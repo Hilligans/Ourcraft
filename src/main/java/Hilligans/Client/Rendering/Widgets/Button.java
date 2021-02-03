@@ -21,7 +21,7 @@ public class Button extends Widget {
     public void render(MatrixStack matrixStack) {
         super.render(matrixStack);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
-        Renderer.drawTexture1(ClientMain.outLine,x,y,width,height);
+        Renderer.drawTexture1(matrixStack, ClientMain.outLine,x,y,width,height);
         StringRenderer.drawString(matrixStack, name,x,y,0.5f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }

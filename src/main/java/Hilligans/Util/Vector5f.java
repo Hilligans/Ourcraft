@@ -1,5 +1,7 @@
 package Hilligans.Util;
 
+import org.joml.Vector4f;
+
 public class Vector5f {
 
     float[] values;
@@ -8,14 +10,18 @@ public class Vector5f {
         values = new float[]{x,y,z,a,b};
     }
 
-    public void addToList(float val[], int offset) {
-        for(int x = 0; x < 5; x++) {
-            val[x + offset] = values[x];
-        }
+    public void addToList(float[] val, int offset) {
+        System.arraycopy(values, 0, val, offset, values.length);
     }
 
-    public float[] get() {
-        return values;
+    public Vector5f setColored() {
+        values = new float[]{values[0],values[1],values[2],1.0f,1.0f,1.0f,1.0f,values[3],values[4]};
+        return this;
+    }
+
+    public Vector5f setColored(float r, float g, float b, float a) {
+        values = new float[]{values[0],values[1],values[2],r,g,b,a,values[3],values[4]};
+        return this;
     }
 
     public Vector5f addX(float val) {
@@ -31,6 +37,20 @@ public class Vector5f {
     public Vector5f addZ(float val) {
         values[2] += val;
         return this;
+    }
+
+    public static Vector5f[] color(Vector5f[] vector5fs, float r, float g, float b, float a) {
+        for(Vector5f vector5f : vector5fs) {
+            vector5f.setColored(r,g,b,a);
+        }
+        return vector5fs;
+    }
+
+    public static Vector5f[] color(Vector5f[] vector5fs, Vector4f color) {
+        for(Vector5f vector5f : vector5fs) {
+            vector5f.setColored(color.x,color.y,color.z,color.w);
+        }
+        return vector5fs;
     }
 
 }

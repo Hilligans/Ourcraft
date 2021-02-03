@@ -1,6 +1,7 @@
 package Hilligans.Client.Rendering.World;
 
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
+import Hilligans.Util.Vector5f;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +12,7 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.*;
 
-public class VAOManager {
+public class  VAOManager {
 
     public static HashMap<Integer, DoubleTypeWrapper<Integer,Integer>> buffers = new HashMap<>();
 
@@ -46,6 +47,36 @@ public class VAOManager {
 
         //glDeleteBuffers(VBO);
        // glDeleteBuffers(EBO);
+        buffers.put(VAO,new DoubleTypeWrapper<>(VBO,EBO));
+
+        return VAO;
+    }
+
+    public static int createColorVAO(float[] vertices, int[] indices) {
+        int VAO = glGenVertexArrays();
+        int VBO = glGenBuffers();
+        int EBO = glGenBuffers();
+
+        glBindVertexArray(VAO);
+
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0,3,GL_FLOAT,false,9 * 4,0);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1, 4, GL_FLOAT, false, 9 * 4, 3 * 4);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(2, 2, GL_FLOAT, false, 9 * 4, 7 * 4);
+        glEnableVertexAttribArray(2);
+
+        // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        //glDeleteBuffers(VBO);
+        // glDeleteBuffers(EBO);
         buffers.put(VAO,new DoubleTypeWrapper<>(VBO,EBO));
 
         return VAO;
@@ -103,6 +134,36 @@ public class VAOManager {
         }
 
         return createVAO(vertices,indices);
+    }
+
+    public static float[] convertVertices(ArrayList<Vector5f> vector5fs, boolean coloured) {
+        float[] floats;
+        if(coloured) {
+            floats = new float[vector5fs.size() * 9];
+            int a = 0;
+            for(Vector5f vector5f : vector5fs) {
+                vector5f.addToList(floats,a * 9);
+                a++;
+            }
+        } else {
+            floats = new float[vector5fs.size() * 5];
+            int a = 0;
+            for(Vector5f vector5f : vector5fs) {
+                vector5f.addToList(floats,a * 5);
+                a++;
+            }
+        }
+        return floats;
+    }
+
+    public static int[] convertIndices(ArrayList<Integer> indices) {
+        int[] integers = new int[indices.size()];
+        int a  = 0;
+        for(Integer integer : indices) {
+            integers[a] = integer;
+            a++;
+        }
+        return integers;
     }
 
 

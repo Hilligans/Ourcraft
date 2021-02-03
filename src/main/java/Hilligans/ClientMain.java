@@ -52,6 +52,7 @@ public class ClientMain {
 
 
     public static int shaderProgram;
+    public static int colorShader;
     static int texture;
 
     public static int outLine;
@@ -105,6 +106,7 @@ public class ClientMain {
         clientWorld = new ClientWorld();
 
         shaderProgram = ShaderManager.registerShader(Util.shader,Util.fragmentShader1);
+        colorShader = ShaderManager.registerShader(Util.coloredShader,Util.fragmentShader1);
         Renderer.register();
 
 
@@ -136,8 +138,7 @@ public class ClientMain {
             mouseLocked = screen == null;
             render();
 
-            countFPS();;
-
+            countFPS();
 
             if(mouseLocked) {
                 Camera.updateMouse();
@@ -160,6 +161,7 @@ public class ClientMain {
         MatrixStack matrixStack = Camera.getWorldStack();
         matrixStack.applyColor();
         MatrixStack screenStack = Camera.getScreenStack();
+        screenStack.applyColor();
 
 
         clientWorld.tick();

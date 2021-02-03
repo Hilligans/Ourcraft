@@ -76,9 +76,6 @@ public class MatrixStack {
         setColor(r / 255f,g / 255f, b / 255f, 1.0f);
     }
 
-
-
-
     public void translate(float x, float y, float z) {
         matrix4f.translate(x,y,z);
     }

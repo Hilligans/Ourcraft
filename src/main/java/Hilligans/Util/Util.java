@@ -57,6 +57,23 @@ public class Util {
             "   FragColor = texColor;\n" +
             "}\n\0";
 
+    public static String coloredShader = "#version 330 core\n " +
+            "layout (location = 0) in vec3 aPos;\n" +
+            "layout (location = 1) in vec4 rgb;\n" +
+            "layout (location = 2) in vec2 aTexCoord;\n" +
+            "uniform mat4 transform;\n" +
+            "uniform vec4 color;\n" +
+            "out vec2 Tex;\n" +
+            "out vec4 rgba;\n" +
+            "void main()\n" +
+            "{\n" +
+            "   gl_Position = transform * vec4(aPos, 1.0);\n" +
+            "   Tex = aTexCoord;\n" +
+            "   rgba = color * rgb;\n"  +
+            "}\0";
+
+
+
     public static void generateCharacters() {
         String vals = "!\"#$%&'()*+,-./0123456789:;<=>?@[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
         String vals1 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

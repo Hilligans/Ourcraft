@@ -29,11 +29,11 @@ public class InputField extends Widget {
 
     @Override
     public void render(MatrixStack matrixStack) {
+        super.render(matrixStack);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
-        Renderer.drawTexture1(ClientMain.outLine,x,y,width,height);
+        Renderer.drawTexture1(matrixStack, ClientMain.outLine,x,y,width,height);
         StringRenderer.drawString(matrixStack, string,x,y,0.5f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
-        super.render(matrixStack);
     }
 
     CharPress charPress = new CharPress() {
