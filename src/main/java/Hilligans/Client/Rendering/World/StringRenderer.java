@@ -99,6 +99,4 @@ public class StringRenderer {
     private static Integer[] getIndices(int offset) {
         return new Integer[] {offset,offset + 1,offset + 2,offset + 3,offset + 1,offset + 2};
     }
-
-
 }

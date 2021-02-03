@@ -1,2 +1,1 @@
-# 3D-Open-World
- 
+A minecraft inspired game
