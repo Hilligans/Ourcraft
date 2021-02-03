@@ -1,1 +1,0 @@
-java -jar Custom_LWJGL-1.0-SNAPSHOT-jar-with-dependencies.jar
