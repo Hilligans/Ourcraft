@@ -31,7 +31,7 @@ public class InputField extends Widget {
     public void render(MatrixStack matrixStack) {
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         Renderer.drawTexture1(ClientMain.outLine,x,y,width,height);
-        StringRenderer.drawString(string,x,y,0.5f);
+        StringRenderer.drawString(matrixStack, string,x,y,0.5f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         super.render(matrixStack);
     }

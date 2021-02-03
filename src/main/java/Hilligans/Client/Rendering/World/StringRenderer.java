@@ -1,5 +1,6 @@
 package Hilligans.Client.Rendering.World;
 
+import Hilligans.Client.MatrixStack;
 import Hilligans.ClientMain;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Util.Vector5f;
@@ -23,57 +24,6 @@ public class StringRenderer {
 
     public int mappedCharacters = -1;
 
-    public void loadCharacters() {
-        String vals = "!#$%&'()*+,-./0123456789:;<=>?@[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
-        String vals1 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-        BufferedImage img = new BufferedImage(vals.length() * 48 + vals1.length() * 48,58,BufferedImage.TYPE_INT_ARGB);
-
-        int val = 0;
-
-        BufferedImage bufferedImage = TextureManager.loadImage("/characters/quote.png");
-        DoubleTypeWrapper<Integer, Integer> data = new DoubleTypeWrapper<>(bufferedImage.getWidth(),val);
-        characterOffset.put("\"",data);
-        for(int z = 0; z < bufferedImage.getWidth(); z++) {
-            for(int y = 0; y < bufferedImage.getHeight(); y++) {
-                img.setRGB(z + val * 48,y,bufferedImage.getRGB(z,y));
-            }
-        }
-
-        val++;
-
-
-        for(int x = 0; x < vals.length(); x++) {
-            String s = "" + vals.charAt(x);
-            System.out.println(s);
-            bufferedImage = TextureManager.loadImage("/characters/" + s + ".png");
-            data = new DoubleTypeWrapper<>(bufferedImage.getWidth(),val);
-            characterOffset.put(s,data);
-            for(int z = 0; z < bufferedImage.getWidth(); z++) {
-                for(int y = 0; y < bufferedImage.getHeight(); y++) {
-                    img.setRGB(z + val * 48,y,bufferedImage.getRGB(z,y));
-                }
-            }
-            val++;
-        }
-
-
-        for(int x = 0; x < vals1.length(); x++) {
-            String s = "" + vals1.charAt(x) + vals1.charAt(x);
-            bufferedImage = TextureManager.loadImage("/characters/" + s + ".png");
-            data = new DoubleTypeWrapper<>(bufferedImage.getWidth(),val);
-            characterOffset.put("" + vals1.charAt(x),data);
-            for(int z = 0; z < bufferedImage.getWidth(); z++) {
-                for(int y = 0; y < bufferedImage.getHeight(); y++) {
-                    img.setRGB(z + val * 48,y,bufferedImage.getRGB(z,y));
-                }
-            }
-            val++;
-        }
-
-        mappedCharacters = TextureManager.registerTexture(img);
-    }
-
     public void loadCharacters1() {
         String vals = "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ";
 
@@ -96,15 +46,11 @@ public class StringRenderer {
             }
             val++;
         }
-
-
-        //TextureManager.saveImage(img,"img");
-
         mappedCharacters = TextureManager.registerTexture(img);
        // System.out.println(mappedCharacters);
     }
 
-    public static void  drawString(String string, int x, int y, float scale) {
+    public static void drawString(MatrixStack matrixStack, String string, int x, int y, float scale) {
 
         int width = 0;
         ArrayList<Vector5f> vector5fs = new ArrayList<>();
@@ -126,10 +72,8 @@ public class StringRenderer {
         a = 0;
         for(Integer b : indices) {
             wholeIndices[a] = b;
-            //System.out.println(b);
             a++;
         }
-
 
         glUseProgram(ClientMain.shaderProgram);
 
@@ -139,19 +83,22 @@ public class StringRenderer {
 
         //int id = VAOManager.createVAO(wholeMesh,wholeIndices);
 
-        Matrix4f matrix4f = new Matrix4f();
-        matrix4f.ortho(0,ClientMain.windowX,ClientMain.windowY,0,-1,1);
+       // Matrix4f matrix4f = new Matrix4f();
+       // matrix4f.ortho(0,ClientMain.windowX,ClientMain.windowY,0,-1,1);
+        matrixStack.setColor(255,0,0,255);
+        matrixStack.applyColor();
 
         //System.out.println(wholeMesh.length + " " + wholeIndices.length);
+        glDisable(GL_CULL_FACE);
+        matrixStack.applyTransformation();
 
         GL30.glBindTexture(GL_TEXTURE_2D,instance.mappedCharacters);
         GL30.glBindVertexArray(id);
 
-        int trans = 0;
-        trans = glGetUniformLocation(ClientMain.shaderProgram, "transform");
-        glDisable(GL_CULL_FACE);
-        float[] floats = new float[16];
-        glUniformMatrix4fv(trans,false,matrix4f.get(floats));
+       // int trans = 0;
+       // trans = glGetUniformLocation(ClientMain.shaderProgram, "transform");
+      // float[] floats = new float[16];
+       // glUniformMatrix4fv(trans,false,matrix4f.get(floats));
         glDrawElements(GL_TRIANGLES, vector5fs.size() * 3 / 2,GL_UNSIGNED_INT,0);
         glEnable(GL_CULL_FACE);
 

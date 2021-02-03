@@ -274,7 +274,7 @@ public class TextureManager {
         //Create a new image where to print the character
         img = new BufferedImage((int) Math.ceil(rect.getWidth()), (int) Math.ceil(rect.getHeight()), BufferedImage.TYPE_INT_ARGB);
         g = img.getGraphics();
-        g.setColor(Color.black); //Otherwise the text would be white
+        g.setColor(Color.white); //Otherwise the text would be white
         g.setFont(font);
         FontMetrics fm = g.getFontMetrics();
         int x = 0;

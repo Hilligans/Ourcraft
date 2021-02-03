@@ -157,16 +157,18 @@ public class ClientMain {
 
         glUseProgram(shaderProgram);
         glBindTexture(GL_TEXTURE_2D, texture);
-        MatrixStack matrixStack = Camera.getStack();
+        MatrixStack matrixStack = Camera.getWorldStack();
+        matrixStack.applyColor();
+        MatrixStack screenStack = Camera.getScreenStack();
 
 
         clientWorld.tick();
         clientWorld.render(matrixStack);
 
-        ChatWindow.render();
+        ChatWindow.render1(screenStack);
 
         if(screen != null) {
-            screen.render(matrixStack);
+            screen.render(screenStack);
         }
 
 

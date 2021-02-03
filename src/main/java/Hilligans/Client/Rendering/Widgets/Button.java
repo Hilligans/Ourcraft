@@ -22,7 +22,7 @@ public class Button extends Widget {
         super.render(matrixStack);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         Renderer.drawTexture1(ClientMain.outLine,x,y,width,height);
-        StringRenderer.drawString(name,x,y,0.5f);
+        StringRenderer.drawString(matrixStack, name,x,y,0.5f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 

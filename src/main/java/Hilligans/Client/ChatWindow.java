@@ -32,7 +32,7 @@ public class ChatWindow implements Screen {
         messages.add(doubleTypeWrapper);
     }
 
-    public static void render() {
+    public static void render1(MatrixStack matrixStack) {
         for(int x = 0; x < messages.size(); x++) {
             if(messages.get(x).getTypeB() < System.currentTimeMillis()) {
                 messages.remove(x);
@@ -43,14 +43,14 @@ public class ChatWindow implements Screen {
         int y = (int) (ClientMain.windowY - charHeight * 1.5);
         int size = messages.size();
         for(int x = 0; x < size; x++) {
-            StringRenderer.drawString(messages.get(size - x - 1).getTypeA(),0,y,0.5f);
+            StringRenderer.drawString(matrixStack, messages.get(size - x - 1).getTypeA(),0,y,0.5f);
             y -= charHeight / 2;
             if(y <= 0 ) {
                 break;
             }
         }
         if(!string.equals("")) {
-            StringRenderer.drawString(string,0,ClientMain.windowY - charHeight / 2,0.5f);
+            StringRenderer.drawString(matrixStack, string,0,ClientMain.windowY - charHeight / 2,0.5f);
         }
     }
 
