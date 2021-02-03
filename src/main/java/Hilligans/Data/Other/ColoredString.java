@@ -15,7 +15,4 @@ public class ColoredString {
 
     }
 
-
-
-
 }

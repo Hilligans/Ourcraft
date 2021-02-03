@@ -1,5 +1,6 @@
 package Hilligans.Blocks;
 
+import Hilligans.Client.Rendering.World.CubeManager;
 import Hilligans.Client.Rendering.World.TextureManager;
 import Hilligans.Util.Vector5f;
 import Hilligans.Client.Rendering.World.BlockTextureManager;
@@ -10,7 +11,7 @@ public class Block {
     public String name;
     public short id;
 
-    BlockTextureManager blockTextureManager = new BlockTextureManager();
+    public BlockTextureManager blockTextureManager = new BlockTextureManager();
 
     public Block(String name) {
         this.name = name;
@@ -34,58 +35,11 @@ public class Block {
     }
 
     public Vector5f[] getVertices(int side) {
-
-        int id = blockTextureManager.textures[side];
-
-        float minX = TextureManager.getMinX(id);
-        float maxX = TextureManager.getMaxX(id);
-        float minY = TextureManager.getMinY(id);
-        float maxY = TextureManager.getMaxY(id);
-
-        switch (side)  {
-            case 0:
-                return new Vector5f[] { new Vector5f(0.5f,0.5f,-0.5f,maxX,maxY),
-                                        new Vector5f(0.5f, -0.5f, -0.5f, maxX,minY),
-                                        new Vector5f(-0.5f,-0.5f,-0.5f,minX,minY),
-                                        new Vector5f(-0.5f,0.5f,-0.5f,minX,maxY)};
-            case 1:
-                return new Vector5f[] { new Vector5f(0.5f,0.5f,0.5f,maxX,maxY),
-                                        new Vector5f(0.5f, -0.5f, 0.5f, maxX,minY),
-                                        new Vector5f(-0.5f,-0.5f,0.5f,minX,minY),
-                                        new Vector5f(-0.5f,0.5f,0.5f,minX,maxY)};
-
-            case 2:
-                return new Vector5f[] { new Vector5f(-0.5f,0.5f,0.5f,maxX,maxY),
-                                        new Vector5f(-0.5f,-0.5f,0.5f,maxX,minY),
-                                        new Vector5f(-0.5f,-0.5f,-0.5f,minX,minY),
-                                        new Vector5f(-0.5f,0.5f,-0.5f,minX,maxY)};
-            case 3:
-                return new Vector5f[] { new Vector5f(0.5f,0.5f,0.5f,maxX,maxY),
-                                        new Vector5f(0.5f,-0.5f,0.5f,maxX,minY),
-                                        new Vector5f(0.5f,-0.5f,-0.5f,minX,minY),
-                                        new Vector5f(0.5f,0.5f,-0.5f,minX,maxY)};
-            case 5:
-                return new Vector5f[] { new Vector5f(0.5f,0.5f,0.5f,minX,minY),
-                                        new Vector5f(0.5f,0.5f,-0.5f,maxX,minY),
-                                        new Vector5f(-0.5f,0.5f,-0.5f,maxX,maxY),
-                                        new Vector5f(-0.5f,0.5f,0.5f,minX,maxY)};
-            default:
-                return new Vector5f[] { new Vector5f(0.5f,-0.5f,0.5f,minX,minY),
-                                        new Vector5f(0.5f,-0.5f,-0.5f,maxX,minY),
-                                        new Vector5f(-0.5f,-0.5f,-0.5f,maxX,maxY),
-                                        new Vector5f(-0.5f,-0.5f,0.5f,minX,maxY)};
-        }
+        return CubeManager.getVertices(blockTextureManager,side,0.5f);
     }
 
     public Integer[] getIndices(int side, int spot) {
-        switch (side) {
-            case 0:
-            case 5:
-            case 3:
-                return new Integer[] {spot,spot + 1,spot + 2,spot,spot + 2,spot + 3};
-            default:
-                return new Integer[]{spot,spot + 2, spot + 1, spot, spot + 3, spot + 2};
-        }
+        return CubeManager.getIndices(side,spot);
     }
 
     public static BlockPos getBlockPos(int side) {

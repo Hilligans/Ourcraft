@@ -6,6 +6,8 @@ import Hilligans.Client.Rendering.Screens.EscapeScreen;
 import Hilligans.Client.Rendering.World.Renderer;
 import Hilligans.Client.Rendering.World.ShaderManager;
 import Hilligans.Client.Rendering.World.TextureManager;
+import Hilligans.Entity.Entities.ItemEntity;
+import Hilligans.Entity.Entity;
 import Hilligans.Util.Util;
 import Hilligans.Blocks.Blocks;
 import Hilligans.Client.Key.KeyHandler;
@@ -108,6 +110,7 @@ public class ClientMain {
         shaderProgram = ShaderManager.registerShader(Util.shader,Util.fragmentShader1);
         colorShader = ShaderManager.registerShader(Util.coloredShader,Util.fragmentShader1);
         Renderer.register();
+        Entity.register();
 
 
         glEnable(GL_DEPTH);
@@ -261,6 +264,7 @@ public class ClientMain {
                             if(pos != null) {
                                 if (joinServer) {
                                     ClientNetworkHandler.sendPacket(new CSendBlockChanges(pos.x, pos.y, pos.z, Blocks.AIR.id));
+                                   // clientWorld.entities.put(100,new ItemEntity(pos.x,pos.y,pos.z,100,clientWorld.getBlockState(pos).block));
                                 } else {
                                     clientWorld.setBlockState(pos, new BlockState(Blocks.AIR));
                                 }

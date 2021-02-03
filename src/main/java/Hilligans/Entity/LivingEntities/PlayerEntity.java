@@ -3,6 +3,7 @@ package Hilligans.Entity.LivingEntities;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.World.VAOManager;
 import Hilligans.Entity.LivingEntity;
+import Hilligans.Network.PacketData;
 import Hilligans.Util.Vector5f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -23,6 +24,11 @@ public class PlayerEntity extends LivingEntity {
 
     public PlayerEntity(float x, float y, float z,int id) {
         super(x,y,z,id);
+        type = 0;
+    }
+
+    public PlayerEntity(PacketData packetData) {
+        super(packetData);
     }
 
     @Override
@@ -38,6 +44,14 @@ public class PlayerEntity extends LivingEntity {
         matrixStack.rotate(pitch,new Vector3f(0,0,1));
         matrixStack.applyTransformation();
         glDrawElements(GL_TRIANGLES, verticesCount,GL_UNSIGNED_INT,0);
+    }
+
+    @Override
+    public void destroy() {
+        if(id != -1) {
+            VAOManager.destroyBuffer(id);
+        }
+        super.destroy();
     }
 
     private void createMesh() {

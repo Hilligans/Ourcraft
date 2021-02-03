@@ -91,7 +91,7 @@ public class ClientWorld extends World {
 
     @Override
     public void removeEntity(int id) {
-        entities.remove(id);
+        entities.remove(id).destroy();
     }
 
     static class XZHolder {
@@ -102,7 +102,6 @@ public class ClientWorld extends World {
             this.x = x;
             this.z = z;
         }
-
     }
 
 }

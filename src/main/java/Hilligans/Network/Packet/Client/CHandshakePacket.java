@@ -44,7 +44,7 @@ public class CHandshakePacket extends PacketBase {
             ServerNetworkHandler.sendPacket(new SHandshakePacket(playerId),ctx);
             ServerNetworkHandler.sendPacket(new SChatMessage(name + " has joined the game"));
             for(Entity entity : ServerMain.world.entities.values()) {
-                ServerNetworkHandler.sendPacket(new SCreateEntityPacket(entity.x,entity.y,entity.z,0,entity.id),ctx);
+                ServerNetworkHandler.sendPacket(new SCreateEntityPacket(entity),ctx);
             }
             ServerMain.world.addEntity(new PlayerEntity(0, Chunk.terrain,0,playerId));
 

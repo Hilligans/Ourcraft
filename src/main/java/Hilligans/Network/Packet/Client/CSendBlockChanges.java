@@ -1,5 +1,8 @@
 package Hilligans.Network.Packet.Client;
 
+import Hilligans.Entity.Entities.ItemEntity;
+import Hilligans.Entity.Entity;
+import Hilligans.Network.Packet.Server.SCreateEntityPacket;
 import Hilligans.Network.Packet.Server.SSendBlockChanges;
 import Hilligans.Blocks.Blocks;
 import Hilligans.Network.PacketBase;
@@ -45,7 +48,11 @@ public class CSendBlockChanges extends PacketBase {
 
     @Override
     public void handle() {
+        BlockState oldState = ServerMain.world.getBlockState(x,y,z);
         ServerMain.world.setBlockState(x,y,z,new BlockState(Blocks.getBlockWithID(blockId)));
+        if(oldState.block != Blocks.AIR && ServerMain.world.getBlockState(x,y,z).block == Blocks.AIR) {
+            //ServerNetworkHandler.sendPacket(new SCreateEntityPacket(new ItemEntity(x,y,z, Entity.getNewId(), oldState.block)));
+        }
         ServerNetworkHandler.sendPacket(new SSendBlockChanges(x,y,z,blockId));
     }
 }
