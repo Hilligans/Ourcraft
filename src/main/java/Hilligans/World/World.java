@@ -87,10 +87,6 @@ public abstract class World {
     }
 
     public void tick() {
-        for(BlockChange blockChange : blockChanges) {
-            setBlockState(blockChange.x,blockChange.y,blockChange.z,new BlockState(Blocks.getBlockWithID(blockChange.id)));
-        }
-        blockChanges.clear();
     }
 
     public void requestChunk(int x, int z) {

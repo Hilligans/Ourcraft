@@ -34,6 +34,8 @@ public class ServerNetworkInit extends ChannelInitializer<SocketChannel> {
                     .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(new ServerNetworkInit(sslCtx));
 
+
+
             b.bind(PORT).sync().channel().closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();

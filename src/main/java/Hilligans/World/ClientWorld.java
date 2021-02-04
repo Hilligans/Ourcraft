@@ -2,6 +2,7 @@ package Hilligans.World;
 
 
 
+import Hilligans.Blocks.Blocks;
 import Hilligans.Client.Camera;
 import Hilligans.Client.MatrixStack;
 import Hilligans.ClientMain;
@@ -14,6 +15,14 @@ public class ClientWorld extends World {
 
     public ClientWorld() {
         getChunk(0,0);
+    }
+
+    @Override
+    public void tick() {
+        for(BlockChange blockChange : blockChanges) {
+            setBlockState(blockChange.x,blockChange.y,blockChange.z,new BlockState(Blocks.getBlockWithID(blockChange.id)));
+        }
+        blockChanges.clear();
     }
 
     public void render(MatrixStack matrixStack) {

@@ -28,6 +28,10 @@ public class SUpdateEntityPacket extends PacketBase {
         this.id = id;
     }
 
+    public SUpdateEntityPacket(Entity entity) {
+        this(entity.x,entity.y,entity.z,entity.pitch,entity.yaw,entity.id);
+    }
+
     @Override
     public void encode(PacketData packetData) {
         packetData.writeFloat(x);

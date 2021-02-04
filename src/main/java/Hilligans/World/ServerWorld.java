@@ -22,6 +22,21 @@ public class ServerWorld extends World {
         ServerNetworkHandler.sendPacket(new SRemoveEntityPacket(id));
     }
 
+    @Override
+    public void tick() {
+        int x = 0;
+        //System.out.println("TICKING");
+        for(Entity entity : entities.values()) {
+            try {
+                entity.tick();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            //System.out.println(x);
+            x++;
+        }
+    }
+
     public void createItemEntity(BlockPos blockPos) {
         Block block = getBlockState(blockPos).block;
         if(block != Blocks.AIR) {
