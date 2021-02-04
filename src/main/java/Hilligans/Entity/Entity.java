@@ -1,16 +1,20 @@
 package Hilligans.Entity;
 
 import Hilligans.Client.MatrixStack;
+import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Entity.Entities.ItemEntity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Network.PacketData;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 
 public abstract class Entity {
 
-    public float x,y,z,pitch,yaw;
+    public float x,y,z,pitch,yaw,velX,velY,velZ;
+
+    BoundingBox boundingBox;
 
     public int id;
     public int type = 0;
@@ -63,7 +67,25 @@ public abstract class Entity {
 
     public abstract void render(MatrixStack matrixStack);
 
+    public void tick() {}
+
     public void destroy() {}
+
+    int stepCount = 10;
+
+    public void move() {
+        float movX = velX / stepCount;
+        float movY = velY / stepCount;
+        float movZ = velZ / stepCount;
+
+    }
+
+
+
+    public Vector3f getAllowedMovement(Vector3f speed) {
+        return null;
+    }
+
 
     static int iD = 0;
 
@@ -76,8 +98,6 @@ public abstract class Entity {
     public static void register() {
         entities.add(PlayerEntity::new);
         entities.add(ItemEntity::new);
-      //  entities.add(PlayerEntity::new);
-
     }
 
 

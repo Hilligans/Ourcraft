@@ -15,4 +15,9 @@ public class ColoredString {
 
     }
 
+    public void append(char Char, Vector4f color) {
+        string += Char;
+        colors.add(color);
+    }
+
 }

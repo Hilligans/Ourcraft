@@ -1,8 +1,10 @@
 package Hilligans.Network;
 
+import Hilligans.Data.Other.ColoredString;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
+import org.joml.Vector4f;
 
 public class PacketData {
 
@@ -76,6 +78,17 @@ public class PacketData {
         return val == (byte) 1;
     }
 
+    public ColoredString readColoredString() {
+        short stringLength = readShort();
+        ColoredString coloredString = new ColoredString("");
+        for(short x = 0; x < stringLength; x++) {
+            char val1 = (char) (readByte() & 0xFF);
+            Vector4f vec4 = new Vector4f(readFloat(),readFloat(),readFloat(),readFloat());
+            coloredString.append(val1,vec4);
+        }
+        return coloredString;
+    }
+
     public void writeInt(int val) {
         size += 4;
         byteBuf.writeInt(val);
@@ -111,6 +124,21 @@ public class PacketData {
             writeByte((byte)1);
         } else {
             writeByte((byte)0);
+        }
+    }
+
+    public void writeColoredString(ColoredString coloredString) {
+        short stringLength = (short) coloredString.string.length();
+        writeShort(stringLength);
+
+        //writeShort(stringLength);
+        for(short x = 0; x < stringLength; x++) {
+            writeByte((byte)coloredString.string.charAt(x));
+            Vector4f vector4f = coloredString.colors.get(x);
+            writeFloat(vector4f.x);
+            writeFloat(vector4f.y);
+            writeFloat(vector4f.z);
+            writeFloat(vector4f.w);
         }
     }
 
