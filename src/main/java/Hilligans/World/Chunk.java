@@ -3,6 +3,7 @@ package Hilligans.World;
 import Hilligans.Blocks.Blocks;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Util.Settings;
+import Hilligans.World.Builders.WorldBuilder;
 import org.joml.Matrix4f;
 
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ public class Chunk {
     public int z;
 
     public static int terrain = 64;
+
+    public boolean populated = false;
 
     public Chunk(int x, int z, World world) {
         this.world = world;
@@ -76,6 +79,24 @@ public class Chunk {
                        }
                    }
                 }
+            }
+        }
+        populate();
+    }
+
+    public void populate() {
+        if(!populated) {
+            populated = true;
+            int x = (int)(Math.random() * 16);
+            int z = (int)(Math.random() * 16);
+            int y = Settings.chunkHeight * 16;
+            while(y > 0 && getBlockState(x,y,z).block == Blocks.AIR) {
+                y--;
+            }
+            y++;
+            WorldBuilder worldBuilder = world.worldBuilders.get(0);
+            if(worldBuilder != null) {
+                worldBuilder.build(new BlockPos(x + this.x * 16,y,z + this.z * 16));
             }
         }
     }

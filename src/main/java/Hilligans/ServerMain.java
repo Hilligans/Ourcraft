@@ -2,6 +2,7 @@ package Hilligans;
 
 import Hilligans.Client.PlayerMovementThread;
 import Hilligans.Network.ServerNetworkInit;
+import Hilligans.World.Builders.TreeBuilder;
 import Hilligans.World.ServerWorld;
 import Hilligans.World.World;
 
@@ -16,6 +17,7 @@ public class ServerMain {
 
     public static void main(String[] args) {
         world = new ServerWorld();
+        world.worldBuilders.add(new TreeBuilder(world));
         Server server = new Server();
 
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);

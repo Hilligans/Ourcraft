@@ -6,6 +6,7 @@ import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CRequestChunkPacket;
 import Hilligans.Util.Noise;
 import Hilligans.Util.Settings;
+import Hilligans.World.Builders.WorldBuilder;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import org.joml.Matrix4f;
@@ -22,6 +23,8 @@ public abstract class World {
 
     Noise noise = new Noise(131);
     Noise biomes = new Noise(new Random(131).nextInt());
+
+    public ArrayList<WorldBuilder> worldBuilders = new ArrayList<>();
 
     public World() {
 

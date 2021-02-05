@@ -6,6 +6,7 @@ import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Util.Vector5f;
 import Hilligans.Client.Rendering.World.BlockTextureManager;
 import Hilligans.World.BlockPos;
+import Hilligans.World.BlockState;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 
@@ -37,6 +38,10 @@ public class Block {
     public Block transparentTexture(boolean val) {
         transparentTexture = val;
         return this;
+    }
+
+    public BlockState getDefaultState() {
+        return new BlockState(this);
     }
 
     public Vector3f getAllowedMovement(Vector3f motion, Vector3f pos, BlockPos blockPos, BoundingBox boundingBox) {
