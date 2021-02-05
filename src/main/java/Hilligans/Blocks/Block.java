@@ -13,6 +13,7 @@ public class Block {
 
     public String name;
     public short id;
+    public boolean transparentTexture = false;
 
     public BlockTextureManager blockTextureManager = new BlockTextureManager();
 
@@ -22,29 +23,6 @@ public class Block {
         Blocks.BLOCKS.add(this);
         Blocks.MAPPED_BLOCKS.put(name,id);
     }
-
-    public Vector3f getAllowedMovement(Vector3f motion, Vector3f pos, BlockPos blockPos, BoundingBox boundingBox) {
-        float x = getMomentum(blockPos.x - 0.5f, blockPos.x + 0.5f, boundingBox.minX + pos.x,boundingBox.maxX + pos.x, motion.x);
-        float y = getMomentum(blockPos.y - 0.5f, blockPos.y + 0.5f, boundingBox.minY + pos.y,boundingBox.maxY + pos.y, motion.y);
-        float z = getMomentum(blockPos.z - 0.5f, blockPos.z + 0.5f, boundingBox.minZ + pos.z,boundingBox.maxZ + pos.z, motion.z);
-        return new Vector3f(x,y,z);
-    }
-
-    private float getMomentum(float blockMin, float blockMax, float entityMin, float entityMax, float speed) {
-        if(speed > 0) {
-            if(entityMax < blockMin && entityMax + speed < blockMin) {
-                return speed;
-            }
-            return blockMin - entityMax;
-        } else {
-            if(entityMin > blockMax && entityMin + speed > blockMax) {
-                return speed;
-            }
-            return blockMax - entityMin;
-        }
-    }
-
-
 
     public Block withTexture(String texture) {
         blockTextureManager.addString(texture);
@@ -56,12 +34,45 @@ public class Block {
         return this;
     }
 
+    public Block transparentTexture(boolean val) {
+        transparentTexture = val;
+        return this;
+    }
+
+    public Vector3f getAllowedMovement(Vector3f motion, Vector3f pos, BlockPos blockPos, BoundingBox boundingBox) {
+        //float x = getMomentum(blockPos.x - 0.5f, blockPos.x + 0.5f, boundingBox.minX + pos.x,boundingBox.maxX + pos.x, motion.x);
+        //float y = getMomentum(blockPos.y - 0.5f, blockPos.y + 0.5f, boundingBox.minY + pos.y,boundingBox.maxY + pos.y, motion.y);
+        //float z = getMomentum(blockPos.z - 0.5f, blockPos.z + 0.5f, boundingBox.minZ + pos.z,boundingBox.maxZ + pos.z, motion.z);
+        float x = getMomentum(blockPos.x, blockPos.x + 1.0f, boundingBox.minX + pos.x,boundingBox.maxX + pos.x, motion.x);
+        float y = getMomentum(blockPos.y, blockPos.y + 1.0f, boundingBox.minY + pos.y,boundingBox.maxY + pos.y, motion.y);
+        float z = getMomentum(blockPos.z, blockPos.z + 1.0f, boundingBox.minZ + pos.z,boundingBox.maxZ + pos.z, motion.z);
+
+
+
+        return new Vector3f(x,y,z);
+    }
+
+    private float getMomentum(float blockMin, float blockMax, float entityMin, float entityMax, float speed) {
+        if(speed > 0) {
+            if(entityMax < blockMin && entityMax + speed < blockMin) {
+                return speed;
+            }
+            return Math.max(blockMin - entityMax,0);
+        } else {
+            if(entityMin > blockMax && entityMin + speed > blockMax) {
+                return speed;
+            }
+            return Math.min(blockMax - entityMin,0);
+        }
+    }
+
     public void generateTextures() {
         blockTextureManager.generate();
     }
 
     public Vector5f[] getVertices(int side) {
-        return CubeManager.getVertices(blockTextureManager,side,0.5f);
+       // return CubeManager.getVertices(blockTextureManager,side,0.5f);
+        return CubeManager.getVertices1(blockTextureManager,side,1f);
     }
 
     public Integer[] getIndices(int side, int spot) {

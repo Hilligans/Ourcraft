@@ -114,15 +114,17 @@ public abstract class World {
     public static final float stepCount = 0.05f;
     public static final int distance = 5;
 
+    static final float offSet = -0.5f;
+
     public BlockPos traceBlock(float x, float y, float z, double pitch, double yaw) {
         Vector3d vector3d = new Vector3d();
         boolean placed = false;
 
         for(int a = 0; a < distance / stepCount; a++) {
 
-            final double Z = z - Math.sin(yaw) * Math.cos(pitch) * a * 0.1;
-            final double Y = y - Math.sin(pitch) * 0.1 * a;
-            final double X = (x - Math.cos(yaw) * Math.cos(pitch) * a * 0.1);
+            final double Z = z - Math.sin(yaw) * Math.cos(pitch) * a * 0.1 + offSet;
+            final double Y = y - Math.sin(pitch) * 0.1 * a + offSet;
+            final double X = (x - Math.cos(yaw) * Math.cos(pitch) * a * 0.1) + offSet;
             BlockState blockState = getBlockState((int) Math.round(X), (int) Math.round(Y), (int) Math.round(Z));
             if(blockState.block != Blocks.AIR) {
                 placed = true;
@@ -144,9 +146,9 @@ public abstract class World {
 
         for(int a = 0; a < distance / stepCount; a++) {
 
-            final double Z = z - Math.sin(yaw) * Math.cos(pitch) * a * 0.1;
-            final double Y = y - Math.sin(pitch) * 0.1 * a;
-            final double X = (x - Math.cos(yaw) * Math.cos(pitch) * a * 0.1);
+            final double Z = z - Math.sin(yaw) * Math.cos(pitch) * a * 0.1 + offSet;
+            final double Y = y - Math.sin(pitch) * 0.1 * a + offSet;
+            final double X = (x - Math.cos(yaw) * Math.cos(pitch) * a * 0.1) + offSet;
             BlockState blockState = getBlockState((int) Math.round(X), (int) Math.round(Y), (int) Math.round(Z));
             if(blockState.block != Blocks.AIR) {
                 return new BlockPos((int) Math.round(X),(int) Math.round(Y),(int) Math.round(Z));

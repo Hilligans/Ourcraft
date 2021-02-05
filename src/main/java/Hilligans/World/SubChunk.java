@@ -73,7 +73,7 @@ public class SubChunk {
                     for(int a = 0; a < 6; a++) {
                         if(block.block != Blocks.AIR) {
                             BlockState blockState = getBlock(new BlockPos(x, y, z).add(Block.getBlockPos(a)));
-                            if (blockState.block == Blocks.AIR) {
+                            if (blockState.block.transparentTexture) {
                                 indices.addAll(Arrays.asList(block.block.getIndices(a,spot * 4)));
                                 Vector5f[] vector5fs = block.block.getVertices(a);
                                 for(Vector5f vector5f : vector5fs) {

@@ -170,6 +170,9 @@ public class ClientMain {
         clientWorld.tick();
         clientWorld.render(matrixStack);
 
+        StringRenderer.drawString(screenStack,Camera.getString(),windowX/2,0,0.5f);
+        StringRenderer.drawString(screenStack,"FPS:" + fps,windowX/2,29,0.5f);
+
         ChatWindow.render1(screenStack);
 
         if(screen != null) {
@@ -186,6 +189,8 @@ public class ClientMain {
     static double lastTime = glfwGetTime();
     static int nbFrames = 0;
 
+    static int fps;
+
     static void countFPS() {
 
             double currentTime = glfwGetTime();
@@ -193,6 +198,7 @@ public class ClientMain {
             if ( currentTime - lastTime >= 1.0 ){ // If last prinf() was more than 1 sec ago
 
                 //System.out.println("fps " + (nbFrames));
+                fps = nbFrames;
                 nbFrames = 0;
                 lastTime += 1.0;
             }
@@ -285,7 +291,7 @@ public class ClientMain {
 
                         if(pos != null) {
                             if (joinServer) {
-                                ClientNetworkHandler.sendPacket(new CSendBlockChanges(pos.x, pos.y, pos.z, Blocks.PHIL.id));
+                                ClientNetworkHandler.sendPacket(new CSendBlockChanges(pos.x, pos.y, pos.z, Blocks.LEAVES.id));
                             } else {
                                 clientWorld.setBlockState(pos, new BlockState(Blocks.PHIL));
                             }

@@ -1,5 +1,7 @@
 package Hilligans.Data.Other;
 
+import Hilligans.Client.MatrixStack;
+import Hilligans.Client.Rendering.World.VAOManager;
 import org.joml.Vector3f;
 
 public class BoundingBox {
@@ -19,6 +21,15 @@ public class BoundingBox {
         this.maxY = maxY;
         this.maxZ = maxZ;
     }
+
+    public boolean intersectsBox(BoundingBox other, Vector3f myPos, Vector3f otherPos) {
+        return this.minX + myPos.x < other.maxX + otherPos.x && this.maxX + myPos.x > other.minX + otherPos.x && this.minY + myPos.y < other.maxY + otherPos.y && this.maxY + myPos.y > other.minY + otherPos.y && this.minZ + myPos.z < other.maxZ + otherPos.z && this.maxZ  + myPos.z > other.minZ + otherPos.z;
+    }
+
+    public boolean intersectsBox(BoundingBox other) {
+        return this.minX < other.maxX && this.maxX > other.minX && this.minY < other.maxY && this.maxY > other.minY && this.minZ < other.maxZ && this.maxZ > other.minZ;
+    }
+
 
 
 

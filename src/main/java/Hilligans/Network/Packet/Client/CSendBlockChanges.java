@@ -51,7 +51,7 @@ public class CSendBlockChanges extends PacketBase {
         BlockState oldState = ServerMain.world.getBlockState(x,y,z);
         ServerMain.world.setBlockState(x,y,z,new BlockState(Blocks.getBlockWithID(blockId)));
         if(oldState.block != Blocks.AIR && ServerMain.world.getBlockState(x,y,z).block == Blocks.AIR) {
-            ItemEntity itemEntity = new ItemEntity(x,y,z, Entity.getNewId(), oldState.block);
+            ItemEntity itemEntity = new ItemEntity(x + 0.5f,y + 1,z + 0.5f, Entity.getNewId(), oldState.block);
             ServerMain.world.addEntity(itemEntity);
         }
         ServerNetworkHandler.sendPacket(new SSendBlockChanges(x,y,z,blockId));

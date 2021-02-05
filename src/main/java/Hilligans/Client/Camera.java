@@ -156,5 +156,9 @@ public class Camera {
         return (float) Math.cos(angle);
     }
 
+    public static String getString() {
+        return "x:" + pos.x + " y:" + pos.y + " z:" + pos.z;
+    }
+
 
 }

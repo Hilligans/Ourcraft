@@ -2,9 +2,14 @@ package Hilligans.Entity.LivingEntities;
 
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.World.VAOManager;
+import Hilligans.Data.Other.BoundingBox;
+import Hilligans.Entity.Entities.ItemEntity;
+import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntity;
 import Hilligans.Network.PacketData;
+import Hilligans.ServerMain;
 import Hilligans.Util.Vector5f;
+import Hilligans.World.ServerWorld;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL30;
@@ -25,10 +30,23 @@ public class PlayerEntity extends LivingEntity {
     public PlayerEntity(float x, float y, float z,int id) {
         super(x,y,z,id);
         type = 0;
+        boundingBox = new BoundingBox(-0.5f,-2.0f,-0.5f,0.5f,0.0f,0.5f);
     }
 
     public PlayerEntity(PacketData packetData) {
         super(packetData);
+    }
+
+    @Override
+    public void tick() {
+        //System.out.println("yes");
+        for(Entity entity : ServerMain.world.entities.values()) {
+            if(entity instanceof ItemEntity) {
+                if (entity.boundingBox.intersectsBox(boundingBox, new Vector3f(entity.x, entity.y, entity.z), new Vector3f(x, y, z))) {
+                    ServerMain.world.removeEntity(entity.id);
+                }
+            }
+        }
     }
 
     @Override

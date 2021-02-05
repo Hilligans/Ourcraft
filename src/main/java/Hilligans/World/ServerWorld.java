@@ -8,7 +8,11 @@ import Hilligans.Network.Packet.Server.SCreateEntityPacket;
 import Hilligans.Network.Packet.Server.SRemoveEntityPacket;
 import Hilligans.Network.ServerNetworkHandler;
 
+import java.util.ArrayList;
+
 public class ServerWorld extends World {
+
+    ArrayList<Integer> entityRemovals = new ArrayList<>();
 
     @Override
     public void addEntity(Entity entity) {
@@ -18,15 +22,25 @@ public class ServerWorld extends World {
 
     @Override
     public void removeEntity(int id) {
-        entities.remove(id);
-        ServerNetworkHandler.sendPacket(new SRemoveEntityPacket(id));
+        //entities.remove(id);
+        //ServerNetworkHandler.sendPacket(new SRemoveEntityPacket(id));
+        entityRemovals.add(id);
+    }
+
+    private void handleRemove() {
+        for(Integer integer : entityRemovals) {
+            entities.remove((int)integer);
+            ServerNetworkHandler.sendPacket(new SRemoveEntityPacket(integer));
+        }
     }
 
     @Override
     public void tick() {
         int x = 0;
+        handleRemove();
         //System.out.println("TICKING");
         for(Entity entity : entities.values()) {
+            //System.out.println(entity.id);
             try {
                 entity.tick();
             } catch (Exception e) {

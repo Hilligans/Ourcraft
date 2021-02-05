@@ -105,11 +105,19 @@ public abstract class Entity {
 
     public Vector3f getAllowedMovement(Vector3f motion, World world) {
         Vector3f newSpeed = new Vector3f(motion);
-        BlockPos pos = new BlockPos(Math.round(x),Math.round(y),Math.round(z));
+        //BlockPos pos = new BlockPos(Math.round(x),Math.round(y),Math.round(z));
+        BlockPos pos = new BlockPos((int)Math.floor(x),(int)Math.floor(y),(int)Math.floor(z));
         //System.out.println((int)Math.ceil(motion.x));
-        for(int x = 0; x < (motion.x > 0 ? Math.ceil(motion.x) : Math.floor(motion.x)); x++) {
-            for(int y = 0; y < (motion.y > 0 ? Math.ceil(motion.y) : Math.floor(motion.y)); y++) {
-                for(int z = 0; z < (motion.z > 0 ? Math.ceil(motion.z) : Math.floor(motion.z)); z++) {
+        int X = (int) Math.ceil(Math.abs(motion.x)) + 1;
+        int Y = (int) Math.ceil(Math.abs(motion.y)) + 1;
+        int Z = (int) Math.ceil(Math.abs(motion.z)) + 1;
+
+      //  for(int x = 0; x < (motion.x > 0 ? Math.ceil(motion.x) : Math.floor(motion.x)); x++) {
+      //      for(int y = 0; y < (motion.y > 0 ? Math.ceil(motion.y) : Math.floor(motion.y)); y++) {
+       //         for(int z = 0; z < (motion.z > 0 ? Math.ceil(motion.z) : Math.floor(motion.z)); z++) {
+        for(int x = -X; x < X; x++) {
+            for(int y = -Y; y < Y; y++) {
+                for(int z = -Z; z < Z; z++) {
                     Block block = world.getBlockState(pos.copy().add(x,y,z)).block;
                     if(block != Blocks.AIR) {
                      //   System.out.println(block.name);

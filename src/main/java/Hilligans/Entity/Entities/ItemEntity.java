@@ -27,21 +27,24 @@ public class ItemEntity extends Entity {
         super(x, y, z, id);
         this.block = block;
         type = 1;
-        boundingBox = new BoundingBox(-0.125f,-0.125f,-0.125f,0.125f,0.125f,0.125f);
+       // boundingBox = new BoundingBox(-0.125f,-0.125f,-0.125f,0.125f,0.125f,0.125f);
+        boundingBox = new BoundingBox(-0.25f,-0.25f,-0.25f,0.25f,0.25f,0.25f);
     }
 
     public ItemEntity(PacketData packetData) {
         super(packetData);
         type = 1;
         block = Blocks.getBlockWithID(packetData.readInt());
-        boundingBox = new BoundingBox(-0.125f,-0.125f,-0.125f,0.125f,0.125f,0.125f);
+        //boundingBox = new BoundingBox(-0.125f,-0.125f,-0.125f,0.125f,0.125f,0.125f);
+        boundingBox = new BoundingBox(-0.25f,-0.25f,-0.25f,0.25f,0.25f,0.25f);
     }
 
     @Override
     public void tick() {
-        this.velX = 0.2f;
-        this.velY = 0.05f;
-        this.velZ = 0.1f;
+       // this.velX = -0.2f;
+        this.velY = -0.05f;
+        //this.velZ = -0.1f;
+       // System.out.println("x " + x + " z " + z);
         move();
     }
 
