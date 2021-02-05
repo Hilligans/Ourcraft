@@ -81,11 +81,22 @@ public class Chunk {
                 }
             }
         }
-        populate();
+        Chunk[] chunks = world.getChunksAround(x,z,0);
+        for(Chunk chunk : chunks) {
+            if(chunk != null) {
+                chunk.populate();
+            }
+        }
     }
 
     public void populate() {
         if(!populated) {
+            Chunk[] chunks = world.getChunksAround(x,z,0);
+            for (Chunk chunk : chunks) {
+                if (chunk == null) {
+                    return;
+                }
+            }
             populated = true;
             int x = (int)(Math.random() * 16);
             int z = (int)(Math.random() * 16);

@@ -14,11 +14,12 @@ import org.joml.Vector3d;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public abstract class World {
 
     public Int2ObjectOpenHashMap<Entity> entities = new Int2ObjectOpenHashMap<>();
-    public ArrayList<BlockChange> blockChanges = new ArrayList<>();
+    public ConcurrentLinkedQueue<BlockChange> blockChanges = new ConcurrentLinkedQueue<>();
     Long2ObjectOpenHashMap<Chunk> chunks = new Long2ObjectOpenHashMap<>();
 
     Noise noise = new Noise(131);
@@ -156,6 +157,13 @@ public abstract class World {
             if(blockState.block != Blocks.AIR) {
                 return new BlockPos((int) Math.round(X),(int) Math.round(Y),(int) Math.round(Z));
             }
+        }
+        return null;
+    }
+
+    public Chunk[] getChunksAround(int x, int z, int radius) {
+        if(radius == 0) {
+            return new Chunk[] {getChunk(x + 1,z),getChunk(x - 1,z),getChunk(x,z + 1),getChunk(x,z - 1)};
         }
         return null;
     }

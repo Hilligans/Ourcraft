@@ -6,6 +6,7 @@ import Hilligans.Entity.Entities.ItemEntity;
 import Hilligans.Entity.Entity;
 import Hilligans.Network.Packet.Server.SCreateEntityPacket;
 import Hilligans.Network.Packet.Server.SRemoveEntityPacket;
+import Hilligans.Network.Packet.Server.SSendBlockChanges;
 import Hilligans.Network.ServerNetworkHandler;
 
 import java.util.ArrayList;
@@ -51,6 +52,12 @@ public class ServerWorld extends World {
             //System.out.println(x);
             x++;
         }
+    }
+
+    @Override
+    public void setBlockState(int x, int y, int z, BlockState blockState) {
+        super.setBlockState(x, y, z, blockState);
+        ServerNetworkHandler.sendPacket(new SSendBlockChanges(x,y,z,blockState.block.id));
     }
 
     public void createItemEntity(BlockPos blockPos) {

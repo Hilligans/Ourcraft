@@ -16,13 +16,13 @@ public class TreeBuilder extends WorldBuilder {
     @Override
     public void build(BlockPos startPos) {
         if(world.getBlockState(startPos.copy().add(0,-1,0)).block == Blocks.GRASS) {
-            int height = (int) (Math.random() * 10) + 5;
+            int height = (int) (Math.random() * 8) + 8;
             for (int y = 0; y < height; y++) {
                 BlockPos pos = startPos.copy().add(0, y, 0);
                 world.setBlockState(pos, Blocks.LOG.getDefaultState());
                 if (y > 5) {
-                    if (Math.random() > 0.6 && y < height - 1) {
-                        placeBranch(pos);
+                    if (Math.random() > 0.4 && y < height - 1) {
+                        startBranch(pos);
                     }
                     placeLeaves(pos);
                 }
@@ -32,9 +32,19 @@ public class TreeBuilder extends WorldBuilder {
         }
     }
 
-    private void placeBranch(BlockPos pos) {
-        double pitch = Math.random() * 180;
+    public void startBranch(BlockPos startPos) {
+
+        double pitch = Math.random() * 90 - 45;
         double yaw = Math.random() * 180;
+
+        int rotCount = 90;
+        placeBranch(startPos.copy().add(0,(int)(Math.random() * 4 - 2), 0),pitch,yaw + rotCount);
+        placeBranch(startPos.copy().add(0,(int)(Math.random() * 4 - 2), 0),pitch,yaw + rotCount * 2);
+        placeBranch(startPos.copy().add(0,(int)(Math.random() * 4 - 2), 0),pitch,yaw + rotCount * 3);
+        placeBranch(startPos.copy().add(0,(int)(Math.random() * 4 - 2), 0),pitch,yaw + rotCount * 4);
+    }
+
+    private void placeBranch(BlockPos pos, double pitch, double yaw) {
 
         int length = (int) (Math.random() * 6) + 4;
 

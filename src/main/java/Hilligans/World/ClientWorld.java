@@ -11,18 +11,28 @@ import Hilligans.Util.Settings;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 public class ClientWorld extends World {
 
     public ClientWorld() {
         getChunk(0,0);
     }
 
+    public ConcurrentLinkedQueue<BlockChange> skippedBlockChanges = new ConcurrentLinkedQueue<>();
+
     @Override
     public void tick() {
         for(BlockChange blockChange : blockChanges) {
+            if(getChunk(blockChange.x >> 4, blockChange.z >> 4) == null) {
+                skippedBlockChanges.add(blockChange);
+                continue;
+            }
             setBlockState(blockChange.x,blockChange.y,blockChange.z,new BlockState(Blocks.getBlockWithID(blockChange.id)));
         }
         blockChanges.clear();
+        blockChanges.addAll(skippedBlockChanges);
+        skippedBlockChanges.clear();
     }
 
     public void render(MatrixStack matrixStack) {
