@@ -1,7 +1,9 @@
 package Hilligans;
 
+import Hilligans.Blocks.Blocks;
 import Hilligans.Client.PlayerMovementThread;
 import Hilligans.Network.ServerNetworkInit;
+import Hilligans.World.Builders.OreBuilder;
 import Hilligans.World.Builders.TreeBuilder;
 import Hilligans.World.ServerWorld;
 import Hilligans.World.World;
@@ -17,7 +19,8 @@ public class ServerMain {
 
     public static void main(String[] args) {
         world = new ServerWorld();
-        world.worldBuilders.add(new TreeBuilder(world));
+        world.worldBuilders.add(new TreeBuilder().setWorld(world));
+        world.worldBuilders.add(new OreBuilder(Blocks.IRON_ORE,Blocks.STONE).setWorld(world).setFrequency(20));
         Server server = new Server();
 
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);

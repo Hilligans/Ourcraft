@@ -98,16 +98,9 @@ public class Chunk {
                 }
             }
             populated = true;
-            int x = (int)(Math.random() * 16);
-            int z = (int)(Math.random() * 16);
-            int y = Settings.chunkHeight * 16;
-            while(y > 0 && getBlockState(x,y,z).block == Blocks.AIR) {
-                y--;
-            }
-            y++;
-            WorldBuilder worldBuilder = world.worldBuilders.get(0);
-            if(worldBuilder != null) {
-                worldBuilder.build(new BlockPos(x + this.x * 16,y,z + this.z * 16));
+
+            for(WorldBuilder worldBuilder : world.worldBuilders) {
+                worldBuilder.build(this);
             }
         }
     }

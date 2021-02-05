@@ -3,25 +3,21 @@ package Hilligans.World.Builders;
 import Hilligans.Blocks.Block;
 import Hilligans.Blocks.Blocks;
 import Hilligans.Client.Camera;
+import Hilligans.Util.Ray;
 import Hilligans.World.BlockPos;
 import Hilligans.World.World;
 
-public class TreeBuilder extends WorldBuilder {
-
-
-    public TreeBuilder(World world) {
-        super(world);
-    }
+public class TreeBuilder extends SurfaceBuilder {
 
     @Override
     public void build(BlockPos startPos) {
         if(world.getBlockState(startPos.copy().add(0,-1,0)).block == Blocks.GRASS) {
-            int height = (int) (Math.random() * 8) + 8;
+            int height = random.nextInt(8) + 8;
             for (int y = 0; y < height; y++) {
                 BlockPos pos = startPos.copy().add(0, y, 0);
                 world.setBlockState(pos, Blocks.LOG.getDefaultState());
                 if (y > 5) {
-                    if (Math.random() > 0.4 && y < height - 1) {
+                    if (random.nextInt(100) > 40 && y < height - 1) {
                         startBranch(pos);
                     }
                     placeLeaves(pos);
@@ -32,10 +28,10 @@ public class TreeBuilder extends WorldBuilder {
         }
     }
 
-    public void startBranch(BlockPos startPos) {
+    private void startBranch(BlockPos startPos) {
 
-        double pitch = Math.random() * 90 - 45;
-        double yaw = Math.random() * 180;
+        double pitch = random.nextInt(90) - 45;
+        double yaw = random.nextInt(180);
 
         int rotCount = 90;
         placeBranch(startPos.copy().add(0,(int)(Math.random() * 4 - 2), 0),pitch,yaw + rotCount);
@@ -47,13 +43,11 @@ public class TreeBuilder extends WorldBuilder {
     private void placeBranch(BlockPos pos, double pitch, double yaw) {
 
         int length = (int) (Math.random() * 6) + 4;
-
+        Ray ray = new Ray(pitch,yaw);
         for(int i = 0; i < length; i++) {
-            int x = (int)(Math.cos(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * i);
-            int y = (int)(Math.sin(Math.toRadians(pitch)) * i);
-            int z = (int)(Math.sin(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * i);
-            world.setBlockState(pos.copy().add(x,y,z),Blocks.LOG.getDefaultState());
-            placeLeaves(pos.copy().add(x,y,z));
+            BlockPos newPos = pos.copy().add(ray.getNextBlock(i));
+            world.setBlockState(newPos,Blocks.LOG.getDefaultState());
+            placeLeaves(newPos);
         }
     }
 

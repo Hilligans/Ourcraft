@@ -24,11 +24,12 @@ public abstract class World {
 
     Noise noise = new Noise(131);
     Noise biomes = new Noise(new Random(131).nextInt());
+    public Random random;
 
     public ArrayList<WorldBuilder> worldBuilders = new ArrayList<>();
 
     public World() {
-
+        random = new Random(131);
     }
 
     public Chunk getChunk(long chunkPos) {

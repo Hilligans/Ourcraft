@@ -44,6 +44,10 @@ public class Block {
         return new BlockState(this);
     }
 
+    public Block getDroppedBlock() {
+        return this;
+    }
+
     public Vector3f getAllowedMovement(Vector3f motion, Vector3f pos, BlockPos blockPos, BoundingBox boundingBox) {
         //float x = getMomentum(blockPos.x - 0.5f, blockPos.x + 0.5f, boundingBox.minX + pos.x,boundingBox.maxX + pos.x, motion.x);
         //float y = getMomentum(blockPos.y - 0.5f, blockPos.y + 0.5f, boundingBox.minY + pos.y,boundingBox.maxY + pos.y, motion.y);
