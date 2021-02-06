@@ -1,6 +1,5 @@
 package Hilligans;
 
-import Hilligans.Biome.Biomes;
 import Hilligans.Client.*;
 import Hilligans.Client.Rendering.Screen;
 import Hilligans.Client.Rendering.Screens.EscapeScreen;
@@ -20,7 +19,7 @@ import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.ClientNetworkInit;
 import Hilligans.Network.Packet.Client.CSendBlockChanges;
 import Hilligans.Client.Camera;
-import Hilligans.World.BlockPos;
+import Hilligans.Data.Other.BlockPos;
 import Hilligans.World.BlockState;
 import Hilligans.World.ClientWorld;
 import org.lwjgl.BufferUtils;
@@ -323,7 +322,7 @@ public class ClientMain {
                             if (joinServer) {
                                 ClientNetworkHandler.sendPacket(new CSendBlockChanges(pos.x, pos.y, pos.z, BlockPlacer.id));
                             } else {
-                                clientWorld.setBlockState(pos, new BlockState(Blocks.PHIL));
+                                clientWorld.setBlockState(pos, new BlockState(Blocks.SAND));
                             }
                         }
                     }

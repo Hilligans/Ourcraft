@@ -1,7 +1,7 @@
 package Hilligans.World.Builders;
 
 import Hilligans.Block.Block;
-import Hilligans.World.BlockPos;
+import Hilligans.Data.Other.BlockPos;
 import it.unimi.dsi.fastutil.ints.Int2BooleanOpenHashMap;
 
 public class OreBuilder extends RandomBuilder {

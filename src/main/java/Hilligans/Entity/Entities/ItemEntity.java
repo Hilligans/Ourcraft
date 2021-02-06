@@ -40,9 +40,9 @@ public class ItemEntity extends Entity {
 
     @Override
     public void tick() {
-       // this.velX = -0.2f;
+        this.velX = -0.2f;
         this.velY = -0.05f;
-        //this.velZ = -0.1f;
+        this.velZ = -0.1f;
        // System.out.println("x " + x + " z " + z);
         move();
     }

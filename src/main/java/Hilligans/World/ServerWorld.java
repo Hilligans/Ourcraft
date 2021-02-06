@@ -2,6 +2,7 @@ package Hilligans.World;
 
 import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
+import Hilligans.Data.Other.BlockPos;
 import Hilligans.Entity.Entities.ItemEntity;
 import Hilligans.Entity.Entity;
 import Hilligans.Network.Packet.Server.SCreateEntityPacket;
@@ -57,7 +58,7 @@ public class ServerWorld extends World {
     @Override
     public void setBlockState(int x, int y, int z, BlockState blockState) {
         super.setBlockState(x, y, z, blockState);
-        ServerNetworkHandler.sendPacket(new SSendBlockChanges(x,y,z,blockState.block.id));
+        //ServerNetworkHandler.sendPacket(new SSendBlockChanges(x,y,z,blockState.block.id));
     }
 
     public void createItemEntity(BlockPos blockPos) {

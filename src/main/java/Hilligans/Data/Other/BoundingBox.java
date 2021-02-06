@@ -23,7 +23,11 @@ public class BoundingBox {
     }
 
     public boolean intersectsBox(BoundingBox other, Vector3f myPos, Vector3f otherPos) {
-        return this.minX + myPos.x < other.maxX + otherPos.x && this.maxX + myPos.x > other.minX + otherPos.x && this.minY + myPos.y < other.maxY + otherPos.y && this.maxY + myPos.y > other.minY + otherPos.y && this.minZ + myPos.z < other.maxZ + otherPos.z && this.maxZ  + myPos.z > other.minZ + otherPos.z;
+        return this.minX + myPos.x <= other.maxX + otherPos.x && this.maxX + myPos.x >= other.minX + otherPos.x && this.minY + myPos.y <= other.maxY + otherPos.y && this.maxY + myPos.y >= other.minY + otherPos.y && this.minZ + myPos.z <= other.maxZ + otherPos.z && this.maxZ  + myPos.z >= other.minZ + otherPos.z;
+    }
+
+    public boolean intersectsBox(BoundingBox other, Vector3f myPos, Vector3f otherPos, float velX, float velY, float velZ) {
+        return intersectsBox(other,myPos,new Vector3f(otherPos.x + velX,otherPos.y + velY,otherPos.z + velZ));
     }
 
     public boolean intersectsBox(BoundingBox other) {

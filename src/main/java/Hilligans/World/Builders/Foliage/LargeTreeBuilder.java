@@ -3,7 +3,7 @@ package Hilligans.World.Builders.Foliage;
 import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
 import Hilligans.Util.Ray;
-import Hilligans.World.BlockPos;
+import Hilligans.Data.Other.BlockPos;
 import Hilligans.World.Builders.SurfaceBuilder;
 
 public class LargeTreeBuilder extends SurfaceBuilder {

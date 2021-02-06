@@ -21,10 +21,11 @@ public class ServerMain {
     public static void main(String[] args) {
         world = new ServerWorld();
      //   world.worldBuilders.add(new TreeBuilder().setWorld(world));
-        world.worldBuilders.add(new OreBuilder(Blocks.IRON_ORE,Blocks.STONE).setFrequency(20));
+        world.worldBuilders.add(new OreBuilder(Blocks.GRASS,Blocks.STONE).setFrequency(20));
 
         for(int x = -Settings.renderDistance; x < Settings.renderDistance; x++) {
             for(int z = -Settings.renderDistance; z < Settings.renderDistance; z++) {
+               // System.out.println("GENERATING CHUNK x:" + x + " z:" + z);
                 world.generateChunk(x,z);
             }
         }

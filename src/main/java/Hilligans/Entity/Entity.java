@@ -10,7 +10,7 @@ import Hilligans.Network.Packet.Server.SUpdateEntityPacket;
 import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.ServerMain;
-import Hilligans.World.BlockPos;
+import Hilligans.Data.Other.BlockPos;
 import Hilligans.World.World;
 import org.joml.Vector3f;
 
@@ -82,7 +82,18 @@ public abstract class Entity {
     public void move() {
         //System.out.println("moving");
         if(velX != 0 || velY != 0 || velZ != 0) {
-            Vector3f movement = getAllowedMovement(new Vector3f(velX, velY, velZ), ServerMain.world);
+            Vector3f movement = new Vector3f();
+            /*Vector3f movement = getAllowedMovement(new Vector3f(velX, velY, velZ), ServerMain.world);
+
+             */
+            for(int x = 0; x < 7; x++) {
+                movement = getAllowedMovement(tryMovement(x,velX,velY,velZ),ServerMain.world);
+                if(movement.x != velX && movement.y != velY && movement.z != velZ) {
+                    continue;
+                }
+                break;
+            }
+
 
             if (movement.x != velX) {
                 velX = 0;
@@ -100,6 +111,27 @@ public abstract class Entity {
         }
     }
 
+    private Vector3f tryMovement(int side, float velX, float velY, float velZ) {
+        switch (side) {
+            case 0:
+                return new Vector3f(velX,velY,velZ);
+            case 1:
+                return new Vector3f(velX,velY,0);
+            case 2:
+                return new Vector3f(velX,0,velZ);
+            case 3:
+                return new Vector3f(0,velY,velZ);
+            case 4:
+                return new Vector3f(velX,0,0);
+            case 5:
+                return new Vector3f(0,velY,0);
+            case 6:
+                return new Vector3f(0,0,velZ);
+            default:
+                return new Vector3f();
+        }
+    }
+
 
 
     public Vector3f getAllowedMovement(Vector3f motion, World world) {
@@ -111,42 +143,39 @@ public abstract class Entity {
         int Y = (int) Math.ceil(Math.abs(motion.y)) + 1;
         int Z = (int) Math.ceil(Math.abs(motion.z)) + 1;
 
-      //  for(int x = 0; x < (motion.x > 0 ? Math.ceil(motion.x) : Math.floor(motion.x)); x++) {
-      //      for(int y = 0; y < (motion.y > 0 ? Math.ceil(motion.y) : Math.floor(motion.y)); y++) {
-       //         for(int z = 0; z < (motion.z > 0 ? Math.ceil(motion.z) : Math.floor(motion.z)); z++) {
         for(int x = -X; x < X; x++) {
             for(int y = -Y; y < Y; y++) {
                 for(int z = -Z; z < Z; z++) {
                     Block block = world.getBlockState(pos.copy().add(x,y,z)).block;
                     if(block != Blocks.AIR) {
                      //   System.out.println(block.name);
-                        Vector3f blockSpeed = block.getAllowedMovement(motion, new Vector3f(this.x, this.y, this.z), pos.copy().add(x, y, z), boundingBox);
-                        if (blockSpeed.x != motion.x) {
-                            if (motion.x > 0) {
-                                newSpeed.x = Math.min(motion.x, blockSpeed.x);
-                            } else {
-                                newSpeed.x = Math.max(motion.x, blockSpeed.x);
-                            }
+                        Vector3f blockSpeed = block.getAllowedMovement(new Vector3f(motion.x,motion.y,motion.z), new Vector3f(this.x, this.y, this.z), pos.copy().add(x, y, z), boundingBox);
+                        if(blockSpeed.x != motion.x || blockSpeed.y != motion.y || blockSpeed.z != motion.z) {
+                            return new Vector3f(0,0,0);
                         }
-                        if (blockSpeed.y != motion.y) {
-                            if (motion.y > 0) {
-                                newSpeed.y = Math.min(motion.y, blockSpeed.y);
-                            } else {
-                                newSpeed.y = Math.max(motion.y, blockSpeed.y);
-                            }
+                       /* if(motion.x > 0) {
+                            newSpeed.x = Math.min(newSpeed.x, blockSpeed.x);
+                        } else {
+                            newSpeed.x = Math.max(newSpeed.x, blockSpeed.x);
                         }
-                        if (blockSpeed.z != motion.z) {
-                            if (motion.z > 0) {
-                                newSpeed.z = Math.min(motion.z, blockSpeed.z);
-                            } else {
-                                newSpeed.z = Math.max(motion.z, blockSpeed.z);
-                            }
+                        if(motion.y > 0) {
+                            newSpeed.y = Math.min(newSpeed.y, blockSpeed.y);
+                        } else {
+                            newSpeed.y = Math.max(newSpeed.y, blockSpeed.y);
                         }
+                        if(motion.z > 0) {
+                            newSpeed.z = Math.min(newSpeed.z, blockSpeed.z);
+                        } else {
+                            newSpeed.z = Math.max(newSpeed.z, blockSpeed.z);
+                        }
+
+                        */
+
                     }
                 }
             }
         }
-        return newSpeed;
+        return motion;
     }
 
 

@@ -1,6 +1,6 @@
 package Hilligans.Util;
 
-import Hilligans.World.BlockPos;
+import Hilligans.Data.Other.BlockPos;
 
 public class Ray {
 

@@ -1,4 +1,6 @@
-package Hilligans.World;
+package Hilligans.Data.Other;
+
+import org.joml.Vector3f;
 
 public class BlockPos {
 
@@ -27,6 +29,10 @@ public class BlockPos {
         return this;
     }
 
+    public Vector3f get3f() {
+        return new Vector3f(x,y,z);
+    }
+
     public BlockPos copy() {
         return new BlockPos(x,y,z);
     }
@@ -35,6 +41,12 @@ public class BlockPos {
         return x >= 0 && x <= 15 && y >= 0 && y <= 15 && z >= 0 && z <= 15;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "BlockPos{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
+    }
 }

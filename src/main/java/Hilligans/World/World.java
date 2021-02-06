@@ -1,12 +1,12 @@
 package Hilligans.World;
 
 import Hilligans.Block.Blocks;
+import Hilligans.Data.Other.BlockPos;
 import Hilligans.Entity.Entity;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CRequestChunkPacket;
 import Hilligans.Util.*;
 import Hilligans.Util.Noises.BiomeNoise;
-import Hilligans.Util.Noises.KenPerlinNoise;
 import Hilligans.Util.Noises.Noise;
 import Hilligans.World.Builders.WorldBuilder;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -110,16 +110,26 @@ public abstract class World {
         ClientNetworkHandler.sendPacket(new CRequestChunkPacket(x, z));
     }
 
-    ArrayList<ClientWorld.XZHolder> requestedChunks = new ArrayList<>();
+    ConcurrentLinkedQueue<ClientWorld.XZHolder> requestedChunks = new ConcurrentLinkedQueue<>();
 
     public void setChunk(Chunk chunk) {
-        for(int x = 0; x < requestedChunks.size(); x++) {
+        for(ClientWorld.XZHolder xzHolder : requestedChunks) {
+            if(xzHolder.x == chunk.x && xzHolder.z == chunk.z) {
+                requestedChunks.remove(xzHolder);
+                chunks.put(chunk.x & 4294967295L | ((long)chunk.z & 4294967295L) << 32,chunk);
+                return;
+            }
+        }
+
+        /*for(int x = 0; x < requestedChunks.size(); x++) {
             if(requestedChunks.get(x).x == chunk.x && requestedChunks.get(x).z == chunk.z) {
                 requestedChunks.remove(x);
                 chunks.put(chunk.x & 4294967295L | ((long)chunk.z & 4294967295L) << 32,chunk);
                 return;
             }
         }
+
+         */
     }
 
     public static final float stepCount = 0.05f;

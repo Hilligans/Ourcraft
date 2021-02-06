@@ -3,7 +3,7 @@ package Hilligans.World.Builders;
 import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
 import Hilligans.Util.Settings;
-import Hilligans.World.BlockPos;
+import Hilligans.Data.Other.BlockPos;
 
 public abstract class SurfaceBuilder extends WorldBuilder {
     @Override

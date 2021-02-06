@@ -25,7 +25,7 @@ public class CHandshakePacket extends PacketBase {
 
     @Override
     public void encode(PacketData packetData) {
-        packetData.writeInt(Settings.GameVersion);
+        packetData.writeInt(Settings.gameVersion);
         packetData.writeString(ClientMain.name);
       //  packetData.writeString("testabc");
     }
@@ -39,7 +39,7 @@ public class CHandshakePacket extends PacketBase {
 
     @Override
     public void handle() {
-        if(id == Settings.GameVersion) {
+        if(id == Settings.gameVersion) {
             int playerId = Entity.getNewId();
             ServerNetworkHandler.sendPacket(new SHandshakePacket(playerId),ctx);
             ServerNetworkHandler.sendPacket(new SChatMessage(name + " has joined the game"));

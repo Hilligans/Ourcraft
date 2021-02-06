@@ -55,9 +55,11 @@ public class ClientWorld extends World {
                         }
                     }
                 } else {
-                    matrixStack.push();
-                    chunk.render(matrixStack);
-                    matrixStack.pop();
+                    if(Camera.shouldRenderChunk(x * 16 + (int) pos.x >> 4, z * 16 + (int) pos.z >> 4)) {
+                        matrixStack.push();
+                        chunk.render(matrixStack);
+                        matrixStack.pop();
+                    }
                 }
             }
         }

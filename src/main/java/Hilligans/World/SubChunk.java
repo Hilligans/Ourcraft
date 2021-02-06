@@ -4,6 +4,7 @@ import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.World.VAOManager;
+import Hilligans.Data.Other.BlockPos;
 import Hilligans.Util.Settings;
 import Hilligans.Util.Vector5f;
 import org.lwjgl.opengl.GL30;

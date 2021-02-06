@@ -1,6 +1,5 @@
 package Hilligans.World.Builders;
 
-import Hilligans.World.BlockPos;
 import Hilligans.World.Chunk;
 import Hilligans.World.World;
 

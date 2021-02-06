@@ -1,8 +1,7 @@
 package Hilligans.World.Builders;
 
 import Hilligans.Util.Settings;
-import Hilligans.World.BlockPos;
-import Hilligans.World.World;
+import Hilligans.Data.Other.BlockPos;
 
 public abstract class RandomBuilder extends WorldBuilder {
 

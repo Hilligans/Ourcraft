@@ -1,7 +1,6 @@
 package Hilligans.Client.Rendering.World;
 
 import Hilligans.Util.Vector5f;
-import Hilligans.World.BlockPos;
 
 public class CubeManager {
     public static Vector5f[] getVertices(BlockTextureManager blockTextureManager, int side, float size) {

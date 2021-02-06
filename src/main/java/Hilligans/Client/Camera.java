@@ -21,6 +21,8 @@ public class Camera {
 
     public static Vector3f pos = new Vector3f(0, Chunk.terrain,0);
 
+    public static final int fov = 70;
+
     public static double pitch;
     public static double yaw;
 
@@ -75,6 +77,14 @@ public class Camera {
         if(pitch < - 3.1415 / 2) {
             pitch = -3.1415 / 2;
         }
+
+
+        if(yaw > 6.283) {
+            yaw = - 6.283;
+        } else if(yaw < -6.283) {
+            yaw = 6.283;
+        }
+
         ClientNetworkHandler.sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.playerId));
 
     }
@@ -97,7 +107,7 @@ public class Camera {
         if(thirdPerson) {
               view.translate(0,0,-3);
         }
-        projection.perspective((float) Math.toRadians(70), (float) windowX / windowY,0.1f,10000.0f);
+        projection.perspective((float) Math.toRadians(fov), (float) windowX / windowY,0.1f,10000.0f);
         matrix4f.mul(projection).mul(view);
         matrix4f.lookAt(Camera.duplicate().add((float)(Math.cos(Camera.yaw) * Math.cos(Camera.pitch)),(float)(Math.sin(Camera.pitch)),(float)(Math.sin(Camera.yaw) * Math.cos(Camera.pitch))),Camera.duplicate(), cameraUp);
     }
@@ -109,7 +119,7 @@ public class Camera {
         if(thirdPerson) {
             view.translate(0,0,-3);
         }
-        matrix4f.perspective((float) Math.toRadians(70), (float) windowX / windowY,0.1f,10000.0f);
+        matrix4f.perspective((float) Math.toRadians(fov), (float) windowX / windowY,0.1f,10000.0f);
         matrix4f.mul(view);
         matrix4f.lookAt(Camera.duplicate().add((float)(Math.cos(Camera.yaw) * Math.cos(Camera.pitch)),(float)(Math.sin(Camera.pitch)),(float)(Math.sin(Camera.yaw) * Math.cos(Camera.pitch))),Camera.duplicate(), cameraUp);
         return new MatrixStack(matrix4f);
@@ -158,6 +168,26 @@ public class Camera {
 
     public static String getString() {
         return "x:" + pos.x + " y:" + pos.y + " z:" + pos.z;
+    }
+
+    public static boolean shouldRenderChunk(int chunkX, int chunkZ) {
+
+        return true;
+
+       /* chunkX -= (float)Math.cos(yaw) * 2;
+        chunkZ -= (float)Math.sin(yaw) * 2;
+
+        double dX = pos.x - chunkX * 16;
+        double dZ = pos.z - chunkZ * 16;
+
+        double yaw = Math.atan2(dZ, dX);
+
+        double anglediff = (Math.toDegrees(Camera.yaw) - Math.toDegrees(yaw) + 180 + 360) % 360 - 180;
+
+
+        return anglediff <= fov && anglediff>=-fov;
+
+        */
     }
 
 
