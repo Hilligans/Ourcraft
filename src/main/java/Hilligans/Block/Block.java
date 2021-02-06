@@ -45,7 +45,6 @@ public class Block {
         return this;
     }
 
-   // public Block setDrop()
 
     public BlockState getDefaultState() {
         return new BlockState(this);
@@ -56,74 +55,15 @@ public class Block {
     }
 
     public Vector3f getAllowedMovement(Vector3f motion, Vector3f pos, BlockPos blockPos, BoundingBox boundingBox) {
-    /*    if(!getBoundingBox().intersectsBox(boundingBox,blockPos.get3f(),pos,motion.x,motion.y,motion.z)) {
-            //System.out.println("return1");
-            return motion;
-        }
-        if(!getBoundingBox().intersectsBox(boundingBox,blockPos.get3f(),pos,motion.x,motion.y,0)) {
-            //System.out.println("return2");
-            return new Vector3f(motion.x,motion.y,0);
-        }
-        if(!getBoundingBox().intersectsBox(boundingBox,blockPos.get3f(),pos,motion.x,0,motion.z)) {
-            //System.out.println("return3");
-            return new Vector3f(motion.x,0,motion.z);
-        }
-        if(!getBoundingBox().intersectsBox(boundingBox,blockPos.get3f(),pos,0,motion.y,motion.z)) {
-            //System.out.println("return4");
-            return new Vector3f(0,motion.y,motion.z);
-        }
-        if(!getBoundingBox().intersectsBox(boundingBox,blockPos.get3f(),pos,motion.x,0,0)) {
-            //System.out.println("return5");
-            return new Vector3f(motion.x,0,0);
-        }
-        if(!getBoundingBox().intersectsBox(boundingBox,blockPos.get3f(),pos,0,motion.y,0)) {
-            //System.out.println("return6");
-            return new Vector3f(0,motion.y,0);
-        }
-        if(!getBoundingBox().intersectsBox(boundingBox,blockPos.get3f(),pos,0,0,motion.z)) {
-            //System.out.println("return7");
-
-            return new Vector3f(0,0,motion.z);
-        }
-        //float x = getMomentum(blockPos.x - 0.5f, blockPos.x + 0.5f, boundingBox.minX + pos.x,boundingBox.maxX + pos.x, motion.x);
-        //float y = getMomentum(blockPos.y - 0.5f, blockPos.y + 0.5f, boundingBox.minY + pos.y,boundingBox.maxY + pos.y, motion.y);
-        //float z = getMomentum(blockPos.z - 0.5f, blockPos.z + 0.5f, boundingBox.minZ + pos.z,boundingBox.maxZ + pos.z, motion.z);
-     //   float x = getMomentum(blockPos.x, blockPos.x + 1.0f, boundingBox.minX + pos.x,boundingBox.maxX + pos.x, motion.x);
-       // float y = getMomentum(blockPos.y, blockPos.y + 1.0f, boundingBox.minY + pos.y,boundingBox.maxY + pos.y, motion.y);
-       // float z = getMomentum(blockPos.z, blockPos.z + 1.0f, boundingBox.minZ + pos.z,boundingBox.maxZ + pos.z, motion.z);
-        //System.out.println("return8");
-        return new Vector3f(0,0,0);
-
-
-       // return new Vector3f(x,y,z);
-
-     */
         if(!getBoundingBox().intersectsBox(boundingBox,blockPos.get3f(),pos,motion.x,motion.y,motion.z)) {
-            //System.out.println("return1");
             return motion;
         }
         return new Vector3f(0f,0f,0f);
-
     }
-
 
     private BoundingBox getBoundingBox() {
         //return new BoundingBox(-1,-1,-1,0,0,0);
         return new BoundingBox(0,0,0,1,1,1);
-    }
-
-    private float getMomentum(float blockMin, float blockMax, float entityMin, float entityMax, float speed) {
-        if(speed > 0) {
-            if(entityMax < blockMin && entityMax + speed < blockMin) {
-                return speed;
-            }
-            return Math.max(blockMin - entityMax,0);
-        } else {
-            if(entityMin > blockMax && entityMin + speed > blockMax) {
-                return speed;
-            }
-            return Math.min(blockMax - entityMin,0);
-        }
     }
 
     public void generateTextures() {

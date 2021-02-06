@@ -82,33 +82,36 @@ public abstract class Entity {
     public void move() {
         //System.out.println("moving");
         if(velX != 0 || velY != 0 || velZ != 0) {
-            Vector3f movement = new Vector3f();
-            /*Vector3f movement = getAllowedMovement(new Vector3f(velX, velY, velZ), ServerMain.world);
-
-             */
-            for(int x = 0; x < 7; x++) {
-                movement = getAllowedMovement(tryMovement(x,velX,velY,velZ),ServerMain.world);
-                if(movement.x != velX && movement.y != velY && movement.z != velZ) {
-                    continue;
-                }
-                break;
+            int count = 4;
+            for(int a = 0; a < count; a++) {
+                move(velX / count, velY / count, velZ / count);
             }
-
-
-            if (movement.x != velX) {
-                velX = 0;
-            }
-            if (movement.y != velY) {
-                velZ = 0;
-            }
-            if (movement.z != velY) {
-                velZ = 0;
-            }
-            x += movement.x;
-            y += movement.y;
-            z += movement.z;
+            //move(velX / 2, velY / 2, velZ / 2);
             ServerNetworkHandler.sendPacket(new SUpdateEntityPacket(this));
         }
+    }
+
+    private void move(float velX, float velY, float velZ) {
+        Vector3f movement = new Vector3f();
+        for(int x = 0; x < 7; x++) {
+            movement = getAllowedMovement(tryMovement(x,velX,velY,velZ),ServerMain.world);
+            if(movement.x != velX && movement.y != velY && movement.z != velZ) {
+                continue;
+            }
+            break;
+        }
+        if (movement.x != velX) {
+            this.velX = 0;
+        }
+        if (movement.y != velY) {
+            this.velZ = 0;
+        }
+        if (movement.z != velY) {
+            this.velZ = 0;
+        }
+        x += movement.x;
+        y += movement.y;
+        z += movement.z;
     }
 
     private Vector3f tryMovement(int side, float velX, float velY, float velZ) {
@@ -135,10 +138,7 @@ public abstract class Entity {
 
 
     public Vector3f getAllowedMovement(Vector3f motion, World world) {
-        Vector3f newSpeed = new Vector3f(motion);
-        //BlockPos pos = new BlockPos(Math.round(x),Math.round(y),Math.round(z));
         BlockPos pos = new BlockPos((int)Math.floor(x),(int)Math.floor(y),(int)Math.floor(z));
-        //System.out.println((int)Math.ceil(motion.x));
         int X = (int) Math.ceil(Math.abs(motion.x)) + 1;
         int Y = (int) Math.ceil(Math.abs(motion.y)) + 1;
         int Z = (int) Math.ceil(Math.abs(motion.z)) + 1;
@@ -148,36 +148,16 @@ public abstract class Entity {
                 for(int z = -Z; z < Z; z++) {
                     Block block = world.getBlockState(pos.copy().add(x,y,z)).block;
                     if(block != Blocks.AIR) {
-                     //   System.out.println(block.name);
                         Vector3f blockSpeed = block.getAllowedMovement(new Vector3f(motion.x,motion.y,motion.z), new Vector3f(this.x, this.y, this.z), pos.copy().add(x, y, z), boundingBox);
                         if(blockSpeed.x != motion.x || blockSpeed.y != motion.y || blockSpeed.z != motion.z) {
                             return new Vector3f(0,0,0);
                         }
-                       /* if(motion.x > 0) {
-                            newSpeed.x = Math.min(newSpeed.x, blockSpeed.x);
-                        } else {
-                            newSpeed.x = Math.max(newSpeed.x, blockSpeed.x);
-                        }
-                        if(motion.y > 0) {
-                            newSpeed.y = Math.min(newSpeed.y, blockSpeed.y);
-                        } else {
-                            newSpeed.y = Math.max(newSpeed.y, blockSpeed.y);
-                        }
-                        if(motion.z > 0) {
-                            newSpeed.z = Math.min(newSpeed.z, blockSpeed.z);
-                        } else {
-                            newSpeed.z = Math.max(newSpeed.z, blockSpeed.z);
-                        }
-
-                        */
-
                     }
                 }
             }
         }
         return motion;
     }
-
 
     static int iD = 0;
 

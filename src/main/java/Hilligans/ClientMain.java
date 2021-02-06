@@ -178,9 +178,6 @@ public class ClientMain {
         MatrixStack screenStack = Camera.getScreenStack();
         screenStack.applyColor();
 
-       // matrixStack.setColor(255,255,255,127);
-       // matrixStack.applyColor();
-
 
         clientWorld.tick();
         clientWorld.render(matrixStack);
