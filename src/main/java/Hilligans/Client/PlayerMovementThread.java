@@ -13,5 +13,6 @@ public class PlayerMovementThread implements Runnable {
     @Override
     public void run() {
         ClientMain.processInput(window);
+        Camera.tick();
     }
 }

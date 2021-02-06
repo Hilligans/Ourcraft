@@ -61,6 +61,10 @@ public class Block {
         return new Vector3f(0f,0f,0f);
     }
 
+    public boolean getAllowedMovement1(Vector3f motion, Vector3f pos, BlockPos blockPos, BoundingBox boundingBox) {
+        return !getBoundingBox().intersectsBox(boundingBox, blockPos.get3f(), pos, motion.x, motion.y, motion.z);
+    }
+
     private BoundingBox getBoundingBox() {
         //return new BoundingBox(-1,-1,-1,0,0,0);
         return new BoundingBox(0,0,0,1,1,1);

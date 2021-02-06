@@ -1,11 +1,19 @@
 package Hilligans.Client;
 
+import Hilligans.Block.Block;
+import Hilligans.Block.Blocks;
 import Hilligans.Client.Key.KeyHandler;
 import Hilligans.Client.Key.KeyPress;
 import Hilligans.ClientMain;
+import Hilligans.Data.Other.BlockPos;
+import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CUpdatePlayerPacket;
+import Hilligans.Network.Packet.Server.SUpdateEntityPacket;
+import Hilligans.Network.ServerNetworkHandler;
+import Hilligans.ServerMain;
 import Hilligans.World.Chunk;
+import Hilligans.World.World;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
@@ -29,6 +37,8 @@ public class Camera {
     public static float moveSpeed = 0.05f;
 
     public static boolean thirdPerson = false;
+
+    public static boolean spectator = false;
 
     static {
         KeyHandler.register(new KeyPress() {
@@ -64,8 +74,26 @@ public class Camera {
     }
 
     public static void add(float x, float y, float z) {
-        pos.add(x,y,z);
-        ClientNetworkHandler.sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.playerId));
+
+        if(spectator) {
+            pos.add(x, y, z);
+            ClientNetworkHandler.sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.playerId));
+        } else {
+            //System.out.println(x + " : " + z);
+            velX += x;
+            velY += y;
+            velZ += z;
+        }
+    }
+
+    public static void tick() {
+        move();
+        //velX = velX / 2;
+        //velY = velY / 2;
+        //velZ = velZ / 2;
+        velX = 0;
+        velY = 0;
+        velZ = 0;
     }
 
     public static void addPitch(double amount) {
@@ -188,6 +216,94 @@ public class Camera {
         return anglediff <= fov && anglediff>=-fov;
 
         */
+    }
+
+    public static float velX;
+    public static float velY;
+    public static float velZ;
+
+    public static void move() {
+        if (velX != 0 || velY != 0 || velZ != 0) {
+            float count = 4;
+            for (int a = 0; a < count; a++) {
+                move(velX / count, velY / count, velZ / count);
+            }
+            ClientNetworkHandler.sendPacket(new CUpdatePlayerPacket(pos.x, pos.y, pos.z, (float) pitch, (float) yaw, ClientMain.playerId));
+
+        }
+    }
+
+    private static void move(float velX, float velY, float velZ) {
+        //System.out.println(velX + " : " + velZ);
+        int x;
+        for(x = 0; x < 7; x++) {
+            boolean movement = getAllowedMovement(tryMovement(x,velX,velY,velZ), ClientMain.clientWorld);
+            if(!movement) {
+                continue;
+            }
+            break;
+        }
+        if (x == 3 || x == 5 || x == 6) {
+            //Camera.velX = 0;
+            velX = 0;
+        }
+        if (x == 2 || x == 4 || x == 6) {
+            //Camera.velZ = 0;
+            velY = 0;
+        }
+        if (x == 1 || x == 4 || x == 5) {
+            //Camera.velZ = 0;
+            velZ = 0;
+        }
+        pos.x += velX;
+        pos.y += velY;
+        pos.z += velZ;
+
+    }
+
+    private static Vector3f tryMovement(int side, float velX, float velY, float velZ) {
+        switch (side) {
+            case 0:
+                return new Vector3f(velX,velY,velZ);
+            case 1:
+                return new Vector3f(velX,velY,0);
+            case 2:
+                return new Vector3f(velX,0,velZ);
+            case 3:
+                return new Vector3f(0,velY,velZ);
+            case 4:
+                return new Vector3f(velX,0,0);
+            case 5:
+                return new Vector3f(0,velY,0);
+            case 6:
+                return new Vector3f(0,0,velZ);
+            default:
+                return new Vector3f();
+        }
+    }
+
+
+
+    public static boolean getAllowedMovement(Vector3f motion, World world) {
+        BlockPos pos = new BlockPos((int)Math.floor(Camera.pos.x),(int)Math.floor(Camera.pos.y),(int)Math.floor(Camera.pos.z));
+        int X = (int) Math.ceil(Math.abs(motion.x)) + 2;
+        int Y = (int) Math.ceil(Math.abs(motion.y)) + 4;
+        int Z = (int) Math.ceil(Math.abs(motion.z)) + 2;
+
+        for(int x = -X; x < X; x++) {
+            for(int y = -Y; y < Y; y++) {
+                for(int z = -Z; z < Z; z++) {
+                    Block block = world.getBlockState(pos.copy().add(x,y,z)).block;
+                    if(block != Blocks.AIR) {
+                        boolean canMove = block.getAllowedMovement1(new Vector3f(motion.x,motion.y,motion.z), new Vector3f(Camera.pos.x, Camera.pos.y, Camera.pos.z), pos.copy().add(x, y, z), new BoundingBox(-0.45f,-2.0f,-0.45f,0.45f,0.0f,0.45f));
+                        if(!canMove) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 
 
