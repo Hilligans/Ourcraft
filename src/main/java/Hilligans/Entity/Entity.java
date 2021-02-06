@@ -1,7 +1,7 @@
 package Hilligans.Entity;
 
-import Hilligans.Blocks.Block;
-import Hilligans.Blocks.Blocks;
+import Hilligans.Block.Block;
+import Hilligans.Block.Blocks;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Entity.Entities.ItemEntity;
@@ -12,7 +12,6 @@ import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.ServerMain;
 import Hilligans.World.BlockPos;
 import Hilligans.World.World;
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;

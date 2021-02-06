@@ -1,14 +1,12 @@
-package Hilligans.Blocks;
+package Hilligans.Block;
 
 import Hilligans.Client.Rendering.World.CubeManager;
-import Hilligans.Client.Rendering.World.TextureManager;
 import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Util.Vector5f;
 import Hilligans.Client.Rendering.World.BlockTextureManager;
 import Hilligans.World.BlockPos;
 import Hilligans.World.BlockState;
 import org.joml.Vector3f;
-import org.joml.Vector3i;
 
 public class Block {
 

@@ -3,7 +3,7 @@ package Hilligans.Network.Packet.Server;
 import Hilligans.ClientMain;
 import Hilligans.Util.Settings;
 import Hilligans.World.Chunk;
-import Hilligans.Blocks.Blocks;
+import Hilligans.Block.Blocks;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.World.BlockState;

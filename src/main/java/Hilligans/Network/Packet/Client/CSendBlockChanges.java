@@ -2,9 +2,8 @@ package Hilligans.Network.Packet.Client;
 
 import Hilligans.Entity.Entities.ItemEntity;
 import Hilligans.Entity.Entity;
-import Hilligans.Network.Packet.Server.SCreateEntityPacket;
 import Hilligans.Network.Packet.Server.SSendBlockChanges;
-import Hilligans.Blocks.Blocks;
+import Hilligans.Block.Blocks;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;

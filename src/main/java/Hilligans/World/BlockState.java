@@ -1,6 +1,6 @@
 package Hilligans.World;
 
-import Hilligans.Blocks.Block;
+import Hilligans.Block.Block;
 
 public class BlockState {
 

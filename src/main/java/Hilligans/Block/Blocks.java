@@ -1,4 +1,4 @@
-package Hilligans.Blocks;
+package Hilligans.Block;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +17,8 @@ public class Blocks {
     public static final Block PHIL = new Block("phil").withTexture("phil.png");
     public static final Block LEAVES = new Block("leaves").withTexture("leaves.png").transparentTexture(true);
     public static final Block LOG = new Block("log").withTexture("log.png").withSidedTexture("log_top.png",Block.UP).withSidedTexture("log_top.png",Block.DOWN);
-
+    public static final Block SAND = new Block("sand").withTexture("sand.png");
+    public static final Block CACTUS = new Block("cactus").withTexture("cactus.png");
 
     static short id = 0;
 

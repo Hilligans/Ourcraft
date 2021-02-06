@@ -1,10 +1,10 @@
 package Hilligans.World;
 
-import Hilligans.Blocks.Blocks;
+import Hilligans.Biome.Biome;
+import Hilligans.Block.Blocks;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Util.Settings;
 import Hilligans.World.Builders.WorldBuilder;
-import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 
@@ -51,15 +51,16 @@ public class Chunk {
 
                 offset = interpolate(offset,getHeight(getBlockHeight(x + 1, z + 1),getBiome(x + 1, z + 1)));
 
+                Biome biome = getBiome1(x + this.x * 16,z + this.z * 16);
 
 
                 for(int y = 0; y < Settings.chunkHeight * 16; y++) {
                     if(y + 5 < offset) {
                         setBlockState(x,y,z,new BlockState(Blocks.STONE));
                     } else if(y < offset) {
-                        setBlockState(x,y,z, new BlockState(Blocks.DIRT));
+                        setBlockState(x,y,z, biome.underBlock.getDefaultState());
                     }  else if(y == offset) {
-                        setBlockState(x,y,z, new BlockState(Blocks.GRASS));
+                        setBlockState(x,y,z, biome.surfaceBlock.getDefaultState());
                     }
                     if(y == 0) {
                         setBlockState(x,0,z,new BlockState(Blocks.BEDROCK));
@@ -102,6 +103,12 @@ public class Chunk {
             for(WorldBuilder worldBuilder : world.worldBuilders) {
                 worldBuilder.build(this);
             }
+
+            for(int y = 0; y < 2; y++) {
+                for(WorldBuilder worldBuilder : getBiome1(world.random.nextInt(16) + x * 16,world.random.nextInt(16) + z * 16).worldBuilders) {
+                    worldBuilder.build(this);
+                }
+            }
         }
     }
 
@@ -127,6 +134,17 @@ public class Chunk {
 
     public double getBiome(int x, int z) {
         return world.biomes.noise((int)((x + this.x * 16)/8 + Integer.MAX_VALUE / 2),(int)((z + this.z * 16)/8 + Integer.MAX_VALUE / 2));
+    }
+
+    private final double size = 400;
+
+    public Biome getBiome1(int x, int z) {
+
+        //System.out.println(height + " height");
+
+        //System.out.println("noise " + noise);
+
+        return world.biomeMap.getBiome(x,z);
     }
 
     public BlockState getBlockState(int x, int y, int z) {

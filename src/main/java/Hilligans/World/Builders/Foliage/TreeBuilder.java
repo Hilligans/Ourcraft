@@ -1,11 +1,10 @@
-package Hilligans.World.Builders;
+package Hilligans.World.Builders.Foliage;
 
-import Hilligans.Blocks.Block;
-import Hilligans.Blocks.Blocks;
-import Hilligans.Client.Camera;
+import Hilligans.Block.Block;
+import Hilligans.Block.Blocks;
 import Hilligans.Util.Ray;
 import Hilligans.World.BlockPos;
-import Hilligans.World.World;
+import Hilligans.World.Builders.SurfaceBuilder;
 
 public class TreeBuilder extends SurfaceBuilder {
 

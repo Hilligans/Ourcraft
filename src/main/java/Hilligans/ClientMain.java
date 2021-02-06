@@ -1,15 +1,15 @@
 package Hilligans;
 
+import Hilligans.Biome.Biomes;
 import Hilligans.Client.*;
 import Hilligans.Client.Rendering.Screen;
 import Hilligans.Client.Rendering.Screens.EscapeScreen;
 import Hilligans.Client.Rendering.World.Renderer;
 import Hilligans.Client.Rendering.World.ShaderManager;
 import Hilligans.Client.Rendering.World.TextureManager;
-import Hilligans.Entity.Entities.ItemEntity;
 import Hilligans.Entity.Entity;
 import Hilligans.Util.Util;
-import Hilligans.Blocks.Blocks;
+import Hilligans.Block.Blocks;
 import Hilligans.Client.Key.KeyHandler;
 import Hilligans.Client.Key.KeyPress;
 import Hilligans.Client.Rendering.Screens.JoinScreen;
@@ -22,7 +22,6 @@ import Hilligans.Client.Camera;
 import Hilligans.World.BlockPos;
 import Hilligans.World.BlockState;
 import Hilligans.World.ClientWorld;
-import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.opengl.GL;
@@ -73,7 +72,7 @@ public class ClientMain {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        window = glfwCreateWindow(windowX,windowY,"OpenGLTest",NULL,NULL);
+        window = glfwCreateWindow(windowX,windowY,"Ourcraft",NULL,NULL);
         if(window == NULL) {
             System.out.println("Failed to create window");
             glfwTerminate();

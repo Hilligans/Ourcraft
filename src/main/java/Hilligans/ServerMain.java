@@ -1,10 +1,10 @@
 package Hilligans;
 
-import Hilligans.Blocks.Blocks;
-import Hilligans.Client.PlayerMovementThread;
+import Hilligans.Biome.Biomes;
+import Hilligans.Block.Blocks;
 import Hilligans.Network.ServerNetworkInit;
 import Hilligans.World.Builders.OreBuilder;
-import Hilligans.World.Builders.TreeBuilder;
+import Hilligans.World.Builders.Foliage.TreeBuilder;
 import Hilligans.World.ServerWorld;
 import Hilligans.World.World;
 
@@ -18,9 +18,10 @@ public class ServerMain {
 
 
     public static void main(String[] args) {
+        Biomes.register();
         world = new ServerWorld();
-        world.worldBuilders.add(new TreeBuilder().setWorld(world));
-        world.worldBuilders.add(new OreBuilder(Blocks.IRON_ORE,Blocks.STONE).setWorld(world).setFrequency(20));
+     //   world.worldBuilders.add(new TreeBuilder().setWorld(world));
+        world.worldBuilders.add(new OreBuilder(Blocks.IRON_ORE,Blocks.STONE).setFrequency(20));
         Server server = new Server();
 
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);

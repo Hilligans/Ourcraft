@@ -1,15 +1,16 @@
 package Hilligans.World;
 
-import Hilligans.Blocks.Blocks;
+import Hilligans.Block.Blocks;
 import Hilligans.Entity.Entity;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CRequestChunkPacket;
-import Hilligans.Util.Noise;
-import Hilligans.Util.Settings;
+import Hilligans.Util.*;
+import Hilligans.Util.Noises.BiomeNoise;
+import Hilligans.Util.Noises.KenPerlinNoise;
+import Hilligans.Util.Noises.Noise;
 import Hilligans.World.Builders.WorldBuilder;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import org.joml.Matrix4f;
 import org.joml.Vector3d;
 
 import java.util.ArrayList;
@@ -24,12 +25,17 @@ public abstract class World {
 
     Noise noise = new Noise(131);
     Noise biomes = new Noise(new Random(131).nextInt());
+    //PerlinNoise biomeMap;
+    BiomeNoise biomeMap;
+
     public Random random;
 
     public ArrayList<WorldBuilder> worldBuilders = new ArrayList<>();
 
     public World() {
         random = new Random(131);
+        biomeMap = new BiomeNoise(random);
+        //biomeMap = new PerlinNoise(random.nextInt(),20,30,1,100);
     }
 
     public Chunk getChunk(long chunkPos) {

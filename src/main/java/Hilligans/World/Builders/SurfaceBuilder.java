@@ -1,9 +1,9 @@
 package Hilligans.World.Builders;
 
-import Hilligans.Blocks.Blocks;
+import Hilligans.Block.Block;
+import Hilligans.Block.Blocks;
 import Hilligans.Util.Settings;
 import Hilligans.World.BlockPos;
-import Hilligans.World.World;
 
 public abstract class SurfaceBuilder extends WorldBuilder {
     @Override
@@ -14,6 +14,10 @@ public abstract class SurfaceBuilder extends WorldBuilder {
         }
         y++;
         build(new BlockPos(x,y,z));
+    }
+
+    public boolean isPlacedOn(BlockPos pos, Block block) {
+        return world.getBlockState(pos.copy().add(0,-1,0)).block == block;
     }
 
     public abstract void build(BlockPos startPos);

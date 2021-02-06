@@ -1,4 +1,4 @@
-package Hilligans.Util;
+package Hilligans.Util.Noises;
 
 import java.util.Random;
 

@@ -1,7 +1,7 @@
 package Hilligans.World;
 
-import Hilligans.Blocks.Block;
-import Hilligans.Blocks.Blocks;
+import Hilligans.Block.Block;
+import Hilligans.Block.Blocks;
 import Hilligans.Entity.Entities.ItemEntity;
 import Hilligans.Entity.Entity;
 import Hilligans.Network.Packet.Server.SCreateEntityPacket;
