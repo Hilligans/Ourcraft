@@ -22,8 +22,7 @@ import java.nio.DoubleBuffer;
 
 import static Hilligans.ClientMain.windowX;
 import static Hilligans.ClientMain.windowY;
-import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
-import static org.lwjgl.glfw.GLFW.glfwSetCursorPos;
+import static org.lwjgl.glfw.GLFW.*;
 
 public class Camera {
 
@@ -31,14 +30,23 @@ public class Camera {
 
     public static final int fov = 70;
 
+    private static final float fallSpeed = -0.0008f;
+    private static final float terminalVel = -0.15f;
+
     public static double pitch;
     public static double yaw;
 
-    public static float moveSpeed = 0.05f;
+    public static float moveSpeed = 0.02f;
 
     public static boolean thirdPerson = false;
 
     public static boolean spectator = false;
+
+    public static boolean isFlying = false;
+
+    public static boolean isOnGround = false;
+
+    public static BoundingBox playerBoundingBox = new BoundingBox(-0.45f,-1.9f,-0.45f,0.45f,0.0f,0.45f);
 
     static {
         KeyHandler.register(new KeyPress() {
@@ -50,27 +58,56 @@ public class Camera {
     }
 
     public static void moveForeWard() {
-        add(-(float)Math.cos(yaw) * moveSpeed,0, -(float)Math.sin(yaw) * moveSpeed);
+        if(KeyHandler.keyPressed[GLFW_KEY_LEFT_SHIFT]) {
+            add(-(float) Math.cos(yaw) * moveSpeed / 3, 0, -(float) Math.sin(yaw) * moveSpeed / 3);
+        } else {
+            if (KeyHandler.keyPressed[GLFW_KEY_LEFT_CONTROL]) {
+                add(-(float) Math.cos(yaw) * moveSpeed * 1.8f, 0, -(float) Math.sin(yaw) * moveSpeed * 1.8f);
+            } else {
+                add(-(float) Math.cos(yaw) * moveSpeed, 0, -(float) Math.sin(yaw) * moveSpeed);
+            }
+        }
     }
 
     public static void moveBackWard() {
-        add((float)Math.cos(yaw) * moveSpeed,0, (float)Math.sin(yaw) * moveSpeed);
+        if (KeyHandler.keyPressed[GLFW_KEY_LEFT_SHIFT]) {
+            add((float)Math.cos(yaw) * moveSpeed / 3,0, (float)Math.sin(yaw) * moveSpeed / 3);
+        } else {
+            add((float)Math.cos(yaw) * moveSpeed,0, (float)Math.sin(yaw) * moveSpeed);
+        }
     }
 
     public static void strafeLeft() {
-        add(-(float)Math.sin(yaw) * moveSpeed,0, (float)Math.cos(yaw) * moveSpeed);
+        if (KeyHandler.keyPressed[GLFW_KEY_LEFT_SHIFT]) {
+            add(-(float) Math.sin(yaw) * moveSpeed / 3, 0, (float) Math.cos(yaw) * moveSpeed / 3);
+        } else {
+            add(-(float) Math.sin(yaw) * moveSpeed, 0, (float) Math.cos(yaw) * moveSpeed);
+        }
     }
 
     public static void strafeRight() {
-        add((float)Math.sin(yaw) * moveSpeed,0, -(float)Math.cos(yaw) * moveSpeed);
+        if (KeyHandler.keyPressed[GLFW_KEY_LEFT_SHIFT]) {
+            add((float) Math.sin(yaw) * moveSpeed / 3, 0, -(float) Math.cos(yaw) * moveSpeed / 3);
+        } else {
+            add((float) Math.sin(yaw) * moveSpeed, 0, -(float) Math.cos(yaw) * moveSpeed);
+        }
     }
 
     public static void moveUp() {
-        add(0,moveSpeed,0);
+        if(spectator || isFlying) {
+            add(0, moveSpeed, 0);
+        } else {
+            if(velY == 0) {
+                isOnGround = false;
+                add(0, 0.045f, 0);
+            }
+        }
     }
 
     public static void moveDown() {
-        add(0,-moveSpeed,0);
+        if(spectator || isFlying) {
+            add(0, -moveSpeed, 0);
+        }
     }
 
     public static void add(float x, float y, float z) {
@@ -87,13 +124,28 @@ public class Camera {
     }
 
     public static void tick() {
-        move();
         //velX = velX / 2;
         //velY = velY / 2;
         //velZ = velZ / 2;
-        velX = 0;
-        velY = 0;
-        velZ = 0;
+        if(ClientMain.clientWorld.getChunk((int)pos.x >> 4, (int)pos.z >> 4) != null) {
+
+            if (!spectator && !isFlying) {
+                velY += fallSpeed;
+                if (velY < terminalVel) {
+                    velY = terminalVel;
+                }
+            }
+
+            move();
+
+            if (isOnGround) {
+                velY = 0;
+            }
+
+
+            velX = 0;
+            velZ = 0;
+        }
     }
 
     public static void addPitch(double amount) {
@@ -150,6 +202,7 @@ public class Camera {
         matrix4f.perspective((float) Math.toRadians(fov), (float) windowX / windowY,0.1f,10000.0f);
         matrix4f.mul(view);
         matrix4f.lookAt(Camera.duplicate().add((float)(Math.cos(Camera.yaw) * Math.cos(Camera.pitch)),(float)(Math.sin(Camera.pitch)),(float)(Math.sin(Camera.yaw) * Math.cos(Camera.pitch))),Camera.duplicate(), cameraUp);
+        matrix4f.translate(0,0.15f,0);
         return new MatrixStack(matrix4f);
     }
 
@@ -223,6 +276,7 @@ public class Camera {
     public static float velZ;
 
     public static void move() {
+
         if (velX != 0 || velY != 0 || velZ != 0) {
             float count = 4;
             for (int a = 0; a < count; a++) {
@@ -235,20 +289,36 @@ public class Camera {
 
     private static void move(float velX, float velY, float velZ) {
         //System.out.println(velX + " : " + velZ);
+        //isOnGround = false;
         int x;
+        boolean couldMove = false;
         for(x = 0; x < 7; x++) {
-            boolean movement = getAllowedMovement(tryMovement(x,velX,velY,velZ), ClientMain.clientWorld);
+            boolean movement = getAllowedMovement(tryMovement(x,velX,velY,velZ),pos, ClientMain.clientWorld);
+            if(movement) {
+                movement = canMove(tryMovement(x,velX,velY,velZ));
+                //System.out.println(movement);
+            }
             if(!movement) {
                 continue;
             }
+            couldMove = true;
             break;
         }
+        isOnGround = false;
+        if(!couldMove) {
+            isOnGround = true;
+            velX = 0;
+            velY = 0;
+            velZ = 0;
+        }
+        //System.out.println(x);
         if (x == 3 || x == 5 || x == 6) {
             //Camera.velX = 0;
             velX = 0;
         }
         if (x == 2 || x == 4 || x == 6) {
             //Camera.velZ = 0;
+            isOnGround = true;
             velY = 0;
         }
         if (x == 1 || x == 4 || x == 5) {
@@ -276,16 +346,18 @@ public class Camera {
             case 5:
                 return new Vector3f(0,velY,0);
             case 6:
+                //System.out.println("yes");
                 return new Vector3f(0,0,velZ);
             default:
+                //System.out.println("else");
                 return new Vector3f();
         }
     }
 
 
 
-    public static boolean getAllowedMovement(Vector3f motion, World world) {
-        BlockPos pos = new BlockPos((int)Math.floor(Camera.pos.x),(int)Math.floor(Camera.pos.y),(int)Math.floor(Camera.pos.z));
+    public static boolean getAllowedMovement(Vector3f motion, Vector3f cameraPos, World world) {
+        BlockPos pos = new BlockPos((int)Math.floor(cameraPos.x),(int)Math.floor(cameraPos.y),(int)Math.floor(cameraPos.z));
         int X = (int) Math.ceil(Math.abs(motion.x)) + 2;
         int Y = (int) Math.ceil(Math.abs(motion.y)) + 4;
         int Z = (int) Math.ceil(Math.abs(motion.z)) + 2;
@@ -295,7 +367,7 @@ public class Camera {
                 for(int z = -Z; z < Z; z++) {
                     Block block = world.getBlockState(pos.copy().add(x,y,z)).block;
                     if(block != Blocks.AIR) {
-                        boolean canMove = block.getAllowedMovement1(new Vector3f(motion.x,motion.y,motion.z), new Vector3f(Camera.pos.x, Camera.pos.y, Camera.pos.z), pos.copy().add(x, y, z), new BoundingBox(-0.45f,-2.0f,-0.45f,0.45f,0.0f,0.45f));
+                        boolean canMove = block.getAllowedMovement1(new Vector3f(motion.x,motion.y,motion.z), new Vector3f(cameraPos.x, cameraPos.y, cameraPos.z), pos.copy().add(x, y, z), playerBoundingBox);
                         if(!canMove) {
                             return false;
                         }
@@ -304,6 +376,23 @@ public class Camera {
             }
         }
         return true;
+    }
+
+    private static boolean canMove(Vector3f motion) {
+        if(KeyHandler.keyPressed[GLFW_KEY_LEFT_SHIFT]) {
+            if(isOnGround) {
+                Vector3f newPos = new Vector3f(pos.x,pos.y,pos.z).add(motion);
+                return !getAllowedMovement(new Vector3f(0,fallSpeed * 2,0), newPos, ClientMain.clientWorld);
+                //System.out.println("yes");
+                //return ClientMain.clientWorld.getBlockState((int)newPos.x,(int)newPos.y,(int)newPos.z).block != Blocks.AIR;
+            } else {
+                //System.out.println("ASD");
+                return true;
+            }
+        } else {
+           // System.out.println("else");
+            return true;
+        }
     }
 
 

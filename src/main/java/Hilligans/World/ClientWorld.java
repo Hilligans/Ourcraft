@@ -63,13 +63,16 @@ public class ClientWorld extends World {
                 }
             }
         }
-        for(Entity entity : entities.values()) {
-            if(entity.id != ClientMain.playerId || Camera.thirdPerson) {
-                matrixStack.push();
-                entity.render(matrixStack);
-                matrixStack.pop();
+        // TODO: 2021-02-06 server removes entities at a bad time
+        try {
+            for (Entity entity : entities.values()) {
+                if (entity.id != ClientMain.playerId || Camera.thirdPerson) {
+                    matrixStack.push();
+                    entity.render(matrixStack);
+                    matrixStack.pop();
+                }
             }
-        }
+        } catch (NullPointerException ignored) {}
 
         glEnable(GL_BLEND);
     }

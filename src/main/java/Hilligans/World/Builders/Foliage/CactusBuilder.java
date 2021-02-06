@@ -15,7 +15,6 @@ public class CactusBuilder extends SurfaceBuilder {
                 if (tryPlace(startPos.copy().add(0, x, 0))) {
                     break;
                 }
-
             }
         }
     }

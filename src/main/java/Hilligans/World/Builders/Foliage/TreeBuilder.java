@@ -21,14 +21,12 @@ public class TreeBuilder extends SurfaceBuilder {
                     }
                     placeLeaves(pos);
                 }
-
             }
             world.setBlockState(startPos.copy().add(0,-1,0),Blocks.DIRT.getDefaultState());
         }
     }
 
     private void startBranch(BlockPos startPos) {
-
         double pitch = random.nextInt(90) - 45;
         double yaw = random.nextInt(180);
 
@@ -40,7 +38,6 @@ public class TreeBuilder extends SurfaceBuilder {
     }
 
     private void placeBranch(BlockPos pos, double pitch, double yaw) {
-
         int length = (int) (Math.random() * 6) + 4;
         Ray ray = new Ray(pitch,yaw);
         for(int i = 0; i < length; i++) {

@@ -15,6 +15,7 @@ public class EscapeScreen extends ScreenBase {
                 ClientNetworkInit.channel.close();
             }
             ClientMain.closeScreen();
+
         }));
     }
 

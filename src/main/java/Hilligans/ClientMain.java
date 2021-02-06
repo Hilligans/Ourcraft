@@ -1,5 +1,6 @@
 package Hilligans;
 
+import Hilligans.Block.Block;
 import Hilligans.Client.*;
 import Hilligans.Client.Rendering.Screen;
 import Hilligans.Client.Rendering.Screens.EscapeScreen;
@@ -22,6 +23,7 @@ import Hilligans.Client.Camera;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.World.BlockState;
 import Hilligans.World.ClientWorld;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
@@ -162,6 +164,8 @@ public class ClientMain {
         ClientNetworkInit.close();
         glfwTerminate();
         System.exit(0);
+
+
     }
 
     public static void render() {
@@ -314,12 +318,15 @@ public class ClientMain {
                 } else if(button == GLFW_MOUSE_BUTTON_2) {
                     if (action == GLFW_PRESS) {
                         BlockPos pos = clientWorld.traceBlock(Camera.pos.x, Camera.pos.y, Camera.pos.z,Camera.pitch,Camera.yaw);
-
                         if(pos != null) {
-                            if (joinServer) {
-                                ClientNetworkHandler.sendPacket(new CSendBlockChanges(pos.x, pos.y, pos.z, BlockPlacer.id));
-                            } else {
-                                clientWorld.setBlockState(pos, new BlockState(Blocks.SAND));
+                            Block block = Blocks.getBlockWithID(BlockPlacer.id);
+                            if(block.getAllowedMovement1(new Vector3f(),Camera.pos,pos,Camera.playerBoundingBox)) {
+                                if (joinServer) {
+                                    ClientNetworkHandler.sendPacket(new CSendBlockChanges(pos.x, pos.y, pos.z, BlockPlacer.id));
+                                    clientWorld.setBlockState(pos, new BlockState(block));
+                                } else {
+                                    clientWorld.setBlockState(pos, new BlockState(block));
+                                }
                             }
                         }
                     }

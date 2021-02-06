@@ -5,6 +5,8 @@ import Hilligans.Network.Packet.Client.CHandshakePacket;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
+import static org.lwjgl.glfw.GLFW.*;
+
 public class ClientNetworkHandler extends SimpleChannelInboundHandler<PacketData> {
 
     @Override
@@ -21,7 +23,9 @@ public class ClientNetworkHandler extends SimpleChannelInboundHandler<PacketData
             System.out.println("YOUR GAME VERSION MAY BE OUT OF DATE");
         }
         super.channelInactive(ctx);
-        System.exit(0);
+
+        glfwDestroyWindow(ClientMain.window);
+        //System.exit(0);
     }
 
     @Override
