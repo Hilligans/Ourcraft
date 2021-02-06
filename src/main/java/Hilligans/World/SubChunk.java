@@ -4,6 +4,7 @@ import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.World.VAOManager;
+import Hilligans.Util.Settings;
 import Hilligans.Util.Vector5f;
 import org.lwjgl.opengl.GL30;
 
@@ -72,7 +73,7 @@ public class SubChunk {
                     for(int a = 0; a < 6; a++) {
                         if(block.block != Blocks.AIR) {
                             BlockState blockState = getBlock(new BlockPos(x, y, z).add(Block.getBlockPos(a)));
-                            if (blockState.block.transparentTexture) {
+                            if (blockState.block.transparentTexture && (Settings.renderSameTransparent || block.block != blockState.block)) {
                                 indices.addAll(Arrays.asList(block.block.getIndices(a,spot * 4)));
                                 Vector5f[] vector5fs = block.block.getVertices(a);
                                 for(Vector5f vector5f : vector5fs) {
@@ -104,6 +105,13 @@ public class SubChunk {
         }
         verticesCount = wholeMesh.length;
         id = VAOManager.createVAO(wholeMesh,wholeIndices);
+
+
+        //float[] wholeMesh = VAOManager.convertVertices(vertices,true);
+       // int[] wholeIndices = VAOManager.convertIndices(indices);
+       // verticesCount = wholeMesh.length;
+       // id = VAOManager.createColorVAO(wholeMesh,wholeIndices);
+
     }
 
     public void destroy() {

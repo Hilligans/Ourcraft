@@ -104,10 +104,8 @@ public class Chunk {
                 worldBuilder.build(this);
             }
 
-            for(int y = 0; y < 2; y++) {
-                for(WorldBuilder worldBuilder : getBiome1(world.random.nextInt(16) + x * 16,world.random.nextInt(16) + z * 16).worldBuilders) {
+            for(WorldBuilder worldBuilder : getBiome1(world.random.nextInt(16) + x * 16,world.random.nextInt(16) + z * 16).worldBuilders) {
                     worldBuilder.build(this);
-                }
             }
         }
     }

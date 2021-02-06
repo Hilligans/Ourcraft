@@ -1,6 +1,7 @@
 package Hilligans.Block;
 
 import Hilligans.Client.Rendering.World.CubeManager;
+import Hilligans.Client.Rendering.World.TextureManager;
 import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Util.Vector5f;
 import Hilligans.Client.Rendering.World.BlockTextureManager;
@@ -13,12 +14,14 @@ public class Block {
     public String name;
     public short id;
     public boolean transparentTexture = false;
+    private Block droppedBlock;
 
     public BlockTextureManager blockTextureManager = new BlockTextureManager();
 
     public Block(String name) {
         this.name = name;
         id = Blocks.getNextId();
+        droppedBlock = this;
         Blocks.BLOCKS.add(this);
         Blocks.MAPPED_BLOCKS.put(name,id);
     }
@@ -38,12 +41,19 @@ public class Block {
         return this;
     }
 
+    public Block setBlockDrop(Block blockDrop) {
+        this.droppedBlock = blockDrop;
+        return this;
+    }
+
+   // public Block setDrop()
+
     public BlockState getDefaultState() {
         return new BlockState(this);
     }
 
     public Block getDroppedBlock() {
-        return this;
+        return droppedBlock;
     }
 
     public Vector3f getAllowedMovement(Vector3f motion, Vector3f pos, BlockPos blockPos, BoundingBox boundingBox) {
@@ -79,7 +89,21 @@ public class Block {
 
     public Vector5f[] getVertices(int side) {
        // return CubeManager.getVertices(blockTextureManager,side,0.5f);
-        return CubeManager.getVertices1(blockTextureManager,side,1f);
+
+       /* Vector5f[] vertices = CubeManager.getVertices1(blockTextureManager,side,1f);
+        if(side == 4 || side == 5) {
+            for(Vector5f vector5f : vertices) {
+                vector5f.setColored();
+            }
+            return vertices;
+        }
+        for(Vector5f vector5f : vertices) {
+            vector5f.setColored(0,0,0,0.5f);
+        }
+        return vertices;
+        re
+        */
+       return CubeManager.getVertices1(blockTextureManager,side,1f);
     }
 
     public Integer[] getIndices(int side, int spot) {

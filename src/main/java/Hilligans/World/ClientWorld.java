@@ -12,6 +12,8 @@ import org.joml.Vector3f;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import static org.lwjgl.opengl.GL11.*;
+
 public class ClientWorld extends World {
 
     public ClientWorld() {
@@ -35,6 +37,11 @@ public class ClientWorld extends World {
     }
 
     public void render(MatrixStack matrixStack) {
+
+        if(!Settings.renderTransparency) {
+            glDisable(GL_BLEND);
+        }
+
         Vector3f pos = Camera.pos;
         for(int x = -Settings.renderDistance; x < Settings.renderDistance; x++) {
             for(int z = -Settings.renderDistance; z < Settings.renderDistance; z++) {
@@ -54,7 +61,6 @@ public class ClientWorld extends World {
                 }
             }
         }
-
         for(Entity entity : entities.values()) {
             if(entity.id != ClientMain.playerId || Camera.thirdPerson) {
                 matrixStack.push();
@@ -62,6 +68,8 @@ public class ClientWorld extends World {
                 matrixStack.pop();
             }
         }
+
+        glEnable(GL_BLEND);
     }
 
     @Override

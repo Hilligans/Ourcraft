@@ -10,6 +10,9 @@ public class Settings {
 
     public static final int GameVersion = 3;
 
+    public static final boolean renderSameTransparent = true;
+    public static final boolean renderTransparency = true;
+
 
 
 }

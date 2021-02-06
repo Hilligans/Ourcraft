@@ -236,8 +236,16 @@ public class TextureManager {
 
 
     public static int loadAndRegisterTexture(String path) {
-
         BufferedImage bufferedImage = createFlipped(loadImage(path));
+        return registerTexture1(bufferedImage);
+    }
+
+    public static int loadAndRegisterUnflippedTexture(String path) {
+        BufferedImage bufferedImage = loadImage(path);
+        return registerTexture1(bufferedImage);
+    }
+
+    private static int registerTexture1(BufferedImage bufferedImage) {
         int texture;
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(bufferedImage.getWidth() * bufferedImage.getHeight() * 4);
         allocatePixels(byteBuffer, bufferedImage);
@@ -249,6 +257,10 @@ public class TextureManager {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bufferedImage.getWidth(), bufferedImage.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, byteBuffer);
         glGenerateMipmap(GL_TEXTURE_2D);
         return texture;
+    }
+
+    public static void removeTexture(int id) {
+        glDeleteTextures(id);
     }
 
     public static BufferedImage stringToBufferedImage(String s) {

@@ -34,6 +34,17 @@ public class Util {
             "   FragColor = texColor * rgba;\n" +
             "}\n\0";
 
+    public static String fragmentShader2 = "#version 330 core\n" +
+            "out vec4 FragColor;\n" +
+            "in vec2 Tex;\n" +
+            "in vec4 rgba;\n" +
+            "uniform sampler2D ourTexture;\n" +
+            "void main()\n" +
+            "{\n" +
+            "   vec4 texColor = texture(ourTexture, Tex);\n" +
+            "   FragColor = texColor * rgba;\n" +
+            "}\n\0";
+
 
     public static String imageShader = "#version 330 core\n " +
             "layout (location = 0) in vec3 aPos;\n" +

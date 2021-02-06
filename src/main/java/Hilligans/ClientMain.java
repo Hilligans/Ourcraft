@@ -8,6 +8,7 @@ import Hilligans.Client.Rendering.World.Renderer;
 import Hilligans.Client.Rendering.World.ShaderManager;
 import Hilligans.Client.Rendering.World.TextureManager;
 import Hilligans.Entity.Entity;
+import Hilligans.Util.Settings;
 import Hilligans.Util.Util;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.Key.KeyHandler;
@@ -24,6 +25,7 @@ import Hilligans.World.BlockState;
 import Hilligans.World.ClientWorld;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL30;
 
@@ -63,7 +65,6 @@ public class ClientMain {
     public static String name = "";
 
     public static void main(String[] args) {
-        Blocks.generateTextures();
 
         System.setProperty("java.awt.headless", "true");
 
@@ -71,6 +72,7 @@ public class ClientMain {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 
         window = glfwCreateWindow(windowX,windowY,"Ourcraft",NULL,NULL);
         if(window == NULL) {
@@ -80,6 +82,8 @@ public class ClientMain {
         }
         glfwMakeContextCurrent(window);
         GL.createCapabilities();
+
+        Blocks.generateTextures();
 
         outLine = TextureManager.loadAndRegisterTexture("outline.png");
         PlayerEntity.imageId = TextureManager.loadAndRegisterTexture("player.png");
@@ -113,12 +117,22 @@ public class ClientMain {
 
 
         glEnable(GL_DEPTH);
+        if(!Settings.renderTransparency) {
+            shaderProgram = ShaderManager.registerShader(Util.shader,Util.fragmentShader2);
+            colorShader = ShaderManager.registerShader(Util.coloredShader,Util.fragmentShader2);
+
+
+
+        } else {
+        }
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
+
 
         glCullFace(GL_FRONT);
         glFrontFace(GL_CW);
@@ -165,6 +179,9 @@ public class ClientMain {
         MatrixStack screenStack = Camera.getScreenStack();
         screenStack.applyColor();
 
+       // matrixStack.setColor(255,255,255,127);
+       // matrixStack.applyColor();
+
 
         clientWorld.tick();
         clientWorld.render(matrixStack);
@@ -176,6 +193,8 @@ public class ClientMain {
 
         if(screen != null) {
             screen.render(screenStack);
+        } else {
+            BlockPlacer.render(screenStack);
         }
 
 
@@ -259,6 +278,18 @@ public class ClientMain {
         });
 
 
+        glfwSetScrollCallback(window, new GLFWScrollCallback() {
+            @Override
+            public void invoke(long window, double xoffset, double yoffset) {
+                if(yoffset == 1.0) {
+                    BlockPlacer.increase();
+                } else if(yoffset == -1.0) {
+                    BlockPlacer.decrease();
+                }
+            }
+        });
+
+
         glfwSetMouseButtonCallback(window, new GLFWMouseButtonCallback() {
             @Override
             public void invoke(long window, int button, int action, int mods) {
@@ -290,7 +321,7 @@ public class ClientMain {
 
                         if(pos != null) {
                             if (joinServer) {
-                                ClientNetworkHandler.sendPacket(new CSendBlockChanges(pos.x, pos.y, pos.z, Blocks.LEAVES.id));
+                                ClientNetworkHandler.sendPacket(new CSendBlockChanges(pos.x, pos.y, pos.z, BlockPlacer.id));
                             } else {
                                 clientWorld.setBlockState(pos, new BlockState(Blocks.PHIL));
                             }

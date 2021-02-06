@@ -1,8 +1,12 @@
 package Hilligans.Client.Rendering.World;
 
+import java.awt.image.BufferedImage;
+
 public class BlockTextureManager {
 
     public int[] textures = new int[6];
+
+    public int texture;
 
     String[] textureNames;
     String location;
@@ -27,6 +31,8 @@ public class BlockTextureManager {
                 textures[x] = TextureManager.instance.loadTextureId(textureNames[x]);
             }
         }
+
+        texture = TextureManager.loadAndRegisterUnflippedTexture(location);
     }
 
 

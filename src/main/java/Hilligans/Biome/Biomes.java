@@ -2,8 +2,10 @@ package Hilligans.Biome;
 
 import Hilligans.Block.Blocks;
 import Hilligans.World.Builders.Foliage.CactusBuilder;
+import Hilligans.World.Builders.Foliage.LargeTreeBuilder;
 import Hilligans.World.Builders.Foliage.TreeBuilder;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -11,9 +13,9 @@ public class Biomes {
 
     public static ArrayList<Biome> biomes = new ArrayList<>();
 
-    public static final Biome PLAINS = new Biome("plains").setParams(0.5f,1.0f,1.0f);
-    public static final Biome DESERT = new Biome("desert", new CactusBuilder()).setSurfaceBlock(Blocks.SAND).setUnderBlock(Blocks.SAND).setParams(0.2f,0.1f,1.0f);
-    public static final Biome FOREST = new Biome("forest", new TreeBuilder()).setParams(0.7f,1.0f,1.0f);
+    public static final Biome PLAINS = new Biome("plains" ).setParams(0.5f,1.0f,1.0f);
+    public static final Biome DESERT = new Biome("desert", new CactusBuilder().setFrequency(7)).setSurfaceBlock(Blocks.SAND).setUnderBlock(Blocks.SAND).setParams(0.2f,0.1f,1.0f);
+    public static final Biome FOREST = new Biome("forest", new TreeBuilder().setFrequency(2)).setParams(0.7f,1.0f,1.0f);
     //public static final Biome DESERT1 = new Biome("desert1").setSurfaceBlock(Blocks.PHIL);
 
 
@@ -24,6 +26,8 @@ public class Biomes {
 
     public static Biome getBiome(double noise, double temp, double humidity) {
         ArrayList<Double> doubles = new ArrayList<>(biomes.size());
+
+
 
        // System.out.println("noise " + noise + " temp " + temp + " humidity " + humidity);
 
@@ -41,11 +45,6 @@ public class Biomes {
         }
         return biome;
     }
-
-
-
-
-    public static void register() {}
 
 
 }

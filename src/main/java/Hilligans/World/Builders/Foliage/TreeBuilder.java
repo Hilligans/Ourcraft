@@ -33,10 +33,10 @@ public class TreeBuilder extends SurfaceBuilder {
         double yaw = random.nextInt(180);
 
         int rotCount = 90;
-        placeBranch(startPos.copy().add(0,(int)(Math.random() * 4 - 2), 0),pitch,yaw + rotCount);
-        placeBranch(startPos.copy().add(0,(int)(Math.random() * 4 - 2), 0),pitch,yaw + rotCount * 2);
-        placeBranch(startPos.copy().add(0,(int)(Math.random() * 4 - 2), 0),pitch,yaw + rotCount * 3);
-        placeBranch(startPos.copy().add(0,(int)(Math.random() * 4 - 2), 0),pitch,yaw + rotCount * 4);
+        placeBranch(startPos.copy().add(0,random.nextInt(4) - 2, 0),pitch,yaw + rotCount);
+        placeBranch(startPos.copy().add(0,random.nextInt(4) - 2, 0),pitch,yaw + rotCount * 2);
+        placeBranch(startPos.copy().add(0,random.nextInt(4) - 2, 0),pitch,yaw + rotCount * 3);
+        placeBranch(startPos.copy().add(0,random.nextInt(4) - 2, 0),pitch,yaw + rotCount * 4);
     }
 
     private void placeBranch(BlockPos pos, double pitch, double yaw) {

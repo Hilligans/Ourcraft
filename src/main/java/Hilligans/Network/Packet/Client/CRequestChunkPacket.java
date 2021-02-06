@@ -10,12 +10,12 @@ import Hilligans.ServerMain;
 public class CRequestChunkPacket extends PacketBase {
 
     public int ChunkX;
-    public int ChunkY;
+    public int ChunkZ;
 
-    public CRequestChunkPacket(int ChunkX, int ChunkY) {
+    public CRequestChunkPacket(int ChunkX, int ChunkZ) {
         super(1);
         this.ChunkX = ChunkX;
-        this.ChunkY = ChunkY;
+        this.ChunkZ = ChunkZ;
     }
 
     public CRequestChunkPacket() {
@@ -25,18 +25,23 @@ public class CRequestChunkPacket extends PacketBase {
     @Override
     public void encode(PacketData packetData) {
         packetData.writeInt(ChunkX);
-        packetData.writeInt(ChunkY);
+        packetData.writeInt(ChunkZ);
     }
 
     @Override
     public void decode(PacketData packetData) {
         ChunkX = packetData.readInt();
-        ChunkY = packetData.readInt();
+        ChunkZ = packetData.readInt();
     }
 
     @Override
     public void handle() {
-        Chunk chunk = ServerMain.world.getOrGenerateChunk(ChunkX,ChunkY);
+        Chunk chunk = ServerMain.world.getOrGenerateChunk(ChunkX, ChunkZ);
+        ServerMain.world.generateChunk(ChunkX + 1, ChunkZ);
+        ServerMain.world.generateChunk(ChunkX - 1, ChunkZ);
+        ServerMain.world.generateChunk(ChunkX, ChunkZ + 1);
+        ServerMain.world.generateChunk(ChunkX, ChunkZ - 1);
+
         if(chunk != null) {
             ServerNetworkHandler.sendPacket(new SSendChunkPacket(chunk),ctx);
 

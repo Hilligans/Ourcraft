@@ -3,6 +3,7 @@ package Hilligans;
 import Hilligans.Biome.Biomes;
 import Hilligans.Block.Blocks;
 import Hilligans.Network.ServerNetworkInit;
+import Hilligans.Util.Settings;
 import Hilligans.World.Builders.OreBuilder;
 import Hilligans.World.Builders.Foliage.TreeBuilder;
 import Hilligans.World.ServerWorld;
@@ -18,10 +19,16 @@ public class ServerMain {
 
 
     public static void main(String[] args) {
-        Biomes.register();
         world = new ServerWorld();
      //   world.worldBuilders.add(new TreeBuilder().setWorld(world));
         world.worldBuilders.add(new OreBuilder(Blocks.IRON_ORE,Blocks.STONE).setFrequency(20));
+
+        for(int x = -Settings.renderDistance; x < Settings.renderDistance; x++) {
+            for(int z = -Settings.renderDistance; z < Settings.renderDistance; z++) {
+                world.generateChunk(x,z);
+            }
+        }
+
         Server server = new Server();
 
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);

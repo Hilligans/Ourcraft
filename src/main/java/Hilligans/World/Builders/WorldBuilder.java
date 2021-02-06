@@ -29,8 +29,8 @@ public abstract class WorldBuilder {
         world = chunk.world;
         random = world.random;
         for(int a = 0; a < frequency; a++) {
-            int x = (int)(Math.random() * 16);
-            int z = (int)(Math.random() * 16);
+            int x = random.nextInt(16);
+            int z = random.nextInt(16);
             build(x + chunk.x * 16,z + chunk.z * 16);
         }
     }
