@@ -4,6 +4,7 @@ import Hilligans.Block.Block;
 import Hilligans.Client.*;
 import Hilligans.Client.Rendering.Screen;
 import Hilligans.Client.Rendering.Screens.EscapeScreen;
+import Hilligans.Client.Rendering.Screens.InventoryScreen;
 import Hilligans.Client.Rendering.World.Renderer;
 import Hilligans.Client.Rendering.World.ShaderManager;
 import Hilligans.Client.Rendering.World.TextureManager;
@@ -21,7 +22,7 @@ import Hilligans.Network.ClientNetworkInit;
 import Hilligans.Network.Packet.Client.CSendBlockChanges;
 import Hilligans.Client.Camera;
 import Hilligans.Data.Other.BlockPos;
-import Hilligans.World.BlockState;
+import Hilligans.Block.BlockState;
 import Hilligans.World.ClientWorld;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
@@ -110,6 +111,17 @@ public class ClientMain {
                 System.exit(1);
             }
         },KeyHandler.GLFW_KEY_F11);
+
+        KeyHandler.register(new KeyPress() {
+            @Override
+            public void onPress() {
+                if(screen == null) {
+                    openScreen(new InventoryScreen());
+                } else if(screen instanceof InventoryScreen) {
+                    closeScreen();
+                }
+            }
+        },GLFW_KEY_E);
 
         screen = new JoinScreen();
 

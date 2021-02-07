@@ -1,5 +1,6 @@
 package Hilligans.World;
 
+import Hilligans.Block.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Entity.Entity;

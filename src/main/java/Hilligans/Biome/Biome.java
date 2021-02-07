@@ -13,7 +13,7 @@ public class Biome {
     public String name;
     public int terrainHeight = 10;
 
-    public Vector3i terrainHeights = new Vector3i(5,5,5);
+    public Vector3i terrainHeights = new Vector3i(0,5,5);
 
     public ArrayList<WorldBuilder> worldBuilders = new ArrayList<>();
 

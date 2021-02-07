@@ -1,9 +1,9 @@
 package Hilligans.World;
 
 import Hilligans.Biome.Biome;
+import Hilligans.Block.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.MatrixStack;
-import Hilligans.Util.Noises.SimplexNoise;
 import Hilligans.Util.Settings;
 import Hilligans.World.Builders.WorldBuilder;
 

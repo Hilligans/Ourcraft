@@ -2,10 +2,10 @@ package Hilligans.Block;
 
 import Hilligans.Client.Rendering.World.CubeManager;
 import Hilligans.Data.Other.BoundingBox;
+import Hilligans.Item.BlockItem;
 import Hilligans.Util.Vector5f;
 import Hilligans.Client.Rendering.World.BlockTextureManager;
 import Hilligans.Data.Other.BlockPos;
-import Hilligans.World.BlockState;
 import org.joml.Vector3f;
 
 public class Block {
@@ -23,6 +23,7 @@ public class Block {
         droppedBlock = this;
         Blocks.BLOCKS.add(this);
         Blocks.MAPPED_BLOCKS.put(name,id);
+        new BlockItem(name,this);
     }
 
     public Block withTexture(String texture) {

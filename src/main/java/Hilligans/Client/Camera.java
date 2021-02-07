@@ -40,7 +40,7 @@ public class Camera {
 
     public static boolean thirdPerson = false;
 
-    public static boolean spectator = true;
+    public static boolean spectator = false;
 
     public static boolean isFlying = false;
 
@@ -48,7 +48,7 @@ public class Camera {
 
     public static float sensitivity = 150;
 
-    public static BoundingBox playerBoundingBox = new BoundingBox(-0.45f,-1.9f,-0.45f,0.45f,0.0f,0.45f);
+    public static BoundingBox playerBoundingBox = new BoundingBox(-0.35f,-1.9f,-0.35f,0.35f,0.0f,0.35f);
 
     static {
         KeyHandler.register(new KeyPress() {

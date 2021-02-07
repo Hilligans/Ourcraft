@@ -6,7 +6,7 @@ import Hilligans.World.Chunk;
 import Hilligans.Block.Blocks;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
-import Hilligans.World.BlockState;
+import Hilligans.Block.BlockState;
 
 public class SSendChunkPacket extends PacketBase {
 

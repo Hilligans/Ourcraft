@@ -9,6 +9,7 @@ public abstract class WorldBuilder {
 
     public World world;
     public int frequency = 1;
+    public int chance = 1;
 
     public Random random;
 
@@ -24,13 +25,20 @@ public abstract class WorldBuilder {
         return this;
     }
 
+    public WorldBuilder setChance(int chance) {
+        this.chance = chance;
+        return this;
+    }
+
     public void build(Chunk chunk) {
         world = chunk.world;
         random = world.random;
         for(int a = 0; a < frequency; a++) {
-            int x = random.nextInt(16);
-            int z = random.nextInt(16);
-            build(x + chunk.x * 16,z + chunk.z * 16);
+            if(chance == 0 || random.nextInt(chance) == 0) {
+                int x = random.nextInt(16);
+                int z = random.nextInt(16);
+                build(x + chunk.x * 16, z + chunk.z * 16);
+            }
         }
     }
 

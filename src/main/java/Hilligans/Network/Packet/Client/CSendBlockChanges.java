@@ -9,7 +9,7 @@ import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.ServerMain;
-import Hilligans.World.BlockState;
+import Hilligans.Block.BlockState;
 
 public class CSendBlockChanges extends PacketBase {
 

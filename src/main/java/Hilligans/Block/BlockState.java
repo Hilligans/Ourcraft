@@ -1,4 +1,4 @@
-package Hilligans.World;
+package Hilligans.Block;
 
 import Hilligans.Block.Block;
 
