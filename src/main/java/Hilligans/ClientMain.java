@@ -247,16 +247,16 @@ public class ClientMain {
         if(screen == null) {
             if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
                 Camera.strafeLeft();
-            if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-                Camera.moveDown();
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
                 Camera.strafeRight();
-            if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-                Camera.moveUp();
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
                 Camera.moveForeWard();
             if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
                 Camera.moveBackWard();
+            if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+                Camera.moveUp();
+            if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+                Camera.moveDown();
         }
     }
 

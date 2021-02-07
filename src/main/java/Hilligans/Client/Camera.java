@@ -50,6 +50,8 @@ public class Camera {
     public static int sprintTimeout = 1;
     public static int sprintDelay = 0;
 
+    public static final float accelTime = 80f;
+
     public static float sensitivity = 150;
 
     public static BoundingBox playerBoundingBox = new BoundingBox(-0.35f,-1.9f,-0.35f,0.35f,0.0f,0.35f);
@@ -107,6 +109,12 @@ public class Camera {
             if(velY == 0) {
                 isOnGround = false;
                 add(0, 0.045f, 0);
+                if(maxX == 0) {
+                    velX = velX * 0.5f;
+                }
+                if(maxZ == 0) {
+                    velZ = velZ * 0.5f;
+                }
             }
         }
     }
@@ -125,43 +133,50 @@ public class Camera {
             pos.add(x, y, z);
             ClientNetworkHandler.sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.playerId));
         } else {
+
             maxX += x;
             maxZ += z;
 
             //System.out.println(x + " : " + z);
-            velX += x;
+
+            if(isOnGround) {
+                velX += x / 4;
+                velZ += z / 4;
+            } else {
+                velX += x / accelTime;
+                velZ += z / accelTime;
+            }
             //velX += x;
             velY += y;
-            velZ += z;
 
-            if(maxX != 0) {
-                if (maxX > 0) {
-                    if (velX > maxX) {
-                        velX = maxX;
-                    }
-                } else {
-                    if (velX < maxX) {
-                        velX = maxX;
-                    }
-                }
-            }
-            if(maxZ != 0) {
-                if (maxZ > 0) {
-                    if (velZ > maxZ) {
-                        velZ = maxZ;
-                    }
-                } else {
-                    if (velZ < maxZ) {
-                        velZ = maxZ;
-                    }
-                }
-            }
 
             //velZ += z;
         }
     }
 
     public static void tick() {
+        if(maxX != 0) {
+            if (maxX > 0) {
+                if (velX > maxX) {
+                    velX = maxX;
+                }
+            } else {
+                if (velX < maxX) {
+                    velX = maxX;
+                }
+            }
+        }
+        if(maxZ != 0) {
+            if (maxZ > 0) {
+                if (velZ > maxZ) {
+                    velZ = maxZ;
+                }
+            } else {
+                if (velZ < maxZ) {
+                    velZ = maxZ;
+                }
+            }
+        }
         //velX = velX / 2;
         //velY = velY / 2;
         //velZ = velZ / 2;
@@ -178,8 +193,12 @@ public class Camera {
 
             if (isOnGround) {
                 velY = 0;
-                velX = velX * 0.8f;
-                velZ = velZ * 0.8f;
+                if(maxX == 0) {
+                    velX = velX * 0.95f;
+                }
+                if(maxZ == 0) {
+                    velZ = velZ * 0.95f;
+                }
             }
 
 
@@ -189,6 +208,8 @@ public class Camera {
 
             maxX = 0;
             maxZ = 0;
+
+            ClientNetworkHandler.sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.playerId));
         }
     }
 
