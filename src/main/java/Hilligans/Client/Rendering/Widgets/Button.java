@@ -27,8 +27,8 @@ public class Button extends Widget {
     }
 
     @Override
-    public void activate() {
-        super.activate();
+    public void activate(int x, int y) {
+        super.activate(x, y);
         buttonAction.onPress();
     }
 }

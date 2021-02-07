@@ -104,6 +104,13 @@ public class ClientMain {
             }
         },KeyHandler.GLFW_KEY_ESCAPE);
 
+        KeyHandler.register(new KeyPress() {
+            @Override
+            public void onPress() {
+                System.exit(1);
+            }
+        },KeyHandler.GLFW_KEY_F11);
+
         screen = new JoinScreen();
 
 
@@ -163,7 +170,7 @@ public class ClientMain {
         }
         ClientNetworkInit.close();
         glfwTerminate();
-        System.exit(0);
+        System.exit(1);
 
 
     }
@@ -188,6 +195,7 @@ public class ClientMain {
 
         StringRenderer.drawString(screenStack,Camera.getString(),windowX/2,0,0.5f);
         StringRenderer.drawString(screenStack,"FPS:" + fps,windowX/2,29,0.5f);
+        StringRenderer.drawString(screenStack,clientWorld.biomeMap.getBiome((int)Camera.pos.x,(int)Camera.pos.z).name,windowX/2,58,0.5f);
 
         ChatWindow.render1(screenStack);
 

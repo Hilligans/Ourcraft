@@ -6,8 +6,7 @@ import Hilligans.Entity.Entity;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CRequestChunkPacket;
 import Hilligans.Util.*;
-import Hilligans.Util.Noises.BiomeNoise;
-import Hilligans.Util.Noises.Noise;
+import Hilligans.Util.Noises.*;
 import Hilligans.World.Builders.WorldBuilder;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
@@ -25,16 +24,29 @@ public abstract class World {
 
     Noise noise = new Noise(131);
     Noise biomes = new Noise(new Random(131).nextInt());
+
+    PerlinNoise heightMap;
     //PerlinNoise biomeMap;
-    BiomeNoise biomeMap;
+    public BiomeNoise biomeMap;
+
+
+    KenPerlinNoise height;
+
+    SimplexNoise simplexNoise;
 
     public Random random;
+
+   // public int simplexNoise;
 
     public ArrayList<WorldBuilder> worldBuilders = new ArrayList<>();
 
     public World() {
         random = new Random(131);
         biomeMap = new BiomeNoise(random);
+        heightMap = new PerlinNoise(random.nextInt(),0.17,10,1,10);
+        height = new KenPerlinNoise(random.nextInt());
+        simplexNoise = new SimplexNoise(random);
+        //simplexNoise = random.nextInt();
         //biomeMap = new PerlinNoise(random.nextInt(),20,30,1,100);
     }
 

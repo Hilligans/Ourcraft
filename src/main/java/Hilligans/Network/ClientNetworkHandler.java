@@ -25,7 +25,7 @@ public class ClientNetworkHandler extends SimpleChannelInboundHandler<PacketData
         super.channelInactive(ctx);
 
         glfwDestroyWindow(ClientMain.window);
-        //System.exit(0);
+        System.exit(1);
     }
 
     @Override

@@ -54,7 +54,7 @@ public abstract class ScreenBase implements Screen {
         for(Widget widget : widgets) {
             widget.isFocused = false;
             if(widget.isInBounds(x,y)) {
-                widget.activate();
+                widget.activate(x - widget.x, y - widget.y);
             }
         }
     }

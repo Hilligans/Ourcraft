@@ -28,7 +28,7 @@ public class Camera {
 
     public static Vector3f pos = new Vector3f(0, Chunk.terrain,0);
 
-    public static final int fov = 70;
+    public static int fov = 70;
 
     private static final float fallSpeed = -0.0008f;
     private static final float terminalVel = -0.15f;
@@ -40,11 +40,13 @@ public class Camera {
 
     public static boolean thirdPerson = false;
 
-    public static boolean spectator = false;
+    public static boolean spectator = true;
 
     public static boolean isFlying = false;
 
     public static boolean isOnGround = false;
+
+    public static float sensitivity = 150;
 
     public static BoundingBox playerBoundingBox = new BoundingBox(-0.45f,-1.9f,-0.45f,0.45f,0.0f,0.45f);
 
@@ -62,7 +64,7 @@ public class Camera {
             add(-(float) Math.cos(yaw) * moveSpeed / 3, 0, -(float) Math.sin(yaw) * moveSpeed / 3);
         } else {
             if (KeyHandler.keyPressed[GLFW_KEY_LEFT_CONTROL]) {
-                add(-(float) Math.cos(yaw) * moveSpeed * 1.8f, 0, -(float) Math.sin(yaw) * moveSpeed * 1.8f);
+                add(-(float) Math.cos(yaw) * moveSpeed * 1.7f, 0, -(float) Math.sin(yaw) * moveSpeed * 1.7f);
             } else {
                 add(-(float) Math.cos(yaw) * moveSpeed, 0, -(float) Math.sin(yaw) * moveSpeed);
             }
@@ -231,8 +233,8 @@ public class Camera {
         double deltaX = newX - halfWindowX;
         double deltaY = newY - halfWindowY;
 
-        Camera.addPitch(deltaY / 100);
-        Camera.addYaw(deltaX / 100);
+        Camera.addPitch(deltaY / sensitivity);
+        Camera.addYaw(deltaX / sensitivity);
 
 
         glfwSetCursorPos(ClientMain.window, halfWindowX, halfWindowY);

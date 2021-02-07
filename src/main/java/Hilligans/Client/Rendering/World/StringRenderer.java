@@ -45,6 +45,7 @@ public class StringRenderer {
 
     public static void drawString(MatrixStack matrixStack, String string, int x, int y, float scale) {
         matrixStack.push();
+        glDisable(GL_DEPTH_TEST);
         int width = 0;
         ArrayList<Vector5f> vector5fs = new ArrayList<>();
         ArrayList<Integer> indices = new ArrayList<>();
@@ -59,6 +60,7 @@ public class StringRenderer {
         matrixStack.applyTransformation();
         draw(id,vector5fs.size());
         matrixStack.pop();
+        glEnable(GL_DEPTH_TEST);
     }
 
     public static void drawColoredString(MatrixStack matrixStack, String string, int x, int y, float scale) {

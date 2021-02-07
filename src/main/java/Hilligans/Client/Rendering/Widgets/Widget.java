@@ -28,7 +28,7 @@ public class Widget {
         return x > this.x && x < this.x + this.width && y > this.y && y < this.y + this.height;
     }
 
-    public void activate() {
+    public void activate(int x, int y) {
         isFocused = true;
     }
 

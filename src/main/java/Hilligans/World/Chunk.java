@@ -3,6 +3,7 @@ package Hilligans.World;
 import Hilligans.Biome.Biome;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.MatrixStack;
+import Hilligans.Util.Noises.SimplexNoise;
 import Hilligans.Util.Settings;
 import Hilligans.World.Builders.WorldBuilder;
 
@@ -18,7 +19,7 @@ public class Chunk {
 
    // public static final int chunkHeight = 16;
 
-    public int x;
+    public int  x;
     public int z;
 
     public static int terrain = 64;
@@ -47,11 +48,14 @@ public class Chunk {
         for(int x = 0; x < 16; x++) {
             for(int z = 0; z < 16; z++) {
 
-                int offset = getHeight(getBlockHeight(x,z),getBiome(x,z));
+                //int offset = getHeight(getBlockHeight(x + this.x * 16,z + this.z * 16));
 
-                offset = interpolate(offset,getHeight(getBlockHeight(x + 1, z + 1),getBiome(x + 1, z + 1)));
+                int offset = getBlockHeight(x + this.x * 16,z + this.z * 16);
+
+                offset = interpolate(offset,getBlockHeight(x + 1 + this.x * 16, z + 1 + this.z * 16));
 
                 Biome biome = getBiome1(x + this.x * 16,z + this.z * 16);
+               // System.out.println("x:" + (x + this.x * 16) + " z:" + (z + this.z * 16) + " " + biome.name);
 
 
                 for(int y = 0; y < Settings.chunkHeight * 16; y++) {
@@ -110,17 +114,25 @@ public class Chunk {
         }
     }
 
-    public double getBlockHeight(int x, int z) {
-        return world.noise.noise((int)((x + this.x * 16)/2 + Integer.MAX_VALUE / 2),(int)((z + this.z * 16)/2 + Integer.MAX_VALUE / 2));
+    public int getBlockHeight(int x, int z) {
+
+        Biome biome = getBiome1(x,z);
+
+        double val = world.simplexNoise.getHeight(x,z,biome.terrainHeights);
+        //System.out.println(val);
+        return (int) (val + terrain);
+        //return world.heightMap.getHeight(x / 64f,z / 64f);
+        //return world.customNoise.getNoise(x,z,10,6);
+        //return world.noise.noise((int)((x + this.x * 16)/2 + Integer.MAX_VALUE / 2),(int)((z + this.z * 16)/2 + Integer.MAX_VALUE / 2));
     }
 
-    public int getHeight(double height, double biome) {
-        biome = biome * 20 + 10;
+  //  public int getHeight(double height, double biome) {
+       // biome = biome * 20 + 5;
 
 
 
-        return (int) (height * biome - biome / 2 + terrain);
-    }
+        //return (int) (height * biome - biome / 2 + terrain);
+  //  }
 
     public int interpolate(int height, int xHeight) {
         return Math.round(((float)height + xHeight) / 2);
@@ -128,10 +140,6 @@ public class Chunk {
 
     public int interpolate(int height, int xHeight, int zHeight) {
         return Math.round(((float)height + xHeight + zHeight) / 3);
-    }
-
-    public double getBiome(int x, int z) {
-        return world.biomes.noise((int)((x + this.x * 16)/8 + Integer.MAX_VALUE / 2),(int)((z + this.z * 16)/8 + Integer.MAX_VALUE / 2));
     }
 
     private final double size = 400;
