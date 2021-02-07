@@ -46,6 +46,10 @@ public class Camera {
 
     public static boolean isOnGround = false;
 
+    public static boolean sprinting = false;
+    public static int sprintTimeout = 1;
+    public static int sprintDelay = 0;
+
     public static float sensitivity = 150;
 
     public static BoundingBox playerBoundingBox = new BoundingBox(-0.35f,-1.9f,-0.35f,0.35f,0.0f,0.35f);
@@ -63,7 +67,8 @@ public class Camera {
         if(KeyHandler.keyPressed[GLFW_KEY_LEFT_SHIFT]) {
             add(-(float) Math.cos(yaw) * moveSpeed / 3, 0, -(float) Math.sin(yaw) * moveSpeed / 3);
         } else {
-            if (KeyHandler.keyPressed[GLFW_KEY_LEFT_CONTROL]) {
+            if (sprinting) {
+                sprintTimeout = 1;
                 add(-(float) Math.cos(yaw) * moveSpeed * 1.7f, 0, -(float) Math.sin(yaw) * moveSpeed * 1.7f);
             } else {
                 add(-(float) Math.cos(yaw) * moveSpeed, 0, -(float) Math.sin(yaw) * moveSpeed);
@@ -112,16 +117,47 @@ public class Camera {
         }
     }
 
+    public static float maxX,maxZ;
+
     public static void add(float x, float y, float z) {
 
         if(spectator) {
             pos.add(x, y, z);
             ClientNetworkHandler.sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.playerId));
         } else {
+            maxX += x;
+            maxZ += z;
+
             //System.out.println(x + " : " + z);
             velX += x;
+            //velX += x;
             velY += y;
             velZ += z;
+
+            if(maxX != 0) {
+                if (maxX > 0) {
+                    if (velX > maxX) {
+                        velX = maxX;
+                    }
+                } else {
+                    if (velX < maxX) {
+                        velX = maxX;
+                    }
+                }
+            }
+            if(maxZ != 0) {
+                if (maxZ > 0) {
+                    if (velZ > maxZ) {
+                        velZ = maxZ;
+                    }
+                } else {
+                    if (velZ < maxZ) {
+                        velZ = maxZ;
+                    }
+                }
+            }
+
+            //velZ += z;
         }
     }
 
@@ -142,11 +178,17 @@ public class Camera {
 
             if (isOnGround) {
                 velY = 0;
+                velX = velX * 0.8f;
+                velZ = velZ * 0.8f;
             }
 
 
-            velX = 0;
-            velZ = 0;
+            velX = velX * 0.995f;
+            velZ = velZ * 0.995f;
+
+
+            maxX = 0;
+            maxZ = 0;
         }
     }
 
@@ -205,6 +247,9 @@ public class Camera {
         matrix4f.mul(view);
         matrix4f.lookAt(Camera.duplicate().add((float)(Math.cos(Camera.yaw) * Math.cos(Camera.pitch)),(float)(Math.sin(Camera.pitch)),(float)(Math.sin(Camera.yaw) * Math.cos(Camera.pitch))),Camera.duplicate(), cameraUp);
         matrix4f.translate(0,0.15f,0);
+        if(KeyHandler.keyPressed[GLFW_KEY_LEFT_SHIFT]) {
+            matrix4f.translate(0,0.05f,0);
+        }
         return new MatrixStack(matrix4f);
     }
 
@@ -318,12 +363,12 @@ public class Camera {
             //Camera.velX = 0;
             velX = 0;
         }
-        if (x == 2 || x == 4 || x == 6) {
+        if (x == 1 || x == 4 || x == 6) {
             //Camera.velZ = 0;
             isOnGround = true;
             velY = 0;
         }
-        if (x == 1 || x == 4 || x == 5) {
+        if (x == 2 || x == 4 || x == 5) {
             //Camera.velZ = 0;
             velZ = 0;
         }
@@ -338,9 +383,10 @@ public class Camera {
             case 0:
                 return new Vector3f(velX,velY,velZ);
             case 1:
-                return new Vector3f(velX,velY,0);
-            case 2:
                 return new Vector3f(velX,0,velZ);
+            case 2:
+                sprintTimeout = 0;
+                return new Vector3f(velX,velY,0);
             case 3:
                 return new Vector3f(0,velY,velZ);
             case 4:

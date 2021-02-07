@@ -1,5 +1,6 @@
 package Hilligans.Client;
 
+import Hilligans.Client.Key.KeyHandler;
 import Hilligans.ClientMain;
 
 public class PlayerMovementThread implements Runnable {
@@ -13,6 +14,14 @@ public class PlayerMovementThread implements Runnable {
     @Override
     public void run() {
         if(ClientMain.valid) {
+
+            if(Camera.sprintTimeout == 0) {
+                Camera.sprinting = false;
+            }
+            if(KeyHandler.keyPressed[KeyHandler.GLFW_KEY_LEFT_CONTROL]) {
+                Camera.sprinting = true;
+            }
+            Camera.sprintTimeout = 0;
             ClientMain.processInput(window);
             Camera.tick();
         }
