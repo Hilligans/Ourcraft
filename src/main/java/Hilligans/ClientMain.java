@@ -5,9 +5,7 @@ import Hilligans.Client.*;
 import Hilligans.Client.Rendering.Screen;
 import Hilligans.Client.Rendering.Screens.EscapeScreen;
 import Hilligans.Client.Rendering.Screens.InventoryScreen;
-import Hilligans.Client.Rendering.World.Renderer;
-import Hilligans.Client.Rendering.World.ShaderManager;
-import Hilligans.Client.Rendering.World.TextureManager;
+import Hilligans.Client.Rendering.World.*;
 import Hilligans.Entity.Entity;
 import Hilligans.Util.Settings;
 import Hilligans.Util.Util;
@@ -15,7 +13,6 @@ import Hilligans.Block.Blocks;
 import Hilligans.Client.Key.KeyHandler;
 import Hilligans.Client.Key.KeyPress;
 import Hilligans.Client.Rendering.Screens.JoinScreen;
-import Hilligans.Client.Rendering.World.StringRenderer;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.ClientNetworkInit;
@@ -58,7 +55,7 @@ public class ClientMain {
 
     public static int shaderProgram;
     public static int colorShader;
-    static int texture;
+    public static int texture;
 
     public static int outLine;
 
@@ -204,6 +201,8 @@ public class ClientMain {
 
         clientWorld.tick();
         clientWorld.render(matrixStack);
+
+        //Renderer.renderBlockItem(screenStack,300,200,64,Blocks.LOG);
 
         StringRenderer.drawString(screenStack,Camera.getString(),windowX/2,0,0.5f);
         StringRenderer.drawString(screenStack,"FPS:" + fps,windowX/2,29,0.5f);

@@ -1,9 +1,11 @@
 package Hilligans.Client.Rendering.World;
 
+import Hilligans.Block.Block;
 import Hilligans.Client.MatrixStack;
 import Hilligans.ClientMain;
 import Hilligans.Util.Util;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.opengl.GL30;
 
 import static org.lwjgl.opengl.GL30.*;
@@ -50,6 +52,32 @@ public class Renderer {
 
         //glEnable(GL_CULL_FACE);
         VAOManager.destroyBuffer(vao);
+    }
+
+    public static void renderBlockItem(MatrixStack matrixStack, int x, int y, int size, Block block) {
+        glUseProgram(ClientMain.shaderProgram);
+        glDisable(GL_DEPTH_TEST);
+        int vao = VAOManager.createVAO(VAOManager.getBlockVertices(block,false,size),VAOManager.getBlockIndices(block));
+        matrixStack.push();
+        GL30.glBindVertexArray(vao);
+        glBindTexture(GL_TEXTURE_2D, ClientMain.texture);
+        //matrixStack.rotate(0.785398f,new Vector3f(0,1,0));
+
+        matrixStack.translate(x,y,0);
+
+        //matrixStack.rotate(xAngle,new Vector3f(1,0,0));
+        //matrixStack.rotate(xAngle, new Vector3f(0,(float)Math.cos(xAngle),(float)-Math.sin(xAngle)));
+
+        matrixStack.rotate(0.785f,new Vector3f(0.5f,-1,0));
+        matrixStack.rotate(0.186f,new Vector3f(0,0,-1));
+        //matrixStack.rotate();
+        matrixStack.translate(0,0,-size * 2);
+        matrixStack.applyTransformation();
+        glDrawElements(GL_TRIANGLES, 52,GL_UNSIGNED_INT,0);
+        matrixStack.pop();
+        VAOManager.destroyBuffer(vao);
+
+        glEnable(GL_DEPTH_TEST);
     }
 
     public static void create(int id) {

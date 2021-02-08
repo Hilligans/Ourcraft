@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class Blocks {
 
-    public static final HashMap<String, Short> MAPPED_BLOCKS = new HashMap<>();
+    public static final HashMap<String, Block> MAPPED_BLOCKS = new HashMap<>();
     public static final ArrayList<Block> BLOCKS = new ArrayList<>();
 
     public static final Block AIR = new Block("air").transparentTexture(true);

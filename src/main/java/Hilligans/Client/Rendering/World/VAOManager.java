@@ -1,9 +1,11 @@
 package Hilligans.Client.Rendering.World;
 
+import Hilligans.Block.Block;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Util.Vector5f;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
@@ -166,6 +168,28 @@ public class  VAOManager {
         return integers;
     }
 
+    public static int[] getBlockIndices(Block block) {
+        ArrayList<Integer> indices = new ArrayList<>();
+        for(int x = 0; x < 6; x++) {
+            indices.addAll(Arrays.asList(block.getIndices(x,x * 4)));
+        }
+        return convertIndices(indices);
+    }
 
+    public static float[] getBlockVertices(Block block, boolean colored) {
+        ArrayList<Vector5f> vertices = new ArrayList<>();
+        for(int x = 0; x < 6; x++) {
+            vertices.addAll(Arrays.asList(block.getVertices(x)));
+        }
+        return convertVertices(vertices,colored);
+    }
+
+    public static float[] getBlockVertices(Block block, boolean colored, float size) {
+        ArrayList<Vector5f> vertices = new ArrayList<>();
+        for(int x = 0; x < 6; x++) {
+            vertices.addAll(Arrays.asList(block.getVertices(x,size)));
+        }
+        return convertVertices(vertices,colored);
+    }
 
 }

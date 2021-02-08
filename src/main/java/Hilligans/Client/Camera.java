@@ -276,7 +276,7 @@ public class Camera {
 
     public static MatrixStack getScreenStack() {
         Matrix4f matrix4f = new Matrix4f();
-        matrix4f.ortho(0,ClientMain.windowX,ClientMain.windowY,0,-1,1);
+        matrix4f.ortho(0,ClientMain.windowX,ClientMain.windowY,0,-1,200);
         return new MatrixStack(matrix4f);
     }
 

@@ -22,7 +22,7 @@ public class Block {
         id = Blocks.getNextId();
         droppedBlock = this;
         Blocks.BLOCKS.add(this);
-        Blocks.MAPPED_BLOCKS.put(name,id);
+        Blocks.MAPPED_BLOCKS.put(name,this);
         new BlockItem(name,this);
     }
 
@@ -91,7 +91,11 @@ public class Block {
         return vertices;
         re
         */
-       return CubeManager.getVertices1(blockTextureManager,side,1f);
+       return getVertices(side,1.0f);
+    }
+
+    public Vector5f[] getVertices(int side, float size) {
+        return CubeManager.getVertices1(blockTextureManager,side,size);
     }
 
     public Integer[] getIndices(int side, int spot) {
