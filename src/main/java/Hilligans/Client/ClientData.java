@@ -9,5 +9,4 @@ public class ClientData {
     public static Inventory inventory = new Inventory(Settings.playerInventorySize);
 
 
-
 }

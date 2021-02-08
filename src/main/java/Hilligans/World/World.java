@@ -35,7 +35,7 @@ public abstract class World {
 
     public Random random;
 
-    public Int2ObjectOpenHashMap<IInventory> containerInventories;
+    public Int2ObjectOpenHashMap<IInventory> containerInventories = new Int2ObjectOpenHashMap<>();
 
     public ArrayList<WorldBuilder> worldBuilders = new ArrayList<>();
 

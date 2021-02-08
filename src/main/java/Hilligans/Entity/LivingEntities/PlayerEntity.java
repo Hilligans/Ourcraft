@@ -8,7 +8,11 @@ import Hilligans.Data.Other.Inventory;
 import Hilligans.Entity.Entities.ItemEntity;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntity;
+import Hilligans.Item.ItemStack;
+import Hilligans.Network.Packet.Server.SUpdateInventory;
+import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
+import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.ServerMain;
 import Hilligans.Util.Settings;
 import Hilligans.Util.Vector5f;
@@ -28,9 +32,7 @@ public class PlayerEntity extends LivingEntity {
     int textureId = -1;
     int verticesCount;
 
-    public IInventory inventory;
-
-    public int containerId;
+    public Inventory inventory;
 
     public static int imageId;
 
@@ -48,12 +50,27 @@ public class PlayerEntity extends LivingEntity {
     @Override
     public void tick() {
         //System.out.println("yes");
+        boolean updateInventory = false;
+
         for(Entity entity : ServerMain.world.entities.values()) {
             if(entity instanceof ItemEntity) {
                 if (entity.boundingBox.intersectsBox(boundingBox, new Vector3f(entity.x, entity.y, entity.z), new Vector3f(x, y, z))) {
-                    ServerMain.world.removeEntity(entity.id);
+                    ItemStack itemStack = ((ItemEntity)entity).itemStack;
+                    int count = itemStack.count;
+                    if(inventory.addItem(itemStack)) {
+                        ServerMain.world.removeEntity(entity.id);
+                    }
+                    if(count != itemStack.count) {
+                        //System.out.println("SHOULD SEND PACKET");
+                        updateInventory = true;
+                    }
                 }
             }
+        }
+        if(updateInventory) {
+            inventory.age++;
+            //System.out.println(inventory.toString());
+            sendPacket(new SUpdateInventory(inventory));
         }
     }
 
@@ -161,6 +178,10 @@ public class PlayerEntity extends LivingEntity {
             default:
                 return new Integer[]{spot,spot + 2, spot + 1, spot, spot + 3, spot + 2};
         }
+    }
+
+    public void sendPacket(PacketBase packetBase) {
+        ServerNetworkHandler.getChannel(id).writeAndFlush(new PacketData(packetBase));
     }
 
 

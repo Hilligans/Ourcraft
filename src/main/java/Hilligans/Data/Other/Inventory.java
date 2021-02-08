@@ -1,11 +1,16 @@
 package Hilligans.Data.Other;
 
+import Hilligans.Block.Blocks;
 import Hilligans.Item.Item;
 import Hilligans.Item.ItemStack;
+import Hilligans.Item.Items;
 import Hilligans.Network.Packet.IFuturePacket;
 import Hilligans.Network.Packet.Server.SUpdateInventory;
 import Hilligans.Network.PacketBase;
+import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
+
+import java.util.Arrays;
 
 public class Inventory implements IInventory {
 
@@ -14,6 +19,9 @@ public class Inventory implements IInventory {
 
     public Inventory(int size) {
         items = new ItemStack[size];
+        for(int x = 0; x < size; x++) {
+            items[x] = new ItemStack(null,(byte)0);
+        }
     }
 
     @Override
@@ -45,5 +53,32 @@ public class Inventory implements IInventory {
             }
         }
         return false;
+    }
+
+    public void writeData(PacketData packetData) {
+        packetData.writeInt(age);
+        packetData.writeInt(items.length);
+        for (ItemStack item : items) {
+            packetData.writeItemStack(item);
+        }
+    }
+
+    public void readData(PacketData packetData) {
+        int age = packetData.readInt();
+        if(age > this.age) {
+            int size = packetData.readInt();
+            for (int x = 0; x < size; x++) {
+                items[x] = packetData.readItemStack();
+            }
+        }
+        //System.out.println(this.toString());
+    }
+
+    @Override
+    public String toString() {
+        return "Inventory{" +
+                "items=" + Arrays.toString(items) +
+                ", age=" + age +
+                '}';
     }
 }

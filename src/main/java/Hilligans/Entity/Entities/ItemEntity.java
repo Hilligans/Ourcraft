@@ -7,6 +7,8 @@ import Hilligans.Client.Rendering.World.CubeManager;
 import Hilligans.Client.Rendering.World.VAOManager;
 import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Entity.Entity;
+import Hilligans.Item.ItemStack;
+import Hilligans.Item.Items;
 import Hilligans.Network.PacketData;
 import Hilligans.Util.Vector5f;
 
@@ -21,6 +23,7 @@ public class ItemEntity extends Entity {
     Block block;
     int id = -1;
     int verticesCount;
+    public ItemStack itemStack;
 
     public ItemEntity(float x, float y, float z, int id, Block block) {
         super(x, y, z, id);
@@ -29,6 +32,7 @@ public class ItemEntity extends Entity {
        // boundingBox = new BoundingBox(-0.125f,-0.125f,-0.125f,0.125f,0.125f,0.125f);
         boundingBox = new BoundingBox(-0.25f,-0.25f,-0.25f,0.25f,0.25f,0.25f);
         velY = 0.30f;
+        itemStack = new ItemStack(Items.HASHED_ITEMS.get(block.name),(byte)1);
     }
 
     public ItemEntity(PacketData packetData) {
@@ -36,6 +40,7 @@ public class ItemEntity extends Entity {
         type = 1;
         block = Blocks.getBlockWithID(packetData.readInt());
         boundingBox = new BoundingBox(-0.25f,-0.25f,-0.25f,0.25f,0.25f,0.25f);
+        itemStack = new ItemStack(Items.HASHED_ITEMS.get(block.name),(byte)1);
         //velY = 1f;
     }
 

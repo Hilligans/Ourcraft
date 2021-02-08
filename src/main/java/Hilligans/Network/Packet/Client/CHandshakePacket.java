@@ -42,16 +42,16 @@ public class CHandshakePacket extends PacketBase {
         if(id == Settings.gameVersion) {
             int playerId = Entity.getNewId();
             int containerId = ServerMain.world.getNextContainerID();
-            ServerNetworkHandler.sendPacket(new SHandshakePacket(playerId,containerId),ctx);
+            ServerNetworkHandler.sendPacket(new SHandshakePacket(playerId),ctx);
             ServerNetworkHandler.sendPacket(new SChatMessage(name + " has joined the game"));
             for(Entity entity : ServerMain.world.entities.values()) {
                 ServerNetworkHandler.sendPacket(new SCreateEntityPacket(entity),ctx);
             }
             PlayerEntity playerEntity = new PlayerEntity(0, Chunk.terrain,0,playerId);
-            playerEntity.containerId = containerId;
             ServerMain.world.addEntity(playerEntity);
             ServerMain.world.containerInventories.put(containerId,playerEntity.inventory);
 
+            ServerNetworkHandler.mappedChannels.put(playerId,ctx.channel().id());
             ServerNetworkHandler.mappedId.put(ctx.channel().id(),playerId);
             ServerNetworkHandler.mappedName.put(ctx.channel().id(),name);
         } else {

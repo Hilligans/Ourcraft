@@ -11,6 +11,9 @@ public class ItemStack {
     }
 
     public int addItem(ItemStack itemStack) {
+        if(item == null) {
+            item = itemStack.item;
+        }
         if(itemStack.item == item) {
             int itemCount = Math.min(64 - count,itemStack.count);
             count += itemCount;
@@ -19,4 +22,11 @@ public class ItemStack {
         return 0;
     }
 
+    @Override
+    public String toString() {
+        return "ItemStack{" +
+                "count=" + count +
+                ", item=" + item +
+                '}';
+    }
 }

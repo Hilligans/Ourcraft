@@ -1,6 +1,7 @@
 package Hilligans.Network;
 
 import Hilligans.Data.Other.ColoredString;
+import Hilligans.Item.Item;
 import Hilligans.Item.ItemStack;
 import Hilligans.Item.Items;
 import io.netty.buffer.ByteBuf;
@@ -94,7 +95,11 @@ public class PacketData {
     public ItemStack readItemStack() {
         short item = readShort();
         byte count = readByte();
-        return new ItemStack(Items.ITEMS.get(item),count);
+        if(item != -1) {
+            return new ItemStack(Items.ITEMS.get(item), count);
+        } else {
+            return new ItemStack(null,count);
+        }
     }
 
     public void writeInt(int val) {
@@ -151,7 +156,12 @@ public class PacketData {
     }
 
     public void writeItemStack(ItemStack itemStack) {
-        writeShort((short) itemStack.item.id);
+        Item item = itemStack.item;
+        if(item != null) {
+            writeShort((short) itemStack.item.id);
+        } else {
+            writeShort((short)-1);
+        }
         writeByte(itemStack.count);
     }
 

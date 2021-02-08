@@ -8,34 +8,29 @@ import Hilligans.Network.PacketData;
 public class SHandshakePacket extends PacketBase {
 
     public int playerId;
-    public int containerId;
 
     public SHandshakePacket() {
         super(6);
     }
 
-    public SHandshakePacket(int playerId, int containerId) {
+    public SHandshakePacket(int playerId) {
         this();
         this.playerId = playerId;
-        this.containerId = containerId;
     }
 
     @Override
     public void encode(PacketData packetData) {
         packetData.writeInt(playerId);
-        packetData.writeInt(containerId);
     }
 
     @Override
     public void decode(PacketData packetData) {
         playerId = packetData.readInt();
-        containerId = packetData.readInt();
     }
 
     @Override
     public void handle() {
         ClientMain.playerId = playerId;
-        ClientData.containerId = containerId;
         ClientMain.valid = true;
     }
 }
