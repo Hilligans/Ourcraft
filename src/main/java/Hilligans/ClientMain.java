@@ -7,6 +7,7 @@ import Hilligans.Client.Rendering.Screens.EscapeScreen;
 import Hilligans.Client.Rendering.Screens.InventoryScreen;
 import Hilligans.Client.Rendering.World.*;
 import Hilligans.Entity.Entity;
+import Hilligans.Item.ItemStack;
 import Hilligans.Util.Settings;
 import Hilligans.Util.Util;
 import Hilligans.Block.Blocks;
@@ -124,6 +125,7 @@ public class ClientMain {
 
 
         texture = TextureManager.instance.registerTexture();
+        ClientData.register();
 
         clientWorld = new ClientWorld();
 
@@ -140,7 +142,6 @@ public class ClientMain {
 
 
 
-        } else {
         }
 
         glEnable(GL_BLEND);
@@ -207,6 +208,21 @@ public class ClientMain {
         StringRenderer.drawString(screenStack,Camera.getString(),windowX/2,0,0.5f);
         StringRenderer.drawString(screenStack,"FPS:" + fps,windowX/2,29,0.5f);
         StringRenderer.drawString(screenStack,clientWorld.biomeMap.getBiome((int)Camera.pos.x,(int)Camera.pos.z).name,windowX/2,58,0.5f);
+
+        int width = 64;
+        int startX = (int) (windowX / 2 - width * 4.5f);
+        int startY = windowY - width;
+
+        for(int x = 0; x < 9; x++) {
+            ItemStack itemStack = ClientData.inventory.getItem(x);
+            Renderer.drawTexture1(screenStack, ClientData.itemSlot,startX + x * width, startY, width,width);
+            if(itemStack.item != null) {
+                Block block = Blocks.MAPPED_BLOCKS.get(itemStack.item.name);
+                if(block != null) {
+                    itemStack.item.render(screenStack,startX + x * width, startY, width / 2,itemStack.count);
+                }
+            }
+        }
 
         ChatWindow.render1(screenStack);
 

@@ -6,6 +6,7 @@ import Hilligans.Client.ClientData;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ScreenBase;
 import Hilligans.Client.Rendering.World.Renderer;
+import Hilligans.ClientMain;
 import Hilligans.Item.ItemStack;
 
 public class InventoryScreen extends ScreenBase {
@@ -23,7 +24,9 @@ public class InventoryScreen extends ScreenBase {
             if(itemStack.item != null) {
                 Block block = Blocks.MAPPED_BLOCKS.get(itemStack.item.name);
                 if(block != null) {
-                    Renderer.renderBlockItem(matrixStack,x * 72, 300, 32,block);
+                    Renderer.drawTexture1(matrixStack, ClientData.itemSlot,x * 72, 300, 64,64);
+                    itemStack.item.render(matrixStack,x * 72, 300, 32,itemStack.count);
+                    //Renderer.renderBlockItem(matrixStack,x * 72, 300, 32,block);
                     //Renderer.drawTexture1(matrixStack, block.blockTextureManager.texture, x * 72, 300, 64, 64);
                 }
             }

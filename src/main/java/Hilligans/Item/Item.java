@@ -1,5 +1,9 @@
 package Hilligans.Item;
 
+import Hilligans.Client.MatrixStack;
+import Hilligans.Client.Rendering.World.Renderer;
+import Hilligans.Client.Rendering.World.StringRenderer;
+
 public class Item {
 
     public String name;
@@ -10,6 +14,20 @@ public class Item {
         Items.ITEMS.add(this);
         Items.HASHED_ITEMS.put(name,this);
         id = Items.getNextId();
+    }
+
+    public void render(MatrixStack matrixStack,int x, int y, int size, int count) {
+
+    }
+
+    void drawString(MatrixStack matrixStack, int x, int y, int size, int count) {
+        if(count != 1) {
+            if(count >= 10) {
+                StringRenderer.drawString(matrixStack, count + "", x + size + 14 , (int) (y + size * 1f), 0.5f);
+            } else {
+                StringRenderer.drawString(matrixStack, count + "", (int) (x + size ) + 29, (int) (y + size * 1f), 0.5f);
+            }
+        }
     }
 
 

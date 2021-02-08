@@ -91,7 +91,8 @@ public class Block {
         return vertices;
         re
         */
-       return getVertices(side,1.0f);
+
+        return getVertices(side,1.0f);
     }
 
     public Vector5f[] getVertices(int side, float size) {
