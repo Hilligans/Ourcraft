@@ -11,4 +11,6 @@ public interface IInventory {
 
     void setItem(int slot, ItemStack item);
 
+    boolean addItem(ItemStack itemStack);
+
 }

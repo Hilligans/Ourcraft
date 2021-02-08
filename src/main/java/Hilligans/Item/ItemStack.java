@@ -10,4 +10,13 @@ public class ItemStack {
         this.count = count;
     }
 
+    public int addItem(ItemStack itemStack) {
+        if(itemStack.item == item) {
+            int itemCount = Math.min(64 - count,itemStack.count);
+            count += itemCount;
+            return itemCount;
+        }
+        return 0;
+    }
+
 }

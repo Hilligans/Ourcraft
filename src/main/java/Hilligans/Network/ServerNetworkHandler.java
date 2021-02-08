@@ -1,5 +1,6 @@
 package Hilligans.Network;
 
+import Hilligans.Network.Packet.IFuturePacket;
 import Hilligans.Network.Packet.Server.SChatMessage;
 import Hilligans.ServerMain;
 import io.netty.channel.Channel;
@@ -22,6 +23,8 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<PacketData
     static ArrayList<ChannelId> channelIds = new ArrayList<>();
     public static HashMap<ChannelId,Integer> mappedId = new HashMap<>();
     public static HashMap<ChannelId,String> mappedName = new HashMap<>();
+
+    public static ArrayList<IFuturePacket> futurePackets = new ArrayList<>();
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {

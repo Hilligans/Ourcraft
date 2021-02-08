@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ServerMain {
 
-    public static World world;
+    public static ServerWorld world;
 
 
     public static void main(String[] args) {

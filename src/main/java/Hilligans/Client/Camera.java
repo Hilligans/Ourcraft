@@ -110,10 +110,10 @@ public class Camera {
                 isOnGround = false;
                 add(0, 0.045f, 0);
                 if(maxX == 0) {
-                    velX = velX * 0.5f;
+                    //velX = velX * 0.5f;
                 }
                 if(maxZ == 0) {
-                    velZ = velZ * 0.5f;
+                    //velZ = velZ * 0.5f;
                 }
             }
         }
@@ -407,6 +407,7 @@ public class Camera {
                 return new Vector3f(velX,0,velZ);
             case 2:
                 sprintTimeout = 0;
+                sprintDelay = 30;
                 return new Vector3f(velX,velY,0);
             case 3:
                 return new Vector3f(0,velY,velZ);

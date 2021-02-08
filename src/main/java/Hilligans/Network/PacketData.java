@@ -1,6 +1,8 @@
 package Hilligans.Network;
 
 import Hilligans.Data.Other.ColoredString;
+import Hilligans.Item.ItemStack;
+import Hilligans.Item.Items;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -89,6 +91,12 @@ public class PacketData {
         return coloredString;
     }
 
+    public ItemStack readItemStack() {
+        short item = readShort();
+        byte count = readByte();
+        return new ItemStack(Items.ITEMS.get(item),count);
+    }
+
     public void writeInt(int val) {
         size += 4;
         byteBuf.writeInt(val);
@@ -140,6 +148,11 @@ public class PacketData {
             writeFloat(vector4f.z);
             writeFloat(vector4f.w);
         }
+    }
+
+    public void writeItemStack(ItemStack itemStack) {
+        writeShort((short) itemStack.item.id);
+        writeByte(itemStack.count);
     }
 
     public PacketBase createPacket() {

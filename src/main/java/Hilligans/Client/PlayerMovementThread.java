@@ -14,11 +14,13 @@ public class PlayerMovementThread implements Runnable {
     @Override
     public void run() {
         if(ClientMain.valid) {
-
+            if(Camera.sprintDelay > 0) {
+                Camera.sprintDelay--;
+            }
             if(Camera.sprintTimeout == 0) {
                 Camera.sprinting = false;
             }
-            if(KeyHandler.keyPressed[KeyHandler.GLFW_KEY_LEFT_CONTROL]) {
+            if(KeyHandler.keyPressed[KeyHandler.GLFW_KEY_LEFT_CONTROL] && Camera.sprintDelay == 0) {
                 Camera.sprinting = true;
             }
             Camera.sprintTimeout = 0;

@@ -40,6 +40,12 @@ public abstract class PacketBase {
         packets.add(SRemoveEntityPacket::new);
         packets.add(CSendMessage::new);
         packets.add(SChatMessage::new);
+        packets.add(COpenScreen::new);
+        packets.add(SOpenScreen::new);
+        packets.add(CUpdateContainer::new);
+        packets.add(SUpdateContainer::new);
+        packets.add(CActivateBlock::new);
+        packets.add(SOpenContainer::new);
 
     }
 

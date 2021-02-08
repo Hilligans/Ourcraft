@@ -68,4 +68,12 @@ public class ServerWorld extends World {
             addEntity(itemEntity);
         }
     }
+
+    private int id = 0;
+
+    public synchronized int getNextContainerID() {
+        int id = this.id;
+        id++;
+        return id;
+    }
 }

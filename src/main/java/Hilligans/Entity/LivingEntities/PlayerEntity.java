@@ -3,11 +3,14 @@ package Hilligans.Entity.LivingEntities;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.World.VAOManager;
 import Hilligans.Data.Other.BoundingBox;
+import Hilligans.Data.Other.IInventory;
+import Hilligans.Data.Other.Inventory;
 import Hilligans.Entity.Entities.ItemEntity;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntity;
 import Hilligans.Network.PacketData;
 import Hilligans.ServerMain;
+import Hilligans.Util.Settings;
 import Hilligans.Util.Vector5f;
 import Hilligans.World.ServerWorld;
 import org.joml.Matrix4f;
@@ -25,12 +28,17 @@ public class PlayerEntity extends LivingEntity {
     int textureId = -1;
     int verticesCount;
 
+    public IInventory inventory;
+
+    public int containerId;
+
     public static int imageId;
 
     public PlayerEntity(float x, float y, float z,int id) {
         super(x,y,z,id);
         type = 0;
         boundingBox = new BoundingBox(-0.5f,-2.0f,-0.5f,0.5f,0.0f,0.5f);
+        inventory = new Inventory(Settings.playerInventorySize);
     }
 
     public PlayerEntity(PacketData packetData) {
