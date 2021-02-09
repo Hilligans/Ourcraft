@@ -1,7 +1,9 @@
-package Hilligans.Client.Rendering.World;
+package Hilligans.Client.Rendering;
 
 import Hilligans.Block.Block;
 import Hilligans.Client.MatrixStack;
+import Hilligans.Client.Rendering.World.ShaderManager;
+import Hilligans.Client.Rendering.World.VAOManager;
 import Hilligans.ClientMain;
 import Hilligans.Data.Other.Texture;
 import Hilligans.Util.Util;
@@ -108,6 +110,26 @@ public class Renderer {
         int width = (int) ((endX - startX) * size);
         int height = (int) ((endY - startY) * size);
         drawTexture(texture, ClientMain.windowX / 2 - width / 2,  ClientMain.windowY / 2 - height / 2, width, height, startX,startY,endX,endY);
+    }
+
+    public static void drawCenteredXTexture(Texture texture, int y, float size) {
+        drawTexture(texture, (int)(ClientMain.windowX / 2 - texture.width / 2 * size), y,(int)(texture.width * size), (int)(texture.height * size));
+    }
+
+    public static void drawCenteredXTexture(Texture texture, int y, int startX, int startY, int endX, int endY, float size) {
+        int width = (int) ((endX - startX) * size);
+        int height = (int) ((endY - startY) * size);
+        drawTexture(texture, ClientMain.windowX / 2 - width / 2,  y, width, height, startX,startY,endX,endY);
+    }
+
+    public static void drawCenteredYTexture(Texture texture, int x, float size) {
+        drawTexture(texture, x, (int)(ClientMain.windowY / 2 - texture.height / 2 * size),(int)(texture.width * size), (int)(texture.height * size));
+    }
+
+    public static void drawCenteredYTexture(Texture texture, int x, int startX, int startY, int endX, int endY, float size) {
+        int width = (int) ((endX - startX) * size);
+        int height = (int) ((endY - startY) * size);
+        drawTexture(texture, x,  ClientMain.windowY / 2 - height / 2, width, height, startX,startY,endX,endY);
     }
 
     public static void create(int id) {

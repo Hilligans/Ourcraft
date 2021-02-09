@@ -11,6 +11,6 @@ public interface Screen {
 
     default void close() {}
 
-    default void mouseClick(int x, int y) {}
+    default void mouseClick(int x, int y, int mouseButton) {}
 
 }

@@ -1,7 +1,7 @@
 package Hilligans.Client.Rendering.Widgets;
 
 import Hilligans.Client.MatrixStack;
-import Hilligans.Client.Rendering.World.Renderer;
+import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Client.Rendering.World.StringRenderer;
 import Hilligans.ClientMain;
 import org.lwjgl.opengl.GL11;

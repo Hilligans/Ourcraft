@@ -8,6 +8,7 @@ public class Textures {
 
     public static final Texture ITEM_SLOT = new Texture("item_slot.png");
     public static final Texture INVENTORY = new Texture("inventory.png");
+    public static final Texture HOTBAR = new Texture("hotbar.png");
 
 
 }

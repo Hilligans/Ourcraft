@@ -1,5 +1,6 @@
 package Hilligans.Network.Packet.Server;
 
+import Hilligans.Client.ClientData;
 import Hilligans.Item.ItemStack;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
@@ -10,7 +11,7 @@ public class SUpdateContainer extends PacketBase {
     ItemStack itemStack;
 
     public SUpdateContainer() {
-        super(16);
+        super(14);
     }
 
     public SUpdateContainer(byte slot, ItemStack itemStack) {
@@ -33,6 +34,8 @@ public class SUpdateContainer extends PacketBase {
 
     @Override
     public void handle() {
-
+        if(ClientData.openContainer != null) {
+            ClientData.openContainer.slots.get(slot).setContents(itemStack);
+        }
     }
 }

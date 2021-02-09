@@ -13,7 +13,9 @@ public class Settings {
     public static final boolean renderSameTransparent = true;
     public static final boolean renderTransparency = true;
 
-    public static final int playerInventorySize = 36;
+    public static final int playerInventorySize = 45;
+
+    public static float guiSize = 4.0f;
 
 
 

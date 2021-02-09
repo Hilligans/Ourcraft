@@ -12,7 +12,7 @@ public class SUpdateInventory extends PacketBase {
     PacketData packetData;
 
     public SUpdateInventory() {
-        super(19);
+        super(17);
     }
 
     public SUpdateInventory(Inventory inventory) {

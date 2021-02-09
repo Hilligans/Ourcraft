@@ -2,9 +2,8 @@ package Hilligans.Client;
 
 import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
-import Hilligans.Client.Rendering.World.Renderer;
+import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Client.Rendering.World.StringRenderer;
-import Hilligans.Client.Rendering.World.TextureManager;
 
 public class BlockPlacer {
 

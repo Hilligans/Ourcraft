@@ -1,7 +1,6 @@
 package Hilligans.Item;
 
 import Hilligans.Client.MatrixStack;
-import Hilligans.Client.Rendering.World.Renderer;
 import Hilligans.Client.Rendering.World.StringRenderer;
 
 public class Item {

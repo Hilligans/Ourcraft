@@ -4,7 +4,7 @@ import Hilligans.Client.Key.CharPress;
 import Hilligans.Client.Key.KeyHandler;
 import Hilligans.Client.Key.KeyPress;
 import Hilligans.Client.MatrixStack;
-import Hilligans.Client.Rendering.World.Renderer;
+import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Client.Rendering.World.StringRenderer;
 import Hilligans.ClientMain;
 import org.lwjgl.opengl.GL11;

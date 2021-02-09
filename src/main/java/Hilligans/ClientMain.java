@@ -2,14 +2,18 @@ package Hilligans;
 
 import Hilligans.Block.Block;
 import Hilligans.Client.*;
+import Hilligans.Client.Rendering.ContainerScreen;
+import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Client.Rendering.Screen;
 import Hilligans.Client.Rendering.Screens.EscapeScreen;
 import Hilligans.Client.Rendering.Screens.InventoryScreen;
 import Hilligans.Client.Rendering.World.*;
+import Hilligans.Container.Container;
 import Hilligans.Data.Other.Texture;
 import Hilligans.Data.Other.Textures;
 import Hilligans.Entity.Entity;
 import Hilligans.Item.ItemStack;
+import Hilligans.Network.PacketBase;
 import Hilligans.Util.Settings;
 import Hilligans.Util.Util;
 import Hilligans.Block.Blocks;
@@ -67,7 +71,8 @@ public class ClientMain {
     public static String name = "";
 
     public static void main(String[] args) {
-
+        PacketBase.register();
+        Container.register();
 
 
         System.setProperty("java.awt.headless", "true");
@@ -182,16 +187,14 @@ public class ClientMain {
 
             countFPS();
 
-            if(mouseLocked) {
-                Camera.updateMouse();
-            }
+
+            Camera.updateMouse();
         }
         ClientNetworkInit.close();
         glfwTerminate();
         System.exit(1);
-
-
     }
+
 
     public static void render() {
 
@@ -217,25 +220,13 @@ public class ClientMain {
         StringRenderer.drawString(screenStack,"FPS:" + fps,windowX/2,29,0.5f);
         StringRenderer.drawString(screenStack,clientWorld.biomeMap.getBiome((int)Camera.pos.x,(int)Camera.pos.z).name,windowX/2,58,0.5f);
 
-        int width = 64;
-        int startX = (int) (windowX / 2 - width * 4.5f);
-        int startY = windowY - width;
-
-        for(int x = 0; x < 9; x++) {
-            ItemStack itemStack = ClientData.inventory.getItem(x);
-            Renderer.drawTexture1(screenStack, ClientData.itemSlot,startX + x * width, startY, width,width);
-            if(itemStack.item != null) {
-                Block block = Blocks.MAPPED_BLOCKS.get(itemStack.item.name);
-                if(block != null) {
-                    itemStack.item.render(screenStack,startX + x * width, startY, width / 2,itemStack);
-                }
-            }
-        }
+        InventoryScreen.drawHotbar(screenStack);
 
         ChatWindow.render1(screenStack);
 
         if(screen != null) {
             screen.render(screenStack);
+            ClientData.heldStack.renderStack(screenStack, (int) (Camera.newX - Settings.guiSize * 8), (int) (Camera.newY - Settings.guiSize * 8));
         } else {
             BlockPlacer.render(screenStack);
         }
@@ -283,7 +274,7 @@ public class ClientMain {
         }
     }
 
-    static boolean mouseLocked = false;
+    public static boolean mouseLocked = false;
 
     public static void joinServer() {
         try {
@@ -304,6 +295,16 @@ public class ClientMain {
 
     public static void openScreen(Screen screen1) {
         screen = screen1;
+        if(screen1 instanceof ContainerScreen) {
+            ContainerScreen<?> screen2 = (ContainerScreen<?>) screen1;
+            screen2.setContainer(screen2.getContainer());
+        }
+    }
+
+    public static void openScreen(Container container) {
+        ContainerScreen<?> containerScreen = container.getContainerScreen();
+        screen = containerScreen;
+        containerScreen.setContainer(container);
     }
 
     public static void createCallbacks() {
@@ -336,42 +337,37 @@ public class ClientMain {
         glfwSetMouseButtonCallback(window, new GLFWMouseButtonCallback() {
             @Override
             public void invoke(long window, int button, int action, int mods) {
-                if(button == GLFW_MOUSE_BUTTON_1) {
-                    if (action == GLFW_PRESS) {
-                        if(screen == null) {
-                            BlockPos pos = clientWorld.traceBlockToBreak(Camera.pos.x, Camera.pos.y, Camera.pos.z,Camera.pitch,Camera.yaw);
-                            if(pos != null) {
+                if (action == GLFW_PRESS) {
+                    if (screen == null) {
+                        if (button == GLFW_MOUSE_BUTTON_1) {
+                            BlockPos pos = clientWorld.traceBlockToBreak(Camera.pos.x, Camera.pos.y, Camera.pos.z, Camera.pitch, Camera.yaw);
+                            if (pos != null) {
                                 if (joinServer) {
                                     ClientNetworkHandler.sendPacket(new CSendBlockChanges(pos.x, pos.y, pos.z, Blocks.AIR.id));
-                                   // clientWorld.entities.put(100,new ItemEntity(pos.x,pos.y,pos.z,100,clientWorld.getBlockState(pos).block));
+                                    // clientWorld.entities.put(100,new ItemEntity(pos.x,pos.y,pos.z,100,clientWorld.getBlockState(pos).block));
                                 } else {
                                     clientWorld.setBlockState(pos, new BlockState(Blocks.AIR));
                                 }
                             }
 
-                        } else {
-                            DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
-                            DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
-
-                            glfwGetCursorPos(window, x, y);
-                            screen.mouseClick((int)x.get(),(int)y.get());
-                        }
-                    }
-
-                } else if(button == GLFW_MOUSE_BUTTON_2) {
-                    if (action == GLFW_PRESS) {
-                        BlockPos pos = clientWorld.traceBlock(Camera.pos.x, Camera.pos.y, Camera.pos.z,Camera.pitch,Camera.yaw);
-                        if(pos != null) {
-                            Block block = Blocks.getBlockWithID(BlockPlacer.id);
-                            if(block.getAllowedMovement1(new Vector3f(),Camera.pos,pos,Camera.playerBoundingBox)) {
-                                if (joinServer) {
-                                    ClientNetworkHandler.sendPacket(new CSendBlockChanges(pos.x, pos.y, pos.z, BlockPlacer.id));
-                                    clientWorld.setBlockState(pos, new BlockState(block));
-                                } else {
+                        } else if (button == GLFW_MOUSE_BUTTON_2) {
+                            BlockPos pos = clientWorld.traceBlock(Camera.pos.x, Camera.pos.y, Camera.pos.z, Camera.pitch, Camera.yaw);
+                            if (pos != null) {
+                                Block block = Blocks.getBlockWithID(BlockPlacer.id);
+                                if (block.getAllowedMovement1(new Vector3f(), Camera.pos, pos, Camera.playerBoundingBox)) {
+                                    if (joinServer) {
+                                        ClientNetworkHandler.sendPacket(new CSendBlockChanges(pos.x, pos.y, pos.z, BlockPlacer.id));
+                                    }
                                     clientWorld.setBlockState(pos, new BlockState(block));
                                 }
                             }
                         }
+                    } else {
+                        DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
+                        DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
+
+                        glfwGetCursorPos(window, x, y);
+                        screen.mouseClick((int) x.get(), (int) y.get(), button);
                     }
                 }
             }

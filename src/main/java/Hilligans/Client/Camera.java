@@ -280,8 +280,8 @@ public class Camera {
         return new MatrixStack(matrix4f);
     }
 
-    static double newX = (float)windowX / 2;
-    static double newY = (float)windowY / 2;
+    public static double newX = (float)windowX / 2;
+    public static double newY = (float)windowY / 2;
 
 
     public static void updateMouse() {
@@ -293,17 +293,21 @@ public class Camera {
         newX = x.get();
         newY = y.get();
 
-        double halfWindowX = (double) windowX / 2;
-        double halfWindowY = (double) windowY / 2;
+        if(ClientMain.mouseLocked) {
+            double halfWindowX = (double) windowX / 2;
+            double halfWindowY = (double) windowY / 2;
 
-        double deltaX = newX - halfWindowX;
-        double deltaY = newY - halfWindowY;
+            double deltaX = newX - halfWindowX;
+            double deltaY = newY - halfWindowY;
 
-        Camera.addPitch(deltaY / sensitivity);
-        Camera.addYaw(deltaX / sensitivity);
+            Camera.addPitch(deltaY / sensitivity);
+            Camera.addYaw(deltaX / sensitivity);
 
 
-        glfwSetCursorPos(ClientMain.window, halfWindowX, halfWindowY);
+            glfwSetCursorPos(ClientMain.window, halfWindowX, halfWindowY);
+        } else {
+
+        }
     }
 
 

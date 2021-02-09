@@ -5,8 +5,11 @@ import Hilligans.Client.Key.KeyHandler;
 import Hilligans.Client.Key.KeyPress;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.Widgets.Widget;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
+
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
 
 public abstract class ScreenBase implements Screen {
 
@@ -50,11 +53,13 @@ public abstract class ScreenBase implements Screen {
     }
 
     @Override
-    public void mouseClick(int x, int y) {
-        for(Widget widget : widgets) {
-            widget.isFocused = false;
-            if(widget.isInBounds(x,y)) {
-                widget.activate(x - widget.x, y - widget.y);
+    public void mouseClick(int x, int y, int mouseButton) {
+        if(mouseButton == GLFW_MOUSE_BUTTON_1) {
+            for (Widget widget : widgets) {
+                widget.isFocused = false;
+                if (widget.isInBounds(x, y)) {
+                    widget.activate(x - widget.x, y - widget.y);
+                }
             }
         }
     }

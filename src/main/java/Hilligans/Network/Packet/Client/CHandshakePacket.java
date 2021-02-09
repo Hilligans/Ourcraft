@@ -5,6 +5,7 @@ import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Network.Packet.Server.SCreateEntityPacket;
 import Hilligans.Network.Packet.Server.SHandshakePacket;
+import Hilligans.Server.PlayerData;
 import Hilligans.World.Chunk;
 import Hilligans.Network.Packet.Server.SChatMessage;
 import Hilligans.Network.PacketBase;
@@ -14,7 +15,7 @@ import Hilligans.ServerMain;
 import Hilligans.Util.Settings;
 
 
-public class CHandshakePacket extends PacketBase {
+public class  CHandshakePacket extends PacketBase {
 
     public int id;
     public String name;
@@ -54,6 +55,7 @@ public class CHandshakePacket extends PacketBase {
             ServerNetworkHandler.mappedChannels.put(playerId,ctx.channel().id());
             ServerNetworkHandler.mappedId.put(ctx.channel().id(),playerId);
             ServerNetworkHandler.mappedName.put(ctx.channel().id(),name);
+            ServerNetworkHandler.playerData.put(playerId,new PlayerData(playerEntity));
         } else {
             ctx.channel().close();
         }

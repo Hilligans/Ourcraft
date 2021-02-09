@@ -2,7 +2,7 @@ package Hilligans.Item;
 
 import Hilligans.Block.Block;
 import Hilligans.Client.MatrixStack;
-import Hilligans.Client.Rendering.World.Renderer;
+import Hilligans.Client.Rendering.Renderer;
 
 public class BlockItem extends Item {
 

@@ -2,6 +2,7 @@ package Hilligans.Network;
 
 import Hilligans.Network.Packet.IFuturePacket;
 import Hilligans.Network.Packet.Server.SChatMessage;
+import Hilligans.Server.PlayerData;
 import Hilligans.ServerMain;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -25,6 +26,7 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<PacketData
     public static HashMap<ChannelId,Integer> mappedId = new HashMap<>();
     public static HashMap<ChannelId,String> mappedName = new HashMap<>();
     public static Int2ObjectOpenHashMap<ChannelId> mappedChannels = new Int2ObjectOpenHashMap<>();
+    public static Int2ObjectOpenHashMap<PlayerData> playerData = new Int2ObjectOpenHashMap<>();
 
     public static ArrayList<IFuturePacket> futurePackets = new ArrayList<>();
 
@@ -48,8 +50,9 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<PacketData
         int id = mappedId.getOrDefault(ctx.channel().id(),-1);
         if(id != -1) {
             ServerMain.world.removeEntity(id);
+            mappedChannels.remove(id);
+            playerData.remove(id);
         }
-        mappedChannels.remove(id);
         sendPacket(new SChatMessage(mappedName.get(ctx.channel().id()) + " has left the game"));
         mappedName.remove(ctx.channel().id());
         super.channelInactive(ctx);

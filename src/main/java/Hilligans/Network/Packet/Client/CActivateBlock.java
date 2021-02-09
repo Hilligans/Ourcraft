@@ -5,7 +5,7 @@ import Hilligans.Network.PacketData;
 
 public class CActivateBlock extends PacketBase {
     public CActivateBlock() {
-        super(17);
+        super(15);
     }
 
     @Override

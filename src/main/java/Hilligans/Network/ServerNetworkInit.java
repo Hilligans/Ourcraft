@@ -1,5 +1,6 @@
 package Hilligans.Network;
 
+import Hilligans.Container.Container;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -20,6 +21,7 @@ public class ServerNetworkInit extends ChannelInitializer<SocketChannel> {
 
     public static void startServer(String port) throws Exception {
         PacketBase.register();
+        Container.register();
 
         final int PORT = Integer.parseInt(System.getProperty("port", port));
 
