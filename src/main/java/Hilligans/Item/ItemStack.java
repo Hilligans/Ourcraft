@@ -32,7 +32,6 @@ public class ItemStack {
         return 0;
     }
 
-
     public ItemStack mergeStack(ItemStack itemStack) {
         int leftOver = itemStack.count - addItem(itemStack);
         if(leftOver == 0) {
