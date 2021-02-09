@@ -9,6 +9,7 @@ import Hilligans.Client.Rendering.Screens.EscapeScreen;
 import Hilligans.Client.Rendering.Screens.InventoryScreen;
 import Hilligans.Client.Rendering.World.*;
 import Hilligans.Container.Container;
+import Hilligans.Container.Slot;
 import Hilligans.Data.Other.Texture;
 import Hilligans.Data.Other.Textures;
 import Hilligans.Entity.Entity;
@@ -141,6 +142,28 @@ public class ClientMain {
                 ClientData.f3 = !ClientData.f3;
             }
         },GLFW_KEY_F3);
+
+        KeyHandler.register(new KeyPress() {
+            @Override
+            public void onPress() {
+                if(screen != null) {
+                    if(ClientData.openContainer != null) {
+                        Slot slot = ClientData.openContainer.getSlotAt((int)Camera.newX,(int)Camera.newY);
+                        if(slot != null) {
+                            if(KeyHandler.keyPressed[GLFW_KEY_LEFT_CONTROL]) {
+                                slot.setContents(ItemStack.emptyStack());
+                                ClientNetworkHandler.sendPacket(new CDropItem(slot.id,(byte)-1));
+                            } else {
+                                slot.getContents().removeCount(1);
+                                ClientNetworkHandler.sendPacket(new CDropItem(slot.id,(byte)1));
+                            }
+                        }
+                    }
+                } else {
+
+                }
+            }
+        },GLFW_KEY_Q);
 
         screen = new JoinScreen();
 
@@ -307,7 +330,7 @@ public class ClientMain {
             screen = null;
         }
         if(!ClientData.heldStack.isEmpty()) {
-            ClientNetworkHandler.sendPacket(new CDropItem((short)-1));
+            ClientNetworkHandler.sendPacket(new CDropItem((short)-1,(byte)-1));
             ClientData.heldStack = ItemStack.emptyStack();
         }
     }
@@ -316,7 +339,9 @@ public class ClientMain {
         screen = screen1;
         if(screen1 instanceof ContainerScreen) {
             ContainerScreen<?> screen2 = (ContainerScreen<?>) screen1;
-            screen2.setContainer(screen2.getContainer());
+            Container container = screen2.getContainer();
+            screen2.setContainer(container);
+            ClientData.openContainer = container;
         }
     }
 
@@ -324,6 +349,7 @@ public class ClientMain {
         ContainerScreen<?> containerScreen = container.getContainerScreen();
         screen = containerScreen;
         containerScreen.setContainer(container);
+        ClientData.openContainer = container;
     }
 
     public static void createCallbacks() {

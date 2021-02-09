@@ -65,6 +65,14 @@ public class ItemStack {
         return itemStack;
     }
 
+    public void removeCount(int count) {
+        this.count -= count;
+        if(this.count <= 0) {
+            this.item  = null;
+            this.count = 0;
+        }
+    }
+
 
     @Override
     public String toString() {

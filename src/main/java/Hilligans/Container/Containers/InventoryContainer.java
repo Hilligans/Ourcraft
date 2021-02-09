@@ -20,12 +20,12 @@ public class InventoryContainer extends Container {
 
         for(int y = 0; y < 4; y++) {
             for (int x = 0; x < 9; x++) {
-                slots.add(new Slot((int)(startX + x * 64 + 7 * Settings.guiSize), (int)(startY + y * 64 + 7 * Settings.guiSize),ClientData.inventory,9 + x + y * 9));
+                addSlot(new Slot((int)(startX + x * 64 + 7 * Settings.guiSize), (int)(startY + y * 64 + 7 * Settings.guiSize),ClientData.inventory,9 + x + y * 9));
             }
         }
 
         for(int x = 0; x < 9; x++) {
-            slots.add(new Slot((int)(startX + x * 64 + 7 * Settings.guiSize), (int)(startY + 256 + 12 * Settings.guiSize),ClientData.inventory,x));
+            addSlot(new Slot((int)(startX + x * 64 + 7 * Settings.guiSize), (int)(startY + 256 + 12 * Settings.guiSize),ClientData.inventory,x));
         }
     }
 
@@ -33,11 +33,11 @@ public class InventoryContainer extends Container {
         super(0);
         for(int y = 0; y < 4; y++) {
             for (int x = 0; x < 9; x++) {
-                slots.add(new Slot(0,0,inventory,9 + x + y * 9));
+                addSlot(new Slot(0,0,inventory,9 + x + y * 9));
             }
         }
         for(int x = 0; x < 9; x++) {
-            slots.add(new Slot(0,0,inventory,x));
+            addSlot(new Slot(0,0,inventory,x));
         }
     }
 

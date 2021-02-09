@@ -15,6 +15,7 @@ public class Slot {
     int index;
     public int x;
     public int y;
+    public short id;
 
     public Slot(int x, int y, IInventory inventory, int index) {
         this.x = x;

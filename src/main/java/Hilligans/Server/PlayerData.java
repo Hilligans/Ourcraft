@@ -50,18 +50,28 @@ public class PlayerData {
         }
     }
 
-    public void dropItem(short slot) {
+    public void dropItem(short slot, byte count) {
         if(slot == -1) {
             if(!heldStack.isEmpty()) {
-                ServerMain.world.addEntity(new ItemEntity(playerEntity.x, playerEntity.y, playerEntity.z, Entity.getNewId(), heldStack).setVel(playerEntity.getForeWard().mul(-0.5f).add(0,0.25f,0)));
-                heldStack = ItemStack.emptyStack();
+                if(count == -1 || count >= heldStack.count) {
+                    ServerMain.world.addEntity(new ItemEntity(playerEntity.x, playerEntity.y, playerEntity.z, Entity.getNewId(), heldStack).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
+                    heldStack = ItemStack.emptyStack();
+                } else {
+                    ServerMain.world.addEntity(new ItemEntity(playerEntity.x,playerEntity.y,playerEntity.z,Entity.getNewId(),new ItemStack(heldStack.item,count)).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
+                    heldStack.count -= count;
+                }
             }
         } else {
             Slot itemSlot = openContainer.getSlot(slot);
             if(itemSlot != null) {
                 if(!itemSlot.getContents().isEmpty()) {
-                    ServerMain.world.addEntity(new ItemEntity(playerEntity.x, playerEntity.y, playerEntity.z, Entity.getNewId(), itemSlot.getContents()).setVel(playerEntity.getForeWard().mul(-0.5f).add(0,0.25f,0)));
-                    itemSlot.setContents(ItemStack.emptyStack());
+                    if(count == -1 || count >= itemSlot.getContents().count) {
+                        ServerMain.world.addEntity(new ItemEntity(playerEntity.x, playerEntity.y, playerEntity.z, Entity.getNewId(), itemSlot.getContents()).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
+                        itemSlot.setContents(ItemStack.emptyStack());
+                    } else {
+                        ServerMain.world.addEntity(new ItemEntity(playerEntity.x,playerEntity.y,playerEntity.z,Entity.getNewId(),new ItemStack(itemSlot.getContents().item,count)).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
+                        itemSlot.getContents().count -= count;
+                    }
                 }
             }
         }

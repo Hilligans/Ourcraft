@@ -3,6 +3,7 @@ package Hilligans.Container;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Container.Containers.InventoryContainer;
+import Hilligans.Util.Settings;
 
 import java.util.ArrayList;
 
@@ -23,6 +24,11 @@ public abstract class Container {
         return null;
     }
 
+    public void addSlot(Slot slot) {
+        slot.id = (short) slots.size();
+        slots.add(slot);
+    }
+
     public void render(MatrixStack matrixStack) {
         //System.out.println("RENDERING");
         for(Slot slot : slots) {
@@ -31,6 +37,15 @@ public abstract class Container {
     }
 
     public abstract ContainerScreen<?> getContainerScreen();
+
+    public Slot getSlotAt(int x, int y) {
+        for(Slot slot : slots) {
+            if(slot.x < x && slot.y < y && slot.x + 16 * Settings.guiSize > x && slot.y + 16 * Settings.guiSize > y) {
+                return slot;
+            }
+        }
+        return null;
+    }
 
     public static ArrayList<ContainerFetcher> containers = new ArrayList<>();
 
