@@ -45,6 +45,7 @@ public abstract class PacketBase {
         packets.add(CActivateBlock::new);
         packets.add(SOpenContainer::new);
         packets.add(SUpdateInventory::new);
+        packets.add(CDropItem::new);
 
 
     }

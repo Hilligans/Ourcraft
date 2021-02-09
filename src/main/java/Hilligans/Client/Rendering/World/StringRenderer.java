@@ -83,11 +83,11 @@ public class StringRenderer {
     }
 
     private static void draw(int id, int size) {
-        glDisable(GL_CULL_FACE);
+        //glDisable(GL_CULL_FACE);
         GL30.glBindTexture(GL_TEXTURE_2D,instance.mappedCharacters);
         GL30.glBindVertexArray(id);
         glDrawElements(GL_TRIANGLES, size * 3 / 2,GL_UNSIGNED_INT,0);
-        glEnable(GL_CULL_FACE);
+        //glEnable(GL_CULL_FACE);
         VAOManager.destroyBuffer(id);
     }
 
@@ -99,6 +99,6 @@ public class StringRenderer {
     }
 
     private static Integer[] getIndices(int offset) {
-        return new Integer[] {offset,offset + 1,offset + 2,offset + 3,offset + 1,offset + 2};
+        return new Integer[] {offset,offset + 1,offset + 2,offset + 3,offset + 2,offset + 1};
     }
 }

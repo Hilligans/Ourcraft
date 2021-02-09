@@ -25,6 +25,9 @@ public abstract class Entity {
     public int id;
     public int type = 0;
 
+    float slowAmount = 0.9f;
+    public boolean onGround = true;
+
     public Entity(int id) {
         this.id = id;
         x = 0;
@@ -61,6 +64,21 @@ public abstract class Entity {
         return this;
     }
 
+    public Entity setVel(float velX, float velY, float velZ) {
+        this.velX = velX;
+        this.velY = velY;
+        this.velZ = velZ;
+        return this;
+    }
+
+    public Entity setVel(Vector3f vel) {
+        this.velX = vel.x;
+        this.velY = vel.y;
+        this.velZ = vel.z;
+        System.out.println(velX + " : " + velY + " : " + velZ);
+        return this;
+    }
+
     public void writeData(PacketData packetData) {
         packetData.writeInt(type);
         packetData.writeFloat(x);
@@ -86,32 +104,44 @@ public abstract class Entity {
             for(int a = 0; a < count; a++) {
                 move(velX / count, velY / count, velZ / count);
             }
-            //move(velX / 2, velY / 2, velZ / 2);
+            velX = velX * slowAmount;
+            velY = velY * slowAmount;
+            velZ = velZ * slowAmount;
             ServerNetworkHandler.sendPacket(new SUpdateEntityPacket(this));
         }
     }
 
     private void move(float velX, float velY, float velZ) {
-        Vector3f movement = new Vector3f();
-        for(int x = 0; x < 7; x++) {
-            movement = getAllowedMovement(tryMovement(x,velX,velY,velZ),ServerMain.world);
-            if(movement.x != velX && movement.y != velY && movement.z != velZ) {
+        boolean couldMove = false;
+        int x;
+        for(x = 0; x < 7; x++) {
+            if(!getAllowedMovement(tryMovement(x,velX,velY,velZ),ServerMain.world)) {
                 continue;
             }
+            couldMove = true;
             break;
         }
-        if (movement.x != velX) {
-            this.velX = 0;
+        onGround = false;
+        if(!couldMove) {
+            onGround = true;
+            velX = 0;
+            velY = 0;
+            velZ = 0;
         }
-        if (movement.y != velY) {
-            this.velZ = 0;
+
+        if (x == 3 || x == 5 || x == 6) {
+            velX = 0;
         }
-        if (movement.z != velY) {
-            this.velZ = 0;
+        if (x == 1 || x == 4 || x == 6) {
+            onGround = true;
+            velY = 0;
         }
-        x += movement.x;
-        y += movement.y;
-        z += movement.z;
+        if (x == 2 || x == 4 || x == 5) {
+            velZ = 0;
+        }
+        this.x += velX;
+        this.y += velY;
+        this.z += velZ;
     }
 
     private Vector3f tryMovement(int side, float velX, float velY, float velZ) {
@@ -119,9 +149,9 @@ public abstract class Entity {
             case 0:
                 return new Vector3f(velX,velY,velZ);
             case 1:
-                return new Vector3f(velX,velY,0);
-            case 2:
                 return new Vector3f(velX,0,velZ);
+            case 2:
+                return new Vector3f(velX,velY,0);
             case 3:
                 return new Vector3f(0,velY,velZ);
             case 4:
@@ -137,7 +167,7 @@ public abstract class Entity {
 
 
 
-    public Vector3f getAllowedMovement(Vector3f motion, World world) {
+    public boolean getAllowedMovement(Vector3f motion, World world) {
         BlockPos pos = new BlockPos((int)Math.floor(x),(int)Math.floor(y),(int)Math.floor(z));
         int X = (int) Math.ceil(Math.abs(motion.x)) + 1;
         int Y = (int) Math.ceil(Math.abs(motion.y)) + 1;
@@ -148,15 +178,15 @@ public abstract class Entity {
                 for(int z = -Z; z < Z; z++) {
                     Block block = world.getBlockState(pos.copy().add(x,y,z)).block;
                     if(block != Blocks.AIR) {
-                        Vector3f blockSpeed = block.getAllowedMovement(new Vector3f(motion.x,motion.y,motion.z), new Vector3f(this.x, this.y, this.z), pos.copy().add(x, y, z), boundingBox);
-                        if(blockSpeed.x != motion.x || blockSpeed.y != motion.y || blockSpeed.z != motion.z) {
-                            return new Vector3f(0,0,0);
+                        boolean canMove = block.getAllowedMovement1(new Vector3f(motion.x,motion.y,motion.z), new Vector3f(this.x, this.y, this.z), pos.copy().add(x, y, z), boundingBox);
+                        if(!canMove) {
+                            return false;
                         }
                     }
                 }
             }
         }
-        return motion;
+        return true;
     }
 
     static int iD = 0;

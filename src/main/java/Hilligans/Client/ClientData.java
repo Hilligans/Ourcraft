@@ -11,6 +11,8 @@ public class ClientData {
     public static Inventory inventory = new Inventory(Settings.playerInventorySize);
     public static ItemStack heldStack = ItemStack.emptyStack();
     public static Container openContainer;
+    public static boolean f3 = false;
+    public static boolean creative = false;
 
 
     public static void register() {

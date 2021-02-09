@@ -1,5 +1,6 @@
 package Hilligans.Entity.LivingEntities;
 
+import Hilligans.Client.Camera;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.World.VAOManager;
 import Hilligans.Data.Other.BoundingBox;
@@ -54,14 +55,16 @@ public class PlayerEntity extends LivingEntity {
         for(Entity entity : ServerMain.world.entities.values()) {
             if(entity instanceof ItemEntity) {
                 if (entity.boundingBox.intersectsBox(itemPickupBox, new Vector3f(entity.x, entity.y, entity.z), new Vector3f(x, y, z))) {
-                    ItemStack itemStack = ((ItemEntity)entity).itemStack;
-                    int count = itemStack.count;
-                    if(inventory.addItem(itemStack)) {
-                        ServerMain.world.removeEntity(entity.id);
-                    }
-                    if(count != itemStack.count) {
-                        //System.out.println("SHOULD SEND PACKET");
-                        updateInventory = true;
+                    if(((ItemEntity)entity).pickupDelay == 0) {
+                        ItemStack itemStack = ((ItemEntity) entity).itemStack;
+                        int count = itemStack.count;
+                        if (inventory.addItem(itemStack)) {
+                            ServerMain.world.removeEntity(entity.id);
+                        }
+                        if (count != itemStack.count) {
+                            //System.out.println("SHOULD SEND PACKET");
+                            updateInventory = true;
+                        }
                     }
                 }
             }
@@ -71,6 +74,10 @@ public class PlayerEntity extends LivingEntity {
             //System.out.println(inventory.toString());
             sendPacket(new SUpdateInventory(inventory));
         }
+    }
+
+    public Vector3f getForeWard() {
+        return new Vector3f((float) (Math.cos(yaw) * Math.cos(pitch)),(float)(Math.sin(pitch)),(float)(Math.sin(yaw) * Math.cos(pitch)));
     }
 
     @Override

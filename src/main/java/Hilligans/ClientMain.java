@@ -13,6 +13,7 @@ import Hilligans.Data.Other.Texture;
 import Hilligans.Data.Other.Textures;
 import Hilligans.Entity.Entity;
 import Hilligans.Item.ItemStack;
+import Hilligans.Network.Packet.Client.CDropItem;
 import Hilligans.Network.PacketBase;
 import Hilligans.Util.Settings;
 import Hilligans.Util.Util;
@@ -134,6 +135,13 @@ public class ClientMain {
             }
         },GLFW_KEY_E);
 
+        KeyHandler.register(new KeyPress() {
+            @Override
+            public void onPress() {
+                ClientData.f3 = !ClientData.f3;
+            }
+        },GLFW_KEY_F3);
+
         screen = new JoinScreen();
 
 
@@ -207,19 +215,26 @@ public class ClientMain {
         glBindTexture(GL_TEXTURE_2D, texture);
         MatrixStack matrixStack = Camera.getWorldStack();
         matrixStack.applyColor();
+        matrixStack.applyTransformation();
+
         MatrixStack screenStack = Camera.getScreenStack();
         screenStack.applyColor();
+        screenStack.applyTransformation();
 
 
         clientWorld.tick();
         clientWorld.render(matrixStack);
 
         //Renderer.renderBlockItem(screenStack,300,200,64,Blocks.LOG);
+        if(ClientData.f3) {
+            StringRenderer.drawString(screenStack, Camera.getString(), windowX / 2, 0, 0.5f);
+            StringRenderer.drawString(screenStack, "FPS:" + fps, windowX / 2, 29, 0.5f);
+            StringRenderer.drawString(screenStack, clientWorld.biomeMap.getBiome((int) Camera.pos.x, (int) Camera.pos.z).name, windowX / 2, 58, 0.5f);
+        }
 
-        StringRenderer.drawString(screenStack,Camera.getString(),windowX/2,0,0.5f);
-        StringRenderer.drawString(screenStack,"FPS:" + fps,windowX/2,29,0.5f);
-        StringRenderer.drawString(screenStack,clientWorld.biomeMap.getBiome((int)Camera.pos.x,(int)Camera.pos.z).name,windowX/2,58,0.5f);
-
+        //screenStack.push();
+        //screenStack.pop();;
+        //StringRenderer.drawString(screenStack,"",0,0,0);
         InventoryScreen.drawHotbar(screenStack);
 
         ChatWindow.render1(screenStack);
@@ -290,6 +305,10 @@ public class ClientMain {
             glfwSetCursorPos(window, (double)windowX / 2, (double)windowY / 2);
             screen.close();
             screen = null;
+        }
+        if(!ClientData.heldStack.isEmpty()) {
+            ClientNetworkHandler.sendPacket(new CDropItem((short)-1));
+            ClientData.heldStack = ItemStack.emptyStack();
         }
     }
 

@@ -29,7 +29,7 @@ public class InventoryScreen extends ContainerScreen<InventoryContainer> {
         int size = 4;
 
         //Renderer.drawTexture(Textures.INVENTORY,0,0,256,256,0,0,157,98);
-        Renderer.drawCenteredTexture(Textures.INVENTORY,0,0,158,99,size);
+        Renderer.drawCenteredTexture(matrixStack, Textures.INVENTORY,0,0,158,99,size);
 /*
         int startX = ClientMain.windowX / 2 - 316;
         int startY = ClientMain.windowY / 2 - 198;
@@ -58,12 +58,11 @@ public class InventoryScreen extends ContainerScreen<InventoryContainer> {
     }
 
     public static void drawHotbar(MatrixStack matrixStack) {
-
         int width = 64;
         int startX = (int) (ClientMain.windowX / 2 - width * 4.5f);
         int startY = ClientMain.windowY - width;
 
-        Renderer.drawCenteredXTexture(Textures.HOTBAR,startY,4.0f);
+        Renderer.drawCenteredXTexture(matrixStack, Textures.HOTBAR,startY,4.0f);
 
         for(int x = 0; x < 9; x++) {
             ItemStack itemStack = ClientData.inventory.getItem(x);

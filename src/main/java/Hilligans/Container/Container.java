@@ -16,6 +16,13 @@ public abstract class Container {
 
     public ArrayList<Slot> slots = new ArrayList<>();
 
+    public Slot getSlot(int slot) {
+        if(slot < slots.size()) {
+            return slots.get(slot);
+        }
+        return null;
+    }
+
     public void render(MatrixStack matrixStack) {
         //System.out.println("RENDERING");
         for(Slot slot : slots) {

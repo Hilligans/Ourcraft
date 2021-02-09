@@ -83,53 +83,56 @@ public class Renderer {
         glEnable(GL_DEPTH_TEST);
     }
 
-    public static void drawTexture(Texture texture, int x, int y, int width, int height) {
-        drawTexture(texture,x,y,width,height,0,0,texture.width,texture.height);
+    public static void drawTexture(MatrixStack matrixStack, Texture texture, int x, int y, int width, int height) {
+        drawTexture(matrixStack, texture,x,y,width,height,0,0,texture.width,texture.height);
     }
 
-    public static void drawTexture(Texture texture, int x, int y, int width, int height, int startX, int startY, int endX, int endY) {
+    public static void drawTexture(MatrixStack matrixStack, Texture texture, int x, int y, int width, int height, int startX, int startY, int endX, int endY) {
+        matrixStack.applyTransformation();
         float minX = (float)startX / texture.width;
         float minY = (float)startY / texture.height;
         float maxX = (float)endX / texture.width;
         float maxY = (float)endY / texture.height;
         float[] vertices = new float[] {x,y,0,minX,minY,x,y + height,0,minX,maxY,x + width,y,0,maxX,minY,x + width,y + height,0,maxX,maxY};
         int[] indices = new int[] {0,1,2,2,1,3};
+        glDisable(GL_DEPTH_TEST);
         glUseProgram(ClientMain.shaderProgram);
         int vao = VAOManager.createVAO(vertices, indices);
         GL30.glBindTexture(GL_TEXTURE_2D,texture.textureId);
         GL30.glBindVertexArray(vao);
         glDrawElements(GL_TRIANGLES, vertices.length,GL_UNSIGNED_INT,0);
         VAOManager.destroyBuffer(vao);
+        glEnable(GL_DEPTH_TEST);
     }
 
-    public static void drawCenteredTexture(Texture texture,float size) {
-        drawTexture(texture, (int)(ClientMain.windowX / 2 - texture.width / 2 * size), (int)(ClientMain.windowY / 2 - texture.height / 2 * size),(int)(texture.width * size), (int)(texture.height * size));
+    public static void drawCenteredTexture(MatrixStack matrixStack, Texture texture,float size) {
+        drawTexture(matrixStack, texture, (int)(ClientMain.windowX / 2 - texture.width / 2 * size), (int)(ClientMain.windowY / 2 - texture.height / 2 * size),(int)(texture.width * size), (int)(texture.height * size));
     }
 
-    public static void drawCenteredTexture(Texture texture, int startX, int startY, int endX, int endY, float size) {
+    public static void drawCenteredTexture(MatrixStack matrixStack, Texture texture, int startX, int startY, int endX, int endY, float size) {
         int width = (int) ((endX - startX) * size);
         int height = (int) ((endY - startY) * size);
-        drawTexture(texture, ClientMain.windowX / 2 - width / 2,  ClientMain.windowY / 2 - height / 2, width, height, startX,startY,endX,endY);
+        drawTexture(matrixStack, texture, ClientMain.windowX / 2 - width / 2,  ClientMain.windowY / 2 - height / 2, width, height, startX,startY,endX,endY);
     }
 
-    public static void drawCenteredXTexture(Texture texture, int y, float size) {
-        drawTexture(texture, (int)(ClientMain.windowX / 2 - texture.width / 2 * size), y,(int)(texture.width * size), (int)(texture.height * size));
+    public static void drawCenteredXTexture(MatrixStack matrixStack, Texture texture, int y, float size) {
+        drawTexture(matrixStack, texture, (int)(ClientMain.windowX / 2 - texture.width / 2 * size), y,(int)(texture.width * size), (int)(texture.height * size));
     }
 
-    public static void drawCenteredXTexture(Texture texture, int y, int startX, int startY, int endX, int endY, float size) {
+    public static void drawCenteredXTexture(MatrixStack matrixStack, Texture texture, int y, int startX, int startY, int endX, int endY, float size) {
         int width = (int) ((endX - startX) * size);
         int height = (int) ((endY - startY) * size);
-        drawTexture(texture, ClientMain.windowX / 2 - width / 2,  y, width, height, startX,startY,endX,endY);
+        drawTexture(matrixStack, texture, ClientMain.windowX / 2 - width / 2,  y, width, height, startX,startY,endX,endY);
     }
 
-    public static void drawCenteredYTexture(Texture texture, int x, float size) {
-        drawTexture(texture, x, (int)(ClientMain.windowY / 2 - texture.height / 2 * size),(int)(texture.width * size), (int)(texture.height * size));
+    public static void drawCenteredYTexture(MatrixStack matrixStack, Texture texture, int x, float size) {
+        drawTexture(matrixStack, texture, x, (int)(ClientMain.windowY / 2 - texture.height / 2 * size),(int)(texture.width * size), (int)(texture.height * size));
     }
 
-    public static void drawCenteredYTexture(Texture texture, int x, int startX, int startY, int endX, int endY, float size) {
+    public static void drawCenteredYTexture(MatrixStack matrixStack, Texture texture, int x, int startX, int startY, int endX, int endY, float size) {
         int width = (int) ((endX - startX) * size);
         int height = (int) ((endY - startY) * size);
-        drawTexture(texture, x,  ClientMain.windowY / 2 - height / 2, width, height, startX,startY,endX,endY);
+        drawTexture(matrixStack, texture, x,  ClientMain.windowY / 2 - height / 2, width, height, startX,startY,endX,endY);
     }
 
     public static void create(int id) {
@@ -138,6 +141,13 @@ public class Renderer {
         glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                 GL_TEXTURE_2D, id, 0);
         glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+    }
+
+    public static void resetShader(int id) {
+        Matrix4f matrix4f = new Matrix4f();
+        int trans = glGetUniformLocation(id, "transform");
+        float[] floats = new float[16];
+        glUniformMatrix4fv(trans,false,matrix4f.get(floats));
     }
 
     static int readFboid;

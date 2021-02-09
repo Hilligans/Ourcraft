@@ -7,6 +7,8 @@ import Hilligans.Client.Rendering.World.CubeManager;
 import Hilligans.Client.Rendering.World.VAOManager;
 import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Entity.Entity;
+import Hilligans.Item.BlockItem;
+import Hilligans.Item.Item;
 import Hilligans.Item.ItemStack;
 import Hilligans.Item.Items;
 import Hilligans.Network.PacketData;
@@ -24,15 +26,29 @@ public class ItemEntity extends Entity {
     int id = -1;
     int verticesCount;
     public ItemStack itemStack;
+    public int pickupDelay;
+
 
     public ItemEntity(float x, float y, float z, int id, Block block) {
         super(x, y, z, id);
         this.block = block;
         type = 1;
        // boundingBox = new BoundingBox(-0.125f,-0.125f,-0.125f,0.125f,0.125f,0.125f);
-        boundingBox = new BoundingBox(-0.25f,-0.25f,-0.25f,0.25f,0.25f,0.25f);
         velY = 0.30f;
         itemStack = new ItemStack(Items.HASHED_ITEMS.get(block.name),(byte)1);
+        boundingBox = new BoundingBox(-0.25f,-0.25f,-0.25f,0.25f,0.25f,0.25f);
+        pickupDelay = 10;
+    }
+
+    public ItemEntity(float x, float y, float z, int id, ItemStack itemStack) {
+        super(x,y,z,id);
+        this.type = 1;
+        this.itemStack = itemStack;
+        boundingBox = new BoundingBox(-0.25f,-0.25f,-0.25f,0.25f,0.25f,0.25f);
+        if(itemStack.item instanceof BlockItem) {
+            this.block = Blocks.MAPPED_BLOCKS.get(itemStack.item.name);
+        }
+        pickupDelay = 40;
     }
 
     public ItemEntity(PacketData packetData) {
@@ -47,7 +63,9 @@ public class ItemEntity extends Entity {
     @Override
     public void tick() {
         //this.velX = -0.2f;
-
+        if(pickupDelay > 0) {
+            pickupDelay--;
+        }
 
         this.velY += -0.07f;
         if(this.velY < -0.4) {

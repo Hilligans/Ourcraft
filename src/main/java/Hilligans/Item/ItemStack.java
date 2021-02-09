@@ -48,7 +48,6 @@ public class ItemStack {
             this.count = (byte) count;
             return true;
         }
-
         if(item == this.item && this.count + count <= 64) {
             this.count += count;
             return true;

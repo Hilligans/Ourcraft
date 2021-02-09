@@ -89,4 +89,8 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<PacketData
     public static void sendPacket(PacketBase packetBase, ChannelHandlerContext ctx) {
         ctx.channel().writeAndFlush(new PacketData(packetBase));
     }
+
+    public static PlayerData getPlayerData(ChannelHandlerContext ctx) {
+        return playerData.get(mappedId.get(ctx.channel().id()));
+    }
 }
