@@ -390,7 +390,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        Hilligans.ClientMain
+                                        Hilligans.ServerMain
                                     </mainClass>
                                 </manifest>
                             </archive>

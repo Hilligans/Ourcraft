@@ -316,8 +316,8 @@ public class ClientMain {
 
     public static void joinServer() {
         try {
-            ClientNetworkInit.joinServer("localhost", "25586");
-            //ClientNetworkInit.joinServer("198.100.150.46", "25586");
+            //ClientNetworkInit.joinServer("localhost", "25586");
+            ClientNetworkInit.joinServer("198.100.150.46", "25586");
         } catch (Exception e) {
             e.printStackTrace();
         }

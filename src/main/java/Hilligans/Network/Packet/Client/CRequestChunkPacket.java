@@ -44,7 +44,6 @@ public class CRequestChunkPacket extends PacketBase {
 
         if(chunk != null) {
             ServerNetworkHandler.sendPacket(new SSendChunkPacket(chunk),ctx);
-
         }
     }
 

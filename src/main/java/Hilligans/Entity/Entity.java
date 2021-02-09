@@ -75,7 +75,6 @@ public abstract class Entity {
         this.velX = vel.x;
         this.velY = vel.y;
         this.velZ = vel.z;
-        System.out.println(velX + " : " + velY + " : " + velZ);
         return this;
     }
 
