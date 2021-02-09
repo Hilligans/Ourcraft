@@ -3,7 +3,6 @@ package Hilligans.Entity.LivingEntities;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.World.VAOManager;
 import Hilligans.Data.Other.BoundingBox;
-import Hilligans.Data.Other.IInventory;
 import Hilligans.Data.Other.Inventory;
 import Hilligans.Entity.Entities.ItemEntity;
 import Hilligans.Entity.Entity;
@@ -16,8 +15,6 @@ import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.ServerMain;
 import Hilligans.Util.Settings;
 import Hilligans.Util.Vector5f;
-import Hilligans.World.ServerWorld;
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL30;
 
@@ -36,10 +33,12 @@ public class PlayerEntity extends LivingEntity {
 
     public static int imageId;
 
+    public BoundingBox itemPickupBox = new BoundingBox(-1.3f,-1.9f,-1.3f,1.3f,0.0f,1.3f);
+
     public PlayerEntity(float x, float y, float z,int id) {
         super(x,y,z,id);
         type = 0;
-        boundingBox = new BoundingBox(-0.5f,-2.0f,-0.5f,0.5f,0.0f,0.5f);
+        boundingBox = new BoundingBox(-2,-1.9f,-2,2,0.0f,2);
         inventory = new Inventory(Settings.playerInventorySize);
     }
 
@@ -54,7 +53,7 @@ public class PlayerEntity extends LivingEntity {
 
         for(Entity entity : ServerMain.world.entities.values()) {
             if(entity instanceof ItemEntity) {
-                if (entity.boundingBox.intersectsBox(boundingBox, new Vector3f(entity.x, entity.y, entity.z), new Vector3f(x, y, z))) {
+                if (entity.boundingBox.intersectsBox(itemPickupBox, new Vector3f(entity.x, entity.y, entity.z), new Vector3f(x, y, z))) {
                     ItemStack itemStack = ((ItemEntity)entity).itemStack;
                     int count = itemStack.count;
                     if(inventory.addItem(itemStack)) {

@@ -6,6 +6,8 @@ import Hilligans.Client.Rendering.Screen;
 import Hilligans.Client.Rendering.Screens.EscapeScreen;
 import Hilligans.Client.Rendering.Screens.InventoryScreen;
 import Hilligans.Client.Rendering.World.*;
+import Hilligans.Data.Other.Texture;
+import Hilligans.Data.Other.Textures;
 import Hilligans.Entity.Entity;
 import Hilligans.Item.ItemStack;
 import Hilligans.Util.Settings;
@@ -66,6 +68,8 @@ public class ClientMain {
 
     public static void main(String[] args) {
 
+
+
         System.setProperty("java.awt.headless", "true");
 
         glfwInit();
@@ -90,6 +94,10 @@ public class ClientMain {
         Renderer.cursorId = TextureManager.loadAndRegisterTexture("cursor.png");
 
         StringRenderer.instance.loadCharacters1();
+        for(Texture texture : Textures.textures) {
+            texture.register();
+        }
+
 
         KeyHandler.register(new KeyPress() {
             @Override
@@ -219,7 +227,7 @@ public class ClientMain {
             if(itemStack.item != null) {
                 Block block = Blocks.MAPPED_BLOCKS.get(itemStack.item.name);
                 if(block != null) {
-                    itemStack.item.render(screenStack,startX + x * width, startY, width / 2,itemStack.count);
+                    itemStack.item.render(screenStack,startX + x * width, startY, width / 2,itemStack);
                 }
             }
         }

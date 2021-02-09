@@ -14,8 +14,8 @@ public class BlockItem extends Item {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int x, int y, int size, int count) {
+    public void render(MatrixStack matrixStack, int x, int y, int size, ItemStack itemStack) {
         Renderer.renderBlockItem(matrixStack,x,y,size,block);
-        drawString(matrixStack,x - size / 2,y,size,count);
+        drawString(matrixStack,x - size / 2,y,size,itemStack.count);
     }
 }

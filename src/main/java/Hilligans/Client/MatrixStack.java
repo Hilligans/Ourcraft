@@ -1,6 +1,7 @@
 package Hilligans.Client;
 
 import Hilligans.ClientMain;
+import Hilligans.Data.Other.Texture;
 import Hilligans.Network.ClientNetworkInit;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -84,9 +85,4 @@ public class MatrixStack {
         matrix4f.rotate(rot,vector);
        // matrix4f.rota
     }
-
-
-
-
-
 }

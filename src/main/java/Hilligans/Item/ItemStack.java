@@ -29,4 +29,8 @@ public class ItemStack {
                 ", item=" + item +
                 '}';
     }
+
+    public boolean isEmpty() {
+        return item == null || count == 0;
+    }
 }

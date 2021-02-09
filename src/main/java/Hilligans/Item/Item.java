@@ -16,7 +16,7 @@ public class Item {
         id = Items.getNextId();
     }
 
-    public void render(MatrixStack matrixStack,int x, int y, int size, int count) {
+    public void render(MatrixStack matrixStack,int x, int y, int size, ItemStack itemStack) {
 
     }
 

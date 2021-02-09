@@ -3,6 +3,7 @@ package Hilligans.Client.Rendering.World;
 import Hilligans.Block.Block;
 import Hilligans.Client.MatrixStack;
 import Hilligans.ClientMain;
+import Hilligans.Data.Other.Texture;
 import Hilligans.Util.Util;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -78,6 +79,35 @@ public class Renderer {
         VAOManager.destroyBuffer(vao);
 
         glEnable(GL_DEPTH_TEST);
+    }
+
+    public static void drawTexture(Texture texture, int x, int y, int width, int height) {
+        drawTexture(texture,x,y,width,height,0,0,texture.width,texture.height);
+    }
+
+    public static void drawTexture(Texture texture, int x, int y, int width, int height, int startX, int startY, int endX, int endY) {
+        float minX = (float)startX / texture.width;
+        float minY = (float)startY / texture.height;
+        float maxX = (float)endX / texture.width;
+        float maxY = (float)endY / texture.height;
+        float[] vertices = new float[] {x,y,0,minX,minY,x,y + height,0,minX,maxY,x + width,y,0,maxX,minY,x + width,y + height,0,maxX,maxY};
+        int[] indices = new int[] {0,1,2,2,1,3};
+        glUseProgram(ClientMain.shaderProgram);
+        int vao = VAOManager.createVAO(vertices, indices);
+        GL30.glBindTexture(GL_TEXTURE_2D,texture.textureId);
+        GL30.glBindVertexArray(vao);
+        glDrawElements(GL_TRIANGLES, vertices.length,GL_UNSIGNED_INT,0);
+        VAOManager.destroyBuffer(vao);
+    }
+
+    public static void drawCenteredTexture(Texture texture,float size) {
+        drawTexture(texture, (int)(ClientMain.windowX / 2 - texture.width / 2 * size), (int)(ClientMain.windowY / 2 - texture.height / 2 * size),(int)(texture.width * size), (int)(texture.height * size));
+    }
+
+    public static void drawCenteredTexture(Texture texture, int startX, int startY, int endX, int endY, float size) {
+        int width = (int) ((endX - startX) * size);
+        int height = (int) ((endY - startY) * size);
+        drawTexture(texture, ClientMain.windowX / 2 - width / 2,  ClientMain.windowY / 2 - height / 2, width, height, startX,startY,endX,endY);
     }
 
     public static void create(int id) {
