@@ -12,6 +12,7 @@ import Hilligans.Container.Container;
 import Hilligans.Container.Containers.InventoryContainer;
 import Hilligans.Data.Other.Textures;
 import Hilligans.Item.ItemStack;
+import Hilligans.Util.Settings;
 
 public class InventoryScreen extends ContainerScreen<InventoryContainer> {
 
@@ -58,11 +59,14 @@ public class InventoryScreen extends ContainerScreen<InventoryContainer> {
     }
 
     public static void drawHotbar(MatrixStack matrixStack) {
-        int width = 64;
+        int width = (int) (16 * Settings.guiSize);
         int startX = (int) (ClientMain.windowX / 2 - width * 4.5f);
-        int startY = ClientMain.windowY - width;
+        int startY = (int) (ClientMain.windowY - width - 1 * Settings.guiSize);
 
-        Renderer.drawCenteredXTexture(matrixStack, Textures.HOTBAR,startY,4.0f);
+        Renderer.drawCenteredXTexture(matrixStack, Textures.HOTBAR,startY, Settings.guiSize);
+
+        //Renderer.drawTexture(matrixStack,Textures.ITEM_OUTLINE, (int) (startX),startY,(int)(width + 6 * Settings.guiSize),(int)(width + 6 * Settings.guiSize),5,5,27,27);
+        //Renderer
 
         for(int x = 0; x < 9; x++) {
             ItemStack itemStack = ClientData.inventory.getItem(x);
@@ -74,5 +78,7 @@ public class InventoryScreen extends ContainerScreen<InventoryContainer> {
                 }
             }
         }
+        Renderer.drawTexture(matrixStack,Textures.ITEM_OUTLINE, (int) (startX - 1 * Settings.guiSize) + width * ClientData.handSlot ,(int)(startY - 1 * Settings.guiSize),(int)(width + 2 * Settings.guiSize),(int)(width + 2 * Settings.guiSize),7,7,25,25);
+
     }
 }

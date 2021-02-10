@@ -33,6 +33,7 @@ public abstract class Entity {
         x = 0;
         y = 0;
         z = 0;
+        boundingBox = new BoundingBox(0,0,0,0,0,0);
     }
 
     public Entity(float x, float y, float z, int id) {
@@ -40,6 +41,7 @@ public abstract class Entity {
         this.y = y;
         this.z = z;
         this.id = id;
+        boundingBox = new BoundingBox(0,0,0,0,0,0);
     }
 
     public Entity(PacketData packetData) {
@@ -49,6 +51,7 @@ public abstract class Entity {
         pitch = packetData.readFloat();
         yaw = packetData.readFloat();
         id = packetData.readInt();
+        boundingBox = new BoundingBox(0,0,0,0,0,0);
     }
 
     public Entity setPos(float x, float y, float z) {

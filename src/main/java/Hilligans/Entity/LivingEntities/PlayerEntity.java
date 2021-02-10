@@ -39,12 +39,13 @@ public class PlayerEntity extends LivingEntity {
     public PlayerEntity(float x, float y, float z,int id) {
         super(x,y,z,id);
         type = 0;
-        boundingBox = new BoundingBox(-2,-1.9f,-2,2,0.0f,2);
+        boundingBox =  new BoundingBox(-0.35f,-1.9f,-0.35f,0.35f,0.0f,0.35f);
         inventory = new Inventory(Settings.playerInventorySize);
     }
 
     public PlayerEntity(PacketData packetData) {
         super(packetData);
+        boundingBox =  new BoundingBox(-0.35f,-1.9f,-0.35f,0.35f,0.0f,0.35f);
     }
 
     @Override
@@ -71,7 +72,6 @@ public class PlayerEntity extends LivingEntity {
         }
         if(updateInventory) {
             inventory.age++;
-            //System.out.println(inventory.toString());
             sendPacket(new SUpdateInventory(inventory));
         }
     }

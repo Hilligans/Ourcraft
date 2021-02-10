@@ -13,11 +13,8 @@ public class ClientData {
     public static Container openContainer;
     public static boolean f3 = false;
     public static boolean creative = false;
+    public static int handSlot = 0;
 
-
-    public static void register() {
-
-    }
 
 
 }

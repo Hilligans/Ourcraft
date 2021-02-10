@@ -56,6 +56,11 @@ public class ServerWorld extends World {
     }
 
     @Override
+    public boolean isServer() {
+        return true;
+    }
+
+    @Override
     public void setBlockState(int x, int y, int z, BlockState blockState) {
         super.setBlockState(x, y, z, blockState);
         //ServerNetworkHandler.sendPacket(new SSendBlockChanges(x,y,z,blockState.block.id));

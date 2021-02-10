@@ -47,6 +47,8 @@ public abstract class World {
         //biomeMap = new PerlinNoise(random.nextInt(),20,30,1,100);
     }
 
+    public abstract boolean isServer();
+
     public Chunk getChunk(long chunkPos) {
         try {
             return chunks.get(chunkPos);

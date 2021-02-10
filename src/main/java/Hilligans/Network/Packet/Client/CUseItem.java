@@ -1,0 +1,54 @@
+package Hilligans.Network.Packet.Client;
+
+import Hilligans.Client.ClientData;
+import Hilligans.Item.ItemStack;
+import Hilligans.Network.ClientNetworkHandler;
+import Hilligans.Network.PacketBase;
+import Hilligans.Network.PacketData;
+import Hilligans.Network.ServerNetworkHandler;
+import Hilligans.Server.PlayerData;
+import Hilligans.ServerMain;
+
+public class CUseItem extends PacketBase {
+
+    byte slot;
+
+    public CUseItem() {
+        super(19);
+    }
+
+    public CUseItem(byte slot) {
+        this();
+        this.slot = slot;
+    }
+
+
+    @Override
+    public void encode(PacketData packetData) {
+        packetData.writeByte(slot);
+    }
+
+    @Override
+    public void decode(PacketData packetData) {
+        slot = packetData.readByte();
+    }
+
+    @Override
+    public void handle() {
+
+        if(slot >= 0 && slot < 9) {
+            PlayerData playerData = ServerNetworkHandler.getPlayerData(ctx);
+            if(playerData != null) {
+                ItemStack itemStack = playerData.playerInventory.getItem(slot);
+                //System.out.println(itemStack.toString());
+                if(!itemStack.isEmpty()) {
+                    if(itemStack.item.onActivate(ServerMain.world,playerData.playerEntity)) {
+                       if(!playerData.isCreative) {
+                           itemStack.removeCount(1);
+                       }
+                    }
+                }
+            }
+        }
+    }
+}

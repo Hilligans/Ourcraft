@@ -21,6 +21,11 @@ public class ClientWorld extends World {
         getChunk(0,0);
     }
 
+    @Override
+    public boolean isServer() {
+        return false;
+    }
+
     public ConcurrentLinkedQueue<BlockChange> skippedBlockChanges = new ConcurrentLinkedQueue<>();
 
     @Override

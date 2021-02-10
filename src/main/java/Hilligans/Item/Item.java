@@ -2,6 +2,8 @@ package Hilligans.Item;
 
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.World.StringRenderer;
+import Hilligans.Entity.LivingEntities.PlayerEntity;
+import Hilligans.World.World;
 
 public class Item {
 
@@ -15,8 +17,10 @@ public class Item {
         id = Items.getNextId();
     }
 
-    public void render(MatrixStack matrixStack,int x, int y, int size, ItemStack itemStack) {
+    public void render(MatrixStack matrixStack,int x, int y, int size, ItemStack itemStack) {}
 
+    public boolean onActivate(World world, PlayerEntity playerEntity) {
+        return true;
     }
 
     void drawString(MatrixStack matrixStack, int x, int y, int size, int count) {

@@ -15,6 +15,7 @@ import Hilligans.Data.Other.Textures;
 import Hilligans.Entity.Entity;
 import Hilligans.Item.ItemStack;
 import Hilligans.Network.Packet.Client.CDropItem;
+import Hilligans.Network.Packet.Client.CUseItem;
 import Hilligans.Network.PacketBase;
 import Hilligans.Util.Settings;
 import Hilligans.Util.Util;
@@ -169,7 +170,6 @@ public class ClientMain {
 
 
         texture = TextureManager.instance.registerTexture();
-        ClientData.register();
 
         clientWorld = new ClientWorld();
 
@@ -183,9 +183,6 @@ public class ClientMain {
         if(!Settings.renderTransparency) {
             shaderProgram = ShaderManager.registerShader(Util.shader,Util.fragmentShader2);
             colorShader = ShaderManager.registerShader(Util.coloredShader,Util.fragmentShader2);
-
-
-
         }
 
         glEnable(GL_BLEND);
@@ -316,8 +313,8 @@ public class ClientMain {
 
     public static void joinServer() {
         try {
-            //ClientNetworkInit.joinServer("localhost", "25586");
-            ClientNetworkInit.joinServer("198.100.150.46", "25586");
+            ClientNetworkInit.joinServer("localhost", "25586");
+            //ClientNetworkInit.joinServer("198.100.150.46", "25586");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -372,8 +369,16 @@ public class ClientMain {
             public void invoke(long window, double xoffset, double yoffset) {
                 if(yoffset == 1.0) {
                     BlockPlacer.increase();
+                    ClientData.handSlot--;
+                    if(ClientData.handSlot <= -1) {
+                        ClientData.handSlot = 8;
+                    }
                 } else if(yoffset == -1.0) {
                     BlockPlacer.decrease();
+                    ClientData.handSlot++;
+                    if(ClientData.handSlot >= 9) {
+                        ClientData.handSlot = 0;
+                    }
                 }
             }
         });
@@ -396,16 +401,25 @@ public class ClientMain {
                             }
 
                         } else if (button == GLFW_MOUSE_BUTTON_2) {
-                            BlockPos pos = clientWorld.traceBlock(Camera.pos.x, Camera.pos.y, Camera.pos.z, Camera.pitch, Camera.yaw);
-                            if (pos != null) {
-                                Block block = Blocks.getBlockWithID(BlockPlacer.id);
-                                if (block.getAllowedMovement1(new Vector3f(), Camera.pos, pos, Camera.playerBoundingBox)) {
-                                    if (joinServer) {
-                                        ClientNetworkHandler.sendPacket(new CSendBlockChanges(pos.x, pos.y, pos.z, BlockPlacer.id));
+                            ItemStack itemStack = ClientData.inventory.getItem(ClientData.handSlot);
+                            if(!itemStack.isEmpty()) {
+                                if(itemStack.item.onActivate(clientWorld,null)) {
+                                    ClientNetworkHandler.sendPacket(new CUseItem((byte)ClientData.handSlot));
+                                    if(!ClientData.creative) {
+                                        itemStack.removeCount(1);
                                     }
-                                    clientWorld.setBlockState(pos, new BlockState(block));
                                 }
                             }
+                            //BlockPos pos = clientWorld.traceBlock(Camera.pos.x, Camera.pos.y, Camera.pos.z, Camera.pitch, Camera.yaw);
+                           // if (pos != null) {
+                             //   Block block = Blocks.getBlockWithID(BlockPlacer.id);
+                              //  if (block.getAllowedMovement1(new Vector3f(), Camera.pos, pos, Camera.playerBoundingBox)) {
+                              //      if (joinServer) {
+                              //          ClientNetworkHandler.sendPacket(new CSendBlockChanges(pos.x, pos.y, pos.z, BlockPlacer.id));
+                               //     }
+                               //     clientWorld.setBlockState(pos, new BlockState(block));
+                               // }
+                           // }
                         }
                     } else {
                         DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
