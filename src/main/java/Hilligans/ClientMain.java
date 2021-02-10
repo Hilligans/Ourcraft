@@ -262,13 +262,7 @@ public class ClientMain {
         if(screen != null) {
             screen.render(screenStack);
             ClientData.heldStack.renderStack(screenStack, (int) (Camera.newX - Settings.guiSize * 8), (int) (Camera.newY - Settings.guiSize * 8));
-        } else {
-            BlockPlacer.render(screenStack);
         }
-
-
-
-
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -368,13 +362,13 @@ public class ClientMain {
             @Override
             public void invoke(long window, double xoffset, double yoffset) {
                 if(yoffset == 1.0) {
-                    BlockPlacer.increase();
+
                     ClientData.handSlot--;
                     if(ClientData.handSlot <= -1) {
                         ClientData.handSlot = 8;
                     }
                 } else if(yoffset == -1.0) {
-                    BlockPlacer.decrease();
+
                     ClientData.handSlot++;
                     if(ClientData.handSlot >= 9) {
                         ClientData.handSlot = 0;
@@ -410,16 +404,6 @@ public class ClientMain {
                                     }
                                 }
                             }
-                            //BlockPos pos = clientWorld.traceBlock(Camera.pos.x, Camera.pos.y, Camera.pos.z, Camera.pitch, Camera.yaw);
-                           // if (pos != null) {
-                             //   Block block = Blocks.getBlockWithID(BlockPlacer.id);
-                              //  if (block.getAllowedMovement1(new Vector3f(), Camera.pos, pos, Camera.playerBoundingBox)) {
-                              //      if (joinServer) {
-                              //          ClientNetworkHandler.sendPacket(new CSendBlockChanges(pos.x, pos.y, pos.z, BlockPlacer.id));
-                               //     }
-                               //     clientWorld.setBlockState(pos, new BlockState(block));
-                               // }
-                           // }
                         }
                     } else {
                         DoubleBuffer x = BufferUtils.createDoubleBuffer(1);

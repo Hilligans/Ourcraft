@@ -1,20 +1,14 @@
 package Hilligans.Item;
 
 import Hilligans.Block.Block;
-import Hilligans.Block.BlockState;
 import Hilligans.Block.Blocks;
-import Hilligans.Client.BlockPlacer;
 import Hilligans.Client.Camera;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.Renderer;
-import Hilligans.ClientMain;
 import Hilligans.Data.Other.BlockPos;
-import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Entity.LivingEntity;
-import Hilligans.Network.ClientNetworkHandler;
-import Hilligans.Network.Packet.Client.CSendBlockChanges;
 import Hilligans.Network.Packet.Server.SSendBlockChanges;
 import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.World.World;
