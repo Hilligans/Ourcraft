@@ -1,4 +1,4 @@
-package Hilligans.Client.Rendering.Screens;
+package Hilligans.Client.Rendering.Screens.ContainerScreens;
 
 import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
@@ -25,34 +25,9 @@ public class InventoryScreen extends ContainerScreen<InventoryContainer> {
     public void drawScreen(MatrixStack matrixStack) {
         //super.render(matrixStack);
 
-        matrixStack.applyTransformation();
-
-        int size = 4;
 
         //Renderer.drawTexture(Textures.INVENTORY,0,0,256,256,0,0,157,98);
-        Renderer.drawCenteredTexture(matrixStack, Textures.INVENTORY,0,0,158,99,size);
-/*
-        int startX = ClientMain.windowX / 2 - 316;
-        int startY = ClientMain.windowY / 2 - 198;
-
-
-        for(int y = 0; y < 3; y++) {
-            for (int x = 0; x < 9; x++) {
-                ItemStack itemStack = ClientData.inventory.getItem(9 + x + y * 9);
-                if(!itemStack.isEmpty()) {
-                    itemStack.item.render(matrixStack, startX + x * 64 + 7 * size, startY + y * 64 + 7 * size, 32, itemStack);
-                }
-            }
-        }
-
-        for(int x = 0; x < 9; x++) {
-            ItemStack itemStack = ClientData.inventory.getItem(x);
-            if(!itemStack.isEmpty()) {
-                itemStack.item.render(matrixStack, startX + x * 64 + 7 * size, startY + 256 + 12 * size, 32, itemStack);
-            }
-        }
-
- */
+        Renderer.drawCenteredTexture(matrixStack, Textures.INVENTORY,0,0,158,99,Settings.guiSize);
 
 
         //Renderer.drawCenteredTexture(Textures.INVENTORY,4.0f);

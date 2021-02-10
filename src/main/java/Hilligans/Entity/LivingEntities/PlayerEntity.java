@@ -13,6 +13,7 @@ import Hilligans.Network.Packet.Server.SUpdateInventory;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
+import Hilligans.Server.PlayerData;
 import Hilligans.ServerMain;
 import Hilligans.Util.Settings;
 import Hilligans.Util.Vector5f;
@@ -78,6 +79,10 @@ public class PlayerEntity extends LivingEntity {
 
     public Vector3f getForeWard() {
         return new Vector3f((float) (Math.cos(yaw) * Math.cos(pitch)),(float)(Math.sin(pitch)),(float)(Math.sin(yaw) * Math.cos(pitch)));
+    }
+
+    public PlayerData getPlayerData() {
+        return ServerNetworkHandler.playerData.get(id);
     }
 
     @Override

@@ -1,12 +1,11 @@
 package Hilligans;
 
-import Hilligans.Block.Block;
 import Hilligans.Client.*;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Client.Rendering.Screen;
 import Hilligans.Client.Rendering.Screens.EscapeScreen;
-import Hilligans.Client.Rendering.Screens.InventoryScreen;
+import Hilligans.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
 import Hilligans.Client.Rendering.World.*;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
@@ -31,7 +30,6 @@ import Hilligans.Client.Camera;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Block.BlockState;
 import Hilligans.World.ClientWorld;
-import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
@@ -308,6 +306,7 @@ public class ClientMain {
     public static void joinServer() {
         try {
             ClientNetworkInit.joinServer("localhost", "25586");
+            //ClientNetworkHandler.sendPacket(new CSendBlockChanges(0, 70, 0, Blocks.CHEST.id));
             //ClientNetworkInit.joinServer("198.100.150.46", "25586");
         } catch (Exception e) {
             e.printStackTrace();
@@ -395,6 +394,11 @@ public class ClientMain {
                             }
 
                         } else if (button == GLFW_MOUSE_BUTTON_2) {
+                            BlockState blockState = clientWorld.traceBlockState(Camera.pos.x,Camera.pos.y,Camera.pos.z,Camera.pitch,Camera.yaw);
+                            if(blockState != null && blockState.block.activateBlock(clientWorld,null)) {
+                                ClientNetworkHandler.sendPacket(new CUseItem((byte)ClientData.handSlot));
+                                return;
+                            }
                             ItemStack itemStack = ClientData.inventory.getItem(ClientData.handSlot);
                             if(!itemStack.isEmpty()) {
                                 if(itemStack.item.onActivate(clientWorld,null)) {
@@ -403,6 +407,8 @@ public class ClientMain {
                                         itemStack.removeCount(1);
                                     }
                                 }
+                            } else {
+                                ClientNetworkHandler.sendPacket(new CUseItem((byte)ClientData.handSlot));
                             }
                         }
                     } else {

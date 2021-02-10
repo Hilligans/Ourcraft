@@ -2,10 +2,12 @@ package Hilligans.Block;
 
 import Hilligans.Client.Rendering.World.CubeManager;
 import Hilligans.Data.Other.BoundingBox;
+import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Item.BlockItem;
 import Hilligans.Util.Vector5f;
 import Hilligans.Client.Rendering.World.BlockTextureManager;
 import Hilligans.Data.Other.BlockPos;
+import Hilligans.World.World;
 import org.joml.Vector3f;
 
 public class Block {
@@ -44,6 +46,10 @@ public class Block {
     public Block setBlockDrop(Block blockDrop) {
         this.droppedBlock = blockDrop;
         return this;
+    }
+
+    public boolean activateBlock(World world, PlayerEntity playerEntity) {
+        return false;
     }
 
 

@@ -1,5 +1,7 @@
 package Hilligans.Block;
 
+import Hilligans.Block.BlockTypes.ChestBlock;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,7 +21,9 @@ public class Blocks {
     public static final Block LOG = new Block("log").withTexture("log.png").withSidedTexture("log_top.png",Block.UP).withSidedTexture("log_top.png",Block.DOWN);
     public static final Block SAND = new Block("sand").withTexture("sand.png");
     public static final Block CACTUS = new Block("cactus").withTexture("cactus.png");
-    public static final Block TAPE = new Block("tape").withTexture("flex_tape.png");
+    //public static final Block TAPE = new Block("tape").withTexture("flex_tape.png");
+
+    public static final Block CHEST = new ChestBlock("chest").withTexture("flex_tape.png");
 
     //public static final Block RED = new Block("red").withTexture("red.png").transparentTexture(true);
     //public static final Block YELLOW = new Block("yellow").withTexture("yellow.png").transparentTexture(true);

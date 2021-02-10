@@ -1,5 +1,6 @@
 package Hilligans.World;
 
+import Hilligans.Block.Block;
 import Hilligans.Block.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Data.Other.BlockPos;
@@ -172,6 +173,19 @@ public abstract class World {
         } else {
             return null;
         }
+    }
+
+    public BlockState traceBlockState(float x, float y, float z, double pitch, double yaw) {
+        for(int a = 0; a < distance / stepCount; a++) {
+            final double Z = z - Math.sin(yaw) * Math.cos(pitch) * a * 0.1 + offSet;
+            final double Y = y - Math.sin(pitch) * 0.1 * a + offSet;
+            final double X = (x - Math.cos(yaw) * Math.cos(pitch) * a * 0.1) + offSet;
+            BlockState blockState = getBlockState((int) Math.round(X), (int) Math.round(Y), (int) Math.round(Z));
+            if(blockState.block != Blocks.AIR) {
+                return blockState;
+            }
+        }
+        return null;
     }
 
     public BlockPos traceBlockToBreak(float x, float y, float z, double pitch, double yaw) {

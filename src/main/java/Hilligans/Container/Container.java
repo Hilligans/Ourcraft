@@ -2,6 +2,7 @@ package Hilligans.Container;
 
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ContainerScreen;
+import Hilligans.Container.Containers.ChestContainer;
 import Hilligans.Container.Containers.InventoryContainer;
 import Hilligans.Util.Settings;
 
@@ -14,6 +15,8 @@ public abstract class Container {
     public Container(int type) {
         this.type = type;
     }
+
+    //TODO slots should be added with an x based off their texture, the x and y pos need to be able to be recalculated when the screen is resized
 
     public ArrayList<Slot> slots = new ArrayList<>();
 
@@ -51,6 +54,7 @@ public abstract class Container {
 
     public static void register() {
         containers.add(InventoryContainer::new);
+        containers.add(ChestContainer::new);
     }
 
 }

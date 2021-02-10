@@ -27,6 +27,7 @@ public class Slot {
     public void render(MatrixStack matrixStack) {
         ItemStack itemStack = inventory.getItem(index);
         if(!itemStack.isEmpty()) {
+            //System.out.println(x + " : " + y);
             itemStack.item.render(matrixStack,x,y, (int) (8 * Settings.guiSize),itemStack);
         }
     }

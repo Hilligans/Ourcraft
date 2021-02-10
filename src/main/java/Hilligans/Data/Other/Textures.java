@@ -10,6 +10,7 @@ public class Textures {
     public static final Texture INVENTORY = new Texture("inventory.png");
     public static final Texture HOTBAR = new Texture("hotbar.png");
     public static final Texture ITEM_OUTLINE = new Texture("item_outline.png");
+    public static final Texture CHEST = new Texture("chest.png");
 
 
 

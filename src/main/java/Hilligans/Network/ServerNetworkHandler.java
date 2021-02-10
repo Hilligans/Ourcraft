@@ -1,5 +1,6 @@
 package Hilligans.Network;
 
+import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Network.Packet.IFuturePacket;
 import Hilligans.Network.Packet.Server.SChatMessage;
 import Hilligans.Server.PlayerData;
@@ -88,6 +89,10 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<PacketData
 
     public static void sendPacket(PacketBase packetBase, ChannelHandlerContext ctx) {
         ctx.channel().writeAndFlush(new PacketData(packetBase));
+    }
+
+    public static void sendPacket(PacketBase packetBase, PlayerEntity playerEntity) {
+        channels.find(mappedChannels.get(playerEntity.id)).writeAndFlush(new PacketData(packetBase));
     }
 
     public static PlayerData getPlayerData(ChannelHandlerContext ctx) {
