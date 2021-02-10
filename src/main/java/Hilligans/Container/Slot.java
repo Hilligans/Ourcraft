@@ -13,16 +13,27 @@ public class Slot {
 
     IInventory inventory;
     int index;
-    public int x;
-    public int y;
     public short id;
+    public int startX;
+    public int startY;
+    public int x = 0;
+    public int y = 0;
 
     public Slot(int x, int y, IInventory inventory, int index) {
         this.x = x;
         this.y = y;
+        this.inventory = inventory; 
+        this.index = index;
+    }
+
+
+    public Slot(int startX, int startY, IInventory inventory, int index, boolean a) {
+        this.startX = startX;
+        this.startY = startY;
         this.inventory = inventory;
         this.index = index;
     }
+
 
     public void render(MatrixStack matrixStack) {
         ItemStack itemStack = inventory.getItem(index);

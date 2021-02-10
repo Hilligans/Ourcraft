@@ -88,7 +88,21 @@ public abstract class World {
             return new BlockState(Blocks.AIR);
         }
         return chunk.getBlockState(x,y,z);
+    }
 
+    public DataProvider getDataProvider(BlockPos pos) {
+        Chunk chunk = getChunk(pos.x >> 4,pos.z >> 4);
+        if(chunk == null) {
+            return null;
+        }
+        return chunk.getDataProvider(pos);
+    }
+
+    public void setDataProvider(BlockPos pos, DataProvider dataProvider) {
+        Chunk chunk = getChunk(pos.x >> 4,pos.z >> 4);
+        if(chunk != null) {
+            chunk.setDataProvider(pos,dataProvider);
+        }
     }
 
     public BlockState getBlockState(BlockPos pos) {

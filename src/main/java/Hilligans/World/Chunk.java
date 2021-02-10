@@ -4,6 +4,7 @@ import Hilligans.Biome.Biome;
 import Hilligans.Block.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.MatrixStack;
+import Hilligans.Data.Other.BlockPos;
 import Hilligans.Util.Settings;
 import Hilligans.World.Builders.WorldBuilder;
 
@@ -160,6 +161,18 @@ public class Chunk {
         int pos = y >> 4;
         SubChunk subChunk = chunks.get(pos);
         return subChunk.getBlock(x & 15, y & 15, z & 15);
+    }
+
+    public DataProvider getDataProvider(BlockPos pos) {
+        int height = pos.y >> 4;
+        SubChunk subChunk = chunks.get(height);
+        return subChunk.getDataProvider(pos.x & 15, pos.y & 15, pos.z & 15);
+    }
+
+    public void setDataProvider(BlockPos pos, DataProvider dataProvider) {
+        int height = pos.y >> 4;
+        SubChunk subChunk = chunks.get(height);
+        subChunk.setDataProvider(pos.x & 15, pos.y & 15, pos.z & 15, dataProvider);
     }
 
     public void setBlockState(int x, int y, int z, BlockState blockState) {

@@ -1,10 +1,13 @@
 package Hilligans.Client.Rendering.Screens;
 
+import Hilligans.Block.Blocks;
 import Hilligans.ClientMain;
 import Hilligans.Client.Rendering.ScreenBase;
 import Hilligans.Client.Rendering.Widgets.Button;
 import Hilligans.Client.Rendering.Widgets.ButtonAction;
 import Hilligans.Client.Rendering.Widgets.InputField;
+import Hilligans.Network.ClientNetworkHandler;
+import Hilligans.Network.Packet.Client.CSendBlockChanges;
 
 public class JoinScreen extends ScreenBase {
 

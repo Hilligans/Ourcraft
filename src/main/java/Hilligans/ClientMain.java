@@ -307,6 +307,7 @@ public class ClientMain {
         try {
             ClientNetworkInit.joinServer("localhost", "25586");
             //ClientNetworkHandler.sendPacket(new CSendBlockChanges(0, 70, 0, Blocks.CHEST.id));
+            //ClientNetworkHandler.sendPacket(new CSendBlockChanges(0, 69, 1, Blocks.CHEST.id));
             //ClientNetworkInit.joinServer("198.100.150.46", "25586");
         } catch (Exception e) {
             e.printStackTrace();
@@ -394,10 +395,13 @@ public class ClientMain {
                             }
 
                         } else if (button == GLFW_MOUSE_BUTTON_2) {
-                            BlockState blockState = clientWorld.traceBlockState(Camera.pos.x,Camera.pos.y,Camera.pos.z,Camera.pitch,Camera.yaw);
-                            if(blockState != null && blockState.block.activateBlock(clientWorld,null)) {
-                                ClientNetworkHandler.sendPacket(new CUseItem((byte)ClientData.handSlot));
-                                return;
+                            BlockPos blockPos = clientWorld.traceBlockToBreak(Camera.pos.x,Camera.pos.y,Camera.pos.z,Camera.pitch,Camera.yaw);
+                            if(blockPos != null) {
+                                BlockState blockState = clientWorld.getBlockState(blockPos);
+                                if (blockState != null && blockState.block.activateBlock(clientWorld, null, blockPos)) {
+                                    ClientNetworkHandler.sendPacket(new CUseItem((byte) ClientData.handSlot));
+                                    return;
+                                }
                             }
                             ItemStack itemStack = ClientData.inventory.getItem(ClientData.handSlot);
                             if(!itemStack.isEmpty()) {

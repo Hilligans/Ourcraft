@@ -48,6 +48,7 @@ public class BlockItem extends Item {
             }
         }
         world.setBlockState(pos, block.getDefaultState());
+        block.onPlace(world,pos);
         if (world.isServer()) {
             ServerNetworkHandler.sendPacket(new SSendBlockChanges(pos,block.id));
         }

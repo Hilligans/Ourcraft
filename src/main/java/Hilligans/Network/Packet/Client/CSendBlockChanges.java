@@ -1,6 +1,7 @@
 package Hilligans.Network.Packet.Client;
 
 import Hilligans.Block.Block;
+import Hilligans.Data.Other.BlockPos;
 import Hilligans.Entity.Entities.ItemEntity;
 import Hilligans.Entity.Entity;
 import Hilligans.Network.Packet.Server.SSendBlockChanges;
@@ -49,7 +50,9 @@ public class CSendBlockChanges extends PacketBase {
     @Override
     public void handle() {
         BlockState oldState = ServerMain.world.getBlockState(x,y,z);
-        ServerMain.world.setBlockState(x,y,z,new BlockState(Blocks.getBlockWithID(blockId)));
+        BlockState newBlock = new BlockState(Blocks.getBlockWithID(blockId));
+        ServerMain.world.setBlockState(x,y,z,newBlock);
+        newBlock.block.onPlace(ServerMain.world, new BlockPos(x,y,z));
         Block droppedBlock = oldState.block.getDroppedBlock();
         if(droppedBlock != Blocks.AIR) {
             if (ServerMain.world.getBlockState(x, y, z).block == Blocks.AIR) {

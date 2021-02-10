@@ -48,8 +48,12 @@ public class Block {
         return this;
     }
 
-    public boolean activateBlock(World world, PlayerEntity playerEntity) {
+    public boolean activateBlock(World world, PlayerEntity playerEntity, BlockPos pos) {
         return false;
+    }
+
+    public void onPlace(World world, BlockPos blockPos) {
+
     }
 
 

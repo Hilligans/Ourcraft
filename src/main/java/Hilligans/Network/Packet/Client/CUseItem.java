@@ -2,6 +2,7 @@ package Hilligans.Network.Packet.Client;
 
 import Hilligans.Block.BlockState;
 import Hilligans.Client.ClientData;
+import Hilligans.Data.Other.BlockPos;
 import Hilligans.Item.ItemStack;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.PacketBase;
@@ -41,8 +42,9 @@ public class CUseItem extends PacketBase {
         if(slot >= 0 && slot < 9) {
             PlayerData playerData = ServerNetworkHandler.getPlayerData(ctx);
             if(playerData != null) {
-                BlockState blockState = ServerMain.world.traceBlockState(playerData.playerEntity.x,playerData.playerEntity.y,playerData.playerEntity.z,playerData.playerEntity.pitch,playerData.playerEntity.yaw);
-                if(blockState != null && blockState.block.activateBlock(ServerMain.world,playerData.playerEntity)) {
+                BlockPos blockPos = ServerMain.world.traceBlockToBreak(playerData.playerEntity.x,playerData.playerEntity.y,playerData.playerEntity.z,playerData.playerEntity.pitch,playerData.playerEntity.yaw);
+                BlockState blockState = ServerMain.world.getBlockState(blockPos);
+                if(blockState != null && blockState.block.activateBlock(ServerMain.world,playerData.playerEntity,blockPos)) {
                     return;
                 }
                 ItemStack itemStack = playerData.playerInventory.getItem(slot);
