@@ -32,15 +32,12 @@ public class BlockItem extends Item {
             pos = world.traceBlock(Camera.pos.x, Camera.pos.y, Camera.pos.z, Camera.pitch, Camera.yaw);
         }
         if (pos == null) {
-            System.out.println(1);
             return false;
         }
         for (Entity entity : world.entities.values()) {
             if (entity instanceof LivingEntity) {
-                Block block = Blocks.getBlockWithID(BlockPlacer.id);
                 if(world.isServer()) {
                     if (!block.getAllowedMovement1(new Vector3f(), new Vector3f(playerEntity.x, playerEntity.y, playerEntity.z), pos, entity.boundingBox)) {
-                        System.out.println(2);
                         return false;
                     }
                 } else {
