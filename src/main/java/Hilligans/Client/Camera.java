@@ -9,9 +9,6 @@ import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CUpdatePlayerPacket;
-import Hilligans.Network.Packet.Server.SUpdateEntityPacket;
-import Hilligans.Network.ServerNetworkHandler;
-import Hilligans.ServerMain;
 import Hilligans.World.Chunk;
 import Hilligans.World.World;
 import org.joml.Matrix4f;
@@ -451,7 +448,7 @@ public class Camera {
                 for(int z = -Z; z < Z; z++) {
                     Block block = world.getBlockState(pos.copy().add(x,y,z)).block;
                     if(block != Blocks.AIR) {
-                        boolean canMove = block.getAllowedMovement1(new Vector3f(motion.x,motion.y,motion.z), new Vector3f(cameraPos.x, cameraPos.y, cameraPos.z), pos.copy().add(x, y, z), playerBoundingBox);
+                        boolean canMove = block.getAllowedMovement(new Vector3f(motion.x,motion.y,motion.z), new Vector3f(cameraPos.x, cameraPos.y, cameraPos.z), pos.copy().add(x, y, z), playerBoundingBox, world);
                         if(!canMove) {
                             return false;
                         }

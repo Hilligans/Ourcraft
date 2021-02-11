@@ -50,7 +50,7 @@ public class CSendBlockChanges extends PacketBase {
     @Override
     public void handle() {
         BlockState oldState = ServerMain.world.getBlockState(x,y,z);
-        BlockState newBlock = new BlockState(Blocks.getBlockWithID(blockId));
+        BlockState newBlock = Blocks.getBlockWithID(blockId).getDefaultState();
         ServerMain.world.setBlockState(x,y,z,newBlock);
         newBlock.block.onPlace(ServerMain.world, new BlockPos(x,y,z));
         Block droppedBlock = oldState.block.getDroppedBlock();
@@ -60,6 +60,6 @@ public class CSendBlockChanges extends PacketBase {
                 ServerMain.world.addEntity(itemEntity);
             }
         }
-        ServerNetworkHandler.sendPacket(new SSendBlockChanges(x,y,z,blockId));
+        ServerNetworkHandler.sendPacket(new SSendBlockChanges(x,y,z,newBlock));
     }
 }

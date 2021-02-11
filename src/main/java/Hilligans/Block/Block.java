@@ -61,22 +61,24 @@ public class Block {
         return new BlockState(this);
     }
 
+    public BlockState getStateWithData(short data) {
+        return new BlockState(this);
+    }
+
+    public BlockState getStateForPlacement(Vector3f pos, Vector3f playerPos) {
+        return new BlockState(this);
+    }
+
     public Block getDroppedBlock() {
         return droppedBlock;
     }
 
-    public Vector3f getAllowedMovement(Vector3f motion, Vector3f pos, BlockPos blockPos, BoundingBox boundingBox) {
-        if(!getBoundingBox().intersectsBox(boundingBox,blockPos.get3f(),pos,motion.x,motion.y,motion.z)) {
-            return motion;
-        }
-        return new Vector3f(0f,0f,0f);
+
+    public boolean getAllowedMovement(Vector3f motion, Vector3f pos, BlockPos blockPos, BoundingBox boundingBox, World world) {
+        return !getBoundingBox(world.getBlockState(blockPos)).intersectsBox(boundingBox, blockPos.get3f(), pos, motion.x, motion.y, motion.z);
     }
 
-    public boolean getAllowedMovement1(Vector3f motion, Vector3f pos, BlockPos blockPos, BoundingBox boundingBox) {
-        return !getBoundingBox().intersectsBox(boundingBox, blockPos.get3f(), pos, motion.x, motion.y, motion.z);
-    }
-
-    protected BoundingBox getBoundingBox() {
+    protected BoundingBox getBoundingBox(BlockState blockState) {
         return new BoundingBox(0,0,0,1,1,1);
     }
 
@@ -84,11 +86,11 @@ public class Block {
         blockTextureManager.generate();
     }
 
-    public Vector5f[] getVertices(int side) {
-        return getVertices(side,1.0f);
+    public Vector5f[] getVertices(int side, BlockState blockState) {
+        return getVertices(side,1.0f,blockState);
     }
 
-    public Vector5f[] getVertices(int side, float size) {
+    public Vector5f[] getVertices(int side, float size, BlockState blockState) {
         return CubeManager.getVertices1(blockTextureManager,side,size);
     }
 

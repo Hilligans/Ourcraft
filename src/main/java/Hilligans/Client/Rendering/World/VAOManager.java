@@ -179,7 +179,7 @@ public class  VAOManager {
     public static float[] getBlockVertices(Block block, boolean colored) {
         ArrayList<Vector5f> vertices = new ArrayList<>();
         for(int x = 0; x < 6; x++) {
-            vertices.addAll(Arrays.asList(block.getVertices(x)));
+            vertices.addAll(Arrays.asList(block.getVertices(x, block.getDefaultState())));
         }
         return convertVertices(vertices,colored);
     }
@@ -187,7 +187,7 @@ public class  VAOManager {
     public static float[] getBlockVertices(Block block, boolean colored, float size) {
         ArrayList<Vector5f> vertices = new ArrayList<>();
         for(int x = 0; x < 6; x++) {
-            vertices.addAll(Arrays.asList(block.getVertices(x,size)));
+            vertices.addAll(Arrays.asList(block.getVertices(x,size,block.getDefaultState())));
         }
         return convertVertices(vertices,colored);
     }

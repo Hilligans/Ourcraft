@@ -15,6 +15,12 @@ public class BlockPos {
         this.z = z;
     }
 
+    public BlockPos(Vector3f vector3f) {
+        this.x = Math.round(vector3f.x);
+        this.y = Math.round(vector3f.y);
+        this.z = Math.round(vector3f.z);
+    }
+
     public BlockPos add(BlockPos pos) {
         x += pos.x;
         y += pos.y;

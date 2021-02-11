@@ -180,7 +180,7 @@ public abstract class Entity {
                 for(int z = -Z; z < Z; z++) {
                     Block block = world.getBlockState(pos.copy().add(x,y,z)).block;
                     if(block != Blocks.AIR) {
-                        boolean canMove = block.getAllowedMovement1(new Vector3f(motion.x,motion.y,motion.z), new Vector3f(this.x, this.y, this.z), pos.copy().add(x, y, z), boundingBox);
+                        boolean canMove = block.getAllowedMovement(new Vector3f(motion.x,motion.y,motion.z), new Vector3f(this.x, this.y, this.z), pos.copy().add(x, y, z), boundingBox, world);
                         if(!canMove) {
                             return false;
                         }

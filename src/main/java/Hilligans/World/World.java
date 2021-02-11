@@ -16,6 +16,7 @@ import Hilligans.World.Builders.WorldBuilder;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import org.joml.Vector3d;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -82,7 +83,7 @@ public abstract class World {
     public BlockState getBlockState(int x, int y, int z) {
         Chunk chunk = getChunk(x >> 4,z >> 4);
         if(chunk == null) {
-            return new BlockState(Blocks.AIR);
+            return Blocks.AIR.getDefaultState();
         }
         return chunk.getBlockState(x,y,z);
     }
@@ -161,7 +162,7 @@ public abstract class World {
 
     static final float offSet = -0.5f;
 
-    public BlockPos traceBlock(float x, float y, float z, double pitch, double yaw) {
+    public Vector3f traceBlock(float x, float y, float z, double pitch, double yaw) {
         Vector3d vector3d = new Vector3d();
         boolean placed = false;
 
@@ -181,7 +182,7 @@ public abstract class World {
         }
 
         if(placed) {
-            return new BlockPos((int) Math.round(vector3d.x), (int) Math.round(vector3d.y), (int) Math.round(vector3d.z));
+            return new Vector3f((float)vector3d.x,(float)vector3d.y,(float)vector3d.z);
         } else {
             return null;
         }
@@ -230,13 +231,13 @@ public abstract class World {
         public int x;
         public int z;
         public int y;
-        public int id;
+        public  BlockState blockState;
 
-        public BlockChange(int x, int y, int z, int id) {
+        public BlockChange(int x, int y, int z, BlockState blockState) {
             this.x = x;
             this.y = y;
             this.z = z;
-            this.id = id;
+            this.blockState = blockState;
         }
 
     }

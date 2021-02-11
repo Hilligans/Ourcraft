@@ -47,15 +47,17 @@ public class SSendChunkPacket extends PacketBase {
             ArrayList<Byte> blocks = new ArrayList<>();
             Short2ByteOpenHashMap mappedBlocks = new Short2ByteOpenHashMap();
             ArrayList<Short> blockIds = new ArrayList<>();
+            ArrayList<Short> blockData = new ArrayList<>();
             byte pointer = 0;
             for (int x = 0; x < 16; x++) {
                 for (int y = 0; y < Settings.chunkHeight * 16; y++) {
                     for (int z = 0; z < 16; z++) {
-                        short blockId = chunk.getBlockState(x, y, z).block.id;
-                        byte id = mappedBlocks.getOrDefault(blockId,(byte)-1);
-                        if(id == -1) {
-                            mappedBlocks.put(blockId,pointer);
-                            blockIds.add(blockId);
+                        BlockState blockState = chunk.getBlockState(x, y, z);
+                        byte id = mappedBlocks.getOrDefault(blockState.block.id,(byte)-1);
+                        if(id == -1 || blockData.get(id) != blockState.readData()) {
+                            mappedBlocks.put(blockState.block.id,pointer);
+                            blockIds.add(blockState.block.id);
+                            blockData.add(blockState.readData());
                             id = pointer;
                             pointer++;
                         }
@@ -66,8 +68,9 @@ public class SSendChunkPacket extends PacketBase {
             int size = blockIds.size();
             packetData.writeByte((byte)size);
 
-            for(Short shortVal : blockIds) {
-                packetData.writeShort(shortVal);
+            for(int x = 0; x < size; x++) {
+                packetData.writeShort(blockIds.get(x));
+                packetData.writeShort(blockData.get(x));
                // packetData.writeByte(mappedBlocks.get(shortVal));
             }
 
@@ -87,7 +90,7 @@ public class SSendChunkPacket extends PacketBase {
             for (int x = 0; x < 16; x++) {
                 for (int y = 0; y < Settings.chunkHeight * 16; y++) {
                     for (int z = 0; z < 16; z++) {
-                        chunk.setBlockState(x, y, z, new BlockState(Blocks.getBlockWithID(packetData.readShort())));
+                        chunk.setBlockState(x, y, z, Blocks.getBlockWithID(packetData.readShort()).getDefaultState());
                     }
                 }
             }
@@ -95,14 +98,17 @@ public class SSendChunkPacket extends PacketBase {
 
             int size = packetData.readByte();
             ArrayList<Short> blocks = new ArrayList<>();
+            ArrayList<Short> blockData = new ArrayList<>();
 
             for(int x = 0; x < size; x++) {
                 blocks.add(packetData.readShort());
+                blockData.add(packetData.readShort());
             }
             for (int x = 0; x < 16; x++) {
                 for (int y = 0; y < Settings.chunkHeight * 16; y++) {
                     for (int z = 0; z < 16; z++) {
-                        chunk.setBlockState(x, y, z, new BlockState(Blocks.getBlockWithID(blocks.get(packetData.readByte()))));
+                        byte block = packetData.readByte();
+                        chunk.setBlockState(x, y, z, Blocks.getBlockWithID(blocks.get(block)).getStateWithData(blockData.get(block)));
                     }
                 }
             }

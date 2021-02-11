@@ -35,7 +35,7 @@ public class ClientWorld extends World {
                 skippedBlockChanges.add(blockChange);
                 continue;
             }
-            setBlockState(blockChange.x,blockChange.y,blockChange.z,new BlockState(Blocks.getBlockWithID(blockChange.id)));
+            setBlockState(blockChange.x,blockChange.y,blockChange.z,blockChange.blockState);
         }
         blockChanges.clear();
         blockChanges.addAll(skippedBlockChanges);

@@ -54,14 +54,14 @@ public class Chunk {
 
                 for(int y = 0; y < Settings.chunkHeight * 16; y++) {
                     if(y + 5 < offset) {
-                        setBlockState(x,y,z,new BlockState(Blocks.STONE));
+                        setBlockState(x,y,z,Blocks.STONE.getDefaultState());
                     } else if(y < offset) {
                         setBlockState(x,y,z, biome.underBlock.getDefaultState());
                     }  else if(y == offset) {
                         setBlockState(x,y,z, biome.surfaceBlock.getDefaultState());
                     }
                     if(y == 0) {
-                        setBlockState(x,0,z,new BlockState(Blocks.BEDROCK));
+                        setBlockState(x,0,z,Blocks.BEDROCK.getDefaultState());
                     }
                 }
             }
@@ -72,9 +72,9 @@ public class Chunk {
                 for(int z = 0; z < 16; z++) {
                    double val = world.noise.smoothNoise(0.1 * (x + this.x * 16),0.1 * y,0.1 * (z + this.z * 16));
                    if(val > 0.2 && y != 0) {
-                       setBlockState(x,y,z,new BlockState(Blocks.AIR));
+                       setBlockState(x,y,z,Blocks.AIR.getDefaultState());
                        if(getBlockState(x,y - 1,z).block == Blocks.DIRT) {
-                           setBlockState(x,y - 1,z,new BlockState(Blocks.AIR));
+                           setBlockState(x,y - 1,z,Blocks.AIR.getDefaultState());
                        }
                    }
                 }
@@ -130,7 +130,7 @@ public class Chunk {
 
     public BlockState getBlockState(int x, int y, int z) {
         if(y >= Settings.chunkHeight * 16 || y < 0) {
-            return new BlockState(Blocks.AIR);
+            return Blocks.AIR.getDefaultState();
         }
         int pos = y >> 4;
         SubChunk subChunk = chunks.get(pos);

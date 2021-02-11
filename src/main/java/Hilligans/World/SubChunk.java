@@ -39,28 +39,11 @@ public class SubChunk {
         for(int x = 0; x < 16; x++) {
             for(int i = 0; i < 16; i++) {
                 for(int z = 0; z < 16; z++) {
-                    blocks[x][i][z] = new BlockState(Blocks.AIR);
+                    blocks[x][i][z] = Blocks.AIR.getDefaultState();
                 }
             }
         }
 
-        if(Y == 0) {
-
-            for (int x = 0; x < 16; x++) {
-                for (int z = 0; z < 16; z++) {
-                    int val = (int) (Math.random() * 3);
-                    if (val == 0) {
-                        blocks[x][0][z] = new BlockState(Blocks.DIRT);
-                    } else if (val == 1) {
-                        blocks[x][0][z] = new BlockState(Blocks.DIRT);
-                        blocks[x][1][z] = new BlockState(Blocks.GRASS);
-                    } else {
-                        blocks[x][0][z] = new BlockState(Blocks.GRASS);
-                    }
-
-                }
-            }
-        }
     }
 
     public void createMesh() {
@@ -76,7 +59,7 @@ public class SubChunk {
                             BlockState blockState = getBlock(new BlockPos(x, y, z).add(Block.getBlockPos(a)));
                             if (blockState.block.transparentTexture && (Settings.renderSameTransparent || block.block != blockState.block)) {
                                 indices.addAll(Arrays.asList(block.block.getIndices(a,spot * 4)));
-                                Vector5f[] vector5fs = block.block.getVertices(a);
+                                Vector5f[] vector5fs = block.block.getVertices(a,block);
                                 for(Vector5f vector5f : vector5fs) {
                                     vertices.add(vector5f.addX(x).addY(y + this.y).addZ(z));
                                 }

@@ -2,6 +2,7 @@ package Hilligans.Block;
 
 import Hilligans.Block.BlockTypes.ChestBlock;
 import Hilligans.Block.BlockTypes.HorizontalSlab;
+import Hilligans.Block.BlockTypes.VerticalSlab;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +23,9 @@ public class Blocks {
     public static final Block LOG = new Block("log").withTexture("log.png").withSidedTexture("log_top.png",Block.UP).withSidedTexture("log_top.png",Block.DOWN);
     public static final Block SAND = new Block("sand").withTexture("sand.png");
     public static final Block CACTUS = new Block("cactus").withTexture("cactus.png");
+
     public static final Block SLAB = new HorizontalSlab("slab").withTexture("phil.png");
+    public static final Block VERTICAL_SLAB = new VerticalSlab("vslab").withTexture("stone.png");
 
     //public static final Block TAPE = new Block("tape").withTexture("flex_tape.png");
 

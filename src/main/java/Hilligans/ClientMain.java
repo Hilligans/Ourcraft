@@ -407,7 +407,7 @@ public class ClientMain {
                                     ClientNetworkHandler.sendPacket(new CSendBlockChanges(pos.x, pos.y, pos.z, Blocks.AIR.id));
                                     // clientWorld.entities.put(100,new ItemEntity(pos.x,pos.y,pos.z,100,clientWorld.getBlockState(pos).block));
                                 } else {
-                                    clientWorld.setBlockState(pos, new BlockState(Blocks.AIR));
+                                    clientWorld.setBlockState(pos, Blocks.AIR.getDefaultState());
                                 }
                             }
 

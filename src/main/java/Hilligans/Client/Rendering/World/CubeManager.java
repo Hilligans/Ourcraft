@@ -92,7 +92,7 @@ public class CubeManager {
         }
     }
 
-    public static Vector5f[] getSlabVertices(BlockTextureManager blockTextureManager, int side, float size, float offsetY) {
+    public static Vector5f[] getHorizontalSlabVertices(BlockTextureManager blockTextureManager, int side, float size, float offsetY) {
 
         int id = blockTextureManager.textures[side];
         float sub = TextureManager.getTextureSize(id) / 2f;
@@ -136,6 +136,55 @@ public class CubeManager {
                         new Vector5f(0, offsetY, size, minX, maxY)};
         }
     }
+
+    public static Vector5f[] getVerticalSlabVertices(BlockTextureManager blockTextureManager, int side, float size, float offset, boolean rotated) {
+
+        int id = blockTextureManager.textures[side];
+        //float sub1 = TextureManager.getTextureSize(id);
+
+        float minX = TextureManager.getMinX(id);
+        float maxX = TextureManager.getMaxX(id);
+        float sub = (maxX - minX) / 2f;
+        float minY = TextureManager.getMinY(id);
+        float maxY = TextureManager.getMaxY(id);
+        float sub1 = (maxY - minY) / 2f;
+
+        switch (side) {
+            case 0:
+                return new Vector5f[]{new Vector5f(offset + size / 2, size, 0, maxX - sub, maxY),
+                        new Vector5f(offset + size / 2, 0, 0, maxX - sub, minY),
+                        new Vector5f(offset, 0, 0, minX, minY),
+                        new Vector5f(offset, size, 0, minX, maxY)};
+            case 1:
+                return new Vector5f[]{new Vector5f(offset + size / 2, size, size, maxX - sub, maxY),
+                        new Vector5f(offset + size / 2, 0, size, maxX - sub, minY),
+                        new Vector5f(offset, 0, size, minX, minY),
+                        new Vector5f(offset, size, size, minX, maxY)};
+
+            case 2:
+                return new Vector5f[]{new Vector5f(offset, size, size, maxX, maxY),
+                        new Vector5f(offset, 0, size, maxX, minY),
+                        new Vector5f(offset, 0, 0, minX, minY),
+                        new Vector5f(offset, size, 0, minX, maxY)};
+            case 3:
+                return new Vector5f[]{new Vector5f(offset + size / 2, size, size, maxX, maxY),
+                        new Vector5f(offset + size / 2, 0, size, maxX, minY),
+                        new Vector5f(offset + size / 2, 0, 0, minX, minY),
+                        new Vector5f(offset + size / 2, size, 0, minX, maxY)};
+            case 5:
+                return new Vector5f[]{new Vector5f(offset + size / 2, size, size, minX, minY),
+                        new Vector5f(offset + size / 2, size, 0, maxX, minY),
+                        new Vector5f(offset, size, 0, maxX, maxY - sub1),
+                        new Vector5f(offset, size, size, minX, maxY - sub1)};
+            default:
+                return new Vector5f[]{new Vector5f(offset + size / 2, 0, size, minX, minY),
+                        new Vector5f(offset + size / 2, 0, 0, maxX, minY),
+                        new Vector5f(offset, 0, 0, maxX, maxY),
+                        new Vector5f(offset, 0, size, minX, maxY)};
+        }
+    }
+
+
 
     public static Integer[] getIndices(int side, int spot) {
         switch (side) {

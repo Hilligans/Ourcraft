@@ -1,5 +1,7 @@
 package Hilligans.Network.Packet.Server;
 
+import Hilligans.Block.BlockState;
+import Hilligans.Block.Blocks;
 import Hilligans.ClientMain;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Network.PacketBase;
@@ -11,25 +13,28 @@ public class SSendBlockChanges extends PacketBase {
     int y;
     int z;
     int blockId;
+    short blockData;
 
     public SSendBlockChanges() {
         super(4);
     }
 
-    public SSendBlockChanges(int x, int y, int z, int id) {
+    public SSendBlockChanges(int x, int y, int z, BlockState blockState) {
         this();
         this.x = x;
         this.y = y;
         this.z = z;
-        this.blockId = id;
+        this.blockId = blockState.block.id;
+        blockData = blockState.readData();
     }
 
-    public SSendBlockChanges(BlockPos pos, int id) {
+    public SSendBlockChanges(BlockPos pos, BlockState blockState) {
         this();
         this.x = pos.x;
         this.y = pos.y;
         this.z = pos.z;
-        this.blockId = id;
+        this.blockId = blockState.block.id;
+        blockData = blockState.readData();
     }
 
     @Override
@@ -38,6 +43,7 @@ public class SSendBlockChanges extends PacketBase {
         packetData.writeInt(y);
         packetData.writeInt(z);
         packetData.writeInt(blockId);
+        packetData.writeShort(blockData);
     }
 
     @Override
@@ -46,11 +52,12 @@ public class SSendBlockChanges extends PacketBase {
         y = packetData.readInt();
         z = packetData.readInt();
         blockId = packetData.readInt();
+        blockData = packetData.readShort();
     }
 
 
     @Override
     public void handle() {
-        ClientMain.clientWorld.blockChanges.add(new ClientWorld.BlockChange(x,y,z,blockId));
+        ClientMain.clientWorld.blockChanges.add(new ClientWorld.BlockChange(x,y,z, Blocks.getBlockWithID(blockId).getStateWithData(blockData)));
     }
 }
