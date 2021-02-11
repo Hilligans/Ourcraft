@@ -13,6 +13,7 @@ import Hilligans.Data.Other.Texture;
 import Hilligans.Data.Other.Textures;
 import Hilligans.Entity.Entity;
 import Hilligans.Item.ItemStack;
+import Hilligans.Network.Packet.Client.CCloseScreen;
 import Hilligans.Network.Packet.Client.CDropItem;
 import Hilligans.Network.Packet.Client.CUseItem;
 import Hilligans.Network.PacketBase;
@@ -315,31 +316,48 @@ public class ClientMain {
     }
 
     public static void closeScreen() {
+        if(!ClientData.heldStack.isEmpty()) {
+            ClientNetworkHandler.sendPacket(new CDropItem((short)-1,(byte)-1));
+            ClientData.heldStack = ItemStack.emptyStack();
+        }
         if(screen != null) {
             glfwSetCursorPos(window, (double)windowX / 2, (double)windowY / 2);
             screen.close();
             screen = null;
         }
-        if(!ClientData.heldStack.isEmpty()) {
-            ClientNetworkHandler.sendPacket(new CDropItem((short)-1,(byte)-1));
-            ClientData.heldStack = ItemStack.emptyStack();
+        if(ClientData.openContainer != null) {
+            ClientData.openContainer.closeContainer();
         }
+
+        ClientNetworkHandler.sendPacket(new CCloseScreen());
     }
 
     public static void openScreen(Screen screen1) {
+        if(screen != null) {
+            screen.close();
+        }
         screen = screen1;
         if(screen1 instanceof ContainerScreen) {
             ContainerScreen<?> screen2 = (ContainerScreen<?>) screen1;
             Container container = screen2.getContainer();
             screen2.setContainer(container);
+            if(ClientData.openContainer != null) {
+                ClientData.openContainer.closeContainer();
+            }
             ClientData.openContainer = container;
         }
     }
 
     public static void openScreen(Container container) {
         ContainerScreen<?> containerScreen = container.getContainerScreen();
+        if(screen != null) {
+            screen.close();
+        }
         screen = containerScreen;
         containerScreen.setContainer(container);
+        if(ClientData.openContainer != null) {
+            ClientData.openContainer.closeContainer();
+        }
         ClientData.openContainer = container;
     }
 

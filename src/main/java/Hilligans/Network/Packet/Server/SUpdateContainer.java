@@ -9,6 +9,7 @@ public class SUpdateContainer extends PacketBase {
 
     byte slot;
     ItemStack itemStack;
+    int containerId = 0;
 
     public SUpdateContainer() {
         super(14);
@@ -24,12 +25,14 @@ public class SUpdateContainer extends PacketBase {
     public void encode(PacketData packetData) {
         packetData.writeByte(slot);
         packetData.writeItemStack(itemStack);
+        packetData.writeInt(containerId);
     }
 
     @Override
     public void decode(PacketData packetData) {
         slot = packetData.readByte();
         itemStack = packetData.readItemStack();
+        containerId = packetData.readInt();
     }
 
     @Override

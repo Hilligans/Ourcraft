@@ -6,7 +6,10 @@ import Hilligans.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
 import Hilligans.ClientMain;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
+import Hilligans.Data.Other.IInventory;
 import Hilligans.Data.Other.Inventory;
+import Hilligans.Network.Packet.Server.SUpdateContainer;
+import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.Util.Settings;
 
 public class InventoryContainer extends Container {
@@ -42,4 +45,5 @@ public class InventoryContainer extends Container {
     public ContainerScreen<?> getContainerScreen() {
         return new InventoryScreen();
     }
+
 }

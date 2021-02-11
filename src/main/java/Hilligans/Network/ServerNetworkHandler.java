@@ -52,7 +52,7 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<PacketData
         if(id != -1) {
             ServerMain.world.removeEntity(id);
             mappedChannels.remove(id);
-            playerData.remove(id);
+            playerData.remove(id).close();
         }
         sendPacket(new SChatMessage(mappedName.get(ctx.channel().id()) + " has left the game"));
         mappedName.remove(ctx.channel().id());
@@ -93,6 +93,20 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<PacketData
 
     public static void sendPacket(PacketBase packetBase, PlayerEntity playerEntity) {
         channels.find(mappedChannels.get(playerEntity.id)).writeAndFlush(new PacketData(packetBase));
+    }
+
+    public static void sendPacket(PacketBase packetBase, ChannelId channelId) {
+        channels.find(channelId).writeAndFlush(new PacketData(packetBase));
+    }
+
+    public static void sendPacket(PacketBase packetBase, int channelId) {
+        ChannelId channelId1 = mappedChannels.get(channelId);
+        if(channelId1 != null) {
+            Channel channel = channels.find(channelId1);
+            if (channel != null) {
+                channel.writeAndFlush(new PacketData(packetBase));
+            }
+        }
     }
 
     public static PlayerData getPlayerData(ChannelHandlerContext ctx) {

@@ -9,18 +9,25 @@ import Hilligans.Network.Packet.Server.SUpdateInventory;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
+import Hilligans.Server.IInventoryChanged;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Inventory implements IInventory {
 
     ItemStack[] items;
     public int age;
+    //public ArrayList<IInventoryChanged> linkedObjects = new ArrayList<>();
+
+    public ArrayList<IInventoryChanged>[] listeners;
 
     public Inventory(int size) {
         items = new ItemStack[size];
+        listeners = new ArrayList[size];
         for(int x = 0; x < size; x++) {
             items[x] = new ItemStack(null,(byte)0);
+            listeners[x] = new ArrayList<>(1);
         }
     }
 
@@ -37,6 +44,7 @@ public class Inventory implements IInventory {
     @Override
     public void setItem(int slot, ItemStack item) {
         items[slot] = item;
+        notifyListeners(slot);
     }
 
     public void markDirty() {
@@ -45,14 +53,25 @@ public class Inventory implements IInventory {
 
     @Override
     public boolean addItem(ItemStack itemStack) {
+        int x = 0;
         for(ItemStack itemStack1 : items) {
             int toRemove = itemStack1.addItem(itemStack);
             itemStack.count -= toRemove;
             if(itemStack.count == 0) {
                 return true;
             }
+            if(toRemove != 0) {
+                notifyListeners(x);
+            }
+            x++;
         }
         return false;
+    }
+
+    public void notifyListeners(int slot) {
+        for(IInventoryChanged iInventoryChanged : listeners[slot]) {
+            iInventoryChanged.onChange(slot,this);
+        }
     }
 
 

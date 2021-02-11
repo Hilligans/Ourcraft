@@ -28,8 +28,8 @@ public class ChestBlock extends Block {
     public boolean activateBlock(World world, PlayerEntity playerEntity, BlockPos pos) {
         if(world.isServer()) {
             ChestDataProvider chestDataProvider = (ChestDataProvider) world.getDataProvider(pos);
-            ChestContainer container = new ChestContainer(chestDataProvider.inventory,playerEntity.getPlayerData().playerInventory);
-            playerEntity.getPlayerData().openContainer = container;
+            ChestContainer container = (ChestContainer) new ChestContainer(chestDataProvider.inventory,playerEntity.getPlayerData().playerInventory).setPlayerId(playerEntity.id);
+            playerEntity.getPlayerData().openContainer(container);
             ServerNetworkHandler.sendPacket(new SOpenContainer(container), playerEntity);
         }
         return true;

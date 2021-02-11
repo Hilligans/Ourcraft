@@ -172,14 +172,6 @@ public class PacketData {
         return packetBase;
     }
 
-    public static void writeBytes(ByteBuf byteBuf) {
-        byteBuf.markReaderIndex();
-        for (int x = 0; x < byteBuf.readableBytes(); x++) {
-            System.out.print(byteBuf.getByte(x) + ":");
-        }
-        System.out.println();
-        byteBuf.resetReaderIndex();
-    }
 
 
 

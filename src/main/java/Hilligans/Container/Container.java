@@ -5,7 +5,10 @@ import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.ClientMain;
 import Hilligans.Container.Containers.ChestContainer;
 import Hilligans.Container.Containers.InventoryContainer;
+import Hilligans.Data.Other.IInventory;
+import Hilligans.Server.IInventoryChanged;
 import Hilligans.Util.Settings;
+import io.netty.channel.ChannelId;
 
 import java.util.ArrayList;
 
@@ -15,6 +18,8 @@ public abstract class Container {
 
     public int textureX = 0;
     public int textureY = 0;
+
+    public int channelId;
 
     public Container(int type) {
         this.type = type;
@@ -31,8 +36,15 @@ public abstract class Container {
         return null;
     }
 
+    public Container setPlayerId(int channelId) {
+        this.channelId = channelId;
+        return this;
+    }
+
     public void addSlot(Slot slot) {
-        slot.id = (short) slots.size();
+        slot.setContainerAndId((short) slots.size(),this);
+        //slot.id = (short) slots.size();
+        //slot.container = this;
         slots.add(slot);
     }
 
@@ -58,6 +70,12 @@ public abstract class Container {
 
 
     public abstract ContainerScreen<?> getContainerScreen();
+
+    public void closeContainer() {
+        for(Slot slot : slots) {
+            slot.onClose();
+        }
+    }
 
     public Slot getSlotAt(int x, int y) {
         for(Slot slot : slots) {

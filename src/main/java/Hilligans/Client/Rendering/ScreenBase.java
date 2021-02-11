@@ -5,6 +5,8 @@ import Hilligans.Client.Key.KeyHandler;
 import Hilligans.Client.Key.KeyPress;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.Widgets.Widget;
+import Hilligans.Network.ClientNetworkHandler;
+import Hilligans.Network.Packet.Client.CCloseScreen;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -49,7 +51,7 @@ public abstract class ScreenBase implements Screen {
         for(KeyPress keyPress : keyPresses) {
             KeyHandler.remove(keyPress);
         }
-
+        ClientNetworkHandler.sendPacket(new CCloseScreen());
     }
 
     @Override

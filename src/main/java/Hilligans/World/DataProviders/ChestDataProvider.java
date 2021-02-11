@@ -6,7 +6,7 @@ import Hilligans.World.DataProvider;
 
 public class ChestDataProvider extends DataProvider {
 
-    public IInventory inventory = new Inventory(27);
+    public Inventory inventory = new Inventory(27);
 
 
 
