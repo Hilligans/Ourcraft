@@ -17,40 +17,26 @@ public class ChestContainer extends Container {
 
 
     public ChestContainer() {
-        super(1);
-        Inventory chestInventory = new Inventory(27);
-
-        //34
-        int slotSize = (int) (16 * Settings.guiSize);
-        int startY = (int) (ClientMain.windowY / 2 - 34 * Settings.guiSize / 2 - 4 * slotSize);
-        int startX = (int) (ClientMain.windowX / 2 - 4.5f * slotSize);
-
-        for(int y = 0; y < 3; y++) {
-            for (int x = 0; x < 9; x++) {
-                addSlot(new Slot(startX + x * slotSize, (int) (startY + 12 * Settings.guiSize + y * slotSize),chestInventory,x + y * 9));
-            }
-        }
-
-        for(int x = 0; x < 9; x++) {
-            addSlot(new Slot(startX + x * slotSize, (int) (startY + 27 * Settings.guiSize + slotSize * 7), ClientData.inventory,x));
-        }
-
-        for(int y = 0; y < 4; y++) {
-            for (int x = 0; x < 9; x++) {
-                addSlot(new Slot(startX + x * slotSize, (int) (startY + y * slotSize + 22 * Settings.guiSize + slotSize * 3),ClientData.inventory,9 + x + y * 9));
-            }
-        }
+        this(new Inventory(27),ClientData.inventory);
     }
 
     public ChestContainer(Inventory inventory, Inventory playerInventory) {
         super(1);
-        for(int x = 0; x < 27; x++) {
-            addSlot(new Slot(0, 0, inventory,x));
+        setTextureSize(158,162);
+        for(int y = 0; y < 3; y++) {
+            for (int x = 0; x < 9; x++) {
+                addSlot(new Slot(7 + x * 16, 12 + y * 16, inventory, x + y * 9));
+            }
         }
-
-        for(int x = 0; x < 45; x++) {
-            addSlot(new Slot(0, 0, playerInventory,x));
+        for(int x = 0; x < 9; x++) {
+            addSlot(new Slot(7 + 16 * x,139, playerInventory,x));
         }
+        for(int y = 0; y < 4; y++) {
+            for (int x = 0; x < 9; x++) {
+                addSlot(new Slot(7 + x * 16, 70 + y * 16,playerInventory,9 + x + y * 9));
+            }
+        }
+        resize();
     }
 
     @Override

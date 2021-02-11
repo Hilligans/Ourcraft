@@ -1,7 +1,6 @@
 package Hilligans.Network;
 
 import Hilligans.Entity.LivingEntities.PlayerEntity;
-import Hilligans.Network.Packet.IFuturePacket;
 import Hilligans.Network.Packet.Server.SChatMessage;
 import Hilligans.Server.PlayerData;
 import Hilligans.ServerMain;

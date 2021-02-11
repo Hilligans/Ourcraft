@@ -2,12 +2,8 @@ package Hilligans.Network;
 
 import Hilligans.ClientMain;
 import Hilligans.Network.Packet.Client.CHandshakePacket;
-import Hilligans.Network.Packet.IFuturePacket;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-
-import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.*;
 

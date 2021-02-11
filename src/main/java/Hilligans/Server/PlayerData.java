@@ -27,6 +27,7 @@ public class PlayerData {
         playerInventory = playerEntity.inventory;
         openContainer = new InventoryContainer(playerInventory).setPlayerId(playerEntity.id);
         playerInventory.setItem(0,new ItemStack(Items.HASHED_ITEMS.get("chest"),(byte)2));
+        playerInventory.setItem(1,new ItemStack(Items.HASHED_ITEMS.get("slab"),(byte)10));
     }
 
     public void openContainer(Container container) {

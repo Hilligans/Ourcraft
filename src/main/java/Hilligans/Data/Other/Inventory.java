@@ -1,14 +1,7 @@
 package Hilligans.Data.Other;
 
-import Hilligans.Block.Blocks;
-import Hilligans.Item.Item;
 import Hilligans.Item.ItemStack;
-import Hilligans.Item.Items;
-import Hilligans.Network.Packet.IFuturePacket;
-import Hilligans.Network.Packet.Server.SUpdateInventory;
-import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
-import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.Server.IInventoryChanged;
 
 import java.util.ArrayList;

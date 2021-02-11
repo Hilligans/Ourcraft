@@ -360,22 +360,32 @@ public class Camera {
     }
 
     private static void move(float velX, float velY, float velZ) {
-        //System.out.println(velX + " : " + velZ);
-        //isOnGround = false;
         int x;
         boolean couldMove = false;
         for(x = 0; x < 7; x++) {
             boolean movement = getAllowedMovement(tryMovement(x,velX,velY,velZ),pos, ClientMain.clientWorld);
-            if(movement) {
-                movement = canMove(tryMovement(x,velX,velY,velZ));
-                //System.out.println(movement);
+
+            if(!movement  && isOnGround && (x == 1 || x == 4 || x == 6)) {
+                if(getAllowedMovement(tryMovement(x,velX,0,velZ),new Vector3f(pos.x,pos.y + 0.5f, pos.z), ClientMain.clientWorld)) {
+                    pos.y += 0.5f;
+                    addVel(x, velX, 0, velZ);
+                    return;
+                }
             }
+            if(movement) {
+                movement = canMove(tryMovement(x,velX,velY,velZ), Camera.pos);
+                if(!movement) {
+                    movement = canMove(tryMovement(x,velX,velY,velZ), new Vector3f(Camera.pos.x,Camera.pos.y - 0.5f, Camera.pos.z));
+                }
+            }
+
             if(!movement) {
                 continue;
             }
             couldMove = true;
             break;
         }
+
         isOnGround = false;
         if(!couldMove) {
             isOnGround = true;
@@ -383,24 +393,24 @@ public class Camera {
             velY = 0;
             velZ = 0;
         }
-        //System.out.println(x);
+        addVel(x,velX,velY,velZ);
+
+    }
+
+    private static void addVel(int x, float velX, float velY, float velZ) {
         if (x == 3 || x == 5 || x == 6) {
-            //Camera.velX = 0;
             velX = 0;
         }
         if (x == 1 || x == 4 || x == 6) {
-            //Camera.velZ = 0;
             isOnGround = true;
             velY = 0;
         }
         if (x == 2 || x == 4 || x == 5) {
-            //Camera.velZ = 0;
             velZ = 0;
         }
         pos.x += velX;
         pos.y += velY;
         pos.z += velZ;
-
     }
 
     private static Vector3f tryMovement(int side, float velX, float velY, float velZ) {
@@ -452,7 +462,7 @@ public class Camera {
         return true;
     }
 
-    private static boolean canMove(Vector3f motion) {
+    private static boolean canMove(Vector3f motion, Vector3f pos) {
         if(KeyHandler.keyPressed[GLFW_KEY_LEFT_SHIFT]) {
             if(isOnGround) {
                 Vector3f newPos = new Vector3f(pos.x,pos.y,pos.z).add(motion);

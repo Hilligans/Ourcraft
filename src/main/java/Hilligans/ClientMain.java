@@ -251,9 +251,6 @@ public class ClientMain {
             StringRenderer.drawString(screenStack, clientWorld.biomeMap.getBiome((int) Camera.pos.x, (int) Camera.pos.z).name, windowX / 2, 58, 0.5f);
         }
 
-        //screenStack.push();
-        //screenStack.pop();;
-        //StringRenderer.drawString(screenStack,"",0,0,0);
         InventoryScreen.drawHotbar(screenStack);
 
         ChatWindow.render1(screenStack);
@@ -362,7 +359,6 @@ public class ClientMain {
     }
 
     public static void createCallbacks() {
-
         glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
             if(height % 2 == 1) {
                 height += 1;
@@ -373,6 +369,9 @@ public class ClientMain {
             GL30.glViewport(0, 0, width, height);
             windowX = width;
             windowY = height;
+            if(ClientData.openContainer != null) {
+                ClientData.openContainer.resize();
+            }
         });
 
 

@@ -15,30 +15,21 @@ import Hilligans.Util.Settings;
 public class InventoryContainer extends Container {
 
     public InventoryContainer() {
-        super(0);
-        int slotSize = (int) (16 * Settings.guiSize);
-        int startX = (int) (ClientMain.windowX / 2 - 4.5f * slotSize);
-        int startY = (int) (ClientMain.windowY / 2 - 2.5 * slotSize - Settings.guiSize * 2.5);
-        for(int y = 0; y < 4; y++) {
-            for (int x = 0; x < 9; x++) {
-                addSlot(new Slot(startX + x * slotSize, startY + y * slotSize,ClientData.inventory,9 + x + y * 9));
-            }
-        }
-        for(int x = 0; x < 9; x++) {
-            addSlot(new Slot(startX + x * slotSize, (int)(startY + slotSize * 4 + 5 * Settings.guiSize),ClientData.inventory,x));
-        }
+        this(ClientData.inventory);
     }
 
     public InventoryContainer(Inventory inventory) {
         super(0);
+        setTextureSize(158,99);
         for(int y = 0; y < 4; y++) {
             for (int x = 0; x < 9; x++) {
-                addSlot(new Slot(0,0,inventory,9 + x + y * 9));
+                addSlot(new Slot(7 + x * 16,7 + y * 16,inventory,9 + x + y * 9));
             }
         }
         for(int x = 0; x < 9; x++) {
-            addSlot(new Slot(0,0,inventory,x));
+            addSlot(new Slot(7 + x * 16,76,inventory,x));
         }
+        resize();
     }
 
     @Override

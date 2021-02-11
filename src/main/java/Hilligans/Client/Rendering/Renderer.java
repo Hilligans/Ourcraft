@@ -66,6 +66,8 @@ public class Renderer {
         glBindTexture(GL_TEXTURE_2D, ClientMain.texture);
         //matrixStack.rotate(0.785398f,new Vector3f(0,1,0));
 
+        //matrixStack.rotate(3.1415f,new Vector3f(1,0,1));
+
         matrixStack.translate(x - size / 2f + 1,y + size / 8f + 1,0);
 
         //matrixStack.rotate(xAngle,new Vector3f(1,0,0));
@@ -73,8 +75,10 @@ public class Renderer {
 
         matrixStack.rotate(0.785f,new Vector3f(0.5f,-1,0));
         matrixStack.rotate(0.186f,new Vector3f(0,0,-1));
+
+
         //matrixStack.rotate();
-        matrixStack.translate(0,0,-size * 2);
+        matrixStack.translate(0,0 ,-size * 2);
         matrixStack.applyTransformation();
         glDrawElements(GL_TRIANGLES, 36,GL_UNSIGNED_INT,0);
         matrixStack.pop();

@@ -76,8 +76,7 @@ public class Block {
         return !getBoundingBox().intersectsBox(boundingBox, blockPos.get3f(), pos, motion.x, motion.y, motion.z);
     }
 
-    private BoundingBox getBoundingBox() {
-        //return new BoundingBox(-1,-1,-1,0,0,0);
+    protected BoundingBox getBoundingBox() {
         return new BoundingBox(0,0,0,1,1,1);
     }
 
@@ -86,22 +85,6 @@ public class Block {
     }
 
     public Vector5f[] getVertices(int side) {
-       // return CubeManager.getVertices(blockTextureManager,side,0.5f);
-
-       /* Vector5f[] vertices = CubeManager.getVertices1(blockTextureManager,side,1f);
-        if(side == 4 || side == 5) {
-            for(Vector5f vector5f : vertices) {
-                vector5f.setColored();
-            }
-            return vertices;
-        }
-        for(Vector5f vector5f : vertices) {
-            vector5f.setColored(0,0,0,0.5f);
-        }
-        return vertices;
-        re
-        */
-
         return getVertices(side,1.0f);
     }
 

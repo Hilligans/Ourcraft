@@ -232,7 +232,9 @@ public class TextureManager {
     public static float getMaxY(int id) {
         return instance.imageMap.get(id).maxY(id);
     }
-
+    public static float getTextureSize(int id) {
+        return instance.imageMap.get(id).imageSize();
+    }
 
 
     public static int loadAndRegisterTexture(String path) {
@@ -397,6 +399,10 @@ public class TextureManager {
             id -= RATIO * this.id;
             int y = (int)(id / count);
             return ((float)1 / count) * (y + 1);
+        }
+
+        public float imageSize() {
+            return (float) (imageSize / MAX_TEXTURE_SIZE);
         }
 
     }

@@ -24,15 +24,7 @@ public class Slot implements IInventoryChanged {
     public int x = 0;
     public int y = 0;
 
-    public Slot(int x, int y, IInventory inventory, int index) {
-        this.x = x;
-        this.y = y;
-        this.inventory = (Inventory) inventory;
-        this.index = index;
-    }
-
-
-    public Slot(int startX, int startY, IInventory inventory, int index, boolean a) {
+    public Slot(int startX, int startY, IInventory inventory, int index) {
         this.startX = startX;
         this.startY = startY;
         this.inventory = (Inventory) inventory;
@@ -49,7 +41,6 @@ public class Slot implements IInventoryChanged {
     public void render(MatrixStack matrixStack) {
         ItemStack itemStack = inventory.getItem(index);
         if(!itemStack.isEmpty()) {
-            //System.out.println(x + " : " + y);
             itemStack.item.render(matrixStack,x,y, (int) (8 * Settings.guiSize),itemStack);
         }
     }
