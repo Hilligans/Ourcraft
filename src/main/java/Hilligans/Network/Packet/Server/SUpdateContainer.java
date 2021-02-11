@@ -15,10 +15,11 @@ public class SUpdateContainer extends PacketBase {
         super(14);
     }
 
-    public SUpdateContainer(byte slot, ItemStack itemStack) {
+    public SUpdateContainer(byte slot, ItemStack itemStack, int uniqueId) {
         this();
         this.slot = slot;
         this.itemStack = itemStack;
+        this.containerId = uniqueId;
     }
 
     @Override
@@ -38,7 +39,9 @@ public class SUpdateContainer extends PacketBase {
     @Override
     public void handle() {
         if(ClientData.openContainer != null) {
-            ClientData.openContainer.slots.get(slot).setContents(itemStack);
+            if(ClientData.openContainer.uniqueId == containerId) {
+                ClientData.openContainer.slots.get(slot).setContents(itemStack);
+            }
         }
     }
 }

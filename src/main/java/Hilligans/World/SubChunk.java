@@ -146,6 +146,7 @@ public class SubChunk {
     }
 
     public void setBlockState(int x, int y, int z, BlockState blockState) {
+        blocks[x & 15][y & 15][z & 15].block.onBreak(world,new BlockPos(x,y,z));
         blocks[x & 15][y & 15][z & 15] = blockState;
     }
 

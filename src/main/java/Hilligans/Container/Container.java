@@ -21,6 +21,8 @@ public abstract class Container {
 
     public int channelId;
 
+    public int uniqueId = -1;
+
     public Container(int type) {
         this.type = type;
     }
@@ -38,6 +40,11 @@ public abstract class Container {
 
     public Container setPlayerId(int channelId) {
         this.channelId = channelId;
+        return this;
+    }
+
+    public Container setUniqueId(int id) {
+        this.uniqueId = id;
         return this;
     }
 
@@ -91,6 +98,12 @@ public abstract class Container {
     public static void register() {
         containers.add(InventoryContainer::new);
         containers.add(ChestContainer::new);
+    }
+
+    static int id = 0;
+
+    public static int getId() {
+        return id++;
     }
 
 }

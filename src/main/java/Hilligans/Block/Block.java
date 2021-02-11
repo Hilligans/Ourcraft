@@ -52,9 +52,9 @@ public class Block {
         return false;
     }
 
-    public void onPlace(World world, BlockPos blockPos) {
+    public void onPlace(World world, BlockPos blockPos) {}
 
-    }
+    public void onBreak(World world, BlockPos blockPos) {}
 
 
     public BlockState getDefaultState() {

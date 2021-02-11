@@ -5,7 +5,9 @@ import Hilligans.Block.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.IInventory;
+import Hilligans.Entity.Entities.ItemEntity;
 import Hilligans.Entity.Entity;
+import Hilligans.Item.ItemStack;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CRequestChunkPacket;
 import Hilligans.Util.*;
@@ -44,8 +46,7 @@ public abstract class World {
         random = new Random(131);
         biomeMap = new BiomeNoise(random);
         simplexNoise = new SimplexNoise(random);
-        //simplexNoise = random.nextInt();
-        //biomeMap = new PerlinNoise(random.nextInt(),20,30,1,100);
+
     }
 
     public abstract boolean isServer();
@@ -119,6 +120,15 @@ public abstract class World {
         }
     }
 
+    public void spawnItemEntity(float x, float y, float z, ItemStack itemStack) {
+        if(!itemStack.isEmpty()) {
+            ItemEntity itemEntity = new ItemEntity(x, y, z, Entity.getNewId(), itemStack);
+            itemEntity.velY = 0.30f;
+            itemEntity.pickupDelay = 10;
+            addEntity(itemEntity);
+        }
+    }
+
     public void setBlockState(BlockPos pos, BlockState blockState) {
         setBlockState(pos.x,pos.y,pos.z,blockState);
     }
@@ -146,16 +156,6 @@ public abstract class World {
                 return;
             }
         }
-
-        /*for(int x = 0; x < requestedChunks.size(); x++) {
-            if(requestedChunks.get(x).x == chunk.x && requestedChunks.get(x).z == chunk.z) {
-                requestedChunks.remove(x);
-                chunks.put(chunk.x & 4294967295L | ((long)chunk.z & 4294967295L) << 32,chunk);
-                return;
-            }
-        }
-
-         */
     }
 
     public static final float stepCount = 0.05f;

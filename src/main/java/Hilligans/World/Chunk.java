@@ -48,16 +48,9 @@ public class Chunk {
     public void generate() {
         for(int x = 0; x < 16; x++) {
             for(int z = 0; z < 16; z++) {
-
-                //int offset = getHeight(getBlockHeight(x + this.x * 16,z + this.z * 16));
-
                 int offset = getBlockHeight(x + this.x * 16,z + this.z * 16);
-
                 offset = interpolate(offset,getBlockHeight(x + 1 + this.x * 16, z + 1 + this.z * 16));
-
                 Biome biome = getBiome1(x + this.x * 16,z + this.z * 16);
-               // System.out.println("x:" + (x + this.x * 16) + " z:" + (z + this.z * 16) + " " + biome.name);
-
 
                 for(int y = 0; y < Settings.chunkHeight * 16; y++) {
                     if(y + 5 < offset) {
@@ -116,24 +109,10 @@ public class Chunk {
     }
 
     public int getBlockHeight(int x, int z) {
-
-        Biome biome = getBiome1(x,z);
-
-        double val = world.simplexNoise.getHeight(x,z,biome.terrainHeights);
-        //System.out.println(val);
+        Biome biome = getBiome1(x, z);
+        double val = world.simplexNoise.getHeight(x, z, biome.terrainHeights);
         return (int) (val + terrain);
-        //return world.heightMap.getHeight(x / 64f,z / 64f);
-        //return world.customNoise.getNoise(x,z,10,6);
-        //return world.noise.noise((int)((x + this.x * 16)/2 + Integer.MAX_VALUE / 2),(int)((z + this.z * 16)/2 + Integer.MAX_VALUE / 2));
     }
-
-  //  public int getHeight(double height, double biome) {
-       // biome = biome * 20 + 5;
-
-
-
-        //return (int) (height * biome - biome / 2 + terrain);
-  //  }
 
     public int interpolate(int height, int xHeight) {
         return Math.round(((float)height + xHeight) / 2);
@@ -146,11 +125,6 @@ public class Chunk {
     private final double size = 400;
 
     public Biome getBiome1(int x, int z) {
-
-        //System.out.println(height + " height");
-
-        //System.out.println("noise " + noise);
-
         return world.biomeMap.getBiome(x,z);
     }
 

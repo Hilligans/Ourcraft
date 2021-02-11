@@ -30,6 +30,9 @@ public class PlayerData {
     }
 
     public void openContainer(Container container) {
+        if(!(container instanceof InventoryContainer)) {
+            container.uniqueId = Container.getId();
+        }
         openContainer.closeContainer();
         openContainer = container;
     }

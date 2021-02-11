@@ -6,6 +6,7 @@ import Hilligans.Container.Containers.ChestContainer;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.Inventory;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
+import Hilligans.Item.ItemStack;
 import Hilligans.Network.Packet.Server.SOpenContainer;
 import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.World.DataProviders.ChestDataProvider;
@@ -33,5 +34,17 @@ public class ChestBlock extends Block {
             ServerNetworkHandler.sendPacket(new SOpenContainer(container), playerEntity);
         }
         return true;
+    }
+
+    @Override
+    public void onBreak(World world, BlockPos blockPos) {
+        super.onBreak(world, blockPos);
+        if(world.isServer()) {
+            Inventory inventory = ((ChestDataProvider) world.getDataProvider(blockPos)).inventory;
+            world.setDataProvider(blockPos, null);
+            for (int x = 0; x < inventory.getSize(); x++) {
+                world.spawnItemEntity(blockPos.x + 0.5f, blockPos.y + 1, blockPos.z + 0.5f, inventory.getItem(x));
+            }
+        }
     }
 }

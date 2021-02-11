@@ -9,6 +9,7 @@ import Hilligans.Network.PacketData;
 public class SOpenContainer extends PacketBase {
 
     Container container;
+    int uniqueId;
 
     public SOpenContainer() {
         super(16);
@@ -17,11 +18,13 @@ public class SOpenContainer extends PacketBase {
     public SOpenContainer(Container container) {
         this();
         this.container = container;
+        this.uniqueId = container.uniqueId;
     }
 
     @Override
     public void encode(PacketData packetData) {
         packetData.writeShort((short) container.type);
+        packetData.writeInt(uniqueId);
         packetData.writeShort((short) container.slots.size());
         for(Slot slot : container.slots) {
             packetData.writeItemStack(slot.getContents());
@@ -31,6 +34,7 @@ public class SOpenContainer extends PacketBase {
     @Override
     public void decode(PacketData packetData) {
         container = Container.containers.get(packetData.readShort()).getContainer();
+        container.uniqueId = packetData.readInt();
         int slotCount = packetData.readShort();
         for(int x = 0; x < slotCount; x++) {
             container.slots.get(x).setContents(packetData.readItemStack());

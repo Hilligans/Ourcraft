@@ -100,7 +100,7 @@ public class Slot implements IInventoryChanged {
 
     @Override
     public void onChange(int slot, IInventory inventory) {
-        ServerNetworkHandler.sendPacket(new SUpdateContainer((byte) id,getContents()),container.channelId);
+        ServerNetworkHandler.sendPacket(new SUpdateContainer((byte) id,getContents(), container.uniqueId),container.channelId);
     }
 
     public void onClose() {

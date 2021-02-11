@@ -130,7 +130,7 @@ public class ClientMain {
             public void onPress() {
                 if(screen == null) {
                     openScreen(new InventoryScreen());
-                } else if(screen instanceof InventoryScreen) {
+                } else if(screen instanceof ContainerScreen) {
                     closeScreen();
                 }
             }

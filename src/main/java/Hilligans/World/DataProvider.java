@@ -1,4 +1,3 @@
 package Hilligans.World;
 
-public class DataProvider {
-}
+public class DataProvider {}

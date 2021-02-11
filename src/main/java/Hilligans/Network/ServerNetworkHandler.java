@@ -29,8 +29,6 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<PacketData
     public static Int2ObjectOpenHashMap<ChannelId> mappedChannels = new Int2ObjectOpenHashMap<>();
     public static Int2ObjectOpenHashMap<PlayerData> playerData = new Int2ObjectOpenHashMap<>();
 
-    public static ArrayList<IFuturePacket> futurePackets = new ArrayList<>();
-
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         ctx.pipeline().get(SslHandler.class).handshakeFuture().addListener(
