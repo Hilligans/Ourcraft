@@ -3,6 +3,7 @@ package Hilligans.Network;
 import Hilligans.ClientMain;
 import Hilligans.Network.Packet.Client.CHandshakePacket;
 import Hilligans.Network.Packet.IFuturePacket;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -15,7 +16,7 @@ public class ClientNetworkHandler extends SimpleChannelInboundHandler<PacketData
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        ServerNetworkHandler.sendPacket(new CHandshakePacket(),ctx);
+        ClientNetworkHandler.sendPacket(new CHandshakePacket());
         super.channelActive(ctx);
     }
 

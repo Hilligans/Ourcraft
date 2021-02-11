@@ -52,6 +52,7 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<PacketData
             mappedChannels.remove(id);
             playerData.remove(id).close();
         }
+        channelIds.remove(ctx.channel().id());
         sendPacket(new SChatMessage(mappedName.get(ctx.channel().id()) + " has left the game"));
         mappedName.remove(ctx.channel().id());
         super.channelInactive(ctx);

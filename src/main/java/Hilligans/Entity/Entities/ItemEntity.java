@@ -2,9 +2,11 @@ package Hilligans.Entity.Entities;
 
 import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
+import Hilligans.Client.ClientData;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.World.CubeManager;
 import Hilligans.Client.Rendering.World.VAOManager;
+import Hilligans.ClientMain;
 import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Entity.Entity;
 import Hilligans.Item.BlockItem;
@@ -84,18 +86,14 @@ public class ItemEntity extends Entity {
 
     @Override
     public void render(MatrixStack matrixStack) {
-       // System.out.print("rendering");
-        matrixStack.push();
         if(id == -1) {
             createMesh();
         }
+        glBindTexture(GL_TEXTURE_2D, ClientMain.texture);
         matrixStack.translate(x,y,z);
         matrixStack.applyTransformation();
         glBindVertexArray(id);
         glDrawElements(GL_TRIANGLES, verticesCount * 3 / 2,GL_UNSIGNED_INT,0);
-
-
-        matrixStack.pop();
     }
 
     @Override

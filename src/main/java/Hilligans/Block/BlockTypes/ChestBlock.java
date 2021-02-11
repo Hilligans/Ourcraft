@@ -43,7 +43,7 @@ public class ChestBlock extends Block {
             Inventory inventory = ((ChestDataProvider) world.getDataProvider(blockPos)).inventory;
             world.setDataProvider(blockPos, null);
             for (int x = 0; x < inventory.getSize(); x++) {
-                world.spawnItemEntity(blockPos.x + 0.5f, blockPos.y + 1, blockPos.z + 0.5f, inventory.getItem(x));
+                world.spawnItemEntity(blockPos.x + 0.5f, blockPos.y + 0.5f, blockPos.z + 0.5f, inventory.getItem(x));
             }
         }
     }

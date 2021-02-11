@@ -38,7 +38,6 @@ public abstract class World {
 
     public Random random;
 
-    public Int2ObjectOpenHashMap<IInventory> containerInventories = new Int2ObjectOpenHashMap<>();
 
     public ArrayList<WorldBuilder> worldBuilders = new ArrayList<>();
 
@@ -69,9 +68,6 @@ public abstract class World {
             generateChunk(x,z);
         }
         chunk = getChunk(x,z);
-        if(chunk == null) {
-            System.out.println("CHUNK IS NULL");
-        }
         return chunk;
     }
 
@@ -124,6 +120,8 @@ public abstract class World {
         if(!itemStack.isEmpty()) {
             ItemEntity itemEntity = new ItemEntity(x, y, z, Entity.getNewId(), itemStack);
             itemEntity.velY = 0.30f;
+            itemEntity.velX = (float) (Math.random() * 0.4 - 0.2f);
+            itemEntity.velZ = (float) (Math.random() * 0.4 - 0.2f);
             itemEntity.pickupDelay = 10;
             addEntity(itemEntity);
         }
@@ -158,7 +156,7 @@ public abstract class World {
         }
     }
 
-    public static final float stepCount = 0.05f;
+    public static final float stepCount = 0.001f;
     public static final int distance = 5;
 
     static final float offSet = -0.5f;

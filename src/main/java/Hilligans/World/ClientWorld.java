@@ -78,7 +78,7 @@ public class ClientWorld extends World {
                     matrixStack.pop();
                 }
             }
-        } catch (NullPointerException ignored) {}
+        } catch (NullPointerException | ArrayIndexOutOfBoundsException ignored) {}
 
         glEnable(GL_BLEND);
     }
