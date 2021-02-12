@@ -140,47 +140,83 @@ public class CubeManager {
     public static Vector5f[] getVerticalSlabVertices(BlockTextureManager blockTextureManager, int side, float size, float offset, boolean rotated) {
 
         int id = blockTextureManager.textures[side];
-        //float sub1 = TextureManager.getTextureSize(id);
 
         float minX = TextureManager.getMinX(id);
         float maxX = TextureManager.getMaxX(id);
-        float sub = (maxX - minX) / 2f;
         float minY = TextureManager.getMinY(id);
         float maxY = TextureManager.getMaxY(id);
+        float sub = (maxX - minX) / 2f;
         float sub1 = (maxY - minY) / 2f;
 
-        switch (side) {
-            case 0:
-                return new Vector5f[]{new Vector5f(offset + size / 2, size, 0, maxX - sub, maxY),
-                        new Vector5f(offset + size / 2, 0, 0, maxX - sub, minY),
-                        new Vector5f(offset, 0, 0, minX, minY),
-                        new Vector5f(offset, size, 0, minX, maxY)};
-            case 1:
-                return new Vector5f[]{new Vector5f(offset + size / 2, size, size, maxX - sub, maxY),
-                        new Vector5f(offset + size / 2, 0, size, maxX - sub, minY),
-                        new Vector5f(offset, 0, size, minX, minY),
-                        new Vector5f(offset, size, size, minX, maxY)};
+        if(rotated) {
+            switch (side) {
+                case 0:
+                    return new Vector5f[]{new Vector5f(size, size, offset, maxX, maxY),
+                            new Vector5f(size, 0, offset, maxX, minY),
+                            new Vector5f(0, 0, offset, minX, minY),
+                            new Vector5f(0, size, offset, minX, maxY)};
+                case 1:
+                    return new Vector5f[]{new Vector5f(size, size, offset + size / 2, maxX, maxY),
+                            new Vector5f(size, 0, offset + size / 2, maxX, minY),
+                            new Vector5f(0, 0, offset + size / 2, minX, minY),
+                            new Vector5f(0, size, offset + size / 2, minX, maxY)};
 
-            case 2:
-                return new Vector5f[]{new Vector5f(offset, size, size, maxX, maxY),
-                        new Vector5f(offset, 0, size, maxX, minY),
-                        new Vector5f(offset, 0, 0, minX, minY),
-                        new Vector5f(offset, size, 0, minX, maxY)};
-            case 3:
-                return new Vector5f[]{new Vector5f(offset + size / 2, size, size, maxX, maxY),
-                        new Vector5f(offset + size / 2, 0, size, maxX, minY),
-                        new Vector5f(offset + size / 2, 0, 0, minX, minY),
-                        new Vector5f(offset + size / 2, size, 0, minX, maxY)};
-            case 5:
-                return new Vector5f[]{new Vector5f(offset + size / 2, size, size, minX, minY),
-                        new Vector5f(offset + size / 2, size, 0, maxX, minY),
-                        new Vector5f(offset, size, 0, maxX, maxY - sub1),
-                        new Vector5f(offset, size, size, minX, maxY - sub1)};
-            default:
-                return new Vector5f[]{new Vector5f(offset + size / 2, 0, size, minX, minY),
-                        new Vector5f(offset + size / 2, 0, 0, maxX, minY),
-                        new Vector5f(offset, 0, 0, maxX, maxY),
-                        new Vector5f(offset, 0, size, minX, maxY)};
+                case 2:
+                    return new Vector5f[]{new Vector5f(0, size, offset + size / 2, maxX - sub, maxY),
+                            new Vector5f(0, 0, offset + size / 2, maxX - sub, minY),
+                            new Vector5f(0, 0, offset, minX, minY),
+                            new Vector5f(0, size, offset, minX, maxY)};
+                case 3:
+                    return new Vector5f[]{new Vector5f(size, size, offset + size / 2, maxX - sub, maxY),
+                            new Vector5f(size, 0, offset + size / 2, maxX - sub, minY),
+                            new Vector5f(size, 0, offset, minX, minY),
+                            new Vector5f(size, size, offset, minX, maxY)};
+                case 5:
+                    return new Vector5f[]{new Vector5f(size, size, offset + size / 2, minX, minY),
+                            new Vector5f(size, size, offset, maxX - sub, minY),
+                            new Vector5f(0, size, offset, maxX - sub, maxY),
+                            new Vector5f(0, size, offset + size / 2, minX, maxY)};
+                default:
+                    return new Vector5f[]{new Vector5f(size, 0, offset + size / 2, minX, minY),
+                            new Vector5f(size, 0, offset, maxX - sub, minY),
+                            new Vector5f(0, 0, offset, maxX - sub, maxY),
+                            new Vector5f(0, 0, offset + size / 2, minX, maxY)};
+            }
+        } else {
+
+            switch (side) {
+                case 0:
+                    return new Vector5f[]{new Vector5f(offset + size / 2, size, 0, maxX - sub, maxY),
+                            new Vector5f(offset + size / 2, 0, 0, maxX - sub, minY),
+                            new Vector5f(offset, 0, 0, minX, minY),
+                            new Vector5f(offset, size, 0, minX, maxY)};
+                case 1:
+                    return new Vector5f[]{new Vector5f(offset + size / 2, size, size, maxX - sub, maxY),
+                            new Vector5f(offset + size / 2, 0, size, maxX - sub, minY),
+                            new Vector5f(offset, 0, size, minX, minY),
+                            new Vector5f(offset, size, size, minX, maxY)};
+
+                case 2:
+                    return new Vector5f[]{new Vector5f(offset, size, size, maxX, maxY),
+                            new Vector5f(offset, 0, size, maxX, minY),
+                            new Vector5f(offset, 0, 0, minX, minY),
+                            new Vector5f(offset, size, 0, minX, maxY)};
+                case 3:
+                    return new Vector5f[]{new Vector5f(offset + size / 2, size, size, maxX, maxY),
+                            new Vector5f(offset + size / 2, 0, size, maxX, minY),
+                            new Vector5f(offset + size / 2, 0, 0, minX, minY),
+                            new Vector5f(offset + size / 2, size, 0, minX, maxY)};
+                case 5:
+                    return new Vector5f[]{new Vector5f(offset + size / 2, size, size, minX, minY),
+                            new Vector5f(offset + size / 2, size, 0, maxX, minY),
+                            new Vector5f(offset, size, 0, maxX, maxY - sub1),
+                            new Vector5f(offset, size, size, minX, maxY - sub1)};
+                default:
+                    return new Vector5f[]{new Vector5f(offset + size / 2, 0, size, minX, minY),
+                            new Vector5f(offset + size / 2, 0, 0, maxX, minY),
+                            new Vector5f(offset, 0, 0, maxX, maxY - sub1),
+                            new Vector5f(offset, 0, size, minX, maxY - sub1)};
+            }
         }
     }
 

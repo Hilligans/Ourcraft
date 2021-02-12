@@ -5,7 +5,7 @@ import Hilligans.Block.BlockState;
 import Hilligans.Client.Rendering.World.CubeManager;
 import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Util.Vector5f;
-import Hilligans.World.DataProviders.TopBottomBlockState;
+import Hilligans.World.DataProviders.ShortBlockState;
 import org.joml.Vector3f;
 
 public class HorizontalSlab extends Block {
@@ -25,21 +25,21 @@ public class HorizontalSlab extends Block {
 
     @Override
     public BlockState getDefaultState() {
-        return new BlockState(this, new TopBottomBlockState((short) 0));
+        return new BlockState(this, new ShortBlockState((short) 0));
     }
 
     @Override
     public BlockState getStateForPlacement(Vector3f pos, Vector3f playerPos) {
         if(Math.round(pos.y) != Math.floor(pos.y)) {
-            return new BlockState(this,new TopBottomBlockState((short)0));
+            return new BlockState(this,new ShortBlockState((short)0));
         } else {
-            return new BlockState(this,new TopBottomBlockState((short)1));
+            return new BlockState(this,new ShortBlockState((short)1));
         }
     }
 
     @Override
     public BlockState getStateWithData(short data) {
-        return new BlockState(this, new TopBottomBlockState(data));
+        return new BlockState(this, new ShortBlockState(data));
     }
 
     protected BoundingBox getBoundingBox(BlockState blockState) {

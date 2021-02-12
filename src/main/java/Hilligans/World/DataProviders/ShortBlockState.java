@@ -2,11 +2,11 @@ package Hilligans.World.DataProviders;
 
 import Hilligans.World.BlockStateDataProvider;
 
-public class TopBottomBlockState extends BlockStateDataProvider {
+public class ShortBlockState extends BlockStateDataProvider {
 
     short rot;
 
-    public TopBottomBlockState(short rot) {
+    public ShortBlockState(short rot) {
         this.rot = rot;
     }
 
