@@ -1,5 +1,7 @@
 package Hilligans.Util;
 
+import Hilligans.Data.Other.BoundingBox;
+
 public class Settings {
 
     public static int renderDistance = 5;
@@ -17,6 +19,7 @@ public class Settings {
 
     public static float guiSize = 4.0f;
 
+    public static BoundingBox playerBoundingBox = new BoundingBox(-0.35f,-1.9f,-0.35f,0.35f,0.0f,0.35f);
 
 
 }

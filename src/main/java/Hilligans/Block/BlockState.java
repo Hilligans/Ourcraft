@@ -1,6 +1,7 @@
 package Hilligans.Block;
 
 import Hilligans.Block.Block;
+import Hilligans.Data.Other.BoundingBox;
 import Hilligans.World.BlockStateDataProvider;
 import Hilligans.World.DataProvider;
 
@@ -17,6 +18,10 @@ public class BlockState {
     public BlockState(Block block, BlockStateDataProvider blockStateDataProvider) {
         this.block = block;
         this.blockData = blockStateDataProvider;
+    }
+
+    public BoundingBox getBoundingBox() {
+        return block.getBoundingBox(this);
     }
 
     public short readData() {

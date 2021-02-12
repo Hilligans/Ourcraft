@@ -48,6 +48,7 @@ public abstract class PacketBase {
         packets.add(CDropItem::new);
         packets.add(CUseItem::new);
         packets.add(CCloseScreen::new);
+        packets.add(SUpdatePlayer::new);
 
 
     }

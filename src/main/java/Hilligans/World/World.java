@@ -4,6 +4,7 @@ import Hilligans.Block.Block;
 import Hilligans.Block.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Data.Other.BlockPos;
+import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Data.Other.IInventory;
 import Hilligans.Entity.Entities.ItemEntity;
 import Hilligans.Entity.Entity;
@@ -157,7 +158,7 @@ public abstract class World {
         }
     }
 
-    public static final float stepCount = 0.001f;
+    public static final float stepCount = 0.0005f;
     public static final int distance = 5;
 
     static final float offSet = -0.5f;
@@ -210,9 +211,7 @@ public abstract class World {
     }
 
     public BlockPos traceBlockToBreak(float x, float y, float z, double pitch, double yaw) {
-
         for(int a = 0; a < distance / stepCount; a++) {
-
             final double Z = z - Math.sin(yaw) * Math.cos(pitch) * a * 0.1 + offSet;
             final double Y = y - Math.sin(pitch) * 0.1 * a + offSet;
             final double X = (x - Math.cos(yaw) * Math.cos(pitch) * a * 0.1) + offSet;
@@ -237,6 +236,26 @@ public abstract class World {
     public abstract void addEntity(Entity entity);
 
     public abstract void removeEntity(int id);
+
+    public BlockPos getWorldSpawn(BoundingBox boundingBox) {
+        BlockPos pos = new BlockPos(0,Settings.chunkHeight * 16,0);
+        int y;
+        out:
+        for(y = 0; y < Settings.chunkHeight * 16 - 1; y++) {
+            for(int z = -1; z < 2; z++) {
+                for(int x = -1; x < 2; x++) {
+                    BlockState blockState = getBlockState(new BlockPos(x,pos.y,z));
+                    if(blockState.block != Blocks.AIR) {
+                        if (boundingBox.intersectsBox(blockState.getBoundingBox(), pos.get3f(), new Vector3f(x, pos.y, z))) {
+                            break out;
+                        }
+                    }
+                }
+            }
+            pos.y -= 1;
+        }
+        return pos.add(0,3,0);
+    }
 
     public static class BlockChange {
         public int x;
