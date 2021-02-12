@@ -57,7 +57,7 @@ public class VerticalSlab extends Block {
         return new BlockState(this, new ShortBlockState(data));
     }
 
-    protected BoundingBox getBoundingBox(BlockState blockState) {
+    public BoundingBox getBoundingBox(BlockState blockState) {
         switch (blockState.readData()) {
             case 0:
                 return new BoundingBox(0,0,0,0.5f,1,1f);

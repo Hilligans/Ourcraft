@@ -78,7 +78,7 @@ public class Block {
         return !getBoundingBox(world.getBlockState(blockPos)).intersectsBox(boundingBox, blockPos.get3f(), pos, motion.x, motion.y, motion.z);
     }
 
-    protected BoundingBox getBoundingBox(BlockState blockState) {
+    public BoundingBox getBoundingBox(BlockState blockState) {
         return new BoundingBox(0,0,0,1,1,1);
     }
 

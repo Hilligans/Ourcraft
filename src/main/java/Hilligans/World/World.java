@@ -165,23 +165,31 @@ public abstract class World {
     public Vector3f traceBlock(float x, float y, float z, double pitch, double yaw) {
         Vector3d vector3d = new Vector3d();
         boolean placed = false;
+        boolean isAir = true;
 
         for(int a = 0; a < distance / stepCount; a++) {
 
             final double Z = z - Math.sin(yaw) * Math.cos(pitch) * a * 0.1 + offSet;
             final double Y = y - Math.sin(pitch) * 0.1 * a + offSet;
             final double X = (x - Math.cos(yaw) * Math.cos(pitch) * a * 0.1) + offSet;
-            BlockState blockState = getBlockState((int) Math.round(X), (int) Math.round(Y), (int) Math.round(Z));
+            BlockPos pos = new BlockPos((int) Math.round(X), (int) Math.round(Y), (int) Math.round(Z));
+            BlockState blockState = getBlockState(pos);
             if(blockState.block != Blocks.AIR) {
-                placed = true;
-                break;
+                if(blockState.block.getBoundingBox(blockState).intersectVector(new Vector3f((float)X - offSet,(float)Y - offSet,(float)Z - offSet), pos)) {
+                    placed = true;
+                    break;
+                } else {
+                    isAir = false;
+                }
+            } else {
+                isAir = true;
             }
             vector3d.x = X;
             vector3d.y = Y;
             vector3d.z = Z;
         }
 
-        if(placed) {
+        if(placed && isAir) {
             return new Vector3f((float)vector3d.x,(float)vector3d.y,(float)vector3d.z);
         } else {
             return null;
@@ -208,9 +216,12 @@ public abstract class World {
             final double Z = z - Math.sin(yaw) * Math.cos(pitch) * a * 0.1 + offSet;
             final double Y = y - Math.sin(pitch) * 0.1 * a + offSet;
             final double X = (x - Math.cos(yaw) * Math.cos(pitch) * a * 0.1) + offSet;
-            BlockState blockState = getBlockState((int) Math.round(X), (int) Math.round(Y), (int) Math.round(Z));
+            BlockPos pos = new BlockPos((int) Math.round(X), (int) Math.round(Y), (int) Math.round(Z));
+            BlockState blockState = getBlockState(pos);
             if(blockState.block != Blocks.AIR) {
-                return new BlockPos((int) Math.round(X),(int) Math.round(Y),(int) Math.round(Z));
+                if(blockState.block.getBoundingBox(blockState).intersectVector(new Vector3f((float)X - offSet,(float)Y - offSet,(float)Z - offSet), pos)) {
+                    return pos;
+                }
             }
         }
         return null;

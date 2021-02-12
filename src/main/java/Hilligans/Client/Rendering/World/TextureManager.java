@@ -339,8 +339,8 @@ public class TextureManager {
             this.id = id;
             this.textureManager = textureManager;
             bufferedImage = new BufferedImage(MAX_TEXTURE_SIZE,MAX_TEXTURE_SIZE,BufferedImage.TYPE_INT_ARGB);
-            for(int x = 0; x < bufferedImage.getWidth(); x++) {
-                for(int y = 0; y < bufferedImage.getHeight(); y++) {
+            for(int y = 0; y < bufferedImage.getHeight(); y++) {
+                for(int x = 0; x < bufferedImage.getWidth(); x++) {
                     bufferedImage.setRGB(x,y,new Color(255,255,255,127).getRGB());
                 }
             }
@@ -349,8 +349,8 @@ public class TextureManager {
         }
 
         public void addTexture(BufferedImage img) {
-            for(int x = 0; x < imageSize; x++) {
-                for(int y = 0; y < imageSize; y++) {
+            for(int y = 0; y < imageSize; y++) {
+                for(int x = 0; x < imageSize; x++) {
                     bufferedImage.setRGB(x + width * (int)imageSize, y + height * (int)imageSize, img.getRGB(x,y));
                 }
             }

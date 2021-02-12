@@ -42,7 +42,7 @@ public class HorizontalSlab extends Block {
         return new BlockState(this, new ShortBlockState(data));
     }
 
-    protected BoundingBox getBoundingBox(BlockState blockState) {
+    public BoundingBox getBoundingBox(BlockState blockState) {
         if(blockState.readData() == 0) {
             return new BoundingBox(0, 0, 0, 1f, 0.5f, 1f);
         } else {

@@ -34,6 +34,13 @@ public class BoundingBox {
         return this.minX < other.maxX && this.maxX > other.minX && this.minY < other.maxY && this.maxY > other.minY && this.minZ < other.maxZ && this.maxZ > other.minZ;
     }
 
+    public boolean intersectVector(Vector3f vector3f) {
+        return this.minX < vector3f.x && this.minY < vector3f.y && this.minZ < vector3f.z && this.maxX > vector3f.x && this.maxY > vector3f.y && this.maxZ > vector3f.z;
+    }
+
+    public boolean intersectVector(Vector3f vector3f, BlockPos source) {
+        return intersectVector(new Vector3f(vector3f.x - source.x, vector3f.y - source.y, vector3f.z - source.z));
+    }
 
 
 
