@@ -7,6 +7,7 @@ import Hilligans.Item.BlockItem;
 import Hilligans.Util.Vector5f;
 import Hilligans.Client.Rendering.World.BlockTextureManager;
 import Hilligans.Data.Other.BlockPos;
+import Hilligans.World.DataProvider;
 import Hilligans.World.World;
 import org.joml.Vector3f;
 
@@ -113,6 +114,10 @@ public class Block {
             default:
                 return new BlockPos(0,1,0);
         }
+    }
+
+    public DataProvider getDataProvider() {
+        return null;
     }
 
     public static final int UP = 5;

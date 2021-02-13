@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class ServerWorld extends World {
 
     ArrayList<Integer> entityRemovals = new ArrayList<>();
-    long autoSaveAfter = 60 * 1000;
+    long autoSaveAfter = 30 * 1000;
     long autoSave = -1;
 
     @Override
@@ -72,13 +72,17 @@ public class ServerWorld extends World {
             autoSave = System.currentTimeMillis();
         }
         if(System.currentTimeMillis() - autoSave > autoSaveAfter) {
-            autoSave = System.currentTimeMillis();
-            long start = System.currentTimeMillis();
-            //System.out.println("SAVING");
-            for(Chunk chunk : chunks.values()) {
-                WorldLoader.writeChunk(chunk);
+            try {
+                autoSave = System.currentTimeMillis();
+                long start = System.currentTimeMillis();
+                //System.out.println("SAVING");
+                for (Chunk chunk : chunks.values()) {
+                    WorldLoader.writeChunk(chunk);
+                }
+                System.out.println("SAVE FINISH:" + (System.currentTimeMillis() - start) + "MS");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            System.out.println("SAVE FINISH:" + (System.currentTimeMillis() - start) + "MS");
         }
 
     }

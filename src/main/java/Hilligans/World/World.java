@@ -162,7 +162,7 @@ public abstract class World {
     }
 
     public void setChunk(Chunk chunk, int x, int z) {
-        chunk.world = this;
+        chunk.setWorld(this);
         chunk.x = x;
         chunk.z = z;
         //System.out.println("Setting " + (x & 4294967295L | ((long)z & 4294967295L) << 32));

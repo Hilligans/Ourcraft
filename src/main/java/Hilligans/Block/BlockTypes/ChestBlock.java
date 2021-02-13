@@ -9,6 +9,7 @@ import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Item.ItemStack;
 import Hilligans.Network.Packet.Server.SOpenContainer;
 import Hilligans.Network.ServerNetworkHandler;
+import Hilligans.World.DataProvider;
 import Hilligans.World.DataProviders.ChestDataProvider;
 import Hilligans.World.World;
 
@@ -46,5 +47,10 @@ public class ChestBlock extends Block {
                 world.spawnItemEntity(blockPos.x + 0.5f, blockPos.y + 0.5f, blockPos.z + 0.5f, inventory.getItem(x));
             }
         }
+    }
+
+    @Override
+    public DataProvider getDataProvider() {
+        return new ChestDataProvider();
     }
 }

@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 public class ByteTag extends Tag {
 
-    byte val;
+    public byte val;
 
     public ByteTag() {}
 

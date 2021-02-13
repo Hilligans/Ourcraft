@@ -1,5 +1,8 @@
 package Hilligans.Tag;
 
+import Hilligans.Item.ItemStack;
+import Hilligans.Item.Items;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,13 +24,44 @@ public class CompoundTag extends Tag {
     }
 
     public CompoundTag putByte(String id, byte val) {
-        ByteTag byteTag = new ByteTag(val);
-        putTag(id,byteTag);
+        putTag(id,new ByteTag(val));
+        return this;
+    }
+
+    public CompoundTag putShort(String id, short val) {
+        putTag(id,new ShortTag(val));
+        return this;
+    }
+
+    public CompoundTag putInt(String id, int val) {
+        putTag(id,new IntegerTag(val));
         return this;
     }
 
     public Tag getTag(String name) {
         return tags.get(name);
+    }
+
+    public ItemStack readStack(int slot) {
+        CompoundTag compoundTag = (CompoundTag) getTag("slot" + slot);
+        byte count = ((ByteTag)compoundTag.getTag("count")).val;
+        short item = ((ShortTag)compoundTag.getTag("item")).val;
+        if(item == -1) {
+            return ItemStack.emptyStack();
+        }
+        return new ItemStack(Items.ITEMS.get(item),count);
+    }
+
+    public CompoundTag writeStack(int slot, ItemStack itemStack) {
+        CompoundTag compoundTag = new CompoundTag();
+        compoundTag.putByte("count",itemStack.count);
+        if(itemStack.isEmpty()) {
+            compoundTag.putShort("item",(short)-1);
+        } else {
+            compoundTag.putShort("item", (short) itemStack.item.id);
+        }
+        putTag("slot" + slot, compoundTag);
+        return this;
     }
 
     @Override

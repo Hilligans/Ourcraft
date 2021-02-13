@@ -8,8 +8,10 @@ import Hilligans.Network.ServerNetworkInit;
 import Hilligans.Util.Settings;
 import Hilligans.World.Builders.OreBuilder;
 import Hilligans.World.Chunk;
+import Hilligans.World.DataProvider;
 import Hilligans.World.ServerWorld;
 import Hilligans.WorldSave.WorldLoader;
+import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 import org.lwjgl.system.CallbackI;
 
 import java.nio.ByteBuffer;
@@ -26,6 +28,27 @@ public class ServerMain {
     public static void main(String[] args) {
         Tag.register();
 
+
+/*
+    Short2ObjectOpenHashMap<DataProvider> dataProviders = new Short2ObjectOpenHashMap<>();
+        f:
+        for(int x = 0; x < 16; x++) {
+            for(int y = 0; y < 256; y++) {
+                for(int z = 0; z < 16; z++) {
+                    int i = x & 15 | (y & 255) << 4 | (z & 15) << 12;
+                    DataProvider dataProvider = dataProviders.get((short) i);
+                    if(dataProvider != null) {
+                        System.out.println("FOUND DUPLICATE");
+                        break f;
+                    } else {
+                        dataProviders.put((short) i, new DataProvider());
+                    }
+                }
+            }
+        }
+
+ */
+        
       //  int val = 3 << 16;
         //System.out.println(val);
 

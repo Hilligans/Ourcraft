@@ -28,7 +28,7 @@ public class SubChunk {
     int z;
 
     BlockState[][][] blocks = new BlockState[16][16][16];
-    DataProvider[][][] dataProviders = new DataProvider[16][16][16];
+    //DataProvider[][][] dataProviders = new DataProvider[16][16][16];
 
     public SubChunk(World world, int X, int Y, int Z) {
         this.world = world;
@@ -43,7 +43,6 @@ public class SubChunk {
                 }
             }
         }
-
     }
 
     public void createMesh() {
@@ -121,11 +120,12 @@ public class SubChunk {
     }
 
     public DataProvider getDataProvider(int x, int y, int z) {
-        return dataProviders[x][y][z];
+        return null;
+        //return dataProviders[x][y][z];
     }
 
     public void setDataProvider(int x, int y, int z, DataProvider dataProvider) {
-        dataProviders[x][y][z] = dataProvider;
+        //dataProviders[x][y][z] = dataProvider;
     }
 
     public void setBlockState(int x, int y, int z, BlockState blockState) {

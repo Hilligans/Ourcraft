@@ -7,6 +7,7 @@ import Hilligans.Client.MatrixStack;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Util.Settings;
 import Hilligans.World.Builders.WorldBuilder;
+import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 
 import java.util.ArrayList;
 
@@ -17,6 +18,8 @@ public class Chunk {
     ArrayList<SubChunk> chunks = new ArrayList<>();
 
     public World world;
+
+    public Short2ObjectOpenHashMap<DataProvider> dataProviders = new Short2ObjectOpenHashMap<>();
 
    // public static final int chunkHeight = 16;
 
@@ -35,6 +38,13 @@ public class Chunk {
         for(int a = 0; a < Settings.chunkHeight; a++) {
             SubChunk subChunk = new SubChunk(world,this.x * 16,a * 16, this.z * 16);
             chunks.add(subChunk);
+        }
+    }
+
+    public void setWorld(World world) {
+        this.world = world;
+        for(SubChunk subChunk : chunks) {
+            subChunk.world = world;
         }
     }
 
@@ -138,15 +148,17 @@ public class Chunk {
     }
 
     public DataProvider getDataProvider(BlockPos pos) {
-        int height = pos.y >> 4;
-        SubChunk subChunk = chunks.get(height);
-        return subChunk.getDataProvider(pos.x & 15, pos.y & 15, pos.z & 15);
+        //int height = pos.y >> 4;
+        //SubChunk subChunk = chunks.get(height);
+        return dataProviders.get((short)(pos.x & 15 | (pos.y & 255) << 4 | (pos.z & 15) << 12));
+        //return subChunk.getDataProvider(pos.x & 15, pos.y & 15, pos.z & 15);
     }
 
     public void setDataProvider(BlockPos pos, DataProvider dataProvider) {
-        int height = pos.y >> 4;
-        SubChunk subChunk = chunks.get(height);
-        subChunk.setDataProvider(pos.x & 15, pos.y & 15, pos.z & 15, dataProvider);
+        //int height = pos.y >> 4;
+        //SubChunk subChunk = chunks.get(height);
+        dataProviders.put((short)(pos.x & 15 | (pos.y & 255) << 4 | (pos.z & 15) << 12),dataProvider);
+        //subChunk.setDataProvider(pos.x & 15, pos.y & 15, pos.z & 15, dataProvider);
     }
 
     public void setBlockState(int x, int y, int z, BlockState blockState) {

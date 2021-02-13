@@ -4,7 +4,13 @@ import java.nio.ByteBuffer;
 
 public class ShortTag extends Tag {
 
-    short val;
+    public short val;
+
+    public ShortTag() {}
+
+    public ShortTag(short val) {
+        this.val = val;
+    }
 
     @Override
     int getSize() {
