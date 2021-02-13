@@ -29,8 +29,10 @@ public abstract class World {
     public ConcurrentLinkedQueue<BlockChange> blockChanges = new ConcurrentLinkedQueue<>();
     Long2ObjectOpenHashMap<Chunk> chunks = new Long2ObjectOpenHashMap<>();
 
-    Noise noise = new Noise(131);
-    Noise biomes = new Noise(new Random(131).nextInt());
+    long seed = 1342;
+
+    Noise noise = new Noise(seed);
+    Noise biomes = new Noise(new Random(seed).nextInt());
 
     public BiomeNoise biomeMap;
 
@@ -44,7 +46,7 @@ public abstract class World {
     public ArrayList<WorldBuilder> worldBuilders = new ArrayList<>();
 
     public World() {
-        random = new Random(131);
+        random = new Random(seed);
         biomeMap = new BiomeNoise(random);
         simplexNoise = new SimplexNoise(random);
 
@@ -61,6 +63,7 @@ public abstract class World {
     }
 
     public Chunk getChunk(int x, int z) {
+        //System.out.println("Getting " + (x & 4294967295L | ((long)z & 4294967295L) << 32));
         return getChunk((long)x & 4294967295L | ((long)z & 4294967295L) << 32);
     }
 
@@ -158,6 +161,15 @@ public abstract class World {
         }
     }
 
+    public void setChunk(Chunk chunk, int x, int z) {
+        chunk.world = this;
+        chunk.x = x;
+        chunk.z = z;
+        //System.out.println("Setting " + (x & 4294967295L | ((long)z & 4294967295L) << 32));
+        //System.out.println("Getting " + (x & 4294967295L | ((long)z & 4294967295L) << 32));
+        chunks.put(x & 4294967295L | ((long)z & 4294967295L) << 32,chunk);
+    }
+
     public static final float stepCount = 0.0005f;
     public static final int distance = 5;
 
@@ -167,9 +179,7 @@ public abstract class World {
         Vector3d vector3d = new Vector3d();
         boolean placed = false;
         boolean isAir = true;
-
         for(int a = 0; a < distance / stepCount; a++) {
-
             final double Z = z - Math.sin(yaw) * Math.cos(pitch) * a * 0.1 + offSet;
             final double Y = y - Math.sin(pitch) * 0.1 * a + offSet;
             final double X = (x - Math.cos(yaw) * Math.cos(pitch) * a * 0.1) + offSet;

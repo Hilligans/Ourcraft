@@ -5,12 +5,9 @@ import Hilligans.ClientMain;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
-import Hilligans.Network.Packet.Server.SCreateEntityPacket;
-import Hilligans.Network.Packet.Server.SHandshakePacket;
-import Hilligans.Network.Packet.Server.SUpdatePlayer;
+import Hilligans.Network.Packet.Server.*;
 import Hilligans.Server.PlayerData;
 import Hilligans.World.Chunk;
-import Hilligans.Network.Packet.Server.SChatMessage;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
@@ -53,12 +50,15 @@ public class  CHandshakePacket extends PacketBase {
             }
             BlockPos spawn = ServerMain.world.getWorldSpawn(Settings.playerBoundingBox);
             PlayerEntity playerEntity = new PlayerEntity(spawn.x,spawn.y,spawn.z,playerId);
-            ServerNetworkHandler.playerData.put(playerId,new PlayerData(playerEntity));
+            PlayerData playerData = new PlayerData(playerEntity);
+            ServerNetworkHandler.playerData.put(playerId,playerData);
             ServerNetworkHandler.mappedChannels.put(playerId,ctx.channel().id());
             ServerNetworkHandler.mappedId.put(ctx.channel().id(),playerId);
             ServerNetworkHandler.mappedName.put(ctx.channel().id(),name);
             ServerMain.world.addEntity(playerEntity);
             ServerNetworkHandler.sendPacket(new SUpdatePlayer(spawn.x,spawn.y,spawn.z,0,0),ctx);
+            playerData.playerInventory.age++;
+            ServerNetworkHandler.sendPacket(new SUpdateInventory(playerData.playerInventory),ctx);
         } else {
             ctx.channel().close();
         }

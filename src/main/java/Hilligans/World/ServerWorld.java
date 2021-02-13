@@ -9,14 +9,15 @@ import Hilligans.Entity.Entity;
 import Hilligans.Network.Packet.Server.SCreateEntityPacket;
 import Hilligans.Network.Packet.Server.SRemoveEntityPacket;
 import Hilligans.Network.ServerNetworkHandler;
+import Hilligans.WorldSave.WorldLoader;
 
 import java.util.ArrayList;
 
 public class ServerWorld extends World {
 
     ArrayList<Integer> entityRemovals = new ArrayList<>();
-
-
+    long autoSaveAfter = 60 * 1000;
+    long autoSave = -1;
 
     @Override
     public void addEntity(Entity entity) {
@@ -38,6 +39,20 @@ public class ServerWorld extends World {
         }
     }
 
+
+    @Override
+    public void generateChunk(int x, int z) {
+        if(getChunk(x,z) == null) {
+            Chunk chunk = WorldLoader.readChunk(x,z);
+            if(chunk != null) {
+                //System.out.println("LOADING CHUNKS X:" + x + " Z:" + z);
+                setChunk(chunk,x,z);
+                return;
+            }
+        }
+        super.generateChunk(x, z);
+    }
+
     @Override
     public void tick() {
         int x = 0;
@@ -53,6 +68,19 @@ public class ServerWorld extends World {
             //System.out.println(x);
             x++;
         }
+        if(autoSave == -1) {
+            autoSave = System.currentTimeMillis();
+        }
+        if(System.currentTimeMillis() - autoSave > autoSaveAfter) {
+            autoSave = System.currentTimeMillis();
+            long start = System.currentTimeMillis();
+            //System.out.println("SAVING");
+            for(Chunk chunk : chunks.values()) {
+                WorldLoader.writeChunk(chunk);
+            }
+            System.out.println("SAVE FINISH:" + (System.currentTimeMillis() - start) + "MS");
+        }
+
     }
 
     @Override

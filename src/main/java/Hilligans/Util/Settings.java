@@ -21,5 +21,6 @@ public class Settings {
 
     public static BoundingBox playerBoundingBox = new BoundingBox(-0.35f,-1.9f,-0.35f,0.35f,0.0f,0.35f);
 
+    public static final String worldName = "world1";
 
 }

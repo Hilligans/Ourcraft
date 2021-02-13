@@ -14,6 +14,8 @@ import Hilligans.Network.Packet.Server.SUpdateContainer;
 import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.ServerMain;
 
+import java.io.InputStream;
+
 public class PlayerData {
 
     public PlayerEntity playerEntity;
@@ -29,6 +31,7 @@ public class PlayerData {
         playerInventory.setItem(0,new ItemStack(Items.HASHED_ITEMS.get("chest"),(byte)2));
         playerInventory.setItem(1,new ItemStack(Items.HASHED_ITEMS.get("slab"),(byte)10));
         playerInventory.setItem(2,new ItemStack(Items.HASHED_ITEMS.get("vslab"),(byte)10));
+
     }
 
     public void openContainer(Container container) {

@@ -1,0 +1,116 @@
+package Hilligans.WorldSave;
+
+import Hilligans.Block.Block;
+import Hilligans.Block.BlockState;
+import Hilligans.Block.Blocks;
+import Hilligans.Tag.*;
+import Hilligans.Util.Settings;
+import Hilligans.World.Chunk;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+
+public class WorldLoader {
+
+    public static String pathToWorld = "world/" + Settings.worldName + "/";
+    public static int maxSize = 10000000;
+
+    public static String getPathToChunk(int x, int z) {
+        return pathToWorld + "chunk_x" + x + "z" + z + ".txt";
+    }
+
+    public static Chunk readChunk(int x, int z) {
+        try {
+            //long start = System.currentTimeMillis();
+            File file = new File(getPathToChunk(x,z));
+            if(file.exists()) {
+                RandomAccessFile aFile = new RandomAccessFile(getPathToChunk(x, z), "rw");
+                FileChannel inChannel = aFile.getChannel();
+                int length = (int) aFile.length();
+                ByteBuffer buf = ByteBuffer.allocate(length);
+                buf.mark();
+                int bytesRead = inChannel.read(buf); //read into buffer.
+                //System.out.println(bytesRead);
+                buf.reset();
+                CompoundTag compoundTag = new CompoundTag();
+                compoundTag.read(buf);
+
+                return createChunk(x, z, compoundTag);
+            }
+            return null;
+            //System.out.println((System.currentTimeMillis() - start));
+
+
+
+
+        } catch (IOException ingored) {
+            return null;
+        }
+    }
+
+    public static void writeChunk(Chunk chunk) {
+        String fileName = getPathToChunk(chunk.x,chunk.z);
+        CompoundTag compoundTag = createTag(chunk);
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(maxSize);
+        byteBuffer.mark();
+        compoundTag.write(byteBuffer);
+        byteBuffer.limit(byteBuffer.position());
+        byteBuffer.reset();
+        write(fileName,byteBuffer);
+    }
+
+
+
+    public static void write(String fileName, ByteBuffer byteBuffer) {
+        try {
+            RandomAccessFile aFile = new RandomAccessFile(fileName, "rw");
+            FileChannel inChannel = aFile.getChannel();
+            inChannel.write(byteBuffer);
+            inChannel.close();
+        } catch (IOException ingored) {}
+    }
+
+
+    public static CompoundTag createTag(Chunk chunk) {
+        CompoundTag compoundTag = new CompoundTag();
+        int[] blocks = new int[16 * 16 * 256];
+
+        for(int i = 0; i < blocks.length; i++) {
+            int x = i & 15;
+            int y = i >> 4 & 255;
+            int z = i >> 12 & 15;
+            BlockState blockState = chunk.getBlockState(x,y,z);
+            blocks[i] = blockState.block.id << 16 | blockState.readData();
+        }
+        IntegerArrayTag intArrayTag = new IntegerArrayTag(blocks);
+        compoundTag.putTag("blocks", intArrayTag);
+
+        return compoundTag;
+    }
+
+    public static Chunk createChunk(int X, int Z, CompoundTag compoundTag) {
+        Chunk chunk = new Chunk(X,Z,null);
+
+        IntegerArrayTag integerTag = (IntegerArrayTag) compoundTag.getTag("blocks");
+
+        for(int i = 0; i < integerTag.val.length; i++) {
+            int x = i & 15;
+            int y = i >> 4 & 255;
+            int z = i >> 12 & 15;
+
+            //System.out.println(x);
+            Block block = Blocks.getBlockWithID((integerTag.val[i]) >> 16 & 65535);
+            BlockState blockState = block.getDefaultState();
+            blockState.write((short) (integerTag.val[i] & 65535));
+            chunk.setBlockState(x,y,z,blockState);
+        }
+        //System.out.println(integerTag.val[0]);
+
+        //chunk.populate();
+        return chunk;
+    }
+
+}

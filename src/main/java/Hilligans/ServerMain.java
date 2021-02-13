@@ -1,14 +1,19 @@
 package Hilligans;
 
-import Hilligans.Biome.Biomes;
 import Hilligans.Block.Blocks;
+import Hilligans.Tag.CompoundTag;
+import Hilligans.Tag.IntegerTag;
+import Hilligans.Tag.Tag;
 import Hilligans.Network.ServerNetworkInit;
 import Hilligans.Util.Settings;
 import Hilligans.World.Builders.OreBuilder;
-import Hilligans.World.Builders.Foliage.TreeBuilder;
+import Hilligans.World.Chunk;
 import Hilligans.World.ServerWorld;
-import Hilligans.World.World;
+import Hilligans.WorldSave.WorldLoader;
+import org.lwjgl.system.CallbackI;
 
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -19,9 +24,15 @@ public class ServerMain {
 
 
     public static void main(String[] args) {
+        Tag.register();
+
+      //  int val = 3 << 16;
+        //System.out.println(val);
+
         world = new ServerWorld();
-     //   world.worldBuilders.add(new TreeBuilder().setWorld(world));
         world.worldBuilders.add(new OreBuilder(Blocks.GRASS,Blocks.STONE).setFrequency(20));
+
+        world.generateChunk(0,0);
 
         for(int x = -Settings.renderDistance; x < Settings.renderDistance; x++) {
             for(int z = -Settings.renderDistance; z < Settings.renderDistance; z++) {
@@ -29,6 +40,11 @@ public class ServerMain {
                 world.generateChunk(x,z);
             }
         }
+
+        //world.setChunk(chunk,0,0);
+        //long start = System.currentTimeMillis();
+        //WorldLoader.writeChunk(world.getChunk(0,1));
+        //System.out.println("Time" + (System.currentTimeMillis() - start));
 
         Server server = new Server();
 
