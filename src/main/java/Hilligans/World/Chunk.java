@@ -5,8 +5,10 @@ import Hilligans.Block.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Data.Other.BlockPos;
+import Hilligans.Entity.Entity;
 import Hilligans.Util.Settings;
 import Hilligans.World.Builders.WorldBuilder;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 
 import java.util.ArrayList;
@@ -21,9 +23,10 @@ public class Chunk {
 
     public Short2ObjectOpenHashMap<DataProvider> dataProviders = new Short2ObjectOpenHashMap<>();
 
-   // public static final int chunkHeight = 16;
+    public Int2ObjectOpenHashMap<Entity> entities = new Int2ObjectOpenHashMap<>();
 
-    public int  x;
+
+    public int x;
     public int z;
 
     public static int terrain = 64;

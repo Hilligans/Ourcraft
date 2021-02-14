@@ -174,24 +174,20 @@ public class TextureManager {
         return img;
     }
 
-    private static BufferedImage createFlipped(BufferedImage image)
-    {
+    public static BufferedImage createFlipped(BufferedImage image) {
         AffineTransform at = new AffineTransform();
         at.concatenate(AffineTransform.getScaleInstance(1, -1));
         at.concatenate(AffineTransform.getTranslateInstance(0, -image.getHeight()));
         return createTransformed(image, at);
     }
 
-    private static BufferedImage createRotated(BufferedImage image)
-    {
+    private static BufferedImage createRotated(BufferedImage image) {
         AffineTransform at = AffineTransform.getRotateInstance(
                 Math.PI, image.getWidth()/2, image.getHeight()/2.0);
         return createTransformed(image, at);
     }
 
-    private static BufferedImage createTransformed(
-            BufferedImage image, AffineTransform at)
-    {
+    private static BufferedImage createTransformed(BufferedImage image, AffineTransform at) {
         BufferedImage newImage = new BufferedImage(
                 image.getWidth(), image.getHeight(),
                 BufferedImage.TYPE_INT_ARGB);

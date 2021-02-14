@@ -59,6 +59,8 @@ public class ClientMain {
     public static boolean joinServer = true;
     public static boolean valid = false;
 
+    public static boolean screenShot = false;
+
     public static Screen screen;
 
 
@@ -165,6 +167,16 @@ public class ClientMain {
             }
         },GLFW_KEY_Q);
 
+        //glReadPixels();
+
+        KeyHandler.register(new KeyPress() {
+            @Override
+            public void onPress() {
+               // ScreenShot.takeScreenShot();
+                screenShot = true;
+            }
+        }, GLFW_KEY_F2);
+
         screen = new JoinScreen();
 
 
@@ -259,8 +271,15 @@ public class ClientMain {
             screen.render(screenStack);
             ClientData.heldStack.renderStack(screenStack, (int) (Camera.newX - Settings.guiSize * 8), (int) (Camera.newY - Settings.guiSize * 8));
         }
+
+
         glfwSwapBuffers(window);
         glfwPollEvents();
+
+        if(screenShot) {
+            screenShot = false;
+            ScreenShot.takeScreenShot();
+        }
     }
 
     static double lastTime = glfwGetTime();

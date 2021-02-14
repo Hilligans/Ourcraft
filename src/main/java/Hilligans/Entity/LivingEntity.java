@@ -10,9 +10,12 @@ public abstract class LivingEntity extends Entity {
     public LivingEntity(float x, float y, float z, int id, int maxHealth) {
         super(x, y, z, id);
         this.maxHealth = maxHealth;
+        this.health = maxHealth;
     }
 
     public LivingEntity(PacketData packetData) {
         super(packetData);
     }
+
+
 }

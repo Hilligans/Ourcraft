@@ -2,3 +2,5 @@ target/
 *.log
 *.dat
 world/
+screenshots/
+.idea/

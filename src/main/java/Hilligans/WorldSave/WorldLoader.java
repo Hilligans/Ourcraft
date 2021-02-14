@@ -131,8 +131,8 @@ public class WorldLoader {
             short key = ((ShortTag)compoundTag2.getTag("pos")).val;
             //(short)(pos.x & 15 | (pos.y & 255) << 4 | (pos.z & 15) << 12)
             int x = key & 15;
-            int y = (key & 4080) >> 4;
-            int z = (key & 61440) >> 12;
+            int y = key >> 4 & 255;
+            int z = key >> 12 & 15;
 
             BlockState blockState = chunk.getBlockState(x,y,z);
             DataProvider dataProvider = blockState.block.getDataProvider();
@@ -146,7 +146,6 @@ public class WorldLoader {
 
 
         }
-        //System.out.println(integerTag.val[0]);
 
         //chunk.populate();
         return chunk;
