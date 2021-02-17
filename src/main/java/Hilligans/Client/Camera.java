@@ -42,6 +42,7 @@ public class Camera {
     public static boolean isFlying = false;
 
     public static boolean isOnGround = false;
+    public static boolean hitBlock = false;
 
     public static boolean sprinting = false;
     public static int sprintTimeout = 1;
@@ -51,7 +52,7 @@ public class Camera {
 
     public static float sensitivity = 150;
 
-    public static BoundingBox playerBoundingBox = new BoundingBox(-0.35f,-1.9f,-0.35f,0.35f,0.0f,0.35f);
+    public static BoundingBox playerBoundingBox = new BoundingBox(-0.35f,-1.9f,-0.35f,0.35f,0.0f,0.35f, -0.15f);
 
     static {
         KeyHandler.register(new KeyPress() {
@@ -201,6 +202,11 @@ public class Camera {
 
             velX = velX * 0.995f;
             velZ = velZ * 0.995f;
+
+            if(hitBlock) {
+                velY = 0;
+                hitBlock = false;
+            }
 
 
             maxX = 0;
@@ -385,7 +391,10 @@ public class Camera {
 
         isOnGround = false;
         if(!couldMove) {
-            isOnGround = true;
+            hitBlock = true;
+            if(velY < 0) {
+                isOnGround = true;
+            }
             velX = 0;
             velY = 0;
             velZ = 0;
@@ -399,7 +408,10 @@ public class Camera {
             velX = 0;
         }
         if (x == 1 || x == 4 || x == 6) {
-            isOnGround = true;
+            hitBlock = true;
+            if(velY < 0) {
+                isOnGround = true;
+            }
             velY = 0;
         }
         if (x == 2 || x == 4 || x == 5) {

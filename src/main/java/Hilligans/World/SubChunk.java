@@ -5,6 +5,7 @@ import Hilligans.Block.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.World.VAOManager;
+import Hilligans.ClientMain;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Util.Settings;
 import Hilligans.Util.Vector5f;
@@ -73,11 +74,11 @@ public class SubChunk {
 
 
 
-        float[] wholeMesh = new float[vertices.size() * 5];
+        float[] wholeMesh = new float[vertices.size() * 9];
         int[] wholeIndices = new int[indices.size()];
         int x = 0;
         for(Vector5f vector5f : vertices) {
-            vector5f.addToList(wholeMesh,x * 5);
+            vector5f.addToList(wholeMesh,x * 9);
             x++;
         }
         x = 0;
@@ -86,14 +87,14 @@ public class SubChunk {
             wholeIndices[x] = a;
             x++;
         }
-        verticesCount = wholeMesh.length;
-        id = VAOManager.createVAO(wholeMesh,wholeIndices);
+        verticesCount = wholeMesh.length / 9 * 5;
+        //id = VAOManager.createVAO(wholeMesh,wholeIndices);
 
 
         //float[] wholeMesh = VAOManager.convertVertices(vertices,true);
        // int[] wholeIndices = VAOManager.convertIndices(indices);
        // verticesCount = wholeMesh.length;
-       // id = VAOManager.createColorVAO(wholeMesh,wholeIndices);
+        id = VAOManager.createColorVAO(wholeMesh,wholeIndices);
 
     }
 
@@ -141,7 +142,7 @@ public class SubChunk {
 
         GL30.glBindVertexArray(id);
         matrixStack.push();
-        matrixStack.applyTransformation();
+        matrixStack.applyTransformation(ClientMain.colorShader);
         glDrawElements(GL_TRIANGLES, verticesCount * 3 / 10,GL_UNSIGNED_INT,0);
         matrixStack.pop();
     }

@@ -81,7 +81,6 @@
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-xxhash:natives-windows:3.2.3" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-yoga:natives-windows:3.2.3" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-zstd:natives-windows:3.2.3" level="project" />
-    <orderEntry type="library" name="Maven: org.l33tlabs.twl:pngdecoder:1.0" level="project" />
     <orderEntry type="library" name="Maven: org.joml:joml:1.10.0" level="project" />
     <orderEntry type="library" name="Maven: it.unimi.dsi:fastutil:8.4.4" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-all:4.1.58.Final" level="project" />

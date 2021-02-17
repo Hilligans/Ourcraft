@@ -28,9 +28,9 @@ public class BlockItem extends Item {
         BlockPos pos;
         Vector3f vector3f;
         if (world.isServer()) {
-            vector3f = world.traceBlock(playerEntity.x, playerEntity.y, playerEntity.z, playerEntity.pitch, playerEntity.yaw);
+            vector3f = world.traceBlock(playerEntity.x, playerEntity.y + playerEntity.boundingBox.eyeHeight, playerEntity.z, playerEntity.pitch, playerEntity.yaw);
         } else {
-            vector3f = world.traceBlock(Camera.pos.x, Camera.pos.y, Camera.pos.z, Camera.pitch, Camera.yaw);
+            vector3f = world.traceBlock(Camera.pos.x, Camera.pos.y + Camera.playerBoundingBox.eyeHeight, Camera.pos.z, Camera.pitch, Camera.yaw);
         }
         if (vector3f == null) {
             return false;

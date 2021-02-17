@@ -42,7 +42,7 @@ public class CUseItem extends PacketBase {
         if(slot >= 0 && slot < 9) {
             PlayerData playerData = ServerNetworkHandler.getPlayerData(ctx);
             if(playerData != null) {
-                BlockPos blockPos = ServerMain.world.traceBlockToBreak(playerData.playerEntity.x, playerData.playerEntity.y, playerData.playerEntity.z, playerData.playerEntity.pitch, playerData.playerEntity.yaw);
+                BlockPos blockPos = ServerMain.world.traceBlockToBreak(playerData.playerEntity.x, playerData.playerEntity.y + playerData.playerEntity.boundingBox.eyeHeight, playerData.playerEntity.z, playerData.playerEntity.pitch, playerData.playerEntity.yaw);
                 if (blockPos != null) {
                     BlockState blockState = ServerMain.world.getBlockState(blockPos);
                     if (blockState != null && blockState.block.activateBlock(ServerMain.world, playerData.playerEntity, blockPos)) {

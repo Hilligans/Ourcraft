@@ -40,13 +40,13 @@ public class PlayerEntity extends LivingEntity {
     public PlayerEntity(float x, float y, float z,int id) {
         super(x,y,z,id,20);
         type = 0;
-        boundingBox =  new BoundingBox(-0.35f,-1.9f,-0.35f,0.35f,0.0f,0.35f);
+        boundingBox =  new BoundingBox(-0.35f,-1.9f,-0.35f,0.35f,0.0f,0.35f, -0.15f);
         inventory = new Inventory(Settings.playerInventorySize);
     }
 
     public PlayerEntity(PacketData packetData) {
         super(packetData);
-        boundingBox =  new BoundingBox(-0.35f,-1.9f,-0.35f,0.35f,0.0f,0.35f);
+        boundingBox =  new BoundingBox(-0.35f,-1.9f,-0.35f,0.35f,0.0f,0.35f, -0.15f);
     }
 
     @Override

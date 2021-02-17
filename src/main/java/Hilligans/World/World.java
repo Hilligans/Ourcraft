@@ -170,7 +170,7 @@ public abstract class World {
         chunks.put(x & 4294967295L | ((long)z & 4294967295L) << 32,chunk);
     }
 
-    public static final float stepCount = 0.0005f;
+    public static final double stepCount = 0.00005;
     public static final int distance = 5;
 
     static final float offSet = -0.5f;

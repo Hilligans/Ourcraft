@@ -88,7 +88,19 @@ public class Block {
     }
 
     public Vector5f[] getVertices(int side, BlockState blockState) {
-        return getVertices(side,1.0f,blockState);
+        Vector5f[] vector5fs = getVertices(side,1.0f,blockState);
+        for(Vector5f vector5f : vector5fs) {
+            if(side == 2 || side == 3) {
+                vector5f.setColored(0.95f,0.95f,0.95f,1.0f);
+            } else if(side == 0 || side == 1) {
+                vector5f.setColored(0.9f,0.9f,0.9f,1.0f);
+            } else if(side == 4) {
+                vector5f.setColored(0.85f,0.85f,0.85f,1.0f);
+            } else {
+                vector5f.setColored();
+            }
+        }
+        return vector5fs;
     }
 
     public Vector5f[] getVertices(int side, float size, BlockState blockState) {

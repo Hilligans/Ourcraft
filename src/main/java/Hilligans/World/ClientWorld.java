@@ -14,6 +14,7 @@ import org.joml.Vector3f;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.glUseProgram;
 
 public class ClientWorld extends World {
 
@@ -47,6 +48,7 @@ public class ClientWorld extends World {
         if(!Settings.renderTransparency) {
             glDisable(GL_BLEND);
         }
+        glUseProgram(ClientMain.colorShader);
 
         Vector3f pos = Camera.pos;
         for(int x = -Settings.renderDistance; x < Settings.renderDistance; x++) {
@@ -69,6 +71,7 @@ public class ClientWorld extends World {
                 }
             }
         }
+        glUseProgram(ClientMain.shaderProgram);
         // TODO: 2021-02-06 server removes entities at a bad time
         try {
             for (Entity entity : entities.values()) {

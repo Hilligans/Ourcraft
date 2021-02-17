@@ -291,17 +291,15 @@ public class ClientMain {
 
             double currentTime = glfwGetTime();
             nbFrames++;
-            if ( currentTime - lastTime >= 1.0 ){ // If last prinf() was more than 1 sec ago
+            if ( currentTime - lastTime >= 1.0 ){
 
-                //System.out.println("fps " + (nbFrames));
                 fps = nbFrames;
                 nbFrames = 0;
                 lastTime += 1.0;
             }
     }
 
-    public static void processInput(long window)
-    {
+    public static void processInput(long window) {
         if(screen == null) {
             if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
                 Camera.strafeLeft();
@@ -420,7 +418,7 @@ public class ClientMain {
                 if (action == GLFW_PRESS) {
                     if (screen == null) {
                         if (button == GLFW_MOUSE_BUTTON_1) {
-                            BlockPos pos = clientWorld.traceBlockToBreak(Camera.pos.x, Camera.pos.y, Camera.pos.z, Camera.pitch, Camera.yaw);
+                            BlockPos pos = clientWorld.traceBlockToBreak(Camera.pos.x, Camera.pos.y + Camera.playerBoundingBox.eyeHeight, Camera.pos.z, Camera.pitch, Camera.yaw);
                             if (pos != null) {
                                 if (joinServer) {
                                     ClientNetworkHandler.sendPacket(new CSendBlockChanges(pos.x, pos.y, pos.z, Blocks.AIR.id));
@@ -431,7 +429,7 @@ public class ClientMain {
                             }
 
                         } else if (button == GLFW_MOUSE_BUTTON_2) {
-                            BlockPos blockPos = clientWorld.traceBlockToBreak(Camera.pos.x,Camera.pos.y,Camera.pos.z,Camera.pitch,Camera.yaw);
+                            BlockPos blockPos = clientWorld.traceBlockToBreak(Camera.pos.x,Camera.pos.y + Camera.playerBoundingBox.eyeHeight,Camera.pos.z,Camera.pitch,Camera.yaw);
                             if(blockPos != null) {
                                 BlockState blockState = clientWorld.getBlockState(blockPos);
                                 if (blockState != null && blockState.block.activateBlock(clientWorld, null, blockPos)) {
