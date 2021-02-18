@@ -165,8 +165,6 @@ public abstract class World {
         chunk.setWorld(this);
         chunk.x = x;
         chunk.z = z;
-        //System.out.println("Setting " + (x & 4294967295L | ((long)z & 4294967295L) << 32));
-        //System.out.println("Getting " + (x & 4294967295L | ((long)z & 4294967295L) << 32));
         chunks.put(x & 4294967295L | ((long)z & 4294967295L) << 32,chunk);
     }
 

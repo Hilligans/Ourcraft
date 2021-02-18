@@ -81,6 +81,10 @@ public class MatrixStack {
         matrix4f.translate(x,y,z);
     }
 
+    public void translate(Vector3f vector3f) {
+        matrix4f.translate(vector3f);
+    }
+
     public void rotate(float rot, Vector3f vector) {
         matrix4f.rotate(rot,vector);
        // matrix4f.rota

@@ -51,16 +51,16 @@ public class Renderer {
 
         // glDisable(GL_CULL_FACE);
 
-        glDrawElements(GL_TRIANGLES, vertices.length,GL_UNSIGNED_INT,0);
+        glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
 
         //glEnable(GL_CULL_FACE);
         VAOManager.destroyBuffer(vao);
     }
 
     public static void renderBlockItem(MatrixStack matrixStack, int x, int y, int size, Block block) {
-        glUseProgram(ClientMain.shaderProgram);
+        glUseProgram(ClientMain.colorShader);
         glDisable(GL_DEPTH_TEST);
-        int vao = VAOManager.createVAO(VAOManager.getBlockVertices(block,false,size),VAOManager.getBlockIndices(block));
+        int vao = VAOManager.createColorVAO(VAOManager.getBlockVertices(block,true,size),VAOManager.getBlockIndices(block));
         matrixStack.push();
         GL30.glBindVertexArray(vao);
         glBindTexture(GL_TEXTURE_2D, ClientMain.texture);
@@ -68,7 +68,9 @@ public class Renderer {
 
         //matrixStack.rotate(3.1415f,new Vector3f(1,0,1));
 
-        matrixStack.translate(x - size / 2f + 1,y + size / 8f + 1,0);
+        //matrixStack.translate(x - size / 2f + 1,y + size / 8f + 1,0);
+        matrixStack.translate(x + size / 3f,y + size / 1.3f,0);
+
 
         //matrixStack.rotate(xAngle,new Vector3f(1,0,0));
         //matrixStack.rotate(xAngle, new Vector3f(0,(float)Math.cos(xAngle),(float)-Math.sin(xAngle)));
@@ -76,10 +78,12 @@ public class Renderer {
         matrixStack.rotate(0.785f,new Vector3f(0.5f,-1,0));
         matrixStack.rotate(0.186f,new Vector3f(0,0,-1));
 
+        matrixStack.rotate(3.1415f,new Vector3f(0,0,1));
+
 
         //matrixStack.rotate();
         matrixStack.translate(0,0 ,-size * 2);
-        matrixStack.applyTransformation();
+        matrixStack.applyTransformation(ClientMain.colorShader);
         glDrawElements(GL_TRIANGLES, 36,GL_UNSIGNED_INT,0);
         matrixStack.pop();
         VAOManager.destroyBuffer(vao);
@@ -104,7 +108,7 @@ public class Renderer {
         int vao = VAOManager.createVAO(vertices, indices);
         GL30.glBindTexture(GL_TEXTURE_2D,texture.textureId);
         GL30.glBindVertexArray(vao);
-        glDrawElements(GL_TRIANGLES, vertices.length,GL_UNSIGNED_INT,0);
+        glDrawElements(GL_TRIANGLES, 6,GL_UNSIGNED_INT,0);
         VAOManager.destroyBuffer(vao);
         glEnable(GL_DEPTH_TEST);
     }

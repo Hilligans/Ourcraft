@@ -9,6 +9,7 @@ import Hilligans.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
 import Hilligans.Client.Rendering.World.*;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
+import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Data.Other.Texture;
 import Hilligans.Data.Other.Textures;
 import Hilligans.Entity.Entity;
@@ -66,6 +67,7 @@ public class ClientMain {
 
     public static int shaderProgram;
     public static int colorShader;
+    public static int lineShader;
     public static int texture;
 
     public static int outLine;
@@ -186,6 +188,7 @@ public class ClientMain {
 
         shaderProgram = ShaderManager.registerShader(Util.shader,Util.fragmentShader1);
         colorShader = ShaderManager.registerShader(Util.coloredShader,Util.fragmentShader1);
+        lineShader = ShaderManager.registerShader(Util.lineShader, Util.lineFragment);
         Renderer.register();
         Entity.register();
 
@@ -253,10 +256,26 @@ public class ClientMain {
         screenStack.applyTransformation();
 
 
+
         clientWorld.tick();
         clientWorld.render(matrixStack);
 
-        //Renderer.renderBlockItem(screenStack,300,200,64,Blocks.LOG);
+        BlockPos pos = clientWorld.traceBlockToBreak(Camera.pos.x,Camera.pos.y + Camera.playerBoundingBox.eyeHeight,Camera.pos.z,Camera.pitch,Camera.yaw);
+        if(pos != null) {
+            BlockState blockState = clientWorld.getBlockState(pos);
+            int id = blockState.block.generateOutline(blockState);
+            glUseProgram(lineShader);
+            GL30.glBindVertexArray(id);
+            matrixStack.push();
+            matrixStack.translate(pos.x,pos.y,pos.z);
+            matrixStack.applyTransformation(ClientMain.lineShader);
+            glDrawElements(GL_LINES, 24,GL_UNSIGNED_INT,0);
+            matrixStack.pop();
+            VAOManager.destroyBuffer(id);
+        }
+
+        glUseProgram(shaderProgram);
+
         if(ClientData.f3) {
             StringRenderer.drawString(screenStack, Camera.getString(), windowX / 2, 0, 0.5f);
             StringRenderer.drawString(screenStack, "FPS:" + fps, windowX / 2, 29, 0.5f);
@@ -264,7 +283,6 @@ public class ClientMain {
         }
 
         InventoryScreen.drawHotbar(screenStack);
-
         ChatWindow.render1(screenStack);
 
         if(screen != null) {
@@ -272,7 +290,7 @@ public class ClientMain {
             ClientData.heldStack.renderStack(screenStack, (int) (Camera.newX - Settings.guiSize * 8), (int) (Camera.newY - Settings.guiSize * 8));
         }
 
-
+        
         glfwSwapBuffers(window);
         glfwPollEvents();
 

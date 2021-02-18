@@ -37,7 +37,7 @@ public class InventoryScreen extends ContainerScreen<InventoryContainer> {
         int width = (int) (16 * Settings.guiSize);
         int startX = (int) (ClientMain.windowX / 2 - width * 4.5f);
         int startY = (int) (ClientMain.windowY - width - 1 * Settings.guiSize);
-
+        matrixStack.applyTransformation();
         Renderer.drawCenteredXTexture(matrixStack, Textures.HOTBAR,startY, Settings.guiSize);
 
         //Renderer.drawTexture(matrixStack,Textures.ITEM_OUTLINE, (int) (startX),startY,(int)(width + 6 * Settings.guiSize),(int)(width + 6 * Settings.guiSize),5,5,27,27);

@@ -17,15 +17,29 @@ public class VerticalSlab extends Block {
 
     @Override
     public Vector5f[] getVertices(int side, float size, BlockState blockState) {
+        Vector5f[] vector5fs;
         if(blockState.readData() == 0) {
-            return CubeManager.getVerticalSlabVertices(blockTextureManager, side, size, 0, false);
+            vector5fs = CubeManager.getVerticalSlabVertices(blockTextureManager, side, size, 0, false);
         } else if(blockState.readData() == 1) {
-            return CubeManager.getVerticalSlabVertices(blockTextureManager, side, size, 0.5f, false);
+            vector5fs = CubeManager.getVerticalSlabVertices(blockTextureManager, side, size, 0.5f, false);
         } else if(blockState.readData() == 2) {
-            return CubeManager.getVerticalSlabVertices(blockTextureManager, side, size, 0, true);
+            vector5fs = CubeManager.getVerticalSlabVertices(blockTextureManager, side, size, 0, true);
         } else {
-            return CubeManager.getVerticalSlabVertices(blockTextureManager, side, size, 0.5f, true);
+            vector5fs = CubeManager.getVerticalSlabVertices(blockTextureManager, side, size, 0.5f, true);
         }
+
+        for(Vector5f vector5f : vector5fs) {
+            if(side == 2 || side == 3) {
+                vector5f.setColored(0.95f,0.95f,0.95f,1.0f);
+            } else if(side == 0 || side == 1) {
+                vector5f.setColored(0.9f,0.9f,0.9f,1.0f);
+            } else if(side == 4) {
+                vector5f.setColored(0.85f,0.85f,0.85f,1.0f);
+            } else {
+                vector5f.setColored();
+            }
+        }
+        return vector5fs;
     }
 
     @Override
