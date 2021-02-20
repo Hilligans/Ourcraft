@@ -1,7 +1,7 @@
 package Hilligans.World;
 
 import Hilligans.Biome.Biome;
-import Hilligans.Block.BlockState;
+import Hilligans.Data.Other.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Data.Other.BlockPos;
@@ -86,7 +86,7 @@ public class Chunk {
                    double val = world.noise.smoothNoise(0.1 * (x + this.x * 16),0.1 * y,0.1 * (z + this.z * 16));
                    if(val > 0.2 && y != 0) {
                        setBlockState(x,y,z,Blocks.AIR.getDefaultState());
-                       if(getBlockState(x,y - 1,z).block == Blocks.DIRT) {
+                       if(getBlockState(x,y - 1,z).getBlock() == Blocks.DIRT) {
                            setBlockState(x,y - 1,z,Blocks.AIR.getDefaultState());
                        }
                    }

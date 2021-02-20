@@ -10,7 +10,7 @@ import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.ServerMain;
-import Hilligans.Block.BlockState;
+import Hilligans.Data.Other.BlockState;
 
 public class CSendBlockChanges extends PacketBase {
 
@@ -52,10 +52,10 @@ public class CSendBlockChanges extends PacketBase {
         BlockState oldState = ServerMain.world.getBlockState(x,y,z);
         BlockState newBlock = Blocks.getBlockWithID(blockId).getDefaultState();
         ServerMain.world.setBlockState(x,y,z,newBlock);
-        newBlock.block.onPlace(ServerMain.world, new BlockPos(x,y,z));
-        Block droppedBlock = oldState.block.getDroppedBlock();
+        newBlock.getBlock().onPlace(ServerMain.world, new BlockPos(x,y,z));
+        Block droppedBlock = oldState.getBlock().getDroppedBlock();
         if(droppedBlock != Blocks.AIR) {
-            if (ServerMain.world.getBlockState(x, y, z).block == Blocks.AIR) {
+            if (ServerMain.world.getBlockState(x, y, z).getBlock() == Blocks.AIR) {
                 ItemEntity itemEntity = new ItemEntity(x + 0.5f, y + 1, z + 0.5f, Entity.getNewId(), droppedBlock);
                 ServerMain.world.addEntity(itemEntity);
             }

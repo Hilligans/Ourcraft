@@ -1,7 +1,7 @@
 package Hilligans.Item;
 
 import Hilligans.Block.Block;
-import Hilligans.Block.BlockState;
+import Hilligans.Data.Other.BlockState;
 import Hilligans.Client.Camera;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.Renderer;
@@ -36,19 +36,7 @@ public class BlockItem extends Item {
             return false;
         }
         pos = new BlockPos(vector3f);
-        for (Entity entity : world.entities.values()) {
-            if (entity instanceof LivingEntity) {
-                if(world.isServer()) {
-                    if (!block.getAllowedMovement(new Vector3f(), new Vector3f(playerEntity.x, playerEntity.y, playerEntity.z), pos, entity.boundingBox, world)) {
-                        return false;
-                    }
-                } else {
-                    if (!block.getAllowedMovement(new Vector3f(), Camera.pos, pos, entity.boundingBox, world)) {
-                        return false;
-                    }
-                }
-            }
-        }
+        BlockState oldState = world.getBlockState(pos);
 
         BlockState blockState;
         if(world.isServer()) {
@@ -57,6 +45,23 @@ public class BlockItem extends Item {
             blockState = block.getStateForPlacement(vector3f, Camera.pos);
         }
         world.setBlockState(pos, blockState);
+
+        for (Entity entity : world.entities.values()) {
+            if (entity instanceof LivingEntity) {
+                if(world.isServer()) {
+                    if (!block.getAllowedMovement(new Vector3f(), new Vector3f(playerEntity.x, playerEntity.y, playerEntity.z), pos, entity.boundingBox, world)) {
+                        world.setBlockState(pos,oldState);
+                        return false;
+                    }
+                } else {
+                    if (!block.getAllowedMovement(new Vector3f(), Camera.pos, pos, entity.boundingBox, world)) {
+                        world.setBlockState(pos,oldState);
+                        return false;
+                    }
+                }
+            }
+        }
+
         block.onPlace(world,pos);
         if (world.isServer()) {
             ServerNetworkHandler.sendPacket(new SSendBlockChanges(pos,blockState));

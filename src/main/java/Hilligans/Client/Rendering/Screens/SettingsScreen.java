@@ -13,7 +13,7 @@ public class SettingsScreen extends ScreenBase {
     public SettingsScreen() {
         widgets.add(new SliderWidget(50, 50, 200, 40, 50, 200, (int)Camera.sensitivity, value -> Camera.sensitivity = value));
         widgets.add(new SliderWidget(50, 150, 200, 40, 10, 110, Camera.fov, value -> Camera.fov = value));
-        widgets.add(new SliderWidget(50, 250, 200, 40, 2, 16, Settings.renderDistance, value -> Settings.renderDistance = value));
+        widgets.add(new SliderWidget(50, 250, 200, 40, 2, 64, Settings.renderDistance, value -> Settings.renderDistance = value));
     }
 
     @Override

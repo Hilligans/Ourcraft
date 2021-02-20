@@ -1,9 +1,10 @@
 package Hilligans.Network.Packet.Server;
 
-import Hilligans.Block.BlockState;
+import Hilligans.Data.Other.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.ClientMain;
 import Hilligans.Data.Other.BlockPos;
+import Hilligans.Data.Other.DataBlockState;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.World.ClientWorld;
@@ -24,8 +25,10 @@ public class SSendBlockChanges extends PacketBase {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.blockId = blockState.block.id;
-        blockData = blockState.readData();
+        this.blockId = blockState.getBlock().id;
+        if(blockState.getBlock().hasBlockState()) {
+            blockData = ((DataBlockState)blockState).readData();
+        }
     }
 
     public SSendBlockChanges(BlockPos pos, BlockState blockState) {
@@ -33,8 +36,10 @@ public class SSendBlockChanges extends PacketBase {
         this.x = pos.x;
         this.y = pos.y;
         this.z = pos.z;
-        this.blockId = blockState.block.id;
-        blockData = blockState.readData();
+        this.blockId = blockState.getBlock().id;
+        if(blockState.getBlock().hasBlockState()) {
+            blockData = ((DataBlockState)blockState).readData();
+        }
     }
 
     @Override

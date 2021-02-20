@@ -9,7 +9,7 @@ public abstract class SurfaceBuilder extends WorldBuilder {
     @Override
     public void build(int x, int z) {
         int y = Settings.chunkHeight * 16;
-        while(y > 0 && world.getBlockState(x,y,z).block == Blocks.AIR) {
+        while(y > 0 && world.getBlockState(x,y,z).getBlock() == Blocks.AIR) {
             y--;
         }
         y++;
@@ -17,7 +17,7 @@ public abstract class SurfaceBuilder extends WorldBuilder {
     }
 
     public boolean isPlacedOn(BlockPos pos, Block block) {
-        return world.getBlockState(pos.copy().add(0,-1,0)).block == block;
+        return world.getBlockState(pos.copy().add(0,-1,0)).getBlock() == block;
     }
 
     public abstract void build(BlockPos startPos);

@@ -1,7 +1,7 @@
 package Hilligans.World;
 
 import Hilligans.Block.Block;
-import Hilligans.Block.BlockState;
+import Hilligans.Data.Other.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Entity.Entities.ItemEntity;
@@ -45,12 +45,20 @@ public class ServerWorld extends World {
         if(getChunk(x,z) == null) {
             Chunk chunk = WorldLoader.readChunk(x,z);
             if(chunk != null) {
-                //System.out.println("LOADING CHUNKS X:" + x + " Z:" + z);
                 setChunk(chunk,x,z);
                 return;
             }
         }
         super.generateChunk(x, z);
+    }
+
+    @Override
+    public void unloadChunk(int x, int z) {
+        Chunk chunk = getChunk(x,z);
+        if(chunk != null) {
+            WorldLoader.writeChunk(chunk);
+        }
+        super.unloadChunk(x,z);
     }
 
     @Override
@@ -99,7 +107,7 @@ public class ServerWorld extends World {
     }
 
     public void createItemEntity(BlockPos blockPos) {
-        Block block = getBlockState(blockPos).block;
+        Block block = getBlockState(blockPos).getBlock();
         if(block != Blocks.AIR) {
             ItemEntity itemEntity = new ItemEntity(blockPos.x,blockPos.y,blockPos.z,Entity.getNewId(),block);
             addEntity(itemEntity);

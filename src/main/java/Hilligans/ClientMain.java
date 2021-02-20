@@ -9,7 +9,6 @@ import Hilligans.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
 import Hilligans.Client.Rendering.World.*;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
-import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Data.Other.Texture;
 import Hilligans.Data.Other.Textures;
 import Hilligans.Entity.Entity;
@@ -30,7 +29,7 @@ import Hilligans.Network.ClientNetworkInit;
 import Hilligans.Network.Packet.Client.CSendBlockChanges;
 import Hilligans.Client.Camera;
 import Hilligans.Data.Other.BlockPos;
-import Hilligans.Block.BlockState;
+import Hilligans.Data.Other.BlockState;
 import Hilligans.World.ClientWorld;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
@@ -263,7 +262,7 @@ public class ClientMain {
         BlockPos pos = clientWorld.traceBlockToBreak(Camera.pos.x,Camera.pos.y + Camera.playerBoundingBox.eyeHeight,Camera.pos.z,Camera.pitch,Camera.yaw);
         if(pos != null) {
             BlockState blockState = clientWorld.getBlockState(pos);
-            int id = blockState.block.generateOutline(blockState);
+            int id = blockState.getBlock().blockShape.generateOutline(clientWorld,pos);
             glUseProgram(lineShader);
             GL30.glBindVertexArray(id);
             matrixStack.push();
@@ -280,6 +279,7 @@ public class ClientMain {
             StringRenderer.drawString(screenStack, Camera.getString(), windowX / 2, 0, 0.5f);
             StringRenderer.drawString(screenStack, "FPS:" + fps, windowX / 2, 29, 0.5f);
             StringRenderer.drawString(screenStack, clientWorld.biomeMap.getBiome((int) Camera.pos.x, (int) Camera.pos.z).name, windowX / 2, 58, 0.5f);
+            StringRenderer.drawString(screenStack, "vel y:" + Camera.velY, windowX / 2,87,0.5f);
         }
 
         InventoryScreen.drawHotbar(screenStack);
@@ -450,7 +450,7 @@ public class ClientMain {
                             BlockPos blockPos = clientWorld.traceBlockToBreak(Camera.pos.x,Camera.pos.y + Camera.playerBoundingBox.eyeHeight,Camera.pos.z,Camera.pitch,Camera.yaw);
                             if(blockPos != null) {
                                 BlockState blockState = clientWorld.getBlockState(blockPos);
-                                if (blockState != null && blockState.block.activateBlock(clientWorld, null, blockPos)) {
+                                if (blockState != null && blockState.getBlock().activateBlock(clientWorld, null, blockPos)) {
                                     ClientNetworkHandler.sendPacket(new CUseItem((byte) ClientData.handSlot));
                                     return;
                                 }

@@ -51,7 +51,6 @@ public class PlayerEntity extends LivingEntity {
 
     @Override
     public void tick() {
-        //System.out.println("yes");
         boolean updateInventory = false;
 
         for(Entity entity : ServerMain.world.entities.values()) {
@@ -64,7 +63,6 @@ public class PlayerEntity extends LivingEntity {
                             ServerMain.world.removeEntity(entity.id);
                         }
                         if (count != itemStack.count) {
-                            //System.out.println("SHOULD SEND PACKET");
                             updateInventory = true;
                         }
                     }

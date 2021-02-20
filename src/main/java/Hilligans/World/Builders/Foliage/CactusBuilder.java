@@ -21,7 +21,7 @@ public class CactusBuilder extends SurfaceBuilder {
 
     public boolean tryPlace(BlockPos pos) {
         for(int x = 0; x < 4; x++) {
-            if(world.getBlockState(pos.copy().add(Block.getBlockPos(x))).block != Blocks.AIR) {
+            if(world.getBlockState(pos.copy().add(Block.getBlockPos(x))).getBlock() != Blocks.AIR) {
                 return true;
             }
         }

@@ -10,7 +10,7 @@ public class TreeBuilder extends SurfaceBuilder {
 
     @Override
     public void build(BlockPos startPos) {
-        if(world.getBlockState(startPos.copy().add(0,-1,0)).block == Blocks.GRASS) {
+        if(world.getBlockState(startPos.copy().add(0,-1,0)).getBlock() == Blocks.GRASS) {
             int height = random.nextInt(8) + 8;
             for (int y = 0; y < height; y++) {
                 BlockPos pos = startPos.copy().add(0, y, 0);
@@ -50,7 +50,7 @@ public class TreeBuilder extends SurfaceBuilder {
     private void placeLeaves(BlockPos pos) {
         for(int x = 0; x < 6; x++) {
             BlockPos newPos = pos.copy().add(Block.getBlockPos(x));
-            if(world.getBlockState(newPos).block == Blocks.AIR) {
+            if(world.getBlockState(newPos).getBlock() == Blocks.AIR) {
                 world.setBlockState(newPos,Blocks.LEAVES.getDefaultState());
             }
         }

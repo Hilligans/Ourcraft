@@ -178,7 +178,7 @@ public abstract class Entity {
         for(int x = -X; x < X; x++) {
             for(int y = -Y; y < Y; y++) {
                 for(int z = -Z; z < Z; z++) {
-                    Block block = world.getBlockState(pos.copy().add(x,y,z)).block;
+                    Block block = world.getBlockState(pos.copy().add(x,y,z)).getBlock();
                     if(block != Blocks.AIR) {
                         boolean canMove = block.getAllowedMovement(new Vector3f(motion.x,motion.y,motion.z), new Vector3f(this.x, this.y, this.z), pos.copy().add(x, y, z), boundingBox, world);
                         if(!canMove) {

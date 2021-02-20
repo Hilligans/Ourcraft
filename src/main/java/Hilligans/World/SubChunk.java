@@ -1,7 +1,7 @@
 package Hilligans.World;
 
 import Hilligans.Block.Block;
-import Hilligans.Block.BlockState;
+import Hilligans.Data.Other.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.World.VAOManager;
@@ -29,7 +29,6 @@ public class SubChunk {
     int z;
 
     BlockState[][][] blocks = new BlockState[16][16][16];
-    //DataProvider[][][] dataProviders = new DataProvider[16][16][16];
 
     public SubChunk(World world, int X, int Y, int Z) {
         this.world = world;
@@ -55,11 +54,11 @@ public class SubChunk {
                 for(int z = 0; z < 16; z++) {
                     BlockState block = blocks[x][y][z];
                     for(int a = 0; a < 6; a++) {
-                        if(block.block != Blocks.AIR) {
+                        if(block.getBlock() != Blocks.AIR) {
                             BlockState blockState = getBlock(new BlockPos(x, y, z).add(Block.getBlockPos(a)));
-                            if (blockState.block.transparentTexture && (Settings.renderSameTransparent || block.block != blockState.block)) {
-                                indices.addAll(Arrays.asList(block.block.getIndices(a,spot * 4)));
-                                Vector5f[] vector5fs = block.block.getVertices(a,block);
+                            if (blockState.getBlock().transparentTexture && (Settings.renderSameTransparent || block.getBlock() != blockState.getBlock())) {
+                                indices.addAll(Arrays.asList(block.getBlock().getIndices(a,spot * 4)));
+                                Vector5f[] vector5fs = block.getBlock().getVertices(a,block);
                                 for(Vector5f vector5f : vector5fs) {
                                     vertices.add(vector5f.addX(x).addY(y + this.y).addZ(z));
                                 }
@@ -120,17 +119,9 @@ public class SubChunk {
         return blocks[x][y][z];
     }
 
-    public DataProvider getDataProvider(int x, int y, int z) {
-        return null;
-        //return dataProviders[x][y][z];
-    }
-
-    public void setDataProvider(int x, int y, int z, DataProvider dataProvider) {
-        //dataProviders[x][y][z] = dataProvider;
-    }
 
     public void setBlockState(int x, int y, int z, BlockState blockState) {
-        blocks[x & 15][y & 15][z & 15].block.onBreak(world,new BlockPos(x,y,z));
+        blocks[x & 15][y & 15][z & 15].getBlock().onBreak(world,new BlockPos(x,y,z));
         blocks[x & 15][y & 15][z & 15] = blockState;
     }
 
@@ -140,10 +131,13 @@ public class SubChunk {
             createMesh();
         }
 
-        GL30.glBindVertexArray(id);
-        matrixStack.push();
-        matrixStack.applyTransformation(ClientMain.colorShader);
-        glDrawElements(GL_TRIANGLES, verticesCount * 3 / 10,GL_UNSIGNED_INT,0);
-        matrixStack.pop();
+      //  if(y == 64) {
+
+            GL30.glBindVertexArray(id);
+            matrixStack.push();
+            matrixStack.applyTransformation(ClientMain.colorShader);
+            glDrawElements(GL_TRIANGLES, verticesCount * 3 / 10, GL_UNSIGNED_INT, 0);
+            matrixStack.pop();
+      //    }
     }
 }

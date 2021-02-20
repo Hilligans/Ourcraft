@@ -1,13 +1,13 @@
 package Hilligans.WorldSave;
 
 import Hilligans.Block.Block;
-import Hilligans.Block.BlockState;
+import Hilligans.Data.Other.BlockState;
 import Hilligans.Block.Blocks;
+import Hilligans.Data.Other.DataBlockState;
 import Hilligans.Tag.*;
 import Hilligans.Util.Settings;
 import Hilligans.World.Chunk;
 import Hilligans.World.DataProvider;
-import it.unimi.dsi.fastutil.ints.AbstractInt2IntMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
 
 import java.io.File;
@@ -41,13 +41,10 @@ public class WorldLoader {
                 CompoundTag compoundTag = new CompoundTag();
                 compoundTag.read(buf);
 
-                return createChunk(x, z, compoundTag);
+                return createChunk2(x, z, compoundTag);
             }
             return null;
             //System.out.println((System.currentTimeMillis() - start));
-
-
-
 
         } catch (IOException ingored) {
             return null;
@@ -56,7 +53,7 @@ public class WorldLoader {
 
     public static void writeChunk(Chunk chunk) {
         String fileName = getPathToChunk(chunk.x,chunk.z);
-        CompoundTag compoundTag = createTag(chunk);
+        CompoundTag compoundTag = createTag2(chunk);
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(maxSize);
         byteBuffer.mark();
         compoundTag.write(byteBuffer);
@@ -86,23 +83,54 @@ public class WorldLoader {
             int y = i >> 4 & 255;
             int z = i >> 12 & 15;
             BlockState blockState = chunk.getBlockState(x,y,z);
-            blocks[i] = blockState.block.id << 16 | blockState.readData();
+            if(blockState.getBlock().hasBlockState()) {
+                blocks[i] = blockState.getBlock().id << 16 | ((DataBlockState)blockState).readData();
+            } else {
+                blocks[i] = blockState.getBlock().id << 16;
+            }
         }
         IntegerArrayTag intArrayTag = new IntegerArrayTag(blocks);
         compoundTag.putTag("blocks", intArrayTag);
-        CompoundTag compoundTag1 = new CompoundTag();
-        compoundTag1.putInt("count",chunk.dataProviders.size());
+        compoundTag.putTag("data",getDataProviderTag(chunk));
+
+        return compoundTag;
+    }
+
+    public static CompoundTag createTag2(Chunk chunk) {
+        CompoundTag compoundTag = new CompoundTag();
+        ListTag<ShortTag> blocks = new ListTag<>();
+
+        for(int i = 0; i < 65536; i++) {
+            int x = i & 15;
+            int y = i >> 4 & 255;
+            int z = i >> 12 & 15;
+            BlockState blockState = chunk.getBlockState(x,y,z);
+            if(blockState.getBlock().hasBlockState()) {
+                blocks.tags.add(new ShortTag(blockState.getBlock().id));
+                blocks.tags.add(new ShortTag(((DataBlockState)blockState).readData()));
+            } else {
+                blocks.tags.add(new ShortTag(blockState.getBlock().id));
+            }
+        }
+
+        compoundTag.putTag("blocks", blocks);
+        compoundTag.putTag("data",getDataProviderTag(chunk));
+
+        return compoundTag;
+    }
+
+    public static CompoundTag getDataProviderTag(Chunk chunk) {
+        CompoundTag compoundTag = new CompoundTag();
+        compoundTag.putInt("count",chunk.dataProviders.size());
         int x = 0;
         for(Short2ObjectMap.Entry<DataProvider> set : chunk.dataProviders.short2ObjectEntrySet()) {
             CompoundTag compoundTag2 = new CompoundTag();
             compoundTag2.putShort("pos",set.getShortKey());
             set.getValue().write(compoundTag2);
-            compoundTag1.putTag(x + "", compoundTag2);
+            compoundTag.putTag(x + "", compoundTag2);
             x++;
 
         }
-        compoundTag.putTag("data",compoundTag1);
-
         return compoundTag;
     }
 
@@ -118,37 +146,70 @@ public class WorldLoader {
 
             //System.out.println(x);
             Block block = Blocks.getBlockWithID((integerTag.val[i]) >> 16 & 65535);
-            BlockState blockState = block.getDefaultState();
-            blockState.write((short) (integerTag.val[i] & 65535));
+            BlockState blockState = block.getStateWithData((short) (integerTag.val[i] & 65535));
+            // blockState.write((short) (integerTag.val[i] & 65535));
             chunk.setBlockState(x,y,z,blockState);
         }
 
-        CompoundTag compoundTag1 = (CompoundTag) compoundTag.getTag("data");
-        int count = ((IntegerTag)compoundTag1.getTag("count")).val;
+        setDataProviders(compoundTag.getCompoundTag("data"),chunk);
+
+        //chunk.populate();
+        return chunk;
+    }
+
+    public static Chunk createChunk2(int X, int Z, CompoundTag compoundTag) {
+            Chunk chunk = new Chunk(X, Z, null);
+        try {
+            ListTag<ShortTag> blocks = (ListTag<ShortTag>) compoundTag.getTag("blocks");
+
+            int listSpot = 0;
+
+            for (int i = 0; i < 65536; i++) {
+                int x = i & 15;
+                int y = i >> 4 & 255;
+                int z = i >> 12 & 15;
+
+                Block block = Blocks.getBlockWithID(blocks.tags.get(listSpot).val);
+                BlockState blockState;
+                if (block.hasBlockState()) {
+                    listSpot++;
+                    blockState = block.getStateWithData(blocks.tags.get(listSpot).val);
+                } else {
+                    blockState = block.getDefaultState();
+                }
+                chunk.setBlockState(x, y, z, blockState);
+                listSpot++;
+            }
+
+            setDataProviders(compoundTag.getCompoundTag("data"), chunk);
+        } catch (Exception e) {
+            System.err.println("Failed to load chunk x:" + X + " z:" + Z);
+            e.printStackTrace();
+            return null;
+        }
+        return chunk;
+    }
+
+    public static void setDataProviders(CompoundTag compoundTag, Chunk chunk) {
+        //CompoundTag compoundTag1 = (CompoundTag) compoundTag.getTag("data");
+        int count = ((IntegerTag)compoundTag.getTag("count")).val;
 
         for(int i = 0; i < count; i++) {
-            CompoundTag compoundTag2 = (CompoundTag) compoundTag1.getTag(i + "");
+            CompoundTag compoundTag2 = (CompoundTag) compoundTag.getTag(i + "");
             short key = ((ShortTag)compoundTag2.getTag("pos")).val;
-            //(short)(pos.x & 15 | (pos.y & 255) << 4 | (pos.z & 15) << 12)
             int x = key & 15;
             int y = key >> 4 & 255;
             int z = key >> 12 & 15;
 
             BlockState blockState = chunk.getBlockState(x,y,z);
-            DataProvider dataProvider = blockState.block.getDataProvider();
+            DataProvider dataProvider = blockState.getBlock().getDataProvider();
             if(dataProvider != null) {
                 dataProvider.read(compoundTag2);
                 chunk.dataProviders.put(key,dataProvider);
             } else {
                 System.out.println("EMPTY DATA PROVIDER");
             }
-            //System.out.println(x + ":" + y + ":" + z);
-
-
         }
-
-        //chunk.populate();
-        return chunk;
     }
 
 }

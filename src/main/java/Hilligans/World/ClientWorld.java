@@ -2,8 +2,7 @@ package Hilligans.World;
 
 
 
-import Hilligans.Block.BlockState;
-import Hilligans.Block.Blocks;
+import Hilligans.Data.Other.BlockState;
 import Hilligans.Client.Camera;
 import Hilligans.Client.MatrixStack;
 import Hilligans.ClientMain;

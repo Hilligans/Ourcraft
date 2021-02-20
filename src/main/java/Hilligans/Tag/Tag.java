@@ -25,6 +25,7 @@ public abstract class Tag {
         tags.add(ByteArrayTag::new);
         tags.add(ShortArrayTag::new);
         tags.add(IntegerArrayTag::new);
+        tags.add(ListTag::new);
     }
 
     public interface TagFetcher {

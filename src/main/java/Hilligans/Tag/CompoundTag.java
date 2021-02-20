@@ -42,6 +42,10 @@ public class CompoundTag extends Tag {
         return tags.get(name);
     }
 
+    public CompoundTag getCompoundTag(String name) {
+        return (CompoundTag) tags.get(name);
+    }
+
     public ItemStack readStack(int slot) {
         CompoundTag compoundTag = (CompoundTag) getTag("slot" + slot);
         byte count = ((ByteTag)compoundTag.getTag("count")).val;

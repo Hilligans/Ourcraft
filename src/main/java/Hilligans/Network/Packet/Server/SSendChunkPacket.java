@@ -1,14 +1,13 @@
 package Hilligans.Network.Packet.Server;
 
 import Hilligans.ClientMain;
+import Hilligans.Data.Other.DataBlockState;
 import Hilligans.Util.Settings;
 import Hilligans.World.Chunk;
 import Hilligans.Block.Blocks;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
-import Hilligans.Block.BlockState;
-import it.unimi.dsi.fastutil.ints.Int2BooleanOpenHashMap;
-import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
+import Hilligans.Data.Other.BlockState;
 import it.unimi.dsi.fastutil.shorts.Short2ByteOpenHashMap;
 
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class SSendChunkPacket extends PacketBase {
             for (int x = 0; x < 16; x++) {
                 for (int y = 0; y < Settings.chunkHeight * 16; y++) {
                     for (int z = 0; z < 16; z++) {
-                        packetData.writeShort(chunk.getBlockState(x, y, z).block.id);
+                        packetData.writeShort(chunk.getBlockState(x, y, z).getBlock().id);
                     }
                 }
             }
@@ -53,11 +52,16 @@ public class SSendChunkPacket extends PacketBase {
                 for (int y = 0; y < Settings.chunkHeight * 16; y++) {
                     for (int z = 0; z < 16; z++) {
                         BlockState blockState = chunk.getBlockState(x, y, z);
-                        byte id = mappedBlocks.getOrDefault(blockState.block.id,(byte)-1);
-                        if(id == -1 || blockData.get(id) != blockState.readData()) {
-                            mappedBlocks.put(blockState.block.id,pointer);
-                            blockIds.add(blockState.block.id);
-                            blockData.add(blockState.readData());
+                        byte id = mappedBlocks.getOrDefault(blockState.getBlock().id,(byte)-1);
+                        boolean hasData = blockState.getBlock().hasBlockState();
+                        if(id == -1 || (hasData && blockData.get(id) != ((DataBlockState)blockState).readData())) {
+                            mappedBlocks.put(blockState.getBlock().id,pointer);
+                            blockIds.add(blockState.getBlock().id);
+                            if(hasData) {
+                                blockData.add(((DataBlockState) blockState).readData());
+                            } else {
+                                blockData.add((short) 0);
+                            }
                             id = pointer;
                             pointer++;
                         }

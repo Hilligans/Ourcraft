@@ -92,7 +92,7 @@ public class LargeTreeBuilder extends SurfaceBuilder {
     private void placeLeaves(BlockPos pos) {
         for(int x = 0; x < 6; x++) {
             BlockPos newPos = pos.copy().add(Block.getBlockPos(x));
-            if(world.getBlockState(newPos).block == Blocks.AIR) {
+            if(world.getBlockState(newPos).getBlock() == Blocks.AIR) {
                 world.setBlockState(newPos,Blocks.LEAVES.getDefaultState());
             }
         }

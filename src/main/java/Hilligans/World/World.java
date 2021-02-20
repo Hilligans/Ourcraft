@@ -1,11 +1,9 @@
 package Hilligans.World;
 
-import Hilligans.Block.Block;
-import Hilligans.Block.BlockState;
+import Hilligans.Data.Other.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BoundingBox;
-import Hilligans.Data.Other.IInventory;
 import Hilligans.Entity.Entities.ItemEntity;
 import Hilligans.Entity.Entity;
 import Hilligans.Item.ItemStack;
@@ -63,8 +61,15 @@ public abstract class World {
     }
 
     public Chunk getChunk(int x, int z) {
-        //System.out.println("Getting " + (x & 4294967295L | ((long)z & 4294967295L) << 32));
         return getChunk((long)x & 4294967295L | ((long)z & 4294967295L) << 32);
+    }
+
+    public void removeChunk(int x, int z) {
+        removeChunk((long)x & 4294967295L | ((long)z & 4294967295L) << 32);
+    }
+
+    public void removeChunk(long chunkPos) {
+        chunks.remove(chunkPos);
     }
 
     public Chunk getOrGenerateChunk(int x, int z) {
@@ -82,6 +87,10 @@ public abstract class World {
             chunks.put(x & 4294967295L | ((long)z & 4294967295L) << 32,chunk);
             chunk.generate();
         }
+    }
+
+    public void unloadChunk(int x, int z) {
+        removeChunk(x,z);
     }
 
     public BlockState getBlockState(int x, int y, int z) {
@@ -183,8 +192,8 @@ public abstract class World {
             final double X = (x - Math.cos(yaw) * Math.cos(pitch) * a * 0.1) + offSet;
             BlockPos pos = new BlockPos((int) Math.round(X), (int) Math.round(Y), (int) Math.round(Z));
             BlockState blockState = getBlockState(pos);
-            if(blockState.block != Blocks.AIR) {
-                if(blockState.block.getBoundingBox(blockState).intersectVector(new Vector3f((float)X - offSet,(float)Y - offSet,(float)Z - offSet), pos)) {
+            if(blockState.getBlock() != Blocks.AIR) {
+                if(blockState.getBlock().getBoundingBox(this,pos).intersectVector(new Vector3f((float)X - offSet,(float)Y - offSet,(float)Z - offSet), pos)) {
                     placed = true;
                     break;
                 } else {
@@ -211,7 +220,7 @@ public abstract class World {
             final double Y = y - Math.sin(pitch) * 0.1 * a + offSet;
             final double X = (x - Math.cos(yaw) * Math.cos(pitch) * a * 0.1) + offSet;
             BlockState blockState = getBlockState((int) Math.round(X), (int) Math.round(Y), (int) Math.round(Z));
-            if(blockState.block != Blocks.AIR) {
+            if(blockState.getBlock() != Blocks.AIR) {
                 return blockState;
             }
         }
@@ -225,8 +234,8 @@ public abstract class World {
             final double X = (x - Math.cos(yaw) * Math.cos(pitch) * a * 0.1) + offSet;
             BlockPos pos = new BlockPos((int) Math.round(X), (int) Math.round(Y), (int) Math.round(Z));
             BlockState blockState = getBlockState(pos);
-            if(blockState.block != Blocks.AIR) {
-                if(blockState.block.getBoundingBox(blockState).intersectVector(new Vector3f((float)X - offSet,(float)Y - offSet,(float)Z - offSet), pos)) {
+            if(blockState.getBlock() != Blocks.AIR) {
+                if(blockState.getBlock().getBoundingBox(this,pos).intersectVector(new Vector3f((float)X - offSet,(float)Y - offSet,(float)Z - offSet), pos)) {
                     return pos;
                 }
             }
@@ -253,8 +262,8 @@ public abstract class World {
             for(int z = -1; z < 2; z++) {
                 for(int x = -1; x < 2; x++) {
                     BlockState blockState = getBlockState(new BlockPos(x,pos.y,z));
-                    if(blockState.block != Blocks.AIR) {
-                        if (boundingBox.intersectsBox(blockState.getBoundingBox(), pos.get3f(), new Vector3f(x, pos.y, z))) {
+                    if(blockState.getBlock() != Blocks.AIR) {
+                        if (boundingBox.intersectsBox(blockState.getBlock().getBoundingBox(this,new BlockPos(x,pos.y,z)), pos.get3f(), new Vector3f(x, pos.y, z))) {
                             break out;
                         }
                     }

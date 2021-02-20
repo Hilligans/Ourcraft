@@ -28,7 +28,7 @@ public class Camera {
     public static int fov = 70;
 
     private static final float fallSpeed = -0.0008f;
-    private static final float terminalVel = -0.15f;
+    private static final float terminalVel = -1.15f;
 
     public static double pitch;
     public static double yaw;
@@ -458,7 +458,7 @@ public class Camera {
         for(int x = -X; x < X; x++) {
             for(int y = -Y; y < Y; y++) {
                 for(int z = -Z; z < Z; z++) {
-                    Block block = world.getBlockState(pos.copy().add(x,y,z)).block;
+                    Block block = world.getBlockState(pos.copy().add(x,y,z)).getBlock();
                     if(block != Blocks.AIR) {
                         boolean canMove = block.getAllowedMovement(new Vector3f(motion.x,motion.y,motion.z), new Vector3f(cameraPos.x, cameraPos.y, cameraPos.z), pos.copy().add(x, y, z), playerBoundingBox, world);
                         if(!canMove) {
