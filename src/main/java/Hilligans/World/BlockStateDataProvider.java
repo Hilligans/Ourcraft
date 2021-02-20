@@ -10,5 +10,7 @@ public class BlockStateDataProvider extends DataProvider {
         return 0;
     }
 
-
+    public BlockStateDataProvider duplicate() {
+        return new BlockStateDataProvider();
+    }
 }

@@ -1,10 +1,12 @@
 package Hilligans.World;
 
 import Hilligans.Biome.Biome;
+import Hilligans.Block.Block;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Data.Other.BlockPos;
+import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Entity.Entity;
 import Hilligans.Util.Settings;
 import Hilligans.World.Builders.WorldBuilder;
@@ -172,5 +174,37 @@ public class Chunk {
         chunks.get(pos).setBlockState(x,y,z,blockState);
     }
 
+    public ArrayList<DoubleTypeWrapper<BlockState,Integer>> getBlockChainedList() {
+        BlockState currentState = null;
+        ArrayList<DoubleTypeWrapper<BlockState,Integer>> values = new ArrayList<>();
+        int count = 0;
+        for(int i = 0; i < 16 * 16 * Settings.chunkHeight * 16; i++) {
+            int x = i & 15;
+            int y = i >> 4 & 255;
+            int z = i >> 12 & 15;
+            BlockState newState = getBlockState(x, y, z);
+            if (!newState.equals(currentState)) {
+                if (currentState != null) {
+                    values.add(new DoubleTypeWrapper<>(currentState, count));
+                    count = 0;
+                }
+                currentState = newState;
+            }
+            count++;
+        }
+        return values;
+    }
 
+    public void setFromChainedList(ArrayList<DoubleTypeWrapper<BlockState,Integer>> values) {
+        int offset = 0;
+        for(DoubleTypeWrapper<BlockState, Integer> block : values) {
+            for(int i = 0; i < block.getTypeB(); i++) {
+                int x = offset & 15;
+                int y = offset >> 4 & 255;
+                int z = offset >> 12 & 15;
+                setBlockState(x,y,z,block.getTypeA().duplicate());
+                offset++;
+            }
+        }
+    }
 }

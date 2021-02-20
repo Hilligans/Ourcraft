@@ -4,6 +4,7 @@ import Hilligans.Block.Block;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Data.Other.DataBlockState;
+import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Tag.*;
 import Hilligans.Util.Settings;
 import Hilligans.World.Chunk;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 
 public class WorldLoader {
 
@@ -41,7 +43,7 @@ public class WorldLoader {
                 CompoundTag compoundTag = new CompoundTag();
                 compoundTag.read(buf);
 
-                return createChunk2(x, z, compoundTag);
+                return createChunk3(x, z, compoundTag);
             }
             return null;
             //System.out.println((System.currentTimeMillis() - start));
@@ -53,7 +55,7 @@ public class WorldLoader {
 
     public static void writeChunk(Chunk chunk) {
         String fileName = getPathToChunk(chunk.x,chunk.z);
-        CompoundTag compoundTag = createTag2(chunk);
+        CompoundTag compoundTag = createTag3(chunk);
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(maxSize);
         byteBuffer.mark();
         compoundTag.write(byteBuffer);
@@ -113,6 +115,27 @@ public class WorldLoader {
             }
         }
 
+        compoundTag.putTag("blocks", blocks);
+        compoundTag.putTag("data",getDataProviderTag(chunk));
+
+        return compoundTag;
+    }
+
+    public static CompoundTag createTag3(Chunk chunk) {
+        CompoundTag compoundTag = new CompoundTag();
+
+        ListTag<ShortTag> blocks = new ListTag<>();
+
+        ArrayList<DoubleTypeWrapper<BlockState,Integer>> blockList = chunk.getBlockChainedList();
+
+        for(DoubleTypeWrapper<BlockState,Integer> block : blockList) {
+            blocks.tags.add(new ShortTag(block.getTypeA().blockId));
+            if(block.getTypeA().getBlock().hasBlockState()) {
+                blocks.tags.add(new ShortTag(((DataBlockState)block.getTypeA()).readData()));
+            }
+            int val = block.getTypeB();
+            blocks.tags.add(new ShortTag((short)val));
+        }
         compoundTag.putTag("blocks", blocks);
         compoundTag.putTag("data",getDataProviderTag(chunk));
 
@@ -180,6 +203,41 @@ public class WorldLoader {
                 chunk.setBlockState(x, y, z, blockState);
                 listSpot++;
             }
+
+            setDataProviders(compoundTag.getCompoundTag("data"), chunk);
+        } catch (Exception e) {
+            System.err.println("Failed to load chunk x:" + X + " z:" + Z);
+            e.printStackTrace();
+            return null;
+        }
+        return chunk;
+    }
+
+    public static Chunk createChunk3(int X, int Z, CompoundTag compoundTag) {
+        Chunk chunk = new Chunk(X, Z, null);
+        try {
+            ListTag<ShortTag> blocks = (ListTag<ShortTag>) compoundTag.getTag("blocks");
+            ArrayList<DoubleTypeWrapper<BlockState,Integer>> blockList = new ArrayList<>();
+
+            int offset = 0;
+
+            while(offset < blocks.tags.size()) {
+                Block block = Blocks.getBlockWithID(blocks.tags.get(offset).val);
+                offset++;
+                BlockState blockState;
+                if(block.hasBlockState()) {
+                    blockState = block.getStateWithData(blocks.tags.get(offset).val);
+                    offset++;
+                } else {
+                    blockState = block.getDefaultState();
+                }
+                blockList.add(new DoubleTypeWrapper<>(blockState,blocks.tags.get(offset).val & 0xFFFF));
+                offset++;
+            }
+
+            chunk.setFromChainedList(blockList);
+
+
 
             setDataProviders(compoundTag.getCompoundTag("data"), chunk);
         } catch (Exception e) {

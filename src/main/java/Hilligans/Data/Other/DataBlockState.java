@@ -3,6 +3,8 @@ package Hilligans.Data.Other;
 import Hilligans.Block.Block;
 import Hilligans.World.BlockStateDataProvider;
 
+import java.util.Objects;
+
 public class DataBlockState extends BlockState {
 
     public BlockStateDataProvider blockData;
@@ -14,6 +16,25 @@ public class DataBlockState extends BlockState {
     public DataBlockState(Block block, BlockStateDataProvider blockStateDataProvider) {
         super(block);
         blockData = blockStateDataProvider;
+    }
+
+    public DataBlockState(Short blockId, BlockStateDataProvider blockStateDataProvider) {
+        super(blockId);
+        blockData = blockStateDataProvider;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        DataBlockState that = (DataBlockState) o;
+        return blockData.write() == ((DataBlockState) o).blockData.write();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), blockData);
     }
 
     public short readData() {
@@ -28,5 +49,9 @@ public class DataBlockState extends BlockState {
             blockData.read(in);
         }
         return this;
+    }
+
+    public BlockState duplicate() {
+        return new DataBlockState(blockId,blockData.duplicate());
     }
 }

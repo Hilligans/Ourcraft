@@ -19,4 +19,9 @@ public class ShortBlockState extends BlockStateDataProvider {
     public short write() {
         return rot;
     }
+
+    @Override
+    public BlockStateDataProvider duplicate() {
+        return new ShortBlockState(rot);
+    }
 }
