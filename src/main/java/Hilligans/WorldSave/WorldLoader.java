@@ -9,6 +9,7 @@ import Hilligans.Tag.*;
 import Hilligans.Util.Settings;
 import Hilligans.World.Chunk;
 import Hilligans.World.DataProvider;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
 
 import java.io.File;
@@ -17,6 +18,8 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
 public class WorldLoader {
 
@@ -24,44 +27,36 @@ public class WorldLoader {
     public static int maxSize = 10000000;
 
     public static String getPathToChunk(int x, int z) {
-        return pathToWorld + "chunk_x" + x + "z" + z + ".dat";
+        //return pathToWorld + "chunk_x" + x + "z" + z + ".dat";
+        return pathToWorld + "x" + x + "_z" + z + ".dat";
     }
 
+    public static HashMap<String, CompoundTag> loadedGroups = new HashMap<>();
+
     public static Chunk readChunk(int x, int z) {
-        try {
-            //long start = System.currentTimeMillis();
-            File file = new File(getPathToChunk(x,z));
-            if(file.exists()) {
-                RandomAccessFile aFile = new RandomAccessFile(getPathToChunk(x, z), "rw");
-                FileChannel inChannel = aFile.getChannel();
-                int length = (int) aFile.length();
-                ByteBuffer buf = ByteBuffer.allocate(length);
-                buf.mark();
-                int bytesRead = inChannel.read(buf); //read into buffer.
-                //System.out.println(bytesRead);
-                buf.reset();
-                CompoundTag compoundTag = new CompoundTag();
-                compoundTag.read(buf);
+        CompoundTag compoundTag = fetchChunk(x,z);
 
-                return createChunk3(x, z, compoundTag);
-            }
-            return null;
-            //System.out.println((System.currentTimeMillis() - start));
+        if(compoundTag != null) {
 
-        } catch (IOException ingored) {
-            return null;
+            return createChunk3(x, z, compoundTag);
         }
+            return null;
     }
 
     public static void writeChunk(Chunk chunk) {
-        String fileName = getPathToChunk(chunk.x,chunk.z);
+
+
+        //String fileName = getPathToChunk(chunk.x,chunk.z);
         CompoundTag compoundTag = createTag3(chunk);
-        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(maxSize);
+        putTag(chunk.x,chunk.z,compoundTag);
+      /*  ByteBuffer byteBuffer = ByteBuffer.allocateDirect(maxSize);
         byteBuffer.mark();
         compoundTag.write(byteBuffer);
         byteBuffer.limit(byteBuffer.position());
         byteBuffer.reset();
         write(fileName,byteBuffer);
+
+       */
     }
 
 
@@ -72,7 +67,9 @@ public class WorldLoader {
             FileChannel inChannel = aFile.getChannel();
             inChannel.write(byteBuffer);
             inChannel.close();
-        } catch (IOException ingored) {}
+        } catch (IOException ingored) {
+            ingored.printStackTrace();
+        }
     }
 
 
@@ -268,6 +265,75 @@ public class WorldLoader {
                 System.out.println("EMPTY DATA PROVIDER");
             }
         }
+    }
+
+    public static CompoundTag fetchChunk(int x, int z) {
+        int X = x >> 3;
+        int Z = z >> 3;
+        CompoundTag compoundTag = loadedGroups.get("x" + X + "_z" + Z);
+        if(compoundTag != null) {
+            return compoundTag.getCompoundTag("x" + x + "_z" + z);
+        } else {
+            compoundTag = loadTag(X,Z);
+            if(compoundTag == null) {
+                compoundTag = new CompoundTag();
+                loadedGroups.put("x" + X + "_z" + Z,compoundTag);
+                return null;
+            } else {
+                loadedGroups.put("x" + X + "_z" + Z,compoundTag);
+                return compoundTag.getCompoundTag("x" + x + "_z" + z);
+            }
+        }
+    }
+
+    public static void putTag(int x, int z, CompoundTag compoundTag) {
+        int X = x >> 3;
+        int Z = z >> 3;
+        CompoundTag groupTag = loadedGroups.get("x" + X + "_z" + Z);
+        if(groupTag == null) {
+            groupTag = loadTag(X,Z);
+            if(groupTag == null) {
+                groupTag = new CompoundTag();
+            }
+            loadedGroups.put("x" + X + "_z" + Z, groupTag);
+        }
+        groupTag.putTag("x" + x + "_z" + z,compoundTag);
+    }
+
+    public static CompoundTag loadTag(int x, int z) {
+        try {
+            File file = new File(getPathToChunk(x,z));
+            if(file.exists()) {
+                RandomAccessFile aFile = new RandomAccessFile(getPathToChunk(x, z), "rw");
+                int length = (int) aFile.length();
+                ByteBuffer buf = ByteBuffer.allocate(length);
+                buf.mark();
+                int bytesRead = aFile.getChannel().read(buf);
+                buf.reset();
+                CompoundTag compoundTag = new CompoundTag();
+                compoundTag.read(buf);
+                return compoundTag;
+            }
+            //System.out.println("failed to find chunk");
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static void finishSave() {
+        for(String string : loadedGroups.keySet()) {
+            CompoundTag compoundTag = loadedGroups.get(string);
+            ByteBuffer byteBuffer = ByteBuffer.allocateDirect(maxSize);
+            byteBuffer.mark();
+            compoundTag.write(byteBuffer);
+            byteBuffer.limit(byteBuffer.position());
+            byteBuffer.reset();
+            //System.out.println("writing " + string);
+            write(pathToWorld + string + ".dat",byteBuffer);
+        }
+
+        loadedGroups.clear();
     }
 
 }

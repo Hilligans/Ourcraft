@@ -57,6 +57,7 @@ public class ServerWorld extends World {
         Chunk chunk = getChunk(x,z);
         if(chunk != null) {
             WorldLoader.writeChunk(chunk);
+            WorldLoader.finishSave();
         }
         super.unloadChunk(x,z);
     }
@@ -87,6 +88,7 @@ public class ServerWorld extends World {
                 for (Chunk chunk : chunks.values()) {
                     WorldLoader.writeChunk(chunk);
                 }
+                WorldLoader.finishSave();
                 System.out.println("SAVE FINISH:" + (System.currentTimeMillis() - start) + "MS");
             } catch (Exception e) {
                 e.printStackTrace();
