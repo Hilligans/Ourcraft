@@ -1,6 +1,5 @@
 package Hilligans.Client.Rendering.World;
 
-import Hilligans.Data.Other.Texture;
 import Hilligans.Util.Vector5f;
 
 public class CubeManager {

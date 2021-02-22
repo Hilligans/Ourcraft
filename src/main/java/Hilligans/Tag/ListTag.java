@@ -13,7 +13,7 @@ public class ListTag<T extends Tag> extends Tag {
     }
 
     @Override
-    byte getId() {
+    public byte getId() {
         return 10;
     }
 
@@ -41,4 +41,10 @@ public class ListTag<T extends Tag> extends Tag {
         }
     }
 
+    @Override
+    public String toString() {
+        return "ListTag{" +
+                "tags=" + tags +
+                '}';
+    }
 }

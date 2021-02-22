@@ -13,4 +13,6 @@ public interface Screen {
 
     default void mouseClick(int x, int y, int mouseButton) {}
 
+    default void mouseScroll(int x, int y, float amount) {}
+
 }

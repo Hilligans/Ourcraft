@@ -28,8 +28,8 @@ public class InputField extends Widget {
     }
 
     @Override
-    public void render(MatrixStack matrixStack) {
-        super.render(matrixStack);
+    public void render(MatrixStack matrixStack, int xOffset, int yOffset) {
+        super.render(matrixStack, xOffset, yOffset);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         Renderer.drawTexture1(matrixStack, ClientMain.outLine,x,y,width,height);
         StringRenderer.drawString(matrixStack, string,x,y,0.5f);

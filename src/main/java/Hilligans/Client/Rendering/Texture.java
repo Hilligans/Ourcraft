@@ -1,4 +1,4 @@
-package Hilligans.Data.Other;
+package Hilligans.Client.Rendering;
 
 import Hilligans.Client.Rendering.World.TextureManager;
 

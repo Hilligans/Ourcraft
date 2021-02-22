@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 public class ShortArrayTag extends Tag {
 
-    short[] val;
+    public short[] val;
 
     public ShortArrayTag() {}
 
@@ -18,7 +18,7 @@ public class ShortArrayTag extends Tag {
     }
 
     @Override
-    byte getId() {
+    public byte getId() {
         return 8;
     }
 

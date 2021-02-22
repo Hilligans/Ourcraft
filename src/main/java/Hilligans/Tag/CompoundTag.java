@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class CompoundTag extends Tag {
 
-    HashMap<String, Tag> tags = new HashMap<>();
+    public HashMap<String, Tag> tags = new HashMap<>();
 
     @Override
     int getSize() {
@@ -69,7 +69,7 @@ public class CompoundTag extends Tag {
     }
 
     @Override
-    byte getId() {
+    public byte getId() {
         return 0;
     }
 
@@ -95,26 +95,6 @@ public class CompoundTag extends Tag {
             byteBuf.put(tags.get(string).getId());
             tags.get(string).write(byteBuf);
         }
-    }
-
-    private String readString(ByteBuffer byteBuffer) {
-        byte length = byteBuffer.get();
-        StringBuilder string = new StringBuilder();
-        for(int x = 0; x < length; x++) {
-            string.append(readChar(byteBuffer));
-        }
-        return string.toString();
-    }
-
-    public void writeString(ByteBuffer byteBuffer, String string) {
-        byteBuffer.put((byte) string.length());
-        for(int x = 0; x < string.length(); x++) {
-            byteBuffer.put((byte) string.charAt(x));
-        }
-    }
-
-    public char readChar(ByteBuffer byteBuffer) {
-        return (char) (byteBuffer.get() & 0xFF);
     }
 
     @Override

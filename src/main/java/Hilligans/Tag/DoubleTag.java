@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 public class DoubleTag extends Tag {
 
-    double val;
+    public double val;
 
     public DoubleTag() {}
 
@@ -18,7 +18,7 @@ public class DoubleTag extends Tag {
     }
 
     @Override
-    byte getId() {
+    public byte getId() {
         return 6;
     }
 
@@ -30,5 +30,10 @@ public class DoubleTag extends Tag {
     @Override
     public void write(ByteBuffer byteBuf) {
         byteBuf.putDouble(val);
+    }
+
+    @Override
+    public String getVal() {
+        return val + "";
     }
 }

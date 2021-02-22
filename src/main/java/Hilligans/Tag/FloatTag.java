@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 public class FloatTag extends Tag {
 
-    float val;
+    public float val;
 
     public FloatTag() {}
 
@@ -18,7 +18,7 @@ public class FloatTag extends Tag {
     }
 
     @Override
-    byte getId() {
+    public byte getId() {
         return 4;
     }
 
@@ -30,5 +30,10 @@ public class FloatTag extends Tag {
     @Override
     public void write(ByteBuffer byteBuf) {
         val = byteBuf.getFloat();
+    }
+
+    @Override
+    public String getVal() {
+        return val + "";
     }
 }

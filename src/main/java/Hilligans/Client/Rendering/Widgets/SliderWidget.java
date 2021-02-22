@@ -32,8 +32,8 @@ public class SliderWidget extends Widget {
     }
 
     @Override
-    public void render(MatrixStack matrixStack) {
-        super.render(matrixStack);
+    public void render(MatrixStack matrixStack, int xOffset, int yOffset) {
+        super.render(matrixStack, xOffset, yOffset);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         Renderer.drawTexture1(matrixStack, ClientMain.outLine,x,y,width,height);
         StringRenderer.drawString(matrixStack, value + "",x,y,0.5f);

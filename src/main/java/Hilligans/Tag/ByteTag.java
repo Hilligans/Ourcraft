@@ -18,7 +18,7 @@ public class ByteTag extends Tag {
     }
 
     @Override
-    byte getId() {
+    public byte getId() {
         return 1;
     }
 
@@ -30,5 +30,17 @@ public class ByteTag extends Tag {
     @Override
     public void write(ByteBuffer byteBuf) {
         byteBuf.put(val);
+    }
+
+    @Override
+    public String getVal() {
+        return val + "";
+    }
+
+    @Override
+    public String toString() {
+        return "ByteTag{" +
+                "val=" + val +
+                '}';
     }
 }

@@ -5,7 +5,6 @@ import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.World.ShaderManager;
 import Hilligans.Client.Rendering.World.VAOManager;
 import Hilligans.ClientMain;
-import Hilligans.Data.Other.Texture;
 import Hilligans.Util.Util;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;

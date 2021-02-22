@@ -1,8 +1,6 @@
 package Hilligans.Client;
 
 import Hilligans.ClientMain;
-import Hilligans.Data.Other.Texture;
-import Hilligans.Network.ClientNetworkInit;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;

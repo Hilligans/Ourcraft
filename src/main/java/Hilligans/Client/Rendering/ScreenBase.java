@@ -24,7 +24,7 @@ public abstract class ScreenBase implements Screen {
     public void render(MatrixStack matrixStack) {
         drawScreen(matrixStack);
         for(Widget widget : widgets) {
-            widget.render(matrixStack);
+            widget.render(matrixStack,0,0);
         }
     }
 
@@ -63,6 +63,12 @@ public abstract class ScreenBase implements Screen {
                     widget.activate(x - widget.x, y - widget.y);
                 }
             }
+        }
+    }
+
+    public void mouseScroll(int x, int y, float amount) {
+        for(Widget widget : widgets) {
+            widget.mouseScroll(x,y,amount);
         }
     }
 }

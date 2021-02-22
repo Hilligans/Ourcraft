@@ -6,17 +6,19 @@ import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Client.Rendering.Screen;
 import Hilligans.Client.Rendering.Screens.EscapeScreen;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
+import Hilligans.Client.Rendering.Screens.TagEditorScreen;
 import Hilligans.Client.Rendering.World.*;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
-import Hilligans.Data.Other.Texture;
-import Hilligans.Data.Other.Textures;
+import Hilligans.Client.Rendering.Texture;
+import Hilligans.Client.Rendering.Textures;
 import Hilligans.Entity.Entity;
 import Hilligans.Item.ItemStack;
 import Hilligans.Network.Packet.Client.CCloseScreen;
 import Hilligans.Network.Packet.Client.CDropItem;
 import Hilligans.Network.Packet.Client.CUseItem;
 import Hilligans.Network.PacketBase;
+import Hilligans.Tag.Tag;
 import Hilligans.Util.Settings;
 import Hilligans.Util.Util;
 import Hilligans.Block.Blocks;
@@ -32,6 +34,7 @@ import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.World.ClientWorld;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.opengl.GL;
@@ -46,7 +49,8 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.glVertexPointer;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.util.nfd.NativeFileDialog.*;
 
 public class ClientMain {
 
@@ -78,6 +82,7 @@ public class ClientMain {
     public static void main(String[] args) {
         PacketBase.register();
         Container.register();
+        Tag.register();
 
 
         System.setProperty("java.awt.headless", "true");
@@ -173,10 +178,16 @@ public class ClientMain {
         KeyHandler.register(new KeyPress() {
             @Override
             public void onPress() {
-               // ScreenShot.takeScreenShot();
                 screenShot = true;
             }
         }, GLFW_KEY_F2);
+
+        KeyHandler.register(new KeyPress() {
+            @Override
+            public void onPress() {
+                openScreen(new TagEditorScreen());
+            }
+        }, GLFW_KEY_H);
 
         screen = new JoinScreen();
 
@@ -413,6 +424,9 @@ public class ClientMain {
         glfwSetScrollCallback(window, new GLFWScrollCallback() {
             @Override
             public void invoke(long window, double xoffset, double yoffset) {
+                if(screen != null) {
+                    screen.mouseScroll(0,0,(float)yoffset);
+                }
                 if(yoffset == 1.0) {
 
                     ClientData.handSlot--;
@@ -479,5 +493,31 @@ public class ClientMain {
         });
     }
 
+    public static void openSingle() {
+        PointerBuffer outPath = memAllocPointer(1);
+        try {
+            checkResult(
+                    NFD_OpenDialog("dat", null, outPath),
+                    outPath
+            );
+        } finally {
+            memFree(outPath);
+        }
+    }
+
+    private static void checkResult(int result, PointerBuffer path) {
+        switch (result) {
+            case NFD_OKAY:
+                //System.out.println("Success!");
+                System.out.println(path.getStringUTF8(0));
+                nNFD_Free(path.get(0));
+                break;
+            case NFD_CANCEL:
+                System.out.println("User pressed cancel.");
+                break;
+            default: // NFD_ERROR
+                System.err.format("Error: %s\n", NFD_GetError());
+        }
+    }
 
 }

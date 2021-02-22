@@ -4,7 +4,7 @@ import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Container.Containers.ChestContainer;
-import Hilligans.Data.Other.Textures;
+import Hilligans.Client.Rendering.Textures;
 import Hilligans.Util.Settings;
 
 public class ChestScreen extends ContainerScreen<ChestContainer> {

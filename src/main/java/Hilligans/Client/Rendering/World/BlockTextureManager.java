@@ -16,6 +16,9 @@ public class BlockTextureManager {
     }
 
     public void addString(String location, int side) {
+        if(this.location == null) {
+            this.location = location;
+        }
         if(textureNames == null) {
             textureNames = new String[6];
         }
@@ -23,16 +26,18 @@ public class BlockTextureManager {
     }
 
     public void generate() {
-        int id = TextureManager.instance.loadTextureId(location);
-        for(int x = 0; x < 6; x++) {
-            textures[x] = id;
+        if(location != null) {
+            int id = TextureManager.instance.loadTextureId("/Blocks/" + location);
+            for (int x = 0; x < 6; x++) {
+                textures[x] = id;
 
-            if(textureNames != null && textureNames[x] != null) {
-                textures[x] = TextureManager.instance.loadTextureId(textureNames[x]);
+                if (textureNames != null && textureNames[x] != null) {
+                    textures[x] = TextureManager.instance.loadTextureId("Blocks/" + textureNames[x]);
+                }
             }
-        }
 
-        texture = TextureManager.loadAndRegisterUnflippedTexture(location);
+            texture = TextureManager.loadAndRegisterUnflippedTexture("Blocks/" + location);
+        }
     }
 
 

@@ -2,38 +2,38 @@ package Hilligans.Tag;
 
 import java.nio.ByteBuffer;
 
-public class LongTag extends Tag {
+public class StringTag extends Tag {
 
-    public long val;
+    public String val;
 
-    public LongTag() {}
+    public StringTag() {}
 
-    public LongTag(long val) {
+    public StringTag(String val) {
         this.val = val;
     }
 
     @Override
     int getSize() {
-        return 8;
+        return val.length();
     }
 
     @Override
     public byte getId() {
-        return 5;
+        return 11;
     }
 
     @Override
     public void read(ByteBuffer byteBuf) {
-        val = byteBuf.getLong();
+        val = readString(byteBuf);
     }
 
     @Override
     public void write(ByteBuffer byteBuf) {
-        byteBuf.putLong(val);
+        writeString(byteBuf,val);
     }
 
     @Override
     public String getVal() {
-        return val + "";
+        return val;
     }
 }

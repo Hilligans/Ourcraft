@@ -19,7 +19,7 @@ public class IntegerTag extends Tag {
     }
 
     @Override
-    byte getId() {
+    public byte getId() {
         return 3;
     }
 
@@ -33,4 +33,15 @@ public class IntegerTag extends Tag {
         byteBuf.putInt(val);
     }
 
+    @Override
+    public String getVal() {
+        return val + "";
+    }
+
+    @Override
+    public String toString() {
+        return "IntegerTag{" +
+                "val=" + val +
+                '}';
+    }
 }

@@ -5,12 +5,10 @@ import Hilligans.Block.Blocks;
 import Hilligans.Client.ClientData;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ContainerScreen;
-import Hilligans.Client.Rendering.ScreenBase;
 import Hilligans.Client.Rendering.Renderer;
 import Hilligans.ClientMain;
-import Hilligans.Container.Container;
 import Hilligans.Container.Containers.InventoryContainer;
-import Hilligans.Data.Other.Textures;
+import Hilligans.Client.Rendering.Textures;
 import Hilligans.Item.ItemStack;
 import Hilligans.Util.Settings;
 

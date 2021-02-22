@@ -18,7 +18,7 @@ public class ByteArrayTag extends Tag {
     }
 
     @Override
-    byte getId() {
+    public byte getId() {
         return 7;
     }
 

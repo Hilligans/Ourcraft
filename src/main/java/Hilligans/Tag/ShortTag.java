@@ -18,7 +18,7 @@ public class ShortTag extends Tag {
     }
 
     @Override
-    byte getId() {
+    public byte getId() {
         return 2;
     }
 
@@ -30,5 +30,17 @@ public class ShortTag extends Tag {
     @Override
     public void write(ByteBuffer byteBuf) {
         byteBuf.putShort(val);
+    }
+
+    @Override
+    public String getVal() {
+        return val + "";
+    }
+
+    @Override
+    public String toString() {
+        return "ShortTag{" +
+                "val=" + val +
+                '}';
     }
 }

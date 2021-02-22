@@ -35,18 +35,13 @@ public class WorldLoader {
 
     public static Chunk readChunk(int x, int z) {
         CompoundTag compoundTag = fetchChunk(x,z);
-
         if(compoundTag != null) {
-
             return createChunk3(x, z, compoundTag);
         }
             return null;
     }
 
     public static void writeChunk(Chunk chunk) {
-
-
-        //String fileName = getPathToChunk(chunk.x,chunk.z);
         CompoundTag compoundTag = createTag3(chunk);
         putTag(chunk.x,chunk.z,compoundTag);
       /*  ByteBuffer byteBuffer = ByteBuffer.allocateDirect(maxSize);
@@ -301,10 +296,14 @@ public class WorldLoader {
     }
 
     public static CompoundTag loadTag(int x, int z) {
+        return loadTag(getPathToChunk(x,z));
+    }
+
+    public static CompoundTag loadTag(String path) {
         try {
-            File file = new File(getPathToChunk(x,z));
+            File file = new File(path);
             if(file.exists()) {
-                RandomAccessFile aFile = new RandomAccessFile(getPathToChunk(x, z), "rw");
+                RandomAccessFile aFile = new RandomAccessFile(path, "rw");
                 int length = (int) aFile.length();
                 ByteBuffer buf = ByteBuffer.allocate(length);
                 buf.mark();
@@ -314,9 +313,10 @@ public class WorldLoader {
                 compoundTag.read(buf);
                 return compoundTag;
             }
-            //System.out.println("failed to find chunk");
+            //System.out.println("Cant find file");
             return null;
         } catch (Exception e) {
+            //e.printStackTrace();
             return null;
         }
     }
@@ -324,16 +324,18 @@ public class WorldLoader {
     public static void finishSave() {
         for(String string : loadedGroups.keySet()) {
             CompoundTag compoundTag = loadedGroups.get(string);
-            ByteBuffer byteBuffer = ByteBuffer.allocateDirect(maxSize);
-            byteBuffer.mark();
-            compoundTag.write(byteBuffer);
-            byteBuffer.limit(byteBuffer.position());
-            byteBuffer.reset();
-            //System.out.println("writing " + string);
-            write(pathToWorld + string + ".dat",byteBuffer);
+            save(compoundTag, pathToWorld + string + ".dat");
         }
-
         loadedGroups.clear();
+    }
+
+    public static void save(CompoundTag compoundTag, String path) {
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(maxSize);
+        byteBuffer.mark();
+        compoundTag.write(byteBuffer);
+        byteBuffer.limit(byteBuffer.position());
+        byteBuffer.reset();
+        write(path,byteBuffer);
     }
 
 }

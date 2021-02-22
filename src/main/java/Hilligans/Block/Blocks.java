@@ -24,7 +24,7 @@ public class Blocks {
     public static final Block SAND = new Block("sand").withTexture("sand.png");
     public static final Block CACTUS = new Block("cactus").withTexture("cactus.png");
 
-    public static final Block SLAB = new HorizontalSlab("slab").withTexture("phil.png");
+    public static final Block SLAB = new HorizontalSlab("slab").withTexture("dirt.png");
     public static final Block VERTICAL_SLAB = new VerticalSlab("vslab").withTexture("stone.png");
 
     //public static final Block TAPE = new Block("tape").withTexture("flex_tape.png");

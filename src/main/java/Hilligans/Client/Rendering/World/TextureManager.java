@@ -116,9 +116,6 @@ public class TextureManager {
         return id;
     }
 
-
-
-
     public static BufferedImage loadImage(String path) {
         if(path != null) {
             InputStream url = ClientMain.class.getResourceAsStream("/Images/" + path);
