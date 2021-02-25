@@ -4,6 +4,7 @@ import Hilligans.Data.Other.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BoundingBox;
+import Hilligans.Data.Other.RayResult;
 import Hilligans.Entity.Entities.ItemEntity;
 import Hilligans.Entity.Entity;
 import Hilligans.Item.ItemStack;
@@ -177,24 +178,40 @@ public abstract class World {
         chunks.put(x & 4294967295L | ((long)z & 4294967295L) << 32,chunk);
     }
 
-    public static final double stepCount = 0.00005;
+    public static final double stepCount = 0.0001;
     public static final int distance = 5;
 
     static final float offSet = -0.5f;
 
-    public Vector3f traceBlock(float x, float y, float z, double pitch, double yaw) {
+    public RayResult traceBlock(float x, float y, float z, double pitch, double yaw) {
         Vector3d vector3d = new Vector3d();
         boolean placed = false;
         boolean isAir = true;
+        int side = -1;
+
+        double addX = (Math.cos(yaw) * Math.cos(pitch)) * stepCount;
+        double addY = Math.sin(pitch) * stepCount;
+        double addZ = Math.sin(yaw) * Math.cos(pitch) * stepCount;
+
+        double Z = z + offSet;
+        double Y = y + offSet;
+        double X = x + offSet;
+
+
         for(int a = 0; a < distance / stepCount; a++) {
-            final double Z = z - Math.sin(yaw) * Math.cos(pitch) * a * 0.1 + offSet;
-            final double Y = y - Math.sin(pitch) * 0.1 * a + offSet;
-            final double X = (x - Math.cos(yaw) * Math.cos(pitch) * a * 0.1) + offSet;
+            //final double Z = z - Math.sin(yaw) * Math.cos(pitch) * a * 0.1 + offSet;
+            //final double Y = y - Math.sin(pitch) * 0.1 * a + offSet;
+           // final double X = (x - Math.cos(yaw) * Math.cos(pitch) * a * 0.1) + offSet;
+            Z -= addZ;
+            Y -= addY;
+            X -= addX;
             BlockPos pos = new BlockPos((int) Math.round(X), (int) Math.round(Y), (int) Math.round(Z));
             BlockState blockState = getBlockState(pos);
             if(blockState.getBlock() != Blocks.AIR) {
-                if(blockState.getBlock().getBoundingBox(this,pos).intersectVector(new Vector3f((float)X - offSet,(float)Y - offSet,(float)Z - offSet), pos)) {
+                Vector3f vector3f = new Vector3f((float)X - offSet,(float)Y - offSet,(float)Z - offSet);
+                if(blockState.getBlock().getBoundingBox(this,pos).intersectVector(vector3f, pos)) {
                     placed = true;
+                    side = blockState.getBlock().getBoundingBox(this,pos).getHitSide(new Vector3f((float)vector3d.x - offSet,(float)vector3d.y - offSet,(float)vector3d.z - offSet), pos);
                     break;
                 } else {
                     isAir = false;
@@ -207,12 +224,15 @@ public abstract class World {
             vector3d.z = Z;
         }
 
-        if(placed && isAir) {
-            return new Vector3f((float)vector3d.x,(float)vector3d.y,(float)vector3d.z);
+        if(placed) {
+            Vector3f vector3f = new Vector3f((float)vector3d.x,(float)vector3d.y,(float)vector3d.z);
+            return new RayResult(vector3f,new BlockPos(vector3f),side);
         } else {
             return null;
         }
     }
+
+
 
     public BlockState traceBlockState(float x, float y, float z, double pitch, double yaw) {
         for(int a = 0; a < distance / stepCount; a++) {
@@ -228,10 +248,20 @@ public abstract class World {
     }
 
     public BlockPos traceBlockToBreak(float x, float y, float z, double pitch, double yaw) {
+        double addX = (Math.cos(yaw) * Math.cos(pitch))  * stepCount;
+        double addY = Math.sin(pitch) * stepCount;
+        double addZ = Math.sin(yaw) * Math.cos(pitch) * stepCount;
+
+        double Z = z + offSet;
+        double Y = y + offSet;
+        double X = x + offSet;
         for(int a = 0; a < distance / stepCount; a++) {
-            final double Z = z - Math.sin(yaw) * Math.cos(pitch) * a * 0.1 + offSet;
-            final double Y = y - Math.sin(pitch) * 0.1 * a + offSet;
-            final double X = (x - Math.cos(yaw) * Math.cos(pitch) * a * 0.1) + offSet;
+            Z -= addZ;
+            Y -= addY;
+            X -= addX;
+            //final double Z = z - Math.sin(yaw) * Math.cos(pitch) * a * 0.1 + offSet;
+            //final double Y = y - Math.sin(pitch) * 0.1 * a + offSet;
+            //final double X = (x - Math.cos(yaw) * Math.cos(pitch) * a * 0.1) + offSet;
             BlockPos pos = new BlockPos((int) Math.round(X), (int) Math.round(Y), (int) Math.round(Z));
             BlockState blockState = getBlockState(pos);
             if(blockState.getBlock() != Blocks.AIR) {

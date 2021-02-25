@@ -1,8 +1,6 @@
 package Hilligans.Block;
 
-import Hilligans.Block.BlockTypes.ChestBlock;
-import Hilligans.Block.BlockTypes.HorizontalSlab;
-import Hilligans.Block.BlockTypes.VerticalSlab;
+import Hilligans.Block.BlockTypes.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,11 +23,24 @@ public class Blocks {
     public static final Block CACTUS = new Block("cactus").withTexture("cactus.png");
 
     public static final Block SLAB = new HorizontalSlab("slab").withTexture("dirt.png");
-    public static final Block VERTICAL_SLAB = new VerticalSlab("vslab").withTexture("stone.png");
 
     //public static final Block TAPE = new Block("tape").withTexture("flex_tape.png");
 
     public static final Block CHEST = new ChestBlock("chest").withTexture("flex_tape.png");
+
+    public static final Block COLOR_BLOCK = new ColorBlock("color_block").withTexture("white.png");
+
+
+
+
+
+    // Tree types
+    public static final Block MAPLE_LOG = new Block("maple_log");
+    public static final Block MAPLE_PLANKS = new Block("maple_planks");
+    public static final Block MAPLE_SLAB = new HorizontalSlab("maple_slab");
+    public static final Block MAPLE_STAIR = new StairBlock("maple_stair");
+
+
 
     //public static final Block RED = new Block("red").withTexture("red.png").transparentTexture(true);
     //public static final Block YELLOW = new Block("yellow").withTexture("yellow.png").transparentTexture(true);

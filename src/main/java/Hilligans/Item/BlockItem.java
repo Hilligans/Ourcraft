@@ -1,11 +1,13 @@
 package Hilligans.Item;
 
 import Hilligans.Block.Block;
+import Hilligans.Block.Blocks;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Client.Camera;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Data.Other.BlockPos;
+import Hilligans.Data.Other.RayResult;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Entity.LivingEntity;
@@ -25,24 +27,32 @@ public class BlockItem extends Item {
 
     @Override
     public boolean onActivate(World world, PlayerEntity playerEntity) {
-        BlockPos pos;
-        Vector3f vector3f;
+
+
+        RayResult rayResult;
         if (world.isServer()) {
-            vector3f = world.traceBlock(playerEntity.x, playerEntity.y + playerEntity.boundingBox.eyeHeight, playerEntity.z, playerEntity.pitch, playerEntity.yaw);
+            rayResult = world.traceBlock(playerEntity.x, playerEntity.y + playerEntity.boundingBox.eyeHeight, playerEntity.z, playerEntity.pitch, playerEntity.yaw);
         } else {
-            vector3f = world.traceBlock(Camera.pos.x, Camera.pos.y + Camera.playerBoundingBox.eyeHeight, Camera.pos.z, Camera.pitch, Camera.yaw);
+            rayResult = world.traceBlock(Camera.pos.x, Camera.pos.y + Camera.playerBoundingBox.eyeHeight, Camera.pos.z, Camera.pitch, Camera.yaw);
         }
-        if (vector3f == null) {
+        if (rayResult == null || rayResult.side == -1) {
             return false;
         }
-        pos = new BlockPos(vector3f);
+        System.out.println(rayResult.side);
+        BlockPos pos = rayResult.getBlockPos();
+        if(world.getBlockState(pos).getBlock() != Blocks.AIR) {
+            pos = rayResult.getBlockPosWidthSide();
+            if(world.getBlockState(pos).getBlock() != Blocks.AIR) {
+                return false;
+            }
+        }
         BlockState oldState = world.getBlockState(pos);
 
         BlockState blockState;
         if(world.isServer()) {
-            blockState = block.getStateForPlacement(vector3f, new Vector3f(playerEntity.x, playerEntity.y, playerEntity.z));
+            blockState = block.getStateForPlacement(new Vector3f(playerEntity.x, playerEntity.y, playerEntity.z),rayResult);
         } else {
-            blockState = block.getStateForPlacement(vector3f, Camera.pos);
+            blockState = block.getStateForPlacement(Camera.pos,rayResult);
         }
         world.setBlockState(pos, blockState);
 

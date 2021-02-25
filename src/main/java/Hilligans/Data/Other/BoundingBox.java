@@ -2,6 +2,8 @@ package Hilligans.Data.Other;
 
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.World.VAOManager;
+import Hilligans.Util.Vector5f;
+import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 public class BoundingBox {
@@ -55,6 +57,39 @@ public class BoundingBox {
         return intersectVector(new Vector3f(vector3f.x - source.x, vector3f.y - source.y, vector3f.z - source.z));
     }
 
+    public int getHitSide(Vector3f last) {
+        if(this.minX < last.x && this.maxX > last.x) {
+            if(this.minY < last.y && this.maxY > last.y) {
+                if(this.minZ > last.z) {
+                    return 0;
+                } else if(this.maxZ < last.z ){
+                    return 1;
+                }
+            } else if(this.minZ < last.z && this.maxZ > last.z) {
+                if(this.minY > last.y) {
+                    return 4;
+                } else if(this.maxY < last.y) {
+                    return 5;
+                }
+            }
+        }
+        if(this.minZ < last.z && this.maxZ > last.z && this.minY < last.y && this.maxY > last.y) {
+            if(this.minX > last.x) {
+                return 2;
+            } else if(this.maxX < last.x){
+                return 3;
+            }
+        }
+        return -1;
+    }
+
+    public int getHitSide(Vector3f vector3f, BlockPos source) {
+        return getHitSide(new Vector3f(vector3f.x - source.x, vector3f.y - source.y, vector3f.z - source.z));
+    }
+
+    public int getHitSide(Vector3d vector3d, BlockPos source) {
+        return getHitSide(new Vector3f((float)vector3d.x - source.x, (float)vector3d.y - source.y, (float)vector3d.z - source.z));
+    }
 
 
 

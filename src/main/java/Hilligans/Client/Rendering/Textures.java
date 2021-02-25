@@ -15,6 +15,7 @@ public class Textures {
     public static final Texture CHEST = new Texture("GUI/chest.png");
 
     public static final Texture FOLDER = new Texture("GUI/folder.png");
+    public static final Texture LIST_ICON = new Texture("GUI/list_icon.png");
     public static final Texture PLUS_ICON = new Texture("GUI/plus.png");
     public static final Texture MINUS_ICON = new Texture("GUI/minus.png");
     public static final Texture BYTE_ICON = new Texture("GUI/byte_icon.png");

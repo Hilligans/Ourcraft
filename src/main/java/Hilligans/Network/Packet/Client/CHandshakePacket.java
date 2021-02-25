@@ -14,6 +14,7 @@ import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.ServerMain;
 import Hilligans.Util.Settings;
 import Hilligans.World.ServerWorld;
+import io.netty.channel.ChannelId;
 
 
 public class  CHandshakePacket extends PacketBase {
@@ -48,6 +49,7 @@ public class  CHandshakePacket extends PacketBase {
             for(Entity entity : ServerMain.world.entities.values()) {
                 ServerNetworkHandler.sendPacket(new SCreateEntityPacket(entity),ctx);
             }
+            ChannelId channelId = ServerNetworkHandler.nameToChannel.get(name);
             BlockPos spawn = ServerMain.world.getWorldSpawn(Settings.playerBoundingBox);
             PlayerEntity playerEntity = new PlayerEntity(spawn.x,spawn.y,spawn.z,playerId);
             PlayerData playerData = new PlayerData(playerEntity);
@@ -55,6 +57,7 @@ public class  CHandshakePacket extends PacketBase {
             ServerNetworkHandler.mappedChannels.put(playerId,ctx.channel().id());
             ServerNetworkHandler.mappedId.put(ctx.channel().id(),playerId);
             ServerNetworkHandler.mappedName.put(ctx.channel().id(),name);
+            ServerNetworkHandler.nameToChannel.put(name, ctx.channel().id());
             ServerMain.world.addEntity(playerEntity);
             ServerNetworkHandler.sendPacket(new SUpdatePlayer(spawn.x,spawn.y,spawn.z,0,0),ctx);
             playerData.playerInventory.age++;

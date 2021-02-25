@@ -12,6 +12,7 @@ import Hilligans.Tag.ListTag;
 import Hilligans.Tag.Tag;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 public class FolderWidget extends Widget {
 
@@ -61,7 +62,11 @@ public class FolderWidget extends Widget {
                 } else {
                     Renderer.drawTexture(matrixStack, Textures.PLUS_ICON, getX() + xOffset + size / 4, getY() + yOffset + size / 4, size / 2, size / 2);
                 }
-                Renderer.drawTexture(matrixStack, Textures.FOLDER, getX() + xOffset + size, getY() + yOffset, size, size);
+                if(isList) {
+                    Renderer.drawTexture(matrixStack, Textures.LIST_ICON, getX() + xOffset + size, getY() + yOffset, size, size);
+                } else {
+                    Renderer.drawTexture(matrixStack, Textures.FOLDER, getX() + xOffset + size, getY() + yOffset, size, size);
+                }
                 StringRenderer.drawString(matrixStack, name, getX() + xOffset + size * 2, getY() + yOffset, 0.5f);
             }
         }
@@ -74,13 +79,15 @@ public class FolderWidget extends Widget {
 
     @Override
     public boolean isInBounds(int x, int y) {
-        if(x > this.getX() && x < this.getX() + length && y > this.getY() && y < this.getY() + height && this.isActive()) {
+        if(x > this.getX() && x < this.getX() + length && y > this.getY() && y < this.getY() + size && this.isActive()) {
             //System.out.println("yes");
             return true;
         }
-        for(Widget widget : widgets) {
-            if(widget.isInBounds(x,y)) {
-                return true;
+        if(isOpen) {
+            for (Widget widget : widgets) {
+                if (widget.isInBounds(x, y)) {
+                    return true;
+                }
             }
         }
         return super.isInBounds(x,y);
@@ -142,7 +149,8 @@ public class FolderWidget extends Widget {
     }
 
     public void addAll(CompoundTag compoundTag) {
-        for(String string : compoundTag.tags.keySet()) {
+        TreeMap<String, Tag> tags = new TreeMap<>(compoundTag.tags);
+        for(String string : tags.keySet()) {
             Tag tag = compoundTag.getTag(string);
             if(tag.getId() == 0) {
                 FolderWidget folderWidget = new FolderWidget(string);
@@ -150,10 +158,11 @@ public class FolderWidget extends Widget {
                 folderWidget.addAll((CompoundTag) tag);
             } else if(tag.getId() == 10) {
                 FolderWidget folderWidget = new FolderWidget(string);
+                folderWidget.isList = true;
                 addWidget(folderWidget);
                 folderWidget.addAll((ListTag<?>)tag);
             } else {
-                addWidget(new DataWidget(100,FolderWidget.spacing,tag.getId() - 1, tag.getVal()));
+                addWidget(new DataWidget(100,FolderWidget.spacing,tag.getId() - 1, tag.getVal(),string));
             }
         }
     }
@@ -166,7 +175,7 @@ public class FolderWidget extends Widget {
                 folderWidget.addAll((CompoundTag)tag);
                 addWidget(folderWidget);
             } else {
-                addWidget(new DataWidget(100,FolderWidget.spacing,tag.getId() - 1, tag.getVal()));
+                addWidget(new DataWidget(100,FolderWidget.spacing,tag.getId() - 1, tag.getVal(),""));
             }
             x++;
         }

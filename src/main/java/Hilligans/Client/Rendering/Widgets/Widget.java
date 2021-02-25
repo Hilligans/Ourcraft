@@ -29,14 +29,12 @@ public class Widget {
         return this;
     }
 
-
-
     public void render(MatrixStack matrixStack, int xOffset, int yOffset) {}
 
     public void screenClose() {}
 
     public boolean isInBounds(int x, int y) {
-        return x > this.x && x < this.x + this.width && y > this.y && y < this.y + this.height;
+        return x > this.getX() && x < this.getX() + this.width && y > this.getY() && y < this.getY() + this.height;
     }
 
     public void activate(int x, int y) {

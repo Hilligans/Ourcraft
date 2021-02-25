@@ -25,6 +25,7 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<PacketData
     static ArrayList<ChannelId> channelIds = new ArrayList<>();
     public static HashMap<ChannelId,Integer> mappedId = new HashMap<>();
     public static HashMap<ChannelId,String> mappedName = new HashMap<>();
+    public static HashMap<String, ChannelId> nameToChannel = new HashMap<>();
     public static Int2ObjectOpenHashMap<ChannelId> mappedChannels = new Int2ObjectOpenHashMap<>();
     public static Int2ObjectOpenHashMap<PlayerData> playerData = new Int2ObjectOpenHashMap<>();
 
@@ -53,7 +54,7 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<PacketData
         }
         channelIds.remove(ctx.channel().id());
         sendPacket(new SChatMessage(mappedName.get(ctx.channel().id()) + " has left the game"));
-        mappedName.remove(ctx.channel().id());
+        nameToChannel.remove(mappedName.remove(ctx.channel().id()));
         super.channelInactive(ctx);
     }
 

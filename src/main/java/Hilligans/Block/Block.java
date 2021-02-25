@@ -3,6 +3,7 @@ package Hilligans.Block;
 import Hilligans.Data.Other.BlockShapes.BlockShape;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Data.Other.BoundingBox;
+import Hilligans.Data.Other.RayResult;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Item.BlockItem;
 import Hilligans.Util.Vector5f;
@@ -12,7 +13,7 @@ import Hilligans.World.DataProvider;
 import Hilligans.World.World;
 import org.joml.Vector3f;
 
-public class Block {
+public class  Block {
 
     public String name;
     public short id;
@@ -71,8 +72,8 @@ public class Block {
         return new BlockState(this);
     }
 
-    public BlockState getStateForPlacement(Vector3f pos, Vector3f playerPos) {
-        return new BlockState(this);
+    public BlockState getStateForPlacement(Vector3f playerPos, RayResult rayResult) {
+        return getDefaultState();
     }
 
     public Block getDroppedBlock() {
@@ -126,5 +127,9 @@ public class Block {
 
     public static final int UP = 5;
     public static final int DOWN = 4;
+    public static final int NORTH = 0;
+    public static final int SOUTH = 1;
+    public static final int WEST = 2;
+    public static final int EAST = 3;
 
 }
