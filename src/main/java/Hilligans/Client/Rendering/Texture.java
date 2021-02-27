@@ -1,6 +1,6 @@
 package Hilligans.Client.Rendering;
 
-import Hilligans.Client.Rendering.World.TextureManager;
+import Hilligans.Client.Rendering.World.Managers.TextureManager;
 
 import java.awt.image.BufferedImage;
 

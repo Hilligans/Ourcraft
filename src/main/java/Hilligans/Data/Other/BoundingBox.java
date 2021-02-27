@@ -1,8 +1,5 @@
 package Hilligans.Data.Other;
 
-import Hilligans.Client.MatrixStack;
-import Hilligans.Client.Rendering.World.VAOManager;
-import Hilligans.Util.Vector5f;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 

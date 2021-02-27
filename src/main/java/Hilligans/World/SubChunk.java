@@ -4,7 +4,7 @@ import Hilligans.Block.Block;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.MatrixStack;
-import Hilligans.Client.Rendering.World.VAOManager;
+import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.ClientMain;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Util.Settings;
@@ -48,7 +48,7 @@ public class SubChunk {
     public void createMesh() {
         ArrayList<Vector5f> vertices = new ArrayList<>();
         ArrayList<Integer> indices = new ArrayList<>();
-        int spot = 0;
+       // int spot = 0;
         for(int x = 0; x < 16; x++) {
             for(int y = 0; y < 16; y++) {
                 for(int z = 0; z < 16; z++) {
@@ -57,12 +57,13 @@ public class SubChunk {
                         if(block.getBlock() != Blocks.AIR) {
                             BlockState blockState = getBlock(new BlockPos(x, y, z).add(Block.getBlockPos(a)));
                             if (blockState.getBlock().transparentTexture && (Settings.renderSameTransparent || block.getBlock() != blockState.getBlock())) {
-                                indices.addAll(Arrays.asList(block.getBlock().getIndices(a,spot * 4)));
-                                Vector5f[] vector5fs = block.getBlock().getVertices(a,block);
+                                Vector5f[] vector5fs = block.getBlock().getVertices(a,block, new BlockPos(x + this.x,y + this.y,z + this.z));
+                                indices.addAll(Arrays.asList(block.getBlock().getIndices(a,vertices.size())));
+
                                 for(Vector5f vector5f : vector5fs) {
                                     vertices.add(vector5f.addX(x).addY(y + this.y).addZ(z));
                                 }
-                                spot++;
+                               // spot+= vector5fs.length;
 
                             }
                         }
@@ -86,7 +87,7 @@ public class SubChunk {
             wholeIndices[x] = a;
             x++;
         }
-        verticesCount = wholeMesh.length / 9 * 5;
+        verticesCount = indices.size();
         //id = VAOManager.createVAO(wholeMesh,wholeIndices);
 
 
@@ -136,7 +137,7 @@ public class SubChunk {
             GL30.glBindVertexArray(id);
             matrixStack.push();
             matrixStack.applyTransformation(ClientMain.colorShader);
-            glDrawElements(GL_TRIANGLES, verticesCount * 3 / 10, GL_UNSIGNED_INT, 0);
+            glDrawElements(GL_TRIANGLES, verticesCount, GL_UNSIGNED_INT, 0);
             matrixStack.pop();
       //    }
     }

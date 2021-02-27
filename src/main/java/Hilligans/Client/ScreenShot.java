@@ -1,10 +1,8 @@
 package Hilligans.Client;
 
-import Hilligans.Client.Rendering.World.TextureManager;
+import Hilligans.Client.Rendering.World.Managers.TextureManager;
 import Hilligans.ClientMain;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL30;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

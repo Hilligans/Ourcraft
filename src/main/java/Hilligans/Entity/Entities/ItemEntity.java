@@ -2,15 +2,13 @@ package Hilligans.Entity.Entities;
 
 import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
-import Hilligans.Client.ClientData;
 import Hilligans.Client.MatrixStack;
-import Hilligans.Client.Rendering.World.CubeManager;
-import Hilligans.Client.Rendering.World.VAOManager;
+import Hilligans.Client.Rendering.World.Managers.VertexManagers.CubeManager;
+import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.ClientMain;
 import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Entity.Entity;
 import Hilligans.Item.BlockItem;
-import Hilligans.Item.Item;
 import Hilligans.Item.ItemStack;
 import Hilligans.Item.Items;
 import Hilligans.Network.PacketData;

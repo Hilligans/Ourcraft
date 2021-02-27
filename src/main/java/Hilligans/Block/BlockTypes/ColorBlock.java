@@ -1,6 +1,7 @@
 package Hilligans.Block.BlockTypes;
 
 import Hilligans.Block.Block;
+import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Data.Other.DataBlockState;
 import Hilligans.Util.Vector5f;
@@ -21,9 +22,9 @@ public class ColorBlock extends Block {
     }
 
     @Override
-    public Vector5f[] getVertices(int side, float size, BlockState blockState) {
+    public Vector5f[] getVertices(int side, float size, BlockState blockState, BlockPos blockPos) {
 
-        Vector5f[] vector5fs = super.getVertices(side, size, blockState);
+        Vector5f[] vector5fs = super.getVertices(side, size, blockState, blockPos);
         float r = 32f / (((DataBlockState)blockState).readData() & 31);
         float g = 32f / (((DataBlockState)blockState).readData() >> 5 & 31);
         float b = 32f / (((DataBlockState)blockState).readData() >> 10 & 31);
@@ -35,8 +36,8 @@ public class ColorBlock extends Block {
     }
 
     @Override
-    public Vector5f[] getVertices(int side, BlockState blockState) {
-        Vector5f[] vector5fs = super.getVertices(side, blockState);
+    public Vector5f[] getVertices(int side, BlockState blockState, BlockPos blockPos) {
+        Vector5f[] vector5fs = super.getVertices(side, blockState, blockPos);
         float r = 32f / (((DataBlockState)blockState).readData() & 31);
         float g = 32f / (((DataBlockState)blockState).readData() >> 5 & 31);
         float b = 32f / (((DataBlockState)blockState).readData() >> 10 & 31);

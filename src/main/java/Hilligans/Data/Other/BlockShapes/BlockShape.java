@@ -1,9 +1,9 @@
 package Hilligans.Data.Other.BlockShapes;
 
 import Hilligans.Data.Other.BlockState;
-import Hilligans.Client.Rendering.World.BlockTextureManager;
-import Hilligans.Client.Rendering.World.CubeManager;
-import Hilligans.Client.Rendering.World.VAOManager;
+import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
+import Hilligans.Client.Rendering.World.Managers.VertexManagers.CubeManager;
+import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Util.Vector5f;
@@ -16,8 +16,7 @@ public class BlockShape {
     }
 
     public Vector5f[] getVertices(int side, BlockState blockState, BlockTextureManager blockTextureManager) {
-        Vector5f[] vector5fs = getVertices(side,1.0f,blockState, blockTextureManager);
-        return vector5fs;
+        return getVertices(side,1.0f,blockState, blockTextureManager);
     }
 
     public Vector5f[] getVertices(int side, float size, BlockState blockState, BlockTextureManager blockTextureManager) {

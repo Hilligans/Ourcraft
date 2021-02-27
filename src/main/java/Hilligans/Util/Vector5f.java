@@ -4,7 +4,7 @@ import org.joml.Vector4f;
 
 public class Vector5f {
 
-    float[] values;
+    public float[] values;
 
     public Vector5f(float x, float y, float z, float a, float b) {
         values = new float[]{x,y,z,a,b};
@@ -15,12 +15,21 @@ public class Vector5f {
     }
 
     public Vector5f setColored() {
-        values = new float[]{values[0],values[1],values[2],1.0f,1.0f,1.0f,1.0f,values[3],values[4]};
+        if(values.length == 5) {
+            values = new float[]{values[0], values[1], values[2], 1.0f, 1.0f, 1.0f, 1.0f, values[3], values[4]};
+        }
         return this;
     }
 
     public Vector5f setColored(float r, float g, float b, float a) {
-        values = new float[]{values[0],values[1],values[2],r,g,b,a,values[3],values[4]};
+        if(values.length == 5) {
+            values = new float[]{values[0], values[1], values[2], r, g, b, a, values[3], values[4]};
+        } else {
+            values[3] *= r;
+            values[4] *= g;
+            values[5] *= b;
+            values[6] *= a;
+        }
         return this;
     }
 

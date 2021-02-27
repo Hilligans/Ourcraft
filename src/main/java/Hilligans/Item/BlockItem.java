@@ -38,7 +38,6 @@ public class BlockItem extends Item {
         if (rayResult == null || rayResult.side == -1) {
             return false;
         }
-        System.out.println(rayResult.side);
         BlockPos pos = rayResult.getBlockPos();
         if(world.getBlockState(pos).getBlock() != Blocks.AIR) {
             pos = rayResult.getBlockPosWidthSide();

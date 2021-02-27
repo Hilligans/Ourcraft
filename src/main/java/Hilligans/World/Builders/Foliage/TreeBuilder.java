@@ -50,9 +50,17 @@ public class TreeBuilder extends SurfaceBuilder {
     private void placeLeaves(BlockPos pos) {
         for(int x = 0; x < 6; x++) {
             BlockPos newPos = pos.copy().add(Block.getBlockPos(x));
-            if(world.getBlockState(newPos).getBlock() == Blocks.AIR) {
-                world.setBlockState(newPos,Blocks.LEAVES.getDefaultState());
+            if (world.getBlockState(newPos).getBlock() == Blocks.AIR) {
+                world.setBlockState(newPos, Blocks.LEAVES.getDefaultState());
             }
+            //if (random.nextInt(3) == 0) {
+                for (int y = 0; y < 5; y++) {
+                    BlockPos newPos1 = newPos.copy().add(0, -1 * y, 0);
+                    if (world.getBlockState(newPos1).getBlock() == Blocks.AIR) {
+                        world.setBlockState(newPos1, Blocks.WEEPING_VINE.getDefaultState());
+                    }
+                }
+           // }
         }
     }
 }

@@ -1,6 +1,5 @@
 package Hilligans.Client;
 
-import Hilligans.Client.Rendering.World.TextureManager;
 import Hilligans.Container.Container;
 import Hilligans.Data.Other.Inventory;
 import Hilligans.Item.ItemStack;

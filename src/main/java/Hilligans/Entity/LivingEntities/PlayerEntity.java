@@ -1,8 +1,7 @@
 package Hilligans.Entity.LivingEntities;
 
-import Hilligans.Client.Camera;
 import Hilligans.Client.MatrixStack;
-import Hilligans.Client.Rendering.World.VAOManager;
+import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Data.Other.Inventory;
 import Hilligans.Entity.Entities.ItemEntity;

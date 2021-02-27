@@ -7,7 +7,7 @@ import Hilligans.Data.Other.RayResult;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Item.BlockItem;
 import Hilligans.Util.Vector5f;
-import Hilligans.Client.Rendering.World.BlockTextureManager;
+import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.World.DataProvider;
 import Hilligans.World.World;
@@ -18,6 +18,7 @@ public class  Block {
     public String name;
     public short id;
     public boolean transparentTexture = false;
+    public boolean canWalkThrough = false;
     private Block droppedBlock;
     public BlockShape blockShape = new BlockShape();
     public BlockTextureManager blockTextureManager = new BlockTextureManager();
@@ -81,7 +82,7 @@ public class  Block {
     }
 
     public boolean getAllowedMovement(Vector3f motion, Vector3f pos, BlockPos blockPos, BoundingBox boundingBox, World world) {
-        return !getBoundingBox(world, blockPos).intersectsBox(boundingBox, blockPos.get3f(), pos, motion.x, motion.y, motion.z);
+        return canWalkThrough || !getBoundingBox(world, blockPos).intersectsBox(boundingBox, blockPos.get3f(), pos, motion.x, motion.y, motion.z);
     }
 
     public BoundingBox getBoundingBox(World world, BlockPos pos) {
@@ -92,11 +93,11 @@ public class  Block {
         blockTextureManager.generate();
     }
 
-    public Vector5f[] getVertices(int side, BlockState blockState) {
+    public Vector5f[] getVertices(int side, BlockState blockState, BlockPos blockPos) {
        return blockShape.getVertices(side,blockState, blockTextureManager);
     }
 
-    public Vector5f[] getVertices(int side, float size, BlockState blockState) {
+    public Vector5f[] getVertices(int side, float size, BlockState blockState, BlockPos blockPos) {
         return blockShape.getVertices(side,size,blockState,blockTextureManager);
     }
 

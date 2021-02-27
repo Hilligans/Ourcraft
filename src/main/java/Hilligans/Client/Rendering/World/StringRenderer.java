@@ -1,10 +1,11 @@
 package Hilligans.Client.Rendering.World;
 
 import Hilligans.Client.MatrixStack;
+import Hilligans.Client.Rendering.World.Managers.TextureManager;
+import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.ClientMain;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Util.Vector5f;
-import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL30;
 
 import java.awt.image.BufferedImage;
@@ -13,7 +14,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL20.*;
 
 public class StringRenderer {

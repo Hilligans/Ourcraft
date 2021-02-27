@@ -22,7 +22,7 @@ public class Blocks {
     public static final Block SAND = new Block("sand").withTexture("sand.png");
     public static final Block CACTUS = new Block("cactus").withTexture("cactus.png");
 
-    public static final Block SLAB = new HorizontalSlab("slab").withTexture("dirt.png");
+    public static final Block SLAB = new SlabBlock("slab").withTexture("dirt.png");
 
     //public static final Block TAPE = new Block("tape").withTexture("flex_tape.png");
 
@@ -30,15 +30,44 @@ public class Blocks {
 
     public static final Block COLOR_BLOCK = new ColorBlock("color_block").withTexture("white.png");
 
-
+    public static final Block GRASS_PLANT = new PlantBlock("grass_plant").withTexture("grass_plant.png");
+    public static final Block WEEPING_VINE = new WeepingVineBlock("weeping_vine").withTexture("weeping_vine1.png");
 
 
 
     // Tree types
     public static final Block MAPLE_LOG = new Block("maple_log");
     public static final Block MAPLE_PLANKS = new Block("maple_planks");
-    public static final Block MAPLE_SLAB = new HorizontalSlab("maple_slab");
-    public static final Block MAPLE_STAIR = new StairBlock("maple_stair");
+
+    public static final Block PINE_LOG = new Block("pine_log");
+    public static final Block PINE_PLANKS = new Block("pine_planks");
+
+    public static final Block SPRUCE_LOG = new Block("spruce_log");
+    public static final Block SPRUCE_PLANKS = new Block("spruce_planks");
+
+    public static final Block BIRCH_LOG = new Block("birch_log");
+    public static final Block BIRCH_PLANKS = new Block("birch_planks");
+
+    public static final Block OAK_LOG = new Block("oak_log");
+    public static final Block OAK_PLANKS = new Block("oak_planks");
+
+    public static final Block WILLOW_LOG = new Block("willow_log");
+    public static final Block WILLOW_PLANKS = new Block("willow_planks");
+
+    public static final Block ACACIA_LOG = new Block("acacia_log");
+    public static final Block ACACIA_PLANKS = new Block("acacia_planks");
+
+    public static final Block POPLAR_LOG = new Block("poplar_log");
+    public static final Block POPLAR_PLANKS = new Block("poplar_planks");
+
+    public static final Block ELM_LOG = new Block("elm_log");
+    public static final Block ELM_WOOD = new Block("elm_wood");
+
+    public static final Block PALM_LOG = new Block("palm_log");
+    public static final Block PALM_WOOD = new Block("palm_wood");
+
+    public static final Block REDWOOD_LOG = new Block("redwood_log");
+    public static final Block REDWOOD_WOOD = new Block("redwood_wood");
 
 
 

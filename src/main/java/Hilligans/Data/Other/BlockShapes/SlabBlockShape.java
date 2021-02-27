@@ -1,15 +1,15 @@
 package Hilligans.Data.Other.BlockShapes;
 
 import Hilligans.Data.Other.BlockState;
-import Hilligans.Client.Rendering.World.BlockTextureManager;
-import Hilligans.Client.Rendering.World.CubeManager;
+import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
+import Hilligans.Client.Rendering.World.Managers.VertexManagers.CubeManager;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Data.Other.DataBlockState;
 import Hilligans.Util.Vector5f;
 import Hilligans.World.World;
 
-public class HorizontalSlabBlockShape extends BlockShape {
+public class SlabBlockShape extends BlockShape {
 
     @Override
     public Vector5f[] getVertices(int side, float size, BlockState blockState, BlockTextureManager blockTextureManager) {

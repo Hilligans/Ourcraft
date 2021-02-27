@@ -1,6 +1,6 @@
 package Hilligans.Util;
 
-import Hilligans.Client.Rendering.World.TextureManager;
+import Hilligans.Client.Rendering.World.Managers.TextureManager;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 
 import java.awt.image.BufferedImage;

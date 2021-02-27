@@ -2,8 +2,8 @@ package Hilligans.Client.Rendering;
 
 import Hilligans.Block.Block;
 import Hilligans.Client.MatrixStack;
-import Hilligans.Client.Rendering.World.ShaderManager;
-import Hilligans.Client.Rendering.World.VAOManager;
+import Hilligans.Client.Rendering.World.Managers.ShaderManager;
+import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.ClientMain;
 import Hilligans.Util.Util;
 import org.joml.Matrix4f;

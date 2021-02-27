@@ -293,7 +293,7 @@ public abstract class World {
                 for(int x = -1; x < 2; x++) {
                     BlockState blockState = getBlockState(new BlockPos(x,pos.y,z));
                     if(blockState.getBlock() != Blocks.AIR) {
-                        if (boundingBox.intersectsBox(blockState.getBlock().getBoundingBox(this,new BlockPos(x,pos.y,z)), pos.get3f(), new Vector3f(x, pos.y, z))) {
+                        if (blockState.getBlock().canWalkThrough || boundingBox.intersectsBox(blockState.getBlock().getBoundingBox(this,new BlockPos(x,pos.y,z)), pos.get3f(), new Vector3f(x, pos.y, z))) {
                             break out;
                         }
                     }
