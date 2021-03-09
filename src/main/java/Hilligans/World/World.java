@@ -1,5 +1,6 @@
 package Hilligans.World;
 
+import Hilligans.Block.Block;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Data.Other.BlockPos;
@@ -128,6 +129,20 @@ public abstract class World {
                 return;
             }
             chunk.setBlockState(x, y, z, blockState);
+        }
+        updateBlock(new BlockPos(x,y,z));
+    }
+
+    private void updateBlock(BlockPos pos) {
+        for(int x = 0; x < 6; x++) {
+            BlockPos newPos = pos.add(Block.getBlockPos(x));
+            if(newPos.y >= Settings.minHeight  && newPos.y < Settings.maxHeight) {
+                Chunk chunk = getChunk(newPos.x >> 4, newPos.z >> 4);
+                if (chunk == null) {
+                    return;
+                }
+                chunk.updateBlock(newPos);
+            }
         }
     }
 

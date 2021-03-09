@@ -25,7 +25,7 @@ public class WeepingVineBlock extends PlantBlock {
         XBlockShape blockShape = (XBlockShape)this.blockShape;
         long seed = ((long)blockPos.x) | ((long)blockPos.z << 32);
         Random random = new Random(seed);
-        for(int x = 0; x < 5; x++) {
+        for(int x = 0; x < 7; x++) {
             vector5fs.addAll(Arrays.asList(blockShape.getVertices(side, 0.5f, random.nextFloat() - 0.5f, random.nextFloat() - 0.5f, blockState, blockTextureManager)));
         }
 
@@ -36,7 +36,7 @@ public class WeepingVineBlock extends PlantBlock {
     @Override
     public Integer[] getIndices(int side, int spot) {
         ArrayList<Integer> indices = new ArrayList<>();
-        for(int x = 0; x < 5; x++) {
+        for(int x = 0; x < 7; x++) {
             indices.addAll(Arrays.asList(blockShape.getIndices(side,spot + x * 4)));
         }
         Integer[] integers = new Integer[indices.size()];

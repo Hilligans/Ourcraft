@@ -1,6 +1,6 @@
 package Hilligans.Client;
 
-import Hilligans.Client.Rendering.World.Managers.TextureManager;
+import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.ClientMain;
 import org.lwjgl.opengl.GL11;
 
@@ -29,7 +29,7 @@ public class ScreenShot {
             }
         }
 
-        bufferedImage = TextureManager.createFlipped(bufferedImage);
+        bufferedImage = WorldTextureManager.createFlipped(bufferedImage);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
         LocalDateTime time = LocalDateTime.now();
 

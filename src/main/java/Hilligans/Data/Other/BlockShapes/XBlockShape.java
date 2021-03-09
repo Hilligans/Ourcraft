@@ -14,16 +14,23 @@ public class XBlockShape extends BlockShape {
 
     @Override
     public Vector5f[] getVertices(int side, float size, BlockState blockState, BlockTextureManager blockTextureManager) {
-        Vector5f[] vector5fs = PlantManager.getXBlockVertices(0.5f,0.5f,blockTextureManager,side,size);
-        applyColoring(vector5fs,side);
-        return vector5fs;
+        if(side != 6) {
+            Vector5f[] vector5fs = PlantManager.getXBlockVertices(0.5f, 0.5f, blockTextureManager, side, size);
+            applyColoring(vector5fs, side);
+            return vector5fs;
+        } else {
+            return new Vector5f[]{};
+        }
     }
 
     public Vector5f[] getVertices(int side, float size,float offsetX, float offsetZ, BlockState blockState, BlockTextureManager blockTextureManager) {
-        Vector5f[] vector5fs = PlantManager.getXBlockVertices( offsetX + 0.5f, offsetZ + 0.5f,blockTextureManager,side,size);
-        applyColoring(vector5fs,side);
-
-        return vector5fs;
+        if(side != 6) {
+            Vector5f[] vector5fs = PlantManager.getXBlockVertices(offsetX + 0.5f, offsetZ + 0.5f, blockTextureManager, side, size);
+            applyColoring(vector5fs, side);
+            return vector5fs;
+        } else {
+            return new Vector5f[]{};
+        }
     }
 
 

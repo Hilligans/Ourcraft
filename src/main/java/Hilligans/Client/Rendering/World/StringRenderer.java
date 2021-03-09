@@ -1,7 +1,7 @@
 package Hilligans.Client.Rendering.World;
 
 import Hilligans.Client.MatrixStack;
-import Hilligans.Client.Rendering.World.Managers.TextureManager;
+import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.ClientMain;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
@@ -30,7 +30,7 @@ public class StringRenderer {
         BufferedImage img = new BufferedImage(vals.length() * 48,58,BufferedImage.TYPE_INT_ARGB);
         for(int x = 0; x < vals.length(); x++) {
             String s = "" + vals.charAt(x);
-            BufferedImage bufferedImage = TextureManager.stringToBufferedImage(s);
+            BufferedImage bufferedImage = WorldTextureManager.stringToBufferedImage(s);
             DoubleTypeWrapper<Integer, Integer> data = new DoubleTypeWrapper<>(bufferedImage.getWidth(),val);
             characterOffset.put(s,data);
             for(int z = 0; z < bufferedImage.getWidth(); z++) {
@@ -40,7 +40,7 @@ public class StringRenderer {
             }
             val++;
         }
-        mappedCharacters = TextureManager.registerTexture(img);
+        mappedCharacters = WorldTextureManager.registerTexture(img);
     }
 
     public static void drawString(MatrixStack matrixStack, String string, int x, int y, float scale) {

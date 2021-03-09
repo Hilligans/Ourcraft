@@ -42,6 +42,10 @@ public class CompoundTag extends Tag {
         return tags.get(name);
     }
 
+    public IntegerTag getInt(String name) {
+        return (IntegerTag)getTag(name);
+    }
+
     public CompoundTag getCompoundTag(String name) {
         return (CompoundTag) tags.get(name);
     }

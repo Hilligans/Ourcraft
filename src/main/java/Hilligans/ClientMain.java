@@ -9,7 +9,7 @@ import Hilligans.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
 import Hilligans.Client.Rendering.Screens.TagEditorScreen;
 import Hilligans.Client.Rendering.World.*;
 import Hilligans.Client.Rendering.World.Managers.ShaderManager;
-import Hilligans.Client.Rendering.World.Managers.TextureManager;
+import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
@@ -107,9 +107,9 @@ public class ClientMain {
 
         Blocks.generateTextures();
 
-        outLine = TextureManager.loadAndRegisterTexture("outline.png");
-        PlayerEntity.imageId = TextureManager.loadAndRegisterTexture("player.png");
-        Renderer.cursorId = TextureManager.loadAndRegisterTexture("cursor.png");
+        outLine = WorldTextureManager.loadAndRegisterTexture("outline.png");
+        PlayerEntity.imageId = WorldTextureManager.loadAndRegisterTexture("player.png");
+        Renderer.cursorId = WorldTextureManager.loadAndRegisterTexture("cursor.png");
 
         StringRenderer.instance.loadCharacters1();
         for(Texture texture : Textures.textures) {
@@ -195,7 +195,7 @@ public class ClientMain {
         screen = new JoinScreen();
 
 
-        texture = TextureManager.instance.registerTexture();
+        texture = WorldTextureManager.instance.registerTexture();
 
         clientWorld = new ClientWorld();
 

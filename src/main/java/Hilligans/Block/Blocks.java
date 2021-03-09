@@ -30,6 +30,9 @@ public class Blocks {
 
     public static final Block COLOR_BLOCK = new ColorBlock("color_block").withTexture("white.png");
 
+    public static final Block STAIR_BLOCK = new StairBlock("stair").withTexture("dirt.png");
+
+
     public static final Block GRASS_PLANT = new PlantBlock("grass_plant").withTexture("grass_plant.png");
     public static final Block WEEPING_VINE = new WeepingVineBlock("weeping_vine").withTexture("weeping_vine1.png");
 
@@ -75,6 +78,39 @@ public class Blocks {
     //public static final Block YELLOW = new Block("yellow").withTexture("yellow.png").transparentTexture(true);
 
 
+    public static ArrayList<Block> serverBlocks = new ArrayList<>();
+    public static HashMap<String, Block> mappedServerBlocks = new HashMap<>();
+
+    public static void addBlock(String name, String texture) {
+        Block block = new Block(name).withTexture(texture);
+        serverBlocks.add(block);
+        mappedServerBlocks.put(name,block);
+    }
+
+    public static void addBlock(String name, String texture, String[] sidedTextures, int[] sides) {
+        Block block = new Block(name).withTexture(texture);
+        for(int x = 0; x < sidedTextures.length; x++) {
+            block.withSidedTexture(sidedTextures[x],sides[x]);
+        }
+        serverBlocks.add(block);
+        mappedServerBlocks.put(name,block);
+    }
+
+    public static void addBlock(String name, String[] sidedTextures, int[] sides) {
+        Block block = new Block(name);
+        for(int x = 0; x < sidedTextures.length; x++) {
+            block.withSidedTexture(sidedTextures[x],sides[x]);
+        }
+        serverBlocks.add(block);
+        mappedServerBlocks.put(name,block);
+    }
+
+    public static void clear() {
+        serverBlocks = new ArrayList<>();
+        mappedServerBlocks = new HashMap<>();
+    }
+
+
     static short id = 0;
 
     public static short getNextId() {
@@ -85,6 +121,10 @@ public class Blocks {
 
     public static Block getBlockWithID(int id) {
         return BLOCKS.get(id);
+    }
+
+    public static Block getBlock(String id) {
+        return MAPPED_BLOCKS.get(id);
     }
 
     public static void generateTextures() {

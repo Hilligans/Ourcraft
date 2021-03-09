@@ -16,13 +16,21 @@ public class BlockShape {
     }
 
     public Vector5f[] getVertices(int side, BlockState blockState, BlockTextureManager blockTextureManager) {
-        return getVertices(side,1.0f,blockState, blockTextureManager);
+        if(side != 6) {
+            return getVertices(side, 1.0f, blockState, blockTextureManager);
+        } else {
+            return new Vector5f[]{};
+        }
     }
 
     public Vector5f[] getVertices(int side, float size, BlockState blockState, BlockTextureManager blockTextureManager) {
-        Vector5f[] vector5fs = CubeManager.getVertices1(blockTextureManager,side,size);
-        applyColoring(vector5fs,side);
-        return vector5fs;
+        if(side != 6) {
+            Vector5f[] vector5fs = CubeManager.getVertices1(blockTextureManager, side, size);
+            applyColoring(vector5fs, side);
+            return vector5fs;
+        } else {
+            return new Vector5f[]{};
+        }
     }
 
     public int generateOutline(World world, BlockPos pos) {
@@ -39,7 +47,11 @@ public class BlockShape {
     }
 
     public Integer[] getIndices(int side, int spot) {
-        return CubeManager.getIndices(side,spot);
+        if(side != 6) {
+            return CubeManager.getIndices(side, spot);
+        } else {
+            return new Integer[]{};
+        }
     }
 
     protected void applyColoring(Vector5f[] vector5fs, int side) {

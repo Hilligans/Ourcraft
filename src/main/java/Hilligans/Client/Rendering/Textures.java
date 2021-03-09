@@ -1,12 +1,18 @@
 package Hilligans.Client.Rendering;
 
 import Hilligans.Client.Rendering.Texture;
+import org.lwjgl.opengl.GL30;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.jar.JarFile;
 
 public class Textures {
 
     public static ArrayList<Texture> textures = new ArrayList<>();
+
+    public static HashMap<String, Texture> mappedTextures = new HashMap<>();
 
     public static final Texture ITEM_SLOT = new Texture("GUI/item_slot.png");
     public static final Texture INVENTORY = new Texture("GUI/inventory.png");
@@ -25,6 +31,16 @@ public class Textures {
     public static final Texture LONG_ICON = new Texture("GUI/long_icon.png");
     public static final Texture DOUBLE_ICON = new Texture("GUI/double_icon.png");
 
+    public static void clear() {
+        for(Texture texture : mappedTextures.values()) {
+            GL30.glDeleteTextures(texture.textureId);
+        }
+        mappedTextures = new HashMap<>();
+    }
+
+    public static void addTexture(String name, BufferedImage texture) {
+        mappedTextures.put(name, new Texture(name,texture));
+    }
 
 
 }

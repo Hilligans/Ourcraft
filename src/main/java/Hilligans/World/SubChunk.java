@@ -59,14 +59,17 @@ public class SubChunk {
                             if (blockState.getBlock().transparentTexture && (Settings.renderSameTransparent || block.getBlock() != blockState.getBlock())) {
                                 Vector5f[] vector5fs = block.getBlock().getVertices(a,block, new BlockPos(x + this.x,y + this.y,z + this.z));
                                 indices.addAll(Arrays.asList(block.getBlock().getIndices(a,vertices.size())));
-
                                 for(Vector5f vector5f : vector5fs) {
                                     vertices.add(vector5f.addX(x).addY(y + this.y).addZ(z));
                                 }
-                               // spot+= vector5fs.length;
 
                             }
                         }
+                    }
+                    Vector5f[] vector5fs = block.getBlock().getVertices(6,block, new BlockPos(x + this.x,y + this.y,z + this.z));
+                    indices.addAll(Arrays.asList(block.getBlock().getIndices(6,vertices.size())));
+                    for(Vector5f vector5f : vector5fs) {
+                        vertices.add(vector5f.addX(x).addY(y + this.y).addZ(z));
                     }
                 }
             }
@@ -124,6 +127,10 @@ public class SubChunk {
     public void setBlockState(int x, int y, int z, BlockState blockState) {
         blocks[x & 15][y & 15][z & 15].getBlock().onBreak(world,new BlockPos(x,y,z));
         blocks[x & 15][y & 15][z & 15] = blockState;
+    }
+
+    public void updateBlock(BlockPos pos) {
+        blocks[pos.x & 15][pos.y & 15][pos.z & 15].getBlock().onUpdate(world,pos);
     }
 
     public void renderMesh(MatrixStack matrixStack) {

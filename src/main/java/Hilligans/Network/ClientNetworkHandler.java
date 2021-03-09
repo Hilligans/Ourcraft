@@ -1,5 +1,7 @@
 package Hilligans.Network;
 
+import Hilligans.Block.Blocks;
+import Hilligans.Client.Rendering.Textures;
 import Hilligans.ClientMain;
 import Hilligans.Network.Packet.Client.CHandshakePacket;
 import io.netty.channel.ChannelHandlerContext;
@@ -19,6 +21,8 @@ public class ClientNetworkHandler extends SimpleChannelInboundHandler<PacketData
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        Blocks.clear();
+        Textures.clear();
         System.out.println("DISCONNECTED FROM SERVER");
         if(!ClientMain.valid) {
             System.out.println("YOUR GAME VERSION MAY BE OUT OF DATE");

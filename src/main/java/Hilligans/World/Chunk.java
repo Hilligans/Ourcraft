@@ -174,6 +174,14 @@ public class Chunk {
         chunks.get(pos).setBlockState(x,y,z,blockState);
     }
 
+    public void updateBlock(BlockPos pos) {
+        if(pos.y > Settings.chunkHeight * 16 || pos.y < 0) {
+            return;
+        }
+        int pos1 = pos.y >> 4;
+        chunks.get(pos1).updateBlock(pos);
+    }
+
     public ArrayList<DoubleTypeWrapper<BlockState,Integer>> getBlockChainedList() {
         BlockState currentState = null;
         ArrayList<DoubleTypeWrapper<BlockState,Integer>> values = new ArrayList<>();

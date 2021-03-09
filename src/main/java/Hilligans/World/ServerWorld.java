@@ -9,6 +9,7 @@ import Hilligans.Entity.Entity;
 import Hilligans.Network.Packet.Server.SCreateEntityPacket;
 import Hilligans.Network.Packet.Server.SRemoveEntityPacket;
 import Hilligans.Network.ServerNetworkHandler;
+import Hilligans.WorldSave.ChunkLoader;
 import Hilligans.WorldSave.WorldLoader;
 
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class ServerWorld extends World {
     @Override
     public void generateChunk(int x, int z) {
         if(getChunk(x,z) == null) {
-            Chunk chunk = WorldLoader.readChunk(x,z);
+            Chunk chunk = ChunkLoader.readChunk(x,z);
             if(chunk != null) {
                 setChunk(chunk,x,z);
                 return;
@@ -56,8 +57,8 @@ public class ServerWorld extends World {
     public void unloadChunk(int x, int z) {
         Chunk chunk = getChunk(x,z);
         if(chunk != null) {
-            WorldLoader.writeChunk(chunk);
-            WorldLoader.finishSave();
+            ChunkLoader.writeChunk(chunk);
+            ChunkLoader.finishSave();
         }
         super.unloadChunk(x,z);
     }
@@ -66,15 +67,12 @@ public class ServerWorld extends World {
     public void tick() {
         int x = 0;
         handleRemove();
-        //System.out.println("TICKING");
         for(Entity entity : entities.values()) {
-            //System.out.println(entity.id);
             try {
                 entity.tick();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            //System.out.println(x);
             x++;
         }
         if(autoSave == -1) {
@@ -84,11 +82,10 @@ public class ServerWorld extends World {
             try {
                 autoSave = System.currentTimeMillis();
                 long start = System.currentTimeMillis();
-                //System.out.println("SAVING");
                 for (Chunk chunk : chunks.values()) {
-                    WorldLoader.writeChunk(chunk);
+                    ChunkLoader.writeChunk(chunk);
                 }
-                WorldLoader.finishSave();
+                ChunkLoader.finishSave();
                 System.out.println("SAVE FINISH:" + (System.currentTimeMillis() - start) + "MS");
             } catch (Exception e) {
                 e.printStackTrace();

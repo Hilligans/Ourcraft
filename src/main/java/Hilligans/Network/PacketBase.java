@@ -49,6 +49,9 @@ public abstract class PacketBase {
         packets.add(CUseItem::new);
         packets.add(CCloseScreen::new);
         packets.add(SUpdatePlayer::new);
+        packets.add(SCreateTexture::new);
+        packets.add(SRegisterBlock::new);
+
 
 
     }

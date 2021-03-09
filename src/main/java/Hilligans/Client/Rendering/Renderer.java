@@ -2,9 +2,9 @@ package Hilligans.Client.Rendering;
 
 import Hilligans.Block.Block;
 import Hilligans.Client.MatrixStack;
-import Hilligans.Client.Rendering.World.Managers.ShaderManager;
-import Hilligans.Client.Rendering.World.Managers.VAOManager;
+import Hilligans.Client.Rendering.World.Managers.*;
 import Hilligans.ClientMain;
+import Hilligans.Util.Settings;
 import Hilligans.Util.Util;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -23,16 +23,7 @@ public class Renderer {
         textureRenderer = ShaderManager.registerShader(Util.imageShader,Util.imageFragment);
     }
 
-    public static void drawTexture(int id, int width, int height) {
-        int readFboId = glGenFramebuffers();
-        glBindFramebuffer(GL_READ_FRAMEBUFFER,readFboId);
-        glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, id, 0);
-        glBlitFramebuffer(0, 0, width, height, 0, 0, ClientMain.windowX/4, ClientMain.windowY/4, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-        glDeleteFramebuffers(readFboId);
-    }
-
-    public static void drawTexture1(MatrixStack matrixStack, int id, int x, int y, int width, int height) {
+    public static void drawTexture(MatrixStack matrixStack, int id, int x, int y, int width, int height) {
         int z = 0;
 
         float[] vertices = new float[] {x,y,z,0,0,x,y + height,z,0,1,x + width,y,z,1,0,x + width,y + height,z,1,1};
@@ -48,11 +39,7 @@ public class Renderer {
         matrixStack.applyTransformation();
         matrixStack.applyColor();
 
-        // glDisable(GL_CULL_FACE);
-
         glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
-
-        //glEnable(GL_CULL_FACE);
         VAOManager.destroyBuffer(vao);
     }
 
@@ -63,30 +50,39 @@ public class Renderer {
         matrixStack.push();
         GL30.glBindVertexArray(vao);
         glBindTexture(GL_TEXTURE_2D, ClientMain.texture);
-        //matrixStack.rotate(0.785398f,new Vector3f(0,1,0));
-
-        //matrixStack.rotate(3.1415f,new Vector3f(1,0,1));
-
-        //matrixStack.translate(x - size / 2f + 1,y + size / 8f + 1,0);
         matrixStack.translate(x + size / 3f,y + size / 1.3f,0);
-
-
-        //matrixStack.rotate(xAngle,new Vector3f(1,0,0));
-        //matrixStack.rotate(xAngle, new Vector3f(0,(float)Math.cos(xAngle),(float)-Math.sin(xAngle)));
-
         matrixStack.rotate(0.785f,new Vector3f(0.5f,-1,0));
         matrixStack.rotate(0.186f,new Vector3f(0,0,-1));
-
         matrixStack.rotate(3.1415f,new Vector3f(0,0,1));
-
-
-        //matrixStack.rotate();
         matrixStack.translate(0,0 ,-size * 2);
         matrixStack.applyTransformation(ClientMain.colorShader);
         glDrawElements(GL_TRIANGLES, 36,GL_UNSIGNED_INT,0);
         matrixStack.pop();
         VAOManager.destroyBuffer(vao);
+        glEnable(GL_DEPTH_TEST);
 
+    }
+
+    public static void renderItem(MatrixStack matrixStack, int x, int y, int size, TextureManager textureManager) {
+        size *= 2;
+        size -= Settings.guiSize * 2;
+        x += Settings.guiSize;
+        y += Settings.guiSize;
+        matrixStack.applyTransformation(ClientMain.shaderProgram);
+        glUseProgram(ClientMain.shaderProgram);
+        glDisable(GL_DEPTH_TEST);
+        int id = textureManager.getTextureId();
+        float minX = WorldTextureManager.getMinX(id);
+        float maxX = WorldTextureManager.getMaxX(id);
+        float minY = WorldTextureManager.getMinY(id);
+        float maxY = WorldTextureManager.getMaxY(id);
+        float[] vertices = new float[] {x,y,0,minX,minY,x,y + size,0,minX,maxY,x + size,y,0,maxX,minY,x + size,y + size,0,maxX,maxY};
+        int[] indices = new int[] {0,1,2,2,1,3};
+        int vao = VAOManager.createVAO(vertices,indices);
+        GL30.glBindTexture(GL_TEXTURE_2D, textureManager.getTextureMap());
+        GL30.glBindVertexArray(vao);
+        glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
+        VAOManager.destroyBuffer(vao);
         glEnable(GL_DEPTH_TEST);
     }
 

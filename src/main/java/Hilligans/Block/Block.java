@@ -1,11 +1,14 @@
 package Hilligans.Block;
 
+import Hilligans.Client.MatrixStack;
+import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Data.Other.BlockShapes.BlockShape;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Data.Other.RayResult;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Item.BlockItem;
+import Hilligans.Item.ItemStack;
 import Hilligans.Util.Vector5f;
 import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
 import Hilligans.Data.Other.BlockPos;
@@ -59,6 +62,8 @@ public class  Block {
     public void onPlace(World world, BlockPos blockPos) {}
 
     public void onBreak(World world, BlockPos blockPos) {}
+
+    public void onUpdate(World world, BlockPos blockPos) {}
 
 
     public BlockState getDefaultState() {
@@ -120,6 +125,10 @@ public class  Block {
             default:
                 return new BlockPos(0,1,0);
         }
+    }
+
+    public void renderItem(MatrixStack matrixStack, int x, int y, int size, ItemStack itemStack) {
+        Renderer.renderBlockItem(matrixStack,x,y,size,this);
     }
 
     public DataProvider getDataProvider() {
