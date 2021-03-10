@@ -4,6 +4,7 @@ import Hilligans.Block.Block;
 import Hilligans.Container.Container;
 import Hilligans.Container.Containers.ChestContainer;
 import Hilligans.Data.Other.BlockPos;
+import Hilligans.Data.Other.BlockProperties;
 import Hilligans.Data.Other.Inventory;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Item.ItemStack;
@@ -16,8 +17,8 @@ import Hilligans.World.World;
 public class ChestBlock extends Block {
 
 
-    public ChestBlock(String name) {
-        super(name);
+    public ChestBlock(String name, BlockProperties blockProperties) {
+        super(name, blockProperties);
     }
 
     @Override

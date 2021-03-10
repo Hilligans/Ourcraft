@@ -2,16 +2,13 @@ package Hilligans.Block;
 
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.Renderer;
+import Hilligans.Data.Other.*;
 import Hilligans.Data.Other.BlockShapes.BlockShape;
-import Hilligans.Data.Other.BlockState;
-import Hilligans.Data.Other.BoundingBox;
-import Hilligans.Data.Other.RayResult;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Item.BlockItem;
 import Hilligans.Item.ItemStack;
 import Hilligans.Util.Vector5f;
 import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
-import Hilligans.Data.Other.BlockPos;
 import Hilligans.World.DataProvider;
 import Hilligans.World.World;
 import org.joml.Vector3f;
@@ -20,34 +17,19 @@ public class  Block {
 
     public String name;
     public short id;
-    public boolean transparentTexture = false;
-    public boolean canWalkThrough = false;
+   public BlockProperties blockProperties;
     private Block droppedBlock;
-    public BlockShape blockShape = new BlockShape();
-    public BlockTextureManager blockTextureManager = new BlockTextureManager();
 
-    public Block(String name) {
+    public BlockShape blockShape = new BlockShape();
+
+    public Block(String name, BlockProperties blockProperties) {
         this.name = name;
         id = Blocks.getNextId();
         droppedBlock = this;
         Blocks.BLOCKS.add(this);
         Blocks.MAPPED_BLOCKS.put(name,this);
         new BlockItem(name,this);
-    }
-
-    public Block withTexture(String texture) {
-        blockTextureManager.addString(texture);
-        return this;
-    }
-
-    public Block withSidedTexture(String texture, int side) {
-        blockTextureManager.addString(texture,side);
-        return this;
-    }
-
-    public Block transparentTexture(boolean val) {
-        transparentTexture = val;
-        return this;
+        this.blockProperties = blockProperties;
     }
 
     public Block setBlockDrop(Block blockDrop) {
@@ -87,7 +69,7 @@ public class  Block {
     }
 
     public boolean getAllowedMovement(Vector3f motion, Vector3f pos, BlockPos blockPos, BoundingBox boundingBox, World world) {
-        return canWalkThrough || !getBoundingBox(world, blockPos).intersectsBox(boundingBox, blockPos.get3f(), pos, motion.x, motion.y, motion.z);
+        return blockProperties.canWalkThrough || !getBoundingBox(world, blockPos).intersectsBox(boundingBox, blockPos.get3f(), pos, motion.x, motion.y, motion.z);
     }
 
     public BoundingBox getBoundingBox(World world, BlockPos pos) {
@@ -95,15 +77,15 @@ public class  Block {
     }
 
     public void generateTextures() {
-        blockTextureManager.generate();
+        blockProperties.blockTextureManager.generate();
     }
 
     public Vector5f[] getVertices(int side, BlockState blockState, BlockPos blockPos) {
-       return blockShape.getVertices(side,blockState, blockTextureManager);
+       return blockShape.getVertices(side,blockState, blockProperties.blockTextureManager);
     }
 
     public Vector5f[] getVertices(int side, float size, BlockState blockState, BlockPos blockPos) {
-        return blockShape.getVertices(side,size,blockState,blockTextureManager);
+        return blockShape.getVertices(side,size,blockState,blockProperties.blockTextureManager);
     }
 
     public Integer[] getIndices(int side, int spot) {

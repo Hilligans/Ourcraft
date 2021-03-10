@@ -8,10 +8,10 @@ import Hilligans.World.DataProviders.ShortBlockState;
 import Hilligans.World.World;
 
 public class StairBlock extends Block {
-    public StairBlock(String name) {
-        super(name);
+    public StairBlock(String name, BlockProperties blockProperties) {
+        super(name, blockProperties);
         blockShape = new StairBlockShape();
-        transparentTexture = true;
+        blockProperties.transparent();
     }
 
 
@@ -23,5 +23,10 @@ public class StairBlock extends Block {
     @Override
     public BlockState getDefaultState() {
         return new DataBlockState(this, new ShortBlockState((short)0));
+    }
+
+    @Override
+    public BlockState getStateWithData(short data) {
+        return new DataBlockState(this,new ShortBlockState(data));
     }
 }

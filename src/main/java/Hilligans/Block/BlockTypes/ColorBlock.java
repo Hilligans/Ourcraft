@@ -2,6 +2,7 @@ package Hilligans.Block.BlockTypes;
 
 import Hilligans.Block.Block;
 import Hilligans.Data.Other.BlockPos;
+import Hilligans.Data.Other.BlockProperties;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Data.Other.DataBlockState;
 import Hilligans.Util.Vector5f;
@@ -12,8 +13,8 @@ import org.joml.Vector3f;
 import java.util.Random;
 
 public class ColorBlock extends Block {
-    public ColorBlock(String name) {
-        super(name);
+    public ColorBlock(String name, BlockProperties blockProperties) {
+        super(name, blockProperties);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package Hilligans.Block.BlockTypes;
 
 import Hilligans.Data.Other.BlockPos;
+import Hilligans.Data.Other.BlockProperties;
 import Hilligans.Data.Other.BlockShapes.XBlockShape;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Util.Vector5f;
@@ -10,8 +11,8 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class WeepingVineBlock extends PlantBlock {
-    public WeepingVineBlock(String name) {
-        super(name);
+    public WeepingVineBlock(String name, BlockProperties blockProperties) {
+        super(name, blockProperties);
     }
 
     @Override
@@ -26,7 +27,7 @@ public class WeepingVineBlock extends PlantBlock {
         long seed = ((long)blockPos.x) | ((long)blockPos.z << 32);
         Random random = new Random(seed);
         for(int x = 0; x < 7; x++) {
-            vector5fs.addAll(Arrays.asList(blockShape.getVertices(side, 0.5f, random.nextFloat() - 0.5f, random.nextFloat() - 0.5f, blockState, blockTextureManager)));
+            vector5fs.addAll(Arrays.asList(blockShape.getVertices(side, 0.5f, random.nextFloat() - 0.5f, random.nextFloat() - 0.5f, blockState, blockProperties.blockTextureManager)));
         }
 
         Vector5f[] vector5fs1 = new Vector5f[vector5fs.size()];

@@ -107,7 +107,7 @@ public class ItemEntity extends Entity {
         ArrayList<Integer> indices = new ArrayList<>();
 
         for(int x = 0; x < 6; x++) {
-            vertices.addAll(Arrays.asList(CubeManager.getVertices(block.blockTextureManager,x,0.25f)));
+            vertices.addAll(Arrays.asList(CubeManager.getVertices(block.blockProperties.blockTextureManager,x,0.25f)));
             indices.addAll(Arrays.asList(block.getIndices(x,4 * x)));
         }
         verticesCount = vertices.size();

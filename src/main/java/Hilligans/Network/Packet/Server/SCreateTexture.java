@@ -26,11 +26,7 @@ public class SCreateTexture extends PacketBase {
         packetData.writeInt(texture.getHeight());
         for(int x = 0; x < texture.getWidth(); x++) {
             for(int y = 0; y < texture.getHeight(); y++) {
-                int rgb = texture.getRGB(x,y);
-                packetData.writeByte((byte) (rgb & 0xFF));
-                packetData.writeByte((byte) (rgb & 0xFF << 8));
-                packetData.writeByte((byte) (rgb & 0xFF << 16));
-                packetData.writeByte((byte) (rgb & 0xFF << 24));
+                packetData.writeInt(texture.getRGB(x,y));
             }
         }
     }
@@ -44,8 +40,7 @@ public class SCreateTexture extends PacketBase {
         texture = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB);
         for(int x = 0; x < width; x++) {
             for(int y = 0; y < height; y++) {
-                int rgb = packetData.readByte() | packetData.readByte() << 8 | packetData.readByte() << 16 | packetData.readByte() << 24;
-                texture.setRGB(x,y,rgb);
+                texture.setRGB(x,y,packetData.readInt());
             }
         }
     }

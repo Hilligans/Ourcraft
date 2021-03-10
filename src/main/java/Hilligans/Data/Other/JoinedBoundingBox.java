@@ -9,7 +9,7 @@ public class JoinedBoundingBox extends BoundingBox {
     ArrayList<BoundingBox> boundingBoxes = new ArrayList<>();
 
     public JoinedBoundingBox(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
-        super(0,0,0,0,0,0);
+        super(minX,minY,minZ,maxX,maxY,maxZ);
         boundingBoxes.add(new BoundingBox(minX,minY,minZ,maxX,maxY,maxZ));
     }
 
@@ -33,4 +33,13 @@ public class JoinedBoundingBox extends BoundingBox {
         return false;
     }
 
+    @Override
+    public boolean intersectVector(Vector3f vector3f) {
+        for(BoundingBox boundingBox : boundingBoxes) {
+            if(boundingBox.intersectVector(vector3f)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
