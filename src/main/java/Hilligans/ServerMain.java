@@ -26,7 +26,9 @@ public class ServerMain {
 
 
     public static void main(String[] args) {
+        Settings.isServer = true;
         Tag.register();
+        Blocks.generateTextures();
 
 
 /*

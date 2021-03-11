@@ -7,6 +7,7 @@ import Hilligans.Data.Other.BlockShapes.BlockShape;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Item.BlockItem;
 import Hilligans.Item.ItemStack;
+import Hilligans.Util.Settings;
 import Hilligans.Util.Vector5f;
 import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
 import Hilligans.World.DataProvider;
@@ -17,7 +18,7 @@ public class  Block {
 
     public String name;
     public short id;
-   public BlockProperties blockProperties;
+    public BlockProperties blockProperties;
     private Block droppedBlock;
 
     public BlockShape blockShape = new BlockShape();
@@ -25,11 +26,16 @@ public class  Block {
     public Block(String name, BlockProperties blockProperties) {
         this.name = name;
         id = Blocks.getNextId();
-        droppedBlock = this;
-        Blocks.BLOCKS.add(this);
-        Blocks.MAPPED_BLOCKS.put(name,this);
-        new BlockItem(name,this);
         this.blockProperties = blockProperties;
+        droppedBlock = this;
+        if(!blockProperties.serverSide) {
+            Blocks.BLOCKS.add(this);
+            Blocks.MAPPED_BLOCKS.put(name, this);
+        } else {
+            Blocks.serverBlocks.add(this);
+            Blocks.mappedServerBlocks.put(name,this);
+        }
+        new BlockItem(name,this);
     }
 
     public Block setBlockDrop(Block blockDrop) {

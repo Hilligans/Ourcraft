@@ -94,6 +94,15 @@ public abstract class Container {
     }
 
     public static ArrayList<ContainerFetcher> containers = new ArrayList<>();
+    public static ArrayList<ContainerFetcher> serverSideContainer = new ArrayList<>();
+
+    public static Container getContainer(int slot) {
+        if(slot >= containers.size()) {
+            return serverSideContainer.get(slot - containers.size()).getContainer();
+        } else {
+            return containers.get(slot).getContainer();
+        }
+    }
 
     public static void register() {
         containers.add(InventoryContainer::new);

@@ -76,6 +76,8 @@ public class ClientMain {
     public static int lineShader;
     public static int texture;
 
+    public static boolean refreshTexture = false;
+
     public static int outLine;
 
     public static ClientWorld clientWorld;
@@ -234,6 +236,7 @@ public class ClientMain {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         createCallbacks();
 
+
         while(!glfwWindowShouldClose(window)) {
             //processInput(window);
 
@@ -257,6 +260,12 @@ public class ClientMain {
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        if(refreshTexture) {
+            Blocks.generateTextures();
+            texture = WorldTextureManager.instance.registerTexture();
+            refreshTexture = false;
+        }
 
         glUseProgram(shaderProgram);
         glBindTexture(GL_TEXTURE_2D, texture);

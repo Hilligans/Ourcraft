@@ -44,11 +44,8 @@ public class InventoryScreen extends ContainerScreen<InventoryContainer> {
         for(int x = 0; x < 9; x++) {
             ItemStack itemStack = ClientData.inventory.getItem(x);
             //Renderer.drawTexture1(screenStack, ClientData.itemSlot,startX + x * width, startY, width,width);
-            if(itemStack.item != null) {
-                Block block = Blocks.MAPPED_BLOCKS.get(itemStack.item.name);
-                if(block != null) {
-                    itemStack.item.render(matrixStack,startX + x * width, startY, width / 2,itemStack);
-                }
+            if(!itemStack.isEmpty()) {
+                itemStack.item.render(matrixStack,startX + x * width, startY, width / 2,itemStack);
             }
         }
         Renderer.drawTexture(matrixStack,Textures.ITEM_OUTLINE, (int) (startX - 1 * Settings.guiSize) + width * ClientData.handSlot ,(int)(startY - 1 * Settings.guiSize),(int)(width + 2 * Settings.guiSize),(int)(width + 2 * Settings.guiSize),7,7,25,25);

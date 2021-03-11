@@ -33,7 +33,7 @@ public class SOpenContainer extends PacketBase {
 
     @Override
     public void decode(PacketData packetData) {
-        container = Container.containers.get(packetData.readShort()).getContainer();
+        container = Container.getContainer(packetData.readShort());
         container.uniqueId = packetData.readInt();
         int slotCount = packetData.readShort();
         for(int x = 0; x < slotCount; x++) {

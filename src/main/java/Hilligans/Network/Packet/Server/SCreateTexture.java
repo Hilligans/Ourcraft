@@ -18,6 +18,13 @@ public class SCreateTexture extends PacketBase {
         super(22);
     }
 
+    public SCreateTexture(BufferedImage texture, String name, boolean isBlock) {
+        this();
+        this.texture = texture;
+        this.isBlock = isBlock;
+        this.name = name;
+    }
+
     @Override
     public void encode(PacketData packetData) {
         packetData.writeBoolean(isBlock);

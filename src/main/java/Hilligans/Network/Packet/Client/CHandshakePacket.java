@@ -1,6 +1,10 @@
 package Hilligans.Network.Packet.Client;
 
+import Hilligans.Block.Block;
+import Hilligans.Block.Blocks;
 import Hilligans.Client.Camera;
+import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
+import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.ClientMain;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Entity.Entity;
@@ -15,6 +19,8 @@ import Hilligans.ServerMain;
 import Hilligans.Util.Settings;
 import Hilligans.World.ServerWorld;
 import io.netty.channel.ChannelId;
+
+import java.awt.image.BufferedImage;
 
 
 public class  CHandshakePacket extends PacketBase {
@@ -61,7 +67,29 @@ public class  CHandshakePacket extends PacketBase {
             ServerMain.world.addEntity(playerEntity);
             ServerNetworkHandler.sendPacket(new SUpdatePlayer(spawn.x,spawn.y,spawn.z,0,0),ctx);
             playerData.playerInventory.age++;
+
+            //todo make this data easier for the server to send to clients
+
+            for(Block block : Blocks.serverBlocks) {
+                BlockTextureManager blockTextureManager = block.blockProperties.blockTextureManager;
+                BufferedImage bufferedImage = WorldTextureManager.loadImage("/Blocks/" + blockTextureManager.location);
+                ServerNetworkHandler.sendPacket(new SCreateTexture(bufferedImage,blockTextureManager.location.substring(0,blockTextureManager.location.length() - 4),true),ctx);
+                for(int x = 0; x < 6; x++) {
+                    if(blockTextureManager.textureNames != null) {
+                        if (blockTextureManager.textureNames[x] != null) {
+                            BufferedImage bufferedImage1 = WorldTextureManager.loadImage("/Blocks/" + blockTextureManager.textureNames[x]);
+                            ServerNetworkHandler.sendPacket(new SCreateTexture(bufferedImage1, blockTextureManager.textureNames[x].substring(0, blockTextureManager.textureNames[x].length() - 4), true), ctx);
+                        }
+                    }
+                }
+            }
+
+            for(Block block: Blocks.serverBlocks) {
+                ServerNetworkHandler.sendPacket(new SRegisterBlock(block),ctx);
+            }
+
             ServerNetworkHandler.sendPacket(new SUpdateInventory(playerData.playerInventory),ctx);
+
         } else {
             ctx.channel().close();
         }

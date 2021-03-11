@@ -15,8 +15,8 @@ import java.util.Set;
 
 public class Slot implements IInventoryChanged {
 
-    Inventory inventory;
-    int index;
+    public Inventory inventory;
+    public int index;
     public short id;
     public Container container;
     public int startX;
@@ -92,6 +92,10 @@ public class Slot implements IInventoryChanged {
     @Override
     public void onChange(int slot, IInventory inventory) {
         ServerNetworkHandler.sendPacket(new SUpdateContainer((byte) id,getContents(), container.uniqueId),container.channelId);
+    }
+
+    public Slot copy() {
+        return new Slot(startX,startY,inventory,index);
     }
 
     public void onClose() {

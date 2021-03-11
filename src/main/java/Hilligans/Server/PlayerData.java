@@ -33,6 +33,7 @@ public class PlayerData {
         playerInventory.setItem(2,new ItemStack(Items.HASHED_ITEMS.get("weeping_vine"), (byte)64));
         playerInventory.setItem(3,new ItemStack(Items.HASHED_ITEMS.get("stair"), (byte)63));
         playerInventory.setItem(4,new ItemStack(Items.HASHED_ITEMS.get("grass_plant"), (byte)63));
+        playerInventory.setItem(5,new ItemStack(Items.HASHED_ITEMS.get("blue"),(byte)63));
 
     }
 

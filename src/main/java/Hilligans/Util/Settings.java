@@ -23,4 +23,5 @@ public class Settings {
 
     public static final String worldName = "world1";
 
+    public static boolean isServer = false;
 }

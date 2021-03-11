@@ -68,6 +68,9 @@ public class PacketData {
 
     public String readString() {
         short stringLength = readShort();
+        if(stringLength == -1) {
+            return " ";
+        }
         StringBuilder val = new StringBuilder();
         for(short x = 0; x < stringLength; x++) {
             char val1 = (char) (readByte() & 0xFF);
@@ -123,6 +126,10 @@ public class PacketData {
     }
 
     public void writeString(String val) {
+        if(val.length() == 0) {
+            writeShort((short)-1);
+            return;
+        }
         short stringLength = (short) val.length();
         writeShort(stringLength);
 

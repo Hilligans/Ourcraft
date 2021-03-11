@@ -1,7 +1,9 @@
 package Hilligans.Block;
 
 import Hilligans.Block.BlockTypes.*;
+import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.Data.Other.BlockProperties;
+import Hilligans.Util.Settings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +12,18 @@ public class Blocks {
 
     public static final HashMap<String, Block> MAPPED_BLOCKS = new HashMap<>();
     public static final ArrayList<Block> BLOCKS = new ArrayList<>();
+
+    public static ArrayList<Block> serverBlocks = new ArrayList<>();
+    public static HashMap<String, Block> mappedServerBlocks = new HashMap<>();
+
+    public static short id = 0;
+
+    public static short getNextId() {
+        short val = id;
+        id++;
+        //System.out.println(id);
+        return val;
+    }
 
     public static final Block AIR = new Block("air", new BlockProperties().transparent());
     public static final Block STONE = new Block("stone",new BlockProperties().withTexture("stone.png"));
@@ -73,56 +87,22 @@ public class Blocks {
     public static final Block REDWOOD_LOG = new Block("redwood_log", new BlockProperties());
     public static final Block REDWOOD_WOOD = new Block("redwood_wood", new BlockProperties());
 
-
+    //public static final Block BLUE = new SlabBlock("blue",new BlockProperties().serverSide().withTexture("blue.png"));
 
     //public static final Block RED = new Block("red").withTexture("red.png").transparentTexture(true);
     //public static final Block YELLOW = new Block("yellow").withTexture("yellow.png").transparentTexture(true);
 
 
-    public static ArrayList<Block> serverBlocks = new ArrayList<>();
-    public static HashMap<String, Block> mappedServerBlocks = new HashMap<>();
-
-    public static void addBlock(String name, String texture) {
-        Block block = new Block(name, new BlockProperties().withTexture(texture));
-        serverBlocks.add(block);
-        mappedServerBlocks.put(name,block);
-    }
-
-    public static void addBlock(String name, String texture, String[] sidedTextures, int[] sides) {
-        BlockProperties blockProperties = new BlockProperties().withTexture(texture);
-        Block block = new Block(name, blockProperties);
-        for(int x = 0; x < sidedTextures.length; x++) {
-            blockProperties.withSidedTexture(sidedTextures[x],sides[x]);
-        }
-        serverBlocks.add(block);
-        mappedServerBlocks.put(name,block);
-    }
-
-    public static void addBlock(String name, String[] sidedTextures, int[] sides) {
-        BlockProperties blockProperties = new BlockProperties();
-        Block block = new Block(name, blockProperties);
-        for(int x = 0; x < sidedTextures.length; x++) {
-            blockProperties.withSidedTexture(sidedTextures[x],sides[x]);
-        }
-        serverBlocks.add(block);
-        mappedServerBlocks.put(name,block);
-    }
-
     public static void clear() {
-        serverBlocks = new ArrayList<>();
-        mappedServerBlocks = new HashMap<>();
+        serverBlocks.clear();
+        mappedServerBlocks.clear();
     }
 
-
-    static short id = 0;
-
-    public static short getNextId() {
-        short val = id;
-        id++;
-        return val;
-    }
 
     public static Block getBlockWithID(int id) {
+        if(id >= BLOCKS.size()) {
+            return serverBlocks.get(id - BLOCKS.size());
+        }
         return BLOCKS.get(id);
     }
 
@@ -131,8 +111,19 @@ public class Blocks {
     }
 
     public static void generateTextures() {
-        for(Block block : BLOCKS) {
-            block.generateTextures();
+        WorldTextureManager.instance.clear();
+        if(Settings.isServer) {
+            for(Block block : serverBlocks) {
+                block.generateTextures();
+            }
+        } else {
+            for (Block block : BLOCKS) {
+                block.generateTextures();
+            }
+            for(Block block : serverBlocks) {
+                //System.out.println("yadasdaswd");
+                block.generateTextures();
+            }
         }
     }
 
