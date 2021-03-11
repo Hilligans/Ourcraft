@@ -76,6 +76,8 @@ public class ClientMain {
     public static int lineShader;
     public static int texture;
 
+    public static Texture queued;
+
     public static boolean refreshTexture = false;
 
     public static int outLine;
@@ -265,6 +267,10 @@ public class ClientMain {
             Blocks.generateTextures();
             texture = WorldTextureManager.instance.registerTexture();
             refreshTexture = false;
+        }
+
+        if(queued != null) {
+            queued.register1();
         }
 
         glUseProgram(shaderProgram);

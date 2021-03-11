@@ -2,6 +2,8 @@ package Hilligans.Container;
 
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.Renderer;
+import Hilligans.Client.Rendering.Texture;
+import Hilligans.Client.Rendering.Textures;
 import Hilligans.Data.Other.IInventory;
 import Hilligans.Data.Other.Inventory;
 import Hilligans.Item.Item;
@@ -23,6 +25,7 @@ public class Slot implements IInventoryChanged {
     public int startY;
     public int x = 0;
     public int y = 0;
+    boolean playerInventory = false;
 
     public Slot(int startX, int startY, IInventory inventory, int index) {
         this.startX = startX;
@@ -38,11 +41,17 @@ public class Slot implements IInventoryChanged {
         return this;
     }
 
+    public Slot playerInventory() {
+        playerInventory = true;
+        return this;
+    }
+
     public void render(MatrixStack matrixStack) {
         ItemStack itemStack = inventory.getItem(index);
         if(!itemStack.isEmpty()) {
             itemStack.item.render(matrixStack,x,y, (int) (8 * Settings.guiSize),itemStack);
         }
+
     }
 
     public boolean canItemBeAdded(ItemStack itemStack) {

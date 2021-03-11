@@ -15,6 +15,8 @@ public class Texture {
 
     public String name;
 
+    BufferedImage texture;
+
     public Texture(String path) {
         this.path = path;
         Textures.textures.add(this);
@@ -23,7 +25,7 @@ public class Texture {
     public Texture(String name, BufferedImage texture) {
         width = texture.getWidth();
         height = texture.getHeight();
-        textureId = WorldTextureManager.registerTexture(texture);
+        this.texture = texture;
         this.name = name;
     }
 
@@ -32,6 +34,10 @@ public class Texture {
         width = bufferedImage.getWidth();
         height = bufferedImage.getHeight();
         textureId = WorldTextureManager.registerTexture(bufferedImage);
+    }
+
+    public void register1() {
+        textureId = WorldTextureManager.registerTexture(texture);
     }
 
 

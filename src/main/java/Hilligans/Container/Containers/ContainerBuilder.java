@@ -1,13 +1,11 @@
 package Hilligans.Container.Containers;
 
 import Hilligans.Client.Rendering.ContainerScreen;
-import Hilligans.Client.Rendering.Screens.CustomContainerScreen;
+import Hilligans.Client.Rendering.Screens.ContainerScreens.CustomContainerScreen;
 import Hilligans.Container.Container;
 import Hilligans.Container.ContainerFetcher;
 import Hilligans.Container.Slot;
 import Hilligans.Data.Other.Inventory;
-
-import java.util.ArrayList;
 
 public class ContainerBuilder implements ContainerFetcher {
 
@@ -32,9 +30,11 @@ public class ContainerBuilder implements ContainerFetcher {
             }
         };
         for(Slot slot : slots) {
-            container.addSlot(slot.copy());
             slot.inventory = inventory;
+            container.addSlot(slot.copy());
         }
+        container.setTextureSize(158,162);
+        container.resize();
         return container;
     }
 }

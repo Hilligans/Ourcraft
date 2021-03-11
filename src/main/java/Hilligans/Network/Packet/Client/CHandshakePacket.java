@@ -3,9 +3,11 @@ package Hilligans.Network.Packet.Client;
 import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.Camera;
+import Hilligans.Client.Rendering.Texture;
 import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.ClientMain;
+import Hilligans.Container.Containers.SlabBlockContainer;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
@@ -18,6 +20,7 @@ import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.ServerMain;
 import Hilligans.Util.Settings;
 import Hilligans.World.ServerWorld;
+import Hilligans.WorldSave.WorldLoader;
 import io.netty.channel.ChannelId;
 
 import java.awt.image.BufferedImage;
@@ -83,7 +86,9 @@ public class  CHandshakePacket extends PacketBase {
                     }
                 }
             }
-
+            BufferedImage tex = WorldTextureManager.loadImage("GUI/slab_chest.png");
+            ServerNetworkHandler.sendPacket(new SCreateTexture(tex,"slab_chest",false),ctx);
+            ServerNetworkHandler.sendPacket(new SRegisterContainer(new SlabBlockContainer(),"slab_chest"));
             for(Block block: Blocks.serverBlocks) {
                 ServerNetworkHandler.sendPacket(new SRegisterBlock(block),ctx);
             }

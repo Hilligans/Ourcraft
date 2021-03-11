@@ -1,6 +1,7 @@
 package Hilligans.Client.Rendering;
 
 import Hilligans.Client.Rendering.Texture;
+import Hilligans.ClientMain;
 import org.lwjgl.opengl.GL30;
 
 import java.awt.image.BufferedImage;
@@ -39,7 +40,9 @@ public class Textures {
     }
 
     public static void addTexture(String name, BufferedImage texture) {
-        mappedTextures.put(name, new Texture(name,texture));
+        Texture tex = new Texture(name,texture);
+        mappedTextures.put(name, tex);
+        ClientMain.queued = tex;
     }
 
 

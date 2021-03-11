@@ -29,9 +29,9 @@ public class SRegisterContainer extends PacketBase {
         packetData.writeShort((short) container.type);
         packetData.writeShort((short) container.slots.size());
         for(Slot slot : container.slots) {
-            packetData.writeShort((short) slot.x);
-            packetData.writeShort((short) slot.y);
-            packetData.writeShort((short) slot.index);
+            packetData.writeShort((short) slot.startX);
+            packetData.writeShort((short) slot.startY);
+            packetData.writeShort((short) slot.id);
         }
         packetData.writeString(textureName);
     }
