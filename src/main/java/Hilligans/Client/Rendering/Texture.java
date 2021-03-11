@@ -13,20 +13,17 @@ public class Texture {
 
     public int textureId;
 
-    public String name;
-
     BufferedImage texture;
 
     public Texture(String path) {
         this.path = path;
-        Textures.textures.add(this);
+        Textures.TEXTURES.add(this);
     }
 
-    public Texture(String name, BufferedImage texture) {
+    public Texture(BufferedImage texture) {
         width = texture.getWidth();
         height = texture.getHeight();
         this.texture = texture;
-        this.name = name;
     }
 
     public void register() {

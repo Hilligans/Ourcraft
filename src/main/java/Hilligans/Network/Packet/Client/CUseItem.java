@@ -6,7 +6,7 @@ import Hilligans.Item.ItemStack;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
-import Hilligans.Server.PlayerData;
+import Hilligans.Data.Other.Server.PlayerData;
 import Hilligans.ServerMain;
 
 public class CUseItem extends PacketBase {

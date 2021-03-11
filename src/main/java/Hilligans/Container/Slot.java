@@ -1,19 +1,13 @@
 package Hilligans.Container;
 
 import Hilligans.Client.MatrixStack;
-import Hilligans.Client.Rendering.Renderer;
-import Hilligans.Client.Rendering.Texture;
-import Hilligans.Client.Rendering.Textures;
 import Hilligans.Data.Other.IInventory;
 import Hilligans.Data.Other.Inventory;
-import Hilligans.Item.Item;
 import Hilligans.Item.ItemStack;
 import Hilligans.Network.Packet.Server.SUpdateContainer;
 import Hilligans.Network.ServerNetworkHandler;
-import Hilligans.Server.IInventoryChanged;
+import Hilligans.Data.Other.Server.IInventoryChanged;
 import Hilligans.Util.Settings;
-
-import java.util.Set;
 
 public class Slot implements IInventoryChanged {
 

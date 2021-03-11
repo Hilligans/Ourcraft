@@ -1,6 +1,7 @@
 package Hilligans;
 
 import Hilligans.Block.Blocks;
+import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Tag.CompoundTag;
 import Hilligans.Tag.IntegerTag;
 import Hilligans.Tag.Tag;
@@ -29,30 +30,7 @@ public class ServerMain {
         Settings.isServer = true;
         Tag.register();
         Blocks.generateTextures();
-
-
-/*
-    Short2ObjectOpenHashMap<DataProvider> dataProviders = new Short2ObjectOpenHashMap<>();
-        f:
-        for(int x = 0; x < 16; x++) {
-            for(int y = 0; y < 256; y++) {
-                for(int z = 0; z < 16; z++) {
-                    int i = x & 15 | (y & 255) << 4 | (z & 15) << 12;
-                    DataProvider dataProvider = dataProviders.get((short) i);
-                    if(dataProvider != null) {
-                        System.out.println("FOUND DUPLICATE");
-                        break f;
-                    } else {
-                        dataProviders.put((short) i, new DataProvider());
-                    }
-                }
-            }
-        }
-
- */
-        
-      //  int val = 3 << 16;
-        //System.out.println(val);
+        ServerSidedData.getInstance().register();
 
         world = new ServerWorld();
         world.worldBuilders.add(new OreBuilder(Blocks.GRASS,Blocks.STONE).setFrequency(20));

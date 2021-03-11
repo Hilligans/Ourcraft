@@ -5,10 +5,8 @@ import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.ClientMain;
 import Hilligans.Container.Containers.ChestContainer;
 import Hilligans.Container.Containers.InventoryContainer;
-import Hilligans.Data.Other.IInventory;
-import Hilligans.Server.IInventoryChanged;
+import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Util.Settings;
-import io.netty.channel.ChannelId;
 
 import java.util.ArrayList;
 
@@ -93,20 +91,19 @@ public abstract class Container {
         return null;
     }
 
-    public static ArrayList<ContainerFetcher> containers = new ArrayList<>();
-    public static ArrayList<ContainerFetcher> serverSideContainer = new ArrayList<>();
+    public static final ArrayList<ContainerFetcher> CONTAINERS = new ArrayList<>();
 
     public static Container getContainer(int slot) {
-        if(slot >= containers.size()) {
-            return serverSideContainer.get(slot - containers.size()).getContainer();
+        if(slot >= CONTAINERS.size()) {
+            return ServerSidedData.getInstance().CONTAINERS.get(slot - CONTAINERS.size()).getContainer();
         } else {
-            return containers.get(slot).getContainer();
+            return CONTAINERS.get(slot).getContainer();
         }
     }
 
     public static void register() {
-        containers.add(InventoryContainer::new);
-        containers.add(ChestContainer::new);
+        CONTAINERS.add(InventoryContainer::new);
+        CONTAINERS.add(ChestContainer::new);
     }
 
     static int id = 0;

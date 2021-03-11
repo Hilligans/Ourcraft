@@ -21,7 +21,6 @@ public class ClientNetworkHandler extends SimpleChannelInboundHandler<PacketData
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        Blocks.clear();
         Textures.clear();
         System.out.println("DISCONNECTED FROM SERVER");
         if(!ClientMain.valid) {

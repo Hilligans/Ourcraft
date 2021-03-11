@@ -1,20 +1,15 @@
-package Hilligans.Server;
+package Hilligans.Data.Other.Server;
 
 import Hilligans.Container.Container;
 import Hilligans.Container.Containers.InventoryContainer;
 import Hilligans.Container.Slot;
-import Hilligans.Data.Other.IInventory;
 import Hilligans.Data.Other.Inventory;
 import Hilligans.Entity.Entities.ItemEntity;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Item.ItemStack;
 import Hilligans.Item.Items;
-import Hilligans.Network.Packet.Server.SUpdateContainer;
-import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.ServerMain;
-
-import java.io.InputStream;
 
 public class PlayerData {
 

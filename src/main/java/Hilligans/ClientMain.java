@@ -116,7 +116,7 @@ public class ClientMain {
         Renderer.cursorId = WorldTextureManager.loadAndRegisterTexture("cursor.png");
 
         StringRenderer.instance.loadCharacters1();
-        for(Texture texture : Textures.textures) {
+        for(Texture texture : Textures.TEXTURES) {
             texture.register();
         }
 

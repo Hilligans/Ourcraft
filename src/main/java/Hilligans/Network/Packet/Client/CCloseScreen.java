@@ -4,7 +4,7 @@ import Hilligans.Container.Containers.InventoryContainer;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
-import Hilligans.Server.PlayerData;
+import Hilligans.Data.Other.Server.PlayerData;
 
 public class CCloseScreen extends PacketBase {
 

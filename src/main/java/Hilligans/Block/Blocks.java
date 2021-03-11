@@ -3,6 +3,7 @@ package Hilligans.Block;
 import Hilligans.Block.BlockTypes.*;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.Data.Other.BlockProperties;
+import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Util.Settings;
 
 import java.util.ArrayList;
@@ -12,9 +13,6 @@ public class Blocks {
 
     public static final HashMap<String, Block> MAPPED_BLOCKS = new HashMap<>();
     public static final ArrayList<Block> BLOCKS = new ArrayList<>();
-
-    public static ArrayList<Block> serverBlocks = new ArrayList<>();
-    public static HashMap<String, Block> mappedServerBlocks = new HashMap<>();
 
     public static short id = 0;
 
@@ -89,19 +87,9 @@ public class Blocks {
 
     //public static final Block BLUE = new SlabChest("blue",new BlockProperties().serverSide().withTexture("blue.png"));
 
-    //public static final Block RED = new Block("red").withTexture("red.png").transparentTexture(true);
-    //public static final Block YELLOW = new Block("yellow").withTexture("yellow.png").transparentTexture(true);
-
-
-    public static void clear() {
-        serverBlocks.clear();
-        mappedServerBlocks.clear();
-    }
-
-
     public static Block getBlockWithID(int id) {
         if(id >= BLOCKS.size()) {
-            return serverBlocks.get(id - BLOCKS.size());
+            return ServerSidedData.getInstance().BLOCKS.get(id - BLOCKS.size());
         }
         return BLOCKS.get(id);
     }
@@ -113,15 +101,14 @@ public class Blocks {
     public static void generateTextures() {
         WorldTextureManager.instance.clear();
         if(Settings.isServer) {
-            for(Block block : serverBlocks) {
+            for(Block block : ServerSidedData.getInstance().BLOCKS) {
                 block.generateTextures();
             }
         } else {
             for (Block block : BLOCKS) {
                 block.generateTextures();
             }
-            for(Block block : serverBlocks) {
-                //System.out.println("yadasdaswd");
+            for(Block block : ServerSidedData.getInstance().BLOCKS) {
                 block.generateTextures();
             }
         }

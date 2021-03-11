@@ -4,12 +4,11 @@ import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Data.Other.*;
 import Hilligans.Data.Other.BlockShapes.BlockShape;
+import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Item.BlockItem;
 import Hilligans.Item.ItemStack;
-import Hilligans.Util.Settings;
 import Hilligans.Util.Vector5f;
-import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
 import Hilligans.World.DataProvider;
 import Hilligans.World.World;
 import org.joml.Vector3f;
@@ -32,8 +31,7 @@ public class  Block {
             Blocks.BLOCKS.add(this);
             Blocks.MAPPED_BLOCKS.put(name, this);
         } else {
-            Blocks.serverBlocks.add(this);
-            Blocks.mappedServerBlocks.put(name,this);
+            ServerSidedData.getInstance().putBlock(name,this);
         }
         new BlockItem(name,this);
     }

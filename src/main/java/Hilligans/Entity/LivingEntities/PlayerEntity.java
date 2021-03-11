@@ -12,7 +12,7 @@ import Hilligans.Network.Packet.Server.SUpdateInventory;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
-import Hilligans.Server.PlayerData;
+import Hilligans.Data.Other.Server.PlayerData;
 import Hilligans.ServerMain;
 import Hilligans.Util.Settings;
 import Hilligans.Util.Vector5f;

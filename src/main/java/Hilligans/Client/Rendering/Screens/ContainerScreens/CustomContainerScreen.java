@@ -8,22 +8,10 @@ import Hilligans.Client.Rendering.Textures;
 import Hilligans.Container.Container;
 import Hilligans.Util.Settings;
 
-public class CustomContainerScreen extends ContainerScreen<Container> {
-
-    String texture;
-
-    public CustomContainerScreen(String textureName) {
-        this.texture = textureName;
-    }
+public abstract class CustomContainerScreen extends ContainerScreen<Container> {
 
     @Override
-    public void drawScreen(MatrixStack matrixStack) {
-        Texture texture1 = Textures.mappedTextures.get(texture);
-        if(texture1 != null) {
-            Renderer.drawCenteredTexture(matrixStack, texture1, 0, 0, 158, 162, Settings.guiSize);
-        }
-
-    }
+    public abstract void drawScreen(MatrixStack matrixStack);
 
     @Override
     public Container getContainer() {

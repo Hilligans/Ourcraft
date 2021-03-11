@@ -2,7 +2,7 @@ package Hilligans.Network;
 
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Network.Packet.Server.SChatMessage;
-import Hilligans.Server.PlayerData;
+import Hilligans.Data.Other.Server.PlayerData;
 import Hilligans.ServerMain;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;

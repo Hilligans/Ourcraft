@@ -1,19 +1,18 @@
 package Hilligans.Client.Rendering;
 
-import Hilligans.Client.Rendering.Texture;
 import Hilligans.ClientMain;
+import Hilligans.Data.Other.ServerSidedData;
 import org.lwjgl.opengl.GL30;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.jar.JarFile;
 
 public class Textures {
 
-    public static ArrayList<Texture> textures = new ArrayList<>();
+    public static final ArrayList<Texture> TEXTURES = new ArrayList<>();
 
-    public static HashMap<String, Texture> mappedTextures = new HashMap<>();
+    public static final HashMap<String, Texture> MAPPED_TEXTURES = new HashMap<>();
 
     public static final Texture ITEM_SLOT = new Texture("GUI/item_slot.png");
     public static final Texture INVENTORY = new Texture("GUI/inventory.png");
@@ -33,16 +32,31 @@ public class Textures {
     public static final Texture DOUBLE_ICON = new Texture("GUI/double_icon.png");
 
     public static void clear() {
-        for(Texture texture : mappedTextures.values()) {
+        for(Texture texture : MAPPED_TEXTURES.values()) {
             GL30.glDeleteTextures(texture.textureId);
         }
-        mappedTextures = new HashMap<>();
+        MAPPED_TEXTURES.clear();
     }
 
     public static void addTexture(String name, BufferedImage texture) {
-        Texture tex = new Texture(name,texture);
-        mappedTextures.put(name, tex);
+        Texture tex = new Texture(texture);
+        MAPPED_TEXTURES.put(name, tex);
         ClientMain.queued = tex;
+    }
+
+    public static Texture getTexture(int id) {
+        if(id >= TEXTURES.size()) {
+            return ServerSidedData.getInstance().TEXTURES.get(id - TEXTURES.size());
+        }
+        return TEXTURES.get(id);
+    }
+
+    public static Texture getTexture(String name) {
+        Texture texture = MAPPED_TEXTURES.get(name);
+        if(texture != null) {
+            return texture;
+        }
+        return ServerSidedData.getInstance().MAPPED_TEXTURES.get(name);
     }
 
 

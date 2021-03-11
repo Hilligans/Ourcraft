@@ -1,10 +1,9 @@
 package Hilligans.Network.Packet.Client;
 
-import Hilligans.Container.Slot;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
-import Hilligans.Server.PlayerData;
+import Hilligans.Data.Other.Server.PlayerData;
 
 public class CModifyStack extends PacketBase {
 
