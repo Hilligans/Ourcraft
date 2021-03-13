@@ -1,5 +1,7 @@
 package Hilligans.Network.Packet.Server;
 
+import Hilligans.Client.Rendering.Widgets.Widget;
+import Hilligans.Client.Rendering.Widgets.WidgetFetcher;
 import Hilligans.Container.Container;
 import Hilligans.Container.Containers.ContainerBuilder;
 import Hilligans.Container.Slot;
@@ -34,7 +36,26 @@ public class SRegisterContainer extends PacketBase {
             packetData.writeShort((short) slot.startY);
             packetData.writeShort((short) slot.id);
         }
+        short count = 0;
+        for(Widget widget : container.widgets) {
+            if(widget.widgetId != -1) {
+                count++;
+            }
+        }
+        packetData.writeShort(count);
+        for(Widget widget : container.widgets) {
+            if(widget.widgetId != -1) {
+                packetData.writeShort(widget.widgetId);
+                packetData.writeShort((short) widget.x);
+                packetData.writeShort((short) widget.y);
+                packetData.writeShort((short) widget.width);
+                packetData.writeShort((short) widget.height);
+            }
+        }
+
         packetData.writeString(textureName);
+
+
     }
 
     @Override
@@ -46,7 +67,11 @@ public class SRegisterContainer extends PacketBase {
         for(int x = 0; x < slots.length; x++) {
             slots[x] = new Slot(packetData.readShort(),packetData.readShort(),null,packetData.readShort());
         }
-        containerBuilder = new ContainerBuilder(type,packetData.readString(),slots,width,height);
+        ContainerBuilder.WidgetHolder[] widgets = new ContainerBuilder.WidgetHolder[packetData.readShort()];
+        for(int x = 0; x < widgets.length; x++) {
+            widgets[x] = new ContainerBuilder.WidgetHolder(Widget.widgets.get(packetData.readShort()),packetData.readShort(),packetData.readShort(),packetData.readShort(),packetData.readShort());
+        }
+        containerBuilder = new ContainerBuilder(type,packetData.readString(),slots,widgets,width,height);
     }
 
     @Override

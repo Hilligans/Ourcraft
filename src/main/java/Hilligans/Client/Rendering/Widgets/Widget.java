@@ -3,12 +3,15 @@ package Hilligans.Client.Rendering.Widgets;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Data.Primitives.IntegerWrapper;
 
+import java.util.ArrayList;
+
 public class Widget {
 
     public int x;
     public int y;
     public int width;
     public int height;
+    public short widgetId = -1;
 
     public int minY;
 
@@ -54,5 +57,13 @@ public class Widget {
     public boolean isActive() {
         return this.getY() >= minY;
     }
+
+    public static ArrayList<WidgetFetcher> widgets = new ArrayList<>();
+
+    public static void register() {
+        widgets.add(Button::new);
+    }
+
+
 
 }

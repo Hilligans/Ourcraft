@@ -6,6 +6,8 @@ import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.CustomContainerScreen;
 import Hilligans.Client.Rendering.Texture;
 import Hilligans.Client.Rendering.Textures;
+import Hilligans.Client.Rendering.Widgets.Widget;
+import Hilligans.Client.Rendering.Widgets.WidgetFetcher;
 import Hilligans.Container.Container;
 import Hilligans.Container.ContainerFetcher;
 import Hilligans.Container.Slot;
@@ -16,13 +18,15 @@ public class ContainerBuilder implements ContainerFetcher {
 
     short id;
     Slot[] slots;
+    WidgetHolder[] widgets;
     String textureName;
     int width;
     int height;
 
-    public ContainerBuilder(short id, String textureName, Slot[] slots, int width, int height) {
+    public ContainerBuilder(short id, String textureName, Slot[] slots, WidgetHolder[] widgets, int width, int height) {
         this.id = id;
         this.slots = slots;
+        this.widgets = widgets;
         this.textureName = textureName;
         this.width = width;
         this.height = height;
@@ -50,8 +54,32 @@ public class ContainerBuilder implements ContainerFetcher {
             slot.inventory = inventory;
             container.addSlot(slot.copy());
         }
+        for(WidgetHolder widgetHolder : widgets) {
+            container.addWidget(widgetHolder.get());
+        }
         container.setTextureSize(width,height);
         container.resize();
         return container;
     }
+
+    public static class WidgetHolder {
+        WidgetFetcher widgetFetcher;
+        int x;
+        int y;
+        int width;
+        int height;
+
+        public WidgetHolder(WidgetFetcher widgetFetcher, int x, int y, int width, int height) {
+            this.widgetFetcher = widgetFetcher;
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+        }
+
+        public Widget get() {
+            return widgetFetcher.getWidget(x,y,width,height);
+        }
+    }
+
 }

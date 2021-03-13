@@ -8,13 +8,18 @@ import org.lwjgl.opengl.GL11;
 
 public class Button extends Widget {
 
-    ButtonAction buttonAction;
+    public ButtonAction buttonAction;
     String name;
 
     public Button(int x, int y, int width, int height, String name, ButtonAction buttonAction) {
         super(x, y, width, height);
         this.name = name;
         this.buttonAction = buttonAction;
+        widgetId = 0;
+    }
+
+    public Button(int x, int y, int width, int height) {
+        this(x,y,width,height,"",null);
     }
 
     @Override

@@ -31,6 +31,7 @@ public abstract class ContainerScreen<T extends Container> extends ScreenBase {
     public void mouseClick(int x, int y, int mouseButton) {
         super.mouseClick(x, y, mouseButton);
         byte z = 0;
+        boolean hasSlot = false;
         for(Slot slot : container.slots) {
             if(slot.x < x && slot.y < y && slot.x + 16 * Settings.guiSize > x && slot.y + 16 * Settings.guiSize > y) {
                 if(mouseButton == GLFW_MOUSE_BUTTON_1) {
@@ -51,9 +52,13 @@ public abstract class ContainerScreen<T extends Container> extends ScreenBase {
                         }
                     }
                 }
+                hasSlot = true;
                 break;
             }
             z++;
+        }
+        if(!hasSlot) {
+
         }
     }
 }

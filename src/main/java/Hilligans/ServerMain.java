@@ -1,6 +1,7 @@
 package Hilligans;
 
 import Hilligans.Block.Blocks;
+import Hilligans.Client.Rendering.Widgets.Widget;
 import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Tag.CompoundTag;
 import Hilligans.Tag.IntegerTag;
@@ -31,6 +32,7 @@ public class ServerMain {
         Tag.register();
         Blocks.generateTextures();
         ServerSidedData.getInstance().register();
+        Widget.register();
 
         world = new ServerWorld();
         world.worldBuilders.add(new OreBuilder(Blocks.GRASS,Blocks.STONE).setFrequency(20));

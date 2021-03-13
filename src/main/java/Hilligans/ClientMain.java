@@ -7,6 +7,7 @@ import Hilligans.Client.Rendering.Screen;
 import Hilligans.Client.Rendering.Screens.EscapeScreen;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
 import Hilligans.Client.Rendering.Screens.TagEditorScreen;
+import Hilligans.Client.Rendering.Widgets.Widget;
 import Hilligans.Client.Rendering.World.*;
 import Hilligans.Client.Rendering.World.Managers.ShaderManager;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
@@ -90,6 +91,7 @@ public class ClientMain {
         PacketBase.register();
         Container.register();
         Tag.register();
+        Widget.register();
 
 
         System.setProperty("java.awt.headless", "true");

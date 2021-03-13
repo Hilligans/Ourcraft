@@ -1,5 +1,6 @@
 package Hilligans.Network;
 
+import Hilligans.ClientMain;
 import Hilligans.Container.Container;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -22,7 +23,12 @@ public class ClientNetworkInit extends ChannelInitializer<SocketChannel> {
 
     public static EventLoopGroup group;
 
+    public static String ip;
+    public static String port;
+
     public static void joinServer(String ip, String port) throws Exception {
+        ClientNetworkInit.ip = ip;
+        ClientNetworkInit.port = port;
 
         final String HOST = System.getProperty("host", ip);
         final int PORT = Integer.parseInt(System.getProperty("port", port));

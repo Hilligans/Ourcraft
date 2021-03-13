@@ -9,10 +9,12 @@ import Hilligans.Container.Container;
 import Hilligans.Container.ContainerFetcher;
 import Hilligans.Container.Containers.SlabBlockContainer;
 import Hilligans.Data.Primitives.TripleTypeWrapper;
+import Hilligans.Network.ClientNetworkInit;
 import Hilligans.Network.Packet.Server.SCreateTexture;
 import Hilligans.Network.Packet.Server.SRegisterBlock;
 import Hilligans.Network.Packet.Server.SRegisterContainer;
 import Hilligans.Network.ServerNetworkHandler;
+import Hilligans.Util.Settings;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.awt.image.BufferedImage;
@@ -36,7 +38,11 @@ public class ServerSidedData {
 
     public boolean hasGenerated = false;
 
-    public ServerSidedData() {}
+    public long version;
+
+    public ServerSidedData(long version) {
+        this.version = version;
+    }
 
     public void clear() {
         BLOCKS.clear();
@@ -45,6 +51,10 @@ public class ServerSidedData {
         MAPPED_TEXTURES.clear();
         CONTAINERS.clear();
         MAPPED_CONTAINER.clear();
+        IMAGES.clear();
+        QUEUED_CONTAINERS.clear();
+        hasGenerated = false;
+        version = Long.MIN_VALUE;
     }
 
     public void putBlock(String name, Block block) {
@@ -107,10 +117,23 @@ public class ServerSidedData {
     }
 
 
-    static ServerSidedData instance = new ServerSidedData();
+    static ServerSidedData instance = new ServerSidedData(System.currentTimeMillis());
 
     public static ServerSidedData getInstance() {
-        return instance;
+        if(Settings.isServer) {
+            return instance;
+        } else {
+            String path = ClientNetworkInit.ip + ":" + ClientNetworkInit.port;
+            ServerSidedData data = cachedData.get(path);
+            if(data == null) {
+                data = new ServerSidedData(Long.MIN_VALUE);
+                cachedData.put(path,data);
+            }
+            return data;
+
+        }
     }
+
+    public static HashMap<String, ServerSidedData> cachedData = new HashMap<>();
 
 }

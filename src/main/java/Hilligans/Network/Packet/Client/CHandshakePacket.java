@@ -19,10 +19,11 @@ import io.netty.channel.ChannelId;
 import java.awt.image.BufferedImage;
 
 
-public class  CHandshakePacket extends PacketBase {
+public class CHandshakePacket extends PacketBase {
 
     public int id;
     public String name;
+    public long version;
 
     public CHandshakePacket() {
         super(5);
@@ -32,21 +33,21 @@ public class  CHandshakePacket extends PacketBase {
     public void encode(PacketData packetData) {
         packetData.writeInt(Settings.gameVersion);
         packetData.writeString(ClientMain.name);
-      //  packetData.writeString("testabc");
+        packetData.writeLong(ServerSidedData.getInstance().version);
     }
 
     @Override
     public void decode(PacketData packetData) {
         id = packetData.readInt();
         name = packetData.readString();
-      //  test = packetData.readString();
+        version = packetData.readLong();
     }
 
     @Override
     public void handle() {
         if(id == Settings.gameVersion) {
             int playerId = Entity.getNewId();
-            ServerNetworkHandler.sendPacket(new SHandshakePacket(playerId),ctx);
+            ServerNetworkHandler.sendPacket(new SHandshakePacket(playerId,ServerSidedData.getInstance().version),ctx);
             ServerNetworkHandler.sendPacket(new SChatMessage(name + " has joined the game"));
             for(Entity entity : ServerMain.world.entities.values()) {
                 ServerNetworkHandler.sendPacket(new SCreateEntityPacket(entity),ctx);
@@ -63,8 +64,9 @@ public class  CHandshakePacket extends PacketBase {
             ServerMain.world.addEntity(playerEntity);
             ServerNetworkHandler.sendPacket(new SUpdatePlayer(spawn.x,spawn.y,spawn.z,0,0),ctx);
             playerData.playerInventory.age++;
-
-            ServerSidedData.getInstance().sendDataToClient(ctx);
+            if(version != ServerSidedData.getInstance().version) {
+                ServerSidedData.getInstance().sendDataToClient(ctx);
+            }
 
             ServerNetworkHandler.sendPacket(new SUpdateInventory(playerData.playerInventory),ctx);
 

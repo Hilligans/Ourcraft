@@ -2,10 +2,15 @@ package Hilligans.Container;
 
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ContainerScreen;
+import Hilligans.Client.Rendering.Widgets.Button;
+import Hilligans.Client.Rendering.Widgets.ButtonAction;
+import Hilligans.Client.Rendering.Widgets.Widget;
 import Hilligans.ClientMain;
 import Hilligans.Container.Containers.ChestContainer;
 import Hilligans.Container.Containers.InventoryContainer;
 import Hilligans.Data.Other.ServerSidedData;
+import Hilligans.Network.ClientNetworkHandler;
+import Hilligans.Network.Packet.Client.CActivateButton;
 import Hilligans.Util.Settings;
 
 import java.util.ArrayList;
@@ -20,6 +25,8 @@ public abstract class Container {
     public int channelId;
 
     public int uniqueId = -1;
+
+    public ArrayList<Widget> widgets = new ArrayList<>();
 
     public Container(int type) {
         this.type = type;
@@ -46,10 +53,15 @@ public abstract class Container {
         return this;
     }
 
+    public void addWidget(Widget widget) {
+        if(widget instanceof Button && !Settings.isServer) {
+            ((Button) widget).buttonAction = () -> ClientNetworkHandler.sendPacket(new CActivateButton(widgets.size()));
+        }
+        widgets.add(widget);
+    }
+
     public void addSlot(Slot slot) {
         slot.setContainerAndId((short) slots.size(),this);
-        //slot.id = (short) slots.size();
-        //slot.container = this;
         slots.add(slot);
     }
 
