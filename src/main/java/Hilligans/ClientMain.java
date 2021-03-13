@@ -273,6 +273,7 @@ public class ClientMain {
 
         if(queued != null) {
             queued.register1();
+            queued = null;
         }
 
         glUseProgram(shaderProgram);
