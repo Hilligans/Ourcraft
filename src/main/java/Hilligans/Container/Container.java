@@ -11,6 +11,8 @@ import Hilligans.Container.Containers.InventoryContainer;
 import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CActivateButton;
+import Hilligans.Network.Packet.Server.SUpdateContainer;
+import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.Util.Settings;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public abstract class Container {
 
     public int uniqueId = -1;
 
+    public ArrayList<Integer> trackedIntegers = new ArrayList<>();
     public ArrayList<Widget> widgets = new ArrayList<>();
 
     public Container(int type) {
@@ -51,6 +54,26 @@ public abstract class Container {
     public Container setUniqueId(int id) {
         this.uniqueId = id;
         return this;
+    }
+
+    public void trackInt(int slot, int val) {
+        if(setInt(slot,val)) {
+            ServerNetworkHandler.sendPacket(new SUpdateContainer((short) slot, val, uniqueId), channelId);
+        }
+    }
+
+    public boolean setInt(int slot, int val) {
+        while(slot >= trackedIntegers.size()) {
+            trackedIntegers.add(0);
+        }
+        return trackedIntegers.set(slot,val) != val;
+    }
+
+    public int getInt(int slot) {
+        while(slot >= trackedIntegers.size()) {
+            trackedIntegers.add(0);
+        }
+        return trackedIntegers.get(slot);
     }
 
     public void addWidget(Widget widget) {

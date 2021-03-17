@@ -24,6 +24,8 @@ public class StringRenderer {
 
     public int mappedCharacters = -1;
 
+    public int stringHeight = 58;
+
     public void loadCharacters1() {
         String vals = "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ";
         int val = 0;
@@ -63,6 +65,29 @@ public class StringRenderer {
         glEnable(GL_DEPTH_TEST);
     }
 
+    public static void drawCenteredString(MatrixStack matrixStack, String string, int y, float scale) {
+        matrixStack.push();
+        glDisable(GL_DEPTH_TEST);
+        int width = 0;
+        ArrayList<Vector5f> vector5fs = new ArrayList<>();
+        ArrayList<Integer> indices = new ArrayList<>();
+        for(int z = 0; z < string.length(); z++) {
+            vector5fs.addAll(Arrays.asList(getVertices("" + string.charAt(z), width ,y,scale)));
+            width += instance.characterOffset.get("" + string.charAt(z)).getTypeA() * scale;
+            indices.addAll(Arrays.asList(getIndices(z * 4)));
+        }
+        for(Vector5f vector5f : vector5fs) {
+            vector5f.addX(ClientMain.windowX / 2f - width / 2f);
+        }
+        int id = VAOManager.createVAO(VAOManager.convertVertices(vector5fs,false),VAOManager.convertIndices(indices));
+        glUseProgram(ClientMain.shaderProgram);
+        matrixStack.applyColor();
+        matrixStack.applyTransformation();
+        draw(id,vector5fs.size());
+        matrixStack.pop();
+        glEnable(GL_DEPTH_TEST);
+    }
+
     public static void drawColoredString(MatrixStack matrixStack, String string, int x, int y, float scale) {
         matrixStack.push();
         int width = 0;
@@ -83,17 +108,15 @@ public class StringRenderer {
     }
 
     private static void draw(int id, int size) {
-        //glDisable(GL_CULL_FACE);
         GL30.glBindTexture(GL_TEXTURE_2D,instance.mappedCharacters);
         GL30.glBindVertexArray(id);
         glDrawElements(GL_TRIANGLES, size * 3 / 2,GL_UNSIGNED_INT,0);
-        //glEnable(GL_CULL_FACE);
         VAOManager.destroyBuffer(id);
     }
 
     private static Vector5f[] getVertices(String character, int x, int y, float scale) {
         int width = instance.characterOffset.get(character).getTypeA();
-        int height = (int) (58 * scale);
+        int height = (int) (instance.stringHeight * scale);
         int offset = 48 * instance.characterOffset.get(character).getTypeB();
         return new Vector5f[]{new Vector5f(x, y, 0,(float)offset / (instance.characterOffset.size() * 48),0),new Vector5f(x,y + height,0,(float)offset / (instance.characterOffset.size() * 48),1), new Vector5f(x + width * scale,y,0,(float)(width + offset) / (instance.characterOffset.size() * 48),0), new Vector5f(x + width * scale, y + height, 0,(float)(width + offset) / (instance.characterOffset.size()  * 48),1)};
     }

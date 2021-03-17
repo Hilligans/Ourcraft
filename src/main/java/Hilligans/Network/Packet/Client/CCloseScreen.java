@@ -21,6 +21,8 @@ public class CCloseScreen extends PacketBase {
     @Override
     public void handle() {
         PlayerData playerData = ServerNetworkHandler.getPlayerData(ctx);
-        playerData.openContainer(new InventoryContainer(playerData.playerInventory));
+        if(playerData != null) {
+            playerData.openContainer(new InventoryContainer(playerData.playerInventory));
+        }
     }
 }

@@ -2,6 +2,8 @@ package Hilligans.Client.Rendering.Widgets;
 
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.Renderer;
+import Hilligans.Client.Rendering.Texture;
+import Hilligans.Client.Rendering.Textures;
 import Hilligans.Client.Rendering.World.StringRenderer;
 import Hilligans.ClientMain;
 import org.lwjgl.opengl.GL11;
@@ -9,6 +11,7 @@ import org.lwjgl.opengl.GL11;
 public class Button extends Widget {
 
     public ButtonAction buttonAction;
+    public boolean enabled = true;
     String name;
 
     public Button(int x, int y, int width, int height, String name, ButtonAction buttonAction) {
@@ -22,11 +25,20 @@ public class Button extends Widget {
         this(x,y,width,height,"",null);
     }
 
+    public Button isEnabled(boolean enabled) {
+        this.enabled = enabled;
+        return this;
+    }
+
     @Override
     public void render(MatrixStack matrixStack, int xOffset, int yOffset) {
         super.render(matrixStack, xOffset, yOffset);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
-        Renderer.drawTexture(matrixStack, ClientMain.outLine,x,y,width,height);
+        if(enabled) {
+            Renderer.drawTexture(matrixStack, Textures.BUTTON, x, y, width, height);
+        } else {
+            Renderer.drawTexture(matrixStack, Textures.BUTTON_DARK,x,y,width,height);
+        }
         StringRenderer.drawString(matrixStack, name,x,y,0.5f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
@@ -34,6 +46,8 @@ public class Button extends Widget {
     @Override
     public void activate(int x, int y) {
         super.activate(x, y);
-        buttonAction.onPress();
+        if(enabled) {
+            buttonAction.onPress();
+        }
     }
 }

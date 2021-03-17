@@ -10,6 +10,7 @@ public class SUpdateContainer extends PacketBase {
     byte slot;
     ItemStack itemStack;
     int containerId = 0;
+    boolean trackInt = false;
 
     public SUpdateContainer() {
         super(14);
@@ -22,17 +23,40 @@ public class SUpdateContainer extends PacketBase {
         this.containerId = uniqueId;
     }
 
+    short integerId;
+    int val;
+
+    public SUpdateContainer(short integerId, int val, int containerId) {
+        this();
+        this.integerId = integerId;
+        this.val = val;
+        this.containerId = containerId;
+        trackInt = true;
+    }
+
     @Override
     public void encode(PacketData packetData) {
-        packetData.writeByte(slot);
-        packetData.writeItemStack(itemStack);
+        packetData.writeBoolean(trackInt);
+        if(trackInt) {
+            packetData.writeShort(integerId);
+            packetData.writeInt(val);
+        } else {
+            packetData.writeByte(slot);
+            packetData.writeItemStack(itemStack);
+        }
         packetData.writeInt(containerId);
     }
 
     @Override
     public void decode(PacketData packetData) {
-        slot = packetData.readByte();
-        itemStack = packetData.readItemStack();
+        trackInt = packetData.readBoolean();
+        if(trackInt) {
+            integerId = packetData.readShort();
+            val = packetData.readInt();
+        } else {
+            slot = packetData.readByte();
+            itemStack = packetData.readItemStack();
+        }
         containerId = packetData.readInt();
     }
 
@@ -40,7 +64,11 @@ public class SUpdateContainer extends PacketBase {
     public void handle() {
         if(ClientData.openContainer != null) {
             if(ClientData.openContainer.uniqueId == containerId) {
-                ClientData.openContainer.slots.get(slot).setContents(itemStack);
+                if(trackInt) {
+                    ClientData.openContainer.setInt(integerId,val);
+                } else {
+                    ClientData.openContainer.slots.get(slot).setContents(itemStack);
+                }
             }
         }
     }

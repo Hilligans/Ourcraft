@@ -1,6 +1,7 @@
 package Hilligans.Network;
 
 import Hilligans.Block.Blocks;
+import Hilligans.Client.Rendering.Screens.JoinScreen;
 import Hilligans.Client.Rendering.Textures;
 import Hilligans.ClientMain;
 import Hilligans.Network.Packet.Client.CHandshakePacket;
@@ -14,8 +15,9 @@ public class ClientNetworkHandler extends SimpleChannelInboundHandler<PacketData
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        ClientNetworkHandler.sendPacket(new CHandshakePacket());
         super.channelActive(ctx);
+        ClientNetworkHandler.sendPacket(new CHandshakePacket());
+        ClientMain.renderWorld = true;
     }
 
 
@@ -24,12 +26,12 @@ public class ClientNetworkHandler extends SimpleChannelInboundHandler<PacketData
         Textures.clear();
         System.out.println("DISCONNECTED FROM SERVER");
         if(!ClientMain.valid) {
-            System.out.println("YOUR GAME VERSION MAY BE OUT OF DATE");
+            //System.out.println("YOUR GAME VERSION MAY BE OUT OF DATE");
         }
+        ClientMain.renderWorld = false;
+        //ClientMain.openScreen(new JoinScreen());
+        //ctx.
         super.channelInactive(ctx);
-
-        glfwDestroyWindow(ClientMain.window);
-        System.exit(1);
     }
 
     @Override

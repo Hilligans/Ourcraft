@@ -7,20 +7,18 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 public class KeyHandler {
 
-    public static ArrayList<DoubleTypeWrapper<KeyPress, Integer>> keyPresses = new ArrayList<>();
-    //public static Int2ObjectOpenHashMap<KeyPress> mappedKeyPresses = new Int2ObjectOpenHashMap<>();
-    public static ArrayList<CharPress> charPresses = new ArrayList<>();
     public static Int2CharOpenHashMap mappedKeys = new Int2CharOpenHashMap();
     public static Int2CharOpenHashMap shiftMappedKeys = new Int2CharOpenHashMap();
     public static boolean[] keyPressed = new boolean[350];
 
-    public static ArrayList<KeyPress> removedKeyPresses = new ArrayList<>();
-    public static ArrayList<CharPress> removedCharPresses = new ArrayList<>();
+    public static ConcurrentLinkedQueue<CharPress> charPresses = new ConcurrentLinkedQueue<>();
+    public static ConcurrentLinkedQueue<DoubleTypeWrapper<KeyPress, Integer>> keyPresses = new ConcurrentLinkedQueue<>();
 
     public static void register(KeyPress keyPress, int id) {
         keyPresses.add(new DoubleTypeWrapper<>(keyPress,id));
@@ -31,38 +29,19 @@ public class KeyHandler {
     }
 
     public static void remove(KeyPress keyPress) {
-        removedKeyPresses.add(keyPress);
+        for(DoubleTypeWrapper<KeyPress, Integer> wrapper : keyPresses) {
+            if(keyPress == wrapper.getTypeA()) {
+                keyPresses.remove(wrapper);
+                break;
+            }
+        }
     }
 
     public static void remove(CharPress charPress) {
-        removedCharPresses.add(charPress);
-    }
-
-    private static void handleRemove() {
-        for(KeyPress keyPress : removedKeyPresses) {
-            for (int x = 0; x < keyPresses.size(); x++) {
-                DoubleTypeWrapper<KeyPress, Integer> doubleTypeWrapper = keyPresses.get(x);
-                if (doubleTypeWrapper.getTypeA() == keyPress) {
-                    keyPresses.remove(x);
-                    break;
-                }
-            }
-        }
-        for(CharPress charPress : removedCharPresses) {
-            for (int x = 0; x < charPresses.size(); x++) {
-                CharPress charPress1 = charPresses.get(x);
-                if (charPress1 == charPress) {
-                    charPresses.remove(x);
-                    break;
-                }
-            }
-        }
-        removedKeyPresses.clear();
-        removedCharPresses.clear();
+        charPresses.remove(charPress);
     }
 
     private static void onPress(int id) {
-        handleRemove();
         char key = getChar(id);
         for(CharPress charPress : charPresses) {
             if(key != Character.MIN_VALUE) {
@@ -78,7 +57,6 @@ public class KeyHandler {
     }
 
     private static void onUnPress(int id) {
-        handleRemove();
         char key = getChar(id);
         for(CharPress charPress : charPresses) {
             if(key != Character.MIN_VALUE) {
@@ -94,7 +72,6 @@ public class KeyHandler {
     }
 
     private static void onRepeat(int id) {
-        handleRemove();
         char key = getChar(id);
         for(CharPress charPress : charPresses) {
             if(key != Character.MIN_VALUE) {

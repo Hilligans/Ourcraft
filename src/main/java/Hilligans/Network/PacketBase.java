@@ -52,6 +52,8 @@ public abstract class PacketBase {
         packets.add(SCreateTexture::new);
         packets.add(SRegisterBlock::new);
         packets.add(SRegisterContainer::new);
+        packets.add(SRegisterItem::new);
+        packets.add(SDisconnectPacket::new);
 
 
 

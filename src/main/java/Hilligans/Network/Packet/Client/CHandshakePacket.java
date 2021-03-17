@@ -14,6 +14,9 @@ import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.ServerMain;
 import Hilligans.Util.Settings;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelId;
 
 import java.awt.image.BufferedImage;
@@ -71,7 +74,18 @@ public class CHandshakePacket extends PacketBase {
             ServerNetworkHandler.sendPacket(new SUpdateInventory(playerData.playerInventory),ctx);
 
         } else {
-            ctx.channel().close();
+            try {
+                ServerNetworkHandler.sendPacket(new SDisconnectPacket("Game version is incompatible"),ctx).addListener(new ChannelFutureListener() {
+                    @Override
+                    public void operationComplete(ChannelFuture future) throws Exception {
+                        if (ctx.channel().isOpen()) {
+                            ctx.channel().close().awaitUninterruptibly(10);
+                        }
+                    }
+                });
+                //ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
+            } catch (Exception ignored) {}
+            //ctx.channel().close();
         }
     }
 }

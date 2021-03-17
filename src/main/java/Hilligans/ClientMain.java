@@ -16,6 +16,7 @@ import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
 import Hilligans.Client.Rendering.Texture;
 import Hilligans.Client.Rendering.Textures;
+import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Entity.Entity;
 import Hilligans.Item.ItemStack;
 import Hilligans.Network.Packet.Client.CCloseScreen;
@@ -68,6 +69,7 @@ public class ClientMain {
     public static boolean valid = false;
 
     public static boolean screenShot = false;
+    public static boolean renderWorld = false;
 
     public static Screen screen;
 
@@ -126,11 +128,15 @@ public class ClientMain {
         KeyHandler.register(new KeyPress() {
             @Override
             public void onPress() {
-                if(screen == null) {
-                    openScreen(new EscapeScreen());
-                    //glfwSetWindowShouldClose(window, true);
+                if(renderWorld) {
+                    if (screen == null) {
+                        openScreen(new EscapeScreen());
+                        //glfwSetWindowShouldClose(window, true);
+                    } else {
+                        closeScreen();
+                    }
                 } else {
-                    closeScreen();
+                    openScreen(new JoinScreen());
                 }
             }
         },KeyHandler.GLFW_KEY_ESCAPE);
@@ -241,14 +247,13 @@ public class ClientMain {
         createCallbacks();
 
 
+
         while(!glfwWindowShouldClose(window)) {
             //processInput(window);
 
             mouseLocked = screen == null;
             render();
-
-            countFPS();
-
+            glfwPollEvents();
 
             Camera.updateMouse();
         }
@@ -257,9 +262,16 @@ public class ClientMain {
         System.exit(1);
     }
 
+    static long timeSinceLastDraw = 0;
+    static float drawTime = 1000f / Settings.maxFps;
 
     public static void render() {
-
+        long currentTime = System.currentTimeMillis();
+        if(currentTime - timeSinceLastDraw < drawTime) {
+            return;
+        }
+        countFPS();
+        timeSinceLastDraw = currentTime;
         //System.out.println("RENDERING");
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -271,10 +283,7 @@ public class ClientMain {
             refreshTexture = false;
         }
 
-        if(queued != null) {
-            queued.register1();
-            queued = null;
-        }
+        ServerSidedData.getInstance().tick();
 
         glUseProgram(shaderProgram);
         glBindTexture(GL_TEXTURE_2D, texture);
@@ -287,35 +296,36 @@ public class ClientMain {
         screenStack.applyTransformation();
 
 
+        if(renderWorld) {
+            clientWorld.tick();
+            clientWorld.render(matrixStack);
 
-        clientWorld.tick();
-        clientWorld.render(matrixStack);
+            BlockPos pos = clientWorld.traceBlockToBreak(Camera.pos.x, Camera.pos.y + Camera.playerBoundingBox.eyeHeight, Camera.pos.z, Camera.pitch, Camera.yaw);
+            if (pos != null) {
+                BlockState blockState = clientWorld.getBlockState(pos);
+                int id = blockState.getBlock().blockShape.generateOutline(clientWorld, pos);
+                glUseProgram(lineShader);
+                GL30.glBindVertexArray(id);
+                matrixStack.push();
+                matrixStack.translate(pos.x, pos.y, pos.z);
+                matrixStack.applyTransformation(ClientMain.lineShader);
+                glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, 0);
+                matrixStack.pop();
+                VAOManager.destroyBuffer(id);
+            }
 
-        BlockPos pos = clientWorld.traceBlockToBreak(Camera.pos.x,Camera.pos.y + Camera.playerBoundingBox.eyeHeight,Camera.pos.z,Camera.pitch,Camera.yaw);
-        if(pos != null) {
-            BlockState blockState = clientWorld.getBlockState(pos);
-            int id = blockState.getBlock().blockShape.generateOutline(clientWorld,pos);
-            glUseProgram(lineShader);
-            GL30.glBindVertexArray(id);
-            matrixStack.push();
-            matrixStack.translate(pos.x,pos.y,pos.z);
-            matrixStack.applyTransformation(ClientMain.lineShader);
-            glDrawElements(GL_LINES, 24,GL_UNSIGNED_INT,0);
-            matrixStack.pop();
-            VAOManager.destroyBuffer(id);
+            glUseProgram(shaderProgram);
+
+            if (ClientData.f3) {
+                StringRenderer.drawString(screenStack, Camera.getString(), windowX / 2, 0, 0.5f);
+                StringRenderer.drawString(screenStack, "FPS:" + fps, windowX / 2, 29, 0.5f);
+                StringRenderer.drawString(screenStack, clientWorld.biomeMap.getBiome((int) Camera.pos.x, (int) Camera.pos.z).name, windowX / 2, 58, 0.5f);
+                StringRenderer.drawString(screenStack, "vel y:" + Camera.velY, windowX / 2, 87, 0.5f);
+            }
+
+            InventoryScreen.drawHotbar(screenStack);
+            ChatWindow.render1(screenStack);
         }
-
-        glUseProgram(shaderProgram);
-
-        if(ClientData.f3) {
-            StringRenderer.drawString(screenStack, Camera.getString(), windowX / 2, 0, 0.5f);
-            StringRenderer.drawString(screenStack, "FPS:" + fps, windowX / 2, 29, 0.5f);
-            StringRenderer.drawString(screenStack, clientWorld.biomeMap.getBiome((int) Camera.pos.x, (int) Camera.pos.z).name, windowX / 2, 58, 0.5f);
-            StringRenderer.drawString(screenStack, "vel y:" + Camera.velY, windowX / 2,87,0.5f);
-        }
-
-        InventoryScreen.drawHotbar(screenStack);
-        ChatWindow.render1(screenStack);
 
         if(screen != null) {
             screen.render(screenStack);
@@ -324,7 +334,6 @@ public class ClientMain {
 
         
         glfwSwapBuffers(window);
-        glfwPollEvents();
 
         if(screenShot) {
             screenShot = false;
@@ -513,32 +522,4 @@ public class ClientMain {
             }
         });
     }
-
-    public static void openSingle() {
-        PointerBuffer outPath = memAllocPointer(1);
-        try {
-            checkResult(
-                    NFD_OpenDialog("dat", null, outPath),
-                    outPath
-            );
-        } finally {
-            memFree(outPath);
-        }
-    }
-
-    private static void checkResult(int result, PointerBuffer path) {
-        switch (result) {
-            case NFD_OKAY:
-                //System.out.println("Success!");
-                System.out.println(path.getStringUTF8(0));
-                nNFD_Free(path.get(0));
-                break;
-            case NFD_CANCEL:
-                System.out.println("User pressed cancel.");
-                break;
-            default: // NFD_ERROR
-                System.err.format("Error: %s\n", NFD_GetError());
-        }
-    }
-
 }

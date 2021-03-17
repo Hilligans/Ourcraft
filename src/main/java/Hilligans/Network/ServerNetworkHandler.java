@@ -4,10 +4,7 @@ import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Network.Packet.Server.SChatMessage;
 import Hilligans.Data.Other.Server.PlayerData;
 import Hilligans.ServerMain;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelId;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.*;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.handler.ssl.SslHandler;
@@ -19,7 +16,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ServerNetworkHandler extends SimpleChannelInboundHandler<PacketData> {
+public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketData> {
 
     static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     static ArrayList<ChannelId> channelIds = new ArrayList<>();
@@ -40,7 +37,6 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<PacketData
                         channelIds.add(ctx.channel().id());
                     }
                 });
-        //System.out.println("STARTING SERVER");
         super.channelActive(ctx);
     }
 
@@ -69,7 +65,7 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<PacketData
         ctx.close();
     }
 
-    public static void sendPacket(PacketBase packetBase) {
+    public static ChannelFuture sendPacket(PacketBase packetBase) {
         for(int x = 0; x < channelIds.size(); x++) {
             Channel channel = channels.find(channelIds.get(x));
             if(channel == null) {
@@ -77,8 +73,9 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<PacketData
                 x--;
                 continue;
             }
-            channel.writeAndFlush(new PacketData(packetBase));
+            return channel.writeAndFlush(new PacketData(packetBase));
         }
+        return null;
     }
 
     public static Channel getChannel(int id) {
@@ -86,8 +83,8 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<PacketData
         return channels.find(mappedChannels.get(id));
     }
 
-    public static void sendPacket(PacketBase packetBase, ChannelHandlerContext ctx) {
-        ctx.channel().writeAndFlush(new PacketData(packetBase));
+    public static ChannelFuture sendPacket(PacketBase packetBase, ChannelHandlerContext ctx) {
+        return ctx.channel().writeAndFlush(new PacketData(packetBase));
     }
 
     public static void sendPacket(PacketBase packetBase, PlayerEntity playerEntity) {

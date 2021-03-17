@@ -20,6 +20,7 @@ import io.netty.channel.ChannelHandlerContext;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ServerSidedData {
 
@@ -32,6 +33,7 @@ public class ServerSidedData {
     public final ArrayList<ContainerFetcher> CONTAINERS = new ArrayList<>();
     public final HashMap<String, ContainerFetcher> MAPPED_CONTAINER = new HashMap<>();
 
+    public final ConcurrentLinkedQueue<Texture> QUEUED_TEXTURES = new ConcurrentLinkedQueue<>();
     public final ArrayList<TripleTypeWrapper<BufferedImage, String, Boolean>> IMAGES = new ArrayList<>();
     //Container,name,path
     public final ArrayList<TripleTypeWrapper<Container,String,String>> QUEUED_CONTAINERS = new ArrayList<>();
@@ -57,13 +59,22 @@ public class ServerSidedData {
         version = Long.MIN_VALUE;
     }
 
+    public void tick() {
+        if(!QUEUED_TEXTURES.isEmpty()) {
+            for(Texture texture : QUEUED_TEXTURES) {
+                texture.register1();
+            }
+            QUEUED_TEXTURES.clear();
+        }
+    }
+
     public void putBlock(String name, Block block) {
         BLOCKS.add(block);
         MAPPED_BLOCKS.put(name,block);
     }
 
     public void putTexture(String name, Texture texture) {
-        ClientMain.queued = texture;
+        QUEUED_TEXTURES.add(texture);
         TEXTURES.add(texture);
         MAPPED_TEXTURES.put(name,texture);
     }

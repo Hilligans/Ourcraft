@@ -108,6 +108,10 @@ public class Renderer {
         glEnable(GL_DEPTH_TEST);
     }
 
+    public static void drawTexture(MatrixStack matrixStack, Texture texture, int x, int y, int startX, int startY, int endX, int endY) {
+        drawTexture(matrixStack,texture,x,y,(int)((endX - startX) * Settings.guiSize),(int) ((endY - startY) * Settings.guiSize),startX,startY,endX,endY);
+    }
+
     public static void drawCenteredTexture(MatrixStack matrixStack, Texture texture,float size) {
         drawTexture(matrixStack, texture, (int)(ClientMain.windowX / 2 - texture.width / 2 * size), (int)(ClientMain.windowY / 2 - texture.height / 2 * size),(int)(texture.width * size), (int)(texture.height * size));
     }
