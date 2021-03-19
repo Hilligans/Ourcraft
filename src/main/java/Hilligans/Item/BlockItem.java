@@ -7,6 +7,7 @@ import Hilligans.Client.Camera;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Data.Other.BlockPos;
+import Hilligans.Data.Other.ItemProperties;
 import Hilligans.Data.Other.RayResult;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
@@ -21,14 +22,12 @@ public class BlockItem extends Item {
     public Block block;
 
     public BlockItem(String name, Block block) {
-        super(name);
+        super(name, new ItemProperties().serverSide(block.blockProperties.serverSide));
         this.block = block;
     }
 
     @Override
     public boolean onActivate(World world, PlayerEntity playerEntity) {
-
-
         RayResult rayResult;
         if (world.isServer()) {
             rayResult = world.traceBlock(playerEntity.x, playerEntity.y + playerEntity.boundingBox.eyeHeight, playerEntity.z, playerEntity.pitch, playerEntity.yaw);

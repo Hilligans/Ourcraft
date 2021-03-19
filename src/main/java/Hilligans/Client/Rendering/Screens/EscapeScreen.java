@@ -23,9 +23,4 @@ public class EscapeScreen extends ScreenBase {
             ClientMain.openScreen(new SettingsScreen());
         }));
     }
-
-    @Override
-    public void close() {
-        super.close();
-    }
 }

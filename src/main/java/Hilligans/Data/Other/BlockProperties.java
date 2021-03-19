@@ -8,6 +8,8 @@ public class BlockProperties {
     public boolean serverSide = false;
     public boolean transparent = false;
     public boolean canWalkThrough = false;
+    public boolean airBlock = false;
+    public int blockStateSize = 0;
     public BlockTextureManager blockTextureManager = new BlockTextureManager();
 
     public BlockProperties serverSide() {
@@ -17,6 +19,11 @@ public class BlockProperties {
 
     public BlockProperties transparent() {
         transparent = true;
+        return this;
+    }
+
+    public BlockProperties airBlock() {
+        airBlock = true;
         return this;
     }
 

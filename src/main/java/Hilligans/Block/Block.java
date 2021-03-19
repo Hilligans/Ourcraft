@@ -13,7 +13,7 @@ import Hilligans.World.DataProvider;
 import Hilligans.World.World;
 import org.joml.Vector3f;
 
-public class  Block {
+public class Block {
 
     public String name;
     public short id;
@@ -58,6 +58,10 @@ public class  Block {
 
     public boolean hasBlockState() {
         return false;
+    }
+
+    public int blockStateByteCount() {
+        return blockProperties.blockStateSize;
     }
 
     public BlockState getStateWithData(short data) {

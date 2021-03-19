@@ -21,6 +21,7 @@ public class SRegisterBlock extends PacketBase {
     public SRegisterBlock(Block block) {
         this();
         this.block = block;
+        this.stateSize = (byte) block.blockStateByteCount();
         if(block instanceof SlabBlock) {
             type = 1;
         }
@@ -57,21 +58,10 @@ public class SRegisterBlock extends PacketBase {
                 block = new SlabBlock(name,blockProperties);
                 break;
         }
-        packetData.readByte();
+        block.blockProperties.blockStateSize = packetData.readByte();
         String textureName = packetData.readString();
-        System.out.println(textureName);
         blockProperties.withTexture(textureName);
-        for(int x = 0; x < 6; x++) {
-            //String tex = packetData.readString();
-            //if(!tex.equals(" ")) {
-            //    blockProperties.withSidedTexture(tex,x);
-            //}
-        }
-
         ClientMain.refreshTexture = true;
-
-        //block.generateTextures();
-       // stateSize = packetData.readByte();
     }
 
     @Override

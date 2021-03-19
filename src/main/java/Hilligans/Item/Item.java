@@ -2,18 +2,25 @@ package Hilligans.Item;
 
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.World.StringRenderer;
+import Hilligans.Data.Other.ItemProperties;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.World.World;
 
 public class Item {
 
     public String name;
+    public ItemProperties itemProperties;
     public int id;
 
-    public Item(String name) {
+    public Item(String name, ItemProperties itemProperties) {
         this.name = name;
-        Items.ITEMS.add(this);
-        Items.HASHED_ITEMS.put(name,this);
+        this.itemProperties = itemProperties;
+        if(itemProperties.serverSide) {
+
+        } else {
+            Items.ITEMS.add(this);
+            Items.HASHED_ITEMS.put(name, this);
+        }
         id = Items.getNextId();
     }
 

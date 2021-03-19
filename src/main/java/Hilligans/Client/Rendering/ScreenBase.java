@@ -39,7 +39,7 @@ public abstract class ScreenBase implements Screen {
     }
 
     @Override
-    public void close() {
+    public void close(boolean replaced) {
         for(Widget widget : widgets) {
             widget.screenClose();
         }
@@ -51,7 +51,7 @@ public abstract class ScreenBase implements Screen {
         for(KeyPress keyPress : keyPresses) {
             KeyHandler.remove(keyPress);
         }
-        ClientNetworkHandler.sendPacket(new CCloseScreen());
+        ClientNetworkHandler.sendPacket(new CCloseScreen(replaced));
     }
 
     @Override

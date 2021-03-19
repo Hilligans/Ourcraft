@@ -32,6 +32,10 @@ public class ItemStack {
         return 0;
     }
 
+    public void add(int amount) {
+        count = (byte) Math.min(count + amount, 64);
+    }
+
     public ItemStack mergeStack(ItemStack itemStack) {
         int leftOver = itemStack.count - addItem(itemStack);
         if(leftOver == 0) {
@@ -90,6 +94,10 @@ public class ItemStack {
         if(!isEmpty()) {
             item.render(matrixStack,x,y, (int) (Settings.guiSize * 8), this);
         }
+    }
+
+    public ItemStack copy() {
+        return new ItemStack(item,count);
     }
 
     public static ItemStack emptyStack() {

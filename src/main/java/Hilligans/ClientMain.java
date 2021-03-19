@@ -4,6 +4,7 @@ import Hilligans.Client.*;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Client.Rendering.Screen;
+import Hilligans.Client.Rendering.Screens.ContainerScreens.CreativeInventoryScreen;
 import Hilligans.Client.Rendering.Screens.EscapeScreen;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
 import Hilligans.Client.Rendering.Screens.TagEditorScreen;
@@ -19,9 +20,7 @@ import Hilligans.Client.Rendering.Textures;
 import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Entity.Entity;
 import Hilligans.Item.ItemStack;
-import Hilligans.Network.Packet.Client.CCloseScreen;
-import Hilligans.Network.Packet.Client.CDropItem;
-import Hilligans.Network.Packet.Client.CUseItem;
+import Hilligans.Network.Packet.Client.*;
 import Hilligans.Network.PacketBase;
 import Hilligans.Tag.Tag;
 import Hilligans.Util.Settings;
@@ -33,7 +32,6 @@ import Hilligans.Client.Rendering.Screens.JoinScreen;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.ClientNetworkInit;
-import Hilligans.Network.Packet.Client.CSendBlockChanges;
 import Hilligans.Client.Camera;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BlockState;
@@ -70,6 +68,7 @@ public class ClientMain {
 
     public static boolean screenShot = false;
     public static boolean renderWorld = false;
+    public static boolean creativeMode = true;
 
     public static Screen screen;
 
@@ -152,7 +151,11 @@ public class ClientMain {
             @Override
             public void onPress() {
                 if(screen == null) {
-                    openScreen(new InventoryScreen());
+                    if(creativeMode) {
+                        openScreen(new CreativeInventoryScreen());
+                    } else {
+                        openScreen(new InventoryScreen());
+                    }
                 } else if(screen instanceof ContainerScreen) {
                     closeScreen();
                 }
@@ -395,22 +398,25 @@ public class ClientMain {
         }
         if(screen != null) {
             glfwSetCursorPos(window, (double)windowX / 2, (double)windowY / 2);
-            screen.close();
+            screen.close(false);
             screen = null;
         }
         if(ClientData.openContainer != null) {
             ClientData.openContainer.closeContainer();
         }
 
-        ClientNetworkHandler.sendPacket(new CCloseScreen());
+        ClientNetworkHandler.sendPacket(new CCloseScreen(false));
     }
 
     public static void openScreen(Screen screen1) {
         if(screen != null) {
-            screen.close();
+            screen.close(true);
         }
         screen = screen1;
         if(screen1 instanceof ContainerScreen) {
+            if(!(screen1 instanceof InventoryScreen)) {
+
+            }
             ContainerScreen<?> screen2 = (ContainerScreen<?>) screen1;
             Container container = screen2.getContainer();
             screen2.setContainer(container);
@@ -419,12 +425,13 @@ public class ClientMain {
             }
             ClientData.openContainer = container;
         }
+        ClientNetworkHandler.sendPacket(new COpenScreen(screen1));
     }
 
     public static void openScreen(Container container) {
         ContainerScreen<?> containerScreen = container.getContainerScreen();
         if(screen != null) {
-            screen.close();
+            screen.close(true);
         }
         screen = containerScreen;
         containerScreen.setContainer(container);
@@ -521,5 +528,12 @@ public class ClientMain {
                 }
             }
         });
+    }
+
+    public static DoubleBuffer getMousePos() {
+        DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
+        DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
+        glfwGetCursorPos(window, x, y);
+        return BufferUtils.createDoubleBuffer(2).put(x.get()).put(y.get());
     }
 }

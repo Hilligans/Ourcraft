@@ -107,7 +107,7 @@ public class ChatWindow implements Screen {
     }
 
     @Override
-    public void close() {
+    public void close(boolean replaced) {
         string = "";
         typing = false;
     }

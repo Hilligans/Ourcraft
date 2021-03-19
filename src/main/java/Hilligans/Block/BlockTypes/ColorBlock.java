@@ -23,8 +23,12 @@ public class ColorBlock extends Block {
     }
 
     @Override
-    public Vector5f[] getVertices(int side, float size, BlockState blockState, BlockPos blockPos) {
+    public int blockStateByteCount() {
+        return 2;
+    }
 
+    @Override
+    public Vector5f[] getVertices(int side, float size, BlockState blockState, BlockPos blockPos) {
         Vector5f[] vector5fs = super.getVertices(side, size, blockState, blockPos);
         float r = 32f / (((DataBlockState)blockState).readData() & 31);
         float g = 32f / (((DataBlockState)blockState).readData() >> 5 & 31);

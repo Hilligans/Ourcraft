@@ -54,6 +54,7 @@ public abstract class PacketBase {
         packets.add(SRegisterContainer::new);
         packets.add(SRegisterItem::new);
         packets.add(SDisconnectPacket::new);
+        packets.add(COpenScreen::new);
 
 
 

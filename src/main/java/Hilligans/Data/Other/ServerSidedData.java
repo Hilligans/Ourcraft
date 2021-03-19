@@ -9,6 +9,7 @@ import Hilligans.Container.Container;
 import Hilligans.Container.ContainerFetcher;
 import Hilligans.Container.Containers.SlabBlockContainer;
 import Hilligans.Data.Primitives.TripleTypeWrapper;
+import Hilligans.Item.Item;
 import Hilligans.Network.ClientNetworkInit;
 import Hilligans.Network.Packet.Server.SCreateTexture;
 import Hilligans.Network.Packet.Server.SRegisterBlock;
@@ -26,6 +27,9 @@ public class ServerSidedData {
 
     public final ArrayList<Block> BLOCKS = new ArrayList<>();
     public final HashMap<String, Block> MAPPED_BLOCKS = new HashMap<>();
+
+    public final ArrayList<Item> ITEMS = new ArrayList<>();
+    public final HashMap<String, Item> MAPPED_ITEMS = new HashMap<>();
 
     public final ArrayList<Texture> TEXTURES = new ArrayList<>();
     public final HashMap<String, Texture> MAPPED_TEXTURES = new HashMap<>();
@@ -49,6 +53,8 @@ public class ServerSidedData {
     public void clear() {
         BLOCKS.clear();
         MAPPED_BLOCKS.clear();
+        ITEMS.clear();
+        MAPPED_ITEMS.clear();
         TEXTURES.clear();
         MAPPED_TEXTURES.clear();
         CONTAINERS.clear();
@@ -71,6 +77,11 @@ public class ServerSidedData {
     public void putBlock(String name, Block block) {
         BLOCKS.add(block);
         MAPPED_BLOCKS.put(name,block);
+    }
+
+    public void putItem(String name, Item item) {
+        ITEMS.add(item);
+        MAPPED_ITEMS.put(name,item);
     }
 
     public void putTexture(String name, Texture texture) {
@@ -124,7 +135,7 @@ public class ServerSidedData {
     }
 
     public void register() {
-        QUEUED_CONTAINERS.add(new TripleTypeWrapper<>(new SlabBlockContainer(),"slab_chest","GUI/slab_chest.png"));
+        //QUEUED_CONTAINERS.add(new TripleTypeWrapper<>(new SlabBlockContainer(),"slab_chest","GUI/slab_chest.png"));
     }
 
 

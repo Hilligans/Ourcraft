@@ -14,7 +14,7 @@ public class SlabBlockContainer extends Container {
     }
 
     public SlabBlockContainer(Inventory inventory, Inventory playerInventory) {
-        super(2);
+        super(3);
         addSlot(new Slot(55, 47, inventory, 0));
         addSlot(new Slot(71, 47, inventory, 1));
         addSlot(new Slot(87, 47, inventory, 2));

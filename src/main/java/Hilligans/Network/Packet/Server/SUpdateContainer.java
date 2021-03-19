@@ -7,7 +7,7 @@ import Hilligans.Network.PacketData;
 
 public class SUpdateContainer extends PacketBase {
 
-    byte slot;
+    short slot;
     ItemStack itemStack;
     int containerId = 0;
     boolean trackInt = false;
@@ -16,7 +16,7 @@ public class SUpdateContainer extends PacketBase {
         super(14);
     }
 
-    public SUpdateContainer(byte slot, ItemStack itemStack, int uniqueId) {
+    public SUpdateContainer(short slot, ItemStack itemStack, int uniqueId) {
         this();
         this.slot = slot;
         this.itemStack = itemStack;
@@ -41,7 +41,7 @@ public class SUpdateContainer extends PacketBase {
             packetData.writeShort(integerId);
             packetData.writeInt(val);
         } else {
-            packetData.writeByte(slot);
+            packetData.writeShort(slot);
             packetData.writeItemStack(itemStack);
         }
         packetData.writeInt(containerId);
@@ -54,7 +54,7 @@ public class SUpdateContainer extends PacketBase {
             integerId = packetData.readShort();
             val = packetData.readInt();
         } else {
-            slot = packetData.readByte();
+            slot = packetData.readShort();
             itemStack = packetData.readItemStack();
         }
         containerId = packetData.readInt();

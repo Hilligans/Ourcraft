@@ -23,7 +23,7 @@ public class Blocks {
         return val;
     }
 
-    public static final Block AIR = new Block("air", new BlockProperties().transparent());
+    public static final Block AIR = new Block("air", new BlockProperties().transparent().airBlock());
     public static final Block STONE = new Block("stone",new BlockProperties().withTexture("stone.png"));
 
     public static final Block DIRT = new Block("dirt",new BlockProperties().withTexture("dirt.png"));

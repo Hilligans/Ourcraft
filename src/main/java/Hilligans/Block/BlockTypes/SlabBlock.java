@@ -35,6 +35,11 @@ public class SlabBlock extends Block {
     }
 
     @Override
+    public int blockStateByteCount() {
+        return 2;
+    }
+
+    @Override
     public BlockState getStateWithData(short data) {
         return new DataBlockState(this, new ShortBlockState(data));
     }

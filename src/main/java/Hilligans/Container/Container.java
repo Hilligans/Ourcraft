@@ -5,16 +5,21 @@ import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Client.Rendering.Widgets.Button;
 import Hilligans.Client.Rendering.Widgets.ButtonAction;
 import Hilligans.Client.Rendering.Widgets.Widget;
+import Hilligans.Client.Rendering.World.StringRenderer;
 import Hilligans.ClientMain;
 import Hilligans.Container.Containers.ChestContainer;
+import Hilligans.Container.Containers.CreativeContainer;
 import Hilligans.Container.Containers.InventoryContainer;
+import Hilligans.Data.Other.IInventory;
 import Hilligans.Data.Other.ServerSidedData;
+import Hilligans.Item.ItemStack;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CActivateButton;
 import Hilligans.Network.Packet.Server.SUpdateContainer;
 import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.Util.Settings;
 
+import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 
 public abstract class Container {
@@ -92,6 +97,12 @@ public abstract class Container {
         for(Slot slot : slots) {
             slot.render(matrixStack);
         }
+        DoubleBuffer mousePos = ClientMain.getMousePos();
+        Slot slot = getSlotAt((int)mousePos.get(0),(int)mousePos.get(1));
+        if(slot != null && !slot.getContents().isEmpty()) {
+            StringRenderer.drawStringWithBackground(matrixStack,slot.getContents().item.name,(int)mousePos.get(0) + 16,(int)mousePos.get(1),0.5f);
+            //StringRenderer.drawStringWithBackground(matrixStack,slot.id + "",(int)mousePos.get(0) + 16,(int)mousePos.get(1),0.5f);
+        }
     }
 
     public void setTextureSize(int x, int y) {
@@ -105,6 +116,17 @@ public abstract class Container {
         for(Slot slot : slots) {
             slot.x = (int)(newX + slot.startX * Settings.guiSize);
             slot.y = (int)(newY + slot.startY * Settings.guiSize);
+        }
+    }
+
+    public void addPlayerInventorySlots(int startX, int startY, IInventory inventory, int startIndex) {
+        for(int x = 0; x < 9; x++) {
+            addSlot(new Slot(startX + 16 * x,startY + 69, inventory,startIndex + x));
+        }
+        for(int y = 0; y < 4; y++) {
+            for (int x = 0; x < 9; x++) {
+                addSlot(new Slot(startX + x * 16, startY + y * 16,inventory,startIndex + 9 + x + y * 9));
+            }
         }
     }
 
@@ -126,6 +148,33 @@ public abstract class Container {
         return null;
     }
 
+    public ItemStack swapStack(short slot, ItemStack heldStack) {
+        Slot itemSlot = slots.get(slot);
+        if(itemSlot != null) {
+            if(itemSlot.canItemBeAdded(heldStack)) {
+                return itemSlot.swapItemStacks(heldStack);
+            }
+        }
+        return heldStack;
+    }
+
+    public ItemStack splitStack(short slot, ItemStack heldStack) {
+        if(heldStack.isEmpty()) {
+            return slots.get(slot).splitStack();
+        }
+        return heldStack;
+    }
+
+    public boolean putOne(short slot, ItemStack heldStack) {
+        if(!heldStack.isEmpty()) {
+            if(slots.get(slot).canAdd(1,heldStack)) {
+                heldStack.count -= 1;
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static final ArrayList<ContainerFetcher> CONTAINERS = new ArrayList<>();
 
     public static Container getContainer(int slot) {
@@ -139,6 +188,7 @@ public abstract class Container {
     public static void register() {
         CONTAINERS.add(InventoryContainer::new);
         CONTAINERS.add(ChestContainer::new);
+        CONTAINERS.add(CreativeContainer::new);
     }
 
     static int id = 0;

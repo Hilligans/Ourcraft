@@ -19,6 +19,7 @@ public class Textures {
     public static final Texture HOTBAR = new Texture("GUI/hotbar.png");
     public static final Texture ITEM_OUTLINE = new Texture("GUI/item_outline.png");
     public static final Texture CHEST = new Texture("GUI/chest.png");
+    public static final Texture CREATIVE_INVENTORY = new Texture("GUI/creative_inventory.png");
 
 
     public static final Texture FOLDER = new Texture("GUI/folder.png");
@@ -32,6 +33,7 @@ public class Textures {
     public static final Texture LONG_ICON = new Texture("GUI/long_icon.png");
     public static final Texture DOUBLE_ICON = new Texture("GUI/double_icon.png");
 
+    public static final Texture BACKGROUND = new Texture("GUI/background.png");
     public static final Texture BUTTON = new Texture("GUI/button.png");
     public static final Texture BUTTON_DARK = new Texture("GUI/button_dark.png");
 

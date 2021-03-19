@@ -14,7 +14,7 @@ public class CModifyStack extends PacketBase {
         super(13);
     }
 
-    public CModifyStack(byte slot, byte mode) {
+    public CModifyStack(short slot, byte mode) {
         this();
         this.slot = slot;
         this.mode = mode;

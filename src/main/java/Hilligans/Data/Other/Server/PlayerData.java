@@ -41,26 +41,15 @@ public class PlayerData {
     }
 
     public void swapStack(short slot) {
-        Slot itemSlot = openContainer.slots.get(slot);
-        if(itemSlot != null) {
-            if(itemSlot.canItemBeAdded(heldStack)) {
-               heldStack = itemSlot.swapItemStacks(heldStack);
-            }
-        }
+        heldStack = openContainer.swapStack(slot,heldStack);
     }
 
     public void splitStack(short slot) {
-        if(heldStack.isEmpty()) {
-            heldStack = openContainer.slots.get(slot).splitStack();
-        }
+        heldStack = openContainer.splitStack(slot,heldStack);
     }
 
     public void putOne(short slot) {
-        if(!heldStack.isEmpty()) {
-            if(openContainer.slots.get(slot).canAdd(1,heldStack)) {
-                heldStack.count -= 1;
-            }
-        }
+        openContainer.putOne(slot,heldStack);
     }
 
     public void dropItem(short slot, byte count) {

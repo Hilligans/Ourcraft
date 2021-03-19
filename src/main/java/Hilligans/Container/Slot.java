@@ -11,7 +11,7 @@ import Hilligans.Util.Settings;
 
 public class Slot implements IInventoryChanged {
 
-    public Inventory inventory;
+    public IInventory inventory;
     public int index;
     public short id;
     public Container container;
@@ -24,14 +24,14 @@ public class Slot implements IInventoryChanged {
     public Slot(int startX, int startY, IInventory inventory, int index) {
         this.startX = startX;
         this.startY = startY;
-        this.inventory = (Inventory) inventory;
+        this.inventory = inventory;
         this.index = index;
     }
 
     public Slot setContainerAndId(short id, Container container) {
         this.id = id;
         this.container = container;
-        inventory.listeners[index].add(this);
+        inventory.addListener(index,this);
         return this;
     }
 
@@ -94,7 +94,7 @@ public class Slot implements IInventoryChanged {
 
     @Override
     public void onChange(int slot, IInventory inventory) {
-        ServerNetworkHandler.sendPacket(new SUpdateContainer((byte) id,getContents(), container.uniqueId),container.channelId);
+        ServerNetworkHandler.sendPacket(new SUpdateContainer(id,getContents(), container.uniqueId),container.channelId);
     }
 
     public Slot copy() {
@@ -102,6 +102,6 @@ public class Slot implements IInventoryChanged {
     }
 
     public void onClose() {
-        inventory.listeners[index].remove(this);
+        inventory.removeListener(index,this);
     }
 }

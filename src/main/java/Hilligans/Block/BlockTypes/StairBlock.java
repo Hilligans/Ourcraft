@@ -21,6 +21,11 @@ public class StairBlock extends Block {
     }
 
     @Override
+    public int blockStateByteCount() {
+        return 2;
+    }
+
+    @Override
     public BlockState getDefaultState() {
         return new DataBlockState(this, new ShortBlockState((short)0));
     }

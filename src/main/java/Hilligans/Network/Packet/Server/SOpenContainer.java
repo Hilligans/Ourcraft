@@ -3,6 +3,7 @@ package Hilligans.Network.Packet.Server;
 import Hilligans.ClientMain;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
+import Hilligans.Item.ItemStack;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 
@@ -37,7 +38,8 @@ public class SOpenContainer extends PacketBase {
         container.uniqueId = packetData.readInt();
         int slotCount = packetData.readShort();
         for(int x = 0; x < slotCount; x++) {
-            container.slots.get(x).setContents(packetData.readItemStack());
+            ItemStack itemStack = packetData.readItemStack();
+            container.slots.get(x).setContents(itemStack);
         }
     }
 

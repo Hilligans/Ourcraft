@@ -1,6 +1,8 @@
 package Hilligans.Client.Rendering.World;
 
 import Hilligans.Client.MatrixStack;
+import Hilligans.Client.Rendering.Renderer;
+import Hilligans.Client.Rendering.Textures;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.ClientMain;
@@ -60,6 +62,27 @@ public class StringRenderer {
         glUseProgram(ClientMain.shaderProgram);
         matrixStack.applyColor();
         matrixStack.applyTransformation();
+        draw(id,vector5fs.size());
+        matrixStack.pop();
+        glEnable(GL_DEPTH_TEST);
+    }
+
+    public static void drawStringWithBackground(MatrixStack matrixStack, String string, int x, int y, float scale) {
+        matrixStack.push();
+        glDisable(GL_DEPTH_TEST);
+        int width = 0;
+        ArrayList<Vector5f> vector5fs = new ArrayList<>();
+        ArrayList<Integer> indices = new ArrayList<>();
+        for(int z = 0; z < string.length(); z++) {
+            vector5fs.addAll(Arrays.asList(getVertices("" + string.charAt(z),x + width ,y,scale)));
+            width += instance.characterOffset.get("" + string.charAt(z)).getTypeA() * scale;
+            indices.addAll(Arrays.asList(getIndices(z * 4)));
+        }
+        int id = VAOManager.createVAO(VAOManager.convertVertices(vector5fs,false),VAOManager.convertIndices(indices));
+        glUseProgram(ClientMain.shaderProgram);
+        matrixStack.applyColor();
+        matrixStack.applyTransformation();
+        Renderer.drawTexture(matrixStack, Textures.BACKGROUND,x,y,width, (int) (instance.stringHeight * scale));
         draw(id,vector5fs.size());
         matrixStack.pop();
         glEnable(GL_DEPTH_TEST);

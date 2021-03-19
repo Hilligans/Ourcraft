@@ -11,7 +11,6 @@ public class Inventory implements IInventory {
 
     ItemStack[] items;
     public int age;
-    //public ArrayList<IInventoryChanged> linkedObjects = new ArrayList<>();
 
     public ArrayList<IInventoryChanged>[] listeners;
 
@@ -61,6 +60,17 @@ public class Inventory implements IInventory {
         return false;
     }
 
+    @Override
+    public void addListener(int slot, IInventoryChanged iInventoryChanged) {
+        listeners[slot].add(iInventoryChanged);
+    }
+
+    @Override
+    public void removeListener(int slot, IInventoryChanged iInventoryChanged) {
+        listeners[slot].remove(iInventoryChanged);
+    }
+
+    @Override
     public void notifyListeners(int slot) {
         for(IInventoryChanged iInventoryChanged : listeners[slot]) {
             iInventoryChanged.onChange(slot,this);
