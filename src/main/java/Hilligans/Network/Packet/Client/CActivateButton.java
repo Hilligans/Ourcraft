@@ -3,7 +3,7 @@ package Hilligans.Network.Packet.Client;
 import Hilligans.Client.Rendering.Widgets.Button;
 import Hilligans.Client.Rendering.Widgets.Widget;
 import Hilligans.Container.Container;
-import Hilligans.Data.Other.Server.PlayerData;
+import Hilligans.Data.Other.Server.ServerPlayerData;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
@@ -33,8 +33,8 @@ public class CActivateButton extends PacketBase {
 
     @Override
     public void handle() {
-        PlayerData playerData = ServerNetworkHandler.playerData.get(ServerNetworkHandler.mappedId.get(ctx.channel().id()));
-        Container container = playerData.openContainer;
+        ServerPlayerData serverPlayerData = ServerNetworkHandler.playerData.get(ServerNetworkHandler.mappedId.get(ctx.channel().id()));
+        Container container = serverPlayerData.openContainer;
         if(container.widgets.size() > button) {
             Widget widget = container.widgets.get(button);
             if(widget instanceof Button) {

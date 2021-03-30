@@ -11,15 +11,16 @@ import Hilligans.Item.ItemStack;
 import Hilligans.Item.Items;
 import Hilligans.ServerMain;
 
-public class PlayerData {
+public class ServerPlayerData {
 
     public PlayerEntity playerEntity;
     public ItemStack heldStack = ItemStack.emptyStack();
     public Container openContainer;
     public Inventory playerInventory;
-    public boolean isCreative = false;
+    public boolean isCreative = true;
 
-    public PlayerData(PlayerEntity playerEntity) {
+
+    public ServerPlayerData(PlayerEntity playerEntity) {
         this.playerEntity = playerEntity;
         playerInventory = playerEntity.inventory;
         openContainer = new InventoryContainer(playerInventory).setPlayerId(playerEntity.id);
@@ -30,6 +31,10 @@ public class PlayerData {
         playerInventory.setItem(4,new ItemStack(Items.HASHED_ITEMS.get("grass_plant"), (byte)63));
         playerInventory.setItem(5,new ItemStack(Items.HASHED_ITEMS.get("blue"),(byte)63));
 
+    }
+
+    public int getDimension() {
+        return playerEntity.dimension;
     }
 
     public void openContainer(Container container) {
@@ -52,14 +57,18 @@ public class PlayerData {
         openContainer.putOne(slot,heldStack);
     }
 
+    public void copyStack(short slot) {
+        heldStack = openContainer.copyStack(slot,heldStack);
+    }
+
     public void dropItem(short slot, byte count) {
         if(slot == -1) {
             if(!heldStack.isEmpty()) {
                 if(count == -1 || count >= heldStack.count) {
-                    ServerMain.world.addEntity(new ItemEntity(playerEntity.x, playerEntity.y, playerEntity.z, Entity.getNewId(), heldStack).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
+                    ServerMain.getWorld(getDimension()).addEntity(new ItemEntity(playerEntity.x, playerEntity.y, playerEntity.z, Entity.getNewId(), heldStack).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
                     heldStack = ItemStack.emptyStack();
                 } else {
-                    ServerMain.world.addEntity(new ItemEntity(playerEntity.x,playerEntity.y,playerEntity.z,Entity.getNewId(),new ItemStack(heldStack.item,count)).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
+                    ServerMain.getWorld(getDimension()).addEntity(new ItemEntity(playerEntity.x,playerEntity.y,playerEntity.z,Entity.getNewId(),new ItemStack(heldStack.item,count)).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
                     heldStack.count -= count;
                 }
             }
@@ -68,10 +77,10 @@ public class PlayerData {
             if(itemSlot != null) {
                 if(!itemSlot.getContents().isEmpty()) {
                     if(count == -1 || count >= itemSlot.getContents().count) {
-                        ServerMain.world.addEntity(new ItemEntity(playerEntity.x, playerEntity.y, playerEntity.z, Entity.getNewId(), itemSlot.getContents()).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
+                        ServerMain.getWorld(getDimension()).addEntity(new ItemEntity(playerEntity.x, playerEntity.y, playerEntity.z, Entity.getNewId(), itemSlot.getContents()).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
                         itemSlot.setContents(ItemStack.emptyStack());
                     } else {
-                        ServerMain.world.addEntity(new ItemEntity(playerEntity.x,playerEntity.y,playerEntity.z,Entity.getNewId(),new ItemStack(itemSlot.getContents().item,count)).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
+                        ServerMain.getWorld(getDimension()).addEntity(new ItemEntity(playerEntity.x,playerEntity.y,playerEntity.z,Entity.getNewId(),new ItemStack(itemSlot.getContents().item,count)).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
                         itemSlot.getContents().count -= count;
                     }
                 }

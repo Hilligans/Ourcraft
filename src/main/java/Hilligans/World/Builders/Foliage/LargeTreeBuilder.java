@@ -19,7 +19,7 @@ public class LargeTreeBuilder extends SurfaceBuilder {
             for (int y = 0; y < height; y++) {
                 int width = Math.round((height - y) / height * girth) + 1;
                 for(int yaw = 0; yaw < 360; yaw += 8) {
-                    Ray ray = new Ray(0,yaw);
+                    Ray ray = new Ray(0,yaw,1.0f);
                     for(int x = 0; x < width; x++) {
                         world.setBlockState(startPos.copy().add(ray.getNextBlock(x)).add(0,y,0),Blocks.LOG.getDefaultState());
                     }
@@ -46,11 +46,11 @@ public class LargeTreeBuilder extends SurfaceBuilder {
     }
 
     private void drawLargeTrunk(BlockPos startPos, int length, int girth, double startPitch, double startYaw) {
-        Ray startRay = new Ray(startPitch,startYaw);
+        Ray startRay = new Ray(startPitch,startYaw,1.0f);
         for (int y = 0; y < length; y++) {
             int width = Math.round(((float)length - y) / length * girth) + 1;
             for(int yaw = 0; yaw < 360; yaw += 360f / girth / 4) {
-                Ray ray = new Ray(yaw,0);
+                Ray ray = new Ray(yaw,0,1.0f);
                 for(int x = 0; x < width; x++) {
                     world.setBlockState(startPos.copy().add(ray.getNextBlock(x)).add(startRay.getNextBlock(y)),Blocks.LOG.getDefaultState());
                 }
@@ -81,7 +81,7 @@ public class LargeTreeBuilder extends SurfaceBuilder {
 
     private void placeBranch(BlockPos pos, double pitch, double yaw) {
         int length = (int) (Math.random() * 12) + 8;
-        Ray ray = new Ray(pitch,yaw);
+        Ray ray = new Ray(pitch,yaw,1.0f);
         for(int i = 0; i < length; i++) {
             BlockPos newPos = pos.copy().add(ray.getNextBlock(i));
             world.setBlockState(newPos,Blocks.LOG.getDefaultState());

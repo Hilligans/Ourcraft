@@ -1,5 +1,7 @@
 package Hilligans.Network.Packet.Client;
 
+import Hilligans.Data.Other.Server.ServerPlayerData;
+import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Entity.Entity;
 import Hilligans.Network.Packet.Server.SUpdateEntityPacket;
 import Hilligans.Network.PacketBase;
@@ -52,10 +54,14 @@ public class CUpdatePlayerPacket extends PacketBase {
 
     @Override
     public void handle() {
-        Entity entity = ServerMain.world.entities.get(playerId);
-        if(entity != null) {
-            entity.setPos(x,y,z).setRot(pitch,yaw);
-            ServerNetworkHandler.sendPacket(new SUpdateEntityPacket(x,y,z,pitch,yaw,playerId));
+        ServerPlayerData data = ServerNetworkHandler.getPlayerData(ctx) ;
+        if(data != null) {
+            int dim = data.getDimension();
+            Entity entity = ServerMain.getWorld(dim).entities.get(playerId);
+            if (entity != null) {
+                entity.setPos(x, y, z).setRot(pitch, yaw);
+                ServerNetworkHandler.sendPacket(new SUpdateEntityPacket(x, y, z, pitch, yaw, playerId));
+            }
         }
     }
 }

@@ -27,6 +27,7 @@ public abstract class World {
 
     public Int2ObjectOpenHashMap<Entity> entities = new Int2ObjectOpenHashMap<>();
     public ConcurrentLinkedQueue<BlockChange> blockChanges = new ConcurrentLinkedQueue<>();
+    public int dimensionId = 1;
     Long2ObjectOpenHashMap<Chunk> chunks = new Long2ObjectOpenHashMap<>();
 
     long seed = 1342;
@@ -101,6 +102,12 @@ public abstract class World {
             return Blocks.AIR.getDefaultState();
         }
         return chunk.getBlockState(x,y,z);
+    }
+
+    public void setBlockMatches(BlockPos pos, BlockState state, Block block) {
+        if(getBlockState(pos).getBlock() == block) {
+            setBlockState(pos,state);
+        }
     }
 
     public DataProvider getDataProvider(BlockPos pos) {
@@ -318,6 +325,7 @@ public abstract class World {
         }
         return pos.add(0,3,0);
     }
+
 
     public static class BlockChange {
         public int x;

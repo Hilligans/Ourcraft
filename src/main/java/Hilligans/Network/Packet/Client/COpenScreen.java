@@ -3,7 +3,7 @@ package Hilligans.Network.Packet.Client;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Client.Rendering.Screen;
 import Hilligans.Container.Containers.CreativeContainer;
-import Hilligans.Data.Other.Server.PlayerData;
+import Hilligans.Data.Other.Server.ServerPlayerData;
 import Hilligans.Network.Packet.Server.SOpenContainer;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
@@ -42,10 +42,10 @@ public class COpenScreen extends PacketBase {
     @Override
     public void handle() {
         if(id == 2) {
-            PlayerData playerData = ServerNetworkHandler.getPlayerData(ctx);
-            if(playerData != null) {
-                CreativeContainer creativeContainer = new CreativeContainer(playerData.playerInventory,CreativeContainer.createInventory());
-                playerData.openContainer(creativeContainer);
+            ServerPlayerData serverPlayerData = ServerNetworkHandler.getPlayerData(ctx);
+            if(serverPlayerData != null && serverPlayerData.isCreative) {
+                CreativeContainer creativeContainer = new CreativeContainer(serverPlayerData.playerInventory,CreativeContainer.createInventory());
+                serverPlayerData.openContainer(creativeContainer);
                 ServerNetworkHandler.sendPacket(new SOpenContainer(creativeContainer), ctx);
             }
         }

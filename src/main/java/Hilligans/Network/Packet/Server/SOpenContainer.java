@@ -39,7 +39,7 @@ public class SOpenContainer extends PacketBase {
         int slotCount = packetData.readShort();
         for(int x = 0; x < slotCount; x++) {
             ItemStack itemStack = packetData.readItemStack();
-            container.slots.get(x).setContents(itemStack);
+            container.getSlot(x).setContents(itemStack);
         }
     }
 

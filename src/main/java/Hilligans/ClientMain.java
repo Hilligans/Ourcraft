@@ -17,6 +17,7 @@ import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
 import Hilligans.Client.Rendering.Texture;
 import Hilligans.Client.Rendering.Textures;
+import Hilligans.Data.Other.ClientPlayerData;
 import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Entity.Entity;
 import Hilligans.Item.ItemStack;
@@ -37,9 +38,9 @@ import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.World.ClientWorld;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
+import org.lwjgl.glfw.GLFWWindowFocusCallbackI;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL30;
 
@@ -53,7 +54,6 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.glVertexPointer;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.util.nfd.NativeFileDialog.*;
 
 public class ClientMain {
 
@@ -68,17 +68,15 @@ public class ClientMain {
 
     public static boolean screenShot = false;
     public static boolean renderWorld = false;
-    public static boolean creativeMode = true;
 
     public static Screen screen;
 
-
     public static int shaderProgram;
     public static int colorShader;
+    public static int opaqueColorShader;
+    public static int transparentColorShader;
     public static int lineShader;
     public static int texture;
-
-    public static Texture queued;
 
     public static boolean refreshTexture = false;
 
@@ -151,7 +149,7 @@ public class ClientMain {
             @Override
             public void onPress() {
                 if(screen == null) {
-                    if(creativeMode) {
+                    if(ClientPlayerData.creative) {
                         openScreen(new CreativeInventoryScreen());
                     } else {
                         openScreen(new InventoryScreen());
@@ -165,7 +163,7 @@ public class ClientMain {
         KeyHandler.register(new KeyPress() {
             @Override
             public void onPress() {
-                ClientData.f3 = !ClientData.f3;
+                ClientPlayerData.f3 = !ClientPlayerData.f3;
             }
         },GLFW_KEY_F3);
 
@@ -173,8 +171,8 @@ public class ClientMain {
             @Override
             public void onPress() {
                 if(screen != null) {
-                    if(ClientData.openContainer != null) {
-                        Slot slot = ClientData.openContainer.getSlotAt((int)Camera.newX,(int)Camera.newY);
+                    if(ClientPlayerData.openContainer != null) {
+                        Slot slot = ClientPlayerData.openContainer.getSlotAt((int)Camera.newX,(int)Camera.newY);
                         if(slot != null) {
                             if(KeyHandler.keyPressed[GLFW_KEY_LEFT_CONTROL]) {
                                 slot.setContents(ItemStack.emptyStack());
@@ -216,16 +214,14 @@ public class ClientMain {
 
         shaderProgram = ShaderManager.registerShader(Util.shader,Util.fragmentShader1);
         colorShader = ShaderManager.registerShader(Util.coloredShader,Util.fragmentShader1);
+        transparentColorShader = colorShader;
+        opaqueColorShader = ShaderManager.registerShader(Util.coloredShader,Util.fragmentShader2);
         lineShader = ShaderManager.registerShader(Util.lineShader, Util.lineFragment);
         Renderer.register();
         Entity.register();
 
 
         glEnable(GL_DEPTH);
-        if(!Settings.renderTransparency) {
-            shaderProgram = ShaderManager.registerShader(Util.shader,Util.fragmentShader2);
-            colorShader = ShaderManager.registerShader(Util.coloredShader,Util.fragmentShader2);
-        }
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -319,11 +315,14 @@ public class ClientMain {
 
             glUseProgram(shaderProgram);
 
-            if (ClientData.f3) {
+            if (ClientPlayerData.f3) {
                 StringRenderer.drawString(screenStack, Camera.getString(), windowX / 2, 0, 0.5f);
                 StringRenderer.drawString(screenStack, "FPS:" + fps, windowX / 2, 29, 0.5f);
                 StringRenderer.drawString(screenStack, clientWorld.biomeMap.getBiome((int) Camera.pos.x, (int) Camera.pos.z).name, windowX / 2, 58, 0.5f);
                 StringRenderer.drawString(screenStack, "vel y:" + Camera.velY, windowX / 2, 87, 0.5f);
+                Runtime runtime = Runtime.getRuntime();
+                long usedMB = (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024;
+                StringRenderer.drawString(screenStack, "Memory:" + usedMB + "MB",windowX / 2, 126, 0.5f);
             }
 
             InventoryScreen.drawHotbar(screenStack);
@@ -332,7 +331,7 @@ public class ClientMain {
 
         if(screen != null) {
             screen.render(screenStack);
-            ClientData.heldStack.renderStack(screenStack, (int) (Camera.newX - Settings.guiSize * 8), (int) (Camera.newY - Settings.guiSize * 8));
+            ClientPlayerData.heldStack.renderStack(screenStack, (int) (Camera.newX - Settings.guiSize * 8), (int) (Camera.newY - Settings.guiSize * 8));
         }
 
         
@@ -386,23 +385,24 @@ public class ClientMain {
             //ClientNetworkHandler.sendPacket(new CSendBlockChanges(0, 70, 0, Blocks.CHEST.id));
             //ClientNetworkHandler.sendPacket(new CSendBlockChanges(0, 69, 1, Blocks.CHEST.id));
             //ClientNetworkInit.joinServer("198.100.150.46", "25586");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public static void closeScreen() {
-        if(!ClientData.heldStack.isEmpty()) {
+        if(!ClientPlayerData.heldStack.isEmpty()) {
             ClientNetworkHandler.sendPacket(new CDropItem((short)-1,(byte)-1));
-            ClientData.heldStack = ItemStack.emptyStack();
+            ClientPlayerData.heldStack = ItemStack.emptyStack();
         }
         if(screen != null) {
             glfwSetCursorPos(window, (double)windowX / 2, (double)windowY / 2);
             screen.close(false);
             screen = null;
         }
-        if(ClientData.openContainer != null) {
-            ClientData.openContainer.closeContainer();
+        if(ClientPlayerData.openContainer != null) {
+            ClientPlayerData.openContainer.closeContainer();
         }
 
         ClientNetworkHandler.sendPacket(new CCloseScreen(false));
@@ -420,10 +420,10 @@ public class ClientMain {
             ContainerScreen<?> screen2 = (ContainerScreen<?>) screen1;
             Container container = screen2.getContainer();
             screen2.setContainer(container);
-            if(ClientData.openContainer != null) {
-                ClientData.openContainer.closeContainer();
+            if(ClientPlayerData.openContainer != null) {
+                ClientPlayerData.openContainer.closeContainer();
             }
-            ClientData.openContainer = container;
+            ClientPlayerData.openContainer = container;
         }
         ClientNetworkHandler.sendPacket(new COpenScreen(screen1));
     }
@@ -435,10 +435,10 @@ public class ClientMain {
         }
         screen = containerScreen;
         containerScreen.setContainer(container);
-        if(ClientData.openContainer != null) {
-            ClientData.openContainer.closeContainer();
+        if(ClientPlayerData.openContainer != null) {
+            ClientPlayerData.openContainer.closeContainer();
         }
-        ClientData.openContainer = container;
+        ClientPlayerData.openContainer = container;
     }
 
     public static void createCallbacks() {
@@ -452,8 +452,8 @@ public class ClientMain {
             GL30.glViewport(0, 0, width, height);
             windowX = width;
             windowY = height;
-            if(ClientData.openContainer != null) {
-                ClientData.openContainer.resize();
+            if(ClientPlayerData.openContainer != null) {
+                ClientPlayerData.openContainer.resize();
             }
         });
 
@@ -466,15 +466,15 @@ public class ClientMain {
                 }
                 if(yoffset == 1.0) {
 
-                    ClientData.handSlot--;
-                    if(ClientData.handSlot <= -1) {
-                        ClientData.handSlot = 8;
+                    ClientPlayerData.handSlot--;
+                    if(ClientPlayerData.handSlot <= -1) {
+                        ClientPlayerData.handSlot = 8;
                     }
                 } else if(yoffset == -1.0) {
 
-                    ClientData.handSlot++;
-                    if(ClientData.handSlot >= 9) {
-                        ClientData.handSlot = 0;
+                    ClientPlayerData.handSlot++;
+                    if(ClientPlayerData.handSlot >= 9) {
+                        ClientPlayerData.handSlot = 0;
                     }
                 }
             }
@@ -502,20 +502,20 @@ public class ClientMain {
                             if(blockPos != null) {
                                 BlockState blockState = clientWorld.getBlockState(blockPos);
                                 if (blockState != null && blockState.getBlock().activateBlock(clientWorld, null, blockPos)) {
-                                    ClientNetworkHandler.sendPacket(new CUseItem((byte) ClientData.handSlot));
+                                    ClientNetworkHandler.sendPacket(new CUseItem((byte) ClientPlayerData.handSlot));
                                     return;
                                 }
                             }
-                            ItemStack itemStack = ClientData.inventory.getItem(ClientData.handSlot);
+                            ItemStack itemStack = ClientPlayerData.inventory.getItem(ClientPlayerData.handSlot);
                             if(!itemStack.isEmpty()) {
                                 if(itemStack.item.onActivate(clientWorld,null)) {
-                                    ClientNetworkHandler.sendPacket(new CUseItem((byte)ClientData.handSlot));
-                                    if(!ClientData.creative) {
+                                    ClientNetworkHandler.sendPacket(new CUseItem((byte) ClientPlayerData.handSlot));
+                                    if(!ClientPlayerData.creative) {
                                         itemStack.removeCount(1);
                                     }
                                 }
                             } else {
-                                ClientNetworkHandler.sendPacket(new CUseItem((byte)ClientData.handSlot));
+                                ClientNetworkHandler.sendPacket(new CUseItem((byte) ClientPlayerData.handSlot));
                             }
                         }
                     } else {
@@ -524,6 +524,18 @@ public class ClientMain {
 
                         glfwGetCursorPos(window, x, y);
                         screen.mouseClick((int) x.get(), (int) y.get(), button);
+                    }
+                }
+            }
+        });
+
+        glfwSetWindowFocusCallback(window, (window, focused) -> {
+            if(!focused) {
+                if(screen == null) {
+                    if (renderWorld) {
+                        openScreen(new EscapeScreen());
+                    } else {
+                        openScreen(new JoinScreen());
                     }
                 }
             }

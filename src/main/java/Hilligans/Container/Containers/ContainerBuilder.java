@@ -36,7 +36,7 @@ public class ContainerBuilder implements ContainerFetcher {
     @Override
     public Container getContainer() {
         Inventory inventory = new Inventory(slots.length);
-        Container container = new Container(id) {
+        Container container = new Container(id,inventory) {
             @Override
             public ContainerScreen<?> getContainerScreen() {
                 return new CustomContainerScreen() {

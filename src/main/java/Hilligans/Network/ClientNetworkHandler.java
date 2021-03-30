@@ -1,10 +1,14 @@
 package Hilligans.Network;
 
 import Hilligans.Block.Blocks;
+import Hilligans.Client.Rendering.Screens.DisconnectScreen;
 import Hilligans.Client.Rendering.Screens.JoinScreen;
 import Hilligans.Client.Rendering.Textures;
 import Hilligans.ClientMain;
 import Hilligans.Network.Packet.Client.CHandshakePacket;
+import Hilligans.World.ClientWorld;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -18,6 +22,7 @@ public class ClientNetworkHandler extends SimpleChannelInboundHandler<PacketData
         super.channelActive(ctx);
         ClientNetworkHandler.sendPacket(new CHandshakePacket());
         ClientMain.renderWorld = true;
+
     }
 
 
@@ -29,10 +34,11 @@ public class ClientNetworkHandler extends SimpleChannelInboundHandler<PacketData
             //System.out.println("YOUR GAME VERSION MAY BE OUT OF DATE");
         }
         ClientMain.renderWorld = false;
-        //ClientMain.openScreen(new JoinScreen());
-        //ctx.
+        ClientMain.clientWorld = new ClientWorld();
+
         super.channelInactive(ctx);
     }
+
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, PacketData msg) throws Exception {
@@ -41,8 +47,9 @@ public class ClientNetworkHandler extends SimpleChannelInboundHandler<PacketData
     }
 
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        cause.printStackTrace();
         ctx.close();
+        ClientMain.clientWorld = new ClientWorld();
+        ClientMain.openScreen(new DisconnectScreen(cause.getMessage()));
     }
 
     public static void sendPacket(PacketBase packetBase) {

@@ -1,8 +1,12 @@
 package Hilligans;
 
 import Hilligans.Block.Blocks;
+import Hilligans.Client.Camera;
 import Hilligans.Client.Rendering.Widgets.Widget;
+import Hilligans.Data.Other.BlockPos;
+import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Data.Other.ServerSidedData;
+import Hilligans.Server.MultiPlayerServer;
 import Hilligans.Tag.CompoundTag;
 import Hilligans.Tag.IntegerTag;
 import Hilligans.Tag.Tag;
@@ -12,6 +16,7 @@ import Hilligans.World.Builders.OreBuilder;
 import Hilligans.World.Chunk;
 import Hilligans.World.DataProvider;
 import Hilligans.World.ServerWorld;
+import Hilligans.World.World;
 import Hilligans.WorldSave.WorldLoader;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 import org.lwjgl.system.CallbackI;
@@ -24,7 +29,9 @@ import java.util.concurrent.TimeUnit;
 
 public class ServerMain {
 
-    public static ServerWorld world;
+    //public static ServerWorld world;
+
+    public static MultiPlayerServer server;
 
 
     public static void main(String[] args) {
@@ -34,43 +41,16 @@ public class ServerMain {
         ServerSidedData.getInstance().register();
         Widget.register();
 
-        world = new ServerWorld();
+        ServerWorld world = new ServerWorld();
         world.worldBuilders.add(new OreBuilder(Blocks.GRASS,Blocks.STONE).setFrequency(20));
 
-        world.generateChunk(0,0);
-
-        for(int x = -Settings.renderDistance; x < Settings.renderDistance; x++) {
-            for(int z = -Settings.renderDistance; z < Settings.renderDistance; z++) {
-               // System.out.println("GENERATING CHUNK x:" + x + " z:" + z);
-                world.generateChunk(x,z);
-            }
-        }
-
-        //world.setChunk(chunk,0,0);
-        //long start = System.currentTimeMillis();
-        //WorldLoader.writeChunk(world.getChunk(0,1));
-        //System.out.println("Time" + (System.currentTimeMillis() - start));
-
-        Server server = new Server();
-
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
-        executorService.scheduleAtFixedRate(server, 0, 40, TimeUnit.MILLISECONDS);
-        try {
-            ServerNetworkInit.startServer("25586");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        server = new MultiPlayerServer();
+        server.addWorld(0,world);
+        server.startServer("25586");
     }
 
-    static class Server implements Runnable {
-
-
-        @Override
-        public void run() {
-           // while(true) {
-            //System.out.println("run");
-                world.tick();
-          //  }
-        }
+    public static World getWorld(int id) {
+        return server.worlds.get(id);
     }
+
 }

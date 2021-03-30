@@ -12,7 +12,7 @@ import Hilligans.Network.Packet.Server.SUpdateInventory;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
-import Hilligans.Data.Other.Server.PlayerData;
+import Hilligans.Data.Other.Server.ServerPlayerData;
 import Hilligans.ServerMain;
 import Hilligans.Util.Settings;
 import Hilligans.Util.Vector5f;
@@ -52,14 +52,14 @@ public class PlayerEntity extends LivingEntity {
     public void tick() {
         boolean updateInventory = false;
 
-        for(Entity entity : ServerMain.world.entities.values()) {
+        for(Entity entity : ServerMain.getWorld(dimension).entities.values()) {
             if(entity instanceof ItemEntity) {
                 if (entity.boundingBox.intersectsBox(itemPickupBox, new Vector3f(entity.x, entity.y, entity.z), new Vector3f(x, y, z))) {
                     if(((ItemEntity)entity).pickupDelay == 0) {
                         ItemStack itemStack = ((ItemEntity) entity).itemStack;
                         int count = itemStack.count;
                         if (inventory.addItem(itemStack)) {
-                            ServerMain.world.removeEntity(entity.id);
+                            ServerMain.getWorld(dimension).removeEntity(entity.id);
                         }
                         if (count != itemStack.count) {
                             updateInventory = true;
@@ -78,7 +78,7 @@ public class PlayerEntity extends LivingEntity {
         return new Vector3f((float) (Math.cos(yaw) * Math.cos(pitch)),(float)(Math.sin(pitch)),(float)(Math.sin(yaw) * Math.cos(pitch)));
     }
 
-    public PlayerData getPlayerData() {
+    public ServerPlayerData getPlayerData() {
         return ServerNetworkHandler.playerData.get(id);
     }
 

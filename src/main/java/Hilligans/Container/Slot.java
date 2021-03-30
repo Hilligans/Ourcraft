@@ -3,6 +3,7 @@ package Hilligans.Container;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Data.Other.IInventory;
 import Hilligans.Data.Other.Inventory;
+import Hilligans.Data.Primitives.IntegerWrapper;
 import Hilligans.Item.ItemStack;
 import Hilligans.Network.Packet.Server.SUpdateContainer;
 import Hilligans.Network.ServerNetworkHandler;
@@ -19,7 +20,7 @@ public class Slot implements IInventoryChanged {
     public int startY;
     public int x = 0;
     public int y = 0;
-    boolean playerInventory = false;
+    public IntegerWrapper offset;
 
     public Slot(int startX, int startY, IInventory inventory, int index) {
         this.startX = startX;
@@ -35,8 +36,8 @@ public class Slot implements IInventoryChanged {
         return this;
     }
 
-    public Slot playerInventory() {
-        playerInventory = true;
+    public Slot setOffset(IntegerWrapper integerWrapper) {
+        this.offset = integerWrapper;
         return this;
     }
 
@@ -54,7 +55,7 @@ public class Slot implements IInventoryChanged {
 
     public ItemStack swapItemStacks(ItemStack itemStack) {
         ItemStack itemStack1 = inventory.getItem(index);
-        byte startCount = itemStack.count;
+        int startCount = itemStack.count;
         itemStack = itemStack1.mergeStack(itemStack);
         if(itemStack.count == startCount) {
             setContents(itemStack);
@@ -94,6 +95,8 @@ public class Slot implements IInventoryChanged {
 
     @Override
     public void onChange(int slot, IInventory inventory) {
+        ItemStack itemStack = getContents();
+
         ServerNetworkHandler.sendPacket(new SUpdateContainer(id,getContents(), container.uniqueId),container.channelId);
     }
 

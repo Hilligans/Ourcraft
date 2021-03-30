@@ -1,25 +1,20 @@
 package Hilligans.Container.Containers;
 
-import Hilligans.Client.ClientData;
+import Hilligans.Data.Other.ClientPlayerData;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
-import Hilligans.ClientMain;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
-import Hilligans.Data.Other.IInventory;
 import Hilligans.Data.Other.Inventory;
-import Hilligans.Network.Packet.Server.SUpdateContainer;
-import Hilligans.Network.ServerNetworkHandler;
-import Hilligans.Util.Settings;
 
 public class InventoryContainer extends Container {
 
     public InventoryContainer() {
-        this(ClientData.inventory);
+        this(ClientPlayerData.inventory);
     }
 
     public InventoryContainer(Inventory inventory) {
-        super(0);
+        super(0,inventory);
         setTextureSize(158,99);
         for(int y = 0; y < 4; y++) {
             for (int x = 0; x < 9; x++) {

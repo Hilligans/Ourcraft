@@ -39,7 +39,7 @@ public class TreeBuilder extends SurfaceBuilder {
 
     private void placeBranch(BlockPos pos, double pitch, double yaw) {
         int length = (int) (Math.random() * 6) + 4;
-        Ray ray = new Ray(pitch,yaw);
+        Ray ray = new Ray(pitch,yaw,1.0f);
         for(int i = 0; i < length; i++) {
             BlockPos newPos = pos.copy().add(ray.getNextBlock(i));
             world.setBlockState(newPos,Blocks.LOG.getDefaultState());

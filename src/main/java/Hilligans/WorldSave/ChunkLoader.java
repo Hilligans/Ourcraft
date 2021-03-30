@@ -10,18 +10,21 @@ import Hilligans.Util.Settings;
 import Hilligans.World.Chunk;
 import Hilligans.World.DataProvider;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
+import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ChunkLoader {
 
-    public static String pathToWorld = "world/" + Settings.worldName + "/";
+    public static String pathToWorld = "world/" + Settings.worldName + "/dim-0/";
     public static String getPathToChunk(int x, int z) {
         return pathToWorld + "x" + x + "_z" + z + ".dat";
     }
 
     public static HashMap<String, CompoundTag> loadedGroups = new HashMap<>();
+
+    public static final Short2ObjectOpenHashMap<String> blockMap = new Short2ObjectOpenHashMap<>();
 
 
     public static CompoundTag createTag(Chunk chunk) {

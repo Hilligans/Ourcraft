@@ -1,27 +1,21 @@
 package Hilligans.Container.Containers;
 
-import Hilligans.Client.ClientData;
+import Hilligans.Data.Other.ClientPlayerData;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.ChestScreen;
-import Hilligans.ClientMain;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
-import Hilligans.Data.Other.IInventory;
 import Hilligans.Data.Other.Inventory;
-import Hilligans.Network.Packet.Server.SUpdateContainer;
-import Hilligans.Network.ServerNetworkHandler;
-import Hilligans.Util.Settings;
+import Hilligans.Data.Other.JoinedInventory;
 
 public class ChestContainer extends Container {
 
-
-
     public ChestContainer() {
-        this(new Inventory(27),ClientData.inventory);
+        this(new Inventory(27), ClientPlayerData.inventory);
     }
 
     public ChestContainer(Inventory inventory, Inventory playerInventory) {
-        super(1);
+        super(1,new JoinedInventory(inventory,playerInventory));
         setTextureSize(158,162);
         for(int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {

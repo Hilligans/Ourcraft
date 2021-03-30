@@ -36,11 +36,12 @@ public class CRequestChunkPacket extends PacketBase {
 
     @Override
     public void handle() {
-        Chunk chunk = ServerMain.world.getOrGenerateChunk(ChunkX, ChunkZ);
-        ServerMain.world.generateChunk(ChunkX + 1, ChunkZ);
-        ServerMain.world.generateChunk(ChunkX - 1, ChunkZ);
-        ServerMain.world.generateChunk(ChunkX, ChunkZ + 1);
-        ServerMain.world.generateChunk(ChunkX, ChunkZ - 1);
+        int dim = ServerNetworkHandler.getPlayerData(ctx).getDimension();
+        Chunk chunk = ServerMain.getWorld(dim).getOrGenerateChunk(ChunkX, ChunkZ);
+        ServerMain.getWorld(dim).generateChunk(ChunkX + 1, ChunkZ);
+        ServerMain.getWorld(dim).generateChunk(ChunkX - 1, ChunkZ);
+        ServerMain.getWorld(dim).generateChunk(ChunkX, ChunkZ + 1);
+        ServerMain.getWorld(dim).generateChunk(ChunkX, ChunkZ - 1);
 
         if(chunk != null) {
             ServerNetworkHandler.sendPacket(new SSendChunkPacket(chunk),ctx);

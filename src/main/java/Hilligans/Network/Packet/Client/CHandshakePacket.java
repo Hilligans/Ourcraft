@@ -1,25 +1,20 @@
 package Hilligans.Network.Packet.Client;
 
-import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.ClientMain;
-import Hilligans.Container.Containers.SlabBlockContainer;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Network.Packet.Server.*;
-import Hilligans.Data.Other.Server.PlayerData;
+import Hilligans.Data.Other.Server.ServerPlayerData;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.ServerMain;
 import Hilligans.Util.Settings;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelId;
-
-import java.awt.image.BufferedImage;
 
 
 public class CHandshakePacket extends PacketBase {
@@ -48,30 +43,33 @@ public class CHandshakePacket extends PacketBase {
 
     @Override
     public void handle() {
+
         if(id == Settings.gameVersion) {
+
             int playerId = Entity.getNewId();
             ServerNetworkHandler.sendPacket(new SHandshakePacket(playerId,ServerSidedData.getInstance().version),ctx);
             ServerNetworkHandler.sendPacket(new SChatMessage(name + " has joined the game"));
-            for(Entity entity : ServerMain.world.entities.values()) {
+
+            ChannelId channelId = ServerNetworkHandler.nameToChannel.get(name);
+            BlockPos spawn = ServerMain.getWorld(0).getWorldSpawn(Settings.playerBoundingBox);
+            PlayerEntity playerEntity = new PlayerEntity(spawn.x,spawn.y,spawn.z,playerId);
+            ServerPlayerData serverPlayerData = new ServerPlayerData(playerEntity);
+            for(Entity entity : ServerMain.getWorld(serverPlayerData.getDimension()).entities.values()) {
                 ServerNetworkHandler.sendPacket(new SCreateEntityPacket(entity),ctx);
             }
-            ChannelId channelId = ServerNetworkHandler.nameToChannel.get(name);
-            BlockPos spawn = ServerMain.world.getWorldSpawn(Settings.playerBoundingBox);
-            PlayerEntity playerEntity = new PlayerEntity(spawn.x,spawn.y,spawn.z,playerId);
-            PlayerData playerData = new PlayerData(playerEntity);
-            ServerNetworkHandler.playerData.put(playerId,playerData);
+            ServerNetworkHandler.playerData.put(playerId, serverPlayerData);
             ServerNetworkHandler.mappedChannels.put(playerId,ctx.channel().id());
             ServerNetworkHandler.mappedId.put(ctx.channel().id(),playerId);
             ServerNetworkHandler.mappedName.put(ctx.channel().id(),name);
             ServerNetworkHandler.nameToChannel.put(name, ctx.channel().id());
-            ServerMain.world.addEntity(playerEntity);
+            ServerMain.getWorld(serverPlayerData.getDimension()).addEntity(playerEntity);
             ServerNetworkHandler.sendPacket(new SUpdatePlayer(spawn.x,spawn.y,spawn.z,0,0),ctx);
-            playerData.playerInventory.age++;
+            serverPlayerData.playerInventory.age++;
             if(version != ServerSidedData.getInstance().version) {
                 ServerSidedData.getInstance().sendDataToClient(ctx);
             }
 
-            ServerNetworkHandler.sendPacket(new SUpdateInventory(playerData.playerInventory),ctx);
+            ServerNetworkHandler.sendPacket(new SUpdateInventory(serverPlayerData.playerInventory),ctx);
 
         } else {
             try {

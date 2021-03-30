@@ -49,15 +49,16 @@ public class CSendBlockChanges extends PacketBase {
 
     @Override
     public void handle() {
-        BlockState oldState = ServerMain.world.getBlockState(x,y,z);
+        int dim = ServerNetworkHandler.getPlayerData(ctx).getDimension();
+        BlockState oldState = ServerMain.getWorld(dim).getBlockState(x,y,z);
         BlockState newBlock = Blocks.getBlockWithID(blockId).getDefaultState();
-        ServerMain.world.setBlockState(x,y,z,newBlock);
-        newBlock.getBlock().onPlace(ServerMain.world, new BlockPos(x,y,z));
+        ServerMain.getWorld(dim).setBlockState(x,y,z,newBlock);
+        newBlock.getBlock().onPlace(ServerMain.getWorld(dim), new BlockPos(x,y,z));
         Block droppedBlock = oldState.getBlock().getDroppedBlock();
         if(droppedBlock != Blocks.AIR) {
-            if (ServerMain.world.getBlockState(x, y, z).getBlock() == Blocks.AIR) {
+            if (ServerMain.getWorld(dim).getBlockState(x, y, z).getBlock() == Blocks.AIR) {
                 ItemEntity itemEntity = new ItemEntity(x + 0.5f, y + 1, z + 0.5f, Entity.getNewId(), droppedBlock);
-                ServerMain.world.addEntity(itemEntity);
+                ServerMain.getWorld(dim).addEntity(itemEntity);
             }
         }
         ServerNetworkHandler.sendPacket(new SSendBlockChanges(x,y,z,newBlock));

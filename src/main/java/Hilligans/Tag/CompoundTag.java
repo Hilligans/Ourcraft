@@ -62,7 +62,7 @@ public class CompoundTag extends Tag {
 
     public CompoundTag writeStack(int slot, ItemStack itemStack) {
         CompoundTag compoundTag = new CompoundTag();
-        compoundTag.putByte("count",itemStack.count);
+        compoundTag.putInt("count",itemStack.count);
         if(itemStack.isEmpty()) {
             compoundTag.putShort("item",(short)-1);
         } else {

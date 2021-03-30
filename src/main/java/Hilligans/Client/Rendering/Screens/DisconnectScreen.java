@@ -1,6 +1,5 @@
 package Hilligans.Client.Rendering.Screens;
 
-import Hilligans.Client.ClientData;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ScreenBase;
 import Hilligans.Client.Rendering.Widgets.Button;

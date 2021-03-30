@@ -36,8 +36,11 @@ public abstract class Container {
     public ArrayList<Integer> trackedIntegers = new ArrayList<>();
     public ArrayList<Widget> widgets = new ArrayList<>();
 
-    public Container(int type) {
+    public IInventory inventory;
+
+    public Container(int type, IInventory inventory) {
         this.type = type;
+        this.inventory = inventory;
     }
 
     //TODO slots should be added with an x based off their texture, the x and y pos need to be able to be recalculated when the screen is resized
@@ -149,7 +152,7 @@ public abstract class Container {
     }
 
     public ItemStack swapStack(short slot, ItemStack heldStack) {
-        Slot itemSlot = slots.get(slot);
+        Slot itemSlot = getSlot(slot);
         if(itemSlot != null) {
             if(itemSlot.canItemBeAdded(heldStack)) {
                 return itemSlot.swapItemStacks(heldStack);
@@ -160,19 +163,26 @@ public abstract class Container {
 
     public ItemStack splitStack(short slot, ItemStack heldStack) {
         if(heldStack.isEmpty()) {
-            return slots.get(slot).splitStack();
+            return getSlot(slot).splitStack();
         }
         return heldStack;
     }
 
     public boolean putOne(short slot, ItemStack heldStack) {
         if(!heldStack.isEmpty()) {
-            if(slots.get(slot).canAdd(1,heldStack)) {
+            if(getSlot(slot).canAdd(1,heldStack)) {
                 heldStack.count -= 1;
                 return true;
             }
         }
         return false;
+    }
+
+    public ItemStack copyStack(short slot, ItemStack heldStack) {
+        if(heldStack.isEmpty()) {
+            return getSlot(slot).getContents().copy().setCount((byte)64);
+        }
+        return heldStack;
     }
 
     public static final ArrayList<ContainerFetcher> CONTAINERS = new ArrayList<>();

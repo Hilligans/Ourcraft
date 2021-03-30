@@ -2,7 +2,7 @@ package Hilligans.Network;
 
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Network.Packet.Server.SChatMessage;
-import Hilligans.Data.Other.Server.PlayerData;
+import Hilligans.Data.Other.Server.ServerPlayerData;
 import Hilligans.ServerMain;
 import io.netty.channel.*;
 import io.netty.channel.group.ChannelGroup;
@@ -24,7 +24,7 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketDat
     public static HashMap<ChannelId,String> mappedName = new HashMap<>();
     public static HashMap<String, ChannelId> nameToChannel = new HashMap<>();
     public static Int2ObjectOpenHashMap<ChannelId> mappedChannels = new Int2ObjectOpenHashMap<>();
-    public static Int2ObjectOpenHashMap<PlayerData> playerData = new Int2ObjectOpenHashMap<>();
+    public static Int2ObjectOpenHashMap<ServerPlayerData> playerData = new Int2ObjectOpenHashMap<>();
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -44,7 +44,8 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketDat
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         int id = mappedId.getOrDefault(ctx.channel().id(),-1);
         if(id != -1) {
-            ServerMain.world.removeEntity(id);
+            int dim = ServerNetworkHandler.getPlayerData(ctx).getDimension();
+            ServerMain.getWorld(dim).removeEntity(id);
             mappedChannels.remove(id);
             playerData.remove(id).close();
         }
@@ -105,7 +106,7 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketDat
         }
     }
 
-    public static PlayerData getPlayerData(ChannelHandlerContext ctx) {
+    public static ServerPlayerData getPlayerData(ChannelHandlerContext ctx) {
         return playerData.get(mappedId.get(ctx.channel().id()));
     }
 }

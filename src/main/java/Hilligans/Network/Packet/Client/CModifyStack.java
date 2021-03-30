@@ -3,7 +3,7 @@ package Hilligans.Network.Packet.Client;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
-import Hilligans.Data.Other.Server.PlayerData;
+import Hilligans.Data.Other.Server.ServerPlayerData;
 
 public class CModifyStack extends PacketBase {
 
@@ -34,14 +34,18 @@ public class CModifyStack extends PacketBase {
 
     @Override
     public void handle() {
-        PlayerData playerData = ServerNetworkHandler.playerData.get(ServerNetworkHandler.mappedId.get(ctx.channel().id()));
-        if(playerData != null) {
+        ServerPlayerData serverPlayerData = ServerNetworkHandler.playerData.get(ServerNetworkHandler.mappedId.get(ctx.channel().id()));
+        if(serverPlayerData != null) {
             if (mode == 0) {
-                playerData.swapStack(slot);
+                serverPlayerData.swapStack(slot);
             } else if (mode == 1) {
-                playerData.splitStack(slot);
+                serverPlayerData.splitStack(slot);
+            } else if (mode == 2) {
+                serverPlayerData.putOne(slot);
             } else {
-                playerData.putOne(slot);
+                if(serverPlayerData.isCreative) {
+                    serverPlayerData.copyStack(slot);
+                }
             }
         }
 

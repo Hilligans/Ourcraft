@@ -1,6 +1,6 @@
 package Hilligans.Network.Packet.Server;
 
-import Hilligans.Client.ClientData;
+import Hilligans.Data.Other.ClientPlayerData;
 import Hilligans.Item.ItemStack;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
@@ -62,12 +62,12 @@ public class SUpdateContainer extends PacketBase {
 
     @Override
     public void handle() {
-        if(ClientData.openContainer != null) {
-            if(ClientData.openContainer.uniqueId == containerId) {
+        if(ClientPlayerData.openContainer != null) {
+            if(ClientPlayerData.openContainer.uniqueId == containerId) {
                 if(trackInt) {
-                    ClientData.openContainer.setInt(integerId,val);
+                    ClientPlayerData.openContainer.setInt(integerId,val);
                 } else {
-                    ClientData.openContainer.slots.get(slot).setContents(itemStack);
+                    ClientPlayerData.openContainer.getSlot(slot).setContents(itemStack);
                 }
             }
         }

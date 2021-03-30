@@ -1,8 +1,6 @@
 package Hilligans.Client.Rendering.Screens.ContainerScreens;
 
-import Hilligans.Block.Block;
-import Hilligans.Block.Blocks;
-import Hilligans.Client.ClientData;
+import Hilligans.Data.Other.ClientPlayerData;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Client.Rendering.Renderer;
@@ -42,13 +40,13 @@ public class InventoryScreen extends ContainerScreen<InventoryContainer> {
         //Renderer
 
         for(int x = 0; x < 9; x++) {
-            ItemStack itemStack = ClientData.inventory.getItem(x);
+            ItemStack itemStack = ClientPlayerData.inventory.getItem(x);
             //Renderer.drawTexture1(screenStack, ClientData.itemSlot,startX + x * width, startY, width,width);
             if(!itemStack.isEmpty()) {
                 itemStack.item.render(matrixStack,startX + x * width, startY, width / 2,itemStack);
             }
         }
-        Renderer.drawTexture(matrixStack,Textures.ITEM_OUTLINE, (int) (startX - 1 * Settings.guiSize) + width * ClientData.handSlot ,(int)(startY - 1 * Settings.guiSize),(int)(width + 2 * Settings.guiSize),(int)(width + 2 * Settings.guiSize),7,7,25,25);
+        Renderer.drawTexture(matrixStack,Textures.ITEM_OUTLINE, (int) (startX - 1 * Settings.guiSize) + width * ClientPlayerData.handSlot ,(int)(startY - 1 * Settings.guiSize),(int)(width + 2 * Settings.guiSize),(int)(width + 2 * Settings.guiSize),7,7,25,25);
 
     }
 }

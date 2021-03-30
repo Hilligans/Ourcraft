@@ -4,24 +4,18 @@ import Hilligans.Data.Other.BlockPos;
 
 public class Ray {
 
-    double pitch;
-    double yaw;
+    double x;
+    double y;
+    double z;
 
-    public Ray(double pitch, double yaw) {
-        this.pitch = pitch;
-        this.yaw = yaw;
+    public Ray(double pitch, double yaw, float stepSize) {
+        x = Math.cos(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * stepSize;
+        y = Math.sin(Math.toRadians(pitch)) * stepSize;
+        z = Math.sin(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * stepSize;
     }
 
     public BlockPos getNextBlock(int step) {
-        float stepSize = 1.0f;
-
-        int x = (int)(Math.cos(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * step * stepSize);
-        int y = (int)(Math.sin(Math.toRadians(pitch)) * step * stepSize);
-        int z = (int)(Math.sin(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * step * stepSize);
-        return new BlockPos(x,y,z);
+        return new BlockPos((int)(x * step),(int)(y * step),(int)(z * step));
     }
-
-
-
 
 }

@@ -102,7 +102,7 @@ public class PacketData {
 
     public ItemStack readItemStack() {
         short item = readShort();
-        byte count = readByte();
+        int count = readInt();
         if(item != -1) {
             return new ItemStack(Items.ITEMS.get(item), count);
         } else {
@@ -179,7 +179,7 @@ public class PacketData {
         } else {
             writeShort((short)-1);
         }
-        writeByte(itemStack.count);
+        writeInt(itemStack.count);
     }
 
     public PacketBase createPacket() {

@@ -37,7 +37,7 @@ public class TagEditorScreen extends ScreenBase {
                 yOffset = new IntegerWrapper(0);
                 folderWidget.addAll(compoundTag);
                 folderWidget.addOffset(yOffset);
-                System.out.println(compoundTag);
+                //System.out.println(compoundTag);
                 folderWidget.yOffset = new IntegerWrapper(0);
                 folderWidget.minY = 100;
             }

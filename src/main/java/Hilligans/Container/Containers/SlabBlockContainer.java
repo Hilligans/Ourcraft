@@ -1,20 +1,20 @@
 package Hilligans.Container.Containers;
 
-import Hilligans.Block.BlockTypes.SlabBlock;
-import Hilligans.Client.ClientData;
+import Hilligans.Data.Other.ClientPlayerData;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
 import Hilligans.Data.Other.Inventory;
+import Hilligans.Data.Other.JoinedInventory;
 
 public class SlabBlockContainer extends Container {
 
     public SlabBlockContainer() {
-        this(new Inventory(3), ClientData.inventory);
+        this(new Inventory(3), ClientPlayerData.inventory);
     }
 
     public SlabBlockContainer(Inventory inventory, Inventory playerInventory) {
-        super(3);
+        super(3,new JoinedInventory(inventory,playerInventory));
         addSlot(new Slot(55, 47, inventory, 0));
         addSlot(new Slot(71, 47, inventory, 1));
         addSlot(new Slot(87, 47, inventory, 2));

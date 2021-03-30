@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public abstract class Entity {
 
     public float x,y,z,pitch,yaw,velX,velY,velZ;
+    public int dimension = 0;
 
     public BoundingBox boundingBox;
 
@@ -117,7 +118,7 @@ public abstract class Entity {
         boolean couldMove = false;
         int x;
         for(x = 0; x < 7; x++) {
-            if(!getAllowedMovement(tryMovement(x,velX,velY,velZ),ServerMain.world)) {
+            if(!getAllowedMovement(tryMovement(x,velX,velY,velZ),ServerMain.getWorld(dimension))) {
                 continue;
             }
             couldMove = true;

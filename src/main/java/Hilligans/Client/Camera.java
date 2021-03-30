@@ -7,6 +7,7 @@ import Hilligans.Client.Key.KeyPress;
 import Hilligans.ClientMain;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BoundingBox;
+import Hilligans.Data.Other.ClientPlayerData;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CUpdatePlayerPacket;
 import Hilligans.World.Chunk;
@@ -37,9 +38,6 @@ public class Camera {
 
     public static boolean thirdPerson = false;
 
-    public static boolean spectator = false;
-
-    public static boolean isFlying = false;
 
     public static boolean isOnGround = false;
     public static boolean hitBlock = false;
@@ -101,7 +99,7 @@ public class Camera {
     }
 
     public static void moveUp() {
-        if(spectator || isFlying) {
+        if(ClientPlayerData.spectator || ClientPlayerData.flying) {
             add(0, moveSpeed, 0);
         } else {
             if(velY == 0) {
@@ -118,7 +116,7 @@ public class Camera {
     }
 
     public static void moveDown() {
-        if(spectator || isFlying) {
+        if(ClientPlayerData.spectator || ClientPlayerData.flying) {
             add(0, -moveSpeed, 0);
         }
     }
@@ -127,8 +125,8 @@ public class Camera {
 
     public static void add(float x, float y, float z) {
 
-        if(spectator) {
-            pos.add(x, y, z);
+        if(ClientPlayerData.spectator) {
+            pos.add(x * 4, y * 4, z * 4);
             ClientNetworkHandler.sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.playerId));
         } else {
 
@@ -180,7 +178,7 @@ public class Camera {
         //velZ = velZ / 2;
         if(ClientMain.clientWorld.getChunk((int)pos.x >> 4, (int)pos.z >> 4) != null) {
 
-            if (!spectator && !isFlying) {
+            if (!ClientPlayerData.spectator && !ClientPlayerData.flying) {
                 velY += fallSpeed;
                 if (velY < terminalVel) {
                     velY = terminalVel;

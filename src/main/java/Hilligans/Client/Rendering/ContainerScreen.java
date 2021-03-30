@@ -1,16 +1,14 @@
 package Hilligans.Client.Rendering;
 
-import Hilligans.Client.ClientData;
+import Hilligans.Data.Other.ClientPlayerData;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
 import Hilligans.Item.ItemStack;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CModifyStack;
-import Hilligans.Util.Settings;
 
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_2;
+import static org.lwjgl.glfw.GLFW.*;
 
 public abstract class ContainerScreen<T extends Container> extends ScreenBase {
 
@@ -36,19 +34,26 @@ public abstract class ContainerScreen<T extends Container> extends ScreenBase {
         Slot slot = container.getSlotAt(x,y);
         if(slot != null) {
             if(mouseButton == GLFW_MOUSE_BUTTON_1) {
-                ItemStack oldStack = ClientData.heldStack.copy();
-                ClientData.heldStack = container.swapStack(slot.id,ClientData.heldStack);
-                if(!ClientData.heldStack.equals(oldStack)) {
+                ItemStack oldStack = ClientPlayerData.heldStack.copy();
+                ClientPlayerData.heldStack = container.swapStack(slot.id, ClientPlayerData.heldStack);
+                if(!ClientPlayerData.heldStack.equals(oldStack)) {
                     ClientNetworkHandler.sendPacket(new CModifyStack(slot.id, (byte) 0));
                 }
             } else if(mouseButton == GLFW_MOUSE_BUTTON_2) {
-                boolean empty = ClientData.heldStack.isEmpty();
-                ClientData.heldStack = container.splitStack(slot.id,ClientData.heldStack);
-                if(empty && !ClientData.heldStack.isEmpty()) {
+                boolean empty = ClientPlayerData.heldStack.isEmpty();
+                ClientPlayerData.heldStack = container.splitStack(slot.id, ClientPlayerData.heldStack);
+                if (empty && !ClientPlayerData.heldStack.isEmpty()) {
                     ClientNetworkHandler.sendPacket(new CModifyStack(slot.id, (byte) 1));
                 }
+
+            } else if(mouseButton == GLFW_MOUSE_BUTTON_MIDDLE && ClientPlayerData.creative) {
+                ItemStack stack = container.copyStack(slot.id,ClientPlayerData.heldStack);
+                if(ClientPlayerData.heldStack != stack) {
+                    ClientPlayerData.heldStack = stack;
+                    ClientNetworkHandler.sendPacket(new CModifyStack(slot.id,(byte)3));
+                }
             } else {
-                if(container.putOne(slot.id,ClientData.heldStack)) {
+                if(container.putOne(slot.id, ClientPlayerData.heldStack)) {
                     ClientNetworkHandler.sendPacket(new CModifyStack(slot.id, (byte) 2));
                 }
             }

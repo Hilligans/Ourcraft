@@ -4,7 +4,7 @@ import Hilligans.Container.Containers.InventoryContainer;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
-import Hilligans.Data.Other.Server.PlayerData;
+import Hilligans.Data.Other.Server.ServerPlayerData;
 
 public class CCloseScreen extends PacketBase {
 
@@ -32,9 +32,9 @@ public class CCloseScreen extends PacketBase {
     @Override
     public void handle() {
         if(!newScreen) {
-            PlayerData playerData = ServerNetworkHandler.getPlayerData(ctx);
-            if (playerData != null) {
-                playerData.openContainer(new InventoryContainer(playerData.playerInventory));
+            ServerPlayerData serverPlayerData = ServerNetworkHandler.getPlayerData(ctx);
+            if (serverPlayerData != null) {
+                serverPlayerData.openContainer(new InventoryContainer(serverPlayerData.playerInventory));
             }
         }
     }

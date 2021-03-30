@@ -1,6 +1,5 @@
 package Hilligans.Network.Packet.Server;
 
-import Hilligans.Client.ClientData;
 import Hilligans.ClientMain;
 import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Network.PacketBase;

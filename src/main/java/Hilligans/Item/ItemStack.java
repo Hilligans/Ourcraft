@@ -5,10 +5,10 @@ import Hilligans.Util.Settings;
 
 public class ItemStack {
 
-    public byte count;
+    public int count;
     public Item item;
 
-    public ItemStack(Item item, byte count) {
+    public ItemStack(Item item, int count) {
         this.item = item;
         this.count = count;
     }
@@ -32,8 +32,13 @@ public class ItemStack {
         return 0;
     }
 
-    public void add(int amount) {
-        count = (byte) Math.min(count + amount, 64);
+    public ItemStack add(int amount) {
+        return setCount((byte) Math.min(count + amount, 64));
+    }
+
+    public ItemStack setCount(byte count) {
+        this.count = count;
+        return this;
     }
 
     public ItemStack mergeStack(ItemStack itemStack) {
