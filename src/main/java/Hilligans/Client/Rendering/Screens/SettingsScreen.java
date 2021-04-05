@@ -2,21 +2,12 @@ package Hilligans.Client.Rendering.Screens;
 
 import Hilligans.Client.Camera;
 import Hilligans.Client.MatrixStack;
-import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Client.Rendering.ScreenBase;
-import Hilligans.Client.Rendering.Widgets.SliderChange;
 import Hilligans.Client.Rendering.Widgets.SliderWidget;
-import Hilligans.Client.Rendering.Widgets.ToggleAction;
 import Hilligans.Client.Rendering.Widgets.ToggleWidget;
-import Hilligans.Client.Rendering.World.Managers.ShaderManager;
 import Hilligans.Client.Rendering.World.StringRenderer;
 import Hilligans.ClientMain;
-import Hilligans.Entity.Entity;
 import Hilligans.Util.Settings;
-import Hilligans.Util.Util;
-
-import static org.lwjgl.opengl.GL11.GL_DEPTH;
-import static org.lwjgl.opengl.GL11.glEnable;
 
 public class SettingsScreen extends ScreenBase {
 

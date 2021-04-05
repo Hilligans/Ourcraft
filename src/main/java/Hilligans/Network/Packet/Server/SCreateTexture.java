@@ -1,12 +1,10 @@
 package Hilligans.Network.Packet.Server;
 
 import Hilligans.Client.Rendering.Texture;
-import Hilligans.Client.Rendering.Textures;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
-import org.lwjgl.system.CallbackI;
 
 import java.awt.image.BufferedImage;
 

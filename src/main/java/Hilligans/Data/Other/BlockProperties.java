@@ -1,6 +1,5 @@
 package Hilligans.Data.Other;
 
-import Hilligans.Block.Block;
 import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
 
 public class BlockProperties {
