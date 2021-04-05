@@ -23,7 +23,7 @@ public class ClientAuthNetworkHandler extends NetworkHandler {
         if(networkHandler == null || !networkHandler.channel.isOpen()) {
             networkHandler = new ClientAuthNetworkHandler();
             try {
-                ClientNetworkInit.joinServer("localhost", "25588", networkHandler);
+                ClientNetworkInit.joinServer("72.172.99.188", "25588", networkHandler);
             } catch (Exception ignored) {
                 ignored.printStackTrace();
             }
