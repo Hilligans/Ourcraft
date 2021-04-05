@@ -7,7 +7,6 @@ import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Client.Rendering.World.StringRenderer;
 import Hilligans.ClientMain;
-import com.sun.security.ntlm.Client;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
