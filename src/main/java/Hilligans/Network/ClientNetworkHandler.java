@@ -1,44 +1,35 @@
 package Hilligans.Network;
 
-import Hilligans.Block.Blocks;
 import Hilligans.Client.Rendering.Screens.DisconnectScreen;
-import Hilligans.Client.Rendering.Screens.JoinScreen;
 import Hilligans.Client.Rendering.Textures;
 import Hilligans.ClientMain;
 import Hilligans.Network.Packet.Client.CHandshakePacket;
 import Hilligans.World.ClientWorld;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.*;
 
-import static org.lwjgl.glfw.GLFW.*;
+public class ClientNetworkHandler extends NetworkHandler {
 
-public class ClientNetworkHandler extends SimpleChannelInboundHandler<PacketData> {
-
+    public static ClientNetworkHandler clientNetworkHandler;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        ClientNetworkHandler.sendPacket(new CHandshakePacket());
+        ClientNetworkHandler.sendPacketDirect(new CHandshakePacket());
         ClientMain.renderWorld = true;
-
     }
-
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Textures.clear();
         System.out.println("DISCONNECTED FROM SERVER");
+
         if(!ClientMain.valid) {
-            //System.out.println("YOUR GAME VERSION MAY BE OUT OF DATE");
         }
         ClientMain.renderWorld = false;
         ClientMain.clientWorld = new ClientWorld();
 
         super.channelInactive(ctx);
     }
-
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, PacketData msg) throws Exception {
@@ -52,10 +43,20 @@ public class ClientNetworkHandler extends SimpleChannelInboundHandler<PacketData
         ClientMain.openScreen(new DisconnectScreen(cause.getMessage()));
     }
 
-    public static void sendPacket(PacketBase packetBase) {
-        if(ClientNetworkInit.channel != null) {
-            ClientNetworkInit.channel.writeAndFlush(new PacketData(packetBase));
+    public static void sendPacketDirect(PacketBase packetBase) {
+     //  if(clientNetworkHandler.channel != null && clientNetworkHandler.channel.isOpen()) {
+        if(clientNetworkHandler != null) {
+            clientNetworkHandler.channel.writeAndFlush(new PacketData(packetBase));
         }
+       // }
+    }
+
+    public static boolean close() {
+        if(clientNetworkHandler != null && clientNetworkHandler.channel != null) {
+            clientNetworkHandler.channel.close();
+            return true;
+        }
+        return false;
     }
 
 }

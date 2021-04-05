@@ -29,6 +29,8 @@
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-opengles:natives-windows:3.2.3" level="project" />
     <orderEntry type="library" name="Maven: org.joml:joml:1.10.0" level="project" />
     <orderEntry type="library" name="Maven: it.unimi.dsi:fastutil:8.4.4" level="project" />
+    <orderEntry type="library" name="Maven: at.favre.lib:bcrypt:0.2.0" level="project" />
+    <orderEntry type="library" name="Maven: at.favre.lib:bytes:0.4.6" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-all:4.1.60.Final" level="project" />
   </component>
 </module>

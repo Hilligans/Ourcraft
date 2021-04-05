@@ -1,6 +1,6 @@
 package Hilligans.Client.Rendering;
 
-import Hilligans.Data.Other.ClientPlayerData;
+import Hilligans.Client.ClientPlayerData;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
@@ -37,24 +37,24 @@ public abstract class ContainerScreen<T extends Container> extends ScreenBase {
                 ItemStack oldStack = ClientPlayerData.heldStack.copy();
                 ClientPlayerData.heldStack = container.swapStack(slot.id, ClientPlayerData.heldStack);
                 if(!ClientPlayerData.heldStack.equals(oldStack)) {
-                    ClientNetworkHandler.sendPacket(new CModifyStack(slot.id, (byte) 0));
+                    ClientNetworkHandler.sendPacketDirect(new CModifyStack(slot.id, (byte) 0));
                 }
             } else if(mouseButton == GLFW_MOUSE_BUTTON_2) {
                 boolean empty = ClientPlayerData.heldStack.isEmpty();
                 ClientPlayerData.heldStack = container.splitStack(slot.id, ClientPlayerData.heldStack);
                 if (empty && !ClientPlayerData.heldStack.isEmpty()) {
-                    ClientNetworkHandler.sendPacket(new CModifyStack(slot.id, (byte) 1));
+                    ClientNetworkHandler.sendPacketDirect(new CModifyStack(slot.id, (byte) 1));
                 }
 
             } else if(mouseButton == GLFW_MOUSE_BUTTON_MIDDLE && ClientPlayerData.creative) {
                 ItemStack stack = container.copyStack(slot.id,ClientPlayerData.heldStack);
                 if(ClientPlayerData.heldStack != stack) {
                     ClientPlayerData.heldStack = stack;
-                    ClientNetworkHandler.sendPacket(new CModifyStack(slot.id,(byte)3));
+                    ClientNetworkHandler.sendPacketDirect(new CModifyStack(slot.id,(byte)3));
                 }
             } else {
                 if(container.putOne(slot.id, ClientPlayerData.heldStack)) {
-                    ClientNetworkHandler.sendPacket(new CModifyStack(slot.id, (byte) 2));
+                    ClientNetworkHandler.sendPacketDirect(new CModifyStack(slot.id, (byte) 2));
                 }
             }
         }

@@ -178,7 +178,7 @@ public abstract class World {
             }
         }
         requestedChunks.add(new ClientWorld.XZHolder(x,z));
-        ClientNetworkHandler.sendPacket(new CRequestChunkPacket(x, z));
+        ClientNetworkHandler.sendPacketDirect(new CRequestChunkPacket(x, z));
     }
 
     ConcurrentLinkedQueue<ClientWorld.XZHolder> requestedChunks = new ConcurrentLinkedQueue<>();

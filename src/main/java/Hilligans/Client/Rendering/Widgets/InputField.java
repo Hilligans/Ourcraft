@@ -7,14 +7,28 @@ import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Client.Rendering.World.StringRenderer;
 import Hilligans.ClientMain;
+import com.sun.security.ntlm.Client;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
 
 public class InputField extends Widget {
 
     public String string = "";
+    public String name;
 
     public InputField(int x, int y, int width, int height) {
         super(x, y, width, height);
+        KeyHandler.register(keyPress,KeyHandler.GLFW_KEY_BACKSPACE);
+        KeyHandler.register(charPress);
+    }
+
+    public InputField(int x, int y, int width, int height, String name) {
+        super(x, y, width, height);
+        this.name = name;
         KeyHandler.register(keyPress,KeyHandler.GLFW_KEY_BACKSPACE);
         KeyHandler.register(charPress);
     }
@@ -32,7 +46,8 @@ public class InputField extends Widget {
         super.render(matrixStack, xOffset, yOffset);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         Renderer.drawTexture(matrixStack, ClientMain.outLine,x,y,width,height);
-        StringRenderer.drawString(matrixStack, string,x,y,0.5f);
+        StringRenderer.drawString(matrixStack, name, x, y, 0.5f);
+        StringRenderer.drawString(matrixStack, string,x,y + height / 2,0.5f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 
@@ -40,7 +55,17 @@ public class InputField extends Widget {
         @Override
         public void onPress(char key) {
             if(isFocused) {
-                string += key;
+                if(key == 'v' && KeyHandler.keyPressed[GLFW.GLFW_KEY_LEFT_CONTROL]) {
+                    try {
+                        System.out.println("adding clipboard");
+                        string += GLFW.glfwGetClipboardString(ClientMain.window);
+                        //string += Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+                    } catch (Exception ignored) {
+                        ignored.printStackTrace();
+                    }
+                } else {
+                    string += key;
+                }
             }
         }
 

@@ -1,5 +1,6 @@
 package Hilligans.Network.Packet.Client;
 
+import Hilligans.Client.ClientPlayerData;
 import Hilligans.ClientMain;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.ServerSidedData;
@@ -21,6 +22,7 @@ public class CHandshakePacket extends PacketBase {
 
     public int id;
     public String name;
+    public String authToken;
     public long version;
 
     public CHandshakePacket() {
@@ -30,8 +32,9 @@ public class CHandshakePacket extends PacketBase {
     @Override
     public void encode(PacketData packetData) {
         packetData.writeInt(Settings.gameVersion);
-        packetData.writeString(ClientMain.name);
+        packetData.writeString(ClientPlayerData.userName);
         packetData.writeLong(ServerSidedData.getInstance().version);
+        packetData.writeString(ClientPlayerData.authToken);
     }
 
     @Override
@@ -39,11 +42,11 @@ public class CHandshakePacket extends PacketBase {
         id = packetData.readInt();
         name = packetData.readString();
         version = packetData.readLong();
+        authToken = packetData.readString();
     }
 
     @Override
     public void handle() {
-
         if(id == Settings.gameVersion) {
 
             int playerId = Entity.getNewId();
@@ -77,7 +80,7 @@ public class CHandshakePacket extends PacketBase {
                     @Override
                     public void operationComplete(ChannelFuture future) throws Exception {
                         if (ctx.channel().isOpen()) {
-                            ctx.channel().close().awaitUninterruptibly(10);
+                            ctx.channel().close().awaitUninterruptibly(100);
                         }
                     }
                 });

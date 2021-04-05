@@ -1,6 +1,6 @@
 package Hilligans.Container.Containers;
 
-import Hilligans.Data.Other.ClientPlayerData;
+import Hilligans.Client.ClientPlayerData;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;

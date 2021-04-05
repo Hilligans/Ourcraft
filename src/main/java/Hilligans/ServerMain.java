@@ -6,6 +6,10 @@ import Hilligans.Client.Rendering.Widgets.Widget;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Data.Other.ServerSidedData;
+import Hilligans.Network.ClientAuthNetworkHandler;
+import Hilligans.Network.ClientNetworkHandler;
+import Hilligans.Network.ClientNetworkInit;
+import Hilligans.Network.Packet.AuthServerPackets.CTokenValid;
 import Hilligans.Server.MultiPlayerServer;
 import Hilligans.Tag.CompoundTag;
 import Hilligans.Tag.IntegerTag;
@@ -18,6 +22,8 @@ import Hilligans.World.DataProvider;
 import Hilligans.World.ServerWorld;
 import Hilligans.World.World;
 import Hilligans.WorldSave.WorldLoader;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 import org.lwjgl.system.CallbackI;
 
@@ -51,6 +57,20 @@ public class ServerMain {
 
     public static World getWorld(int id) {
         return server.worlds.get(id);
+    }
+
+    public static boolean clientValid(String username, String token, String ip) {
+        if(ClientNetworkInit.authChannel == null || !ClientNetworkInit.authChannel.isOpen()) {
+            try {
+                ClientNetworkInit.joinServer("72.172.99.188","25588", new ClientAuthNetworkHandler());
+            } catch (Exception ignored) {
+                return false;
+            }
+        }
+
+
+
+        return false;
     }
 
 }

@@ -1,6 +1,6 @@
 package Hilligans.Client.Rendering.Screens.ContainerScreens;
 
-import Hilligans.Data.Other.ClientPlayerData;
+import Hilligans.Client.ClientPlayerData;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Client.Rendering.Renderer;

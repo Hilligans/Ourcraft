@@ -11,53 +11,35 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 
+import javax.net.ssl.TrustManagerFactory;
+
 public class ClientNetworkInit extends ChannelInitializer<SocketChannel> {
 
-    public static Channel channel;
+    public static Channel authChannel;
 
     private final SslContext sslCtx;
+    private final SimpleChannelInboundHandler<PacketData> networkHandler;
 
-    public ClientNetworkInit(SslContext sslCtx) {
+    public ClientNetworkInit(SslContext sslCtx, SimpleChannelInboundHandler<PacketData> networkHandler) {
         this.sslCtx = sslCtx;
+        this.networkHandler = networkHandler;
     }
 
-    public static EventLoopGroup group;
 
-    public static String ip;
-    public static String port;
-
-    public static void joinServer(String ip, String port) throws Exception {
-        ClientNetworkInit.ip = ip;
-        ClientNetworkInit.port = port;
-
+    public static void joinServer(String ip, String port, NetworkHandler networkHandler) throws Exception {
         final String HOST = System.getProperty("host", ip);
         final int PORT = Integer.parseInt(System.getProperty("port", port));
-
+        //TrustManagerFactory.
         final SslContext sslCtx = SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+        //final SslContext s slCtx1 = SslContextBuilder.forClient().trustManager(TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())).build();
 
-        group = new NioEventLoopGroup();
+        EventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap b = new Bootstrap();
-            b.group(group)
-                    .channel(NioSocketChannel.class)
-                    .handler(new ClientNetworkInit(sslCtx));
-
-            // Start the connection attempt.
-            channel = b.connect(HOST, PORT).sync().channel();
-            //}
-        } finally {
-            // The connection is closed automatically on shutdown.
-        }
+            b.group(group).channel(NioSocketChannel.class).handler(new ClientNetworkInit(sslCtx, networkHandler));
+            networkHandler.setData(b.connect(HOST, PORT).sync().channel(), group, ip, port);
+        } finally {}
     }
-
-    public static void close() {
-        if(group != null) {
-            group.shutdownGracefully();
-        }
-    }
-
-
-
 
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
@@ -84,6 +66,6 @@ public class ClientNetworkInit extends ChannelInitializer<SocketChannel> {
 
 
         // and then business logic.
-        pipeline.addLast(new ClientNetworkHandler());
+        pipeline.addLast(networkHandler);
     }
 }

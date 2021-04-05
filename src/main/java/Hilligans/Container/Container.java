@@ -3,7 +3,6 @@ package Hilligans.Container;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Client.Rendering.Widgets.Button;
-import Hilligans.Client.Rendering.Widgets.ButtonAction;
 import Hilligans.Client.Rendering.Widgets.Widget;
 import Hilligans.Client.Rendering.World.StringRenderer;
 import Hilligans.ClientMain;
@@ -86,7 +85,7 @@ public abstract class Container {
 
     public void addWidget(Widget widget) {
         if(widget instanceof Button && !Settings.isServer) {
-            ((Button) widget).buttonAction = () -> ClientNetworkHandler.sendPacket(new CActivateButton(widgets.size()));
+            ((Button) widget).buttonAction = () -> ClientNetworkHandler.sendPacketDirect(new CActivateButton(widgets.size()));
         }
         widgets.add(widget);
     }

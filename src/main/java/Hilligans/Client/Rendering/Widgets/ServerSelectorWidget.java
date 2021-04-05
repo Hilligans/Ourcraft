@@ -7,6 +7,7 @@ import Hilligans.Client.Rendering.Texture;
 import Hilligans.Client.Rendering.Textures;
 import Hilligans.Client.Rendering.World.StringRenderer;
 import Hilligans.ClientMain;
+import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.ClientNetworkInit;
 import Hilligans.Util.Settings;
 
@@ -35,7 +36,8 @@ public class ServerSelectorWidget extends Widget {
 
     public void joinServer() {
         try {
-            ClientNetworkInit.joinServer(ip, port);
+            ClientNetworkHandler.clientNetworkHandler = new ClientNetworkHandler();
+            ClientNetworkInit.joinServer(ip, port, ClientNetworkHandler.clientNetworkHandler);
             ClientMain.closeScreen();
         } catch (Exception e) {
             e.printStackTrace();

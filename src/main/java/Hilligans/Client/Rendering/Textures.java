@@ -36,6 +36,8 @@ public class Textures {
     public static final Texture BACKGROUND = new Texture("GUI/background.png");
     public static final Texture BUTTON = new Texture("GUI/button.png");
     public static final Texture BUTTON_DARK = new Texture("GUI/button_dark.png");
+    public static final Texture CHECK_MARK = new Texture("GUI/check_mark.png");
+    public static final Texture X_MARK = new Texture("GUI/check_mark.png");
 
     public static void clear() {
         for(Texture texture : MAPPED_TEXTURES.values()) {

@@ -60,9 +60,6 @@ public abstract class PacketBase {
 
     }
 
-    public PacketBase createNew() {
-        return new InvalidFormatPacket();
-    }
 
 
 }

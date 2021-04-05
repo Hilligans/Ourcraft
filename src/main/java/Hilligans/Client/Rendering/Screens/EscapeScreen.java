@@ -13,11 +13,7 @@ public class EscapeScreen extends ScreenBase {
     public EscapeScreen() {
         widgets.add(new Button(50,50,200,40, "Disconnect", () -> {
             ClientMain.closeScreen();
-            if(ClientNetworkInit.channel != null) {
-                ClientNetworkInit.channel.close();
-            }
-
-
+            ClientNetworkHandler.close();
         }));
         widgets.add(new Button(50, 100, 200, 40, "Settings", () -> {
             ClientMain.openScreen(new SettingsScreen());

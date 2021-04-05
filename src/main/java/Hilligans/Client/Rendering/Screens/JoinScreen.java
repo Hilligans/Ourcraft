@@ -1,13 +1,17 @@
 package Hilligans.Client.Rendering.Screens;
 
 import Hilligans.Block.Blocks;
+import Hilligans.Client.ClientPlayerData;
 import Hilligans.Client.Rendering.Widgets.ServerSelectorWidget;
 import Hilligans.ClientMain;
 import Hilligans.Client.Rendering.ScreenBase;
 import Hilligans.Client.Rendering.Widgets.Button;
 import Hilligans.Client.Rendering.Widgets.ButtonAction;
 import Hilligans.Client.Rendering.Widgets.InputField;
+import Hilligans.Network.ClientAuthNetworkHandler;
 import Hilligans.Network.ClientNetworkHandler;
+import Hilligans.Network.Packet.AuthServerPackets.CCreateAccount;
+import Hilligans.Network.Packet.AuthServerPackets.CGetToken;
 import Hilligans.Network.Packet.Client.CSendBlockChanges;
 import Hilligans.Util.Settings;
 
@@ -35,6 +39,18 @@ public class JoinScreen extends ScreenBase {
         //widgets.add(inputField);
         widgets.add(play);
         widgets.add(new ServerSelectorWidget(100,200,200,80,"localhost","25586",this));
+        widgets.add(new Button(500, 200, 200, 50, "Create Account", () -> {
+            ClientMain.openScreen(new AccountCreationScreen());
+        }));
+        widgets.add(new Button(500, 300, 200, 50, "Create new token", new ButtonAction() {
+            @Override
+            public void onPress() {
+                ClientAuthNetworkHandler.sendPacketDirect(new CGetToken(ClientPlayerData.userName,ClientPlayerData.password));
+            }
+        }));
+
+
+        //widgets.add(new Button(500,ClientMain.windowY / 2 + 100,200,50,""))
 
     }
 

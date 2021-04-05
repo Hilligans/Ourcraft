@@ -1,6 +1,6 @@
 package Hilligans.Network.Packet.Server;
 
-import Hilligans.Data.Other.ClientPlayerData;
+import Hilligans.Client.ClientPlayerData;
 import Hilligans.Data.Other.Inventory;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;

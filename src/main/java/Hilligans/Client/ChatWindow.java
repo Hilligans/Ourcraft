@@ -68,7 +68,7 @@ public class ChatWindow implements Screen {
             @Override
             public void onPress() {
                 if(typing) {
-                    ClientNetworkHandler.sendPacket(new CSendMessage(string));
+                    ClientNetworkHandler.sendPacketDirect(new CSendMessage(string));
                     string = "";
                     typing = false;
                     ClientMain.closeScreen();

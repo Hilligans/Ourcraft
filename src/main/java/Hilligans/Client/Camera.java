@@ -7,7 +7,6 @@ import Hilligans.Client.Key.KeyPress;
 import Hilligans.ClientMain;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BoundingBox;
-import Hilligans.Data.Other.ClientPlayerData;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CUpdatePlayerPacket;
 import Hilligans.World.Chunk;
@@ -127,7 +126,7 @@ public class Camera {
 
         if(ClientPlayerData.spectator) {
             pos.add(x * 4, y * 4, z * 4);
-            ClientNetworkHandler.sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.playerId));
+            ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.playerId));
         } else {
 
             maxX += x;
@@ -210,7 +209,7 @@ public class Camera {
             maxX = 0;
             maxZ = 0;
 
-            ClientNetworkHandler.sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.playerId));
+            ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.playerId));
         }
     }
 
@@ -231,13 +230,13 @@ public class Camera {
             yaw = 6.283;
         }
 
-        ClientNetworkHandler.sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.playerId));
+        ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.playerId));
 
     }
 
     public static void addYaw(double amount) {
         yaw += amount;
-        ClientNetworkHandler.sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.playerId));
+        ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.playerId));
     }
 
     public static Vector3f duplicate() {
@@ -355,7 +354,7 @@ public class Camera {
             for (int a = 0; a < count; a++) {
                 move(velX / count, velY / count, velZ / count);
             }
-            ClientNetworkHandler.sendPacket(new CUpdatePlayerPacket(pos.x, pos.y, pos.z, (float) pitch, (float) yaw, ClientMain.playerId));
+            ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x, pos.y, pos.z, (float) pitch, (float) yaw, ClientMain.playerId));
 
         }
     }

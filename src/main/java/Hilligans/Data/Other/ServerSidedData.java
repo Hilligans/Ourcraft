@@ -10,6 +10,7 @@ import Hilligans.Container.ContainerFetcher;
 import Hilligans.Container.Containers.SlabBlockContainer;
 import Hilligans.Data.Primitives.TripleTypeWrapper;
 import Hilligans.Item.Item;
+import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.ClientNetworkInit;
 import Hilligans.Network.Packet.Server.SCreateTexture;
 import Hilligans.Network.Packet.Server.SRegisterBlock;
@@ -145,13 +146,17 @@ public class ServerSidedData {
         if(Settings.isServer) {
             return instance;
         } else {
-            String path = ClientNetworkInit.ip + ":" + ClientNetworkInit.port;
-            ServerSidedData data = cachedData.get(path);
-            if(data == null) {
-                data = new ServerSidedData(Long.MIN_VALUE);
-                cachedData.put(path,data);
+            if(ClientNetworkHandler.clientNetworkHandler != null) {
+                String path = ClientNetworkHandler.clientNetworkHandler.ip + ":" + ClientNetworkHandler.clientNetworkHandler.port;
+                ServerSidedData data = cachedData.get(path);
+                if (data == null) {
+                    data = new ServerSidedData(Long.MIN_VALUE);
+                    cachedData.put(path, data);
+                }
+                return data;
             }
-            return data;
+            return new ServerSidedData(Long.MIN_VALUE);
+
 
         }
     }

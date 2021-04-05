@@ -4,6 +4,9 @@ import Hilligans.Data.Other.ColoredString;
 import Hilligans.Item.Item;
 import Hilligans.Item.ItemStack;
 import Hilligans.Item.Items;
+import Hilligans.Network.Packet.AuthServerPackets.SAccountPacket;
+import Hilligans.Network.Packet.AuthServerPackets.SSendToken;
+import Hilligans.Network.Packet.AuthServerPackets.STokenValid;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -184,6 +187,20 @@ public class PacketData {
 
     public PacketBase createPacket() {
         PacketBase packetBase = PacketBase.packets.get(packetId).getPacket();
+        packetBase.ctx = ctx;
+        packetBase.decode(this);
+        return packetBase;
+    }
+
+    public PacketBase createAltPacket() {
+        PacketBase packetBase;
+        if(packetId == 0) {
+            packetBase = new SAccountPacket();
+        } else if(packetId == 1) {
+            packetBase = new SSendToken();
+        } else {
+            packetBase = new STokenValid();
+        }
         packetBase.ctx = ctx;
         packetBase.decode(this);
         return packetBase;
