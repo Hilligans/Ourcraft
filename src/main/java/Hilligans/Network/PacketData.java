@@ -5,6 +5,7 @@ import Hilligans.Item.Item;
 import Hilligans.Item.ItemStack;
 import Hilligans.Item.Items;
 import Hilligans.Network.Packet.AuthServerPackets.SAccountPacket;
+import Hilligans.Network.Packet.AuthServerPackets.SSendLoginToken;
 import Hilligans.Network.Packet.AuthServerPackets.SSendToken;
 import Hilligans.Network.Packet.AuthServerPackets.STokenValid;
 import io.netty.buffer.ByteBuf;
@@ -198,8 +199,10 @@ public class PacketData {
             packetBase = new SAccountPacket();
         } else if(packetId == 1) {
             packetBase = new SSendToken();
-        } else {
+        } else if(packetId == 2) {
             packetBase = new STokenValid();
+        } else {
+            packetBase = new SSendLoginToken();
         }
         packetBase.ctx = ctx;
         packetBase.decode(this);

@@ -84,16 +84,16 @@ public class Client {
 
     public ClientWorld clientWorld;
 
-    public Client() {
+    public Client() {}
+
+    public void startClient() {
         register();
         CompoundTag tag = WorldLoader.loadTag("clientData.dat");
         if(tag != null) {
             readUsernameAndPassword(tag);
-            ClientAuthNetworkHandler.sendPacketDirect(new CGetToken(playerData.userName,playerData.password));
+            ClientAuthNetworkHandler.sendPacketDirect(new CGetToken(playerData.userName,playerData.login_token));
         }
-    }
 
-    public void startClient() {
         createGL();
         registerKeyHandlers();
         createCallbacks();
@@ -529,13 +529,15 @@ public class Client {
 
     public CompoundTag readUsernameAndPassword(CompoundTag tag) {
          playerData.userName = tag.getFullString("username").val;
-         playerData.password = tag.getFullString("password").val;
+         playerData.login_token = tag.getFullString("loginToken").val;
+         playerData.email = tag.getFullString("email").val;
          return tag;
     }
 
     public CompoundTag writeUsernameAndPassword(CompoundTag tag) {
          tag.putFullString("username",playerData.userName);
-         tag.putFullString("password",playerData.password);
+         tag.putFullString("loginToken",playerData.login_token);
+         tag.putFullString("email",playerData.email);
          return tag;
     }
 

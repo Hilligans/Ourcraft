@@ -29,7 +29,7 @@ public class AccountCreationScreen extends ScreenBase {
 
         widgets.add(new Button(500, 200, 200, 50, "Create Account", () -> {
             ClientMain.getClient().playerData.email = email.string;
-            ClientMain.getClient().playerData.password = Ourcraft.hashString(password.string);
+            ClientMain.getClient().playerData.password = Ourcraft.hashString(password.string, email.string);
             ClientMain.getClient().playerData.userName = username.string;
             ClientMain.getClient().saveUsernameAndPassword();
             ClientAuthNetworkHandler.sendPacketDirect(new CCreateAccount(username.string,ClientMain.getClient().playerData.password,email.string,token.string));

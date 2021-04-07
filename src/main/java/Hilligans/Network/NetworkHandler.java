@@ -21,7 +21,11 @@ public abstract class NetworkHandler extends SimpleChannelInboundHandler<PacketD
     }
 
     public ChannelFuture sendPacket(PacketBase packetBase) {
-        return channel.writeAndFlush(new PacketData(packetBase));
+        if(channel != null) {
+            return channel.writeAndFlush(new PacketData(packetBase));
+        } else {
+            return null;
+        }
     }
 
     public ChannelFuture shutdown() {

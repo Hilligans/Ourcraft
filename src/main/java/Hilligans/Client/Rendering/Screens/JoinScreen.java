@@ -3,6 +3,7 @@ package Hilligans.Client.Rendering.Screens;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.Client;
 import Hilligans.Client.ClientPlayerData;
+import Hilligans.Client.Key.KeyPress;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Client.Rendering.Textures;
@@ -19,6 +20,8 @@ import Hilligans.Network.Packet.AuthServerPackets.CCreateAccount;
 import Hilligans.Network.Packet.AuthServerPackets.CGetToken;
 import Hilligans.Network.Packet.Client.CSendBlockChanges;
 import Hilligans.Util.Settings;
+
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_H;
 
 public class JoinScreen extends ScreenBase {
 
@@ -39,6 +42,13 @@ public class JoinScreen extends ScreenBase {
         widgets.add(new Button(500, 200, 200, 50, "Create Account", () -> {
             ClientMain.getClient().openScreen(new AccountCreationScreen());
         }));
+
+        registerKeyPress(new KeyPress() {
+            @Override
+            public void onPress() {
+                ClientMain.getClient().openScreen(new TagEditorScreen());
+            }
+        }, GLFW_KEY_H);
     }
 
     public void setActive(ServerSelectorWidget selected) {

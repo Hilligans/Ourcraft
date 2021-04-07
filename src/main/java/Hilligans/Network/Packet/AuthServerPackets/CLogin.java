@@ -3,30 +3,35 @@ package Hilligans.Network.Packet.AuthServerPackets;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 
-public class CGetToken extends PacketBase {
+public class CLogin extends PacketBase {
 
     String username;
-    String loginToken;
+    String password;
 
-    public CGetToken() {
-        super(1);
+
+    public CLogin() {
+        super(3);
     }
 
-    public CGetToken(String username, String loginToken) {
+    public CLogin(String username, String password) {
         this();
         this.username = username;
-        this.loginToken = loginToken;
+        this.password = password;
     }
 
     @Override
     public void encode(PacketData packetData) {
         packetData.writeString(username);
-        packetData.writeString(loginToken);
+        packetData.writeString(password);
     }
 
     @Override
-    public void decode(PacketData packetData) {}
+    public void decode(PacketData packetData) {
+
+    }
 
     @Override
-    public void handle() {}
+    public void handle() {
+
+    }
 }

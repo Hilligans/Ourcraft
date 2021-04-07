@@ -1,8 +1,10 @@
 package Hilligans.Network.Packet.AuthServerPackets;
 
+import Hilligans.Client.Client;
 import Hilligans.Client.ClientPlayerData;
 import Hilligans.Client.Rendering.Screens.AccountCreationScreen;
 import Hilligans.ClientMain;
+import Hilligans.Network.ClientAuthNetworkHandler;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 
@@ -24,6 +26,7 @@ public class SAccountPacket extends PacketBase {
 
     @Override
     public void handle() {
+        System.out.println(response);
         if(ClientMain.getClient().screen instanceof AccountCreationScreen) {
             ((AccountCreationScreen) ClientMain.getClient().screen).debug = response;
         }
