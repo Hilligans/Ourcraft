@@ -54,8 +54,8 @@ public class SUpdateEntityPacket extends PacketBase {
 
     @Override
     public void handle() {
-        if(id != ClientMain.playerId) {
-            Entity entity = ClientMain.clientWorld.entities.get(id);
+        if(id != ClientMain.getClient().playerId) {
+            Entity entity = ClientMain.getClient().clientWorld.entities.get(id);
             if(entity != null) {
                 entity.setPos(x,y,z).setRot(pitch,yaw);
             }

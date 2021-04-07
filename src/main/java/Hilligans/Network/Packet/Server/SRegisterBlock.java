@@ -61,7 +61,7 @@ public class SRegisterBlock extends PacketBase {
         block.blockProperties.blockStateSize = packetData.readByte();
         String textureName = packetData.readString();
         blockProperties.withTexture(textureName);
-        ClientMain.refreshTexture = true;
+        ClientMain.getClient().refreshTexture = true;
     }
 
     @Override

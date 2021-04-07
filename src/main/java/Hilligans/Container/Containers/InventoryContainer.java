@@ -3,6 +3,7 @@ package Hilligans.Container.Containers;
 import Hilligans.Client.ClientPlayerData;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
+import Hilligans.ClientMain;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
 import Hilligans.Data.Other.Inventory;
@@ -10,7 +11,7 @@ import Hilligans.Data.Other.Inventory;
 public class InventoryContainer extends Container {
 
     public InventoryContainer() {
-        this(ClientPlayerData.inventory);
+        this(ClientMain.getClient().playerData.inventory);
     }
 
     public InventoryContainer(Inventory inventory) {

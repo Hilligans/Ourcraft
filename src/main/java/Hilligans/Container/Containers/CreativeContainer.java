@@ -3,6 +3,7 @@ package Hilligans.Container.Containers;
 import Hilligans.Client.ClientPlayerData;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.CreativeInventoryScreen;
+import Hilligans.ClientMain;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
 import Hilligans.Data.Other.IInventory;
@@ -17,7 +18,7 @@ import Hilligans.Item.Items;
 public class CreativeContainer extends Container {
 
     public CreativeContainer() {
-        this(ClientPlayerData.inventory,new Inventory(Math.max(Items.ITEMS.size() + ServerSidedData.getInstance().ITEMS.size(),54)));
+        this(ClientMain.getClient().playerData.inventory,new Inventory(Math.max(Items.ITEMS.size() + ServerSidedData.getInstance().ITEMS.size(),54)));
     }
 
     public CreativeContainer(IInventory playerInventory, IInventory creativeInventory) {

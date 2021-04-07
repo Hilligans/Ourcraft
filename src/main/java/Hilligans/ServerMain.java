@@ -15,6 +15,7 @@ import Hilligans.Tag.CompoundTag;
 import Hilligans.Tag.IntegerTag;
 import Hilligans.Tag.Tag;
 import Hilligans.Network.ServerNetworkInit;
+import Hilligans.Util.Profiler;
 import Hilligans.Util.Settings;
 import Hilligans.World.Builders.OreBuilder;
 import Hilligans.World.Chunk;
@@ -35,6 +36,8 @@ import java.util.concurrent.TimeUnit;
 
 public class ServerMain {
 
+
+    public static Profiler profiler;
     //public static ServerWorld world;
 
     public static MultiPlayerServer server;

@@ -4,7 +4,7 @@ import Hilligans.Data.Other.BoundingBox;
 
 public class Settings {
 
-    public static int renderDistance = 5;
+    public static int renderDistance = 8 ;
 
     public static final int chunkHeight = 16;
     public static final int maxHeight = chunkHeight * 16;

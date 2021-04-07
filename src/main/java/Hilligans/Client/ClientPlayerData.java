@@ -8,24 +8,21 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 
 public class ClientPlayerData {
 
-    public static Inventory inventory = new Inventory(Settings.playerInventorySize);
-    public static ItemStack heldStack = ItemStack.emptyStack();
-    public static Container openContainer;
-    public static boolean f3 = false;
-    public static boolean creative = true;
-    public static int handSlot = 0;
-    public static boolean flying = true;
-    public static boolean spectator = true;
+    public Inventory inventory = new Inventory(Settings.playerInventorySize);
+    public ItemStack heldStack = ItemStack.emptyStack();
+    public Container openContainer;
+    public boolean f3 = false;
+    public boolean creative = true;
+    public int handSlot = 0;
+    public boolean flying = true;
+    public boolean spectator = true;
 
-    public static String authToken = "";
-    public static String userName = "";
-    public static String password = "";
-    public static String email = "";
-    public static boolean valid_account = false;
+    public String authToken = "";
+    public String userName = "";
+    public String password = "";
+    public String email = "";
+    public boolean valid_account = false;
 
-    public static String hashString(String password) {
-        return BCrypt.withDefaults().hashToString(16, password.toCharArray());
-    }
 
 
 

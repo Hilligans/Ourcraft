@@ -87,7 +87,7 @@ public class KeyHandler {
     }
 
     private static char getChar(int id) {
-        if(glfwGetKey(ClientMain.window,GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(ClientMain.window,GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS) {
+        if(glfwGetKey(ClientMain.getClient().window,GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(ClientMain.getClient().window,GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS) {
             return shiftMappedKeys.getOrDefault(id,mappedKeys.getOrDefault(id,Character.MIN_VALUE));
         } else {
             return mappedKeys.getOrDefault(id,Character.MIN_VALUE);
@@ -96,7 +96,7 @@ public class KeyHandler {
 
     static {
 
-        GLFW.glfwSetKeyCallback(ClientMain.window, new GLFWKeyCallback() {
+        GLFW.glfwSetKeyCallback(ClientMain.getClient().window, new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
                 if(action == GLFW_PRESS) {

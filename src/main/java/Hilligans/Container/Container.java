@@ -99,7 +99,7 @@ public abstract class Container {
         for(Slot slot : slots) {
             slot.render(matrixStack);
         }
-        DoubleBuffer mousePos = ClientMain.getMousePos();
+        DoubleBuffer mousePos = ClientMain.getClient().getMousePos();
         Slot slot = getSlotAt((int)mousePos.get(0),(int)mousePos.get(1));
         if(slot != null && !slot.getContents().isEmpty()) {
             StringRenderer.drawStringWithBackground(matrixStack,slot.getContents().item.name,(int)mousePos.get(0) + 16,(int)mousePos.get(1),0.5f);
@@ -113,8 +113,8 @@ public abstract class Container {
     }
 
     public void resize() {
-        int newX = (int)(ClientMain.windowX / 2 - textureX * Settings.guiSize / 2);
-        int newY = (int)(ClientMain.windowY / 2 - textureY * Settings.guiSize / 2);
+        int newX = (int)(ClientMain.getWindowX() / 2 - textureX * Settings.guiSize / 2);
+        int newY = (int)(ClientMain.getWindowY() / 2 - textureY * Settings.guiSize / 2);
         for(Slot slot : slots) {
             slot.x = (int)(newX + slot.startX * Settings.guiSize);
             slot.y = (int)(newY + slot.startY * Settings.guiSize);

@@ -51,6 +51,6 @@ public class BlockTextureManager implements TextureManager {
 
     @Override
     public int getTextureMap() {
-        return ClientMain.texture;
+        return ClientMain.getClient().texture;
     }
 }

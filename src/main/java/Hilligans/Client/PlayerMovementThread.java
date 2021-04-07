@@ -13,7 +13,7 @@ public class PlayerMovementThread implements Runnable {
 
     @Override
     public void run() {
-        if(ClientMain.valid) {
+        if(ClientMain.getClient().valid) {
             if(Camera.sprintDelay > 0) {
                 Camera.sprintDelay--;
             }
@@ -24,7 +24,7 @@ public class PlayerMovementThread implements Runnable {
                 Camera.sprinting = true;
             }
             Camera.sprintTimeout = 0;
-            ClientMain.processInput(window);
+            ClientMain.getClient().processInput(window);
             Camera.tick();
         }
     }

@@ -8,6 +8,7 @@ import Hilligans.Client.MatrixStack;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Entity.Entity;
+import Hilligans.ServerMain;
 import Hilligans.Util.Settings;
 import Hilligans.World.Builders.WorldBuilder;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -61,6 +62,7 @@ public class Chunk {
     }
 
     public void generate() {
+        System.out.println("generating " + x + " " + z);
         for(int x = 0; x < 16; x++) {
             for(int z = 0; z < 16; z++) {
                 int offset = getBlockHeight(x + this.x * 16,z + this.z * 16);

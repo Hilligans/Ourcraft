@@ -35,6 +35,6 @@ public class SCreateEntityPacket extends PacketBase {
 
     @Override
     public void handle() {
-        ClientMain.clientWorld.addEntity(entity);
+        ClientMain.getClient().clientWorld.addEntity(entity);
     }
 }

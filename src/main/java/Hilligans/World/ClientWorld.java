@@ -47,17 +47,17 @@ public class ClientWorld extends World {
         if(!Settings.renderTransparency) {
             glDisable(GL_BLEND);
         }
-        glUseProgram(ClientMain.colorShader);
+        glUseProgram(ClientMain.getClient().shaderManager.colorShader);
 
         Vector3f pos = Camera.pos;
         for(int x = -Settings.renderDistance; x < Settings.renderDistance; x++) {
             for(int z = -Settings.renderDistance; z < Settings.renderDistance; z++) {
                 Chunk chunk = getChunk(x * 16 + (int)pos.x >> 4,z * 16 + (int)pos.z >> 4);
                 if(chunk == null) {
-                    if(!ClientMain.joinServer) {
+                    if(!ClientMain.getClient().joinServer) {
                         generateChunk(x * 16 + (int) pos.x >> 4, z * 16 + (int) pos.z >> 4);
                     } else {
-                        if (ClientMain.valid) {
+                        if (ClientMain.getClient().valid) {
                             requestChunk(x * 16 + (int) pos.x >> 4, z * 16 + (int) pos.z >> 4);
                         }
                     }
@@ -70,11 +70,11 @@ public class ClientWorld extends World {
                 }
             }
         }
-        glUseProgram(ClientMain.shaderProgram);
+        glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
         // TODO: 2021-02-06 server removes entities at a bad time
         try {
             for (Entity entity : entities.values()) {
-                if (entity.id != ClientMain.playerId || Camera.thirdPerson) {
+                if (entity.id != ClientMain.getClient().playerId || Camera.thirdPerson) {
                     matrixStack.push();
                     entity.render(matrixStack);
                     matrixStack.pop();

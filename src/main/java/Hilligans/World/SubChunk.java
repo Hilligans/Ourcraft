@@ -143,7 +143,7 @@ public class SubChunk {
 
             GL30.glBindVertexArray(id);
             matrixStack.push();
-            matrixStack.applyTransformation(ClientMain.colorShader);
+            matrixStack.applyTransformation(ClientMain.getClient().shaderManager.colorShader);
             glDrawElements(GL_TRIANGLES, verticesCount, GL_UNSIGNED_INT, 0);
             matrixStack.pop();
       //    }

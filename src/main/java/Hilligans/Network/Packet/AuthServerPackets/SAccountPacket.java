@@ -24,12 +24,8 @@ public class SAccountPacket extends PacketBase {
 
     @Override
     public void handle() {
-        System.out.println(response);
-        if(!response.equals("Account created successfully")) {
-            ClientPlayerData.valid_account = false;
-        }
-        if(ClientMain.screen instanceof AccountCreationScreen) {
-            ((AccountCreationScreen) ClientMain.screen).debug = response;
+        if(ClientMain.getClient().screen instanceof AccountCreationScreen) {
+            ((AccountCreationScreen) ClientMain.getClient().screen).debug = response;
         }
     }
 }

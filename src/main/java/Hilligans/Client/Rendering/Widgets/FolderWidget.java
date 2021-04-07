@@ -55,7 +55,7 @@ public class FolderWidget extends Widget {
     @Override
     public void render(MatrixStack matrixStack, int xOffset, int yOffset) {
         super.render(matrixStack, xOffset, yOffset);
-        if (this.getY() > 0 && this.getY() < ClientMain.windowY && this.isActive()) {
+        if (this.getY() > 0 && this.getY() < ClientMain.getWindowY() && this.isActive()) {
             if (shouldRender) {
                 if (isOpen) {
                     Renderer.drawTexture(matrixStack, Textures.MINUS_ICON, getX() + xOffset + size / 4, getY() + yOffset + size / 4, size / 2, size / 2);

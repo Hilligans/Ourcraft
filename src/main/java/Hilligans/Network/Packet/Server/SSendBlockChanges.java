@@ -63,6 +63,6 @@ public class SSendBlockChanges extends PacketBase {
 
     @Override
     public void handle() {
-        ClientMain.clientWorld.blockChanges.add(new ClientWorld.BlockChange(x,y,z, Blocks.getBlockWithID(blockId).getStateWithData(blockData)));
+        ClientMain.getClient().clientWorld.blockChanges.add(new ClientWorld.BlockChange(x,y,z, Blocks.getBlockWithID(blockId).getStateWithData(blockData)));
     }
 }

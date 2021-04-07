@@ -1,6 +1,7 @@
 package Hilligans.Network.Packet.Server;
 
 import Hilligans.Client.ClientPlayerData;
+import Hilligans.ClientMain;
 import Hilligans.Data.Other.Inventory;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
@@ -32,6 +33,6 @@ public class SUpdateInventory extends PacketBase {
 
     @Override
     public void handle() {
-        ClientPlayerData.inventory.readData(packetData);
+        ClientMain.getClient().playerData.inventory.readData(packetData);
     }
 }

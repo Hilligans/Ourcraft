@@ -17,8 +17,6 @@ import org.lwjgl.BufferUtils;
 
 import java.nio.DoubleBuffer;
 
-import static Hilligans.ClientMain.windowX;
-import static Hilligans.ClientMain.windowY;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Camera {
@@ -98,7 +96,7 @@ public class Camera {
     }
 
     public static void moveUp() {
-        if(ClientPlayerData.spectator || ClientPlayerData.flying) {
+        if(ClientMain.getClient().playerData.spectator || ClientMain.getClient().playerData.flying) {
             add(0, moveSpeed, 0);
         } else {
             if(velY == 0) {
@@ -115,7 +113,7 @@ public class Camera {
     }
 
     public static void moveDown() {
-        if(ClientPlayerData.spectator || ClientPlayerData.flying) {
+        if(ClientMain.getClient().playerData.spectator || ClientMain.getClient().playerData.flying) {
             add(0, -moveSpeed, 0);
         }
     }
@@ -124,9 +122,9 @@ public class Camera {
 
     public static void add(float x, float y, float z) {
 
-        if(ClientPlayerData.spectator) {
+        if(ClientMain.getClient().playerData.spectator) {
             pos.add(x * 4, y * 4, z * 4);
-            ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.playerId));
+            ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.getClient().playerId));
         } else {
 
             maxX += x;
@@ -175,9 +173,9 @@ public class Camera {
         //velX = velX / 2;
         //velY = velY / 2;
         //velZ = velZ / 2;
-        if(ClientMain.clientWorld.getChunk((int)pos.x >> 4, (int)pos.z >> 4) != null) {
+        if(ClientMain.getClient().clientWorld.getChunk((int)pos.x >> 4, (int)pos.z >> 4) != null) {
 
-            if (!ClientPlayerData.spectator && !ClientPlayerData.flying) {
+            if (!ClientMain.getClient().playerData.spectator && !ClientMain.getClient().playerData.flying) {
                 velY += fallSpeed;
                 if (velY < terminalVel) {
                     velY = terminalVel;
@@ -209,7 +207,7 @@ public class Camera {
             maxX = 0;
             maxZ = 0;
 
-            ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.playerId));
+            ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.getClient().playerId));
         }
     }
 
@@ -230,13 +228,13 @@ public class Camera {
             yaw = 6.283;
         }
 
-        ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.playerId));
+        ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.getClient().playerId));
 
     }
 
     public static void addYaw(double amount) {
         yaw += amount;
-        ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.playerId));
+        ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.getClient().playerId));
     }
 
     public static Vector3f duplicate() {
@@ -252,7 +250,7 @@ public class Camera {
         if(thirdPerson) {
               view.translate(0,0,-3);
         }
-        projection.perspective((float) Math.toRadians(fov), (float) windowX / windowY,0.1f,10000.0f);
+        projection.perspective((float) Math.toRadians(fov), (float) ClientMain.getWindowX() / ClientMain.getWindowY(),0.1f,10000.0f);
         matrix4f.mul(projection).mul(view);
         matrix4f.lookAt(Camera.duplicate().add((float)(Math.cos(Camera.yaw) * Math.cos(Camera.pitch)),(float)(Math.sin(Camera.pitch)),(float)(Math.sin(Camera.yaw) * Math.cos(Camera.pitch))),Camera.duplicate(), cameraUp);
     }
@@ -264,7 +262,7 @@ public class Camera {
         if(thirdPerson) {
             view.translate(0,0,-3);
         }
-        matrix4f.perspective((float) Math.toRadians(fov), (float) windowX / windowY,0.1f,10000.0f);
+        matrix4f.perspective((float) Math.toRadians(fov), (float) ClientMain.getWindowX() / ClientMain.getWindowY(),0.1f,10000.0f);
         matrix4f.mul(view);
         matrix4f.lookAt(Camera.duplicate().add((float)(Math.cos(Camera.yaw) * Math.cos(Camera.pitch)),(float)(Math.sin(Camera.pitch)),(float)(Math.sin(Camera.yaw) * Math.cos(Camera.pitch))),Camera.duplicate(), cameraUp);
         matrix4f.translate(0,0.15f,0);
@@ -276,26 +274,26 @@ public class Camera {
 
     public static MatrixStack getScreenStack() {
         Matrix4f matrix4f = new Matrix4f();
-        matrix4f.ortho(0,ClientMain.windowX,ClientMain.windowY,0,-1,200);
+        matrix4f.ortho(0,ClientMain.getWindowX(),ClientMain.getWindowY(),0,-1,200);
         return new MatrixStack(matrix4f);
     }
 
-    public static double newX = (float)windowX / 2;
-    public static double newY = (float)windowY / 2;
+    public static double newX = (float)ClientMain.getWindowX() / 2;
+    public static double newY = (float)ClientMain.getWindowY() / 2;
 
 
     public static void updateMouse() {
         DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
         DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
 
-        glfwGetCursorPos(ClientMain.window, x, y);
+        glfwGetCursorPos(ClientMain.getClient().window, x, y);
 
         newX = x.get();
         newY = y.get();
 
-        if(ClientMain.mouseLocked) {
-            double halfWindowX = (double) windowX / 2;
-            double halfWindowY = (double) windowY / 2;
+        if(ClientMain.getClient().mouseLocked) {
+            double halfWindowX = (double) ClientMain.getWindowX() / 2;
+            double halfWindowY = (double) ClientMain.getWindowY() / 2;
 
             double deltaX = newX - halfWindowX;
             double deltaY = newY - halfWindowY;
@@ -304,7 +302,7 @@ public class Camera {
             Camera.addYaw(deltaX / sensitivity);
 
 
-            glfwSetCursorPos(ClientMain.window, halfWindowX, halfWindowY);
+            glfwSetCursorPos(ClientMain.getClient().window, halfWindowX, halfWindowY);
         } else {
 
         }
@@ -354,7 +352,7 @@ public class Camera {
             for (int a = 0; a < count; a++) {
                 move(velX / count, velY / count, velZ / count);
             }
-            ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x, pos.y, pos.z, (float) pitch, (float) yaw, ClientMain.playerId));
+            ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x, pos.y, pos.z, (float) pitch, (float) yaw, ClientMain.getClient().playerId));
 
         }
     }
@@ -363,10 +361,10 @@ public class Camera {
         int x;
         boolean couldMove = false;
         for(x = 0; x < 7; x++) {
-            boolean movement = getAllowedMovement(tryMovement(x,velX,velY,velZ),pos, ClientMain.clientWorld);
+            boolean movement = getAllowedMovement(tryMovement(x,velX,velY,velZ),pos, ClientMain.getClient().clientWorld);
 
             if(!movement  && isOnGround && (x == 1 || x == 4 || x == 6)) {
-                if(getAllowedMovement(tryMovement(x,velX,0,velZ),new Vector3f(pos.x,pos.y + 0.5f, pos.z), ClientMain.clientWorld)) {
+                if(getAllowedMovement(tryMovement(x,velX,0,velZ),new Vector3f(pos.x,pos.y + 0.5f, pos.z), ClientMain.getClient().clientWorld)) {
                     pos.y += 0.5f;
                     addVel(x, velX, 0, velZ);
                     return;
@@ -472,7 +470,7 @@ public class Camera {
         if(KeyHandler.keyPressed[GLFW_KEY_LEFT_SHIFT]) {
             if(isOnGround) {
                 Vector3f newPos = new Vector3f(pos.x,pos.y,pos.z).add(motion);
-                return !getAllowedMovement(new Vector3f(0,fallSpeed * 2,0), newPos, ClientMain.clientWorld);
+                return !getAllowedMovement(new Vector3f(0,fallSpeed * 2,0), newPos, ClientMain.getClient().clientWorld);
                 //System.out.println("yes");
                 //return ClientMain.clientWorld.getBlockState((int)newPos.x,(int)newPos.y,(int)newPos.z).block != Blocks.AIR;
             } else {

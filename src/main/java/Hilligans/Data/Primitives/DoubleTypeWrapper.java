@@ -2,8 +2,8 @@ package Hilligans.Data.Primitives;
 
 public class DoubleTypeWrapper<T,Q> {
 
-    T typeA;
-    Q typeB;
+    public T typeA;
+    public Q typeB;
 
     public DoubleTypeWrapper(T typeA, Q typeB) {
         this.typeA = typeA;
@@ -17,4 +17,6 @@ public class DoubleTypeWrapper<T,Q> {
     public Q getTypeB() {
         return typeB;
     }
+
+
 }

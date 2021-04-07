@@ -1,5 +1,6 @@
 package Hilligans.Client.Rendering.Screens;
 
+import Hilligans.Client.Client;
 import Hilligans.Client.ClientPlayerData;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ScreenBase;
@@ -9,6 +10,7 @@ import Hilligans.Client.Rendering.World.StringRenderer;
 import Hilligans.ClientMain;
 import Hilligans.Network.ClientAuthNetworkHandler;
 import Hilligans.Network.Packet.AuthServerPackets.CCreateAccount;
+import Hilligans.Ourcraft;
 
 public class AccountCreationScreen extends ScreenBase {
 
@@ -26,11 +28,11 @@ public class AccountCreationScreen extends ScreenBase {
         widgets.add(token);
 
         widgets.add(new Button(500, 200, 200, 50, "Create Account", () -> {
-            ClientPlayerData.valid_account = true;
-            ClientPlayerData.email = email.string;
-            ClientPlayerData.password = ClientPlayerData.hashString(password.string);
-            ClientPlayerData.userName = username.string;
-            ClientAuthNetworkHandler.sendPacketDirect(new CCreateAccount(username.string,ClientPlayerData.password,email.string,token.string));
+            ClientMain.getClient().playerData.email = email.string;
+            ClientMain.getClient().playerData.password = Ourcraft.hashString(password.string);
+            ClientMain.getClient().playerData.userName = username.string;
+            ClientMain.getClient().saveUsernameAndPassword();
+            ClientAuthNetworkHandler.sendPacketDirect(new CCreateAccount(username.string,ClientMain.getClient().playerData.password,email.string,token.string));
         }));
 
     }

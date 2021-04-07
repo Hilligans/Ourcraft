@@ -18,9 +18,9 @@ public class SettingsScreen extends ScreenBase {
         widgets.add(new ToggleWidget(50, 350, 200, 40, "Transparent textures ", Settings.renderTransparency, value -> {
             Settings.renderTransparency = value;
             if(value) {
-                ClientMain.colorShader = ClientMain.transparentColorShader;
+                ClientMain.getClient().shaderManager.colorShader = ClientMain.getClient().shaderManager.transparentColorShader;
             } else {
-                ClientMain.colorShader = ClientMain.opaqueColorShader;
+                ClientMain.getClient().shaderManager.colorShader = ClientMain.getClient().shaderManager.opaqueColorShader;
             }
         }));
     }

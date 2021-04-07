@@ -2,6 +2,7 @@ package Hilligans.Container.Containers;
 
 import Hilligans.Client.ClientPlayerData;
 import Hilligans.Client.Rendering.ContainerScreen;
+import Hilligans.ClientMain;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
 import Hilligans.Data.Other.Inventory;
@@ -10,7 +11,7 @@ import Hilligans.Data.Other.JoinedInventory;
 public class SlabBlockContainer extends Container {
 
     public SlabBlockContainer() {
-        this(new Inventory(3), ClientPlayerData.inventory);
+        this(new Inventory(3), ClientMain.getClient().playerData.inventory);
     }
 
     public SlabBlockContainer(Inventory inventory, Inventory playerInventory) {

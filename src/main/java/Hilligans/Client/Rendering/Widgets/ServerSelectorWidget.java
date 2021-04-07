@@ -38,7 +38,7 @@ public class ServerSelectorWidget extends Widget {
         try {
             ClientNetworkHandler.clientNetworkHandler = new ClientNetworkHandler();
             ClientNetworkInit.joinServer(ip, port, ClientNetworkHandler.clientNetworkHandler);
-            ClientMain.closeScreen();
+            ClientMain.getClient().closeScreen();
         } catch (Exception e) {
             e.printStackTrace();
         }

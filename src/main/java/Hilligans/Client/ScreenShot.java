@@ -17,14 +17,14 @@ public class ScreenShot {
 
     public static void takeScreenShot() {
 
-        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(ClientMain.windowX * ClientMain.windowY * 3);
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(ClientMain.getWindowX() * ClientMain.getWindowY() * 3);
 
-        GL11.glReadPixels(0,0, ClientMain.windowX,ClientMain.windowY, GL11.GL_RGB,GL11.GL_UNSIGNED_BYTE,byteBuffer);
+        GL11.glReadPixels(0,0, ClientMain.getWindowX(),ClientMain.getWindowY(), GL11.GL_RGB,GL11.GL_UNSIGNED_BYTE,byteBuffer);
 
-        BufferedImage bufferedImage = new BufferedImage(ClientMain.windowX, ClientMain.windowY, BufferedImage.TYPE_INT_RGB);
+        BufferedImage bufferedImage = new BufferedImage(ClientMain.getWindowX(), ClientMain.getWindowY(), BufferedImage.TYPE_INT_RGB);
 
-        for(int y = 0; y < ClientMain.windowY; y++) {
-            for(int x = 0; x < ClientMain.windowX; x++) {
+        for(int y = 0; y < ClientMain.getWindowY(); y++) {
+            for(int x = 0; x < ClientMain.getWindowX(); x++) {
                 bufferedImage.setRGB(x,y,new Color(byteBuffer.get() & 255,byteBuffer.get() & 255,byteBuffer.get() & 255).getRGB());
             }
         }

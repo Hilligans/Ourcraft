@@ -6,6 +6,7 @@ import Hilligans.Block.Blocks;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Entity.Entities.ItemEntity;
 import Hilligans.Entity.Entity;
+import Hilligans.EventHandler.EventBus;
 import Hilligans.Network.Packet.Server.SCreateEntityPacket;
 import Hilligans.Network.Packet.Server.SRemoveEntityPacket;
 import Hilligans.Network.ServerNetworkHandler;
@@ -28,8 +29,6 @@ public class ServerWorld extends World {
 
     @Override
     public void removeEntity(int id) {
-        //entities.remove(id);
-        //ServerNetworkHandler.sendPacket(new SRemoveEntityPacket(id));
         entityRemovals.add(id);
     }
 

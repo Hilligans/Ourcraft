@@ -3,6 +3,7 @@ package Hilligans.Container.Containers;
 import Hilligans.Client.ClientPlayerData;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.ChestScreen;
+import Hilligans.ClientMain;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
 import Hilligans.Data.Other.Inventory;
@@ -11,7 +12,7 @@ import Hilligans.Data.Other.JoinedInventory;
 public class ChestContainer extends Container {
 
     public ChestContainer() {
-        this(new Inventory(27), ClientPlayerData.inventory);
+        this(new Inventory(27), ClientMain.getClient().playerData.inventory);
     }
 
     public ChestContainer(Inventory inventory, Inventory playerInventory) {

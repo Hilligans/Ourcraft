@@ -1,8 +1,13 @@
 package Hilligans.Client.Rendering.Screens;
 
 import Hilligans.Block.Blocks;
+import Hilligans.Client.Client;
 import Hilligans.Client.ClientPlayerData;
+import Hilligans.Client.MatrixStack;
+import Hilligans.Client.Rendering.Renderer;
+import Hilligans.Client.Rendering.Textures;
 import Hilligans.Client.Rendering.Widgets.ServerSelectorWidget;
+import Hilligans.Client.Rendering.World.StringRenderer;
 import Hilligans.ClientMain;
 import Hilligans.Client.Rendering.ScreenBase;
 import Hilligans.Client.Rendering.Widgets.Button;
@@ -19,7 +24,7 @@ public class JoinScreen extends ScreenBase {
 
     InputField inputField = new InputField(100,10,200,80);
     public ServerSelectorWidget selected;
-    Button play = new Button(100, ClientMain.windowY / 2 + 100, 200, 50, "Join server", new ButtonAction() {
+    Button play = new Button(100, ClientMain.getWindowY() / 2 + 100, 200, 50, "Join server", new ButtonAction() {
         @Override
         public void onPress() {
             if(selected != null) {
@@ -29,29 +34,11 @@ public class JoinScreen extends ScreenBase {
     }).isEnabled(false);
 
     public JoinScreen() {
-       /* widgets.add(new Button(100, 100, 200, 80, "join server", () -> {
-            ClientMain.name = inputField.string;
-            ClientMain.joinServer();
-            ClientMain.closeScreen();
-        }));
-
-        */
-        //widgets.add(inputField);
         widgets.add(play);
         widgets.add(new ServerSelectorWidget(100,200,200,80,"localhost","25586",this));
         widgets.add(new Button(500, 200, 200, 50, "Create Account", () -> {
-            ClientMain.openScreen(new AccountCreationScreen());
+            ClientMain.getClient().openScreen(new AccountCreationScreen());
         }));
-        widgets.add(new Button(500, 300, 200, 50, "Create new token", new ButtonAction() {
-            @Override
-            public void onPress() {
-                ClientAuthNetworkHandler.sendPacketDirect(new CGetToken(ClientPlayerData.userName,ClientPlayerData.password));
-            }
-        }));
-
-
-        //widgets.add(new Button(500,ClientMain.windowY / 2 + 100,200,50,""))
-
     }
 
     public void setActive(ServerSelectorWidget selected) {
@@ -59,5 +46,16 @@ public class JoinScreen extends ScreenBase {
         play.enabled = true;
     }
 
+    @Override
+    public void drawScreen(MatrixStack matrixStack) {
+        super.drawScreen(matrixStack);
+        if(ClientMain.getClient().playerData.valid_account) {
+            StringRenderer.drawString(matrixStack,ClientMain.getClient().playerData.userName, (int) (Settings.guiSize * 8), (int) (1 * Settings.guiSize),0.5f);
+            Renderer.drawTexture(matrixStack, Textures.CHECK_MARK,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
+        } else {
+            Renderer.drawTexture(matrixStack, Textures.X_MARK,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
+        }
 
+
+    }
 }

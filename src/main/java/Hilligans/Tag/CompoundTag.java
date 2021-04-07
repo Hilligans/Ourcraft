@@ -38,12 +38,30 @@ public class CompoundTag extends Tag {
         return this;
     }
 
+    public CompoundTag putString(String id, String string) {
+        putTag(id,new StringTag(string));
+        return this;
+    }
+
+    public CompoundTag putFullString(String id, String string) {
+        putTag(id,new FullStringTag(string));
+        return this;
+    }
+
     public Tag getTag(String name) {
         return tags.get(name);
     }
 
     public IntegerTag getInt(String name) {
         return (IntegerTag)getTag(name);
+    }
+
+    public StringTag getString(String id) {
+        return (StringTag)getTag(id);
+    }
+
+    public FullStringTag getFullString(String id) {
+        return (FullStringTag)getTag(id);
     }
 
     public CompoundTag getCompoundTag(String name) {

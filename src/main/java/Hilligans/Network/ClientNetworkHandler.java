@@ -15,7 +15,7 @@ public class ClientNetworkHandler extends NetworkHandler {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
         ClientNetworkHandler.sendPacketDirect(new CHandshakePacket());
-        ClientMain.renderWorld = true;
+        ClientMain.getClient().renderWorld = true;
     }
 
     @Override
@@ -23,10 +23,10 @@ public class ClientNetworkHandler extends NetworkHandler {
         Textures.clear();
         System.out.println("DISCONNECTED FROM SERVER");
 
-        if(!ClientMain.valid) {
+        if(!ClientMain.getClient().valid) {
         }
-        ClientMain.renderWorld = false;
-        ClientMain.clientWorld = new ClientWorld();
+        ClientMain.getClient().renderWorld = false;
+        ClientMain.getClient().clientWorld = new ClientWorld();
 
         super.channelInactive(ctx);
     }
@@ -39,8 +39,8 @@ public class ClientNetworkHandler extends NetworkHandler {
 
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         ctx.close();
-        ClientMain.clientWorld = new ClientWorld();
-        ClientMain.openScreen(new DisconnectScreen(cause.getMessage()));
+        ClientMain.getClient().clientWorld = new ClientWorld();
+        ClientMain.getClient().openScreen(new DisconnectScreen(cause.getMessage()));
     }
 
     public static void sendPacketDirect(PacketBase packetBase) {

@@ -29,6 +29,6 @@ public class SRemoveEntityPacket extends PacketBase {
 
     @Override
     public void handle() {
-        ClientMain.clientWorld.entities.remove(id);
+        ClientMain.getClient().clientWorld.entities.remove(id);
     }
 }

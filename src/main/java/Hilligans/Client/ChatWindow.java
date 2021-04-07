@@ -40,7 +40,7 @@ public class ChatWindow implements Screen {
             }
         }
 
-        int y = (int) (ClientMain.windowY - charHeight * 1.5);
+        int y = (int) (ClientMain.getWindowY() - charHeight * 1.5);
         int size = messages.size();
         for(int x = 0; x < size; x++) {
             StringRenderer.drawString(matrixStack, messages.get(size - x - 1).getTypeA(),0,y,0.5f);
@@ -50,7 +50,7 @@ public class ChatWindow implements Screen {
             }
         }
         if(!string.equals("")) {
-            StringRenderer.drawString(matrixStack, string,0,ClientMain.windowY - charHeight / 2,0.5f);
+            StringRenderer.drawString(matrixStack, string,0,ClientMain.getWindowY() - charHeight / 2,0.5f);
         }
     }
 
@@ -58,8 +58,8 @@ public class ChatWindow implements Screen {
         KeyHandler.register(new KeyPress() {
             @Override
             public void onPress() {
-                if(ClientMain.screen == null) {
-                    ClientMain.openScreen(new ChatWindow());
+                if(ClientMain.getClient().screen == null) {
+                    ClientMain.getClient().openScreen(new ChatWindow());
                     typing = true;
                 }
             }
@@ -71,7 +71,7 @@ public class ChatWindow implements Screen {
                     ClientNetworkHandler.sendPacketDirect(new CSendMessage(string));
                     string = "";
                     typing = false;
-                    ClientMain.closeScreen();
+                    ClientMain.getClient().closeScreen();
                 }
             }
         },KeyHandler.GLFW_KEY_ENTER);

@@ -43,7 +43,7 @@ public class TagEditorScreen extends ScreenBase {
             }
             @Override
             public void cancel() {
-                ClientMain.openScreen(new JoinScreen());
+                ClientMain.getClient().openScreen(new JoinScreen());
             }
         })));
         widgets.add(new Button(100, 0, 100, 40, "Save", () -> WorldLoader.save(compoundTag,filePath)));

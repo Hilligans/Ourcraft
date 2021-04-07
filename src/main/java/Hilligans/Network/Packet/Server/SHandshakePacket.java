@@ -34,8 +34,8 @@ public class SHandshakePacket extends PacketBase {
 
     @Override
     public void handle() {
-        ClientMain.playerId = playerId;
-        ClientMain.valid = true;
+        ClientMain.getClient().playerId = playerId;
+        ClientMain.getClient().valid = true;
         ServerSidedData serverSidedData = ServerSidedData.getInstance();
         if(serverSidedData.version != dataVersion) {
             serverSidedData.clear();

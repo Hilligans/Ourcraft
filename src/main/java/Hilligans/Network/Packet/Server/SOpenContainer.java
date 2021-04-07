@@ -46,7 +46,7 @@ public class SOpenContainer extends PacketBase {
     @Override
     public void handle() {
         if(container != null) {
-            ClientMain.openScreen(container);
+            ClientMain.getClient().openScreen(container);
         }
     }
 }

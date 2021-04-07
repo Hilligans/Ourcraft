@@ -30,6 +30,6 @@ public class SDisconnectPacket extends PacketBase {
 
     @Override
     public void handle() {
-        ClientMain.openScreen(new DisconnectScreen(disconnectReason));
+        ClientMain.getClient().openScreen(new DisconnectScreen(disconnectReason));
     }
 }

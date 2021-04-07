@@ -47,7 +47,7 @@ public class MatrixStack {
     }
 
     public void applyTransformation() {
-        applyTransformation(ClientMain.shaderProgram);
+        applyTransformation(ClientMain.getClient().shaderManager.shaderProgram);
     }
 
     public void applyColor(int shaderId) {
@@ -56,7 +56,7 @@ public class MatrixStack {
     }
 
     public void applyColor() {
-        applyColor(ClientMain.shaderProgram);
+        applyColor(ClientMain.getClient().shaderManager.shaderProgram);
     }
 
     public void setColor(float r, float g, float b, float a) {

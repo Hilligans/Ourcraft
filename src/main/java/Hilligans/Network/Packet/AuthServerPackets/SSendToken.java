@@ -1,6 +1,7 @@
 package Hilligans.Network.Packet.AuthServerPackets;
 
 import Hilligans.Client.ClientPlayerData;
+import Hilligans.ClientMain;
 import Hilligans.Network.ClientAuthNetworkHandler;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
@@ -23,7 +24,7 @@ public class SSendToken extends PacketBase {
 
     @Override
     public void handle() {
-        System.out.println(token);
-        ClientPlayerData.authToken = token;
+        ClientMain.getClient().playerData.valid_account = true;
+        ClientMain.getClient().playerData.authToken = token;
     }
 }

@@ -88,7 +88,7 @@ public class SSendChunkPacket extends PacketBase {
     @Override
     public void decode(PacketData packetData) {
         mode = packetData.readByte();
-        chunk = new Chunk(packetData.readInt(),packetData.readInt(), ClientMain.clientWorld);
+        chunk = new Chunk(packetData.readInt(),packetData.readInt(), ClientMain.getClient().clientWorld);
 
         if(mode == 0) {
             for (int x = 0; x < 16; x++) {

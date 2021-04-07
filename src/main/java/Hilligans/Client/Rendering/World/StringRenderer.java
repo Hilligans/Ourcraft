@@ -59,7 +59,7 @@ public class StringRenderer {
             indices.addAll(Arrays.asList(getIndices(z * 4)));
         }
         int id = VAOManager.createVAO(VAOManager.convertVertices(vector5fs,false),VAOManager.convertIndices(indices));
-        glUseProgram(ClientMain.shaderProgram);
+        glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
         matrixStack.applyColor();
         matrixStack.applyTransformation();
         draw(id,vector5fs.size());
@@ -79,7 +79,7 @@ public class StringRenderer {
             indices.addAll(Arrays.asList(getIndices(z * 4)));
         }
         int id = VAOManager.createVAO(VAOManager.convertVertices(vector5fs,false),VAOManager.convertIndices(indices));
-        glUseProgram(ClientMain.shaderProgram);
+        glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
         matrixStack.applyColor();
         matrixStack.applyTransformation();
         Renderer.drawTexture(matrixStack, Textures.BACKGROUND,x,y,width, (int) (instance.stringHeight * scale));
@@ -100,10 +100,10 @@ public class StringRenderer {
             indices.addAll(Arrays.asList(getIndices(z * 4)));
         }
         for(Vector5f vector5f : vector5fs) {
-            vector5f.addX(ClientMain.windowX / 2f - width / 2f);
+            vector5f.addX(ClientMain.getWindowX() / 2f - width / 2f);
         }
         int id = VAOManager.createVAO(VAOManager.convertVertices(vector5fs,false),VAOManager.convertIndices(indices));
-        glUseProgram(ClientMain.shaderProgram);
+        glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
         matrixStack.applyColor();
         matrixStack.applyTransformation();
         draw(id,vector5fs.size());
@@ -123,9 +123,9 @@ public class StringRenderer {
             indices.addAll(Arrays.asList(getIndices(z * 4)));
         }
         int id = VAOManager.createColorVAO(VAOManager.convertVertices(vector5fs,true),VAOManager.convertIndices(indices));
-        glUseProgram(ClientMain.colorShader);
-        matrixStack.applyColor(ClientMain.colorShader);
-        matrixStack.applyTransformation(ClientMain.colorShader);
+        glUseProgram(ClientMain.getClient().shaderManager.colorShader);
+        matrixStack.applyColor(ClientMain.getClient().shaderManager.colorShader);
+        matrixStack.applyTransformation(ClientMain.getClient().shaderManager.colorShader);
         draw(id,vector5fs.size());
         matrixStack.pop();
     }

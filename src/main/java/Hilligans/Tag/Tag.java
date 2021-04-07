@@ -23,6 +23,15 @@ public abstract class Tag {
         return string.toString();
     }
 
+    public String readFullString(ByteBuffer byteBuffer) {
+        byte length = byteBuffer.get();
+        StringBuilder string = new StringBuilder();
+        for(int x = 0; x < length; x++) {
+            string.append(readFullChar(byteBuffer));
+        }
+        return string.toString();
+    }
+
     public void writeString(ByteBuffer byteBuffer, String string) {
         byteBuffer.put((byte) string.length());
         for(int x = 0; x < string.length(); x++) {
@@ -30,8 +39,19 @@ public abstract class Tag {
         }
     }
 
+    public void writeFullString(ByteBuffer byteBuffer, String string) {
+        byteBuffer.put((byte) string.length());
+        for(int x = 0; x < string.length(); x++) {
+            byteBuffer.putShort((short) string.charAt(x));
+        }
+    }
+
     public char readChar(ByteBuffer byteBuffer) {
         return (char) (byteBuffer.get() & 0xFF);
+    }
+
+    public char readFullChar(ByteBuffer byteBuffer) {
+        return (char) byteBuffer.getShort();
     }
 
     public String getVal() {
@@ -51,6 +71,7 @@ public abstract class Tag {
         tags.add(IntegerArrayTag::new);
         tags.add(ListTag::new);
         tags.add(StringTag::new);
+        tags.add(FullStringTag::new);
     }
 
     public interface TagFetcher {

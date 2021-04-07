@@ -31,8 +31,8 @@ public class InventoryScreen extends ContainerScreen<InventoryContainer> {
 
     public static void drawHotbar(MatrixStack matrixStack) {
         int width = (int) (16 * Settings.guiSize);
-        int startX = (int) (ClientMain.windowX / 2 - width * 4.5f);
-        int startY = (int) (ClientMain.windowY - width - 1 * Settings.guiSize);
+        int startX = (int) (ClientMain.getWindowX() / 2 - width * 4.5f);
+        int startY = (int) (ClientMain.getWindowY() - width - 1 * Settings.guiSize);
         matrixStack.applyTransformation();
         Renderer.drawCenteredXTexture(matrixStack, Textures.HOTBAR,startY, Settings.guiSize);
 
@@ -40,13 +40,13 @@ public class InventoryScreen extends ContainerScreen<InventoryContainer> {
         //Renderer
 
         for(int x = 0; x < 9; x++) {
-            ItemStack itemStack = ClientPlayerData.inventory.getItem(x);
+            ItemStack itemStack = ClientMain.getClient().playerData.inventory.getItem(x);
             //Renderer.drawTexture1(screenStack, ClientData.itemSlot,startX + x * width, startY, width,width);
             if(!itemStack.isEmpty()) {
                 itemStack.item.render(matrixStack,startX + x * width, startY, width / 2,itemStack);
             }
         }
-        Renderer.drawTexture(matrixStack,Textures.ITEM_OUTLINE, (int) (startX - 1 * Settings.guiSize) + width * ClientPlayerData.handSlot ,(int)(startY - 1 * Settings.guiSize),(int)(width + 2 * Settings.guiSize),(int)(width + 2 * Settings.guiSize),7,7,25,25);
+        Renderer.drawTexture(matrixStack,Textures.ITEM_OUTLINE, (int) (startX - 1 * Settings.guiSize) + width * ClientMain.getClient().playerData.handSlot ,(int)(startY - 1 * Settings.guiSize),(int)(width + 2 * Settings.guiSize),(int)(width + 2 * Settings.guiSize),7,7,25,25);
 
     }
 }

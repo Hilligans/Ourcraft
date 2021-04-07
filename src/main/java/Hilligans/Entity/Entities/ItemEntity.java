@@ -87,7 +87,7 @@ public class ItemEntity extends Entity {
         if(id == -1) {
             createMesh();
         }
-        glBindTexture(GL_TEXTURE_2D, ClientMain.texture);
+        glBindTexture(GL_TEXTURE_2D, ClientMain.getClient().texture);
         matrixStack.translate(x,y,z);
         matrixStack.applyTransformation();
         glBindVertexArray(id);

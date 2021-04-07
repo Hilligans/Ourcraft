@@ -32,9 +32,9 @@ public class CHandshakePacket extends PacketBase {
     @Override
     public void encode(PacketData packetData) {
         packetData.writeInt(Settings.gameVersion);
-        packetData.writeString(ClientPlayerData.userName);
+        packetData.writeString(ClientMain.getClient().playerData.userName);
         packetData.writeLong(ServerSidedData.getInstance().version);
-        packetData.writeString(ClientPlayerData.authToken);
+        packetData.writeString(ClientMain.getClient().playerData.authToken);
     }
 
     @Override
