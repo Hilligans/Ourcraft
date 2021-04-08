@@ -1,6 +1,6 @@
-package Hilligans.EventHandler.Events;
+package Hilligans.ModHandler.Events;
 
-import Hilligans.EventHandler.Event;
+import Hilligans.ModHandler.Event;
 
 public class GLInitEvent extends Event {
 

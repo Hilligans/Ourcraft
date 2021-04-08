@@ -36,12 +36,21 @@ public class STokenValid extends PacketBase {
         CHandshakePacket packet = ServerMain.server.waitingPlayers.get(oldCtx);
         ServerMain.server.waitingPlayers.remove(oldCtx);
         ServerMain.server.playerQueue.remove(tempid);
+        System.out.println(this.toString());
         if(valid) {
             CHandshakePacket.handlePlayer(packet.name, packet.version, oldCtx, uuid);
         } else {
             ServerNetworkHandler.sendPacketClose(new SDisconnectPacket("Could not authorize you account"),oldCtx);
         }
-        //System.out.println(username + " uuid:" + uuid + " valid:" + valid);
+    }
 
+    @Override
+    public String toString() {
+        return "STokenValid{" +
+                "username='" + username + '\'' +
+                ", uuid='" + uuid + '\'' +
+                ", valid=" + valid +
+                ", tempid='" + tempid + '\'' +
+                '}';
     }
 }

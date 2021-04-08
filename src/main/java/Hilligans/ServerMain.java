@@ -28,6 +28,7 @@ import io.netty.channel.ChannelFutureListener;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 import org.lwjgl.system.CallbackI;
 
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.concurrent.Executors;
@@ -45,6 +46,7 @@ public class ServerMain {
 
     public static void main(String[] args) {
         Settings.isServer = true;
+        Ourcraft.MOD_LOADER.loadAllMods(new File("mods/"));
         Tag.register();
         Blocks.generateTextures();
         ServerSidedData.getInstance().register();

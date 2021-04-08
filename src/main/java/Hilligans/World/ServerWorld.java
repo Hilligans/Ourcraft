@@ -7,13 +7,10 @@ import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.Server.ServerPlayerData;
 import Hilligans.Entity.Entities.ItemEntity;
 import Hilligans.Entity.Entity;
-import Hilligans.EventHandler.EventBus;
 import Hilligans.Network.Packet.Server.SCreateEntityPacket;
 import Hilligans.Network.Packet.Server.SRemoveEntityPacket;
 import Hilligans.Network.ServerNetworkHandler;
-import Hilligans.Tag.CompoundTag;
 import Hilligans.WorldSave.ChunkLoader;
-import Hilligans.WorldSave.WorldLoader;
 
 import java.util.ArrayList;
 

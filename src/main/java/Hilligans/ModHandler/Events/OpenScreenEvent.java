@@ -1,7 +1,7 @@
-package Hilligans.EventHandler.Events;
+package Hilligans.ModHandler.Events;
 
 import Hilligans.Client.Rendering.Screen;
-import Hilligans.EventHandler.Event;
+import Hilligans.ModHandler.Event;
 
 public class OpenScreenEvent extends Event {
 

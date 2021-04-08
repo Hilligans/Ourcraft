@@ -1,5 +1,6 @@
 package Hilligans.Client;
 
+import Hilligans.Block.BlockTypes.ColorBlock;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.Key.KeyHandler;
 import Hilligans.Client.Key.KeyPress;
@@ -8,24 +9,20 @@ import Hilligans.Client.Rendering.Screens.ContainerScreens.CreativeInventoryScre
 import Hilligans.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
 import Hilligans.Client.Rendering.Screens.EscapeScreen;
 import Hilligans.Client.Rendering.Screens.JoinScreen;
-import Hilligans.Client.Rendering.Screens.TagEditorScreen;
 import Hilligans.Client.Rendering.Widgets.Widget;
 import Hilligans.Client.Rendering.World.Managers.ShaderManager;
 import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.Client.Rendering.World.StringRenderer;
-import Hilligans.ClientMain;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BlockState;
-import Hilligans.Data.Other.Inventory;
 import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
-import Hilligans.EventHandler.EventBus;
-import Hilligans.EventHandler.Events.GLInitEvent;
-import Hilligans.EventHandler.Events.OpenScreenEvent;
+import Hilligans.ModHandler.Events.GLInitEvent;
+import Hilligans.ModHandler.Events.OpenScreenEvent;
 import Hilligans.Item.ItemStack;
 import Hilligans.Network.ClientAuthNetworkHandler;
 import Hilligans.Network.ClientNetworkHandler;
@@ -36,7 +33,6 @@ import Hilligans.Ourcraft;
 import Hilligans.Tag.CompoundTag;
 import Hilligans.Tag.Tag;
 import Hilligans.Util.Settings;
-import Hilligans.Util.Util;
 import Hilligans.World.ClientWorld;
 import Hilligans.WorldSave.WorldLoader;
 import org.lwjgl.BufferUtils;
@@ -46,6 +42,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL30;
 
 import java.nio.DoubleBuffer;
+import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -97,6 +94,8 @@ public class Client {
         createGL();
         registerKeyHandlers();
         createCallbacks();
+
+
 
         while(!glfwWindowShouldClose(window)) {
             mouseLocked = screen == null;

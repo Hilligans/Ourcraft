@@ -1,6 +1,5 @@
-package Hilligans.EventHandler;
+package Hilligans.ModHandler;
 
-import Hilligans.EventHandler.Events.GLInitEvent;
 import net.jodah.typetools.TypeResolver;
 
 

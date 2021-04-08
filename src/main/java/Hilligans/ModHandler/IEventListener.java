@@ -1,4 +1,4 @@
-package Hilligans.EventHandler;
+package Hilligans.ModHandler;
 
 public interface IEventListener {
 
