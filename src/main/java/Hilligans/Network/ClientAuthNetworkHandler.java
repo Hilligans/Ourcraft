@@ -19,7 +19,7 @@ public class ClientAuthNetworkHandler extends NetworkHandler {
         ctx.close();
     }
 
-    public static void sendPacketDirect(PacketBase packetBase) {
+    public static ChannelFuture sendPacketDirect(PacketBase packetBase) {
         if(networkHandler == null || !networkHandler.channel.isOpen()) {
             networkHandler = new ClientAuthNetworkHandler();
             try {
@@ -28,7 +28,7 @@ public class ClientAuthNetworkHandler extends NetworkHandler {
                 ignored.printStackTrace();
             }
         }
-        networkHandler.sendPacket(packetBase);
+        return networkHandler.sendPacket(packetBase);
     }
 
 }

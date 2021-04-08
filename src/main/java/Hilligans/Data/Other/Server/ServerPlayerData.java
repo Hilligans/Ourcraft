@@ -10,6 +10,9 @@ import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Item.ItemStack;
 import Hilligans.Item.Items;
 import Hilligans.ServerMain;
+import Hilligans.Tag.CompoundTag;
+import Hilligans.Util.Settings;
+import Hilligans.WorldSave.WorldLoader;
 
 public class ServerPlayerData {
 
@@ -17,11 +20,13 @@ public class ServerPlayerData {
     public ItemStack heldStack = ItemStack.emptyStack();
     public Container openContainer;
     public Inventory playerInventory;
+    public String id;
     public boolean isCreative = true;
 
 
-    public ServerPlayerData(PlayerEntity playerEntity) {
+    public ServerPlayerData(PlayerEntity playerEntity, String id) {
         this.playerEntity = playerEntity;
+        this.id = id;
         playerInventory = playerEntity.inventory;
         openContainer = new InventoryContainer(playerInventory).setPlayerId(playerEntity.id);
         playerInventory.setItem(0,new ItemStack(Items.HASHED_ITEMS.get("chest"), (byte)2));
@@ -31,6 +36,46 @@ public class ServerPlayerData {
         playerInventory.setItem(4,new ItemStack(Items.HASHED_ITEMS.get("grass_plant"), (byte)63));
         playerInventory.setItem(5,new ItemStack(Items.HASHED_ITEMS.get("blue"),(byte)63));
 
+    }
+
+    public ServerPlayerData(PlayerEntity playerEntity, String id, CompoundTag tag) {
+        this.playerEntity = playerEntity;
+        this.id = id;
+        playerInventory = playerEntity.inventory;
+        read(tag);
+        openContainer = new InventoryContainer(playerInventory).setPlayerId(playerEntity.id);
+    }
+
+    public static ServerPlayerData loadOrCreatePlayer(PlayerEntity playerEntity, String id) {
+        CompoundTag tag = WorldLoader.loadTag(path + id + ".dat");
+        if(tag == null) {
+            return new ServerPlayerData(playerEntity,id);
+        } else {
+            System.out.println("asdaw");
+            return new ServerPlayerData(playerEntity,id,tag);
+        }
+    }
+
+    public static String path = "world/" + Settings.worldName + "/player-data/";
+
+    public void read(CompoundTag tag) {
+        for(int x = 0; x < 27; x++) {
+            playerInventory.setItem(x,tag.readStack(x));
+        }
+        heldStack = tag.readStack(-1);
+    }
+
+    public void write(CompoundTag tag) {
+        for(int x = 0; x < 27; x++) {
+            tag.writeStack(x,playerInventory.getItem(x));
+        }
+        tag.writeStack(-1,heldStack);
+    }
+
+    public void save() {
+        CompoundTag compoundTag = new CompoundTag();
+        write(compoundTag);
+        WorldLoader.save(compoundTag,ServerPlayerData.path + id + ".dat");
     }
 
     public int getDimension() {
@@ -89,6 +134,7 @@ public class ServerPlayerData {
     }
 
     public void close() {
+        save();
         openContainer.closeContainer();
     }
 

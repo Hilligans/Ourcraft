@@ -8,12 +8,14 @@ public class CTokenValid extends PacketBase {
     String username;
     String token;
     String ip;
+    String tempId;
 
-    public CTokenValid(String username, String token, String ip) {
+    public CTokenValid(String username, String token, String ip, String tempId) {
         super(2);
         this.username = username;
         this.token = token;
         this.ip = ip;
+        this.tempId = tempId;
     }
 
     @Override
@@ -21,6 +23,7 @@ public class CTokenValid extends PacketBase {
         packetData.writeString(username);
         packetData.writeString(token);
         packetData.writeString(ip);
+        packetData.writeString(tempId);
     }
 
     @Override

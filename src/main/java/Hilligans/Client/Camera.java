@@ -207,7 +207,7 @@ public class Camera {
             maxX = 0;
             maxZ = 0;
 
-            ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.getClient().playerId));
+            //ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.getClient().playerId));
         }
     }
 

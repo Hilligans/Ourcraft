@@ -30,13 +30,14 @@ public class EventBus {
                     list.add(event -> {
                         try {
                             method.invoke(obj, event);
-                        } catch (Exception ignored) {}});
+                        } catch (Exception ignored) {}
+                    });
                 }
             }
         }
     }
 
-    public <T extends Event> void postEvent(Event event) {
+    public void postEvent(Event event) {
         ArrayList<IEventListener> list = events.get(event.getClass());
         if(list != null) {
             for(IEventListener eventListener : list) {

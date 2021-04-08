@@ -19,7 +19,6 @@ public class ClientPlayerData {
 
     public String authToken = "";
     public String userName = "";
-    public String password = "";
     public String email = "";
     public String login_token = "";
     public boolean valid_account = false;

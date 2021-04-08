@@ -4,12 +4,14 @@ import Hilligans.Block.Block;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Data.Other.BlockPos;
+import Hilligans.Data.Other.Server.ServerPlayerData;
 import Hilligans.Entity.Entities.ItemEntity;
 import Hilligans.Entity.Entity;
 import Hilligans.EventHandler.EventBus;
 import Hilligans.Network.Packet.Server.SCreateEntityPacket;
 import Hilligans.Network.Packet.Server.SRemoveEntityPacket;
 import Hilligans.Network.ServerNetworkHandler;
+import Hilligans.Tag.CompoundTag;
 import Hilligans.WorldSave.ChunkLoader;
 import Hilligans.WorldSave.WorldLoader;
 
@@ -85,6 +87,11 @@ public class ServerWorld extends World {
                     ChunkLoader.writeChunk(chunk);
                 }
                 ChunkLoader.finishSave();
+                for(ServerPlayerData playerData : ServerNetworkHandler.playerData.values()) {
+                    playerData.save();
+                }
+
+
                 System.out.println("SAVE FINISH:" + (System.currentTimeMillis() - start) + "MS");
             } catch (Exception e) {
                 e.printStackTrace();

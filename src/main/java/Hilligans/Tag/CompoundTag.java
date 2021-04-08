@@ -70,7 +70,7 @@ public class CompoundTag extends Tag {
 
     public ItemStack readStack(int slot) {
         CompoundTag compoundTag = (CompoundTag) getTag("slot" + slot);
-        byte count = ((ByteTag)compoundTag.getTag("count")).val;
+        int count = ((IntegerTag)compoundTag.getTag("count")).val;
         short item = ((ShortTag)compoundTag.getTag("item")).val;
         if(item == -1) {
             return ItemStack.emptyStack();

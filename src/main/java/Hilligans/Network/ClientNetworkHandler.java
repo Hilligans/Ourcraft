@@ -26,6 +26,7 @@ public class ClientNetworkHandler extends NetworkHandler {
         if(!ClientMain.getClient().valid) {
         }
         ClientMain.getClient().renderWorld = false;
+        ClientMain.getClient().valid = false;
         ClientMain.getClient().clientWorld = new ClientWorld();
 
         super.channelInactive(ctx);
@@ -45,8 +46,10 @@ public class ClientNetworkHandler extends NetworkHandler {
 
     public static void sendPacketDirect(PacketBase packetBase) {
      //  if(clientNetworkHandler.channel != null && clientNetworkHandler.channel.isOpen()) {
-        if(clientNetworkHandler != null) {
-            clientNetworkHandler.channel.writeAndFlush(new PacketData(packetBase));
+        if(ClientMain.getClient().valid || packetBase instanceof CHandshakePacket) {
+            if (clientNetworkHandler != null) {
+                clientNetworkHandler.channel.writeAndFlush(new PacketData(packetBase));
+            }
         }
        // }
     }

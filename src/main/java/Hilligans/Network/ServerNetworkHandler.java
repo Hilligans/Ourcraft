@@ -1,9 +1,11 @@
 package Hilligans.Network;
 
 import Hilligans.Entity.LivingEntities.PlayerEntity;
+import Hilligans.Network.Packet.Client.CHandshakePacket;
 import Hilligans.Network.Packet.Server.SChatMessage;
 import Hilligans.Data.Other.Server.ServerPlayerData;
 import Hilligans.ServerMain;
+import Hilligans.Tag.IntegerTag;
 import io.netty.channel.*;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
@@ -58,6 +60,12 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketDat
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, PacketData msg) throws Exception {
         PacketBase packetBase = msg.createPacket();
+        if(!(packetBase instanceof CHandshakePacket)) {
+            if (mappedId.getOrDefault(ctx.channel().id(), Integer.MIN_VALUE) == Integer.MIN_VALUE) {
+                ctx.close();
+                return;
+            }
+        }
         packetBase.handle();
     }
 
@@ -86,6 +94,16 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketDat
 
     public static ChannelFuture sendPacket(PacketBase packetBase, ChannelHandlerContext ctx) {
         return ctx.channel().writeAndFlush(new PacketData(packetBase));
+    }
+
+    public static void sendPacketClose(PacketBase packetBase, ChannelHandlerContext ctx) {
+        try {
+        ctx.channel().writeAndFlush(new PacketData(packetBase)).addListeners((ChannelFutureListener) future -> {
+            if (ctx.channel().isOpen()) {
+                ctx.channel().close().awaitUninterruptibly(100);
+            }
+        });
+        } catch (Exception ignored) {}
     }
 
     public static void sendPacket(PacketBase packetBase, PlayerEntity playerEntity) {
