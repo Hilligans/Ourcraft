@@ -29,7 +29,7 @@ public class BlockTextureManager implements TextureManager {
 
     public void generate() {
         if(location != null) {
-            int id = WorldTextureManager.instance.loadTextureId("/Blocks/" + location, location.substring(0,location.length() - 4));
+            int id = WorldTextureManager.instance.loadTextureId("Blocks/" + location, location.substring(0,location.length() - 4));
             for (int x = 0; x < 6; x++) {
                 textures[x] = id;
 

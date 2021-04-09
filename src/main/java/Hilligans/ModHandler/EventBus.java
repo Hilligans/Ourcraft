@@ -1,6 +1,5 @@
 package Hilligans.ModHandler;
 
-import net.jodah.typetools.TypeResolver;
 
 
 import java.lang.reflect.Method;
@@ -12,8 +11,7 @@ public class EventBus {
 
     public HashMap<Class<? extends Event>, ArrayList<IEventListener>> events = new HashMap<>();
 
-    public <T extends Event> void register(Consumer<T> consumer) {
-        final Class<T> eventClass = (Class<T>) TypeResolver.resolveRawArgument(Consumer.class, consumer.getClass());
+    public <T extends Event> void register(Class<T> eventClass, Consumer<T> consumer) {
         ArrayList<IEventListener> list = events.computeIfAbsent(eventClass, k -> new ArrayList<>());
         list.add(e-> consumer.accept((T)e));
     }

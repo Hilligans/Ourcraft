@@ -98,12 +98,12 @@ public class ServerSidedData {
         IMAGES.clear();
         for(Block block : BLOCKS) {
             BlockTextureManager blockTextureManager = block.blockProperties.blockTextureManager;
-            BufferedImage bufferedImage = WorldTextureManager.loadImage("/Blocks/" + blockTextureManager.location);
+            BufferedImage bufferedImage = WorldTextureManager.loadImage("Blocks/" + blockTextureManager.location);
             IMAGES.add(new TripleTypeWrapper<>(bufferedImage, blockTextureManager.location.substring(0, blockTextureManager.location.length() - 4), true));
             for(int x = 0; x < 6; x++) {
                 if(blockTextureManager.textureNames != null) {
                     if (blockTextureManager.textureNames[x] != null) {
-                        BufferedImage bufferedImage1 = WorldTextureManager.loadImage("/Blocks/" + blockTextureManager.textureNames[x]);
+                        BufferedImage bufferedImage1 = WorldTextureManager.loadImage("Blocks/" + blockTextureManager.textureNames[x]);
                         IMAGES.add(new TripleTypeWrapper<>(bufferedImage1,blockTextureManager.textureNames[x].substring(0, blockTextureManager.textureNames[x].length() - 4), true));
                     }
                 }

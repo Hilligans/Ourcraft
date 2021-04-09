@@ -129,7 +129,7 @@ public class Util {
 
         int val = 0;
 
-        BufferedImage bufferedImage = WorldTextureManager.loadImage("/characters/quote.png");
+        BufferedImage bufferedImage = WorldTextureManager.loadImage("characters/quote.png");
         DoubleTypeWrapper<Integer, Integer> data = new DoubleTypeWrapper<>(bufferedImage.getWidth(),val);
        // characterOffset.put("\"",data);
         for(int z = 0; z < bufferedImage.getWidth(); z++) {
@@ -144,7 +144,7 @@ public class Util {
         for(int x = 0; x < vals.length(); x++) {
             String s = "" + vals.charAt(x);
             System.out.println(s);
-            bufferedImage = WorldTextureManager.loadImage("/characters/" + s + ".png");
+            bufferedImage = WorldTextureManager.loadImage("characters/" + s + ".png");
             data = new DoubleTypeWrapper<>(bufferedImage.getWidth(),val);
         //    characterOffset.put(s,data);
             for(int z = 0; z < bufferedImage.getWidth(); z++) {
@@ -158,7 +158,7 @@ public class Util {
 
         for(int x = 0; x < vals1.length(); x++) {
             String s = "" + vals1.charAt(x) + vals1.charAt(x);
-            bufferedImage = WorldTextureManager.loadImage("/characters/" + s + ".png");
+            bufferedImage = WorldTextureManager.loadImage("characters/" + s + ".png");
             data = new DoubleTypeWrapper<>(bufferedImage.getWidth(),val);
         //    characterOffset.put("" + vals1.charAt(x),data);
             for(int z = 0; z < bufferedImage.getWidth(); z++) {

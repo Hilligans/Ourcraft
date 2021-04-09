@@ -70,11 +70,6 @@ public class WorldTextureManager {
         idHashMap.put(textureName,addImage(bufferedImage));
     }
 
-    public void loadTexture(String path) {
-        BufferedImage image = createFlipped(loadImage(path));
-        System.out.println("id " + addImage(image));
-    }
-
     public int registerTexture() {
 
         if(imageHolders.size() != 0) {
@@ -148,8 +143,6 @@ public class WorldTextureManager {
             BufferedImage image;
             try {
             InputStream url = ClientMain.class.getResourceAsStream("/Images/" + path);
-            URL a = ClientMain.class.getResource("/Images/" + path);
-            image = DefaultImage();
             if(url == null) {
                 return DefaultImage();
             }

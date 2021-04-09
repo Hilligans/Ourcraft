@@ -46,7 +46,7 @@ public class ServerMain {
 
     public static void main(String[] args) {
         Settings.isServer = true;
-        Ourcraft.MOD_LOADER.loadAllMods(new File("mods/"));
+        Ourcraft.MOD_LOADER.loadDefaultMods();
         Tag.register();
         Blocks.generateTextures();
         ServerSidedData.getInstance().register();

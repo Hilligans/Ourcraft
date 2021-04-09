@@ -8,7 +8,6 @@ import Hilligans.ModHandler.ModLoader;
 import java.io.File;
 import java.util.Arrays;
 
-@Mod
 public class ClientMain {
 
     public static Client client;
@@ -20,13 +19,8 @@ public class ClientMain {
 
     public static void main(String[] args) {
         client = new Client();
-        Ourcraft.MOD_LOADER.loadAllMods(new File("mods/"));
+        Ourcraft.MOD_LOADER.loadDefaultMods();
         client.startClient();
-    }
-
-    @Mod()
-    public void a() {
-
     }
 
     public static int getWindowX() {

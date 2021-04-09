@@ -1,6 +1,7 @@
 package Hilligans;
 
 import Hilligans.ModHandler.EventBus;
+import Hilligans.ModHandler.Mod;
 import Hilligans.ModHandler.ModLoader;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 

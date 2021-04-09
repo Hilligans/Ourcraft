@@ -15,6 +15,11 @@ import java.util.zip.ZipInputStream;
 
 public class ModLoader {
 
+    public void loadDefaultMods() {
+        loadAllMods(new File("mods/"));
+        loadClasses(new File("target/classes/"), "");
+    }
+
     public void loadAllMods(File folder) {
         File[] mods = folder.listFiles();
         if(mods != null) {
@@ -24,12 +29,33 @@ public class ModLoader {
         }
     }
 
+    public void loadClasses(File folder, String topName) {
+        File[] mods = folder.listFiles();
+        if(mods != null) {
+            for (File mod : mods) {
+                if(mod.isDirectory()) {
+                    loadClasses(mod, topName + mod.getName() + ".");
+                } else if(mod.getName().endsWith(".class")) {
+                    try {
+                        URLClassLoader child = new URLClassLoader(new URL[]{mod.toURI().toURL()}, this.getClass().getClassLoader());
+                        Class<?> testClass = Class.forName(topName + mod.getName().substring(0,mod.getName().length() - 6),false,child);
+                        if(isMain(testClass)) {
+                            testClass.newInstance();
+                        }
+                    } catch (Exception ignored) {}
+                }
+            }
+        }
+    }
+
+
     public boolean loadMod(File file) {
         try {
             URLClassLoader child = new URLClassLoader(new URL[]{file.toURI().toURL()}, this.getClass().getClassLoader());
             ArrayList<String> classNames = getClassNames(file);
             Class<?> mainClass = null;
             for(String name : classNames) {
+                //System.out.println(name);
                 Class<?> testClass = Class.forName(name,false,child);
                 if(isMain(testClass)) {
                     mainClass = Class.forName(name,true,child);
