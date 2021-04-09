@@ -2,6 +2,8 @@ package Hilligans.Util;
 
 import org.joml.Vector4f;
 
+import java.util.Arrays;
+
 public class Vector5f {
 
     public float[] values;
@@ -62,4 +64,10 @@ public class Vector5f {
         return vector5fs;
     }
 
+    @Override
+    public String toString() {
+        return "Vector5f{" +
+                "values=" + Arrays.toString(values) +
+                '}';
+    }
 }

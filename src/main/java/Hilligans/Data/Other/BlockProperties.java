@@ -41,6 +41,10 @@ public class BlockProperties {
         return this;
     }
 
+    public BlockProperties textureSource(String source) {
+        blockTextureManager.textureSource = source;
+        return this;
+    }
 
 
 

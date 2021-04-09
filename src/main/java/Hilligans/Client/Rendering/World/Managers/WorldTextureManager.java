@@ -1,6 +1,9 @@
 package Hilligans.Client.Rendering.World.Managers;
 
 import Hilligans.ClientMain;
+import Hilligans.Data.Primitives.DoubleTypeWrapper;
+import Hilligans.Data.Primitives.TripleTypeWrapper;
+import Hilligans.Ourcraft;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import javax.imageio.ImageIO;
@@ -10,12 +13,16 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
@@ -52,13 +59,13 @@ public class WorldTextureManager {
         imageMap.clear();
     }
 
-    public int loadTextureId(String path, String textureName) {
-        Integer id = idHashMap.get(textureName);
+    public int loadTextureId(String path, String textureName, String source) {
+        Integer id = idHashMap.get(source + ":" + textureName);
         if(id == null) {
-            BufferedImage image = createFlipped(loadImage(path));
-            bufferedImageHashMap.put(textureName,image);
+            BufferedImage image = createFlipped(loadImage(path,source));
+            bufferedImageHashMap.put(source + ":" + textureName,image);
             int id1 = addImage(image);
-            idHashMap.put(textureName,id1);
+            idHashMap.put(source + ":" + textureName,id1);
             return id1;
         } else {
             return id;
@@ -108,24 +115,20 @@ public class WorldTextureManager {
         return texture;
 
     }
-   // int id = 0;
+
     public int addImage(BufferedImage img) {
         int id;
         for(ImageHolder imageHolder : imageHolders) {
-            //System.out.println((imageHolder.imageSize == img.getWidth()) + " " + imageHolder.canAddImage());
             if(imageHolder.imageSize == img.getWidth() && imageHolder.canAddImage()) {
                 imageHolder.addTexture(img);
-          //      System.out.println("image id " + (imageHolder.idHolder + MAX_TEXTURE_SIZE / MIN_TEXTURE_SIZE * imageHolder.id));
                 id = imageHolder.getNextID();
                 imageMap.put(id,imageHolder);
-
                 return id;
             }
         }
         ImageHolder imageHolder = new ImageHolder(img.getWidth(),imageHolders.size(), this);
         imageHolder.addTexture(img);
         imageHolders.add(imageHolder);
-      //  System.out.println("new image id " + (imageHolder.idHolder + MAX_TEXTURE_SIZE / MIN_TEXTURE_SIZE * imageHolder.id));
         id = imageHolder.getNextID();
         imageMap.put(id,imageHolder);
         width++;
@@ -139,21 +142,50 @@ public class WorldTextureManager {
         if(img != null) {
             return img;
         }
-        if(path != null) {
-            BufferedImage image;
+        try {
+            File file = new File(WorldTextureManager.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            ZipFile zipFile = new ZipFile(file);
+            ZipEntry zipEntry = zipFile.getEntry("Images/" + path);
+            if (zipEntry != null) {
+                return ImageIO.read(zipFile.getInputStream(zipEntry));
+            }
+        } catch (Exception ignored) {}
+
+
+        InputStream url = ClientMain.class.getResourceAsStream("/Images/" + path);
+        if(url != null) {
             try {
-            InputStream url = ClientMain.class.getResourceAsStream("/Images/" + path);
-            if(url == null) {
-                return DefaultImage();
-            }
-            image = ImageIO.read(url);
-            } catch (IOException e) {
-                return DefaultImage();
-            }
-            cachedImages.put(path,image);
-            return image;
+                return ImageIO.read(url);
+            } catch (IOException ignored) {}
         }
         return DefaultImage();
+    }
+
+    public static BufferedImage loadImage(String path, String source) {
+        if(source.equals("")) {
+            return loadImage(path);
+        }
+        TripleTypeWrapper<Class<?>,String,Boolean> type = Ourcraft.MOD_LOADER.mainClasses.get(source);
+        String filePath = type.getTypeB();
+        if(type.getTypeC()) {
+            if (filePath != null) {
+                try {
+                    ZipFile zipFile = new ZipFile(filePath);
+                    ZipEntry zipEntry = zipFile.getEntry("Images/" + path);
+                    if (zipEntry != null) {
+                        return ImageIO.read(zipFile.getInputStream(zipEntry));
+                    }
+                } catch (Exception ignored) {}
+            }
+        } else {
+            File file = new File("target/classes/Images/" + path);
+            if(file.exists()) {
+                try {
+                    return ImageIO.read(file);
+                } catch (Exception ignored) {}
+            }
+        }
+        return loadImage(path);
     }
 
 
@@ -261,8 +293,8 @@ public class WorldTextureManager {
         return registerTexture1(bufferedImage);
     }
 
-    public static int loadAndRegisterUnflippedTexture(String path) {
-        BufferedImage bufferedImage = loadImage(path);
+    public static int loadAndRegisterUnflippedTexture(String path, String source) {
+        BufferedImage bufferedImage = loadImage(path, source);
         return registerTexture1(bufferedImage);
     }
 

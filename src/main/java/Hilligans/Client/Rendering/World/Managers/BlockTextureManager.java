@@ -13,6 +13,8 @@ public class BlockTextureManager implements TextureManager {
     public String[] textureNames;
     public String location;
 
+    public String textureSource = "";
+
     public void addString(String location) {
         this.location = location;
     }
@@ -29,17 +31,18 @@ public class BlockTextureManager implements TextureManager {
 
     public void generate() {
         if(location != null) {
-            int id = WorldTextureManager.instance.loadTextureId("Blocks/" + location, location.substring(0,location.length() - 4));
+            int id = WorldTextureManager.instance.loadTextureId("Blocks/" + location, location.substring(0,location.length() - 4),textureSource);
             for (int x = 0; x < 6; x++) {
                 textures[x] = id;
 
                 if (textureNames != null && textureNames[x] != null) {
-                    textures[x] = WorldTextureManager.instance.loadTextureId("Blocks/" + textureNames[x], textureNames[x].substring(0,textureNames[x].length() - 4));
+                    textures[x] = WorldTextureManager.instance.loadTextureId("Blocks/" + textureNames[x], textureNames[x].substring(0,textureNames[x].length() - 4),textureSource);
                 }
             }
-            if(!Settings.isServer) {
-                texture = WorldTextureManager.loadAndRegisterUnflippedTexture("Blocks/" + location);
-            }
+           // if(!Settings.isServer) {
+                //texture = WorldTextureManager.loadAndRegisterUnflippedTexture("Blocks/" + location, textureSource);
+
+          //  }
         }
     }
 

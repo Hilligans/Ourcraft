@@ -2,6 +2,8 @@ package Hilligans.ModHandler;
 
 import Hilligans.Block.Block;
 import Hilligans.Client.Client;
+import Hilligans.Data.Primitives.DoubleTypeWrapper;
+import Hilligans.Data.Primitives.TripleTypeWrapper;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,10 +12,13 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class ModLoader {
+
+    public HashMap<String, TripleTypeWrapper<Class<?>,String,Boolean>> mainClasses = new HashMap<>();
 
     public void loadDefaultMods() {
         loadAllMods(new File("mods/"));
@@ -39,7 +44,9 @@ public class ModLoader {
                     try {
                         URLClassLoader child = new URLClassLoader(new URL[]{mod.toURI().toURL()}, this.getClass().getClassLoader());
                         Class<?> testClass = Class.forName(topName + mod.getName().substring(0,mod.getName().length() - 6),false,child);
-                        if(isMain(testClass)) {
+                        String modID = getModID(testClass);
+                        if(modID != null) {
+                            mainClasses.put(modID,new TripleTypeWrapper<>(testClass,mod.getAbsolutePath(),false));
                             testClass.newInstance();
                         }
                     } catch (Exception ignored) {}
@@ -53,19 +60,16 @@ public class ModLoader {
         try {
             URLClassLoader child = new URLClassLoader(new URL[]{file.toURI().toURL()}, this.getClass().getClassLoader());
             ArrayList<String> classNames = getClassNames(file);
-            Class<?> mainClass = null;
             for(String name : classNames) {
-                //System.out.println(name);
                 Class<?> testClass = Class.forName(name,false,child);
-                if(isMain(testClass)) {
-                    mainClass = Class.forName(name,true,child);
-                    break;
+                String modID = getModID(testClass);
+                if(modID != null) {
+                    testClass = Class.forName(name,true,child);
+                    mainClasses.put(modID,new TripleTypeWrapper<>(testClass,file.getAbsolutePath(),true));
+                    testClass.newInstance();
+                    return true;
                 }
             }
-            if(mainClass == null) {
-                return false;
-            }
-            Object instance = mainClass.newInstance();
         } catch (Exception e) {
             return false;
         }
@@ -87,16 +91,17 @@ public class ModLoader {
         return classNames;
     }
 
-    public boolean isMain(Class<?> val) {
+    public String getModID(Class<?> val) {
         for(Annotation annotation : val.getAnnotations()) {
-            return annotation.annotationType().equals(Mod.class);
+            if(annotation.annotationType().equals(Mod.class)) {
+                if(((Mod)annotation).modID().equals("")) {
+                    System.out.println("MainClass " + val.toString() + " has no modID specified, will not load");
+                    return null;
+                } else {
+                    return ((Mod)annotation).modID();
+                }
+            }
         }
-        return false;
+        return null;
     }
-
-
-
-
-
-
 }
