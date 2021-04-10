@@ -4,6 +4,7 @@ import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Network.Packet.Client.CHandshakePacket;
 import Hilligans.Network.Packet.Server.SChatMessage;
 import Hilligans.Data.Other.Server.ServerPlayerData;
+import Hilligans.Network.Packet.Server.SSendPlayerList;
 import Hilligans.ServerMain;
 import Hilligans.Tag.IntegerTag;
 import io.netty.channel.*;
@@ -52,6 +53,7 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketDat
             playerData.remove(id).close();
         }
         channelIds.remove(ctx.channel().id());
+        sendPacket(new SSendPlayerList(mappedName.get(ctx.channel().id()),id,false));
         sendPacket(new SChatMessage(mappedName.get(ctx.channel().id()) + " has left the game"));
         nameToChannel.remove(mappedName.remove(ctx.channel().id()));
         super.channelInactive(ctx);
@@ -74,7 +76,7 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketDat
         ctx.close();
     }
 
-    public static ChannelFuture sendPacket(PacketBase packetBase) {
+    public static void sendPacket(PacketBase packetBase) {
         for(int x = 0; x < channelIds.size(); x++) {
             Channel channel = channels.find(channelIds.get(x));
             if(channel == null) {
@@ -82,9 +84,9 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketDat
                 x--;
                 continue;
             }
-            return channel.writeAndFlush(new PacketData(packetBase));
+            channel.writeAndFlush(new PacketData(packetBase));
         }
-        return null;
+        //return null;
     }
 
     public static Channel getChannel(int id) {
@@ -119,6 +121,20 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketDat
         if(channelId1 != null) {
             Channel channel = channels.find(channelId1);
             if (channel != null) {
+                channel.writeAndFlush(new PacketData(packetBase));
+            }
+        }
+    }
+
+    public static void sendPacketExcept(PacketBase packetBase, ChannelHandlerContext ctx) {
+        for(int x = 0; x < channelIds.size(); x++) {
+            Channel channel = channels.find(channelIds.get(x));
+            if(channel == null) {
+                channelIds.remove(x);
+                x--;
+                continue;
+            }
+            if(!channel.id().equals(ctx.channel().id())) {
                 channel.writeAndFlush(new PacketData(packetBase));
             }
         }

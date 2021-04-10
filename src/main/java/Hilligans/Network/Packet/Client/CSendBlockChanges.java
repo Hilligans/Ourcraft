@@ -61,6 +61,6 @@ public class CSendBlockChanges extends PacketBase {
                 ServerMain.getWorld(dim).addEntity(itemEntity);
             }
         }
-        ServerNetworkHandler.sendPacket(new SSendBlockChanges(x,y,z,newBlock));
+        //ServerNetworkHandler.sendPacket(new SSendBlockChanges(x,y,z,newBlock));
     }
 }

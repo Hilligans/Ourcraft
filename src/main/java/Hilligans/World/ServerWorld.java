@@ -10,6 +10,7 @@ import Hilligans.Entity.Entity;
 import Hilligans.Network.Packet.Server.SCreateEntityPacket;
 import Hilligans.Network.Packet.Server.SRemoveEntityPacket;
 import Hilligans.Network.ServerNetworkHandler;
+import Hilligans.Server.MultiPlayerServer;
 import Hilligans.WorldSave.ChunkLoader;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class ServerWorld extends World {
     ArrayList<Integer> entityRemovals = new ArrayList<>();
     long autoSaveAfter = 30 * 1000;
     long autoSave = -1;
+    public MultiPlayerServer multiPlayerServer;
 
     @Override
     public void addEntity(Entity entity) {
@@ -72,6 +74,9 @@ public class ServerWorld extends World {
                 e.printStackTrace();
             }
             x++;
+        }
+        for(Chunk chunk : chunks.values()) {
+            chunk.tick();
         }
         if(autoSave == -1) {
             autoSave = System.currentTimeMillis();

@@ -12,6 +12,7 @@ import Hilligans.ServerMain;
 import Hilligans.Util.Settings;
 import Hilligans.World.Builders.WorldBuilder;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class Chunk {
     public Short2ObjectOpenHashMap<DataProvider> dataProviders = new Short2ObjectOpenHashMap<>();
 
     public Int2ObjectOpenHashMap<Entity> entities = new Int2ObjectOpenHashMap<>();
+    public Long2ObjectOpenHashMap<ArrayList<BlockPos>> blockTicks = new Long2ObjectOpenHashMap<>();
 
 
     public int x;
@@ -44,6 +46,26 @@ public class Chunk {
         for(int a = 0; a < Settings.chunkHeight; a++) {
             SubChunk subChunk = new SubChunk(world,this.x * 16,a * 16, this.z * 16);
             chunks.add(subChunk);
+        }
+    }
+
+    public void tick() {
+        if(world.isServer()) {
+            ArrayList<BlockPos> list = blockTicks.get(((ServerWorld) world).multiPlayerServer.time);
+            if(list != null) {
+                blockTicks.remove(((ServerWorld) world).multiPlayerServer.time);
+                for(BlockPos pos : list) {
+                    world.getBlockState(pos).getBlock().tickBlock(world,pos);
+                }
+            }
+        }
+    }
+
+    public void scheduleTick(BlockPos pos, int time) {
+        if(world.isServer()) {
+            long futureTime = ((ServerWorld)world).multiPlayerServer.time + time;
+            ArrayList<BlockPos> list = blockTicks.computeIfAbsent(futureTime, k -> new ArrayList<>());
+            list.add(pos);
         }
     }
 

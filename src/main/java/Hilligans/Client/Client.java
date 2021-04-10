@@ -1,6 +1,5 @@
 package Hilligans.Client;
 
-import Hilligans.Block.BlockTypes.ColorBlock;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.Key.KeyHandler;
 import Hilligans.Client.Key.KeyPress;
@@ -18,12 +17,15 @@ import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BlockState;
+import Hilligans.Data.Other.PlayerList;
 import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
-import Hilligans.ModHandler.Events.GLInitEvent;
-import Hilligans.ModHandler.Events.OpenScreenEvent;
+import Hilligans.ModHandler.Events.Client.GLInitEvent;
+import Hilligans.ModHandler.Events.Client.OpenScreenEvent;
 import Hilligans.Item.ItemStack;
+import Hilligans.ModHandler.Events.Client.RenderEndEvent;
+import Hilligans.ModHandler.Events.Client.RenderStartEvent;
 import Hilligans.Network.ClientAuthNetworkHandler;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.AuthServerPackets.CGetToken;
@@ -42,7 +44,6 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL30;
 
 import java.nio.DoubleBuffer;
-import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -67,6 +68,7 @@ public class Client {
     public boolean valid = false;
     public boolean screenShot = false;
     public boolean renderWorld = false;
+    public PlayerList playerList;
 
     public Screen screen;
 
@@ -191,6 +193,7 @@ public class Client {
         screenStack.applyColor();
         screenStack.applyTransformation();
 
+        Ourcraft.EVENT_BUS.postEvent(new RenderStartEvent(matrixStack,screenStack,this));
 
         if(renderWorld) {
             clientWorld.tick();
@@ -222,6 +225,7 @@ public class Client {
                 StringRenderer.drawString(screenStack, "Memory:" + usedMB + "MB",windowX / 2, 126, 0.5f);
             }
 
+
             InventoryScreen.drawHotbar(screenStack);
             ChatWindow.render1(screenStack);
         }
@@ -229,8 +233,14 @@ public class Client {
         if(screen != null) {
             screen.render(screenStack);
             playerData.heldStack.renderStack(screenStack, (int) (Camera.newX - Settings.guiSize * 8), (int) (Camera.newY - Settings.guiSize * 8));
+        } else {
+            if(KeyHandler.keyPressed[GLFW_KEY_TAB]) {
+                if(playerList != null) {
+                    playerList.render(screenStack);
+                }
+            }
         }
-
+        Ourcraft.EVENT_BUS.postEvent(new RenderEndEvent(matrixStack,screenStack,this));
 
         glfwSwapBuffers(window);
 

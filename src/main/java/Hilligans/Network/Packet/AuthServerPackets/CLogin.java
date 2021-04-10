@@ -7,22 +7,25 @@ public class CLogin extends PacketBase {
 
     String username;
     String password;
+    String email;
 
 
     public CLogin() {
         super(3);
     }
 
-    public CLogin(String username, String password) {
+    public CLogin(String username, String password, String email) {
         this();
         this.username = username;
         this.password = password;
+        this.email = email;
     }
 
     @Override
     public void encode(PacketData packetData) {
         packetData.writeString(username);
         packetData.writeString(password);
+        packetData.writeString(email);
     }
 
     @Override

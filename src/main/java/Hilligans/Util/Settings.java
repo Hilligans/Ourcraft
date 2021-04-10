@@ -27,4 +27,7 @@ public class Settings {
 
     public static boolean isServer = false;
     public static boolean isOnlineServer = false;
+    public static boolean forceDifferentName = true;
+
+    public static int tickingDistance = 5;
 }

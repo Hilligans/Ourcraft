@@ -24,6 +24,7 @@ public class SSendLoginToken extends PacketBase {
     @Override
     public void handle() {
         ClientMain.getClient().playerData.login_token = token;
+        ClientMain.getClient().saveUsernameAndPassword();
         ClientAuthNetworkHandler.sendPacketDirect(new CGetToken(ClientMain.getClient().playerData.userName,token));
     }
 }

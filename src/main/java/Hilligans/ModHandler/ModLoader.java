@@ -66,7 +66,11 @@ public class ModLoader {
                 if(modID != null) {
                     testClass = Class.forName(name,true,child);
                     mainClasses.put(modID,new TripleTypeWrapper<>(testClass,file.getAbsolutePath(),true));
-                    testClass.newInstance();
+                    try {
+                        testClass.newInstance();
+                    } catch (NoClassDefFoundError | Exception e) {
+                        new Exception("Failed to load mod " + modID + " from " + file.getName(),e).printStackTrace();
+                    }
                     return true;
                 }
             }

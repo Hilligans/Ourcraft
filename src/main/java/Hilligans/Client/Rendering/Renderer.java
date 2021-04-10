@@ -111,24 +111,38 @@ public class Renderer {
         drawTexture(matrixStack, texture, ClientMain.getWindowX() / 2 - width / 2,  ClientMain.getWindowY() / 2 - height / 2, width, height, startX,startY,endX,endY);
     }
 
-    public static void drawCenteredXTexture(MatrixStack matrixStack, Texture texture, int y, float size) {
-        drawTexture(matrixStack, texture, (int)(ClientMain.getWindowX() / 2 - texture.width / 2 * size), y,(int)(texture.width * size), (int)(texture.height * size));
+    public static int drawCenteredXTexture(MatrixStack matrixStack, Texture texture, int y, float size) {
+        int x = (int)(ClientMain.getWindowX() / 2 - texture.width / 2 * size);
+        drawTexture(matrixStack, texture, x, y,(int)(texture.width * size), (int)(texture.height * size));
+        return x;
     }
 
-    public static void drawCenteredXTexture(MatrixStack matrixStack, Texture texture, int y, int startX, int startY, int endX, int endY, float size) {
+    public static int drawCenteredXTexture(MatrixStack matrixStack, Texture texture, int y, float width, float height) {
+        int x = (int) (ClientMain.getWindowX() / 2 - width / 2);
+        drawTexture(matrixStack, texture, x,  y, (int)width, (int)height);
+        return x;
+    }
+
+    public static int drawCenteredXTexture(MatrixStack matrixStack, Texture texture, int y, int startX, int startY, int endX, int endY, float size) {
         int width = (int) ((endX - startX) * size);
         int height = (int) ((endY - startY) * size);
-        drawTexture(matrixStack, texture, ClientMain.getWindowX() / 2 - width / 2,  y, width, height, startX,startY,endX,endY);
+        int x = ClientMain.getWindowX() / 2 - width / 2;
+        drawTexture(matrixStack, texture, x,  y, width, height, startX,startY,endX,endY);
+        return x;
     }
 
-    public static void drawCenteredYTexture(MatrixStack matrixStack, Texture texture, int x, float size) {
-        drawTexture(matrixStack, texture, x, (int)(ClientMain.getWindowY() / 2 - texture.height / 2 * size),(int)(texture.width * size), (int)(texture.height * size));
+    public static int drawCenteredYTexture(MatrixStack matrixStack, Texture texture, int x, float size) {
+        int y = (int)(ClientMain.getWindowY() / 2 - texture.height / 2 * size);
+        drawTexture(matrixStack, texture, x, y,(int)(texture.width * size), (int)(texture.height * size));
+        return y;
     }
 
-    public static void drawCenteredYTexture(MatrixStack matrixStack, Texture texture, int x, int startX, int startY, int endX, int endY, float size) {
+    public static int drawCenteredYTexture(MatrixStack matrixStack, Texture texture, int x, int startX, int startY, int endX, int endY, float size) {
         int width = (int) ((endX - startX) * size);
         int height = (int) ((endY - startY) * size);
-        drawTexture(matrixStack, texture, x,  ClientMain.getWindowY() / 2 - height / 2, width, height, startX,startY,endX,endY);
+        int y = ClientMain.getWindowY() / 2 - height / 2;
+        drawTexture(matrixStack, texture, x,  y, width, height, startX,startY,endX,endY);
+        return y;
     }
 
     public static void create(int id) {

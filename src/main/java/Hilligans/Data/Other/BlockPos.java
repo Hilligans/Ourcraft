@@ -43,6 +43,10 @@ public class BlockPos {
         return new BlockPos(x,y,z);
     }
 
+    public long getChunkPos() {
+        return (long)x >> 4 & 4294967295L | ((long)z >> 4 & 4294967295L) << 32;
+    }
+
     public boolean isSubChunkValid() {
         return x >= 0 && x <= 15 && y >= 0 && y <= 15 && z >= 0 && z <= 15;
     }

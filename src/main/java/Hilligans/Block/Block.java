@@ -53,6 +53,7 @@ public class Block {
 
     public void onUpdate(World world, BlockPos blockPos) {}
 
+    public void tickBlock(World world, BlockPos blockPos) {}
 
     public BlockState getDefaultState() {
         return new BlockState(this);

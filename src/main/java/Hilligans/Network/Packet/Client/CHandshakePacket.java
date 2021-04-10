@@ -56,14 +56,17 @@ public class CHandshakePacket extends PacketBase {
     @Override
     public void handle() {
         if(id == Settings.gameVersion) {
-
-            if(Settings.isOnlineServer) {
-                String token = getToken(16);
-                ServerMain.server.waitingPlayers.put(ctx,this);
-                ServerMain.server.playerQueue.put(token,new DoubleTypeWrapper<>(ctx,System.currentTimeMillis() + 5000));
-                ChannelFuture future = ClientAuthNetworkHandler.sendPacketDirect(new CTokenValid(name,authToken,((InetSocketAddress)ctx.channel().remoteAddress()).getAddress().getHostAddress(),token));
+            if(ServerNetworkHandler.nameToChannel.get(name) == null || !Settings.forceDifferentName) {
+                if (Settings.isOnlineServer) {
+                    String token = getToken(16);
+                    ServerMain.server.waitingPlayers.put(ctx, this);
+                    ServerMain.server.playerQueue.put(token, new DoubleTypeWrapper<>(ctx, System.currentTimeMillis() + 5000));
+                    ChannelFuture future = ClientAuthNetworkHandler.sendPacketDirect(new CTokenValid(name, authToken, ((InetSocketAddress) ctx.channel().remoteAddress()).getAddress().getHostAddress(), token));
+                } else {
+                    handlePlayer(name, version, ctx, name);
+                }
             } else {
-                handlePlayer(name, version, ctx, name);
+                ServerNetworkHandler.sendPacketClose(new SDisconnectPacket("An account with your username is already connected to the server"),ctx);
             }
         } else {
             ServerNetworkHandler.sendPacketClose(new SDisconnectPacket("Game version is incompatible"),ctx);
@@ -73,7 +76,6 @@ public class CHandshakePacket extends PacketBase {
     public static synchronized void handlePlayer(String name, long version, ChannelHandlerContext ctx, String identifier) {
         int playerId = Entity.getNewId();
 
-        ChannelId channelId = ServerNetworkHandler.nameToChannel.get(name);
         BlockPos spawn = ServerMain.getWorld(0).getWorldSpawn(Settings.playerBoundingBox);
         PlayerEntity playerEntity = new PlayerEntity(spawn.x,spawn.y,spawn.z,playerId);
         ServerPlayerData serverPlayerData = ServerPlayerData.loadOrCreatePlayer(playerEntity,identifier);
@@ -86,6 +88,17 @@ public class CHandshakePacket extends PacketBase {
         ServerMain.getWorld(serverPlayerData.getDimension()).addEntity(playerEntity);
         ServerNetworkHandler.sendPacket(new SHandshakePacket(playerId,ServerSidedData.getInstance().version),ctx);
         ServerNetworkHandler.sendPacket(new SChatMessage(name + " has joined the game"));
+        ServerNetworkHandler.sendPacketExcept(new SSendPlayerList(name,playerId,true),ctx);
+        int size = ServerNetworkHandler.mappedChannels.size();
+        String[] players = new String[size];
+        int[] ids = new int[size];
+        int x = 0;
+        for(ChannelId channelId1 : ServerNetworkHandler.mappedChannels.values()) {
+            players[x] = ServerNetworkHandler.mappedName.get(channelId1);
+            ids[x] = ServerNetworkHandler.mappedId.get(channelId1);
+            x++;
+        }
+        ServerNetworkHandler.sendPacket(new SSendPlayerList(players,ids));
         for(Entity entity : ServerMain.getWorld(serverPlayerData.getDimension()).entities.values()) {
             ServerNetworkHandler.sendPacket(new SCreateEntityPacket(entity),ctx);
         }

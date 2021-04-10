@@ -72,7 +72,7 @@ public class BlockItem extends Item {
 
         block.onPlace(world,pos);
         if (world.isServer()) {
-            ServerNetworkHandler.sendPacket(new SSendBlockChanges(pos,blockState));
+           // ServerNetworkHandler.sendPacket(new SSendBlockChanges(pos,blockState));
         }
         return true;
     }

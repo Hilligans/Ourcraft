@@ -39,6 +39,7 @@ public class Textures {
     public static final Texture CHECK_MARK = new Texture("GUI/check_mark.png");
     public static final Texture X_MARK = new Texture("GUI/x_mark.png");
     public static final Texture OUTLINE = new Texture("outline.png");
+    public static final Texture TRANSPARENT_BACKGROUND = new Texture("GUI/transparent_background.png");
 
     public static void clear() {
         for(Texture texture : MAPPED_TEXTURES.values()) {

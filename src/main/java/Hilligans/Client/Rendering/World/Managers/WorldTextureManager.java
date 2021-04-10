@@ -151,7 +151,6 @@ public class WorldTextureManager {
             }
         } catch (Exception ignored) {}
 
-
         InputStream url = ClientMain.class.getResourceAsStream("/Images/" + path);
         if(url != null) {
             try {

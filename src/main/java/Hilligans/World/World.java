@@ -11,6 +11,8 @@ import Hilligans.Entity.Entity;
 import Hilligans.Item.ItemStack;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CRequestChunkPacket;
+import Hilligans.Network.Packet.Server.SSendBlockChanges;
+import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.Util.*;
 import Hilligans.Util.Noises.*;
 import Hilligans.World.Builders.WorldBuilder;
@@ -60,6 +62,15 @@ public abstract class World {
             return chunks.get(chunkPos);
         } catch (ArrayIndexOutOfBoundsException ignored) {
             return null;
+        }
+    }
+
+    public void scheduleTick(BlockPos pos, int time) {
+        if(isServer()) {
+            Chunk chunk = getChunk(pos.getChunkPos());
+            if(chunk != null) {
+                chunk.scheduleTick(pos, time);
+            }
         }
     }
 
@@ -136,6 +147,9 @@ public abstract class World {
                 return;
             }
             chunk.setBlockState(x, y, z, blockState);
+        }
+        if (isServer()) {
+            ServerNetworkHandler.sendPacket(new SSendBlockChanges(x,y,z,blockState));
         }
         updateBlock(new BlockPos(x,y,z));
     }
