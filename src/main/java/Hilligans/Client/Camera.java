@@ -256,13 +256,8 @@ public class Camera {
     }
 
     public static MatrixStack getWorldStack() {
-        Matrix4f matrix4f = new Matrix4f();
-        Matrix4f view = new Matrix4f();
-        view.translate(0,0,1);
-        if(thirdPerson) {
-            view.translate(0,0,-3);
-        }
-        matrix4f.perspective((float) Math.toRadians(fov), (float) ClientMain.getWindowX() / ClientMain.getWindowY(),0.1f,10000.0f);
+        Matrix4f matrix4f = getPerspective();
+        Matrix4f view = getViewStack();
         matrix4f.mul(view);
         matrix4f.lookAt(Camera.duplicate().add((float)(Math.cos(Camera.yaw) * Math.cos(Camera.pitch)),(float)(Math.sin(Camera.pitch)),(float)(Math.sin(Camera.yaw) * Math.cos(Camera.pitch))),Camera.duplicate(), cameraUp);
         matrix4f.translate(0,0.15f,0);
@@ -270,6 +265,19 @@ public class Camera {
             matrix4f.translate(0,0.05f,0);
         }
         return new MatrixStack(matrix4f);
+    }
+
+    public static Matrix4f getViewStack() {
+        Matrix4f view = new Matrix4f();
+        view.translate(0,0,1);
+        if(thirdPerson) {
+            view.translate(0,0,-3);
+        }
+        return view;
+    }
+
+    public static Matrix4f getPerspective() {
+        return new Matrix4f().perspective((float) Math.toRadians(fov), (float) ClientMain.getWindowX() / ClientMain.getWindowY(),0.1f,10000.0f);
     }
 
     public static MatrixStack getScreenStack() {

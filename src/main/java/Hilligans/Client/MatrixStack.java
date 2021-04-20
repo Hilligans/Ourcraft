@@ -1,5 +1,6 @@
 package Hilligans.Client;
 
+import Hilligans.Client.Rendering.World.Managers.ShaderManager;
 import Hilligans.ClientMain;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -42,7 +43,7 @@ public class MatrixStack {
 
     public void applyTransformation(int shaderId) {
         int trans = glGetUniformLocation(shaderId, "transform");
-        float[] floats = new float[16];
+        float[] floats = new float[16];;
         glUniformMatrix4fv(trans,false,matrix4f.get(floats));
     }
 

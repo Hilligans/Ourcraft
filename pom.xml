@@ -124,7 +124,14 @@
             <artifactId>netty-all</artifactId>
             <version>4.1.60.Final</version>
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20210307</version>
+        </dependency>
+
     </dependencies>
+
 
     <build>
         <plugins>
@@ -152,6 +159,7 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 

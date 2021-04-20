@@ -1,6 +1,8 @@
 package Hilligans.World;
 
 import Hilligans.Block.Block;
+import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
+import Hilligans.Client.Rendering.World.Managers.ShaderManager;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.MatrixStack;
@@ -101,6 +103,30 @@ public class SubChunk {
 
     }
 
+    public void createMesh1() {
+        PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES,ShaderManager.worldShader);
+        for(int x = 0; x < 16; x++) {
+            for(int y = 0; y < 16; y++) {
+                for(int z = 0; z < 16; z++) {
+                    BlockState block = blocks[x][y][z];
+                    for(int a = 0; a < 6; a++) {
+                        if(block.getBlock() != Blocks.AIR) {
+                            BlockState blockState = getBlock(new BlockPos(x, y, z).add(Block.getBlockPos(a)));
+                            if (blockState.getBlock().blockProperties.transparent && (Settings.renderSameTransparent || block.getBlock() != blockState.getBlock())) {
+                                block.getBlock().addVertices(primitiveBuilder,a,1.0f,block,new BlockPos(x + this.x,y + this.y,z + this.z),x,z);
+                            }
+                        }
+                    }
+                    block.getBlock().addVertices(primitiveBuilder,6,1.0f,block,new BlockPos(x + this.x,y + this.y,z + this.z),x,z);
+                }
+            }
+        }
+        verticesCount = primitiveBuilder.indices.size();
+        id = VAOManager.createVAO(primitiveBuilder);
+    }
+
+
+
     public void destroy() {
         if(id != -1) {
             VAOManager.destroyBuffer(id);
@@ -136,14 +162,15 @@ public class SubChunk {
     public void renderMesh(MatrixStack matrixStack) {
 
         if(id == -1) {
-            createMesh();
+            createMesh1();
         }
 
       //  if(y == 64) {
 
             GL30.glBindVertexArray(id);
             matrixStack.push();
-            matrixStack.applyTransformation(ClientMain.getClient().shaderManager.colorShader);
+            //matrixStack.applyTransformation(ClientMain.getClient().shaderManager.colorShader);
+            matrixStack.applyTransformation(ShaderManager.worldShader.shader);
             glDrawElements(GL_TRIANGLES, verticesCount, GL_UNSIGNED_INT, 0);
             matrixStack.pop();
       //    }

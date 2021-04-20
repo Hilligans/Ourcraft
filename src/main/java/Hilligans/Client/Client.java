@@ -4,6 +4,7 @@ import Hilligans.Block.Blocks;
 import Hilligans.Client.Key.KeyHandler;
 import Hilligans.Client.Key.KeyPress;
 import Hilligans.Client.Rendering.*;
+import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.CreativeInventoryScreen;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
 import Hilligans.Client.Rendering.Screens.EscapeScreen;
@@ -21,9 +22,9 @@ import Hilligans.Data.Other.PlayerList;
 import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
+import Hilligans.Item.ItemStack;
 import Hilligans.ModHandler.Events.Client.GLInitEvent;
 import Hilligans.ModHandler.Events.Client.OpenScreenEvent;
-import Hilligans.Item.ItemStack;
 import Hilligans.ModHandler.Events.Client.RenderEndEvent;
 import Hilligans.ModHandler.Events.Client.RenderStartEvent;
 import Hilligans.Network.ClientAuthNetworkHandler;
@@ -50,8 +51,8 @@ import java.util.concurrent.TimeUnit;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_CW;
 import static org.lwjgl.opengl.GL20.glUseProgram;
+import static org.lwjgl.opengl.GL32.GL_PROGRAM_POINT_SIZE;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Client {
@@ -87,6 +88,7 @@ public class Client {
 
     public void startClient() {
         register();
+        Ourcraft.MOD_LOADER.loadDefaultMods();
         CompoundTag tag = WorldLoader.loadTag("clientData.dat");
         if(tag != null) {
             readUsernameAndPassword(tag);
@@ -117,6 +119,8 @@ public class Client {
         Tag.register();
         Widget.register();
         Entity.register();
+        Blocks.register();
+
 
     }
 
@@ -158,6 +162,9 @@ public class Client {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_FRONT);
         glFrontFace(GL_CW);
+        glEnable(GL_PROGRAM_POINT_SIZE);
+        // glEnable(GL_MULTISAMPLE);
+        //glSampleCoverage();
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
         PlayerMovementThread playerMovementThread = new PlayerMovementThread(window);
@@ -166,6 +173,7 @@ public class Client {
     }
 
     public void render() {
+        glGetError();
         long currentTime = System.currentTimeMillis();
         if(currentTime - timeSinceLastDraw < drawTime) {
             return;
@@ -199,6 +207,39 @@ public class Client {
             clientWorld.tick();
             clientWorld.render(matrixStack);
 
+
+/*
+            PrimitiveBuilder builder = new PrimitiveBuilder(GL_POINTS,ShaderManager.particleShader);
+            glBindTexture(GL_TEXTURE_2D,Textures.LIST_ICON.textureId);
+            glPointSize(100f);
+            builder.add(0.0f,100.0f,0.0f,0.0f,1.0f);
+            builder.add(0f,1f,0f,0f,0f);
+            builder.draw(matrixStack,0);
+
+
+ */
+            //System.out.println(new Vector4f(0f,1f,0f,1f).mul(matrixStack.matrix4f).y);
+            PrimitiveBuilder builder = new PrimitiveBuilder(GL_POINTS,ShaderManager.particleShader2);
+
+            glBindTexture(GL_TEXTURE_2D,Textures.LIST_ICON.textureId);
+            glUseProgram(ShaderManager.particleShader2.shader);
+
+            builder.applyTransformation(Camera.getPerspective(),ShaderManager.particleShader2.shader,"projection");
+            builder.applyTransformation(Camera.getViewStack(),ShaderManager.particleShader2.shader,"modelview");
+            builder.applyTransformation(windowX,windowY,ShaderManager.particleShader2.shader,"screenSize");
+            //glPointSize(100f);
+            //builder.add(0.0f,100.0f,0.0f,0.0f,0.0f,1.0f,1.0f, (float) (Math.random() * 10));
+
+            builder.add(0.0f,100.0f,0.0f,0.0f,100.0f);
+            //builder.add(0f,100f,10f,0f,0f);
+            //builder.add(0f,110f,10f,0f,1f);
+            //builder.add(10f,100f,10f,1f,0f);
+            //builder.add(1,100,1,1,1,0,0,0);
+
+            builder.draw(matrixStack,0);
+
+
+
             BlockPos pos = clientWorld.traceBlockToBreak(Camera.pos.x, Camera.pos.y + Camera.playerBoundingBox.eyeHeight, Camera.pos.z, Camera.pitch, Camera.yaw);
             if (pos != null) {
                 BlockState blockState = clientWorld.getBlockState(pos);
@@ -223,6 +264,8 @@ public class Client {
                 Runtime runtime = Runtime.getRuntime();
                 long usedMB = (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024;
                 StringRenderer.drawString(screenStack, "Memory:" + usedMB + "MB",windowX / 2, 126, 0.5f);
+                StringRenderer.drawString(screenStack, "Pitch:" + Math.toDegrees(Camera.pitch),windowX/2,155,0.5f);
+                StringRenderer.drawString(screenStack, "Yaw:" + Math.toDegrees(Camera.yaw),windowX/2,184,0.5f);
             }
 
 

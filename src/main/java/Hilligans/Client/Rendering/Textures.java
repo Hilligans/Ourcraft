@@ -48,11 +48,6 @@ public class Textures {
         MAPPED_TEXTURES.clear();
     }
 
-    public static void addTexture(String name, BufferedImage texture) {
-        Texture tex = new Texture(texture);
-        MAPPED_TEXTURES.put(name, tex);
-    }
-
     public static Texture getTexture(int id) {
         if(id >= TEXTURES.size()) {
             return ServerSidedData.getInstance().TEXTURES.get(id - TEXTURES.size());

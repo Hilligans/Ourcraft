@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 public class Texture {
 
     String path;
+    String source;
 
     public int width;
     public int height;
@@ -16,7 +17,12 @@ public class Texture {
     BufferedImage texture;
 
     public Texture(String path) {
+        this(path,"");
+    }
+
+    public Texture(String path, String source) {
         this.path = path;
+        this.source = source;
         Textures.TEXTURES.add(this);
     }
 

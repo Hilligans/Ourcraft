@@ -1,5 +1,7 @@
 package Hilligans.Data.Other.BlockShapes;
 
+import Hilligans.Client.Rendering.NewRenderer.BlockVertices;
+import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
 import Hilligans.Client.Rendering.World.Managers.VertexManagers.CubeManager;
@@ -10,6 +12,9 @@ import Hilligans.Util.Vector5f;
 import Hilligans.World.World;
 
 public class BlockShape {
+
+    public BlockVertices data = BlockVertices.create("/Models/Blocks/block.txt");
+
 
     public BoundingBox getBoundingBox(World world, BlockPos pos) {
         return new BoundingBox(0,0,0,1,1,1);
@@ -31,6 +36,10 @@ public class BlockShape {
         } else {
             return new Vector5f[]{};
         }
+    }
+
+    public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockTextureManager blockTextureManager, BlockPos offset) {
+        data.addData(primitiveBuilder,blockTextureManager,side,size,offset);
     }
 
     public int generateOutline(World world, BlockPos pos) {

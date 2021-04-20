@@ -18,6 +18,8 @@ import java.util.zip.ZipInputStream;
 
 public class ModLoader {
 
+    public String mod = "";
+
     public HashMap<String, TripleTypeWrapper<Class<?>,String,Boolean>> mainClasses = new HashMap<>();
 
     public void loadDefaultMods() {
@@ -46,6 +48,7 @@ public class ModLoader {
                         Class<?> testClass = Class.forName(topName + mod.getName().substring(0,mod.getName().length() - 6),false,child);
                         String modID = getModID(testClass);
                         if(modID != null) {
+                            this.mod = modID;
                             mainClasses.put(modID,new TripleTypeWrapper<>(testClass,mod.getAbsolutePath(),false));
                             testClass.newInstance();
                         }
@@ -57,6 +60,7 @@ public class ModLoader {
 
 
     public boolean loadMod(File file) {
+
         try {
             URLClassLoader child = new URLClassLoader(new URL[]{file.toURI().toURL()}, this.getClass().getClassLoader());
             ArrayList<String> classNames = getClassNames(file);
@@ -64,6 +68,7 @@ public class ModLoader {
                 Class<?> testClass = Class.forName(name,false,child);
                 String modID = getModID(testClass);
                 if(modID != null) {
+                    mod = modID;
                     testClass = Class.forName(name,true,child);
                     mainClasses.put(modID,new TripleTypeWrapper<>(testClass,file.getAbsolutePath(),true));
                     try {
@@ -75,8 +80,10 @@ public class ModLoader {
                 }
             }
         } catch (Exception e) {
+            mod = "";
             return false;
         }
+        mod = "";
         return true;
     }
 

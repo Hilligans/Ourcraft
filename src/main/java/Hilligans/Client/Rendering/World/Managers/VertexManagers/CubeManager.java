@@ -1,5 +1,6 @@
 package Hilligans.Client.Rendering.World.Managers.VertexManagers;
 
+import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.Util.Vector5f;
@@ -50,13 +51,24 @@ public class CubeManager {
     }
 
     public static Vector5f[] getVertices1(BlockTextureManager blockTextureManager, int side, float size) {
+        float minX;
+        float maxX;
+        float minY;
+        float maxY;
+        if(blockTextureManager != null) {
 
-        int id = blockTextureManager.textures[side];
+            int id = blockTextureManager.textures[side];
 
-        float minX = WorldTextureManager.getMinX(id);
-        float maxX = WorldTextureManager.getMaxX(id);
-        float minY = WorldTextureManager.getMinY(id);
-        float maxY = WorldTextureManager.getMaxY(id);
+            minX = WorldTextureManager.getMinX(id);
+            maxX = WorldTextureManager.getMaxX(id);
+            minY = WorldTextureManager.getMinY(id);
+            maxY = WorldTextureManager.getMaxY(id);
+        } else {
+            minX = 0;
+            minY = 0;
+            maxX = 1;
+            maxY = 1;
+        }
 
         switch (side) {
             case 0:
@@ -91,6 +103,10 @@ public class CubeManager {
                         new Vector5f(0, 0, 0, maxX, maxY),
                         new Vector5f(0, 0, size, minX, maxY)};
         }
+    }
+
+    public static void addVertices(PrimitiveBuilder primitiveBuilder, BlockTextureManager blockTextureManager, int side, float size, float offsetY) {
+
     }
 
     public static Vector5f[] getHorizontalSlabVertices(BlockTextureManager blockTextureManager, int side, float size, float offsetY) {
@@ -285,6 +301,17 @@ public class CubeManager {
                 return new Integer[] {spot,spot + 1,spot + 2,spot,spot + 2,spot + 3};
             default:
                 return new Integer[]{spot,spot + 2, spot + 1, spot, spot + 3, spot + 2};
+        }
+    }
+
+    public static int[] getIndices2(int side, int spot) {
+        switch (side) {
+            case 0:
+            case 5:
+            case 3:
+                return new int[] {spot,spot + 1,spot + 2,spot,spot + 2,spot + 3};
+            default:
+                return new int[]{spot,spot + 2, spot + 1, spot, spot + 3, spot + 2};
         }
     }
 

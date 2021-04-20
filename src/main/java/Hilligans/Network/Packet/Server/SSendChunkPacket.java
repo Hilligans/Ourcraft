@@ -87,40 +87,44 @@ public class SSendChunkPacket extends PacketBase {
 
     @Override
     public void decode(PacketData packetData) {
-        mode = packetData.readByte();
-        chunk = new Chunk(packetData.readInt(),packetData.readInt(), ClientMain.getClient().clientWorld);
+        try {
+            mode = packetData.readByte();
+            chunk = new Chunk(packetData.readInt(), packetData.readInt(), ClientMain.getClient().clientWorld);
 
-        if(mode == 0) {
-            for (int x = 0; x < 16; x++) {
-                for (int y = 0; y < Settings.chunkHeight * 16; y++) {
-                    for (int z = 0; z < 16; z++) {
-                        chunk.setBlockState(x, y, z, Blocks.getBlockWithID(packetData.readShort()).getDefaultState());
+            if (mode == 0) {
+                for (int x = 0; x < 16; x++) {
+                    for (int y = 0; y < Settings.chunkHeight * 16; y++) {
+                        for (int z = 0; z < 16; z++) {
+                            chunk.setBlockState(x, y, z, Blocks.getBlockWithID(packetData.readShort()).getDefaultState());
+                        }
+                    }
+                }
+            } else if (mode == 1) {
+
+                int size = packetData.readByte();
+                ArrayList<Short> blocks = new ArrayList<>();
+                ArrayList<Short> blockData = new ArrayList<>();
+
+                for (int x = 0; x < size; x++) {
+                    blocks.add(packetData.readShort());
+                    blockData.add(packetData.readShort());
+                }
+                for (int x = 0; x < 16; x++) {
+                    for (int y = 0; y < Settings.chunkHeight * 16; y++) {
+                        for (int z = 0; z < 16; z++) {
+                            byte block = packetData.readByte();
+                            chunk.setBlockState(x, y, z, Blocks.getBlockWithID(blocks.get(block)).getStateWithData(blockData.get(block)));
+                        }
                     }
                 }
             }
-        } else if(mode == 1) {
-
-            int size = packetData.readByte();
-            ArrayList<Short> blocks = new ArrayList<>();
-            ArrayList<Short> blockData = new ArrayList<>();
-
-            for(int x = 0; x < size; x++) {
-                blocks.add(packetData.readShort());
-                blockData.add(packetData.readShort());
-            }
-            for (int x = 0; x < 16; x++) {
-                for (int y = 0; y < Settings.chunkHeight * 16; y++) {
-                    for (int z = 0; z < 16; z++) {
-                        byte block = packetData.readByte();
-                        chunk.setBlockState(x, y, z, Blocks.getBlockWithID(blocks.get(block)).getStateWithData(blockData.get(block)));
-                    }
-                }
-            }
-        }
+        } catch (Exception ignored) {}
     }
 
     @Override
     public void handle() {
-        chunk.world.setChunk(chunk);
+        try {
+            chunk.world.setChunk(chunk);
+        } catch (Exception ignored) {}
     }
 }

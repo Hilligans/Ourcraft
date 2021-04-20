@@ -40,6 +40,7 @@ public class ClientNetworkHandler extends NetworkHandler {
 
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         ctx.close();
+        cause.printStackTrace();
         ClientMain.getClient().clientWorld = new ClientWorld();
         ClientMain.getClient().openScreen(new DisconnectScreen(cause.getMessage()));
     }

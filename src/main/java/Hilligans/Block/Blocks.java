@@ -87,6 +87,8 @@ public class Blocks {
 
     //public static final Block BLUE = new SlabChest("blue",new BlockProperties().serverSide().withTexture("blue.png"));
 
+    public static void register() {}
+
     public static Block getBlockWithID(int id) {
         if(id >= BLOCKS.size()) {
             return ServerSidedData.getInstance().BLOCKS.get(id - BLOCKS.size());

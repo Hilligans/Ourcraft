@@ -49,7 +49,6 @@ public class Renderer {
         matrixStack.pop();
         VAOManager.destroyBuffer(vao);
         glEnable(GL_DEPTH_TEST);
-
     }
 
     public static void renderItem(MatrixStack matrixStack, int x, int y, int size, TextureManager textureManager) {

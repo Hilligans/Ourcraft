@@ -46,12 +46,12 @@ public class ServerMain {
 
     public static void main(String[] args) {
         Settings.isServer = true;
-        Ourcraft.MOD_LOADER.loadDefaultMods();
         Tag.register();
         Blocks.generateTextures();
         ServerSidedData.getInstance().register();
         Widget.register();
 
+        Ourcraft.MOD_LOADER.loadDefaultMods();
         ServerWorld world = new ServerWorld();
         world.worldBuilders.add(new OreBuilder(Blocks.GRASS,Blocks.STONE).setFrequency(20));
 
@@ -62,20 +62,6 @@ public class ServerMain {
 
     public static World getWorld(int id) {
         return server.worlds.get(id);
-    }
-
-    public static boolean clientValid(String username, String token, String ip) {
-        if(ClientNetworkInit.authChannel == null || !ClientNetworkInit.authChannel.isOpen()) {
-            try {
-                ClientNetworkInit.joinServer("72.172.99.188","25588", new ClientAuthNetworkHandler());
-            } catch (Exception ignored) {
-                return false;
-            }
-        }
-
-
-
-        return false;
     }
 
 }

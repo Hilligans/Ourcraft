@@ -1,23 +1,30 @@
 package Hilligans.Block;
 
 import Hilligans.Client.MatrixStack;
+import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Data.Other.*;
 import Hilligans.Data.Other.BlockShapes.BlockShape;
 import Hilligans.Data.Other.ServerSidedData;
+import Hilligans.Data.Primitives.FloatList;
+import Hilligans.Data.Primitives.IntList;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Item.BlockItem;
 import Hilligans.Item.ItemStack;
+import Hilligans.ModHandler.ModLoader;
+import Hilligans.Ourcraft;
 import Hilligans.Util.Vector5f;
 import Hilligans.World.DataProvider;
 import Hilligans.World.World;
 import org.joml.Vector3f;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Block {
 
     public String name;
+    public String modId;
     public short id;
     public BlockProperties blockProperties;
     private Block droppedBlock;
@@ -26,6 +33,7 @@ public class Block {
 
     public Block(String name, BlockProperties blockProperties) {
         this.name = name;
+        this.modId = Ourcraft.MOD_LOADER.mod;
         id = Blocks.getNextId();
         this.blockProperties = blockProperties;
         droppedBlock = this;
@@ -54,6 +62,10 @@ public class Block {
     public void onUpdate(World world, BlockPos blockPos) {}
 
     public void tickBlock(World world, BlockPos blockPos) {}
+
+    public void tick(World world, BlockPos pos) {}
+
+    public void randomTick(World world, BlockPos pos) {}
 
     public BlockState getDefaultState() {
         return new BlockState(this);
@@ -97,6 +109,22 @@ public class Block {
 
     public Vector5f[] getVertices(int side, float size, BlockState blockState, BlockPos blockPos) {
         return blockShape.getVertices(side,size,blockState,blockProperties.blockTextureManager);
+    }
+
+    public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockPos blockPos, int x, int z) {
+
+        /*FloatList vertices = new FloatList();
+        IntList indices = new IntList();
+
+        Vector5f[] vector5fs = getVertices(side,blockState, blockPos);
+        indices.add(getIndices(side,primitiveBuilder.getVerticesCount()));
+        for(Vector5f vector5f : vector5fs) {
+            vertices.add(vector5f.addX(x).addY(blockPos.y).addZ(z).values);
+        }
+        primitiveBuilder.add(vertices.getElementData(),indices.getElementData());
+
+         */
+       blockShape.addVertices(primitiveBuilder,side,size,blockState,blockProperties.blockTextureManager, new BlockPos(x,blockPos.y,z));
     }
 
     public Integer[] getIndices(int side, int spot) {

@@ -1,6 +1,7 @@
 package Hilligans.Client.Rendering.World.Managers;
 
 import Hilligans.Block.Block;
+import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Util.Vector5f;
@@ -22,8 +23,8 @@ public class  VAOManager {
     public static void destroyBuffer(int id) {
         DoubleTypeWrapper<Integer,Integer> doubleTypeWrapper = buffers.get(id);
         buffers.remove(id);
-        glDeleteBuffers(doubleTypeWrapper.getTypeA());
-        glDeleteBuffers(doubleTypeWrapper.getTypeB());
+        //glDeleteBuffers(doubleTypeWrapper.getTypeA());
+        //glDeleteBuffers(doubleTypeWrapper.getTypeB());
         glDeleteVertexArrays(id);
     }
 
@@ -31,6 +32,7 @@ public class  VAOManager {
         int VAO = glGenVertexArrays();
         int VBO = glGenBuffers();
         int EBO = glGenBuffers();
+
 
         glBindVertexArray(VAO);
 
@@ -79,10 +81,16 @@ public class  VAOManager {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         //glDeleteBuffers(VBO);
-        // glDeleteBuffers(EBO);
+        //glDeleteBuffers(EBO);
         buffers.put(VAO,new DoubleTypeWrapper<>(VBO,EBO));
 
         return VAO;
+    }
+
+    public static int createVAO(PrimitiveBuilder primitiveBuilder) {
+        int[] vals = primitiveBuilder.createMesh();
+        buffers.put(vals[0],new DoubleTypeWrapper<>(vals[1],vals[2]));
+        return vals[0];
     }
 
     public static int createLine(float[] vertices, int[] indices) {
@@ -103,8 +111,8 @@ public class  VAOManager {
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        //glDeleteBuffers(VBO);
-        // glDeleteBuffers(EBO);
+        glDeleteBuffers(VBO);
+        glDeleteBuffers(EBO);
         buffers.put(VAO,new DoubleTypeWrapper<>(VBO,EBO));
 
         return VAO;

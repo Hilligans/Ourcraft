@@ -1,6 +1,7 @@
 package Hilligans.WorldSave;
 
 import Hilligans.Block.Block;
+import Hilligans.Client.Rendering.World.Managers.ShaderManager;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Data.Other.DataBlockState;
@@ -12,9 +13,7 @@ import Hilligans.World.DataProvider;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
@@ -57,8 +56,20 @@ public class WorldLoader {
         }
     }
 
+    public static String readString(String path) {
+        StringBuilder stringBuilder = new StringBuilder();
+        InputStream stream = ShaderManager.class.getResourceAsStream(path);
+        if(stream == null) {
+            System.out.println("Cant read file");
+            return "";
+        }
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+        reader.lines().forEach(string -> stringBuilder.append(string).append("\n"));
+        return stringBuilder.toString() + "\n\0";
+    }
+
     public static void save(CompoundTag compoundTag, String path) {
-        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(maxSize);
+            ByteBuffer byteBuffer = ByteBuffer.allocateDirect(maxSize);
         byteBuffer.mark();
         compoundTag.write(byteBuffer);
         byteBuffer.limit(byteBuffer.position());
