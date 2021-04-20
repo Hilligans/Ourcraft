@@ -219,24 +219,24 @@ public class Client {
 
  */
             //System.out.println(new Vector4f(0f,1f,0f,1f).mul(matrixStack.matrix4f).y);
-            PrimitiveBuilder builder = new PrimitiveBuilder(GL_POINTS,ShaderManager.particleShader2);
+            //PrimitiveBuilder builder = new PrimitiveBuilder(GL_POINTS,ShaderManager.particleShader2);
 
-            glBindTexture(GL_TEXTURE_2D,Textures.LIST_ICON.textureId);
-            glUseProgram(ShaderManager.particleShader2.shader);
+            //glBindTexture(GL_TEXTURE_2D,Textures.LIST_ICON.textureId);
+            //glUseProgram(ShaderManager.particleShader2.shader);
 
-            builder.applyTransformation(Camera.getPerspective(),ShaderManager.particleShader2.shader,"projection");
-            builder.applyTransformation(Camera.getViewStack(),ShaderManager.particleShader2.shader,"modelview");
-            builder.applyTransformation(windowX,windowY,ShaderManager.particleShader2.shader,"screenSize");
+            //builder.applyTransformation(Camera.getPerspective(),ShaderManager.particleShader2.shader,"projection");
+            //builder.applyTransformation(Camera.getViewStack(),ShaderManager.particleShader2.shader,"modelview");
+            //builder.applyTransformation(windowX,windowY,ShaderManager.particleShader2.shader,"screenSize");
             //glPointSize(100f);
             //builder.add(0.0f,100.0f,0.0f,0.0f,0.0f,1.0f,1.0f, (float) (Math.random() * 10));
 
-            builder.add(0.0f,100.0f,0.0f,0.0f,100.0f);
+            //builder.add(0.0f,100.0f,0.0f,0.0f,100.0f);
             //builder.add(0f,100f,10f,0f,0f);
             //builder.add(0f,110f,10f,0f,1f);
             //builder.add(10f,100f,10f,1f,0f);
             //builder.add(1,100,1,1,1,0,0,0);
 
-            builder.draw(matrixStack,0);
+            //builder.draw(matrixStack,0);
 
 
 

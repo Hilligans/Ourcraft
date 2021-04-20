@@ -111,8 +111,6 @@ public class  VAOManager {
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        glDeleteBuffers(VBO);
-        glDeleteBuffers(EBO);
         buffers.put(VAO,new DoubleTypeWrapper<>(VBO,EBO));
 
         return VAO;
@@ -138,9 +136,6 @@ public class  VAOManager {
 
         // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        glDeleteBuffers(VBO);
-        glDeleteBuffers(EBO);
 
         return VAO;
     }
