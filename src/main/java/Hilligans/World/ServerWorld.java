@@ -4,6 +4,7 @@ import Hilligans.Block.Block;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Data.Other.BlockPos;
+import Hilligans.Data.Other.ChunkPos;
 import Hilligans.Data.Other.Server.ServerPlayerData;
 import Hilligans.Entity.Entities.ItemEntity;
 import Hilligans.Entity.Entity;
@@ -11,6 +12,7 @@ import Hilligans.Network.Packet.Server.SCreateEntityPacket;
 import Hilligans.Network.Packet.Server.SRemoveEntityPacket;
 import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.Server.MultiPlayerServer;
+import Hilligans.Util.Settings;
 import Hilligans.WorldSave.ChunkLoader;
 
 import java.util.ArrayList;
@@ -85,13 +87,33 @@ public class ServerWorld extends World {
             try {
                 autoSave = System.currentTimeMillis();
                 long start = System.currentTimeMillis();
-                for (Chunk chunk : chunks.values()) {
-                    ChunkLoader.writeChunk(chunk);
-                }
-                ChunkLoader.finishSave();
+                ArrayList<Long> players = new ArrayList<>();
                 for(ServerPlayerData playerData : ServerNetworkHandler.playerData.values()) {
+                    players.add(ChunkPos.fromPos((int)playerData.playerEntity.x,(int)playerData.playerEntity.z));
+                    //System.out.println(players.get(players.size() - 1));
                     playerData.save();
                 }
+
+                boolean inBounds;
+                int purgeCount = 0;
+                for (Chunk chunk : chunks.values()) {
+                    ChunkLoader.writeChunk(chunk);
+                    inBounds = false;
+                    for(Long longVal : players) {
+                        if(isInBounds(chunk.x,chunk.z,longVal,Settings.renderDistance)) {
+                            inBounds = true;
+                            break;
+                        }
+                    }
+                    if(!inBounds) {
+                        purgeCount++;
+                        removeChunk(chunk.x,chunk.z);
+                    }
+                }
+
+
+                ChunkLoader.finishSave();
+
 
 
                 System.out.println("SAVE FINISH:" + (System.currentTimeMillis() - start) + "MS");

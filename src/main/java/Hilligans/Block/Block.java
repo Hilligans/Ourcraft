@@ -16,6 +16,7 @@ import Hilligans.Ourcraft;
 import Hilligans.Util.Vector5f;
 import Hilligans.World.DataProvider;
 import Hilligans.World.World;
+import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -83,7 +84,7 @@ public class Block {
         return new BlockState(this);
     }
 
-    public BlockState getStateForPlacement(Vector3f playerPos, RayResult rayResult) {
+    public BlockState getStateForPlacement(Vector3d playerPos, RayResult rayResult) {
         return getDefaultState();
     }
 
@@ -91,8 +92,8 @@ public class Block {
         return droppedBlock;
     }
 
-    public boolean getAllowedMovement(Vector3f motion, Vector3f pos, BlockPos blockPos, BoundingBox boundingBox, World world) {
-        return blockProperties.canWalkThrough || !getBoundingBox(world, blockPos).intersectsBox(boundingBox, blockPos.get3f(), pos, motion.x, motion.y, motion.z);
+    public boolean getAllowedMovement(Vector3d motion, Vector3d pos, BlockPos blockPos, BoundingBox boundingBox, World world) {
+        return blockProperties.canWalkThrough || !getBoundingBox(world, blockPos).intersectsBox(boundingBox, blockPos.get3d(), pos, motion.x, motion.y, motion.z);
     }
 
     public BoundingBox getBoundingBox(World world, BlockPos pos) {
@@ -124,7 +125,7 @@ public class Block {
         primitiveBuilder.add(vertices.getElementData(),indices.getElementData());
 
          */
-       blockShape.addVertices(primitiveBuilder,side,size,blockState,blockProperties.blockTextureManager, new BlockPos(x,blockPos.y,z));
+       blockShape.addVertices(primitiveBuilder,side,size,blockState,blockProperties.blockTextureManager, new BlockPos(x,blockPos.y,z).get3f());
     }
 
     public Integer[] getIndices(int side, int spot) {

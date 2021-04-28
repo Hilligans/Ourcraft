@@ -75,6 +75,11 @@ public class PacketData {
         return byteBuf.readLong();
     }
 
+    public double readDouble() {
+        size -= 8;
+        return byteBuf.readDouble();
+    }
+
     public String readString() {
         short stringLength = readShort();
         if(stringLength == -1) {
@@ -137,6 +142,11 @@ public class PacketData {
     public void writeLong(long val) {
         size += 8;
         byteBuf.writeLong(val);
+    }
+
+    public void writeDouble(double val) {
+        size += 8;
+        byteBuf.writeDouble(val);
     }
 
     public void writeString(String val) {

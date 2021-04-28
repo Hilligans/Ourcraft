@@ -12,6 +12,7 @@ import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.ServerMain;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.World.World;
+import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -59,6 +60,13 @@ public abstract class Entity {
         this.x = x;
         this.y = y;
         this.z = z;
+        return this;
+    }
+
+    public Entity setPos(Vector3d vector3d) {
+        this.x = (float) vector3d.x;
+        this.y = (float) vector3d.y;
+        this.z = (float) vector3d.z;
         return this;
     }
 
@@ -181,7 +189,7 @@ public abstract class Entity {
                 for(int z = -Z; z < Z; z++) {
                     Block block = world.getBlockState(pos.copy().add(x,y,z)).getBlock();
                     if(block != Blocks.AIR) {
-                        boolean canMove = block.getAllowedMovement(new Vector3f(motion.x,motion.y,motion.z), new Vector3f(this.x, this.y, this.z), pos.copy().add(x, y, z), boundingBox, world);
+                        boolean canMove = block.getAllowedMovement(new Vector3d(motion.x,motion.y,motion.z), new Vector3d(this.x, this.y, this.z), pos.copy().add(x, y, z), boundingBox, world);
                         if(!canMove) {
                             return false;
                         }

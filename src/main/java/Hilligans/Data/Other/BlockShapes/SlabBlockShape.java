@@ -1,5 +1,8 @@
 package Hilligans.Data.Other.BlockShapes;
 
+import Hilligans.Block.BlockTypes.SlabBlock;
+import Hilligans.Client.Rendering.NewRenderer.BlockModel;
+import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
 import Hilligans.Client.Rendering.World.Managers.VertexManagers.CubeManager;
@@ -8,9 +11,13 @@ import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Data.Other.DataBlockState;
 import Hilligans.Util.Vector5f;
 import Hilligans.World.World;
+import org.joml.Vector3f;
 
 public class SlabBlockShape extends BlockShape {
 
+    public SlabBlockShape() {
+        data = BlockModel.create("/Models/Blocks/slab.txt");
+    }
     @Override
     public Vector5f[] getVertices(int side, float size, BlockState blockState, BlockTextureManager blockTextureManager) {
         Vector5f[] vector5fs;
@@ -36,6 +43,10 @@ public class SlabBlockShape extends BlockShape {
         }
         applyColoring(vector5fs,side);
         return vector5fs;
+    }
+
+    public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset) {
+        data.addData(primitiveBuilder,blockTextureManager,side,size,offset,0,1);
     }
 
     @Override

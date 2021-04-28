@@ -34,12 +34,12 @@ public class BoundingBox {
         this.eyeHeight = eyeHeight;
     }
 
-    public boolean intersectsBox(BoundingBox other, Vector3f myPos, Vector3f otherPos) {
+    public boolean intersectsBox(BoundingBox other, Vector3d myPos, Vector3d otherPos) {
         return this.minX + myPos.x <= other.maxX + otherPos.x && this.maxX + myPos.x >= other.minX + otherPos.x && this.minY + myPos.y <= other.maxY + otherPos.y && this.maxY + myPos.y >= other.minY + otherPos.y && this.minZ + myPos.z <= other.maxZ + otherPos.z && this.maxZ  + myPos.z >= other.minZ + otherPos.z;
     }
 
-    public boolean intersectsBox(BoundingBox other, Vector3f myPos, Vector3f otherPos, float velX, float velY, float velZ) {
-        return intersectsBox(other,myPos,new Vector3f(otherPos.x + velX,otherPos.y + velY,otherPos.z + velZ));
+    public boolean intersectsBox(BoundingBox other, Vector3d myPos, Vector3d otherPos, double velX, double velY, double velZ) {
+        return intersectsBox(other,myPos,new Vector3d(otherPos.x + velX,otherPos.y + velY,otherPos.z + velZ));
     }
 
     public boolean intersectsBox(BoundingBox other) {

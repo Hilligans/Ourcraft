@@ -88,7 +88,7 @@ public class ItemEntity extends Entity {
             createMesh();
         }
         glBindTexture(GL_TEXTURE_2D, ClientMain.getClient().texture);
-        matrixStack.translate(x,y,z);
+        matrixStack.translateMinusOffset(x,y,z);
         matrixStack.applyTransformation();
         glBindVertexArray(id);
         glDrawElements(GL_TRIANGLES, verticesCount * 3 / 2,GL_UNSIGNED_INT,0);

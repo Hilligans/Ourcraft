@@ -1,5 +1,6 @@
 package Hilligans.Data.Other;
 
+import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class JoinedBoundingBox extends BoundingBox {
     }
 
     @Override
-    public boolean intersectsBox(BoundingBox other, Vector3f myPos, Vector3f otherPos) {
+    public boolean intersectsBox(BoundingBox other, Vector3d myPos, Vector3d otherPos) {
         for(BoundingBox boundingBox : boundingBoxes) {
             if(boundingBox.intersectsBox(other,myPos,otherPos)) {
                 return true;

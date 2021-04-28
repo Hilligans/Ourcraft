@@ -48,6 +48,16 @@ public class CompoundTag extends Tag {
         return this;
     }
 
+    public CompoundTag putDouble(String id, double val) {
+        putTag(id, new DoubleTag(val));
+        return this;
+    }
+
+    public CompoundTag putFloat(String id, float val) {
+        putTag(id, new FloatTag(val));
+        return this;
+    }
+
     public Tag getTag(String name) {
         return tags.get(name);
     }
@@ -58,6 +68,14 @@ public class CompoundTag extends Tag {
 
     public StringTag getString(String id) {
         return (StringTag)getTag(id);
+    }
+
+    public DoubleTag getDouble(String id) {
+        return (DoubleTag)getTag(id);
+    }
+
+    public FloatTag getFloat(String id) {
+        return (FloatTag)getTag(id);
     }
 
     public FullStringTag getFullString(String id) {

@@ -23,16 +23,16 @@ import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 
 public class SubChunk {
 
-    int id = -1;
+    int id = -2;
     int verticesCount = -1;
     World world;
-    int y;
-    int x;
-    int z;
+    long y;
+    long x;
+    long z;
 
     BlockState[][][] blocks = new BlockState[16][16][16];
 
-    public SubChunk(World world, int X, int Y, int Z) {
+    public SubChunk(World world, long X, long Y, long Z) {
         this.world = world;
         this.y = Y;
         this.x = X;
@@ -117,7 +117,7 @@ public class SubChunk {
                             }
                         }
                     }
-                    block.getBlock().addVertices(primitiveBuilder,6,1.0f,block,new BlockPos(x + this.x,y + this.y,z + this.z),x,z);
+                    //block.getBlock().addVertices(primitiveBuilder,6,1.0f,block,new BlockPos(x + this.x,y + this.y,z + this.z),x,z);
                 }
             }
         }
@@ -128,7 +128,7 @@ public class SubChunk {
 
 
     public void destroy() {
-        if(id != -1) {
+        if(id != -1 && id != -2 && id != -3) {
             VAOManager.destroyBuffer(id);
             id = -1;
         }
@@ -164,15 +164,24 @@ public class SubChunk {
         if(id == -1) {
             createMesh1();
         }
+        if(id == -2) {
+            if(world instanceof ClientWorld) {
+                ((ClientWorld) world).queuedChunks.add(this);
+                id = -3;
+            } else {
+                id = -1;
+            }
+        }
 
       //  if(y == 64) {
-
-            GL30.glBindVertexArray(id);
-            matrixStack.push();
-            //matrixStack.applyTransformation(ClientMain.getClient().shaderManager.colorShader);
-            matrixStack.applyTransformation(ShaderManager.worldShader.shader);
-            glDrawElements(GL_TRIANGLES, verticesCount, GL_UNSIGNED_INT, 0);
-            matrixStack.pop();
+            if(verticesCount != 0) {
+                GL30.glBindVertexArray(id);
+                matrixStack.push();
+                //matrixStack.applyTransformation(ClientMain.getClient().shaderManager.colorShader);
+                matrixStack.applyTransformation(ShaderManager.worldShader.shader);
+                glDrawElements(GL_TRIANGLES, verticesCount, GL_UNSIGNED_INT, 0);
+                matrixStack.pop();
+            }
       //    }
     }
 }

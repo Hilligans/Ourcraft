@@ -1,5 +1,6 @@
 package Hilligans.Data.Other;
 
+import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 public class BlockPos {
@@ -13,6 +14,12 @@ public class BlockPos {
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+
+    public BlockPos(long x, long y, long z) {
+        this.x = (int) x;
+        this.y = (int) y;
+        this.z = (int) z;
     }
 
     public BlockPos(Vector3f vector3f) {
@@ -37,6 +44,10 @@ public class BlockPos {
 
     public Vector3f get3f() {
         return new Vector3f(x,y,z);
+    }
+
+    public Vector3d get3d() {
+        return new Vector3d(x,y,z);
     }
 
     public BlockPos copy() {

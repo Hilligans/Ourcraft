@@ -2,6 +2,7 @@ package Hilligans.World;
 
 import Hilligans.Biome.Biome;
 import Hilligans.Block.Block;
+import Hilligans.Client.Camera;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.MatrixStack;
@@ -29,6 +30,8 @@ public class Chunk {
 
     public Int2ObjectOpenHashMap<Entity> entities = new Int2ObjectOpenHashMap<>();
     public Long2ObjectOpenHashMap<ArrayList<BlockPos>> blockTicks = new Long2ObjectOpenHashMap<>();
+
+    public boolean needsSaving = false;
 
 
     public int x;
@@ -77,14 +80,23 @@ public class Chunk {
     }
 
     public void render(MatrixStack matrixStack) {
-        matrixStack.translate(x * 16, 0, z * 16);
+        matrixStack.translate((x - Camera.playerChunkPos.x) * 16, 0, (z - Camera.playerChunkPos.z) * 16);
         for(SubChunk subChunk : chunks) {
             subChunk.renderMesh(matrixStack);
         }
     }
 
+    public void destroy() {
+        for(SubChunk subChunk : chunks) {
+            subChunk.destroy();
+        }
+        blockTicks.clear();
+        entities.clear();
+        dataProviders.clear();
+    }
+
     public void generate() {
-        System.out.println("generating " + x + " " + z);
+        // System.out.println("generating " + x + " " + z);
         for(int x = 0; x < 16; x++) {
             for(int z = 0; z < 16; z++) {
                 int offset = getBlockHeight(x + this.x * 16,z + this.z * 16);
@@ -177,6 +189,7 @@ public class Chunk {
     }
 
     public DataProvider getDataProvider(BlockPos pos) {
+        needsSaving = true;
         //int height = pos.y >> 4;
         //SubChunk subChunk = chunks.get(height);
         return dataProviders.get((short)(pos.x & 15 | (pos.y & 255) << 4 | (pos.z & 15) << 12));
@@ -184,6 +197,7 @@ public class Chunk {
     }
 
     public void setDataProvider(BlockPos pos, DataProvider dataProvider) {
+        needsSaving = true;
         //int height = pos.y >> 4;
         //SubChunk subChunk = chunks.get(height);
         dataProviders.put((short)(pos.x & 15 | (pos.y & 255) << 4 | (pos.z & 15) << 12),dataProvider);
@@ -191,6 +205,7 @@ public class Chunk {
     }
 
     public void setBlockState(int x, int y, int z, BlockState blockState) {
+        needsSaving = true;
         if(y > Settings.chunkHeight * 16 || y < 0) {
            return;
         }
@@ -238,5 +253,9 @@ public class Chunk {
                 offset++;
             }
         }
+    }
+
+    public void writeData() {
+
     }
 }

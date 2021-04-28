@@ -22,6 +22,7 @@ public class ServerPlayerData {
     public Inventory playerInventory;
     public String id;
     public boolean isCreative = true;
+    public int opLevel = 1;
 
 
     public ServerPlayerData(PlayerEntity playerEntity, String id) {
@@ -59,17 +60,37 @@ public class ServerPlayerData {
     public static String path = "world/" + Settings.worldName + "/player-data/";
 
     public void read(CompoundTag tag) {
-        for(int x = 0; x < 27; x++) {
-            playerInventory.setItem(x,tag.readStack(x));
-        }
-        heldStack = tag.readStack(-1);
+        try {
+            CompoundTag inventory = tag.getCompoundTag("inventory");
+            if (inventory != null) {
+                for (int x = 0; x < 27; x++) {
+                    playerInventory.setItem(x, inventory.readStack(x));
+                }
+                heldStack = inventory.readStack(-1);
+            }
+            if (playerEntity != null) {
+                playerEntity.x = (float) tag.getDouble("x").val;
+                playerEntity.y = (float) tag.getDouble("y").val;
+                playerEntity.z = (float) tag.getDouble("z").val;
+                playerEntity.pitch = tag.getFloat("pitch").val;
+                playerEntity.yaw = tag.getFloat("yaw").val;
+            }
+        } catch (Exception ignored) {}
     }
 
     public void write(CompoundTag tag) {
+        CompoundTag inventory = new CompoundTag();
         for(int x = 0; x < 27; x++) {
-            tag.writeStack(x,playerInventory.getItem(x));
+            inventory.writeStack(x,playerInventory.getItem(x));
         }
-        tag.writeStack(-1,heldStack);
+        inventory.writeStack(-1,heldStack);
+        tag.putTag("inventory",inventory);
+
+        tag.putDouble("x",playerEntity.x);
+        tag.putDouble("y",playerEntity.y);
+        tag.putDouble("z",playerEntity.z);
+        tag.putFloat("pitch",playerEntity.pitch);
+        tag.putFloat("yaw",playerEntity.yaw);
     }
 
     public void save() {

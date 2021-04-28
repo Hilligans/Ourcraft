@@ -16,6 +16,7 @@ import Hilligans.Data.Other.Server.ServerPlayerData;
 import Hilligans.ServerMain;
 import Hilligans.Util.Settings;
 import Hilligans.Util.Vector5f;
+import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL30;
 
@@ -54,7 +55,7 @@ public class PlayerEntity extends LivingEntity {
 
         for(Entity entity : ServerMain.getWorld(dimension).entities.values()) {
             if(entity instanceof ItemEntity) {
-                if (entity.boundingBox.intersectsBox(itemPickupBox, new Vector3f(entity.x, entity.y, entity.z), new Vector3f(x, y, z))) {
+                if (entity.boundingBox.intersectsBox(itemPickupBox, new Vector3d(entity.x, entity.y, entity.z), new Vector3d(x, y, z))) {
                     if(((ItemEntity)entity).pickupDelay == 0) {
                         ItemStack itemStack = ((ItemEntity) entity).itemStack;
                         int count = itemStack.count;
@@ -90,7 +91,7 @@ public class PlayerEntity extends LivingEntity {
         GL30.glBindTexture(GL_TEXTURE_2D,imageId);
         GL30.glBindVertexArray(textureId);
 
-        matrixStack.translate(x,y,z);
+        matrixStack.translateMinusOffset(x,y,z);
         matrixStack.rotate(-yaw,new Vector3f(0,1,0));
         matrixStack.rotate(pitch,new Vector3f(0,0,1));
         matrixStack.applyTransformation();

@@ -111,13 +111,33 @@ public class CubeManager {
 
     public static Vector5f[] getHorizontalSlabVertices(BlockTextureManager blockTextureManager, int side, float size, float offsetY) {
 
-        int id = blockTextureManager.textures[side];
-        float sub = WorldTextureManager.getTextureSize(id) / 2f;
+        float minX;
+        float maxX;
+        float minY;
+        float maxY;
+        float sub = 0.5f;
+        if(blockTextureManager != null) {
 
-        float minX = WorldTextureManager.getMinX(id);
-        float maxX = WorldTextureManager.getMaxX(id);
-        float minY = WorldTextureManager.getMinY(id);
-        float maxY = WorldTextureManager.getMaxY(id);
+            int id = blockTextureManager.textures[side];
+
+            minX = WorldTextureManager.getMinX(id);
+            maxX = WorldTextureManager.getMaxX(id);
+            minY = WorldTextureManager.getMinY(id);
+            maxY = WorldTextureManager.getMaxY(id);
+        } else {
+
+            minX = 0;
+            minY = 0;
+            maxX = 1;
+            maxY = 1;
+        }
+        //int id = blockTextureManager.textures[side];
+        ////float sub = WorldTextureManager.getTextureSize(id) / 2f;
+
+        //float minX = WorldTextureManager.getMinX(id);
+        //float maxX = WorldTextureManager.getMaxX(id);
+        //float minY = WorldTextureManager.getMinY(id);
+        //float maxY = WorldTextureManager.getMaxY(id);
 
         switch (side) {
             case 0:

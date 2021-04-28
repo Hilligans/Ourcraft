@@ -1,5 +1,7 @@
 package Hilligans.Network.Packet.Client;
 
+import Hilligans.Command.CommandHandler;
+import Hilligans.Command.Commands;
 import Hilligans.Network.Packet.Server.SChatMessage;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
@@ -31,8 +33,22 @@ public class CSendMessage extends PacketBase {
 
     @Override
     public void handle() {
-        String name = ServerNetworkHandler.mappedName.get(ctx.channel().id());
-        System.out.println(name + ": " + message);
-        ServerNetworkHandler.sendPacket(new SChatMessage(name + ": " + message));
+        if(!message.equals("")) {
+            String name = ServerNetworkHandler.mappedName.get(ctx.channel().id());
+            String[] args = message.split(" ");
+            if (args.length != 0) {
+                CommandHandler commandHandler = Commands.commands.get(args[0]);
+                if (commandHandler != null) {
+                    String[] args1 = new String[args.length - 1];
+                    System.arraycopy(args,1,args1,0,args1.length);
+                    ServerNetworkHandler.sendPacket(new SChatMessage(commandHandler.handle(ServerNetworkHandler.getPlayerData(ctx).playerEntity,args1)));
+                    return;
+                }
+            }
+            System.out.println(name + ": " + message);
+            ServerNetworkHandler.sendPacket(new SChatMessage(name + ": " + message));
+        }
     }
+
+
 }

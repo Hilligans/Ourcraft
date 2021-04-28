@@ -8,14 +8,18 @@ import Hilligans.Client.MatrixStack;
 import Hilligans.ClientMain;
 import Hilligans.Entity.Entity;
 import Hilligans.Util.Settings;
+import org.joml.Vector3d;
 import org.joml.Vector3f;
 
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 
 public class ClientWorld extends World {
+
+    public ArrayList<SubChunk> queuedChunks = new ArrayList<>();
 
     public ClientWorld() {
         getChunk(0,0);
@@ -40,7 +44,45 @@ public class ClientWorld extends World {
         blockChanges.clear();
         blockChanges.addAll(skippedBlockChanges);
         skippedBlockChanges.clear();
+        if(purgeTime > 100) {
+            purgeTime = 0;
+            purgeChunks(Settings.renderDistance + 2);
+        } else {
+            buildChunks(16);
+            purgeTime++;
+        }
+
     }
+
+    int purgeTime = 0;
+
+    public void buildChunks(int count) {
+        for(int x = 0; x < Math.min(count,queuedChunks.size()); x++) {
+            queuedChunks.get(0).createMesh1();
+            queuedChunks.remove(0);
+        }
+    }
+
+    public void purgeChunks(int distance) {
+        int cameraX = (int)Camera.pos.x >> 4;
+        int cameraZ = (int)Camera.pos.z >> 4;
+        ArrayList<Long> removedChunks = new ArrayList<>();
+        for(Long longVal : chunks.keySet()) {
+              int x = (int)((long)longVal);
+              int z = (int)(longVal >> 32);
+
+              if(Math.abs(cameraX - x) > distance || Math.abs(cameraZ - z) > distance) {
+                  Chunk chunk = chunks.get(longVal);
+                  chunk.destroy();
+                  removedChunks.add(longVal);
+              }
+        }
+
+        for(Long longVal : removedChunks) {
+            chunks.remove(longVal);
+        }
+    }
+
 
     public void render(MatrixStack matrixStack) {
 
@@ -49,7 +91,7 @@ public class ClientWorld extends World {
         }
         glUseProgram(ClientMain.getClient().shaderManager.colorShader);
 
-        Vector3f pos = Camera.pos;
+        Vector3d pos = Camera.pos;
         for(int x = -Settings.renderDistance; x < Settings.renderDistance; x++) {
             for(int z = -Settings.renderDistance; z < Settings.renderDistance; z++) {
                 Chunk chunk = getChunk(x * 16 + (int)pos.x >> 4,z * 16 + (int)pos.z >> 4);

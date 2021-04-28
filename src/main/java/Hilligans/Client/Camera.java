@@ -7,34 +7,42 @@ import Hilligans.Client.Key.KeyPress;
 import Hilligans.ClientMain;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BoundingBox;
+import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CUpdatePlayerPacket;
 import Hilligans.World.Chunk;
 import Hilligans.World.World;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
+import org.joml.*;
 import org.lwjgl.BufferUtils;
 
+import java.lang.Math;
 import java.nio.DoubleBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Camera {
 
-    public static Vector3f pos = new Vector3f(0, Chunk.terrain,0);
+    public static Vector3d pos = new Vector3d(0, Chunk.terrain,0);
 
     public static int fov = 70;
 
-    private static final float fallSpeed = -0.0008f;
-    private static final float terminalVel = -1.15f;
+    private static final double fallSpeed = -0.0008f;
+    private static final double terminalVel = -1.15f;
 
     public static double pitch;
     public static double yaw;
 
-    public static float moveSpeed = 0.02f;
+    public static double moveSpeed = 0.02f;
 
     public static boolean thirdPerson = false;
+    public static int thirdPersonMode = -1;
 
+    public static Vector3i playerChunkPos = null;
+
+    public static float thirdPersonScroll = 2.0f;
+
+
+    public static PlayerEntity playerEntity = new PlayerEntity(0,0,0,Integer.MIN_VALUE);
 
     public static boolean isOnGround = false;
     public static boolean hitBlock = false;
@@ -53,14 +61,14 @@ public class Camera {
         KeyHandler.register(new KeyPress() {
             @Override
             public void onPress() {
-                thirdPerson = !thirdPerson;
+                toggleThirdPerson();
             }
         },KeyHandler.GLFW_KEY_F5);
     }
 
     public static void moveForeWard() {
         if(KeyHandler.keyPressed[GLFW_KEY_LEFT_SHIFT]) {
-            add(-(float) Math.cos(yaw) * moveSpeed / 3, 0, -(float) Math.sin(yaw) * moveSpeed / 3);
+            add(- Math.cos(yaw) * moveSpeed / 3, 0, - Math.sin(yaw) * moveSpeed / 3);
         } else {
             if (sprinting) {
                 sprintTimeout = 1;
@@ -118,9 +126,30 @@ public class Camera {
         }
     }
 
+    public static void addToThirdPerson(float amount) {
+        if(amount > 0) {
+            thirdPersonScroll = Math.min(16,thirdPersonScroll + amount);
+        } else {
+            thirdPersonScroll = Math.max(2.0f,thirdPersonScroll + amount);
+        }
+    }
+
+    public static void toggleThirdPerson() {
+        if(thirdPerson) {
+            if (thirdPersonMode == 1) {
+                thirdPersonMode = -1;
+                thirdPerson = false;
+            } else {
+                thirdPersonMode = 1;
+            }
+        } else {
+            thirdPerson = true;
+        }
+    }
+
     public static float maxX,maxZ;
 
-    public static void add(float x, float y, float z) {
+    public static void add(double x, double y, double z) {
 
         if(ClientMain.getClient().playerData.spectator) {
             pos.add(x * 4, y * 4, z * 4);
@@ -237,53 +266,66 @@ public class Camera {
         ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.getClient().playerId));
     }
 
-    public static Vector3f duplicate() {
-        return new Vector3f(Camera.pos.x,Camera.pos.y,Camera.pos.z);
+    public static Vector3d duplicate() {
+        return new Vector3d(Camera.pos.x,Camera.pos.y,Camera.pos.z);
     }
 
-    static Vector3f cameraUp    = new Vector3f(0.0f, 1.0f, 0.0f);
+    public static Vector3d duplicateAndAssign() {
+        playerChunkPos = new Vector3i((int)Camera.pos.x >> 4, 0, (int)Camera.pos.z >> 4);
+        return new Vector3d(Camera.pos.x - (playerChunkPos.x << 4), Camera.pos.y, Camera.pos.z - (playerChunkPos.z << 4));
+    }
 
-    public static void applyTransformations(Matrix4f matrix4f) {
-        Matrix4f projection = new Matrix4f();
-        Matrix4f view = new Matrix4f();
+    public static Vector3d duplicateExtra() {
+        return new Vector3d(Camera.pos.x - (playerChunkPos.x << 4), Camera.pos.y, Camera.pos.z - (playerChunkPos.z << 4));
+    }
+
+    static Vector3d cameraUp    = new Vector3d(0.0f, 1.0f, 0.0f);
+
+    public static void applyTransformations(Matrix4d matrix4d) {
+        Matrix4d projection = new Matrix4d();
+        Matrix4d view = new Matrix4d();
         view.translate(0,0,1);
         if(thirdPerson) {
-              view.translate(0,0,-3);
+              view.translate(0,0,-thirdPersonScroll);
         }
         projection.perspective((float) Math.toRadians(fov), (float) ClientMain.getWindowX() / ClientMain.getWindowY(),0.1f,10000.0f);
-        matrix4f.mul(projection).mul(view);
-        matrix4f.lookAt(Camera.duplicate().add((float)(Math.cos(Camera.yaw) * Math.cos(Camera.pitch)),(float)(Math.sin(Camera.pitch)),(float)(Math.sin(Camera.yaw) * Math.cos(Camera.pitch))),Camera.duplicate(), cameraUp);
+        matrix4d.mul(projection).mul(view);
+        matrix4d.lookAt(Camera.duplicate().add((float)(Math.cos(Camera.yaw) * Math.cos(Camera.pitch)),(float)(Math.sin(Camera.pitch)),(float)(Math.sin(Camera.yaw) * Math.cos(Camera.pitch))),Camera.duplicate(), cameraUp);
     }
 
     public static MatrixStack getWorldStack() {
-        Matrix4f matrix4f = getPerspective();
-        Matrix4f view = getViewStack();
-        matrix4f.mul(view);
-        matrix4f.lookAt(Camera.duplicate().add((float)(Math.cos(Camera.yaw) * Math.cos(Camera.pitch)),(float)(Math.sin(Camera.pitch)),(float)(Math.sin(Camera.yaw) * Math.cos(Camera.pitch))),Camera.duplicate(), cameraUp);
-        matrix4f.translate(0,0.15f,0);
+        Matrix4d matrix4d = getPerspective();
+        Matrix4d view = getViewStack();
+        matrix4d.mul(view);
+       // if(thirdPerson && thirdPersonMode == 1) {
+       //     matrix4d.lookAt(Camera.duplicateAndAssign().sub((float) (Math.cos(Camera.yaw) * Math.cos(Camera.pitch)), (float) (Math.sin(Camera.pitch)), (float) (Math.sin(Camera.yaw) * Math.cos(Camera.pitch))), Camera.duplicateExtra(), cameraUp);
+      //  } else {
+            matrix4d.lookAt(Camera.duplicateAndAssign().add((float) (Math.cos(Camera.yaw) * Math.cos(Camera.pitch)), (float) (Math.sin(Camera.pitch)), (float) (Math.sin(Camera.yaw) * Math.cos(Camera.pitch))), Camera.duplicateExtra(), cameraUp);
+       // }
+        matrix4d.translate(0,0.15f,0);
         if(KeyHandler.keyPressed[GLFW_KEY_LEFT_SHIFT]) {
-            matrix4f.translate(0,0.05f,0);
+            matrix4d.translate(0,0.05f,0);
         }
-        return new MatrixStack(matrix4f);
+        return new MatrixStack(matrix4d);
     }
 
-    public static Matrix4f getViewStack() {
-        Matrix4f view = new Matrix4f();
-        view.translate(0,0,1);
+    public static Matrix4d getViewStack() {
+        Matrix4d view = new Matrix4d();
+        view.translate(0,0, -thirdPersonMode);
         if(thirdPerson) {
-            view.translate(0,0,-3);
+            view.translate(0,0,thirdPersonScroll * thirdPersonMode);
         }
         return view;
     }
 
-    public static Matrix4f getPerspective() {
-        return new Matrix4f().perspective((float) Math.toRadians(fov), (float) ClientMain.getWindowX() / ClientMain.getWindowY(),0.1f,10000.0f);
+    public static Matrix4d getPerspective() {
+        return new Matrix4d().perspective((float) Math.toRadians(fov), (float) ClientMain.getWindowX() / ClientMain.getWindowY(),0.1f,10000.0f);
     }
 
     public static MatrixStack getScreenStack() {
-        Matrix4f matrix4f = new Matrix4f();
-        matrix4f.ortho(0,ClientMain.getWindowX(),ClientMain.getWindowY(),0,-1,200);
-        return new MatrixStack(matrix4f);
+        Matrix4d matrix4d = new Matrix4d();
+        matrix4d.ortho(0,ClientMain.getWindowX(),ClientMain.getWindowY(),0,-1,200);
+        return new MatrixStack(matrix4d);
     }
 
     public static double newX = (float)ClientMain.getWindowX() / 2;
@@ -316,13 +358,12 @@ public class Camera {
         }
     }
 
-
-    public static float sin(double angle) {
-        return (float) Math.sin(angle);
-    }
-
-    public static float cos(double angle) {
-        return (float) Math.cos(angle);
+    public static void renderPlayer(MatrixStack matrixStack) {
+        if(thirdPerson) {
+            playerEntity.setPos(pos);
+            playerEntity.setRot((float) pitch, (float) yaw);
+            playerEntity.render(matrixStack);
+        }
     }
 
     public static String getString() {
@@ -349,9 +390,9 @@ public class Camera {
         */
     }
 
-    public static float velX;
-    public static float velY;
-    public static float velZ;
+    public static double velX;
+    public static double velY;
+    public static double velZ;
 
     public static void move() {
 
@@ -365,14 +406,14 @@ public class Camera {
         }
     }
 
-    private static void move(float velX, float velY, float velZ) {
+    private static void move(double velX, double velY, double velZ) {
         int x;
         boolean couldMove = false;
         for(x = 0; x < 7; x++) {
             boolean movement = getAllowedMovement(tryMovement(x,velX,velY,velZ),pos, ClientMain.getClient().clientWorld);
 
             if(!movement  && isOnGround && (x == 1 || x == 4 || x == 6)) {
-                if(getAllowedMovement(tryMovement(x,velX,0,velZ),new Vector3f(pos.x,pos.y + 0.5f, pos.z), ClientMain.getClient().clientWorld)) {
+                if(getAllowedMovement(tryMovement(x,velX,0,velZ),new Vector3d(pos.x,pos.y + 0.5f, pos.z), ClientMain.getClient().clientWorld)) {
                     pos.y += 0.5f;
                     addVel(x, velX, 0, velZ);
                     return;
@@ -381,7 +422,7 @@ public class Camera {
             if(movement) {
                 movement = canMove(tryMovement(x,velX,velY,velZ), Camera.pos);
                 if(!movement) {
-                    movement = canMove(tryMovement(x,velX,velY,velZ), new Vector3f(Camera.pos.x,Camera.pos.y - 0.5f, Camera.pos.z));
+                    movement = canMove(tryMovement(x,velX,velY,velZ), new Vector3d(Camera.pos.x,Camera.pos.y - 0.5f, Camera.pos.z));
                 }
             }
 
@@ -406,7 +447,7 @@ public class Camera {
 
     }
 
-    private static void addVel(int x, float velX, float velY, float velZ) {
+    private static void addVel(int x, double velX, double velY, double velZ) {
         if (x == 3 || x == 5 || x == 6) {
             velX = 0;
         }
@@ -425,34 +466,34 @@ public class Camera {
         pos.z += velZ;
     }
 
-    private static Vector3f tryMovement(int side, float velX, float velY, float velZ) {
+    private static Vector3d tryMovement(int side, double velX, double velY, double velZ) {
         switch (side) {
             case 0:
-                return new Vector3f(velX,velY,velZ);
+                return new Vector3d(velX,velY,velZ);
             case 1:
-                return new Vector3f(velX,0,velZ);
+                return new Vector3d(velX,0,velZ);
             case 2:
                 sprintTimeout = 0;
                 sprintDelay = 30;
-                return new Vector3f(velX,velY,0);
+                return new Vector3d(velX,velY,0);
             case 3:
-                return new Vector3f(0,velY,velZ);
+                return new Vector3d(0,velY,velZ);
             case 4:
-                return new Vector3f(velX,0,0);
+                return new Vector3d(velX,0,0);
             case 5:
-                return new Vector3f(0,velY,0);
+                return new Vector3d(0,velY,0);
             case 6:
                 //System.out.println("yes");
-                return new Vector3f(0,0,velZ);
+                return new Vector3d(0,0,velZ);
             default:
                 //System.out.println("else");
-                return new Vector3f();
+                return new Vector3d();
         }
     }
 
 
 
-    public static boolean getAllowedMovement(Vector3f motion, Vector3f cameraPos, World world) {
+    public static boolean getAllowedMovement(Vector3d motion, Vector3d cameraPos, World world) {
         BlockPos pos = new BlockPos((int)Math.floor(cameraPos.x),(int)Math.floor(cameraPos.y),(int)Math.floor(cameraPos.z));
         int X = (int) Math.ceil(Math.abs(motion.x)) + 2;
         int Y = (int) Math.ceil(Math.abs(motion.y)) + 4;
@@ -463,7 +504,7 @@ public class Camera {
                 for(int z = -Z; z < Z; z++) {
                     Block block = world.getBlockState(pos.copy().add(x,y,z)).getBlock();
                     if(block != Blocks.AIR) {
-                        boolean canMove = block.getAllowedMovement(new Vector3f(motion.x,motion.y,motion.z), new Vector3f(cameraPos.x, cameraPos.y, cameraPos.z), pos.copy().add(x, y, z), playerBoundingBox, world);
+                        boolean canMove = block.getAllowedMovement(new Vector3d(motion.x,motion.y,motion.z), new Vector3d(cameraPos.x, cameraPos.y, cameraPos.z), pos.copy().add(x, y, z), playerBoundingBox, world);
                         if(!canMove) {
                             return false;
                         }
@@ -474,11 +515,11 @@ public class Camera {
         return true;
     }
 
-    private static boolean canMove(Vector3f motion, Vector3f pos) {
+    private static boolean canMove(Vector3d motion, Vector3d pos) {
         if(KeyHandler.keyPressed[GLFW_KEY_LEFT_SHIFT]) {
             if(isOnGround) {
-                Vector3f newPos = new Vector3f(pos.x,pos.y,pos.z).add(motion);
-                return !getAllowedMovement(new Vector3f(0,fallSpeed * 2,0), newPos, ClientMain.getClient().clientWorld);
+                Vector3d newPos = new Vector3d(pos.x,pos.y,pos.z).add(motion);
+                return !getAllowedMovement(new Vector3d(0,fallSpeed * 2,0), newPos, ClientMain.getClient().clientWorld);
                 //System.out.println("yes");
                 //return ClientMain.clientWorld.getBlockState((int)newPos.x,(int)newPos.y,(int)newPos.z).block != Blocks.AIR;
             } else {

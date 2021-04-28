@@ -10,6 +10,7 @@ import Hilligans.Data.Other.DataBlockState;
 import Hilligans.Data.Other.RayResult;
 import Hilligans.Item.ItemStack;
 import Hilligans.World.DataProviders.ShortBlockState;
+import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 public class SlabBlock extends Block {
@@ -25,7 +26,7 @@ public class SlabBlock extends Block {
     }
 
     @Override
-    public BlockState getStateForPlacement(Vector3f playerPos, RayResult rayResult) {
+    public BlockState getStateForPlacement(Vector3d playerPos, RayResult rayResult) {
         return new DataBlockState(this, new ShortBlockState((short) rayResult.side));
     }
 

@@ -11,9 +11,9 @@ import Hilligans.ServerMain;
 
 public class CUpdatePlayerPacket extends PacketBase {
 
-    float x;
-    float y;
-    float z;
+    double x;
+    double y;
+    double z;
     float pitch;
     float yaw;
     int playerId;
@@ -22,7 +22,7 @@ public class CUpdatePlayerPacket extends PacketBase {
         super(7);
     }
 
-    public CUpdatePlayerPacket(float x, float y, float z,float pitch, float yaw, int id) {
+    public CUpdatePlayerPacket(double x, double y, double z,float pitch, float yaw, int id) {
         this();
         this.x = x;
         this.y = y;
@@ -34,9 +34,9 @@ public class CUpdatePlayerPacket extends PacketBase {
 
     @Override
     public void encode(PacketData packetData) {
-        packetData.writeFloat(x);
-        packetData.writeFloat(y);
-        packetData.writeFloat(z);
+        packetData.writeDouble(x);
+        packetData.writeDouble(y);
+        packetData.writeDouble(z);
         packetData.writeFloat(pitch);
         packetData.writeFloat(yaw);
         packetData.writeInt(playerId);
@@ -44,9 +44,9 @@ public class CUpdatePlayerPacket extends PacketBase {
 
     @Override
     public void decode(PacketData packetData) {
-        x = packetData.readFloat();
-        y = packetData.readFloat();
-        z = packetData.readFloat();
+        x = packetData.readDouble();
+        y = packetData.readDouble();
+        z = packetData.readDouble();
         pitch = packetData.readFloat();
         yaw = packetData.readFloat();
         playerId = packetData.readInt();
@@ -59,8 +59,8 @@ public class CUpdatePlayerPacket extends PacketBase {
             int dim = data.getDimension();
             Entity entity = ServerMain.getWorld(dim).entities.get(playerId);
             if (entity != null) {
-                entity.setPos(x, y, z).setRot(pitch, yaw);
-                ServerNetworkHandler.sendPacket(new SUpdateEntityPacket(x, y, z, pitch, yaw, playerId));
+                entity.setPos((float)x, (float)y, (float)z).setRot(pitch, yaw);
+                ServerNetworkHandler.sendPacket(new SUpdateEntityPacket((float)x, (float)y, (float)z, pitch, yaw, playerId));
             }
         }
     }

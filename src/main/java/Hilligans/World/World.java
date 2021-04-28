@@ -103,6 +103,12 @@ public abstract class World {
         }
     }
 
+    public boolean isInBounds(int playerX, int playerZ, long pos, int distance) {
+        int x = (int)(pos);
+        int z = (int)(pos >> 32);
+        return Math.abs(playerX - x) < distance || Math.abs(playerZ - z) < distance;
+    }
+
     public void unloadChunk(int x, int z) {
         removeChunk(x,z);
     }
@@ -219,7 +225,7 @@ public abstract class World {
 
     static final float offSet = -0.5f;
 
-    public RayResult traceBlock(float x, float y, float z, double pitch, double yaw) {
+    public RayResult traceBlock(double x, double y, double z, double pitch, double yaw) {
         Vector3d vector3d = new Vector3d();
         boolean placed = false;
         boolean isAir = true;
@@ -283,7 +289,7 @@ public abstract class World {
         return null;
     }
 
-    public BlockPos traceBlockToBreak(float x, float y, float z, double pitch, double yaw) {
+    public BlockPos traceBlockToBreak(double x, double y, double z, double pitch, double yaw) {
         double addX = (Math.cos(yaw) * Math.cos(pitch))  * stepCount;
         double addY = Math.sin(pitch) * stepCount;
         double addZ = Math.sin(yaw) * Math.cos(pitch) * stepCount;
@@ -329,7 +335,7 @@ public abstract class World {
                 for(int x = -1; x < 2; x++) {
                     BlockState blockState = getBlockState(new BlockPos(x,pos.y,z));
                     if(blockState.getBlock() != Blocks.AIR) {
-                        if (blockState.getBlock().blockProperties.canWalkThrough || boundingBox.intersectsBox(blockState.getBlock().getBoundingBox(this,new BlockPos(x,pos.y,z)), pos.get3f(), new Vector3f(x, pos.y, z))) {
+                        if (blockState.getBlock().blockProperties.canWalkThrough || boundingBox.intersectsBox(blockState.getBlock().getBoundingBox(this,new BlockPos(x,pos.y,z)), pos.get3d(), new Vector3d(x, pos.y, z))) {
                             break out;
                         }
                     }

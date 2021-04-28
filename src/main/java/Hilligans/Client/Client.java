@@ -9,6 +9,7 @@ import Hilligans.Client.Rendering.Screens.ContainerScreens.CreativeInventoryScre
 import Hilligans.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
 import Hilligans.Client.Rendering.Screens.EscapeScreen;
 import Hilligans.Client.Rendering.Screens.JoinScreen;
+import Hilligans.Client.Rendering.Screens.TagEditorScreen;
 import Hilligans.Client.Rendering.Widgets.Widget;
 import Hilligans.Client.Rendering.World.Managers.ShaderManager;
 import Hilligans.Client.Rendering.World.Managers.VAOManager;
@@ -155,7 +156,7 @@ public class Client {
         Renderer.create(texture);
         clientWorld = new ClientWorld();
 
-        glEnable(GL_DEPTH);
+       // glEnable(GL_DEPTH);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_DEPTH_TEST);
@@ -247,7 +248,7 @@ public class Client {
                 glUseProgram(shaderManager.lineShader);
                 GL30.glBindVertexArray(id);
                 matrixStack.push();
-                matrixStack.translate(pos.x, pos.y, pos.z);
+                matrixStack.translateMinusOffset(pos.x, pos.y, pos.z);
                 matrixStack.applyTransformation(shaderManager.lineShader);
                 glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, 0);
                 matrixStack.pop();
@@ -271,6 +272,7 @@ public class Client {
 
             InventoryScreen.drawHotbar(screenStack);
             ChatWindow.render1(screenStack);
+            Camera.renderPlayer(matrixStack);
         }
 
         if(screen != null) {
@@ -350,14 +352,17 @@ public class Client {
 
     public void registerKeyHandlers() {
 
-       /*  KeyHandler.register(new KeyPress() {
-            @Override
-            public void onPress() {
-                openScreen(new TagEditorScreen());
-            }
-        }, GLFW_KEY_H);
+       //  KeyHandler.register(new KeyPress() {
+       //     @Override
+       //     public void onPress() {
+                //if(KeyHandler.keyPressed[GLFW_KEY_RIGHT_ALT]) {
+               //     System.out.println(KeyHandler.keyPressed[GLFW_KEY_LEFT_ALT]);
+               //     openScreen(new TagEditorScreen());
+              //  }
+      //      }
+      //  }, GLFW_KEY_H);
 
-        */
+
 
         KeyHandler.register(new KeyPress() {
             @Override
@@ -456,17 +461,23 @@ public class Client {
                 if(screen != null) {
                     screen.mouseScroll(0,0,(float)yoffset);
                 }
-                if(yoffset == 1.0) {
+                if(renderWorld) {
+                    if(Camera.thirdPerson && KeyHandler.keyPressed[GLFW_KEY_LEFT_ALT]) {
+                        Camera.addToThirdPerson((float) (yoffset / -2.0f));
+                    } else {
+                        if (yoffset == 1.0) {
 
-                    playerData.handSlot--;
-                    if(playerData.handSlot <= -1) {
-                        playerData.handSlot = 8;
-                    }
-                } else if(yoffset == -1.0) {
+                            playerData.handSlot--;
+                            if (playerData.handSlot <= -1) {
+                                playerData.handSlot = 8;
+                            }
+                        } else if (yoffset == -1.0) {
 
-                    playerData.handSlot++;
-                    if(playerData.handSlot >= 9) {
-                        playerData.handSlot = 0;
+                            playerData.handSlot++;
+                            if (playerData.handSlot >= 9) {
+                                playerData.handSlot = 0;
+                            }
+                        }
                     }
                 }
             }
@@ -537,7 +548,7 @@ public class Client {
     static long timeSinceLastDraw = 0;
     static float drawTime = 1000f / Settings.maxFps;
 
-    double lastTime = glfwGetTime();
+    double lastTime;
     int nbFrames = 0;
 
     int fps;

@@ -15,6 +15,7 @@ import Hilligans.Entity.LivingEntity;
 import Hilligans.Network.Packet.Server.SSendBlockChanges;
 import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.World.World;
+import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 public class BlockItem extends Item {
@@ -48,7 +49,7 @@ public class BlockItem extends Item {
 
         BlockState blockState;
         if(world.isServer()) {
-            blockState = block.getStateForPlacement(new Vector3f(playerEntity.x, playerEntity.y, playerEntity.z),rayResult);
+            blockState = block.getStateForPlacement(new Vector3d(playerEntity.x, playerEntity.y, playerEntity.z),rayResult);
         } else {
             blockState = block.getStateForPlacement(Camera.pos,rayResult);
         }
@@ -57,12 +58,12 @@ public class BlockItem extends Item {
         for (Entity entity : world.entities.values()) {
             if (entity instanceof LivingEntity) {
                 if(world.isServer()) {
-                    if (!block.getAllowedMovement(new Vector3f(), new Vector3f(playerEntity.x, playerEntity.y, playerEntity.z), pos, entity.boundingBox, world)) {
+                    if (!block.getAllowedMovement(new Vector3d(), new Vector3d(playerEntity.x, playerEntity.y, playerEntity.z), pos, entity.boundingBox, world)) {
                         world.setBlockState(pos,oldState);
                         return false;
                     }
                 } else {
-                    if (!block.getAllowedMovement(new Vector3f(), Camera.pos, pos, entity.boundingBox, world)) {
+                    if (!block.getAllowedMovement(new Vector3d(), Camera.pos, pos, entity.boundingBox, world)) {
                         world.setBlockState(pos,oldState);
                         return false;
                     }

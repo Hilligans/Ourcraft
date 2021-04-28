@@ -56,6 +56,7 @@ public abstract class PacketBase {
         packets.add(SDisconnectPacket::new);
         packets.add(COpenScreen::new);
         packets.add(SSendPlayerList::new);
+        packets.add(SSetGameMode::new);
 
 
 

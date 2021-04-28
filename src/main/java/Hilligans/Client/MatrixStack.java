@@ -2,6 +2,7 @@ package Hilligans.Client;
 
 import Hilligans.Client.Rendering.World.Managers.ShaderManager;
 import Hilligans.ClientMain;
+import org.joml.Matrix4d;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -23,6 +24,11 @@ public class MatrixStack {
         color = new Vector4f(1.0f,1.0f,1.0f,1.0f);
     }
 
+    public MatrixStack(Matrix4d matrix4d) {
+        this.matrix4f = new Matrix4f(matrix4d);
+        color = new Vector4f(1.0f,1.0f,1.0f,1.0f);
+    }
+
     public void push() {
         Matrix4f matrix4f1 = new Matrix4f();
         matrix4f.get(matrix4f1);
@@ -38,6 +44,7 @@ public class MatrixStack {
     public void pop() {
         matrix4f = matrix4fStack.pop();
         color = colorStack.pop();
+        // glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
         applyColor();
     }
 
@@ -78,6 +85,10 @@ public class MatrixStack {
 
     public void translate(float x, float y, float z) {
         matrix4f.translate(x,y,z);
+    }
+
+    public void translateMinusOffset(float x, float y, float z) {
+        matrix4f.translate(x - (Camera.playerChunkPos.x << 4),y,z - (Camera.playerChunkPos.z << 4));
     }
 
     public void translate(Vector3f vector3f) {
