@@ -24,6 +24,12 @@ public class KeyHandler {
         keyPresses.add(new DoubleTypeWrapper<>(keyPress,id));
     }
 
+    public static void register(KeyPress keyPress, int... id) {
+        for(int id1 : id) {
+            keyPresses.add(new DoubleTypeWrapper<>(keyPress, id1));
+        }
+    }
+
     public static void register(CharPress charPress) {
         charPresses.add(charPress);
     }

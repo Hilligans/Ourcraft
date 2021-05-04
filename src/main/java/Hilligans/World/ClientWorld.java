@@ -2,6 +2,11 @@ package Hilligans.World;
 
 
 
+import Hilligans.Client.Client;
+import Hilligans.Client.Sound.SoundBuffer;
+import Hilligans.Client.Sound.SoundEngine;
+import Hilligans.Client.Sound.Sounds;
+import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Client.Camera;
 import Hilligans.Client.MatrixStack;
@@ -39,7 +44,7 @@ public class ClientWorld extends World {
                 skippedBlockChanges.add(blockChange);
                 continue;
             }
-            setBlockState(blockChange.x,blockChange.y,blockChange.z,blockChange.blockState);
+            setBlockStateDirect(blockChange.x,blockChange.y,blockChange.z,blockChange.blockState);
         }
         blockChanges.clear();
         blockChanges.addAll(skippedBlockChanges);
@@ -53,6 +58,7 @@ public class ClientWorld extends World {
         }
 
     }
+
 
     int purgeTime = 0;
 
@@ -78,6 +84,7 @@ public class ClientWorld extends World {
               }
         }
 
+        //TODO: sometimes tries to remove -1 and causes crash
         for(Long longVal : removedChunks) {
             chunks.remove(longVal);
         }
@@ -92,23 +99,17 @@ public class ClientWorld extends World {
         glUseProgram(ClientMain.getClient().shaderManager.colorShader);
 
         Vector3d pos = Camera.pos;
-        for(int x = -Settings.renderDistance; x < Settings.renderDistance; x++) {
-            for(int z = -Settings.renderDistance; z < Settings.renderDistance; z++) {
-                Chunk chunk = getChunk(x * 16 + (int)pos.x >> 4,z * 16 + (int)pos.z >> 4);
-                if(chunk == null) {
-                    if(!ClientMain.getClient().joinServer) {
-                        generateChunk(x * 16 + (int) pos.x >> 4, z * 16 + (int) pos.z >> 4);
-                    } else {
-                        if (ClientMain.getClient().valid) {
-                            requestChunk(x * 16 + (int) pos.x >> 4, z * 16 + (int) pos.z >> 4);
-                        }
+        for(int x = 0; x < Settings.renderDistance; x++) {
+            for(int z = 0; z < Settings.renderDistance; z++) {
+                drawChunk(matrixStack,pos,x,z);
+                if(x != 0) {
+                    drawChunk(matrixStack, pos, -x, z);
+                    if(z != 0) {
+                        drawChunk(matrixStack,pos,-x,-z);
                     }
-                } else {
-                    if(Camera.shouldRenderChunk(x * 16 + (int) pos.x >> 4, z * 16 + (int) pos.z >> 4)) {
-                        matrixStack.push();
-                        chunk.render(matrixStack);
-                        matrixStack.pop();
-                    }
+                }
+                if(z != 0) {
+                    drawChunk(matrixStack,pos,x,-z);
                 }
             }
         }
@@ -127,8 +128,38 @@ public class ClientWorld extends World {
         glEnable(GL_BLEND);
     }
 
+    private void drawChunk(MatrixStack matrixStack, Vector3d pos, int x, int z) {
+        Chunk chunk = getChunk(x * 16 + (int)pos.x >> 4,z * 16 + (int)pos.z >> 4);
+        if(chunk == null) {
+            if(!ClientMain.getClient().joinServer) {
+                generateChunk(x * 16 + (int) pos.x >> 4, z * 16 + (int) pos.z >> 4);
+            } else {
+                if (ClientMain.getClient().valid) {
+                    requestChunk(x * 16 + (int) pos.x >> 4, z * 16 + (int) pos.z >> 4);
+                }
+            }
+        } else {
+            if(Camera.shouldRenderChunk(x * 16 + (int) pos.x >> 4, z * 16 + (int) pos.z >> 4)) {
+                matrixStack.push();
+                chunk.render(matrixStack);
+                matrixStack.pop();
+            }
+        }
+    }
+
+    public void playSound(SoundBuffer soundBuffer, Vector3d pos) {
+        if(Settings.sounds) {
+            ClientMain.getClient().soundEngine.addSound(soundBuffer,pos);
+        }
+    }
+
     @Override
     public void setBlockState(int x, int y, int z, BlockState blockState) {
+        playSound(Sounds.BLOCK_BREAK,new Vector3d(x,y,z));
+        setBlockStateDirect(x,y,z,blockState);
+    }
+
+    public void setBlockStateDirect(int x, int y, int z, BlockState blockState) {
         if(y >= Settings.minHeight  && y < Settings.maxHeight) {
             super.setBlockState(x, y, z, blockState);
             notifySubChunks(x >> 4, y >> 4, z >> 4);

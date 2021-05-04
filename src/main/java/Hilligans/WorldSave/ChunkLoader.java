@@ -101,6 +101,7 @@ public class ChunkLoader {
         for(Short2ObjectMap.Entry<DataProvider> set : chunk.dataProviders.short2ObjectEntrySet()) {
             CompoundTag compoundTag2 = new CompoundTag();
             compoundTag2.putShort("pos",set.getShortKey());
+            //TODO: sometimes returns null and causes an exception
             set.getValue().write(compoundTag2);
             compoundTag.putTag(x + "", compoundTag2);
             x++;

@@ -4,17 +4,16 @@ import Hilligans.Block.Blocks;
 import Hilligans.Client.Key.KeyHandler;
 import Hilligans.Client.Key.KeyPress;
 import Hilligans.Client.Rendering.*;
-import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.CreativeInventoryScreen;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
 import Hilligans.Client.Rendering.Screens.EscapeScreen;
 import Hilligans.Client.Rendering.Screens.JoinScreen;
-import Hilligans.Client.Rendering.Screens.TagEditorScreen;
 import Hilligans.Client.Rendering.Widgets.Widget;
 import Hilligans.Client.Rendering.World.Managers.ShaderManager;
 import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.Client.Rendering.World.StringRenderer;
+import Hilligans.Client.Sound.*;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
 import Hilligans.Data.Other.BlockPos;
@@ -39,9 +38,11 @@ import Hilligans.Tag.Tag;
 import Hilligans.Util.Settings;
 import Hilligans.World.ClientWorld;
 import Hilligans.WorldSave.WorldLoader;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
+import org.lwjgl.openal.AL11;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL30;
 
@@ -76,6 +77,8 @@ public class Client {
 
     public ShaderManager shaderManager;
 
+    public SoundEngine soundEngine = new SoundEngine();
+
     public int texture;
 
     public boolean refreshTexture = false;
@@ -97,6 +100,8 @@ public class Client {
         }
 
         createGL();
+        soundEngine.init();
+        soundEngine.setAttenuationModel(AL11.AL_LINEAR_DISTANCE_CLAMPED);
         registerKeyHandlers();
         createCallbacks();
 
@@ -108,11 +113,18 @@ public class Client {
             glfwPollEvents();
             Camera.updateMouse();
         }
-        ClientNetworkHandler.close();
-        glfwTerminate();
+        cleanUp();
         System.exit(1);
     }
 
+    public void cleanUp() {
+        ClientNetworkHandler.close();
+        glfwTerminate();
+        soundEngine.cleanup();
+        for(SoundBuffer soundBuffer : Sounds.sounds) {
+            soundBuffer.cleanup();
+        }
+    }
 
     public static void register() {
         PacketBase.register();
@@ -121,8 +133,7 @@ public class Client {
         Widget.register();
         Entity.register();
         Blocks.register();
-
-
+        Sounds.sounds.size();
     }
 
     public void createGL() {
@@ -260,13 +271,14 @@ public class Client {
             if (playerData.f3) {
                 StringRenderer.drawString(screenStack, Camera.getString(), windowX / 2, 0, 0.5f);
                 StringRenderer.drawString(screenStack, "FPS:" + fps, windowX / 2, 29, 0.5f);
-                StringRenderer.drawString(screenStack, clientWorld.biomeMap.getBiome((int) Camera.pos.x, (int) Camera.pos.z).name, windowX / 2, 58, 0.5f);
-                StringRenderer.drawString(screenStack, "vel y:" + Camera.velY, windowX / 2, 87, 0.5f);
+                StringRenderer.drawString(screenStack, "Biome:" + clientWorld.biomeMap.getBiome((int) Camera.pos.x, (int) Camera.pos.z).name, windowX / 2, 58, 0.5f);
+                StringRenderer.drawString(screenStack, "VelY:" + Camera.velY, windowX / 2, 87, 0.5f);
                 Runtime runtime = Runtime.getRuntime();
                 long usedMB = (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024;
                 StringRenderer.drawString(screenStack, "Memory:" + usedMB + "MB",windowX / 2, 126, 0.5f);
                 StringRenderer.drawString(screenStack, "Pitch:" + Math.toDegrees(Camera.pitch),windowX/2,155,0.5f);
                 StringRenderer.drawString(screenStack, "Yaw:" + Math.toDegrees(Camera.yaw),windowX/2,184,0.5f);
+                StringRenderer.drawString(screenStack, "Sounds:" + soundEngine.sounds.size(),windowX/2,213,0.5f);
             }
 
 
@@ -279,6 +291,7 @@ public class Client {
             screen.render(screenStack);
             playerData.heldStack.renderStack(screenStack, (int) (Camera.newX - Settings.guiSize * 8), (int) (Camera.newY - Settings.guiSize * 8));
         } else {
+            Renderer.drawCenteredTexture(screenStack,Textures.CURSOR,1.0f);
             if(KeyHandler.keyPressed[GLFW_KEY_TAB]) {
                 if(playerList != null) {
                     playerList.render(screenStack);
@@ -289,6 +302,7 @@ public class Client {
 
         glfwSwapBuffers(window);
 
+        soundEngine.tick();
         if(screenShot) {
             screenShot = false;
             ScreenShot.takeScreenShot();
@@ -495,9 +509,9 @@ public class Client {
                                 if (joinServer) {
                                     ClientNetworkHandler.sendPacketDirect(new CSendBlockChanges(pos.x, pos.y, pos.z, Blocks.AIR.id));
                                     // clientWorld.entities.put(100,new ItemEntity(pos.x,pos.y,pos.z,100,clientWorld.getBlockState(pos).block));
-                                } else {
-                                    clientWorld.setBlockState(pos, Blocks.AIR.getDefaultState());
                                 }
+                                clientWorld.setBlockState(pos, Blocks.AIR.getDefaultState());
+
                             }
 
                         } else if (button == GLFW_MOUSE_BUTTON_2) {

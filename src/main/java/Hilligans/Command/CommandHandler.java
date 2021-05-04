@@ -9,9 +9,18 @@ public abstract  class CommandHandler {
     }
 
     public CommandHandler addAlias(String alias) {
-        Commands.commands.put(alias,this);
+        Commands.commands.put("/" + alias,this);
         return this;
     }
 
     public abstract String handle(Entity executor, String[] args);
+
+    public static boolean isNumber(String arg) {
+        try {
+            Float.parseFloat(arg);
+            return true;
+        } catch (Exception ignored) {}
+        return false;
+    }
+
 }

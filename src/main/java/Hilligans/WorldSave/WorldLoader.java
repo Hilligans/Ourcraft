@@ -13,12 +13,17 @@ import Hilligans.World.DataProvider;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
 
+import javax.imageio.ImageIO;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.concurrent.ScheduledExecutorService;
+
+import static org.lwjgl.stb.STBImage.stbi_load;
+import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
 
 public class WorldLoader {
 
@@ -37,16 +42,10 @@ public class WorldLoader {
 
     public static CompoundTag loadTag(String path) {
         try {
-            File file = new File(path);
-            if(file.exists()) {
-                RandomAccessFile aFile = new RandomAccessFile(path, "rw");
-                int length = (int) aFile.length();
-                ByteBuffer buf = ByteBuffer.allocate(length);
-                buf.mark();
-                int bytesRead = aFile.getChannel().read(buf);
-                buf.reset();
+            ByteBuffer byteBuffer = readBuffer(path);
+            if(byteBuffer != null) {
                 CompoundTag compoundTag = new CompoundTag();
-                compoundTag.read(buf);
+                compoundTag.read(byteBuffer);
                 return compoundTag;
             }
             return null;
@@ -55,6 +54,64 @@ public class WorldLoader {
             return null;
         }
     }
+
+    public static ByteBuffer readBuffer(String path) {
+        try {
+            File file = new File(path);
+            if(file.exists()) {
+                RandomAccessFile aFile = new RandomAccessFile(path, "rw");
+                int length = (int) aFile.length();
+                ByteBuffer buf = ByteBuffer.allocate(length);
+                buf.mark();
+                aFile.getChannel().read(buf);
+                buf.reset();
+                return buf;
+            }
+            return null;
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
+    public static ByteBuffer readResource(String path) {
+        try {
+
+            //WorldLoader.class.getResourceAsStream(path).
+            //File file = new File(WorldLoader.class.getResource(path).toURI());
+            //System.out.println("file exist?" + file.exists());
+           // File file = new File(path);
+            //if(file.exists()) {
+           // ScheduledExecutorService
+            InputStream inputStream = WorldLoader.class.getResourceAsStream(path);
+            byte[] vals = inputStream.readAllBytes();
+            //System.out.println(vals);
+            ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vals.length);
+            byteBuffer.put(vals);
+            byteBuffer.flip();
+
+            //stbi_load_from_memory()
+
+           // ImageIO.read()
+              /*  RandomAccessFile aFile = new RandomAccessFile(path, "rw");
+                length = (int) aFile.length();
+                ByteBuffer buf = ByteBuffer.allocate(length);
+                buf.mark();
+                aFile.getChannel().read(buf);
+                buf.reset();]
+
+               */
+                return byteBuffer;
+            //}
+            //System.err.println("Failed to find file " + path);
+           // return null;
+        } catch (Exception e) {
+            System.err.println("Failed to find file " + path);
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 
     public static String readString(String path) {
         StringBuilder stringBuilder = new StringBuilder();

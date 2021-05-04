@@ -7,6 +7,7 @@ import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Network.Packet.Server.SUpdateEntityPacket;
 import Hilligans.Network.Packet.Server.SUpdatePlayer;
 import Hilligans.Network.ServerNetworkHandler;
+import org.lwjgl.glfw.GLFW;
 
 public class TeleportCommand extends CommandHandler {
 
@@ -16,7 +17,21 @@ public class TeleportCommand extends CommandHandler {
 
     @Override
     public String handle(Entity executor, String[] args) {
-        if(args.length >= 3) {
+        if(args.length >= 4) {
+            PlayerEntity playerEntity = ServerNetworkHandler.getPlayerEntity(args[0]);
+            if(playerEntity != null) {
+                float x = Float.parseFloat(args[1]);
+                float y = Float.parseFloat(args[2]);
+                float z = Float.parseFloat(args[3]);
+                playerEntity.x = x;
+                playerEntity.y = y;
+                playerEntity.z = z;
+                ServerNetworkHandler.sendPacket(new SUpdateEntityPacket(x,y,z,playerEntity.pitch,playerEntity.yaw,playerEntity.id));
+                ServerNetworkHandler.sendPacket(new SUpdatePlayer(x,y,z,playerEntity.pitch,playerEntity.yaw),playerEntity);
+            } else {
+                return "no player found with name " + args[0];
+            }
+        } else if(args.length == 3) {
             try {
                 float x = Float.parseFloat(args[0]);
                 float y = Float.parseFloat(args[1]);
@@ -32,6 +47,8 @@ public class TeleportCommand extends CommandHandler {
 
             } catch (Exception ignored) {}
         }
+
+
         return "";
     }
 }

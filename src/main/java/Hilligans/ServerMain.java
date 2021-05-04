@@ -28,6 +28,7 @@ import io.netty.channel.ChannelFutureListener;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 import org.lwjgl.system.CallbackI;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -45,6 +46,7 @@ public class ServerMain {
 
 
     public static void main(String[] args) {
+
         Settings.isServer = true;
         Tag.register();
         Blocks.generateTextures();

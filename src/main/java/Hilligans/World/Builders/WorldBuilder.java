@@ -1,5 +1,6 @@
 package Hilligans.World.Builders;
 
+import Hilligans.Data.Other.BlockPos;
 import Hilligans.World.Chunk;
 import Hilligans.World.World;
 
@@ -43,6 +44,8 @@ public abstract class WorldBuilder {
     }
 
     public abstract void build(int x, int z);
+
+    public void build(BlockPos pos) {}
 
     //public abstract void build(BlockPos startPos);
 

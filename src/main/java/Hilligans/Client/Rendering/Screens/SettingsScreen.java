@@ -3,6 +3,7 @@ package Hilligans.Client.Rendering.Screens;
 import Hilligans.Client.Camera;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ScreenBase;
+import Hilligans.Client.Rendering.Widgets.Button;
 import Hilligans.Client.Rendering.Widgets.SliderWidget;
 import Hilligans.Client.Rendering.Widgets.ToggleWidget;
 import Hilligans.Client.Rendering.World.StringRenderer;
@@ -21,6 +22,12 @@ public class SettingsScreen extends ScreenBase {
                 ClientMain.getClient().shaderManager.colorShader = ClientMain.getClient().shaderManager.transparentColorShader;
             } else {
                 ClientMain.getClient().shaderManager.colorShader = ClientMain.getClient().shaderManager.opaqueColorShader;
+            }
+        }));
+        widgets.add(new ToggleWidget(50,450,200,40,"Sounds", Settings.sounds, value -> {
+            Settings.sounds = value;
+            if(!value) {
+                ClientMain.getClient().soundEngine.stopAllSounds();
             }
         }));
     }

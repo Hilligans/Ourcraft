@@ -85,6 +85,8 @@ public class Blocks {
     public static final Block REDWOOD_LOG = new Block("redwood_log", new BlockProperties());
     public static final Block REDWOOD_WOOD = new Block("redwood_wood", new BlockProperties());
 
+    public static final Block SAPLING = new OakSapling("oak_sapling",new BlockProperties());
+
     //public static final Block BLUE = new SlabChest("blue",new BlockProperties().serverSide().withTexture("blue.png"));
 
     public static void register() {}

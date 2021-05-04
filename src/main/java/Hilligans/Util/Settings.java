@@ -29,5 +29,7 @@ public class Settings {
     public static boolean isOnlineServer = false;
     public static boolean forceDifferentName = false;
 
+    public static boolean sounds = true;
+
     public static int tickingDistance = 5;
 }

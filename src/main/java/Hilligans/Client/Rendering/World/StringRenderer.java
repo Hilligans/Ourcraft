@@ -130,21 +130,21 @@ public class StringRenderer {
         matrixStack.pop();
     }
 
-    private static void draw(int id, int size) {
+    public static void draw(int id, int size) {
         GL30.glBindTexture(GL_TEXTURE_2D,instance.mappedCharacters);
         GL30.glBindVertexArray(id);
         glDrawElements(GL_TRIANGLES, size * 3 / 2,GL_UNSIGNED_INT,0);
         VAOManager.destroyBuffer(id);
     }
 
-    private static Vector5f[] getVertices(String character, int x, int y, float scale) {
+    public static Vector5f[] getVertices(String character, int x, int y, float scale) {
         int width = instance.characterOffset.get(character).getTypeA();
         int height = (int) (instance.stringHeight * scale);
         int offset = 48 * instance.characterOffset.get(character).getTypeB();
         return new Vector5f[]{new Vector5f(x, y, 0,(float)offset / (instance.characterOffset.size() * 48),0),new Vector5f(x,y + height,0,(float)offset / (instance.characterOffset.size() * 48),1), new Vector5f(x + width * scale,y,0,(float)(width + offset) / (instance.characterOffset.size() * 48),0), new Vector5f(x + width * scale, y + height, 0,(float)(width + offset) / (instance.characterOffset.size()  * 48),1)};
     }
 
-    private static Integer[] getIndices(int offset) {
+    public static Integer[] getIndices(int offset) {
         return new Integer[] {offset,offset + 1,offset + 2,offset + 3,offset + 2,offset + 1};
     }
 }

@@ -143,4 +143,18 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketDat
     public static ServerPlayerData getPlayerData(ChannelHandlerContext ctx) {
         return playerData.get(mappedId.get(ctx.channel().id()));
     }
+
+    public static PlayerEntity getPlayerEntity(String name) {
+        ChannelId channelId = nameToChannel.get(name);
+        if(channelId != null) {
+            int id = mappedId.getOrDefault(channelId,Integer.MIN_VALUE);
+            if(id != Integer.MIN_VALUE) {
+                ServerPlayerData serverPlayerData = playerData.get(id);
+                if(serverPlayerData != null) {
+                    return serverPlayerData.playerEntity;
+                }
+            }
+        }
+        return null;
+    }
 }

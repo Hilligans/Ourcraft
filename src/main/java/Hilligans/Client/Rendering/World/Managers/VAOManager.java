@@ -23,8 +23,10 @@ public class  VAOManager {
     public static void destroyBuffer(int id) {
         DoubleTypeWrapper<Integer,Integer> doubleTypeWrapper = buffers.get(id);
         buffers.remove(id);
-        glDeleteBuffers(doubleTypeWrapper.getTypeA());
-        glDeleteBuffers(doubleTypeWrapper.getTypeB());
+        if(doubleTypeWrapper != null) {
+            glDeleteBuffers(doubleTypeWrapper.getTypeA());
+            glDeleteBuffers(doubleTypeWrapper.getTypeB());
+        }
         glDeleteVertexArrays(id);
     }
 

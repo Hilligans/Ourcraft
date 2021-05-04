@@ -300,13 +300,17 @@ public class Camera {
        // if(thirdPerson && thirdPersonMode == 1) {
        //     matrix4d.lookAt(Camera.duplicateAndAssign().sub((float) (Math.cos(Camera.yaw) * Math.cos(Camera.pitch)), (float) (Math.sin(Camera.pitch)), (float) (Math.sin(Camera.yaw) * Math.cos(Camera.pitch))), Camera.duplicateExtra(), cameraUp);
       //  } else {
-            matrix4d.lookAt(Camera.duplicateAndAssign().add((float) (Math.cos(Camera.yaw) * Math.cos(Camera.pitch)), (float) (Math.sin(Camera.pitch)), (float) (Math.sin(Camera.yaw) * Math.cos(Camera.pitch))), Camera.duplicateExtra(), cameraUp);
+            matrix4d.lookAt(Camera.duplicateAndAssign().add(getLookVector()), Camera.duplicateExtra(), cameraUp);
        // }
         matrix4d.translate(0,0.15f,0);
         if(KeyHandler.keyPressed[GLFW_KEY_LEFT_SHIFT]) {
             matrix4d.translate(0,0.05f,0);
         }
         return new MatrixStack(matrix4d);
+    }
+
+    public static Vector3d getLookVector() {
+        return new Vector3d((Math.cos(Camera.yaw) * Math.cos(Camera.pitch)), (Math.sin(Camera.pitch)), (Math.sin(Camera.yaw) * Math.cos(Camera.pitch)));
     }
 
     public static Matrix4d getViewStack() {
