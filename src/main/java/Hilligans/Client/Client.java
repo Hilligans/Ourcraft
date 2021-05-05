@@ -3,6 +3,7 @@ package Hilligans.Client;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.Key.KeyHandler;
 import Hilligans.Client.Key.KeyPress;
+import Hilligans.Client.Mouse.MouseHandler;
 import Hilligans.Client.Rendering.*;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.CreativeInventoryScreen;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
@@ -13,7 +14,7 @@ import Hilligans.Client.Rendering.World.Managers.ShaderManager;
 import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.Client.Rendering.World.StringRenderer;
-import Hilligans.Client.Sound.*;
+import Hilligans.Client.Audio.*;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
 import Hilligans.Data.Other.BlockPos;
@@ -38,7 +39,6 @@ import Hilligans.Tag.Tag;
 import Hilligans.Util.Settings;
 import Hilligans.World.ClientWorld;
 import Hilligans.WorldSave.WorldLoader;
-import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
@@ -73,6 +73,8 @@ public class Client {
     public boolean renderWorld = false;
     public PlayerList playerList;
 
+    public MouseHandler mouseHandler;
+
     public Screen screen;
 
     public ShaderManager shaderManager;
@@ -104,6 +106,7 @@ public class Client {
         soundEngine.setAttenuationModel(AL11.AL_LINEAR_DISTANCE_CLAMPED);
         registerKeyHandlers();
         createCallbacks();
+
 
 
 
@@ -452,7 +455,9 @@ public class Client {
         }, GLFW_KEY_F2);
     }
 
-    public  void createCallbacks() {
+    public void createCallbacks() {
+        mouseHandler = new MouseHandler(this);
+
         glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
             if(height % 2 == 1) {
                 height += 1;
@@ -496,56 +501,7 @@ public class Client {
                 }
             }
         });
-
-
-        glfwSetMouseButtonCallback(window, new GLFWMouseButtonCallback() {
-            @Override
-            public void invoke(long window, int button, int action, int mods) {
-                if (action == GLFW_PRESS) {
-                    if (screen == null) {
-                        if (button == GLFW_MOUSE_BUTTON_1) {
-                            BlockPos pos = clientWorld.traceBlockToBreak(Camera.pos.x, Camera.pos.y + Camera.playerBoundingBox.eyeHeight, Camera.pos.z, Camera.pitch, Camera.yaw);
-                            if (pos != null) {
-                                if (joinServer) {
-                                    ClientNetworkHandler.sendPacketDirect(new CSendBlockChanges(pos.x, pos.y, pos.z, Blocks.AIR.id));
-                                    // clientWorld.entities.put(100,new ItemEntity(pos.x,pos.y,pos.z,100,clientWorld.getBlockState(pos).block));
-                                }
-                                clientWorld.setBlockState(pos, Blocks.AIR.getDefaultState());
-
-                            }
-
-                        } else if (button == GLFW_MOUSE_BUTTON_2) {
-                            BlockPos blockPos = clientWorld.traceBlockToBreak(Camera.pos.x,Camera.pos.y + Camera.playerBoundingBox.eyeHeight,Camera.pos.z,Camera.pitch,Camera.yaw);
-                            if(blockPos != null) {
-                                BlockState blockState = clientWorld.getBlockState(blockPos);
-                                if (blockState != null && blockState.getBlock().activateBlock(clientWorld, null, blockPos)) {
-                                    ClientNetworkHandler.sendPacketDirect(new CUseItem((byte) playerData.handSlot));
-                                    return;
-                                }
-                            }
-                            ItemStack itemStack = playerData.inventory.getItem(playerData.handSlot);
-                            if(!itemStack.isEmpty()) {
-                                if(itemStack.item.onActivate(clientWorld,null)) {
-                                    ClientNetworkHandler.sendPacketDirect(new CUseItem((byte) playerData.handSlot));
-                                    if(!playerData.creative) {
-                                        itemStack.removeCount(1);
-                                    }
-                                }
-                            } else {
-                                ClientNetworkHandler.sendPacketDirect(new CUseItem((byte) playerData.handSlot));
-                            }
-                        }
-                    } else {
-                        DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
-                        DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
-
-                        glfwGetCursorPos(window, x, y);
-                        screen.mouseClick((int) x.get(), (int) y.get(), button);
-                    }
-                }
-            }
-        });
-
+        glfwSetMouseButtonCallback(window, mouseHandler::invoke);
         glfwSetWindowFocusCallback(window, (window, focused) -> {
             if(!focused) {
                 if(screen == null) {

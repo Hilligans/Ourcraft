@@ -21,7 +21,6 @@ public class FolderWidget extends Widget {
     static final int length = 150;
 
     ArrayList<Widget> widgets = new ArrayList<>();
-    String name;
     boolean isOpen = false;
     public int scrollY = 0;
 

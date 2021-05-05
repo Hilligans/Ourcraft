@@ -11,7 +11,6 @@ public class DataWidget extends Widget {
 
     String val;
     int type;
-    String name;
 
     public DataWidget(int x, int y, int width, int height, int type, String val) {
         super(x, y, width, height);

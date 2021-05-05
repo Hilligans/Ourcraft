@@ -1,4 +1,4 @@
-package Hilligans.Client.Sound;
+package Hilligans.Client.Audio;
 
 import Hilligans.WorldSave.WorldLoader;
 import org.lwjgl.stb.STBVorbisInfo;
@@ -8,7 +8,6 @@ import org.lwjgl.system.MemoryUtil;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
-import java.util.Arrays;
 
 import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.stb.STBVorbis.*;
@@ -19,6 +18,8 @@ public class SoundBuffer {
     public int samples;
     public int sampleRate;
     public float length;
+    public float rollOff = 12f;
+    public SoundCategory soundCategory = SoundCategory.MASTER;
     int channelType;
     ShortBuffer pcm;
 
@@ -35,10 +36,20 @@ public class SoundBuffer {
         }
     }
 
-    public SoundSource createNewSound(boolean loop, boolean relative) {
+    public SoundSource createNewSound(boolean loop, boolean relative, SoundCategory soundCategory) {
         int bufferID = alGenBuffers();
         alBufferData(bufferID,channelType,pcm,sampleRate);
-        return new SoundSource(loop,relative).setBuffer(bufferID);
+        return new SoundSource(loop,relative,soundCategory).setBuffer(bufferID).defaultEndTime(length);
+    }
+
+    public SoundBuffer setRollOff(float rollOff) {
+        this.rollOff = rollOff;
+        return this;
+    }
+
+    public SoundBuffer setCategory(SoundCategory category) {
+        this.soundCategory = category;
+        return this;
     }
 
     public void cleanup() {

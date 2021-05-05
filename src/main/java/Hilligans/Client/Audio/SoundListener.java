@@ -1,4 +1,4 @@
-package Hilligans.Client.Sound;
+package Hilligans.Client.Audio;
 
 import org.joml.Vector3f;
 

@@ -1,7 +1,6 @@
-package Hilligans.Client.Sound;
+package Hilligans.Client.Audio;
 
 import Hilligans.Client.Camera;
-import org.joml.Matrix4f;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.lwjgl.openal.AL;
@@ -24,12 +23,11 @@ public class SoundEngine {
 
     private long context;
 
+    MusicEngine musicEngine = new MusicEngine();
+
     private SoundListener listener;
 
     public final ArrayList<SoundSource> sounds = new ArrayList<>();
-
-    private final Matrix4f cameraMatrix = new Matrix4f();
-
 
     public void init() {
         this.device = alcOpenDevice((ByteBuffer) null);
@@ -45,13 +43,20 @@ public class SoundEngine {
         AL.createCapabilities(deviceCaps);
 
         listener = new SoundListener(Camera.pos.get(new Vector3f()));
+
+        for(SoundBuffer soundBuffer : Sounds.sounds) {
+            soundBuffer.soundCategory.sounds.add(soundBuffer);
+        }
+
     }
 
     public void tick() {
         updateListenerPosition();
+        musicEngine.tick();
         long time = System.currentTimeMillis();
         for(int x = 0; x < sounds.size(); x++) {
             SoundSource soundSource = sounds.get(x);
+            soundSource.tick();
             if(soundSource.endTime <= time) {
                 soundSource.stop();
                 soundSource.cleanup();
@@ -62,6 +67,7 @@ public class SoundEngine {
     }
 
     public void stopAllSounds() {
+        musicEngine.stop();
         for(SoundSource soundSource : sounds) {
             soundSource.cleanup();
         }
@@ -69,15 +75,22 @@ public class SoundEngine {
     }
 
     public void addSound(SoundBuffer soundBuffer, Vector3d pos) {
-        SoundSource soundSource = soundBuffer.createNewSound(false,false).setRollOffFactor(12f).setPosition(new Vector3f((float)pos.x,(float)pos.y,(float)pos.z)).setEndTime(System.currentTimeMillis() + (long)(1000 * soundBuffer.length)).setPitch(1.0f);;
-        sounds.add(soundSource);
+        SoundSource soundSource = soundBuffer.createNewSound(false,false,soundBuffer.soundCategory).setRollOffFactor(soundBuffer.rollOff).setPosition(new Vector3f((float)pos.x,(float)pos.y,(float)pos.z)).setPitch(1.0f);;
+        addSound(soundSource);
         soundSource.play();
+    }
+
+    public void addSound(SoundSource soundSource) {
+        if(sounds.size() > 255) {
+            sounds.remove(0).cleanup();
+        }
+        sounds.add(soundSource);
     }
 
     public void updateListenerPosition() {
         listener.setPosition(Camera.pos.get(new Vector3f()));
-        Vector3f at = new Vector3f(0,0,-1);
-        Vector3f up = Camera.getLookVector().get(new Vector3f());
+        Vector3f up = new Vector3f(0,0,-1);
+        Vector3f at = Camera.getLookVector().get(new Vector3f());
         listener.setOrientation(at, up);
     }
 

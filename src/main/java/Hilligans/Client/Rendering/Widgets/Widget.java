@@ -12,6 +12,7 @@ public class Widget {
     public int width;
     public int height;
     public short widgetId = -1;
+    public String name;
 
     public int minY;
 
@@ -38,6 +39,10 @@ public class Widget {
 
     public boolean isInBounds(int x, int y) {
         return x > this.getX() && x < this.getX() + this.width && y > this.getY() && y < this.getY() + this.height;
+    }
+
+    public boolean isInBoundsX(int x) {
+        return x > this.getX() && x < this.getX() + this.width;
     }
 
     public void activate(int x, int y) {

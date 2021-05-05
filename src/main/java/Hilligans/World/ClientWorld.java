@@ -2,11 +2,8 @@ package Hilligans.World;
 
 
 
-import Hilligans.Client.Client;
-import Hilligans.Client.Sound.SoundBuffer;
-import Hilligans.Client.Sound.SoundEngine;
-import Hilligans.Client.Sound.Sounds;
-import Hilligans.Data.Other.BlockPos;
+import Hilligans.Client.Audio.SoundBuffer;
+import Hilligans.Client.Audio.Sounds;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Client.Camera;
 import Hilligans.Client.MatrixStack;
@@ -14,7 +11,6 @@ import Hilligans.ClientMain;
 import Hilligans.Entity.Entity;
 import Hilligans.Util.Settings;
 import org.joml.Vector3d;
-import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;

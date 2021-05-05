@@ -12,7 +12,6 @@ public class Button extends Widget {
 
     public ButtonAction buttonAction;
     public boolean enabled = true;
-    String name;
 
     public Button(int x, int y, int width, int height, String name, ButtonAction buttonAction) {
         super(x, y, width, height);

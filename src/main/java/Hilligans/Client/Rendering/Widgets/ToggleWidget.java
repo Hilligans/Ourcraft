@@ -10,7 +10,6 @@ public class ToggleWidget extends Widget {
 
     public boolean value;
     public boolean enabled = true;
-    String name;
     public ToggleAction toggleAction;
 
     public ToggleWidget(int x, int y, int width, int height, String name, boolean defaultValue, ToggleAction toggleAction) {

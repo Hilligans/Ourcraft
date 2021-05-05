@@ -96,6 +96,24 @@ public class Renderer {
         glEnable(GL_DEPTH_TEST);
     }
 
+    public static void drawTextureAlternative(MatrixStack matrixStack, Texture texture, int x, int y, int width, int height, int startX, int startY, int endX, int endY) {
+        matrixStack.applyTransformation();
+        float minX = (float)startX / texture.width;
+        float minY = (float)startY / texture.height;
+        float maxX = (float)endX / texture.width;
+        float maxY = (float)endY / texture.height;
+        float[] vertices = new float[] {x + startX,y + startY,0,minX,minY,x + startX,y + endY,0,minX,maxY,x + endX,y + startY,0,maxX,minY,x + endX,y + endY,0,maxX,maxY};
+        int[] indices = new int[] {0,1,2,2,1,3};
+        glDisable(GL_DEPTH_TEST);
+        glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
+        int vao = VAOManager.createVAO(vertices, indices);
+        GL30.glBindTexture(GL_TEXTURE_2D,texture.textureId);
+        GL30.glBindVertexArray(vao);
+        glDrawElements(GL_TRIANGLES, 6,GL_UNSIGNED_INT,0);
+        VAOManager.destroyBuffer(vao);
+        glEnable(GL_DEPTH_TEST);
+    }
+
     public static void drawTexture(MatrixStack matrixStack, Texture texture, int x, int y, int startX, int startY, int endX, int endY) {
         drawTexture(matrixStack,texture,x,y,(int)((endX - startX) * Settings.guiSize),(int) ((endY - startY) * Settings.guiSize),startX,startY,endX,endY);
     }

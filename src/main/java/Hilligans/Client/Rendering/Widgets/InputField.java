@@ -19,7 +19,6 @@ import java.awt.datatransfer.DataFlavor;
 public class InputField extends Widget {
 
     public String string = "";
-    public String name;
 
     public InputField(int x, int y, int width, int height) {
         super(x, y, width, height);
