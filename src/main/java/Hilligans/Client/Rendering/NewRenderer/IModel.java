@@ -17,7 +17,7 @@ public interface IModel {
         return getIndices(side);
     }
     void addData(PrimitiveBuilder primitiveBuilder, TextureManager textureManager, int side, float size, Vector3f offset, int rotX, int rotY);
-
+    void addData(PrimitiveBuilder primitiveBuilder, TextureManager textureManager, int side, float size, Vector3f offset, int rotX, int rotY, float offsetX, float offsetY, float offsetZ);
 
 
 }

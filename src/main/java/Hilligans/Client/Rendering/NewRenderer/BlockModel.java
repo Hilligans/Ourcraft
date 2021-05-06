@@ -147,6 +147,38 @@ public class BlockModel implements IModel {
         }
     }
 
+    @Override
+    public void addData(PrimitiveBuilder primitiveBuilder, TextureManager textureManager, int side, float size, Vector3f offset, int rotX, int rotY, float offsetX, float offsetY, float offsetZ) {
+        float[] vertices = getVertices(side,rotX,rotY);
+        if(vertices != null) {
+            if(textureManager instanceof BlockTextureManager) {
+                float color = getSideColor(side);
+                float[] vals = new float[vertices.length];
+                int id = ((BlockTextureManager) textureManager).textures[side];
+
+                float startX = WorldTextureManager.getMinX(id);
+                float startY = WorldTextureManager.getMinY(id);
+                float texOffsetX = WorldTextureManager.getMaxX(id) - startX;
+                float texOffsetY = WorldTextureManager.getMaxY(id) - startY;
+                for (int x = 0; x < vals.length; x += 9) {
+                    vals[x] = vertices[x] * size + offset.x + offsetX;
+                    vals[x + 1] = vertices[x + 1] * size + offset.y + offsetY;
+                    vals[x + 2] = vertices[x + 2] * size + offset.z + offsetZ;
+                    vals[x + 7] = vertices[x + 3] * texOffsetX + startX;
+                    vals[x + 8] = vertices[x + 4] * texOffsetY + startY;
+                    vals[x + 3] = color;
+                    vals[x + 4] = color;
+                    vals[x + 5] = color;
+                    vals[x + 6] = 1.0f;
+                }
+                int[] indices = getIndices(side,rotX,rotY);
+                int[] ints = new int[indices.length];
+                smallArrayCopy(indices, 0, ints, 0, indices.length, primitiveBuilder.getVerticesCount());
+                primitiveBuilder.add(vals, ints);
+            }
+        }
+    }
+
     public static void smallArrayCopy(int[] source, int startPos, int[] dest, int destPos, int length, int toAdd) {
         for(int x = startPos; x < Math.min(source.length,startPos + length); x++) {
             dest[destPos + x] = source[x] + toAdd;

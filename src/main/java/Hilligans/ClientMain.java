@@ -3,6 +3,8 @@ package Hilligans;
 import Hilligans.Client.*;
 import Hilligans.Client.Rendering.NewRenderer.BlockModel;
 import Hilligans.Client.Rendering.World.Managers.VertexManagers.CubeManager;
+import Hilligans.Client.Rendering.World.Managers.VertexManagers.PlantManager;
+import Hilligans.Data.Other.BlockShapes.XBlockShape;
 import Hilligans.Util.Vector5f;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,11 +35,13 @@ public class ClientMain {
 
         JSONObject jsonObject = new JSONObject();
 
+        XBlockShape xBlockShape = new XBlockShape();
+
         for(int x = 0; x < 6; x++) {
             JSONArray vertices = new JSONArray();
             JSONArray indices = new JSONArray();
 
-            Vector5f[] vector5fs = CubeManager.getHorizontalSlabVertices(null, x,1.0f,0.0f);
+            Vector5f[] vector5fs = PlantManager.getXBlockVertices(0.5f, 0.5f,null, x,1.0f);
             Integer[] integers = CubeManager.getIndices(x,0);
 
             for (Vector5f vector5f : vector5fs) {

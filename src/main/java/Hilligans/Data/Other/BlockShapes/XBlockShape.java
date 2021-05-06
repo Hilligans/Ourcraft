@@ -1,11 +1,16 @@
 package Hilligans.Data.Other.BlockShapes;
 
+import Hilligans.Client.Rendering.NewRenderer.BlockModel;
 import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
 import Hilligans.Client.Rendering.World.Managers.VertexManagers.PlantManager;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Util.Vector5f;
 
 public class XBlockShape extends BlockShape {
+
+    public XBlockShape() {
+        data = BlockModel.create("/Models/Blocks/xBlock.txt");
+    }
 
     @Override
     public Vector5f[] getVertices(int side, BlockState blockState, BlockTextureManager blockTextureManager) {

@@ -7,12 +7,19 @@ import Hilligans.Util.Vector5f;
 public class PlantManager {
 
     public static Vector5f[] getXBlockVertices(float offsetX, float offsetZ, BlockTextureManager blockTextureManager, int side, float size) {
-        int id = blockTextureManager.textures[side];
+        float texMinX = 0;
+        float texMaxX = 1;
+        float texMinY = 0;
+        float texMaxY = 1;
+        if(blockTextureManager != null) {
+            int id = blockTextureManager.textures[side];
+             texMinX = WorldTextureManager.getMinX(id);
+             texMaxX = WorldTextureManager.getMaxX(id);
+             texMinY = WorldTextureManager.getMinY(id);
+             texMaxY = WorldTextureManager.getMaxY(id);
+        } else {
 
-        float texMinX = WorldTextureManager.getMinX(id);
-        float texMaxX = WorldTextureManager.getMaxX(id);
-        float texMinY = WorldTextureManager.getMinY(id);
-        float texMaxY = WorldTextureManager.getMaxY(id);
+        }
 
         float minX = -size + offsetX;
         float maxX = size + offsetX;

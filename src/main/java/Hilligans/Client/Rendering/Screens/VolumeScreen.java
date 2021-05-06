@@ -18,9 +18,4 @@ public class VolumeScreen extends ScreenBase {
         }
 
     }
-
-
-
-
-
 }

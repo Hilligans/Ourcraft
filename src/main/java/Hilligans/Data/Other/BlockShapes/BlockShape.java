@@ -46,6 +46,10 @@ public class BlockShape {
         data.addData(primitiveBuilder,blockTextureManager,side,size,offset,0,0);
     }
 
+    public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset, float offsetX, float offsetY, float offsetZ) {
+        data.addData(primitiveBuilder,blockTextureManager,side,size,offset,0,0,offsetX,offsetY,offsetZ);
+    }
+
     public int generateOutline(World world, BlockPos pos) {
         BoundingBox boundingBox = getBoundingBox(world, pos);
         boundingBox.minX -= 0.001f;
