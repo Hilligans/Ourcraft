@@ -10,6 +10,7 @@ import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CUpdatePlayerPacket;
+import Hilligans.Util.Ray;
 import Hilligans.World.Chunk;
 import Hilligans.World.World;
 import org.joml.*;
@@ -300,7 +301,11 @@ public class Camera {
        // if(thirdPerson && thirdPersonMode == 1) {
        //     matrix4d.lookAt(Camera.duplicateAndAssign().sub((float) (Math.cos(Camera.yaw) * Math.cos(Camera.pitch)), (float) (Math.sin(Camera.pitch)), (float) (Math.sin(Camera.yaw) * Math.cos(Camera.pitch))), Camera.duplicateExtra(), cameraUp);
       //  } else {
+        if(thirdPerson && thirdPersonMode == 1) {
+            matrix4d.lookAt(Camera.duplicateAndAssign().add(getLookVector().negate()), Camera.duplicateExtra(), cameraUp);
+        } else {
             matrix4d.lookAt(Camera.duplicateAndAssign().add(getLookVector()), Camera.duplicateExtra(), cameraUp);
+        }
        // }
         matrix4d.translate(0,0.15f,0);
         if(KeyHandler.keyPressed[GLFW_KEY_LEFT_SHIFT]) {
@@ -315,11 +320,27 @@ public class Camera {
 
     public static Matrix4d getViewStack() {
         Matrix4d view = new Matrix4d();
-        view.translate(0,0, -thirdPersonMode);
+        view.translate(0,0, Math.abs(thirdPersonMode));
         if(thirdPerson) {
-            view.translate(0,0,thirdPersonScroll * thirdPersonMode);
+            view.translate(0,0,getViewLength() * -1);
         }
         return view;
+    }
+
+    public static float getViewLength() {
+        Ray ray = new Ray(pitch,yaw,0.1f);
+        if(thirdPerson && thirdPersonMode == -1) {
+            ray.negate();
+        }
+        int x;
+        for(x = 0; x < thirdPersonScroll / 0.1; x++) {
+            Block block = ClientMain.getClient().clientWorld.getBlockState(ray.getNextBlock(x).add(pos)).getBlock();
+            if(!block.blockProperties.canWalkThrough) {
+                x -= 1;
+                break;
+            }
+        }
+        return x * 0.1f;
     }
 
     public static Matrix4d getPerspective() {

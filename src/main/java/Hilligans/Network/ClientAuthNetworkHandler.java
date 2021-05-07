@@ -1,7 +1,10 @@
 package Hilligans.Network;
 
+import Hilligans.Client.Client;
 import Hilligans.Client.Rendering.Screens.DisconnectScreen;
 import Hilligans.ClientMain;
+import Hilligans.Network.Packet.AuthServerPackets.CGetToken;
+import Hilligans.Tag.CompoundTag;
 import Hilligans.World.ClientWorld;
 import io.netty.channel.*;
 

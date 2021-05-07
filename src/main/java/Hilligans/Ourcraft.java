@@ -6,6 +6,7 @@ import Hilligans.ModHandler.ModLoader;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Logger;
 
 public class Ourcraft {
 

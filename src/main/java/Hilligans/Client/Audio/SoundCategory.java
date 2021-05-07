@@ -42,6 +42,7 @@ public class SoundCategory {
 
     public void addSource(SoundSource soundSource) {
         soundSources.add(soundSource);
+        soundSource.setDefaultVolume(getVolume());
     }
 
     public void removeSource(SoundSource soundSource) {

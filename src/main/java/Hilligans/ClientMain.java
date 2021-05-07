@@ -21,21 +21,7 @@ public class ClientMain {
 
 
     public static void main(String[] args) {
-
-
-        int rotX = 0;
-        int rotY = 2;
-        int side = 0;
-        for(int x = 0; x < 4; x++) {
-            System.out.println(rotX | rotY << 2 | side << 4);
-            rotX++;
-         //   System.out.println(Integer.toBinaryString(rotX | rotY << 2 | side << 4));
-        }
-
-
         JSONObject jsonObject = new JSONObject();
-
-        XBlockShape xBlockShape = new XBlockShape();
 
         for(int x = 0; x < 6; x++) {
             JSONArray vertices = new JSONArray();
@@ -59,19 +45,12 @@ public class ClientMain {
             jsonObject.put(x + "",newObject);
         }
 
-        System.out.println(rotX >> 2 | rotY);
-
         JSONArray jsonArray = new JSONArray();
         jsonArray.put(0).put(4).put(5).put(6).put(7).put(8);
 
 
         jsonObject.put("modelRotations",jsonArray);
-        System.out.println(jsonObject.toString());
-        try {
-            new BlockModel(jsonObject.toString());
-        } catch (Exception ignored) {
-            ignored.printStackTrace();
-        }
+
 
 
 

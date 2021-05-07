@@ -25,7 +25,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_H;
 
 public class JoinScreen extends ScreenBase {
 
-    InputField inputField = new InputField(100,10,200,80);
     public ServerSelectorWidget selected;
     Button play = new Button(100, ClientMain.getWindowY() / 2 + 100, 200, 50, "Join server", new ButtonAction() {
         @Override

@@ -1,11 +1,5 @@
-A minecraft inspired game
+A minecraft inspired game engine
 
-If you intend on playing this you will probably have to build your own server jar, you can do this by changing the ClientMain in the pom.xml file to ServerMain and packaging the project
-  
-How to build a jar on windows:
+A new installer has been made for windows, available at https://github.com/Hilligans/OurcraftLauncher. To run the game simple run the exe and it will auto download and install all the necessary libraries to run the game. The launcher will download and install the newest version of the game from github.
 
-Ensure you have apache maven installed and open command prompt in the folder with all the ourcraft contents
-
-Type mvn package into command prompt
-
-A file will be created in the target folder called Ourcraft-1.0-SNAPSHOT-jar-with-dependencies, this is the full game
+Linux launcher coming soon.

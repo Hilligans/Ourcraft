@@ -66,4 +66,8 @@ public class ServerMain {
         return server.worlds.get(id);
     }
 
+    public static MultiPlayerServer getServer() {
+        return server;
+    }
+
 }

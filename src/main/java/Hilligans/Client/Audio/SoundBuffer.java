@@ -30,7 +30,6 @@ public class SoundBuffer {
                 pcm = readVorbis(file, info);
                 sampleRate = info.sample_rate();
                 length = samples / (float) sampleRate;
-                System.out.println(length);
                 channelType = info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
             } catch (Exception ignored) {}
         }

@@ -42,6 +42,13 @@ public class BlockPos {
         return this;
     }
 
+    public BlockPos add(Vector3d vector3d) {
+        this.x += vector3d.x;
+        this.y += vector3d.y;
+        this.z += vector3d.z;
+        return this;
+    }
+
     public Vector3f get3f() {
         return new Vector3f(x,y,z);
     }

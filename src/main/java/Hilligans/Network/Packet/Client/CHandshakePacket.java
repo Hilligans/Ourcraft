@@ -59,8 +59,8 @@ public class CHandshakePacket extends PacketBase {
             if(ServerNetworkHandler.nameToChannel.get(name) == null || !Settings.forceDifferentName) {
                 if (Settings.isOnlineServer) {
                     String token = getToken(16);
-                    ServerMain.server.waitingPlayers.put(ctx, this);
-                    ServerMain.server.playerQueue.put(token, new DoubleTypeWrapper<>(ctx, System.currentTimeMillis() + 5000));
+                    ServerMain.getServer().waitingPlayers.put(ctx, this);
+                    ServerMain.getServer().playerQueue.put(token, new DoubleTypeWrapper<>(ctx, System.currentTimeMillis() + 5000));
                     ChannelFuture future = ClientAuthNetworkHandler.sendPacketDirect(new CTokenValid(name, authToken, ((InetSocketAddress) ctx.channel().remoteAddress()).getAddress().getHostAddress(), token));
                 } else {
                     handlePlayer(name, version, ctx, name);

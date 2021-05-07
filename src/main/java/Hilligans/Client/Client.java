@@ -97,8 +97,10 @@ public class Client {
         Ourcraft.MOD_LOADER.loadDefaultMods();
         CompoundTag tag = WorldLoader.loadTag("clientData.dat");
         if(tag != null) {
-            readUsernameAndPassword(tag);
-            ClientAuthNetworkHandler.sendPacketDirect(new CGetToken(playerData.userName,playerData.login_token));
+            new Thread(() -> {
+                readUsernameAndPassword(tag);
+                ClientAuthNetworkHandler.sendPacketDirect(new CGetToken(playerData.userName, playerData.login_token));
+            }).start();
         }
 
         createGL();

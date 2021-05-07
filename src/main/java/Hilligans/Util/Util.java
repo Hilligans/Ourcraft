@@ -100,22 +100,6 @@ public class Util {
             "   FragColor = texture(ourTexture, texCoord);\n" +
             "}\n\0";
 
-    public static String particleVertexShader1 = "#version 330 core\n" +
-            "layout (location = 0) in vec3 aPos;\n" +
-            "layout (location = 1) in vec4 texCoord;\n" +
-            "layout (location = 2) in float size;\n" +
-            "uniform mat4 transform;\n" +
-            "out vec4 texOut;\n" +
-            "out mat4 transformOut;\n" +
-            "out float sizeOut;\n" +
-            "void main()\n" +
-            "{\n" +
-            "   gl_Position = vec4(aPos, 1.0);\n" +
-            "   transformOut = transform;\n" +
-            "   texOut = texCoord;\n" +
-            "   sizeOut = size;\n" +
-            "}\0";
-
     public static String particleGeometryShader1 = "#version 330 core\n" +
             "layout (points) in;\n" +
             "layout (triangle_strip, max_vertices = 4) out;\n" +

@@ -32,10 +32,10 @@ public class STokenValid extends PacketBase {
 
     @Override
     public void handle() {
-        ChannelHandlerContext oldCtx = ServerMain.server.playerQueue.get(tempid).typeA;
-        CHandshakePacket packet = ServerMain.server.waitingPlayers.get(oldCtx);
-        ServerMain.server.waitingPlayers.remove(oldCtx);
-        ServerMain.server.playerQueue.remove(tempid);
+        ChannelHandlerContext oldCtx = ServerMain.getServer().playerQueue.get(tempid).typeA;
+        CHandshakePacket packet = ServerMain.getServer().waitingPlayers.get(oldCtx);
+        ServerMain.getServer().waitingPlayers.remove(oldCtx);
+        ServerMain.getServer().playerQueue.remove(tempid);
         System.out.println(this.toString());
         if(valid) {
             CHandshakePacket.handlePlayer(packet.name, packet.version, oldCtx, uuid);
