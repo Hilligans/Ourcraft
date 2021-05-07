@@ -42,7 +42,7 @@ public class JoinScreen extends ScreenBase {
         widgets.add(new ServerSelectorWidget(100,300,200,80,"localhost","25586",this));
         widgets.add(new Button(500, 200, 200, 50, "Create Account", () -> ClientMain.getClient().openScreen(new AccountCreationScreen())));
         widgets.add(new Button(500, 300, 200, 50, "Log in", () -> ClientMain.getClient().openScreen(new LoginScreen())));
-        widgets.add(new Button(500,500,500,200,"CAN YOU SEE THIS",() -> {}));
+        //widgets.add(new Button(500,500,500,200,"CAN YOU SEE THIS",() -> {}));
 
         registerKeyPress(new KeyPress() {
             @Override
