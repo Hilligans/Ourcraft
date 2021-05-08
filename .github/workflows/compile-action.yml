@@ -20,3 +20,15 @@ jobs:
           distribution: 'adopt'
       - name: Build with Maven
         run: mvn -B package --file pom.xml
+
+      - name: Commit and push changes
+        run: |
+        git config --global user.name "your username"
+        git config --global user.email "your email"
+        git config --global
+        git add -A
+        git commit -m "commit message"
+        git stash
+        git checkout builds
+        git stash pop
+        git push
