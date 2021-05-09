@@ -18,17 +18,11 @@ jobs:
         with:
           java-version: '16'
           distribution: 'adopt'
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
-
-      - name: Commit and push changes
-        run: |
-        git config user.name Hilligans
-        git config user.email squarehead2003@gmail.com
-        git config --global
-        git add -A
-        git commit -m "commit message"
-        git stash
-        git checkout builds
-        git stash pop
-        git push
+      - run: mvn -B package --file pom.xml
+      - run: mkdir staging && cp target/*.jar staging
+      - name: Maven Package
+        uses: actions/upload-artifact@v2
+        with:
+          path: staging'
+          java-version: '16'
+          distribution: 'adopt'
