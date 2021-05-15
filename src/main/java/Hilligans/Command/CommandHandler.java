@@ -2,6 +2,8 @@ package Hilligans.Command;
 
 import Hilligans.Entity.Entity;
 
+import java.util.ArrayList;
+
 public abstract  class CommandHandler {
 
     public CommandHandler(String command) {
@@ -13,7 +15,7 @@ public abstract  class CommandHandler {
         return this;
     }
 
-    public abstract String handle(Entity executor, String[] args);
+    public abstract Object handle(Entity executor, String[] args);
 
     public static boolean isNumber(String arg) {
         try {
@@ -21,6 +23,15 @@ public abstract  class CommandHandler {
             return true;
         } catch (Exception ignored) {}
         return false;
+    }
+
+    public ArrayList<Entity> processSelector(String selector) {
+
+        return null;
+    }
+
+    public Entity processSelectorSingle(String selector) {
+
     }
 
 }

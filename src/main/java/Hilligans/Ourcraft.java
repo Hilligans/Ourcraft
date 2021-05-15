@@ -13,6 +13,8 @@ public class Ourcraft {
     public static final EventBus EVENT_BUS = new EventBus();
     public static final ModLoader MOD_LOADER = new ModLoader();
 
+    public static String path = System.getProperty("user.dir");
+
     public static String hashString(String password, String salt) {
         return new String(BCrypt.withDefaults().hash(12,"abcdefghjklmmopq".getBytes(), (password + salt).getBytes()), StandardCharsets.UTF_8);
     }

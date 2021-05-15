@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -88,6 +89,7 @@ public class WorldLoader {
             ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vals.length);
             byteBuffer.put(vals);
             byteBuffer.flip();
+
 
             //stbi_load_from_memory()
 

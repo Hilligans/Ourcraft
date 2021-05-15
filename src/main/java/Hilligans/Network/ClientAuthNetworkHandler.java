@@ -26,7 +26,7 @@ public class ClientAuthNetworkHandler extends NetworkHandler {
         //if(networkHandler == null || !networkHandler.channel.isWritable()) {
             networkHandler = new ClientAuthNetworkHandler();
             try {
-                ClientNetworkInit.joinServer("72.172.99.188", "25588", networkHandler);
+                ClientNetworkInit.joinServer("hilligans.dev", "25588", networkHandler);
             } catch (Exception ignored) {
                 ignored.printStackTrace();
             }

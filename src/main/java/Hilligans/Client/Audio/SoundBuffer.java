@@ -33,6 +33,7 @@ public class SoundBuffer {
                 channelType = info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
             } catch (Exception ignored) {}
         }
+
     }
 
     public SoundSource createNewSound(boolean loop, boolean relative, SoundCategory soundCategory) {

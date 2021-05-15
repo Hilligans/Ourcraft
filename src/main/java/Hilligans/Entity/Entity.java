@@ -1,5 +1,6 @@
 package Hilligans.Entity;
 
+import Hilligans.ClientMain;
 import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.MatrixStack;
@@ -11,7 +12,9 @@ import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.ServerMain;
 import Hilligans.Data.Other.BlockPos;
+import Hilligans.Util.Settings;
 import Hilligans.World.World;
+import org.joml.Vector2f;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 
@@ -20,6 +23,11 @@ import java.util.ArrayList;
 public abstract class Entity {
 
     public float x,y,z,pitch,yaw,velX,velY,velZ;
+
+    public Vector3d pos = new Vector3d();
+    public Vector3d vel = new Vector3d();
+    public Vector2f rot = new Vector2f();
+
     public int dimension = 0;
 
     public BoundingBox boundingBox;
@@ -29,6 +37,7 @@ public abstract class Entity {
 
     float slowAmount = 0.9f;
     public boolean onGround = true;
+    public World world;
 
     public Entity(int id) {
         this.id = id;
@@ -36,6 +45,7 @@ public abstract class Entity {
         y = 0;
         z = 0;
         boundingBox = new BoundingBox(0,0,0,0,0,0);
+        setWorld();
     }
 
     public Entity(float x, float y, float z, int id) {
@@ -44,6 +54,7 @@ public abstract class Entity {
         this.z = z;
         this.id = id;
         boundingBox = new BoundingBox(0,0,0,0,0,0);
+        setWorld();
     }
 
     public Entity(PacketData packetData) {
@@ -54,6 +65,15 @@ public abstract class Entity {
         yaw = packetData.readFloat();
         id = packetData.readInt();
         boundingBox = new BoundingBox(0,0,0,0,0,0);
+        setWorld();
+    }
+
+    private void setWorld() {
+        if(Settings.isServer) {
+            world = ServerMain.getWorld(dimension);
+        } else {
+            world = ClientMain.getClient().clientWorld;
+        }
     }
 
     public Entity setPos(float x, float y, float z) {
@@ -88,6 +108,10 @@ public abstract class Entity {
         this.velY = vel.y;
         this.velZ = vel.z;
         return this;
+    }
+
+    public World getWorld() {
+        return world;
     }
 
     public void writeData(PacketData packetData) {

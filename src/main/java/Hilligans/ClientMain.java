@@ -9,6 +9,9 @@ import Hilligans.Util.Vector5f;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class ClientMain {
@@ -21,41 +24,16 @@ public class ClientMain {
 
 
     public static void main(String[] args) {
-        JSONObject jsonObject = new JSONObject();
-
-        for(int x = 0; x < 6; x++) {
-            JSONArray vertices = new JSONArray();
-            JSONArray indices = new JSONArray();
-
-            Vector5f[] vector5fs = PlantManager.getXBlockVertices(0.5f, 0.5f,null, x,1.0f);
-            Integer[] integers = CubeManager.getIndices(x,0);
-
-            for (Vector5f vector5f : vector5fs) {
-                JSONArray vals = new JSONArray();
-                for(float val : vector5f.values) {
-                    //val += 0.5;
-                    vals.put(val);
-                }
-                vertices.put(vals);
-            }
-            indices.putAll(integers);
-            JSONObject newObject = new JSONObject();
-            newObject.put("vertices", vertices);
-            newObject.put("indices",indices);
-            jsonObject.put(x + "",newObject);
-        }
-
-        JSONArray jsonArray = new JSONArray();
-        jsonArray.put(0).put(4).put(5).put(6).put(7).put(8);
-
-
-        jsonObject.put("modelRotations",jsonArray);
-
-
-
-
         client = new Client();
         client.startClient();
+    }
+
+    public static void handleArgs(String[] args) {
+        for(String string : args) {
+            if(string.length() >= 5 && string.startsWith("--path")) {
+                Ourcraft.path = string.substring(5);
+            }
+        }
     }
 
     public static int getWindowX() {
