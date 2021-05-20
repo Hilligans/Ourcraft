@@ -1,5 +1,6 @@
 package Hilligans.Network.Packet.Client;
 
+import Hilligans.Command.CommandExecutors.EntityExecutor;
 import Hilligans.Command.CommandHandler;
 import Hilligans.Command.Commands;
 import Hilligans.Network.Packet.Server.SChatMessage;
@@ -41,7 +42,7 @@ public class CSendMessage extends PacketBase {
                 if (commandHandler != null) {
                     String[] args1 = new String[args.length - 1];
                     System.arraycopy(args,1,args1,0,args1.length);
-                    ServerNetworkHandler.sendPacket(new SChatMessage(commandHandler.handle(ServerNetworkHandler.getPlayerData(ctx).playerEntity,args1)));
+                    ServerNetworkHandler.sendPacket(new SChatMessage((String) commandHandler.handle(new EntityExecutor(ServerNetworkHandler.getPlayerData(ctx).playerEntity),args1)));
                     return;
                 }
             }

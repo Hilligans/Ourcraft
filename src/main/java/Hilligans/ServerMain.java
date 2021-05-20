@@ -15,6 +15,7 @@ import Hilligans.Tag.CompoundTag;
 import Hilligans.Tag.IntegerTag;
 import Hilligans.Tag.Tag;
 import Hilligans.Network.ServerNetworkInit;
+import Hilligans.Util.ConsoleReader;
 import Hilligans.Util.Profiler;
 import Hilligans.Util.Settings;
 import Hilligans.World.Builders.OreBuilder;

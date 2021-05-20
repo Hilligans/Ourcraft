@@ -94,4 +94,16 @@ public class KeyBind {
         }
     }
 
+    public String asString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int x = 0; x < keyCombo.length; x++) {
+            stringBuilder.append(KeyHandler.mappedKeys.get(keyCombo[x]));
+            if(x + 1 < keyCombo.length) {
+                stringBuilder.append(" + ");
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+
 }

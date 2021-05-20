@@ -1,5 +1,7 @@
 package Hilligans.Server;
 
+import Hilligans.Command.CommandExecutors.ConsoleExecutor;
+import Hilligans.Command.Commands;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.ModHandler.Events.Server.MultiPlayerServerStartEvent;
 import Hilligans.ModHandler.Events.Server.ServerTickEvent;
@@ -8,12 +10,15 @@ import Hilligans.Network.Packet.Server.SDisconnectPacket;
 import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.Network.ServerNetworkInit;
 import Hilligans.Ourcraft;
+import Hilligans.Util.ConsoleReader;
 import Hilligans.Util.Settings;
 import Hilligans.World.ServerWorld;
 import Hilligans.World.World;
 import io.netty.channel.ChannelHandlerContext;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectCollection;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -34,6 +39,8 @@ public class MultiPlayerServer {
         executorService.scheduleAtFixedRate(server, 0, 40, TimeUnit.MILLISECONDS);
         ScheduledExecutorService executorService1 = Executors.newScheduledThreadPool(1);
         executorService1.scheduleAtFixedRate(new PlayerHandler(this), 0, 10, TimeUnit.MILLISECONDS);
+        ConsoleReader consoleReader = new ConsoleReader(this::executeCommand);
+
         try {
             ServerNetworkInit.startServer(port);
         } catch (Exception e) {
@@ -52,6 +59,16 @@ public class MultiPlayerServer {
         worlds.put(id,world);
     }
 
+    public void executeCommand(String command) {
+        if(!command.startsWith("/")) {
+            command = "/" + command;
+        }
+        Commands.executeCommand(command,new ConsoleExecutor(this));
+    }
+
+    public World getDefaultWorld() {
+        return worlds.values().iterator().next();
+    }
 
 
     static class Server implements Runnable {

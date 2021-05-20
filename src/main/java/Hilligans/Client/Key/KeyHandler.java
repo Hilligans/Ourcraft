@@ -2,8 +2,12 @@ package Hilligans.Client.Key;
 
 import Hilligans.ClientMain;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
+import Hilligans.ModHandler.Events.Client.GLInitEvent;
+import Hilligans.Ourcraft;
 import it.unimi.dsi.fastutil.ints.Int2CharOpenHashMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWCharCallbackI;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
 import java.util.ArrayList;
@@ -14,6 +18,7 @@ import static org.lwjgl.glfw.GLFW.*;
 public class KeyHandler {
 
     public static Int2CharOpenHashMap mappedKeys = new Int2CharOpenHashMap();
+    public static Int2ObjectOpenHashMap<String> namedKeys = new Int2ObjectOpenHashMap<>();
     public static Int2CharOpenHashMap shiftMappedKeys = new Int2CharOpenHashMap();
     public static boolean[] keyPressed = new boolean[350];
 
@@ -100,9 +105,8 @@ public class KeyHandler {
         }
     }
 
-    static {
-
-        GLFW.glfwSetKeyCallback(ClientMain.getClient().window, new GLFWKeyCallback() {
+    private static void setCallback(long window) {
+        GLFW.glfwSetKeyCallback(window, new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
                 if(action == GLFW_PRESS) {
@@ -116,6 +120,34 @@ public class KeyHandler {
                 }
             }
         });
+
+        glfwSetCharCallback(window, new GLFWCharCallbackI() {
+            @Override
+            public void invoke(long window, int codepoint) {
+                System.out.println((char)codepoint);
+            }
+        });
+    }
+
+    private static void setCallback(GLInitEvent glInitEvent) {
+        setCallback(glInitEvent.window);
+    }
+
+    private static void putKeyAndKey(int id, char key) {
+        mappedKeys.put(id,key);
+        namedKeys.put(id,key + "");
+    }
+
+    private static void putName(int id, String name) {
+        namedKeys.put(id,name);
+    }
+
+    static {
+        if(ClientMain.getClient().glStarted) {
+            setCallback(ClientMain.getClient().window);
+        } else {
+            Ourcraft.EVENT_BUS.register(GLInitEvent.class,KeyHandler::setCallback);
+        }
 
         mappedKeys.put(32,' ');
         mappedKeys.put(39, '\'');
@@ -165,6 +197,9 @@ public class KeyHandler {
         mappedKeys.put(92,'\\');
         mappedKeys.put(93,']');
         mappedKeys.put(96,'`');
+
+        putKeyAndKey(GLFW.GLFW_KEY_A,'a');
+
 
         shiftMappedKeys.put(39, '\"');
         shiftMappedKeys.put(44,'<');

@@ -13,6 +13,7 @@ import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CRequestChunkPacket;
 import Hilligans.Network.Packet.Server.SSendBlockChanges;
 import Hilligans.Network.ServerNetworkHandler;
+import Hilligans.Server.MultiPlayerServer;
 import Hilligans.Util.*;
 import Hilligans.Util.Noises.*;
 import Hilligans.World.Builders.WorldBuilder;
@@ -38,7 +39,6 @@ public abstract class World {
     Noise biomes = new Noise(new Random(seed).nextInt());
 
     public BiomeNoise biomeMap;
-
 
 
     SimplexNoise simplexNoise;

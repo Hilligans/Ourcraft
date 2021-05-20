@@ -1,5 +1,6 @@
 package Hilligans.Command;
 
+import Hilligans.Command.CommandExecutors.CommandExecutor;
 import Hilligans.Entity.Entity;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public abstract  class CommandHandler {
         return this;
     }
 
-    public abstract Object handle(Entity executor, String[] args);
+    public abstract Object handle(CommandExecutor executor, String[] args);
 
     public static boolean isNumber(String arg) {
         try {
@@ -31,7 +32,7 @@ public abstract  class CommandHandler {
     }
 
     public Entity processSelectorSingle(String selector) {
-
+        return null;
     }
 
 }

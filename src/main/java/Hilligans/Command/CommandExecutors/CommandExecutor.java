@@ -1,5 +1,6 @@
 package Hilligans.Command.CommandExecutors;
 
+import Hilligans.Server.MultiPlayerServer;
 import Hilligans.World.World;
 
 public interface CommandExecutor {
@@ -9,6 +10,8 @@ public interface CommandExecutor {
      double getY();
 
      double getZ();
+
+     MultiPlayerServer getServer();
 
      World getWorld();
 }

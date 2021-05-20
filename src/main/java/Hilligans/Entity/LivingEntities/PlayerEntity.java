@@ -75,8 +75,8 @@ public class PlayerEntity extends LivingEntity {
         }
     }
 
-    public Vector3f getForeWard() {
-        return new Vector3f((float) (Math.cos(yaw) * Math.cos(pitch)),(float)(Math.sin(pitch)),(float)(Math.sin(yaw) * Math.cos(pitch)));
+    public Vector3d getForeWard() {
+        return new Vector3d((float) (Math.cos(yaw) * Math.cos(pitch)),(float)(Math.sin(pitch)),(float)(Math.sin(yaw) * Math.cos(pitch)));
     }
 
     public ServerPlayerData getPlayerData() {

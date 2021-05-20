@@ -280,7 +280,7 @@ public class Camera {
         return new Vector3d(Camera.pos.x - (playerChunkPos.x << 4), Camera.pos.y, Camera.pos.z - (playerChunkPos.z << 4));
     }
 
-    static Vector3d cameraUp    = new Vector3d(0.0f, 1.0f, 0.0f);
+    static Vector3d cameraUp = new Vector3d(0.0f, 1.0f, 0.0f);
 
     public static void applyTransformations(Matrix4d matrix4d) {
         Matrix4d projection = new Matrix4d();
@@ -298,15 +298,11 @@ public class Camera {
         Matrix4d matrix4d = getPerspective();
         Matrix4d view = getViewStack();
         matrix4d.mul(view);
-       // if(thirdPerson && thirdPersonMode == 1) {
-       //     matrix4d.lookAt(Camera.duplicateAndAssign().sub((float) (Math.cos(Camera.yaw) * Math.cos(Camera.pitch)), (float) (Math.sin(Camera.pitch)), (float) (Math.sin(Camera.yaw) * Math.cos(Camera.pitch))), Camera.duplicateExtra(), cameraUp);
-      //  } else {
         if(thirdPerson && thirdPersonMode == 1) {
             matrix4d.lookAt(Camera.duplicateAndAssign().add(getLookVector().negate()), Camera.duplicateExtra(), cameraUp);
         } else {
             matrix4d.lookAt(Camera.duplicateAndAssign().add(getLookVector()), Camera.duplicateExtra(), cameraUp);
         }
-       // }
         matrix4d.translate(0,0.15f,0);
         if(KeyHandler.keyPressed[GLFW_KEY_LEFT_SHIFT]) {
             matrix4d.translate(0,0.05f,0);

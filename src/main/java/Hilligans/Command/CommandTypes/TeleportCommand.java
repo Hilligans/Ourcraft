@@ -1,5 +1,7 @@
 package Hilligans.Command.CommandTypes;
 
+import Hilligans.Command.CommandExecutors.CommandExecutor;
+import Hilligans.Command.CommandExecutors.EntityExecutor;
 import Hilligans.Command.CommandHandler;
 import Hilligans.Data.Other.Server.ServerPlayerData;
 import Hilligans.Entity.Entity;
@@ -16,7 +18,7 @@ public class TeleportCommand extends CommandHandler {
     }
 
     @Override
-    public String handle(Entity executor, String[] args) {
+    public String handle(CommandExecutor executor, String[] args) {
         if(args.length >= 4) {
             PlayerEntity playerEntity = ServerNetworkHandler.getPlayerEntity(args[0]);
             if(playerEntity != null) {
@@ -33,16 +35,19 @@ public class TeleportCommand extends CommandHandler {
             }
         } else if(args.length == 3) {
             try {
-                float x = Float.parseFloat(args[0]);
-                float y = Float.parseFloat(args[1]);
-                float z = Float.parseFloat(args[2]);
-                executor.x = x;
-                executor.y = y;
-                executor.z = z;
-                ServerNetworkHandler.sendPacket(new SUpdateEntityPacket(x,y,z,executor.pitch,executor.yaw,executor.id));
+                if(executor instanceof EntityExecutor) {
+                    Entity entity = ((EntityExecutor) executor).entity;
+                    float x = Float.parseFloat(args[0]);
+                    float y = Float.parseFloat(args[1]);
+                    float z = Float.parseFloat(args[2]);
+                    entity.x = x;
+                    entity.y = y;
+                    entity.z = z;
+                    ServerNetworkHandler.sendPacket(new SUpdateEntityPacket(x, y, z, entity.pitch, entity.yaw, entity.id));
 
-                if(executor instanceof PlayerEntity) {
-                    ServerNetworkHandler.sendPacket(new SUpdatePlayer(x,y,z,executor.pitch,executor.yaw),(PlayerEntity)executor);
+                    if (entity instanceof PlayerEntity) {
+                        ServerNetworkHandler.sendPacket(new SUpdatePlayer(x, y, z, entity.pitch, entity.yaw), (PlayerEntity) entity);
+                    }
                 }
 
             } catch (Exception ignored) {}

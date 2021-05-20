@@ -1,11 +1,13 @@
 package Hilligans.Command.CommandExecutors;
 
 import Hilligans.Entity.Entity;
+import Hilligans.Server.MultiPlayerServer;
+import Hilligans.World.ServerWorld;
 import Hilligans.World.World;
 
 public class EntityExecutor implements CommandExecutor {
 
-    Entity entity;
+    public Entity entity;
 
     public EntityExecutor(Entity entity) {
         this.entity = entity;
@@ -24,6 +26,15 @@ public class EntityExecutor implements CommandExecutor {
     @Override
     public double getZ() {
         return 0;
+    }
+
+    @Override
+    public MultiPlayerServer getServer() {
+        World world = entity.world;
+        if(world instanceof ServerWorld) {
+            return ((ServerWorld) world).multiPlayerServer;
+        }
+        return null;
     }
 
     @Override

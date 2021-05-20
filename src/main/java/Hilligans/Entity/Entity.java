@@ -57,6 +57,13 @@ public abstract class Entity {
         setWorld();
     }
 
+    public Entity(Vector3d pos, int id) {
+        this.pos = pos;
+        this.id = id;
+        boundingBox = new BoundingBox(0,0,0,0,0,0);
+        setWorld();
+    }
+
     public Entity(PacketData packetData) {
         x = packetData.readFloat();
         y = packetData.readFloat();
@@ -87,26 +94,32 @@ public abstract class Entity {
         this.x = (float) vector3d.x;
         this.y = (float) vector3d.y;
         this.z = (float) vector3d.z;
+        this.pos = vector3d;
         return this;
     }
 
     public Entity setRot(float pitch, float yaw) {
        this.pitch = pitch;
        this.yaw = yaw;
+       this.rot = new Vector2f(pitch,yaw);
+        return this;
+    }
+
+    public Entity setRot(Vector2f rot) {
+        this.rot = rot;
         return this;
     }
 
     public Entity setVel(float velX, float velY, float velZ) {
-        this.velX = velX;
-        this.velY = velY;
-        this.velZ = velZ;
+        this.vel = new Vector3d(velX,velY,velZ);
         return this;
     }
 
-    public Entity setVel(Vector3f vel) {
-        this.velX = vel.x;
-        this.velY = vel.y;
-        this.velZ = vel.z;
+    public Entity setVel(Vector3d vel) {
+        this.velX = (float) vel.x;
+        this.velY = (float) vel.y;
+        this.velZ = (float) vel.z;
+        this.vel = vel;
         return this;
     }
 

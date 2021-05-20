@@ -5,6 +5,7 @@ import Hilligans.ModHandler.Mod;
 import Hilligans.ModHandler.ModLoader;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
@@ -17,5 +18,9 @@ public class Ourcraft {
 
     public static String hashString(String password, String salt) {
         return new String(BCrypt.withDefaults().hash(12,"abcdefghjklmmopq".getBytes(), (password + salt).getBytes()), StandardCharsets.UTF_8);
+    }
+
+    public static File getFile(String path) {
+        return new File(path + "/" + path);
     }
 }

@@ -1,6 +1,7 @@
 package Hilligans.Client;
 
 import Hilligans.Block.Blocks;
+import Hilligans.Client.Key.KeyBind;
 import Hilligans.Client.Key.KeyHandler;
 import Hilligans.Client.Key.KeyPress;
 import Hilligans.Client.Mouse.MouseHandler;
@@ -40,8 +41,7 @@ import Hilligans.Util.Settings;
 import Hilligans.World.ClientWorld;
 import Hilligans.WorldSave.WorldLoader;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFWMouseButtonCallback;
-import org.lwjgl.glfw.GLFWScrollCallback;
+import org.lwjgl.glfw.*;
 import org.lwjgl.openal.AL11;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL30;
@@ -72,6 +72,7 @@ public class Client {
     public boolean screenShot = false;
     public boolean renderWorld = false;
     public PlayerList playerList;
+    public boolean glStarted = false;
 
     public MouseHandler mouseHandler;
 
@@ -104,11 +105,11 @@ public class Client {
         }
 
         createGL();
+
         soundEngine.init();
         soundEngine.setAttenuationModel(AL11.AL_LINEAR_DISTANCE_CLAMPED);
         registerKeyHandlers();
         createCallbacks();
-
 
 
 
@@ -157,6 +158,7 @@ public class Client {
         glfwMakeContextCurrent(window);
         GL.createCapabilities();
 
+        glStarted = true;
         Ourcraft.EVENT_BUS.postEvent(new GLInitEvent(window));
 
         shaderManager = new ShaderManager();

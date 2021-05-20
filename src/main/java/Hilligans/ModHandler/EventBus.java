@@ -16,6 +16,10 @@ public class EventBus {
         list.add(e-> consumer.accept((T)e));
     }
 
+    public <T extends Event> void register(Consumer<T> consumer, Class<T> eventClass) {
+        register(eventClass,consumer);
+    }
+
     public void register(Object obj) {
         Method[] methods = obj.getClass().getMethods();
         for(Method method : methods) {
