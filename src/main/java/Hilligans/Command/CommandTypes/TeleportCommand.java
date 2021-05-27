@@ -9,6 +9,7 @@ import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Network.Packet.Server.SUpdateEntityPacket;
 import Hilligans.Network.Packet.Server.SUpdatePlayer;
 import Hilligans.Network.ServerNetworkHandler;
+import Hilligans.ServerMain;
 import org.lwjgl.glfw.GLFW;
 
 public class TeleportCommand extends CommandHandler {
@@ -28,8 +29,8 @@ public class TeleportCommand extends CommandHandler {
                 playerEntity.x = x;
                 playerEntity.y = y;
                 playerEntity.z = z;
-                ServerNetworkHandler.sendPacket(new SUpdateEntityPacket(x,y,z,playerEntity.pitch,playerEntity.yaw,playerEntity.id));
-                ServerNetworkHandler.sendPacket(new SUpdatePlayer(x,y,z,playerEntity.pitch,playerEntity.yaw),playerEntity);
+                ServerMain.getServer().sendPacket(new SUpdateEntityPacket(x,y,z,playerEntity.pitch,playerEntity.yaw,playerEntity.id));
+                ServerMain.getServer().sendPacket(new SUpdatePlayer(x,y,z,playerEntity.pitch,playerEntity.yaw),playerEntity);
             } else {
                 return "no player found with name " + args[0];
             }
@@ -43,10 +44,10 @@ public class TeleportCommand extends CommandHandler {
                     entity.x = x;
                     entity.y = y;
                     entity.z = z;
-                    ServerNetworkHandler.sendPacket(new SUpdateEntityPacket(x, y, z, entity.pitch, entity.yaw, entity.id));
+                    ServerMain.getServer().sendPacket(new SUpdateEntityPacket(x, y, z, entity.pitch, entity.yaw, entity.id));
 
                     if (entity instanceof PlayerEntity) {
-                        ServerNetworkHandler.sendPacket(new SUpdatePlayer(x, y, z, entity.pitch, entity.yaw), (PlayerEntity) entity);
+                        ServerMain.getServer().sendPacket(new SUpdatePlayer(x, y, z, entity.pitch, entity.yaw), (PlayerEntity) entity);
                     }
                 }
 

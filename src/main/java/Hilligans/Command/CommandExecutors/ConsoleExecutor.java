@@ -1,13 +1,14 @@
 package Hilligans.Command.CommandExecutors;
 
+import Hilligans.Server.IServer;
 import Hilligans.Server.MultiPlayerServer;
 import Hilligans.World.World;
 
 public class ConsoleExecutor implements CommandExecutor {
 
-    MultiPlayerServer multiPlayerServer;
+    IServer multiPlayerServer;
 
-    public ConsoleExecutor(MultiPlayerServer multiPlayerServer) {
+    public ConsoleExecutor(IServer multiPlayerServer) {
         this.multiPlayerServer = multiPlayerServer;
     }
 
@@ -27,7 +28,7 @@ public class ConsoleExecutor implements CommandExecutor {
     }
 
     @Override
-    public MultiPlayerServer getServer() {
+    public IServer getServer() {
         return multiPlayerServer;
     }
 

@@ -32,6 +32,7 @@ public class ShaderManager {
 
     public static Shader worldShader = new Shader(readShader("/Shaders/WorldVertexShader.glsl"),readShader("/Shaders/WorldFragmentShader.glsl")).addShaderElement(GL_FLOAT,3,false).addShaderElement(GL_FLOAT,4,false).addShaderElement(GL_FLOAT,2,false);
     //  .addShaderElement(GL_FLOAT,1,false);
+    public static Shader guiShader = new Shader(readShader("/Shaders/VertexShader.glsl"),readShader("/Shaders/FragmentShader.glsl")).addShaderElement(GL_FLOAT,3,false).addShaderElement(GL_FLOAT,2,false);
 
     public ShaderManager() {
         shaderProgram = ShaderManager.registerShader(Util.shader,Util.fragmentShader1);

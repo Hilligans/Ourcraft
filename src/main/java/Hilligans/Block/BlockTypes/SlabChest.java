@@ -7,6 +7,7 @@ import Hilligans.Data.Other.BlockProperties;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Network.Packet.Server.SOpenContainer;
 import Hilligans.Network.ServerNetworkHandler;
+import Hilligans.ServerMain;
 import Hilligans.World.DataProviders.ChestDataProvider;
 import Hilligans.World.DataProviders.SlabChestDataProvider;
 import Hilligans.World.World;
@@ -28,7 +29,7 @@ public class SlabChest extends SlabBlock {
             SlabChestDataProvider chestDataProvider = (SlabChestDataProvider) world.getDataProvider(pos);
             SlabBlockContainer container = (SlabBlockContainer) new SlabBlockContainer(chestDataProvider.inventory,playerEntity.getPlayerData().playerInventory).setPlayerId(playerEntity.id);
             playerEntity.getPlayerData().openContainer(container);
-            ServerNetworkHandler.sendPacket(new SOpenContainer(container), playerEntity);
+            ServerMain.getServer().sendPacket(new SOpenContainer(container), playerEntity);
         }
         return true;
     }

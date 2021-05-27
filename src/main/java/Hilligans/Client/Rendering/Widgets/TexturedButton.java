@@ -21,7 +21,7 @@ public class TexturedButton extends Button {
         super.render(matrixStack, xOffset, yOffset);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         Renderer.drawTexture(matrixStack, texture,x,y,width,height);
-        StringRenderer.drawString(matrixStack, name,x,y,0.5f);
+        StringRenderer.drawStringTranslated(matrixStack, name,x,y,0.5f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 }

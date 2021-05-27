@@ -1,0 +1,17 @@
+#GUI
+settings.sensitivity::感度
+settings.languages::言語
+settings.fov::視野
+settings.render_distance::描画距離
+settings.transparent_textures::透明テクスチャ
+settings.sound_options::音量設定
+menu.main_menu::ゲームメニュー
+menu.log_in::ログイン
+menu.create_account::アカウントを作成
+menu.join::ゲームに参加
+menu.account_name::アクアウントの名前
+menu.password::パスワード
+menu.email::メール
+menu.disconnect::切断
+menu.settings::設定
+menu.done::完了

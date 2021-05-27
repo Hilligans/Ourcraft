@@ -26,7 +26,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_H;
 public class JoinScreen extends ScreenBase {
 
     public ServerSelectorWidget selected;
-    Button play = new Button(100, ClientMain.getWindowY() / 2 + 100, 200, 50, "Join server", new ButtonAction() {
+    Button play = new Button(100, ClientMain.getWindowY() / 2 + 100, 200, 50, "menu.join", new ButtonAction() {
         @Override
         public void onPress() {
             if(selected != null) {
@@ -39,8 +39,8 @@ public class JoinScreen extends ScreenBase {
         widgets.add(play);
         widgets.add(new ServerSelectorWidget(100,200,200,80,"72.172.99.188","25586",this));
         widgets.add(new ServerSelectorWidget(100,300,200,80,"localhost","25586",this));
-        widgets.add(new Button(500, 200, 200, 50, "Create Account", () -> ClientMain.getClient().openScreen(new AccountCreationScreen())));
-        widgets.add(new Button(500, 300, 200, 50, "Log in", () -> ClientMain.getClient().openScreen(new LoginScreen())));
+        widgets.add(new Button(500, 200, 200, 50, "menu.create_account", () -> ClientMain.getClient().openScreen(new AccountCreationScreen())));
+        widgets.add(new Button(500, 300, 200, 50, "menu.log_in", () -> ClientMain.getClient().openScreen(new LoginScreen())));
         //widgets.add(new Button(500,500,500,200,"CAN YOU SEE THIS",() -> {}));
 
         registerKeyPress(new KeyPress() {

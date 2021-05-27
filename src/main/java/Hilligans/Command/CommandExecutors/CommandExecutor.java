@@ -1,5 +1,6 @@
 package Hilligans.Command.CommandExecutors;
 
+import Hilligans.Server.IServer;
 import Hilligans.Server.MultiPlayerServer;
 import Hilligans.World.World;
 
@@ -11,7 +12,7 @@ public interface CommandExecutor {
 
      double getZ();
 
-     MultiPlayerServer getServer();
+     IServer getServer();
 
      World getWorld();
 }

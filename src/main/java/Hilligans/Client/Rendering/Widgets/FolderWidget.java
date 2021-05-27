@@ -41,11 +41,8 @@ public class FolderWidget extends Widget {
     public FolderWidget addWidget(Widget widget) {
         if(widget instanceof FolderWidget) {
             ((FolderWidget) widget).parent = this;
-            ((FolderWidget) widget).minY = this.minY;
         }
-        if(widget instanceof DataWidget) {
-            ((DataWidget) widget).minY = this.minY;
-        }
+        widget.minY = this.minY;
         widgets.add(widget);
         update();
         return this;
@@ -79,7 +76,6 @@ public class FolderWidget extends Widget {
     @Override
     public boolean isInBounds(int x, int y) {
         if(x > this.getX() && x < this.getX() + length && y > this.getY() && y < this.getY() + size && this.isActive()) {
-            //System.out.println("yes");
             return true;
         }
         if(isOpen) {

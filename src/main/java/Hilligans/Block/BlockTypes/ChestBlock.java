@@ -10,6 +10,7 @@ import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Item.ItemStack;
 import Hilligans.Network.Packet.Server.SOpenContainer;
 import Hilligans.Network.ServerNetworkHandler;
+import Hilligans.ServerMain;
 import Hilligans.World.DataProvider;
 import Hilligans.World.DataProviders.ChestDataProvider;
 import Hilligans.World.World;
@@ -33,7 +34,7 @@ public class ChestBlock extends Block {
             ChestDataProvider chestDataProvider = (ChestDataProvider) world.getDataProvider(pos);
             ChestContainer container = (ChestContainer) new ChestContainer(chestDataProvider.inventory,playerEntity.getPlayerData().playerInventory).setPlayerId(playerEntity.id);
             playerEntity.getPlayerData().openContainer(container);
-            ServerNetworkHandler.sendPacket(new SOpenContainer(container), playerEntity);
+            ServerMain.getServer().sendPacket(new SOpenContainer(container), playerEntity);
         }
         return true;
     }

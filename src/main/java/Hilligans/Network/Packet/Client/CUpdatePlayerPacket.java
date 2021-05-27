@@ -60,7 +60,7 @@ public class CUpdatePlayerPacket extends PacketBase {
             Entity entity = ServerMain.getWorld(dim).entities.get(playerId);
             if (entity != null) {
                 entity.setPos((float)x, (float)y, (float)z).setRot(pitch, yaw);
-                ServerNetworkHandler.sendPacket(new SUpdateEntityPacket((float)x, (float)y, (float)z, pitch, yaw, playerId));
+                ServerMain.getServer().sendPacket(new SUpdateEntityPacket((float)x, (float)y, (float)z, pitch, yaw, playerId));
             }
         }
     }

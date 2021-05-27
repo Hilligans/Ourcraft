@@ -102,8 +102,7 @@ public abstract class Container {
         DoubleBuffer mousePos = ClientMain.getClient().getMousePos();
         Slot slot = getSlotAt((int)mousePos.get(0),(int)mousePos.get(1));
         if(slot != null && !slot.getContents().isEmpty()) {
-            StringRenderer.drawStringWithBackground(matrixStack,slot.getContents().item.name,(int)mousePos.get(0) + 16,(int)mousePos.get(1),0.5f);
-            //StringRenderer.drawStringWithBackground(matrixStack,slot.id + "",(int)mousePos.get(0) + 16,(int)mousePos.get(1),0.5f);
+            StringRenderer.drawStringWithBackgroundTranslated(matrixStack,slot.getContents().item.getName(),(int)mousePos.get(0) + 16,(int)mousePos.get(1),0.5f);
         }
     }
 

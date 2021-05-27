@@ -13,6 +13,7 @@ import Hilligans.Network.Packet.Server.SCreateTexture;
 import Hilligans.Network.Packet.Server.SRegisterBlock;
 import Hilligans.Network.Packet.Server.SRegisterContainer;
 import Hilligans.Network.ServerNetworkHandler;
+import Hilligans.ServerMain;
 import Hilligans.Util.Settings;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -122,7 +123,7 @@ public class ServerSidedData {
             generateData();
         }
         for(TripleTypeWrapper<BufferedImage, String, Boolean> type : IMAGES) {
-            ServerNetworkHandler.sendPacket(new SCreateTexture(type.getTypeA(),type.getTypeB(),type.getTypeC()));
+            ServerMain.getServer().sendPacket(new SCreateTexture(type.getTypeA(),type.getTypeB(),type.getTypeC()));
         }
         for(Block block: ServerSidedData.getInstance().BLOCKS) {
             ServerNetworkHandler.sendPacket(new SRegisterBlock(block),ctx);

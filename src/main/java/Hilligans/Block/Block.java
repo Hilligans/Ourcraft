@@ -52,6 +52,10 @@ public class Block {
         return this;
     }
 
+    public String getName() {
+        return "block." + modId + "." + name;
+    }
+
     public boolean activateBlock(World world, PlayerEntity playerEntity, BlockPos pos) {
         return false;
     }

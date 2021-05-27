@@ -14,7 +14,7 @@ public class DisconnectScreen extends ScreenBase {
 
     public DisconnectScreen(String message) {
         this.message = message;
-        widgets.add(new Button(ClientMain.getWindowX() / 2 - 100, (int) (ClientMain.getWindowY() / 2 + Settings.guiSize * 58), 200, 50, "Main Menu", new ButtonAction() {
+        widgets.add(new Button(ClientMain.getWindowX() / 2 - 100, (int) (ClientMain.getWindowY() / 2 + Settings.guiSize * 58), 200, 50, "menu.main_menu", new ButtonAction() {
             @Override
             public void onPress() {
                 ClientMain.getClient().openScreen(new JoinScreen());
@@ -24,7 +24,7 @@ public class DisconnectScreen extends ScreenBase {
 
     @Override
     public void render(MatrixStack matrixStack) {
-        StringRenderer.drawCenteredString(matrixStack,message, (ClientMain.getWindowY() + StringRenderer.instance.stringHeight) / 2,1.0f);
+        StringRenderer.drawCenteredStringTranslated(matrixStack,message, (ClientMain.getWindowY() + StringRenderer.instance.stringHeight) / 2,1.0f);
         super.render(matrixStack);
     }
 }

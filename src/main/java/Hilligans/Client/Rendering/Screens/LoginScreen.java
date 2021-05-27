@@ -11,9 +11,9 @@ import Hilligans.Ourcraft;
 
 public class LoginScreen extends ScreenBase {
 
-    InputField username = new InputField(100,100,200,100, "Account name");
-    InputField password = new InputField(100,250,200,100, "Password");
-    InputField email = new InputField(100,400,200,100,"Email");
+    InputField username = new InputField(100,100,200,100, "menu.account_name");
+    InputField password = new InputField(100,250,200,100, "menu.password");
+    InputField email = new InputField(100,400,200,100,"menu.email");
 
     public LoginScreen() {
         widgets.add(username);

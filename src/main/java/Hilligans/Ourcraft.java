@@ -7,12 +7,16 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 public class Ourcraft {
 
     public static final EventBus EVENT_BUS = new EventBus();
     public static final ModLoader MOD_LOADER = new ModLoader();
+    public static final Logger LOGGER = Logger.getGlobal();
+    public static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public static String path = System.getProperty("user.dir");
 

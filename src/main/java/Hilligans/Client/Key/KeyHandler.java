@@ -124,7 +124,7 @@ public class KeyHandler {
         glfwSetCharCallback(window, new GLFWCharCallbackI() {
             @Override
             public void invoke(long window, int codepoint) {
-                System.out.println((char)codepoint);
+                //System.out.println((char)codepoint);
             }
         });
     }

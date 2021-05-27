@@ -2,6 +2,8 @@ package Hilligans.Client.Rendering.NewRenderer;
 
 import Hilligans.Client.Camera;
 import Hilligans.Client.MatrixStack;
+import Hilligans.Client.Rendering.World.Managers.ShaderManager;
+import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.ClientMain;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Data.Primitives.FloatList;
@@ -48,6 +50,25 @@ public class PrimitiveBuilder {
         size++;
     }
 
+    public void addQuad(float... vertices) {
+        int count = getVerticesCount();
+        this.indices.add(count,count + 1, count + 2,count + 3, count + 2, count + 1);
+        this.vertices.add(vertices);
+        size+= 4;
+    }
+
+    protected void translate(int startX, float x, float y, float z) {
+        for(int i = startX; i < vertices.size(); i+= shader.shaderElementCount) {
+            vertices.elementData[i] += x;
+            vertices.elementData[i + 1] += y;
+            vertices.elementData[i + 2] += z;
+        }
+    }
+
+    public void translate(float x, float y, float z) {
+        translate(0,x,y,z);
+    }
+
     public int getVerticesCount() {
         return vertices.size() / shader.shaderElementCount;
     }
@@ -62,6 +83,7 @@ public class PrimitiveBuilder {
         glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
         int x = 0;
@@ -74,6 +96,16 @@ public class PrimitiveBuilder {
         }
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         return new int[]{VAO,VBO,EBO};
+    }
+
+    public void draw(MatrixStack matrixStack) {
+        int id = VAOManager.createVAO(this);
+        GL30.glBindVertexArray(id);
+        matrixStack.push();
+        matrixStack.applyTransformation(shader.shader);
+        glDrawElements(type, indices.size(), GL_UNSIGNED_INT, 0);
+        matrixStack.pop();
+        VAOManager.destroyBuffer(id);
     }
 
     public void draw(MatrixStack matrixStack, int drawMode) {

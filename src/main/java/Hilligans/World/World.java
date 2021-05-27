@@ -14,6 +14,7 @@ import Hilligans.Network.Packet.Client.CRequestChunkPacket;
 import Hilligans.Network.Packet.Server.SSendBlockChanges;
 import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.Server.MultiPlayerServer;
+import Hilligans.ServerMain;
 import Hilligans.Util.*;
 import Hilligans.Util.Noises.*;
 import Hilligans.World.Builders.WorldBuilder;
@@ -155,7 +156,7 @@ public abstract class World {
             chunk.setBlockState(x, y, z, blockState);
         }
         if (isServer()) {
-            ServerNetworkHandler.sendPacket(new SSendBlockChanges(x,y,z,blockState));
+            ServerMain.getServer().sendPacket(new SSendBlockChanges(x,y,z,blockState));
         }
         updateBlock(new BlockPos(x,y,z));
     }

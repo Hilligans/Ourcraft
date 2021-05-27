@@ -18,6 +18,7 @@ public class Widget {
 
     public boolean isFocused = false;
     public boolean shouldRender = true;
+    public boolean enabled = true;
 
     public IntegerWrapper yOffset = new IntegerWrapper(0);
 

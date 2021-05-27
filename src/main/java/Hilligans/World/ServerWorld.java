@@ -11,7 +11,9 @@ import Hilligans.Entity.Entity;
 import Hilligans.Network.Packet.Server.SCreateEntityPacket;
 import Hilligans.Network.Packet.Server.SRemoveEntityPacket;
 import Hilligans.Network.ServerNetworkHandler;
+import Hilligans.Server.IServer;
 import Hilligans.Server.MultiPlayerServer;
+import Hilligans.ServerMain;
 import Hilligans.Util.Settings;
 import Hilligans.WorldSave.ChunkLoader;
 
@@ -22,12 +24,12 @@ public class ServerWorld extends World {
     ArrayList<Integer> entityRemovals = new ArrayList<>();
     long autoSaveAfter = 30 * 1000;
     long autoSave = -1;
-    public MultiPlayerServer multiPlayerServer;
+    public IServer server;
 
     @Override
     public void addEntity(Entity entity) {
         entities.put(entity.id,entity);
-        ServerNetworkHandler.sendPacket(new SCreateEntityPacket(entity));
+        ServerMain.getServer().sendPacket(new SCreateEntityPacket(entity));
     }
 
     @Override
@@ -38,7 +40,7 @@ public class ServerWorld extends World {
     private void handleRemove() {
         for(Integer integer : entityRemovals) {
             entities.remove((int)integer);
-            ServerNetworkHandler.sendPacket(new SRemoveEntityPacket(integer));
+            ServerMain.getServer().sendPacket(new SRemoveEntityPacket(integer));
         }
     }
 

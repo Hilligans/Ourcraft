@@ -54,9 +54,9 @@ public class Chunk {
 
     public void tick() {
         if(world.isServer()) {
-            ArrayList<BlockPos> list = blockTicks.get(((ServerWorld) world).multiPlayerServer.time);
+            ArrayList<BlockPos> list = blockTicks.get(((ServerWorld) world).server.getTime());
             if(list != null) {
-                blockTicks.remove(((ServerWorld) world).multiPlayerServer.time);
+                blockTicks.remove(((ServerWorld) world).server.getTime());
                 for(BlockPos pos : list) {
                     world.getBlockState(pos).getBlock().tickBlock(world,pos);
                 }
@@ -66,7 +66,7 @@ public class Chunk {
 
     public void scheduleTick(BlockPos pos, int time) {
         if(world.isServer()) {
-            long futureTime = ((ServerWorld)world).multiPlayerServer.time + time;
+            long futureTime = ((ServerWorld)world).server.getTime() + time;
             ArrayList<BlockPos> list = blockTicks.computeIfAbsent(futureTime, k -> new ArrayList<>());
             list.add(pos);
         }

@@ -43,6 +43,15 @@ public class IntList {
         }
     }
 
+    public boolean containsValues(int value) {
+        for(int x = 0; x < size; x++) {
+            if(elementData[x] == value) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void ensureCapacity(int minCapacity) {
         int minExpand = (elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) ? 0 : DEFAULT_CAPACITY;
         if (minCapacity > minExpand) {
@@ -130,7 +139,7 @@ public class IntList {
         size++;
     }
 
-    public void add(int[] values) {
+    public void add(int... values) {
         ensureCapacityInternal(size + values.length);
         System.arraycopy(values,0,elementData,size,values.length);
         size+=values.length;

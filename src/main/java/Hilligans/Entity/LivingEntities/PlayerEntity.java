@@ -71,7 +71,7 @@ public class PlayerEntity extends LivingEntity {
         }
         if(updateInventory) {
             inventory.age++;
-            sendPacket(new SUpdateInventory(inventory));
+            ServerMain.getServer().sendPacket(new SUpdateInventory(inventory),this);
         }
     }
 
@@ -81,6 +81,10 @@ public class PlayerEntity extends LivingEntity {
 
     public ServerPlayerData getPlayerData() {
         return ServerNetworkHandler.playerData.get(id);
+    }
+
+    public void kick(String message) {
+        //ServerNetworkHandler.
     }
 
     @Override
@@ -187,10 +191,6 @@ public class PlayerEntity extends LivingEntity {
             default:
                 return new Integer[]{spot,spot + 2, spot + 1, spot, spot + 3, spot + 2};
         }
-    }
-
-    public void sendPacket(PacketBase packetBase) {
-        ServerNetworkHandler.getChannel(id).writeAndFlush(new PacketData(packetBase));
     }
 
 

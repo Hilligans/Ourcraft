@@ -1,9 +1,9 @@
 package Hilligans.Client;
 
 import Hilligans.Block.Blocks;
-import Hilligans.Client.Key.KeyBind;
 import Hilligans.Client.Key.KeyHandler;
 import Hilligans.Client.Key.KeyPress;
+import Hilligans.Client.Lang.Languages;
 import Hilligans.Client.Mouse.MouseHandler;
 import Hilligans.Client.Rendering.*;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.CreativeInventoryScreen;
@@ -165,7 +165,9 @@ public class Client {
 
         Blocks.generateTextures();
         PlayerEntity.imageId = WorldTextureManager.loadAndRegisterTexture("player.png");
-        StringRenderer.instance.loadCharacters1();
+        StringRenderer.instance.buildChars();
+        //StringRenderer.instance.loadCharacters2();
+
         for(Texture texture : Textures.TEXTURES) {
             texture.register();
         }
@@ -175,6 +177,8 @@ public class Client {
         clientWorld = new ClientWorld();
 
        // glEnable(GL_DEPTH);
+
+        glfwWindowHint(GLFW_SAMPLES, 4);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_DEPTH_TEST);
@@ -222,6 +226,8 @@ public class Client {
 
         Ourcraft.EVENT_BUS.postEvent(new RenderStartEvent(matrixStack,screenStack,this));
 
+        //StringRenderer.instance.drawString(screenStack,"abcd",1000,100,0.5f);
+        //StringRenderer.drawString(screenStack,"abcd",1000,150,0.5f);
         if(renderWorld) {
             clientWorld.tick();
             clientWorld.render(matrixStack);
@@ -273,8 +279,8 @@ public class Client {
                 VAOManager.destroyBuffer(id);
             }
 
+            StringRenderer.drawString(matrixStack,"定",1000,100,0.5f);
             glUseProgram(shaderManager.shaderProgram);
-
             if (playerData.f3) {
                 StringRenderer.drawString(screenStack, Camera.getString(), windowX / 2, 0, 0.5f);
                 StringRenderer.drawString(screenStack, "FPS:" + fps, windowX / 2, 29, 0.5f);
@@ -382,6 +388,13 @@ public class Client {
               //  }
       //      }
       //  }, GLFW_KEY_H);
+
+        KeyHandler.register(new KeyPress() {
+            @Override
+            public void onPress() {
+                Languages.setCurrentLanguage("test");
+            }
+        },KeyHandler.GLFW_KEY_F6);
 
 
 

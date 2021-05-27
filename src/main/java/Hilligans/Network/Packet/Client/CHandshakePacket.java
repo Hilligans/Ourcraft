@@ -69,7 +69,7 @@ public class CHandshakePacket extends PacketBase {
                 ServerNetworkHandler.sendPacketClose(new SDisconnectPacket("An account with your username is already connected to the server"),ctx);
             }
         } else {
-            ServerNetworkHandler.sendPacketClose(new SDisconnectPacket("Game version is incompatible"),ctx);
+            ServerNetworkHandler.sendPacketClose(new SDisconnectPacket("version_incompatible"),ctx);
         }
     }
 
@@ -87,7 +87,7 @@ public class CHandshakePacket extends PacketBase {
         ServerNetworkHandler.nameToChannel.put(name, ctx.channel().id());
         ServerMain.getWorld(serverPlayerData.getDimension()).addEntity(playerEntity);
         ServerNetworkHandler.sendPacket(new SHandshakePacket(playerId,ServerSidedData.getInstance().version),ctx);
-        ServerNetworkHandler.sendPacket(new SChatMessage(name + " has joined the game"));
+        ServerMain.getServer().sendPacket(new SChatMessage(name + " has joined the game"));
         ServerNetworkHandler.sendPacketExcept(new SSendPlayerList(name,playerId,true),ctx);
         int size = ServerNetworkHandler.mappedChannels.size();
         String[] players = new String[size];
@@ -98,7 +98,7 @@ public class CHandshakePacket extends PacketBase {
             ids[x] = ServerNetworkHandler.mappedId.get(channelId1);
             x++;
         }
-        ServerNetworkHandler.sendPacket(new SSendPlayerList(players,ids));
+        ServerMain.getServer().sendPacket(new SSendPlayerList(players,ids));
         for(Entity entity : ServerMain.getWorld(serverPlayerData.getDimension()).entities.values()) {
             ServerNetworkHandler.sendPacket(new SCreateEntityPacket(entity),ctx);
         }

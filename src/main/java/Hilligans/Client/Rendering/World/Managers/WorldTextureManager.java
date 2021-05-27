@@ -27,6 +27,8 @@ import java.util.zip.ZipInputStream;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
+import static org.lwjgl.opengl.GL32C.GL_TEXTURE_2D_MULTISAMPLE;
+import static org.lwjgl.opengl.GL32C.glTexImage2DMultisample;
 
 public class WorldTextureManager {
 
@@ -303,8 +305,22 @@ public class WorldTextureManager {
         allocatePixels(byteBuffer, bufferedImage);
         texture = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texture);
-
+       // glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, bufferedImage.getWidth(), bufferedImage.getHeight(), true);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bufferedImage.getWidth(), bufferedImage.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, byteBuffer);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        return texture;
+    }
+
+    private static int registerTexture2(BufferedImage bufferedImage) {
+        int texture;
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(bufferedImage.getWidth() * bufferedImage.getHeight() * 4);
+        allocatePixels(byteBuffer, bufferedImage);
+        texture = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, texture);
+
+       // glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bufferedImage.getWidth(), bufferedImage.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, byteBuffer);
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -323,7 +339,8 @@ public class WorldTextureManager {
 
 
 
-        Font font = new Font("Tahoma", Font.PLAIN, 48);
+        //Font font = new Font("Tahoma", Font.PLAIN, 48);
+        Font font = new Font("SansSerif", Font.PLAIN, 48);
         //Set the font to be used when drawing the string
         g.setFont(font);
 
@@ -334,8 +351,12 @@ public class WorldTextureManager {
         g.dispose();
 
         //Then, we have to draw the string on the final image
-
+        if(Math.ceil(rect.getWidth()) == 0) {
+            //System.out.println(s);
+            return null;
+        }
         //Create a new image where to print the character
+
         img = new BufferedImage((int) Math.ceil(rect.getWidth()), (int) Math.ceil(rect.getHeight()), BufferedImage.TYPE_INT_ARGB);
         g = img.getGraphics();
         g.setColor(Color.white); //Otherwise the text would be white
@@ -429,9 +450,6 @@ public class WorldTextureManager {
             id -= RATIO * this.id;
             int y = (int)(id / count);
             int x = (int)(id - (y * count));
-            if(val) {
-               // System.out.println("x " + x);
-            }
             return ((float)1 / count) * x + (float)(this.id) / worldTextureManager.imageHolders.size() * worldTextureManager.imageHolders.size();
         }
         public float maxX(int id) {

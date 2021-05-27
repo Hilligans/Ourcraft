@@ -1,6 +1,7 @@
 package Hilligans.Client.Rendering.Widgets;
 
 import Hilligans.Client.Client;
+import Hilligans.Client.Lang.Languages;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Client.Rendering.Textures;
@@ -58,7 +59,7 @@ public class SliderWidget extends Widget {
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         Renderer.drawTexture(matrixStack, Textures.SLIDER_BACKGROUND,x - height / 4,y,width + height / 2,height);
         Renderer.drawTexture(matrixStack,Textures.SLIDER,getSliderX(height),y,height/2,height);
-        StringRenderer.drawString(matrixStack, name + ": " + value,x,y,0.5f);
+        StringRenderer.drawString(matrixStack, Languages.getTranslated(name) + ": " + value,x,y,0.5f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 

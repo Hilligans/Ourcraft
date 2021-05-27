@@ -11,11 +11,11 @@ import Hilligans.Network.ClientNetworkInit;
 public class EscapeScreen extends ScreenBase {
 
     public EscapeScreen() {
-        widgets.add(new Button(50,50,200,40, "Disconnect", () -> {
+        widgets.add(new Button(50,50,200,40, "menu.disconnect", () -> {
             ClientMain.getClient().closeScreen();
             ClientNetworkHandler.close();
         }));
-        widgets.add(new Button(50, 100, 200, 40, "Settings", () -> {
+        widgets.add(new Button(50, 100, 200, 40, "menu.settings", () -> {
             ClientMain.getClient().openScreen(new SettingsScreen());
         }));
     }

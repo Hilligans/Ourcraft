@@ -1,6 +1,7 @@
 package Hilligans.Command.CommandExecutors;
 
 import Hilligans.Entity.Entity;
+import Hilligans.Server.IServer;
 import Hilligans.Server.MultiPlayerServer;
 import Hilligans.World.ServerWorld;
 import Hilligans.World.World;
@@ -29,10 +30,10 @@ public class EntityExecutor implements CommandExecutor {
     }
 
     @Override
-    public MultiPlayerServer getServer() {
+    public IServer getServer() {
         World world = entity.world;
         if(world instanceof ServerWorld) {
-            return ((ServerWorld) world).multiPlayerServer;
+            return ((ServerWorld) world).server;
         }
         return null;
     }

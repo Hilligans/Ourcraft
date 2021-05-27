@@ -18,7 +18,7 @@ import java.util.zip.ZipInputStream;
 
 public class ModLoader {
 
-    public String mod = "";
+    public String mod = "ourcraft";
 
     public HashMap<String, TripleTypeWrapper<Class<?>,String,Boolean>> mainClasses = new HashMap<>();
 

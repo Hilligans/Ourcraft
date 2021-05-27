@@ -1,5 +1,6 @@
 package Hilligans.Client.Rendering.Widgets;
 
+import Hilligans.Client.Lang.Languages;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Client.Rendering.Textures;
@@ -33,7 +34,7 @@ public class ToggleWidget extends Widget {
         } else {
             Renderer.drawTexture(matrixStack, Textures.BUTTON_DARK,x,y,width,height);
         }
-        StringRenderer.drawString(matrixStack, name + (value ? " true" : " false"),x,y,0.5f);
+        StringRenderer.drawString(matrixStack, Languages.getTranslated(name) + (value ? " true" : " false"),x,y,0.5f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 

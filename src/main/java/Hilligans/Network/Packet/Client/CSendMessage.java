@@ -7,6 +7,7 @@ import Hilligans.Network.Packet.Server.SChatMessage;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
+import Hilligans.ServerMain;
 
 public class CSendMessage extends PacketBase {
 
@@ -42,12 +43,12 @@ public class CSendMessage extends PacketBase {
                 if (commandHandler != null) {
                     String[] args1 = new String[args.length - 1];
                     System.arraycopy(args,1,args1,0,args1.length);
-                    ServerNetworkHandler.sendPacket(new SChatMessage((String) commandHandler.handle(new EntityExecutor(ServerNetworkHandler.getPlayerData(ctx).playerEntity),args1)));
+                    ServerMain.getServer().sendPacket(new SChatMessage((String) commandHandler.handle(new EntityExecutor(ServerNetworkHandler.getPlayerData(ctx).playerEntity),args1)));
                     return;
                 }
             }
             System.out.println(name + ": " + message);
-            ServerNetworkHandler.sendPacket(new SChatMessage(name + ": " + message));
+            ServerMain.getServer().sendPacket(new SChatMessage(name + ": " + message));
         }
     }
 

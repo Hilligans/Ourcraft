@@ -1,19 +1,33 @@
 package Hilligans.Client.Rendering.World;
 
+import Hilligans.Client.Lang.Language;
+import Hilligans.Client.Lang.Languages;
 import Hilligans.Client.MatrixStack;
+import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
+import Hilligans.Client.Rendering.NewRenderer.TextureAtlas;
 import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Client.Rendering.Textures;
+import Hilligans.Client.Rendering.World.Managers.ShaderManager;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.ClientMain;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
+import Hilligans.Data.Primitives.IntList;
+import Hilligans.Data.Primitives.TripleTypeWrapper;
+import Hilligans.Ourcraft;
 import Hilligans.Util.Vector5f;
+import it.unimi.dsi.fastutil.chars.Char2IntOpenHashMap;
+import it.unimi.dsi.fastutil.ints.Int2BooleanArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.lwjgl.opengl.GL30;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -23,96 +37,41 @@ public class StringRenderer {
     public static StringRenderer instance = new StringRenderer();
 
     public HashMap<String, DoubleTypeWrapper<Integer,Integer>> characterOffset = new HashMap<>();
+    public HashMap<String, TripleTypeWrapper<Integer,Integer, Integer>> characterOffset1 = new HashMap<>();
+
+    public int width;
+    public int height;
 
     public int mappedCharacters = -1;
 
     public int stringHeight = 58;
 
-    public void loadCharacters1() {
-        String vals = "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ";
-        int val = 0;
-        BufferedImage img = new BufferedImage(vals.length() * 48,58,BufferedImage.TYPE_INT_ARGB);
-        for(int x = 0; x < vals.length(); x++) {
-            String s = "" + vals.charAt(x);
-            BufferedImage bufferedImage = WorldTextureManager.stringToBufferedImage(s);
-            DoubleTypeWrapper<Integer, Integer> data = new DoubleTypeWrapper<>(bufferedImage.getWidth(),val);
-            characterOffset.put(s,data);
-            for(int z = 0; z < bufferedImage.getWidth(); z++) {
-                for(int y = 0; y < bufferedImage.getHeight(); y++) {
-                    img.setRGB(z + val * 48,y,bufferedImage.getRGB(z,y));
-                }
-            }
-            val++;
-        }
-        mappedCharacters = WorldTextureManager.registerTexture(img);
+    public static void drawString(MatrixStack matrixStack, String string, int x, int y, float scale) {
+        instance.drawStringInternal(matrixStack,string,x,y,scale);
     }
 
-    public static void drawString(MatrixStack matrixStack, String string, int x, int y, float scale) {
-        matrixStack.push();
-        glDisable(GL_DEPTH_TEST);
-        int width = 0;
-        ArrayList<Vector5f> vector5fs = new ArrayList<>();
-        ArrayList<Integer> indices = new ArrayList<>();
-        for(int z = 0; z < string.length(); z++) {
-            vector5fs.addAll(Arrays.asList(getVertices("" + string.charAt(z),x + width ,y,scale)));
-            width += instance.characterOffset.get("" + string.charAt(z)).getTypeA() * scale;
-            indices.addAll(Arrays.asList(getIndices(z * 4)));
-        }
-        int id = VAOManager.createVAO(VAOManager.convertVertices(vector5fs,false),VAOManager.convertIndices(indices));
-        glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
-        matrixStack.applyColor();
-        matrixStack.applyTransformation();
-        draw(id,vector5fs.size());
-        matrixStack.pop();
-        glEnable(GL_DEPTH_TEST);
+    public static void drawStringTranslated(MatrixStack matrixStack, String string, int x, int y, float scale) {
+        drawString(matrixStack, Languages.getTranslated(string),x,y,scale);
     }
 
     public static void drawStringWithBackground(MatrixStack matrixStack, String string, int x, int y, float scale) {
-        matrixStack.push();
-        glDisable(GL_DEPTH_TEST);
-        int width = 0;
-        ArrayList<Vector5f> vector5fs = new ArrayList<>();
-        ArrayList<Integer> indices = new ArrayList<>();
-        for(int z = 0; z < string.length(); z++) {
-            vector5fs.addAll(Arrays.asList(getVertices("" + string.charAt(z),x + width ,y,scale)));
-            width += instance.characterOffset.get("" + string.charAt(z)).getTypeA() * scale;
-            indices.addAll(Arrays.asList(getIndices(z * 4)));
-        }
-        int id = VAOManager.createVAO(VAOManager.convertVertices(vector5fs,false),VAOManager.convertIndices(indices));
-        glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
-        matrixStack.applyColor();
-        matrixStack.applyTransformation();
-        Renderer.drawTexture(matrixStack, Textures.BACKGROUND,x,y,width, (int) (instance.stringHeight * scale));
-        draw(id,vector5fs.size());
-        matrixStack.pop();
-        glEnable(GL_DEPTH_TEST);
+        instance.drawStringWithBackgroundInternal(matrixStack,string,x,y,scale);
+    }
+
+    public static void drawStringWithBackgroundTranslated(MatrixStack matrixStack, String string, int x, int y, float scale) {
+        drawStringWithBackground(matrixStack, Languages.getTranslated(string),x,y,scale);
     }
 
     public static void drawCenteredString(MatrixStack matrixStack, String string, int y, float scale) {
-        matrixStack.push();
-        glDisable(GL_DEPTH_TEST);
-        int width = 0;
-        ArrayList<Vector5f> vector5fs = new ArrayList<>();
-        ArrayList<Integer> indices = new ArrayList<>();
-        for(int z = 0; z < string.length(); z++) {
-            vector5fs.addAll(Arrays.asList(getVertices("" + string.charAt(z), width ,y,scale)));
-            width += instance.characterOffset.get("" + string.charAt(z)).getTypeA() * scale;
-            indices.addAll(Arrays.asList(getIndices(z * 4)));
-        }
-        for(Vector5f vector5f : vector5fs) {
-            vector5f.addX(ClientMain.getWindowX() / 2f - width / 2f);
-        }
-        int id = VAOManager.createVAO(VAOManager.convertVertices(vector5fs,false),VAOManager.convertIndices(indices));
-        glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
-        matrixStack.applyColor();
-        matrixStack.applyTransformation();
-        draw(id,vector5fs.size());
-        matrixStack.pop();
-        glEnable(GL_DEPTH_TEST);
+        instance.drawCenteredStringInternal(matrixStack, string, y, scale);
+    }
+
+    public static void drawCenteredStringTranslated(MatrixStack matrixStack, String string, int y, float scale) {
+        drawCenteredString(matrixStack, Languages.getTranslated(string),y,scale);
     }
 
     public static void drawColoredString(MatrixStack matrixStack, String string, int x, int y, float scale) {
-        matrixStack.push();
+      /*  matrixStack.push();
         int width = 0;
         ArrayList<Vector5f> vector5fs = new ArrayList<>();
         ArrayList<Integer> indices = new ArrayList<>();
@@ -126,15 +85,10 @@ public class StringRenderer {
         glUseProgram(ClientMain.getClient().shaderManager.colorShader);
         matrixStack.applyColor(ClientMain.getClient().shaderManager.colorShader);
         matrixStack.applyTransformation(ClientMain.getClient().shaderManager.colorShader);
-        draw(id,vector5fs.size());
+        //draw(id,vector5fs.size());
         matrixStack.pop();
-    }
 
-    public static void draw(int id, int size) {
-        GL30.glBindTexture(GL_TEXTURE_2D,instance.mappedCharacters);
-        GL30.glBindVertexArray(id);
-        glDrawElements(GL_TRIANGLES, size * 3 / 2,GL_UNSIGNED_INT,0);
-        VAOManager.destroyBuffer(id);
+       */
     }
 
     public static Vector5f[] getVertices(String character, int x, int y, float scale) {
@@ -147,4 +101,190 @@ public class StringRenderer {
     public static Integer[] getIndices(int offset) {
         return new Integer[] {offset,offset + 1,offset + 2,offset + 3,offset + 2,offset + 1};
     }
+
+    public Int2ObjectOpenHashMap<TextureAtlas> textureAtlases = new Int2ObjectOpenHashMap<>();
+    public Char2IntOpenHashMap charMap = new Char2IntOpenHashMap();
+    public Char2IntOpenHashMap idMap = new Char2IntOpenHashMap();
+    public Int2BooleanArrayMap texturesBuilt = new Int2BooleanArrayMap();
+
+    public void buildChars() {
+        for(int x = 0; x < Short.MAX_VALUE / 128; x++) {
+            int finalX = x;
+            Future<TextureAtlas> atlasFuture = Ourcraft.executor.submit(() -> {
+                TextureAtlas textureAtlas = buildTextureAtlas(finalX);
+                textureAtlases.put(finalX,textureAtlas);
+                return textureAtlas;
+            });
+        }
+    }
+
+    public TextureAtlas buildTextureAtlas(int startPos) {
+        TextureAtlas textureAtlas = new TextureAtlas(1024);
+        for(int x = 0; x < 16; x++) {
+            for(int y = 0; y < 16; y++) {
+                if (Character.isDefined(startPos * 256 + x * 16 + y)) {
+                    char character = Character.toChars(startPos * 256 + x * 16 + y)[0];
+                    BufferedImage bufferedImage = WorldTextureManager.stringToBufferedImage(character + "");
+                    if (bufferedImage != null) {
+                        charMap.put(character,bufferedImage.getWidth());
+                        idMap.put(character,textureAtlas.addImage(bufferedImage,64));
+                    }
+                }
+            }
+        }
+        return textureAtlas;
+    }
+
+    public void ensureTexturesBuilt(IntList intList) {
+        intList.forEach((val) -> {
+            if(!texturesBuilt.getOrDefault(val,(Boolean)false)) {
+                TextureAtlas textureAtlas = textureAtlases.get(val);
+                if(textureAtlas != null) {
+                    textureAtlas.buildAtlas();
+                    texturesBuilt.put(val, (Boolean) true);
+                }
+            }
+        });
+    }
+
+    public void addVertices(PrimitiveBuilder primitiveBuilder, char character, int x, int y, float scale) {
+        TextureAtlas textureAtlas = textureAtlases.get(character >> 8);
+        if (textureAtlas == null) {
+            return;
+        }
+        int id = idMap.get(character);
+        float minX = textureAtlas.minX(id);
+        float minY = textureAtlas.minY(id);
+        float maxX = textureAtlas.maxX(id);
+        float maxY = textureAtlas.maxY(id);
+
+        maxX = (maxX - minX) * (charMap.get(character) / 64.0f) + minX;
+        maxY = (maxY - minY) * (52 / 64.0f) + minY;
+
+        int width = charMap.get(character);
+        int height = stringHeight;
+        primitiveBuilder.addQuad(x, y, 0, minX, minY, x, y + height * scale, 0, minX, maxY, x + width * scale, y, 0, maxX, minY, x + width * scale, y + height * scale, 0, maxX, maxY);
+    }
+
+    public void drawStringInternal(MatrixStack matrixStack, String string, int x, int y, float scale) {
+        matrixStack.push();
+        glDisable(GL_DEPTH_TEST);
+        glUseProgram(ShaderManager.guiShader.shader);
+        IntList vals = getAtlases(string);
+        Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
+        vals.forEach((val) -> primitiveBuilders.put(val,new PrimitiveBuilder(GL_TRIANGLES,ShaderManager.guiShader)));
+        int width = 0;
+        for(int z = 0; z < string.length(); z++) {
+            PrimitiveBuilder primitiveBuilder = primitiveBuilders.get((int)string.charAt(z) >> 8);
+            addVertices(primitiveBuilder,string.charAt(z),x + width,y,scale);
+            width += charMap.get(string.charAt(z)) * scale;
+        }
+        draw(matrixStack,vals,primitiveBuilders);
+        matrixStack.pop();
+        glEnable(GL_DEPTH_TEST);
+    }
+
+    public void drawStringWithBackgroundInternal(MatrixStack matrixStack, String string, int x, int y, float scale) {
+        matrixStack.push();
+        glDisable(GL_DEPTH_TEST);
+        glUseProgram(ShaderManager.guiShader.shader);
+        IntList vals = getAtlases(string);
+        Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
+        vals.forEach((val) -> primitiveBuilders.put(val,new PrimitiveBuilder(GL_TRIANGLES,ShaderManager.guiShader)));
+        int width = 0;
+        for(int z = 0; z < string.length(); z++) {
+            PrimitiveBuilder primitiveBuilder = primitiveBuilders.get((int)string.charAt(z) >> 8);
+            addVertices(primitiveBuilder,string.charAt(z),x + width,y,scale);
+            width += charMap.get(string.charAt(z)) * scale;
+        }
+        glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
+        matrixStack.applyColor();
+        matrixStack.applyTransformation();
+        Renderer.drawTexture(matrixStack, Textures.BACKGROUND,x,y,width, (int) (instance.stringHeight * scale));
+        draw(matrixStack,vals,primitiveBuilders);
+        matrixStack.pop();
+        glEnable(GL_DEPTH_TEST);
+    }
+
+    public void drawCenteredStringInternal(MatrixStack matrixStack, String string, int y, float scale) {
+        matrixStack.push();
+        glDisable(GL_DEPTH_TEST);
+        glUseProgram(ShaderManager.guiShader.shader);
+        IntList vals = getAtlases(string);
+        Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
+        vals.forEach((val) -> primitiveBuilders.put(val,new PrimitiveBuilder(GL_TRIANGLES,ShaderManager.guiShader)));
+        int width = 0;
+        for(int z = 0; z < string.length(); z++) {
+            PrimitiveBuilder primitiveBuilder = primitiveBuilders.get((int)string.charAt(z) >> 8);
+            addVertices(primitiveBuilder,string.charAt(z),width,y,scale);
+            width += charMap.get(string.charAt(z)) * scale;
+        }
+        int finalWidth = width;
+        ensureTexturesBuilt(vals);
+        vals.forEach((val) -> {
+            TextureAtlas textureAtlas = textureAtlases.get(val);
+            if(textureAtlas == null) {
+                return;
+            }
+            textureAtlas.bindTexture();
+            PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
+            primitiveBuilder.translate(ClientMain.getWindowX() / 2f - finalWidth / 2f,0,0);
+            primitiveBuilder.draw(matrixStack);
+        });
+        matrixStack.pop();
+        glEnable(GL_DEPTH_TEST);
+    }
+
+
+    public IntList getAtlases(String string) {
+        IntList intList = new IntList(1);
+        for(int x = 0; x < string.length(); x++) {
+            char character = string.charAt(x);
+            int val = character >> 8;
+            if(!intList.containsValues(val)) {
+                intList.add(val);
+            }
+        }
+        return intList;
+    }
+
+    public void draw(MatrixStack matrixStack, IntList vals, Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders) {
+        glEnable(GL_MULTISAMPLE);
+        ensureTexturesBuilt(vals);
+        vals.forEach((val) -> {
+            TextureAtlas textureAtlas = textureAtlases.get(val);
+            if(textureAtlas == null) {
+                return;
+            }
+            textureAtlas.bindTexture();
+            PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
+            primitiveBuilder.translate(1.0f,0,1.0f);
+            primitiveBuilder.draw(matrixStack);
+        });
+        glDisable(GL_MULTISAMPLE);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

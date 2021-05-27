@@ -11,7 +11,6 @@ import org.lwjgl.opengl.GL11;
 public class Button extends Widget {
 
     public ButtonAction buttonAction;
-    public boolean enabled = true;
 
     public Button(int x, int y, int width, int height, String name, ButtonAction buttonAction) {
         super(x, y, width, height);
@@ -38,7 +37,7 @@ public class Button extends Widget {
         } else {
             Renderer.drawTexture(matrixStack, Textures.BUTTON_DARK,x,y,width,height);
         }
-        StringRenderer.drawString(matrixStack, name,x,y,0.5f);
+        StringRenderer.drawStringTranslated(matrixStack, name,x,y,0.5f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 

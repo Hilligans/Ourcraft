@@ -85,7 +85,6 @@ public class WorldLoader {
            // ScheduledExecutorService
             InputStream inputStream = WorldLoader.class.getResourceAsStream(path);
             byte[] vals = inputStream.readAllBytes();
-            //System.out.println(vals);
             ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vals.length);
             byteBuffer.put(vals);
             byteBuffer.flip();

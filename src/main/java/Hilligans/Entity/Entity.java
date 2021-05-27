@@ -155,7 +155,7 @@ public abstract class Entity {
             velX = velX * slowAmount;
             velY = velY * slowAmount;
             velZ = velZ * slowAmount;
-            ServerNetworkHandler.sendPacket(new SUpdateEntityPacket(this));
+            ServerMain.getServer().sendPacket(new SUpdateEntityPacket(this));
         }
     }
 
