@@ -21,9 +21,9 @@ public class LanguageScreen extends ScreenBase implements SelectorScreen {
                 @Override
                 public void render(MatrixStack matrixStack, int xOffset, int yOffset) {
                     if(enabled) {
-                        Renderer.drawTexture(matrixStack, Textures.BUTTON, x, y, width, height);
+                        Textures.BUTTON.drawTexture(matrixStack, x, y, width, height);
                     } else {
-                        Renderer.drawTexture(matrixStack, Textures.BUTTON_DARK,x,y,width,height);
+                        Textures.BUTTON_DARK.drawTexture(matrixStack,x,y,width,height);
                     }
                     StringRenderer.drawString(matrixStack,Languages.mappedNames.get(name),x,y,0.5f);
                 }

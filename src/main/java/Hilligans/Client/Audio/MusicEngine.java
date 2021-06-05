@@ -27,7 +27,7 @@ public class MusicEngine {
         }
         if(random.nextInt() % chancePerSecond == 0) {
             song = SoundCategory.MUSIC.getRandomSource(false,true);
-            song.play();
+            //song.play();
         }
         lastAttempt = time;
     }

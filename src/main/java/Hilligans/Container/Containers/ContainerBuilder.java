@@ -44,7 +44,7 @@ public class ContainerBuilder implements ContainerFetcher {
                     public void drawScreen(MatrixStack matrixStack) {
                         Texture texture1 = Textures.getTexture(textureName);
                         if(texture1 != null) {
-                            Renderer.drawCenteredTexture(matrixStack, texture1, 0, 0, width, height, Settings.guiSize);
+                            texture1.drawCenteredTexture(matrixStack, 0, 0, width, height, Settings.guiSize);
                         }
                     }
                 };

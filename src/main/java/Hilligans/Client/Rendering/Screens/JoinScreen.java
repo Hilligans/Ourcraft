@@ -61,9 +61,9 @@ public class JoinScreen extends ScreenBase {
         super.drawScreen(matrixStack);
         if(ClientMain.getClient().playerData.valid_account) {
             StringRenderer.drawString(matrixStack,ClientMain.getClient().playerData.userName, (int) (Settings.guiSize * 8), (int) (1 * Settings.guiSize),0.5f);
-            Renderer.drawTexture(matrixStack, Textures.CHECK_MARK,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
+            Textures.CHECK_MARK.drawTexture(matrixStack,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
         } else {
-            Renderer.drawTexture(matrixStack, Textures.X_MARK,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
+            Textures.X_MARK.drawTexture(matrixStack,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
         }
 
 

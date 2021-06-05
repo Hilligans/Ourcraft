@@ -200,9 +200,6 @@ public class Camera {
                 }
             }
         }
-        //velX = velX / 2;
-        //velY = velY / 2;
-        //velZ = velZ / 2;
         if(ClientMain.getClient().clientWorld.getChunk((int)pos.x >> 4, (int)pos.z >> 4) != null) {
 
             if (!ClientMain.getClient().playerData.spectator && !ClientMain.getClient().playerData.flying) {
@@ -237,7 +234,7 @@ public class Camera {
             maxX = 0;
             maxZ = 0;
 
-            //ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.getClient().playerId));
+            ClientMain.getClient().renderTime++;
         }
     }
 

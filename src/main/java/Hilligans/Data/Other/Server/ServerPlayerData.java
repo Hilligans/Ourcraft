@@ -52,7 +52,7 @@ public class ServerPlayerData {
         if(tag == null) {
             return new ServerPlayerData(playerEntity,id);
         } else {
-            System.out.println("asdaw");
+            //System.out.println("asdaw");
             return new ServerPlayerData(playerEntity,id,tag);
         }
     }

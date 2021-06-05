@@ -1,23 +1,6 @@
 package Hilligans;
 
 import Hilligans.Client.*;
-import Hilligans.Client.Key.KeyBind;
-import Hilligans.Client.Key.KeyPress;
-import Hilligans.Client.Lang.Language;
-import Hilligans.Client.Rendering.NewRenderer.BlockModel;
-import Hilligans.Client.Rendering.World.Managers.VertexManagers.CubeManager;
-import Hilligans.Client.Rendering.World.Managers.VertexManagers.PlantManager;
-import Hilligans.Client.Rendering.World.StringRenderer;
-import Hilligans.Data.Other.BlockShapes.XBlockShape;
-import Hilligans.Util.Vector5f;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.lwjgl.glfw.GLFW;
-
-import java.io.File;
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.HashMap;
 
 public class ClientMain {
 
@@ -30,9 +13,9 @@ public class ClientMain {
 
 
     public static void main(String[] args) {
+        System.out.println(3 | (1 << 2));
         client = new Client();
         client.startClient();
-
     }
 
     public static void handleArgs(String[] args) {

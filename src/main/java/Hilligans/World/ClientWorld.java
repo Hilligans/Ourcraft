@@ -49,7 +49,7 @@ public class ClientWorld extends World {
             purgeTime = 0;
             purgeChunks(Settings.renderDistance + 2);
         } else {
-            buildChunks(16);
+            buildChunks(12);
             purgeTime++;
         }
 
@@ -88,7 +88,8 @@ public class ClientWorld extends World {
 
 
     public void render(MatrixStack matrixStack) {
-
+        vertices = 0;
+        count = 0;
         if(!Settings.renderTransparency) {
             glDisable(GL_BLEND);
         }
@@ -124,6 +125,9 @@ public class ClientWorld extends World {
         glEnable(GL_BLEND);
     }
 
+    public int vertices = 0;
+    public int count = 0;
+
     private void drawChunk(MatrixStack matrixStack, Vector3d pos, int x, int z) {
         Chunk chunk = getChunk(x * 16 + (int)pos.x >> 4,z * 16 + (int)pos.z >> 4);
         if(chunk == null) {
@@ -135,6 +139,8 @@ public class ClientWorld extends World {
                 }
             }
         } else {
+            vertices += chunk.getTotalVertices();
+            count++;
             if(Camera.shouldRenderChunk(x * 16 + (int) pos.x >> 4, z * 16 + (int) pos.z >> 4)) {
                 matrixStack.push();
                 chunk.render(matrixStack);

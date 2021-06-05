@@ -64,6 +64,14 @@ public class Chunk {
         }
     }
 
+    public int getTotalVertices() {
+        int vertices = 0;
+        for(SubChunk subChunk : chunks) {
+            vertices += subChunk.verticesCount;
+        }
+        return vertices;
+    }
+
     public void scheduleTick(BlockPos pos, int time) {
         if(world.isServer()) {
             long futureTime = ((ServerWorld)world).server.getTime() + time;

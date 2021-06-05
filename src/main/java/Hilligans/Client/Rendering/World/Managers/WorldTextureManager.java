@@ -244,9 +244,7 @@ public class WorldTextureManager {
     }
 
     private static BufferedImage createTransformed(BufferedImage image, AffineTransform at) {
-        BufferedImage newImage = new BufferedImage(
-                image.getWidth(), image.getHeight(),
-                BufferedImage.TYPE_INT_ARGB);
+        BufferedImage newImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = newImage.createGraphics();
         g.transform(at);
         g.drawImage(image, 0, 0, null);
@@ -416,7 +414,7 @@ public class WorldTextureManager {
                 }
             }
             count = MAX_TEXTURE_SIZE / imageSize;
-            System.out.println(" count " + count);
+            //System.out.println(" count " + count);
         }
 
         public void addTexture(BufferedImage img) {

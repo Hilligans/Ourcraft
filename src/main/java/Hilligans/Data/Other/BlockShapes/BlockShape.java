@@ -20,26 +20,12 @@ public class BlockShape {
         data = BlockModel.create("/Models/Blocks/block.txt");
     }
 
+    public BlockShape(String path) {
+        data = BlockModel.create("/Models/Blocks/" + path);
+    }
+
     public BoundingBox getBoundingBox(World world, BlockPos pos) {
         return new BoundingBox(0,0,0,1,1,1);
-    }
-
-    public Vector5f[] getVertices(int side, BlockState blockState, BlockTextureManager blockTextureManager) {
-        if(side != 6) {
-            return getVertices(side, 1.0f, blockState, blockTextureManager);
-        } else {
-            return new Vector5f[]{};
-        }
-    }
-
-    public Vector5f[] getVertices(int side, float size, BlockState blockState, BlockTextureManager blockTextureManager) {
-        if(side != 6) {
-            Vector5f[] vector5fs = CubeManager.getVertices1(blockTextureManager, side, size);
-            applyColoring(vector5fs, side);
-            return vector5fs;
-        } else {
-            return new Vector5f[]{};
-        }
     }
 
     public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset) {
@@ -48,6 +34,10 @@ public class BlockShape {
 
     public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset, float offsetX, float offsetY, float offsetZ) {
         data.addData(primitiveBuilder,blockTextureManager,side,size,offset,0,0,offsetX,offsetY,offsetZ);
+    }
+
+    public int getSide(BlockState blockState, int side) {
+        return side;
     }
 
     public int generateOutline(World world, BlockPos pos) {
@@ -63,25 +53,4 @@ public class BlockShape {
         return VAOManager.createLine(vertices,indices);
     }
 
-    public Integer[] getIndices(int side, int spot) {
-        if(side != 6) {
-            return CubeManager.getIndices(side, spot);
-        } else {
-            return new Integer[]{};
-        }
-    }
-
-    protected void applyColoring(Vector5f[] vector5fs, int side) {
-        for(Vector5f vector5f : vector5fs) {
-            if (side == 2 || side == 3) {
-                vector5f.setColored(0.95f, 0.95f, 0.95f, 1.0f);
-            } else if (side == 0 || side == 1) {
-                vector5f.setColored(0.9f, 0.9f, 0.9f, 1.0f);
-            } else if (side == 4) {
-                vector5f.setColored(0.85f, 0.85f, 0.85f, 1.0f);
-            } else {
-                vector5f.setColored();
-            }
-        }
-    }
 }

@@ -47,7 +47,7 @@ public class SRegisterBlock extends PacketBase {
     @Override
     public void decode(PacketData packetData) {
         String name = packetData.readString();
-        System.out.println(name);
+        //System.out.println(name);
         BlockProperties blockProperties = new BlockProperties().serverSide();
         Block block;
         switch (packetData.readShort()) {

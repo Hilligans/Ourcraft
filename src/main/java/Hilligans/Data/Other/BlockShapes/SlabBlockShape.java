@@ -18,35 +18,37 @@ public class SlabBlockShape extends BlockShape {
     public SlabBlockShape() {
         data = BlockModel.create("/Models/Blocks/slab.txt");
     }
-    @Override
-    public Vector5f[] getVertices(int side, float size, BlockState blockState, BlockTextureManager blockTextureManager) {
-        Vector5f[] vector5fs;
-        switch (((DataBlockState)blockState).readData()) {
-            case 3:
-                vector5fs = CubeManager.getVerticalSlabVertices(blockTextureManager, side, size, 0, false);
-                break;
-            case 2:
-                vector5fs = CubeManager.getVerticalSlabVertices(blockTextureManager, side, size, 0.5f, false);
-                break;
-            case 1:
-                vector5fs = CubeManager.getVerticalSlabVertices(blockTextureManager, side, size, 0, true);
-                break;
-            case 0:
-                vector5fs = CubeManager.getVerticalSlabVertices(blockTextureManager, side, size, 0.5f, true);
-                break;
-            case 5:
-                vector5fs = CubeManager.getHorizontalSlabVertices(blockTextureManager, side, size, 0);
-                break;
-            default:
-                vector5fs = CubeManager.getHorizontalSlabVertices(blockTextureManager, side, size, 0.5f);
-                break;
-        }
-        applyColoring(vector5fs,side);
-        return vector5fs;
-    }
+
 
     public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset) {
-        data.addData(primitiveBuilder,blockTextureManager,side,size,offset,0,1);
+        switch (((DataBlockState)blockState).readData()) {
+            case 4:
+                data.addData(primitiveBuilder,blockTextureManager,side,size,offset,2,0);
+                break;
+            case 1:
+                data.addData(primitiveBuilder,blockTextureManager,side,size,offset,1,0);
+                break;
+            case 0:
+                data.addData(primitiveBuilder,blockTextureManager,side,size,offset,3,0);
+                break;
+            case 2:
+                data.addData(primitiveBuilder,blockTextureManager,side,size,offset,3,1);
+                break;
+            case 3:
+                data.addData(primitiveBuilder,blockTextureManager,side,size,offset,1,1);
+                break;
+            default:
+                data.addData(primitiveBuilder,blockTextureManager,side,size,offset,0,0);
+                break;
+        }
+    }
+
+    @Override
+    public int getSide(BlockState blockState, int side) {
+        switch (((DataBlockState)blockState).readData()) {
+
+        }
+        return super.getSide(blockState, side);
     }
 
     @Override

@@ -8,11 +8,8 @@ import Hilligans.World.World;
 
 public class StairBlockShape extends BlockShape {
 
-    @Override
-    public Vector5f[] getVertices(int side, float size, BlockState blockState, BlockTextureManager blockTextureManager) {
-        Vector5f[] vector5fs = CubeManager.getStairVertices(blockTextureManager,side,1.0f,0,0);
-        applyColoring(vector5fs,side);
-        return vector5fs;
+    public StairBlockShape() {
+        super("stair.txt");
     }
 
     @Override

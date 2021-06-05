@@ -22,7 +22,7 @@ public class SlabBlock extends Block {
 
     @Override
     public BlockState getDefaultState() {
-        return new DataBlockState(this, new ShortBlockState((short) 4));
+        return new DataBlockState(this, new ShortBlockState((short) 5));
     }
 
     @Override

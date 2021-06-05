@@ -36,7 +36,7 @@ public class STokenValid extends PacketBase {
         CHandshakePacket packet = ServerMain.getServer().waitingPlayers.get(oldCtx);
         ServerMain.getServer().waitingPlayers.remove(oldCtx);
         ServerMain.getServer().playerQueue.remove(tempid);
-        System.out.println(this.toString());
+        //System.out.println(this.toString());
         if(valid) {
             CHandshakePacket.handlePlayer(packet.name, packet.version, oldCtx, uuid);
         } else {

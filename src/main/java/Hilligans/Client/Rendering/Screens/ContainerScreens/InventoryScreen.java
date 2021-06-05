@@ -4,6 +4,7 @@ import Hilligans.Client.ClientPlayerData;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Client.Rendering.Renderer;
+import Hilligans.Client.Rendering.Texture;
 import Hilligans.ClientMain;
 import Hilligans.Container.Containers.InventoryContainer;
 import Hilligans.Client.Rendering.Textures;
@@ -19,14 +20,7 @@ public class InventoryScreen extends ContainerScreen<InventoryContainer> {
 
     @Override
     public void drawScreen(MatrixStack matrixStack) {
-        //super.render(matrixStack);
-
-
-        //Renderer.drawTexture(Textures.INVENTORY,0,0,256,256,0,0,157,98);
-        Renderer.drawCenteredTexture(matrixStack, Textures.INVENTORY,0,0,158,99,Settings.guiSize);
-
-
-        //Renderer.drawCenteredTexture(Textures.INVENTORY,4.0f);
+        Textures.INVENTORY.drawCenteredTexture(matrixStack,0,0,158,99,Settings.guiSize);
     }
 
     public static void drawHotbar(MatrixStack matrixStack) {
@@ -34,19 +28,15 @@ public class InventoryScreen extends ContainerScreen<InventoryContainer> {
         int startX = (int) (ClientMain.getWindowX() / 2 - width * 4.5f);
         int startY = (int) (ClientMain.getWindowY() - width - 1 * Settings.guiSize);
         matrixStack.applyTransformation();
-        Renderer.drawCenteredXTexture(matrixStack, Textures.HOTBAR,startY, Settings.guiSize);
-
-        //Renderer.drawTexture(matrixStack,Textures.ITEM_OUTLINE, (int) (startX),startY,(int)(width + 6 * Settings.guiSize),(int)(width + 6 * Settings.guiSize),5,5,27,27);
-        //Renderer
+        Textures.HOTBAR.drawCenteredXTexture(matrixStack,startY, Settings.guiSize);
 
         for(int x = 0; x < 9; x++) {
             ItemStack itemStack = ClientMain.getClient().playerData.inventory.getItem(x);
-            //Renderer.drawTexture1(screenStack, ClientData.itemSlot,startX + x * width, startY, width,width);
             if(!itemStack.isEmpty()) {
                 itemStack.item.render(matrixStack,startX + x * width, startY, width / 2,itemStack);
             }
         }
-        Renderer.drawTexture(matrixStack,Textures.ITEM_OUTLINE, (int) (startX - 1 * Settings.guiSize) + width * ClientMain.getClient().playerData.handSlot ,(int)(startY - 1 * Settings.guiSize),(int)(width + 2 * Settings.guiSize),(int)(width + 2 * Settings.guiSize),7,7,25,25);
+        Textures.ITEM_OUTLINE.drawTexture(matrixStack, (int) (startX - 1 * Settings.guiSize) + width * ClientMain.getClient().playerData.handSlot ,(int)(startY - 1 * Settings.guiSize),(int)(width + 2 * Settings.guiSize),(int)(width + 2 * Settings.guiSize),7,7,25,25);
 
     }
 }

@@ -54,14 +54,14 @@ public class FolderWidget extends Widget {
         if (this.getY() > 0 && this.getY() < ClientMain.getWindowY() && this.isActive()) {
             if (shouldRender) {
                 if (isOpen) {
-                    Renderer.drawTexture(matrixStack, Textures.MINUS_ICON, getX() + xOffset + size / 4, getY() + yOffset + size / 4, size / 2, size / 2);
+                    Textures.MINUS_ICON.drawTexture(matrixStack, getX() + xOffset + size / 4, getY() + yOffset + size / 4, size / 2, size / 2);
                 } else {
-                    Renderer.drawTexture(matrixStack, Textures.PLUS_ICON, getX() + xOffset + size / 4, getY() + yOffset + size / 4, size / 2, size / 2);
+                    Textures.PLUS_ICON.drawTexture(matrixStack, getX() + xOffset + size / 4, getY() + yOffset + size / 4, size / 2, size / 2);
                 }
                 if(isList) {
-                    Renderer.drawTexture(matrixStack, Textures.LIST_ICON, getX() + xOffset + size, getY() + yOffset, size, size);
+                    Textures.LIST_ICON.drawTexture(matrixStack, getX() + xOffset + size, getY() + yOffset, size, size);
                 } else {
-                    Renderer.drawTexture(matrixStack, Textures.FOLDER, getX() + xOffset + size, getY() + yOffset, size, size);
+                    Textures.FOLDER.drawTexture(matrixStack, getX() + xOffset + size, getY() + yOffset, size, size);
                 }
                 StringRenderer.drawString(matrixStack, name, getX() + xOffset + size * 2, getY() + yOffset, 0.5f);
             }

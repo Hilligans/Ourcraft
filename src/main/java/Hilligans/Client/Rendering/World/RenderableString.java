@@ -37,9 +37,9 @@ public class RenderableString {
         ArrayList<Vector5f> vector5fs = new ArrayList<>();
         ArrayList<Integer> indices = new ArrayList<>();
         for(int z = 0; z < string.length(); z++) {
-            vector5fs.addAll(Arrays.asList(StringRenderer.getVertices("" + string.charAt(z),x + length ,y,scale)));
-            length += StringRenderer.instance.characterOffset.get("" + string.charAt(z)).getTypeA() * scale;
-            indices.addAll(Arrays.asList(StringRenderer.getIndices(z * 4)));
+            //vector5fs.addAll(Arrays.asList(StringRenderer.getVertices("" + string.charAt(z),x + length ,y,scale)));
+             length += StringRenderer.instance.characterOffset.get("" + string.charAt(z)).getTypeA() * scale;
+            //indices.addAll(Arrays.asList(StringRenderer.getIndices(z * 4)));
         }
         id = VAOManager.createVAO(VAOManager.convertVertices(vector5fs,false),VAOManager.convertIndices(indices));
         vertexCount = vector5fs.size() * 5;
@@ -50,9 +50,9 @@ public class RenderableString {
         ArrayList<Vector5f> vector5fs = new ArrayList<>();
         ArrayList<Integer> indices = new ArrayList<>();
         for(int z = 0; z < string.length(); z++) {
-            vector5fs.addAll(Arrays.asList(StringRenderer.getVertices("" + string.charAt(z), length ,0,scale)));
+            //vector5fs.addAll(Arrays.asList(StringRenderer.getVertices("" + string.charAt(z), length ,0,scale)));
             length += StringRenderer.instance.characterOffset.get("" + string.charAt(z)).getTypeA() * scale;
-            indices.addAll(Arrays.asList(StringRenderer.getIndices(z * 4)));
+            //indices.addAll(Arrays.asList(StringRenderer.getIndices(z * 4)));
         }
         id = VAOManager.createVAO(VAOManager.convertVertices(vector5fs,false),VAOManager.convertIndices(indices));
         vertexCount = vector5fs.size() * 5;

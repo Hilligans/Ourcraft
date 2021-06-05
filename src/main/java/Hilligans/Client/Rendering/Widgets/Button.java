@@ -33,9 +33,9 @@ public class Button extends Widget {
         super.render(matrixStack, xOffset, yOffset);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         if(enabled) {
-            Renderer.drawTexture(matrixStack, Textures.BUTTON, x, y, width, height);
+            Textures.BUTTON.drawTexture(matrixStack, x, y, width, height);
         } else {
-            Renderer.drawTexture(matrixStack, Textures.BUTTON_DARK,x,y,width,height);
+            Textures.BUTTON_DARK.drawTexture(matrixStack,x,y,width,height);
         }
         StringRenderer.drawStringTranslated(matrixStack, name,x,y,0.5f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);

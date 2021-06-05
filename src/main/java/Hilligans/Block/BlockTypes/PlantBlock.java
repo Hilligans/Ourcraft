@@ -4,15 +4,13 @@ import Hilligans.Block.Block;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Data.Other.BlockProperties;
-import Hilligans.Data.Other.BlockShapes.XBlockShape;
-import Hilligans.Data.Other.BlockState;
+import Hilligans.Data.Other.BlockShapes.BlockShape;
 import Hilligans.Item.ItemStack;
-import Hilligans.Util.Vector5f;
 
 public class PlantBlock extends Block {
     public PlantBlock(String name, BlockProperties blockProperties) {
         super(name, blockProperties);
-        blockShape = new XBlockShape();
+        blockShape = new BlockShape("xBlock.txt");
         blockProperties.transparent().canWalkThrough();
     }
 

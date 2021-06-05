@@ -1,11 +1,11 @@
 package Hilligans.Client.Lang;
 
 import Hilligans.Ourcraft;
+import Hilligans.Resource.ResourceManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Languages {
@@ -23,14 +23,7 @@ public class Languages {
     }
 
     public static void setCurrentLanguage(String languageName) {
-        String languageName1 = languageName + ".txt";
-        switchingLanguage.set(true);
-        Future<Language> languageFuture = Ourcraft.executor.submit(() -> {
-            Language language = new Language(languageName1);
-            switchingLanguage.set(false);
-            CURRENT_LANGUAGE = language;
-            return language;
-        });
+        Ourcraft.getResourceManager().setLanguageFile(languageName);
     }
 
     private static void addLanguage(String language, String name) {
@@ -40,7 +33,7 @@ public class Languages {
 
     static {
         addLanguage("English","English (US)");
-        addLanguage("British", "English (United Kingdom)");
+        addLanguage("British.txt", "English (United Kingdom)");
         addLanguage("Australian", "English (Australia)");
         addLanguage("Lolcat", "LOLCAT");
         addLanguage("French","Francais");

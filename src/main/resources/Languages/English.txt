@@ -16,3 +16,13 @@ menu.email::Email
 menu.disconnect::Disconnect
 menu.settings::Settings
 menu.done::Done
+
+
+
+#Items
+item.ourcraft.stone::Stone
+item.ourcraft.dirt::Dirt
+item.ourcraft.sand::Sand
+item.ourcraft.weeping_vine::Weeping Vine
+item.ourcraft.bedrock::Bedrock
+item.ourcraft.chest::Chest

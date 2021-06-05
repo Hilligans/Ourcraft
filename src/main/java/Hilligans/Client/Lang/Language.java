@@ -17,7 +17,7 @@ public class Language {
         parseLines(read("/Languages/" + name));
     }
 
-    private void parseLines(String[] lines) {
+    public void parseLines(String[] lines) {
         if(lines != null){
             for (String string : lines) {
                 if(!string.startsWith("#")) {
@@ -37,7 +37,6 @@ public class Language {
     public static String[] read(String source) {
         InputStream stream = Language.class.getResourceAsStream(source);
         if(stream == null) {
-            System.out.println("Null");
             return null;
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));

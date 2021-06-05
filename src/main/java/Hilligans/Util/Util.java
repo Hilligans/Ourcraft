@@ -198,7 +198,7 @@ public class Util {
 
         for(int x = 0; x < vals.length(); x++) {
             String s = "" + vals.charAt(x);
-            System.out.println(s);
+            //System.out.println(s);
             bufferedImage = WorldTextureManager.loadImage("characters/" + s + ".png");
             data = new DoubleTypeWrapper<>(bufferedImage.getWidth(),val);
         //    characterOffset.put(s,data);

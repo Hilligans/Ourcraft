@@ -35,22 +35,22 @@ public class DataWidget extends Widget {
             if (shouldRender) {
                 switch (type) {
                     case 0:
-                        Renderer.drawTexture(matrixStack, Textures.BYTE_ICON, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
+                        Textures.BYTE_ICON.drawTexture(matrixStack, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
                         break;
                     case 1:
-                        Renderer.drawTexture(matrixStack, Textures.SHORT_ICON, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
+                        Textures.SHORT_ICON.drawTexture(matrixStack, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
                         break;
                     case 2:
-                        Renderer.drawTexture(matrixStack, Textures.INTEGER_ICON, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
+                        Textures.INTEGER_ICON.drawTexture(matrixStack, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
                         break;
                     case 3:
-                        Renderer.drawTexture(matrixStack, Textures.FLOAT_ICON, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
+                        Textures.FLOAT_ICON.drawTexture(matrixStack, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
                         break;
                     case 4:
-                        Renderer.drawTexture(matrixStack, Textures.LONG_ICON, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
+                        Textures.LONG_ICON.drawTexture(matrixStack, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
                         break;
                     case 5:
-                        Renderer.drawTexture(matrixStack, Textures.DOUBLE_ICON, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
+                        Textures.DOUBLE_ICON.drawTexture(matrixStack, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
                         break;
                 }
                 StringRenderer.drawString(matrixStack, val, getX() + xOffset + FolderWidget.size * 2, getY() + yOffset, 0.5f);

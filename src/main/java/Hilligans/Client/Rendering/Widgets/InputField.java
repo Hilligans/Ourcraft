@@ -45,7 +45,7 @@ public class InputField extends Widget {
     public void render(MatrixStack matrixStack, int xOffset, int yOffset) {
         super.render(matrixStack, xOffset, yOffset);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
-        Renderer.drawTexture(matrixStack, Textures.OUTLINE,x,y,width,height);
+        Textures.OUTLINE.drawTexture(matrixStack,x,y,width,height);
         StringRenderer.drawStringTranslated(matrixStack, name, x, y, 0.5f);
         StringRenderer.drawString(matrixStack, string,x,y + height / 2,0.5f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
@@ -57,7 +57,7 @@ public class InputField extends Widget {
             if(isFocused) {
                 if(key == 'v' && KeyHandler.keyPressed[GLFW.GLFW_KEY_LEFT_CONTROL]) {
                     try {
-                        System.out.println("adding clipboard");
+                        //System.out.println("adding clipboard");
                         string += GLFW.glfwGetClipboardString(ClientMain.getClient().window);
                         //string += Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
                     } catch (Exception ignored) {

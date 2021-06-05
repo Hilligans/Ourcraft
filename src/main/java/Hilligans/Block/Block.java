@@ -108,32 +108,12 @@ public class Block {
         blockProperties.blockTextureManager.generate();
     }
 
-    public Vector5f[] getVertices(int side, BlockState blockState, BlockPos blockPos) {
-       return blockShape.getVertices(side,blockState, blockProperties.blockTextureManager);
-    }
-
-    public Vector5f[] getVertices(int side, float size, BlockState blockState, BlockPos blockPos) {
-        return blockShape.getVertices(side,size,blockState,blockProperties.blockTextureManager);
-    }
-
     public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockPos blockPos, int x, int z) {
-
-        /*FloatList vertices = new FloatList();
-        IntList indices = new IntList();
-
-        Vector5f[] vector5fs = getVertices(side,blockState, blockPos);
-        indices.add(getIndices(side,primitiveBuilder.getVerticesCount()));
-        for(Vector5f vector5f : vector5fs) {
-            vertices.add(vector5f.addX(x).addY(blockPos.y).addZ(z).values);
-        }
-        primitiveBuilder.add(vertices.getElementData(),indices.getElementData());
-
-         */
        blockShape.addVertices(primitiveBuilder,side,size,blockState,blockProperties.blockTextureManager, new BlockPos(x,blockPos.y,z).get3f());
     }
 
-    public Integer[] getIndices(int side, int spot) {
-        return blockShape.getIndices(side,spot);
+    public int getSide(BlockState blockState, int side) {
+        return blockShape.getSide(blockState,side);
     }
 
     public static BlockPos getBlockPos(int side) {

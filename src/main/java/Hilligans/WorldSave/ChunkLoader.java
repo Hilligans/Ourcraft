@@ -96,17 +96,18 @@ public class ChunkLoader {
 
     public static CompoundTag getDataProviderTag(Chunk chunk) {
         CompoundTag compoundTag = new CompoundTag();
-        compoundTag.putInt("count",chunk.dataProviders.size());
         int x = 0;
         for(Short2ObjectMap.Entry<DataProvider> set : chunk.dataProviders.short2ObjectEntrySet()) {
             CompoundTag compoundTag2 = new CompoundTag();
             compoundTag2.putShort("pos",set.getShortKey());
             //TODO: sometimes returns null and causes an exception
-            set.getValue().write(compoundTag2);
-            compoundTag.putTag(x + "", compoundTag2);
-            x++;
-
+            if(set.getValue() != null) {
+                set.getValue().write(compoundTag2);
+                compoundTag.putTag(x + "", compoundTag2);
+                x++;
+            }
         }
+        compoundTag.putInt("count",x);
         return compoundTag;
     }
 
@@ -120,7 +121,6 @@ public class ChunkLoader {
             int y = i >> 4 & 255;
             int z = i >> 12 & 15;
 
-            //System.out.println(x);
             Block block = Blocks.getBlockWithID((integerTag.val[i]) >> 16 & 65535);
             BlockState blockState = block.getStateWithData((short) (integerTag.val[i] & 65535));
             // blockState.write((short) (integerTag.val[i] & 65535));

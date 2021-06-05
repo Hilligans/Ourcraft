@@ -3,9 +3,12 @@ package Hilligans.Entity.Entities;
 import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.MatrixStack;
+import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
+import Hilligans.Client.Rendering.World.Managers.ShaderManager;
 import Hilligans.Client.Rendering.World.Managers.VertexManagers.CubeManager;
 import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.ClientMain;
+import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Entity.Entity;
 import Hilligans.Item.BlockItem;
@@ -13,11 +16,13 @@ import Hilligans.Item.ItemStack;
 import Hilligans.Item.Items;
 import Hilligans.Network.PacketData;
 import Hilligans.Util.Vector5f;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public class ItemEntity extends Entity {
@@ -84,14 +89,24 @@ public class ItemEntity extends Entity {
 
     @Override
     public void render(MatrixStack matrixStack) {
+        matrixStack.push();
         if(id == -1) {
             createMesh();
         }
+        glUseProgram(ClientMain.getClient().shaderManager.colorShader);
+        glBindVertexArray(id);
         glBindTexture(GL_TEXTURE_2D, ClientMain.getClient().texture);
         matrixStack.translateMinusOffset(x,y,z);
-        matrixStack.applyTransformation();
-        glBindVertexArray(id);
-        glDrawElements(GL_TRIANGLES, verticesCount * 3 / 2,GL_UNSIGNED_INT,0);
+        matrixStack.rotate((float) Math.toRadians(ClientMain.getClient().getRenderTime() / 3f),new Vector3f(0,1,0));
+        matrixStack.translate(-0.25f,0,-0.25f);
+        if((ClientMain.getClient().getRenderTime() % 400) > 200) {
+            matrixStack.translate(0, (float) (-0.00125 * (200 - (ClientMain.getClient().getRenderTime() % 200)) + 0.125f), 0);
+        } else {
+            matrixStack.translate(0, (float) (-0.00125 * (ClientMain.getClient().getRenderTime() % 200) + 0.125f), 0);
+        }
+        matrixStack.applyTransformation(ClientMain.getClient().shaderManager.colorShader);
+        glDrawElements(GL_TRIANGLES, verticesCount,GL_UNSIGNED_INT,0);
+        matrixStack.pop();
     }
 
     @Override
@@ -103,16 +118,14 @@ public class ItemEntity extends Entity {
     }
 
     public void createMesh() {
-        ArrayList<Vector5f> vertices = new ArrayList<>();
-        ArrayList<Integer> indices = new ArrayList<>();
-
-        for(int x = 0; x < 6; x++) {
-            vertices.addAll(Arrays.asList(CubeManager.getVertices(block.blockProperties.blockTextureManager,x,0.25f)));
-            indices.addAll(Arrays.asList(block.getIndices(x,4 * x)));
+        PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
+        if(block != null) {
+            for (int x = 0; x < 6; x++) {
+                block.addVertices(primitiveBuilder,x,0.5f,block.getDefaultState(),new BlockPos(0,0,0),0,0);
+            }
+            verticesCount = primitiveBuilder.indices.size();
+            id = VAOManager.createVAO(primitiveBuilder);
         }
-        verticesCount = vertices.size();
-        id = VAOManager.createVAO(VAOManager.convertVertices(vertices,false),VAOManager.convertIndices(indices));
-
     }
 
 

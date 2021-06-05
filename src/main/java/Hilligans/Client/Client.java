@@ -73,6 +73,7 @@ public class Client {
     public boolean renderWorld = false;
     public PlayerList playerList;
     public boolean glStarted = false;
+    public long renderTime = 0;
 
     public MouseHandler mouseHandler;
 
@@ -279,7 +280,6 @@ public class Client {
                 VAOManager.destroyBuffer(id);
             }
 
-            StringRenderer.drawString(matrixStack,"定",1000,100,0.5f);
             glUseProgram(shaderManager.shaderProgram);
             if (playerData.f3) {
                 StringRenderer.drawString(screenStack, Camera.getString(), windowX / 2, 0, 0.5f);
@@ -304,7 +304,7 @@ public class Client {
             screen.render(screenStack);
             playerData.heldStack.renderStack(screenStack, (int) (Camera.newX - Settings.guiSize * 8), (int) (Camera.newY - Settings.guiSize * 8));
         } else {
-            Renderer.drawCenteredTexture(screenStack,Textures.CURSOR,1.0f);
+            Textures.CURSOR.drawCenteredTexture(screenStack,1.0f);
             if(KeyHandler.keyPressed[GLFW_KEY_TAB]) {
                 if(playerList != null) {
                     playerList.render(screenStack);
@@ -595,6 +595,10 @@ public class Client {
          CompoundTag tag = new CompoundTag();
          writeUsernameAndPassword(tag);
          WorldLoader.save(tag,"clientData.dat");
+    }
+
+    public long getRenderTime() {
+         return renderTime;
     }
 
 }

@@ -28,7 +28,7 @@ public class ServerSelectorWidget extends Widget {
     @Override
     public void render(MatrixStack matrixStack, int xOffset, int yOffset) {
         super.render(matrixStack, xOffset, yOffset);
-        Renderer.drawTexture(matrixStack, Textures.BUTTON,x,y,width,height);
+        Textures.BUTTON.drawTexture(matrixStack,x,y,width,height);
         float sizeX = width / (float)Textures.BUTTON.width;
         float sizeY = height / (float)Textures.BUTTON.height;
         StringRenderer.drawString(matrixStack,ip + ":" + port,x + (int)(sizeX * Settings.guiSize),y + (int)(sizeY * Settings.guiSize),0.5f);

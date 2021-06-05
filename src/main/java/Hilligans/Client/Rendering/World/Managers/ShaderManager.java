@@ -79,7 +79,7 @@ public class ShaderManager {
         glDetachShader(shaderProgram,fragment);
         glDeleteShader(vertex);
         glDeleteShader(fragment);
-        System.out.println(shaderProgram);
+        //System.out.println(shaderProgram);
         return shaderProgram;
     }
 
@@ -113,7 +113,7 @@ public class ShaderManager {
         glDeleteShader(vertex);
         glDeleteShader(geometry);
         glDeleteShader(fragment);
-        System.out.println(shaderProgram + "a");
+        //System.out.println(shaderProgram + "a");
         return shaderProgram;
     }
 

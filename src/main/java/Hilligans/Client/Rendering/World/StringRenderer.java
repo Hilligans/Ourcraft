@@ -21,6 +21,7 @@ import it.unimi.dsi.fastutil.ints.Int2BooleanArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.lwjgl.opengl.GL30;
 
+import javax.script.ScriptEngineManager;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -89,17 +90,8 @@ public class StringRenderer {
         matrixStack.pop();
 
        */
-    }
 
-    public static Vector5f[] getVertices(String character, int x, int y, float scale) {
-        int width = instance.characterOffset.get(character).getTypeA();
-        int height = (int) (instance.stringHeight * scale);
-        int offset = 48 * instance.characterOffset.get(character).getTypeB();
-        return new Vector5f[]{new Vector5f(x, y, 0,(float)offset / (instance.characterOffset.size() * 48),0),new Vector5f(x,y + height,0,(float)offset / (instance.characterOffset.size() * 48),1), new Vector5f(x + width * scale,y,0,(float)(width + offset) / (instance.characterOffset.size() * 48),0), new Vector5f(x + width * scale, y + height, 0,(float)(width + offset) / (instance.characterOffset.size()  * 48),1)};
-    }
-
-    public static Integer[] getIndices(int offset) {
-        return new Integer[] {offset,offset + 1,offset + 2,offset + 3,offset + 2,offset + 1};
+       // ScriptEngineManager
     }
 
     public Int2ObjectOpenHashMap<TextureAtlas> textureAtlases = new Int2ObjectOpenHashMap<>();
@@ -158,10 +150,10 @@ public class StringRenderer {
         float maxX = textureAtlas.maxX(id);
         float maxY = textureAtlas.maxY(id);
 
-        maxX = (maxX - minX) * (charMap.get(character) / 64.0f) + minX;
+        maxX = (maxX - minX) * (getCharWidth(character) / 64.0f) + minX;
         maxY = (maxY - minY) * (52 / 64.0f) + minY;
 
-        int width = charMap.get(character);
+        int width = getCharWidth(character);
         int height = stringHeight;
         primitiveBuilder.addQuad(x, y, 0, minX, minY, x, y + height * scale, 0, minX, maxY, x + width * scale, y, 0, maxX, minY, x + width * scale, y + height * scale, 0, maxX, maxY);
     }
@@ -177,7 +169,7 @@ public class StringRenderer {
         for(int z = 0; z < string.length(); z++) {
             PrimitiveBuilder primitiveBuilder = primitiveBuilders.get((int)string.charAt(z) >> 8);
             addVertices(primitiveBuilder,string.charAt(z),x + width,y,scale);
-            width += charMap.get(string.charAt(z)) * scale;
+            width += getCharWidth(string.charAt(z)) * scale;
         }
         draw(matrixStack,vals,primitiveBuilders);
         matrixStack.pop();
@@ -195,12 +187,12 @@ public class StringRenderer {
         for(int z = 0; z < string.length(); z++) {
             PrimitiveBuilder primitiveBuilder = primitiveBuilders.get((int)string.charAt(z) >> 8);
             addVertices(primitiveBuilder,string.charAt(z),x + width,y,scale);
-            width += charMap.get(string.charAt(z)) * scale;
+            width += getCharWidth(string.charAt(z)) * scale;
         }
         glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
         matrixStack.applyColor();
         matrixStack.applyTransformation();
-        Renderer.drawTexture(matrixStack, Textures.BACKGROUND,x,y,width, (int) (instance.stringHeight * scale));
+        Textures.BACKGROUND.drawTexture(matrixStack,x,y,width, (int) (instance.stringHeight * scale));
         draw(matrixStack,vals,primitiveBuilders);
         matrixStack.pop();
         glEnable(GL_DEPTH_TEST);
@@ -217,7 +209,7 @@ public class StringRenderer {
         for(int z = 0; z < string.length(); z++) {
             PrimitiveBuilder primitiveBuilder = primitiveBuilders.get((int)string.charAt(z) >> 8);
             addVertices(primitiveBuilder,string.charAt(z),width,y,scale);
-            width += charMap.get(string.charAt(z)) * scale;
+            width += getCharWidth(string.charAt(z)) * scale;
         }
         int finalWidth = width;
         ensureTexturesBuilt(vals);
@@ -264,27 +256,13 @@ public class StringRenderer {
         glDisable(GL_MULTISAMPLE);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public int getCharWidth(char character) {
+        try {
+            if (charMap.containsKey(character)) {
+                return charMap.get(character);
+            }
+        } catch (Exception ignored) {}
+        return height;
+    }
 
 }

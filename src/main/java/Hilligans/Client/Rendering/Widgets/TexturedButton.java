@@ -20,7 +20,7 @@ public class TexturedButton extends Button {
     public void render(MatrixStack matrixStack, int xOffset, int yOffset) {
         super.render(matrixStack, xOffset, yOffset);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
-        Renderer.drawTexture(matrixStack, texture,x,y,width,height);
+        texture.drawTexture(matrixStack,x,y,width,height);
         StringRenderer.drawStringTranslated(matrixStack, name,x,y,0.5f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }

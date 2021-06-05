@@ -16,6 +16,6 @@ public class ChestScreen extends ContainerScreen<ChestContainer> {
 
     @Override
     public void drawScreen(MatrixStack matrixStack) {
-        Renderer.drawCenteredTexture(matrixStack, Textures.CHEST,0,0,158,162, Settings.guiSize);
+        Textures.CHEST.drawCenteredTexture(matrixStack,0,0,158,162, Settings.guiSize);
     }
 }

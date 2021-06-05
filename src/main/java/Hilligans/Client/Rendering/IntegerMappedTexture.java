@@ -32,7 +32,7 @@ public class IntegerMappedTexture {
 
     public void render(MatrixStack matrixStack) {
         if(mode == 0) {
-            Renderer.drawTexture(matrixStack, texture, x, y, startX, startY, endX, endY);
+            texture.drawTexture(matrixStack, x, y, startX, startY, endX, endY);
         }
     }
 }
