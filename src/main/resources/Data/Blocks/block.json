@@ -1,0 +1,16 @@
+{
+   "model":{
+      "modelName":"block.txt",
+      "blockStates":{
+         "default":{
+            "rotX":0,
+            "rotY":0
+         }
+      }
+   },
+   "properties":{
+      "canWalkThrough":false,
+      "transparent":false,
+      "airBlock":false
+   }
+}

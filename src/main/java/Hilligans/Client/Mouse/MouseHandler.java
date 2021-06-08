@@ -27,7 +27,7 @@ public class MouseHandler {
     public int button;
     public Client client;
 
-    public MouseHandler(Client client) {
+    public  MouseHandler(Client client) {
         this.window = client.window;
         this.client = client;
         instance = this;

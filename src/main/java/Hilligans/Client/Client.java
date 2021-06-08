@@ -269,7 +269,7 @@ public class Client {
             BlockPos pos = clientWorld.traceBlockToBreak(Camera.pos.x, Camera.pos.y + Camera.playerBoundingBox.eyeHeight, Camera.pos.z, Camera.pitch, Camera.yaw);
             if (pos != null) {
                 BlockState blockState = clientWorld.getBlockState(pos);
-                int id = blockState.getBlock().blockShape.generateOutline(clientWorld, pos);
+                int id = blockState.getBlock().blockProperties.blockShape.generateOutline(clientWorld, pos);
                 glUseProgram(shaderManager.lineShader);
                 GL30.glBindVertexArray(id);
                 matrixStack.push();

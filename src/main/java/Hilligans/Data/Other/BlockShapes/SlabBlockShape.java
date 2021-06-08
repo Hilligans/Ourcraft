@@ -1,15 +1,12 @@
 package Hilligans.Data.Other.BlockShapes;
 
-import Hilligans.Block.BlockTypes.SlabBlock;
 import Hilligans.Client.Rendering.NewRenderer.BlockModel;
 import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
-import Hilligans.Client.Rendering.World.Managers.VertexManagers.CubeManager;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Data.Other.DataBlockState;
-import Hilligans.Util.Vector5f;
 import Hilligans.World.World;
 import org.joml.Vector3f;
 
@@ -29,13 +26,13 @@ public class SlabBlockShape extends BlockShape {
                 data.addData(primitiveBuilder,blockTextureManager,side,size,offset,1,0);
                 break;
             case 0:
-                data.addData(primitiveBuilder,blockTextureManager,side,size,offset,3,0);
+                data.addData(primitiveBuilder,blockTextureManager,side,size,offset,1,2);
                 break;
             case 2:
-                data.addData(primitiveBuilder,blockTextureManager,side,size,offset,3,1);
+                data.addData(primitiveBuilder,blockTextureManager,side,size,offset,1,1);
                 break;
             case 3:
-                data.addData(primitiveBuilder,blockTextureManager,side,size,offset,1,1);
+                data.addData(primitiveBuilder,blockTextureManager,side,size,offset,3,1);
                 break;
             default:
                 data.addData(primitiveBuilder,blockTextureManager,side,size,offset,0,0);

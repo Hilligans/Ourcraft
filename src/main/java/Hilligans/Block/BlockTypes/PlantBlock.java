@@ -10,7 +10,7 @@ import Hilligans.Item.ItemStack;
 public class PlantBlock extends Block {
     public PlantBlock(String name, BlockProperties blockProperties) {
         super(name, blockProperties);
-        blockShape = new BlockShape("xBlock.txt");
+        blockProperties.blockShape = new BlockShape("xBlock.txt");
         blockProperties.transparent().canWalkThrough();
     }
 

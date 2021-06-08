@@ -5,6 +5,9 @@ import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.Data.Other.BlockProperties;
 import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Util.Settings;
+import Hilligans.WorldSave.WorldLoader;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,6 +93,27 @@ public class Blocks {
     //public static final Block BLUE = new SlabChest("blue",new BlockProperties().serverSide().withTexture("blue.png"));
 
     public static void register() {}
+
+
+    static {
+        JSONObject jsonObject = new JSONObject(WorldLoader.readString("/Data/Blocks.json"));
+        for(String string : jsonObject.keySet()) {
+            JSONObject blockData = jsonObject.getJSONObject(string);
+            Block block = new Block(string,"/Data/" + blockData.getString("data"));
+            JSONArray textures = blockData.getJSONArray("textures");
+            for(int x = 0; x < textures.length(); x++) {
+                if(x == 0) {
+                    block.blockProperties.withTexture(textures.getString(x));
+                } else {
+                    block.blockProperties.withSidedTexture(textures.getString(x),x - 1);
+                }
+            }
+
+        }
+
+
+
+    }
 
     public static Block getBlockWithID(int id) {
         if(id >= BLOCKS.size()) {

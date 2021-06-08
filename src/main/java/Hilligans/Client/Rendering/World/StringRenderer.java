@@ -140,11 +140,17 @@ public class StringRenderer {
     }
 
     public void addVertices(PrimitiveBuilder primitiveBuilder, char character, int x, int y, float scale) {
-        TextureAtlas textureAtlas = textureAtlases.get(character >> 8);
+        TextureAtlas textureAtlas = textureAtlases.getOrDefault(character >> 8,null);
         if (textureAtlas == null) {
             return;
         }
-        int id = idMap.get(character);
+        //TODO fix this
+        int id;
+        try {
+            id = idMap.get(character);
+        } catch (Exception ignored) {
+            return;
+        }
         float minX = textureAtlas.minX(id);
         float minY = textureAtlas.minY(id);
         float maxX = textureAtlas.maxX(id);

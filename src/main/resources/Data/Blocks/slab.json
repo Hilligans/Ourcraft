@@ -1,0 +1,9 @@
+{
+   "model":{
+      "modelName":"slab.txt"
+   },
+   "properties":{
+      "canWalkThrough":true,
+      "transparent":true
+   }
+}

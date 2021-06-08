@@ -82,45 +82,46 @@ public class ServerWorld extends World {
         for(Chunk chunk : chunks.values()) {
             chunk.tick();
         }
-        if(autoSave == -1) {
-            autoSave = System.currentTimeMillis();
-        }
-        if(System.currentTimeMillis() - autoSave > autoSaveAfter) {
-            try {
+        if(Settings.autoSave) {
+            if (autoSave == -1) {
                 autoSave = System.currentTimeMillis();
-                long start = System.currentTimeMillis();
-                ArrayList<Long> players = new ArrayList<>();
-                for(ServerPlayerData playerData : ServerNetworkHandler.playerData.values()) {
-                    players.add(ChunkPos.fromPos((int)playerData.playerEntity.x,(int)playerData.playerEntity.z));
-                    //System.out.println(players.get(players.size() - 1));
-                    playerData.save();
-                }
+            }
+            if (System.currentTimeMillis() - autoSave > autoSaveAfter) {
+                try {
+                    autoSave = System.currentTimeMillis();
+                    long start = System.currentTimeMillis();
+                    ArrayList<Long> players = new ArrayList<>();
+                    for (ServerPlayerData playerData : ServerNetworkHandler.playerData.values()) {
+                        players.add(ChunkPos.fromPos((int) playerData.playerEntity.x, (int) playerData.playerEntity.z));
+                        //System.out.println(players.get(players.size() - 1));
+                        playerData.save();
+                    }
 
-                boolean inBounds;
-                int purgeCount = 0;
-                for (Chunk chunk : chunks.values()) {
-                    ChunkLoader.writeChunk(chunk);
-                    inBounds = false;
-                    for(Long longVal : players) {
-                        if(isInBounds(chunk.x,chunk.z,longVal,Settings.renderDistance)) {
-                            inBounds = true;
-                            break;
+                    boolean inBounds;
+                    int purgeCount = 0;
+                    for (Chunk chunk : chunks.values()) {
+                        ChunkLoader.writeChunk(chunk);
+                        inBounds = false;
+                        for (Long longVal : players) {
+                            if (isInBounds(chunk.x, chunk.z, longVal, Settings.renderDistance)) {
+                                inBounds = true;
+                                break;
+                            }
+                        }
+                        if (!inBounds) {
+                            purgeCount++;
+                            removeChunk(chunk.x, chunk.z);
                         }
                     }
-                    if(!inBounds) {
-                        purgeCount++;
-                        removeChunk(chunk.x,chunk.z);
-                    }
+
+
+                    ChunkLoader.finishSave();
+
+
+                    System.out.println("SAVE FINISH:" + (System.currentTimeMillis() - start) + "MS");
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
-
-                ChunkLoader.finishSave();
-
-
-
-                System.out.println("SAVE FINISH:" + (System.currentTimeMillis() - start) + "MS");
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
 

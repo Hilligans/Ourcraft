@@ -1,5 +1,6 @@
 package Hilligans.Client.Rendering.NewRenderer;
 
+import Hilligans.Block.Block;
 import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
 import Hilligans.Client.Rendering.World.Managers.TextureManager;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
@@ -13,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -121,7 +123,7 @@ public class BlockModel implements IModel {
         float[] vertices = getVertices(side,rotX,rotY);
         if(vertices != null) {
             if(textureManager instanceof BlockTextureManager) {
-                float color = getSideColor(side);
+                float color = getSideColor(side,rotX,rotY);
                 float[] vals = new float[vertices.length];
                 int id = ((BlockTextureManager) textureManager).textures[side];
 
@@ -149,38 +151,6 @@ public class BlockModel implements IModel {
         }
     }
 
-    @Override
-    public void addData(PrimitiveBuilder primitiveBuilder, TextureManager textureManager, int side, float size, Vector3f offset, int rotX, int rotY, float offsetX, float offsetY, float offsetZ) {
-        float[] vertices = getVertices(side,rotX,rotY);
-        if(vertices != null) {
-            if(textureManager instanceof BlockTextureManager) {
-                float color = getSideColor(side);
-                float[] vals = new float[vertices.length];
-                int id = ((BlockTextureManager) textureManager).textures[side];
-                float startX = WorldTextureManager.getMinX(id);
-                float startY = WorldTextureManager.getMinY(id);
-                float texOffsetX = WorldTextureManager.getMaxX(id) - startX;
-                float texOffsetY = WorldTextureManager.getMaxY(id) - startY;
-                for (int x = 0; x < vals.length; x += 9) {
-                    vals[x] = vertices[x] * size + offset.x + offsetX;
-                    vals[x + 1] = vertices[x + 1] * size + offset.y + offsetY;
-                    vals[x + 2] = vertices[x + 2] * size + offset.z + offsetZ;
-                    vals[x + 7] = vertices[x + 3] * texOffsetX + startX;
-                    vals[x + 8] = vertices[x + 4] * texOffsetY + startY;
-                    vals[x + 3] = color;
-                    vals[x + 4] = color;
-                    vals[x + 5] = color;
-                    vals[x + 6] = 1.0f;
-                }
-                int[] indices = getIndices(side,rotX,rotY);
-                int[] ints = new int[indices.length];
-                smallArrayCopy(indices, 0, ints, 0, indices.length, primitiveBuilder.getVerticesCount());
-                //applyRotation(vals,rotX,rotY,size);
-                primitiveBuilder.add(vals, ints);
-            }
-        }
-    }
-
     public static void smallArrayCopy(int[] source, int startPos, int[] dest, int destPos, int length, int toAdd) {
         for(int x = startPos; x < Math.min(source.length,startPos + length); x++) {
             dest[destPos + x] = source[x] + toAdd;
@@ -199,6 +169,12 @@ public class BlockModel implements IModel {
         }
     }
 
+    private float getSideColor(int side, int rotX, int rotY) {
+        int value = side | rotX << 3 | rotY << 5;
+        return getSideColor(Block.rotationSides[value]);
+    }
+
+
     @Override
     public float[] getVertices(int side) {
         return vertices[side];
@@ -214,33 +190,9 @@ public class BlockModel implements IModel {
         return vertices[side];
     }
 
-    public void applyRotation(float[] vertices, int rotX, int rotY, float size, Vector3f offset) {
-       /* switch (rotY) {
-            case 0:
-                break;
-            case 1:
-                for(int x = 0; x < vertices.length; x+= 9) {
-                    float temp =  vertices[x];
-                    vertices[x] = vertices[x + 2];
-                    vertices[x + 2] = abs(temp - size);;
-                }
-                break;
-            case 2:
-                for(int x = 0; x < vertices.length; x+= 9) {
-                    vertices[x] = abs(vertices[x] - size);
-                    vertices[x + 2] = abs(vertices[x + 2] - size);
-                }
-                break;
-            case 3:
-                for(int x = 0; x < vertices.length; x+= 9) {
-                    float temp = abs(vertices[x] - size);
-                    vertices[x] = abs(vertices[x + 2]);
-                    vertices[x + 2] = temp;
-                }
-                break;
-        }
+    public static final boolean[] doRations = {false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false};
 
-        */
+    public void applyRotation(float[] vertices, int rotX, int rotY, float size, Vector3f offset) {
         switch (rotX | rotY << 2) {
             case 0 -> {
                 for (int x = 0; x < vertices.length; x += 9) {
@@ -252,9 +204,10 @@ public class BlockModel implements IModel {
             case 1 -> {
                 for (int x = 0; x < vertices.length; x += 9) {
                     float temp = abs(vertices[x + 1]);
-                    vertices[x] += offset.x;
+                    vertices[x] = abs(vertices[x]) + offset.x;
                     vertices[x + 1] = abs(vertices[x + 2] - size) + offset.y;
                     vertices[x + 2] = temp + offset.z;
+
                 }
             }
             case 2 -> {
@@ -267,7 +220,7 @@ public class BlockModel implements IModel {
             case 3 -> {
                 for (int x = 0; x < vertices.length; x += 9) {
                     float temp = abs(vertices[x + 1] - size);
-                    vertices[x] += offset.x;
+                    vertices[x] = abs(vertices[x]) + offset.x;
                     vertices[x + 1] = abs(vertices[x + 2]) + offset.y;
                     vertices[x + 2] = temp + offset.z;
                 }
@@ -277,14 +230,15 @@ public class BlockModel implements IModel {
             case 4 -> {
                 for (int x = 0; x < vertices.length; x += 9) {
                     float temp = vertices[x];
-                    vertices[x] = vertices[x + 2];
-                    vertices[x + 2] = abs(temp - size);
+                    vertices[x] = abs(vertices[x + 2] - size) + offset.x;
+                    vertices[x + 1] += + offset.y;
+                    vertices[x + 2] = abs(temp) + offset.z;
                 }
             }
             case 5 -> {
                 for (int x = 0; x < vertices.length; x += 9) {
-                    float temp = abs(vertices[x] - size);
-                    vertices[x] = vertices[x + 1] + offset.x;
+                    float temp = abs(vertices[x]);
+                    vertices[x] = abs(vertices[x + 1] - size) + offset.x;
                     vertices[x + 1] = abs(vertices[x + 2] - size) + offset.y;
                     vertices[x + 2] = temp + offset.z;
                 }
@@ -299,8 +253,8 @@ public class BlockModel implements IModel {
             }
             case 7 -> {
                 for (int x = 0; x < vertices.length; x += 9) {
-                    float temp = abs(vertices[x]);
-                    vertices[x] = abs(vertices[x + 1] - size) + offset.x;
+                    float temp = abs(vertices[x] - size);
+                    vertices[x] = abs(vertices[x + 1]) + offset.x;
                     vertices[x + 1] = abs(vertices[x + 2] - size) + offset.y;
                     vertices[x + 2] = temp + offset.z;
 
@@ -310,18 +264,75 @@ public class BlockModel implements IModel {
 
             case 8 -> {
                 for(int x = 0; x < vertices.length; x+= 9) {
-                    vertices[x] = abs(vertices[x] - size);
-                    vertices[x + 2] = abs(vertices[x + 2] - size);
+                    vertices[x] = abs(vertices[x] - size) + offset.x;
+                    vertices[x + 1] += offset.y;
+                    vertices[x + 2] = abs(vertices[x + 2] - size) + offset.z;
                 }
             }
             case 9 -> {
                 for (int x = 0; x < vertices.length; x += 9) {
+                    float temp = abs(vertices[x + 1] - size);
                     vertices[x] = abs(vertices[x] - size) + offset.x;
-                    vertices[x + 1] = abs(vertices[x + 1] - size) + offset.y;
-                    vertices[x + 2] += offset.z;
+                    vertices[x + 1] = abs(vertices[x + 2] - size) + offset.y;
+                    vertices[x + 2] = temp + offset.z;
+
                 }
             }
 
+            case 10 -> {
+                for (int x = 0; x < vertices.length; x += 9) {
+                    vertices[x] = abs(vertices[x] - size) + offset.x;
+                    vertices[x + 1] = abs(vertices[x + 1] - size) + offset.y;
+                    vertices[x + 2] = vertices[x + 2] + offset.z;
+                }
+            }
+
+            case 11 -> {
+                for (int x = 0; x < vertices.length; x += 9) {
+                    float temp = abs(vertices[x + 1]);
+                    vertices[x] = abs(vertices[x] - size) + offset.x;
+                    vertices[x + 1] = abs(vertices[x + 2]) + offset.y;
+                    vertices[x + 2] = temp + offset.z;
+                }
+            }
+
+
+
+            case 12 -> {
+                for (int x = 0; x < vertices.length; x += 9) {
+                    float temp = vertices[x];
+                    vertices[x] = abs(vertices[x + 2]) + offset.x;
+                    vertices[x + 1] += + offset.y;
+                    vertices[x + 2] = abs(temp - size) + offset.z;
+                }
+            }
+
+            case 13 -> {
+                for (int x = 0; x < vertices.length; x += 9) {
+                    float temp = abs(vertices[x] - size);
+                    vertices[x] = abs(vertices[x + 1]) + offset.x;
+                    vertices[x + 1] = abs(vertices[x + 2] - size) + offset.y;
+                    vertices[x + 2] = temp + offset.z;
+                }
+            }
+
+            case 14 -> {
+                for (int x = 0; x < vertices.length; x += 9) {
+                    float temp = abs(vertices[x] - size);
+                    vertices[x] = abs(vertices[x + 2] - size) + offset.x;
+                    vertices[x + 1] = abs(vertices[x + 1] - size) + offset.y;
+                    vertices[x + 2] = temp + offset.z;
+                }
+            }
+
+            case 15 -> {
+                for (int x = 0; x < vertices.length; x += 9) {
+                    float temp = abs(vertices[x] - size);
+                    vertices[x] = abs(vertices[x + 1] - size) + offset.x;
+                    vertices[x + 1] = abs(vertices[x + 2]) + offset.y;
+                    vertices[x + 2] = temp + offset.z;
+                }
+            }
         }
     }
 
@@ -331,6 +342,17 @@ public class BlockModel implements IModel {
 
     @Override
     public int[] getIndices(int side, int rotX, int rotY) {
+        boolean rotate = doRations[rotX | rotY << 2];
+        if(rotate) {
+            int[] indices = this.indices[side];
+            int[] newIndices = new int[indices.length];
+            for(int x = 0; x < indices.length; x += 3) {
+                newIndices[x] = indices[x];
+                newIndices[x + 1] = indices[x + 2];
+                newIndices[x + 2] = indices[x + 1];
+            }
+            return newIndices;
+        }
         return indices[side];
     }
 

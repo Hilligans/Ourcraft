@@ -32,4 +32,6 @@ public class Settings {
     public static boolean sounds = true;
 
     public static int tickingDistance = 5;
+
+    public static boolean autoSave = false;
 }

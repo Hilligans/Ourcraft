@@ -1,0 +1,6 @@
+{
+   "blue":{
+      "textures":["blue.png","stone.png","dirt.png","dirt.png"],
+      "data":"Blocks/slab.json"
+   }
+}

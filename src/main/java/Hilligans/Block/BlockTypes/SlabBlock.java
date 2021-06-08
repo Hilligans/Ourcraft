@@ -17,7 +17,7 @@ public class SlabBlock extends Block {
     public SlabBlock(String name, BlockProperties blockProperties) {
         super(name, blockProperties);
         blockProperties.transparent();
-        blockShape = new SlabBlockShape();
+        blockProperties.blockShape = new SlabBlockShape();
     }
 
     @Override

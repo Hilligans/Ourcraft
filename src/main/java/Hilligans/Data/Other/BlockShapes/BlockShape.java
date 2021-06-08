@@ -4,11 +4,9 @@ import Hilligans.Client.Rendering.NewRenderer.BlockModel;
 import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
-import Hilligans.Client.Rendering.World.Managers.VertexManagers.CubeManager;
 import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BoundingBox;
-import Hilligans.Util.Vector5f;
 import Hilligans.World.World;
 import org.joml.Vector3f;
 
@@ -33,7 +31,7 @@ public class BlockShape {
     }
 
     public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset, float offsetX, float offsetY, float offsetZ) {
-        data.addData(primitiveBuilder,blockTextureManager,side,size,offset,0,0,offsetX,offsetY,offsetZ);
+        data.addData(primitiveBuilder,blockTextureManager,side,size,offset.add(offsetX,offsetY,offsetZ),0,0);
     }
 
     public int getSide(BlockState blockState, int side) {

@@ -5,7 +5,6 @@ import Hilligans.Block.Blocks;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import Hilligans.Client.Rendering.World.Managers.ShaderManager;
-import Hilligans.Client.Rendering.World.Managers.VertexManagers.CubeManager;
 import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.ClientMain;
 import Hilligans.Data.Other.BlockPos;
@@ -15,11 +14,7 @@ import Hilligans.Item.BlockItem;
 import Hilligans.Item.ItemStack;
 import Hilligans.Item.Items;
 import Hilligans.Network.PacketData;
-import Hilligans.Util.Vector5f;
 import org.joml.Vector3f;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.glUseProgram;

@@ -17,7 +17,7 @@ public class WeepingVineBlock extends PlantBlock {
         long seed = ((long)blockPos.x) | ((long)blockPos.z << 32);
         Random random = new Random(seed);
         for(int a = 0; a < 3; a++) {
-            blockShape.addVertices(primitiveBuilder,side,size,blockState,blockProperties.blockTextureManager, new BlockPos(x,blockPos.y,z).get3f(),random.nextFloat() - 0.5f, 0,random.nextFloat() - 0.5f);
+            blockProperties.blockShape.addVertices(primitiveBuilder,side,size,blockState,blockProperties.blockTextureManager, new BlockPos(x,blockPos.y,z).get3f(),random.nextFloat() - 0.5f, 0,random.nextFloat() - 0.5f);
         }
     }
 

@@ -1,6 +1,11 @@
 package Hilligans;
 
 import Hilligans.Client.*;
+import netscape.javascript.JSObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.Scanner;
 
 public class ClientMain {
 
@@ -13,7 +18,7 @@ public class ClientMain {
 
 
     public static void main(String[] args) {
-        System.out.println(3 | (1 << 2));
+
         client = new Client();
         client.startClient();
     }

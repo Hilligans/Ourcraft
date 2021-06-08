@@ -30,8 +30,6 @@ public class Block {
     public BlockProperties blockProperties;
     private Block droppedBlock;
 
-    public BlockShape blockShape = new BlockShape();
-
     public Block(String name, BlockProperties blockProperties) {
         this.name = name;
         this.modId = Ourcraft.MOD_LOADER.mod;
@@ -45,6 +43,10 @@ public class Block {
             ServerSidedData.getInstance().putBlock(name,this);
         }
         new BlockItem(name,this);
+    }
+
+    public Block(String name, String path) {
+        this(name,BlockProperties.loadProperties(path));
     }
 
     public Block setBlockDrop(Block blockDrop) {
@@ -101,7 +103,7 @@ public class Block {
     }
 
     public BoundingBox getBoundingBox(World world, BlockPos pos) {
-        return blockShape.getBoundingBox(world,pos);
+        return blockProperties.blockShape.getBoundingBox(world,pos);
     }
 
     public void generateTextures() {
@@ -109,11 +111,11 @@ public class Block {
     }
 
     public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockPos blockPos, int x, int z) {
-       blockShape.addVertices(primitiveBuilder,side,size,blockState,blockProperties.blockTextureManager, new BlockPos(x,blockPos.y,z).get3f());
+        blockProperties.blockShape.addVertices(primitiveBuilder,side,size,blockState,blockProperties.blockTextureManager, new BlockPos(x,blockPos.y,z).get3f());
     }
 
     public int getSide(BlockState blockState, int side) {
-        return blockShape.getSide(blockState,side);
+        return blockProperties.blockShape.getSide(blockState,side);
     }
 
     public static BlockPos getBlockPos(int side) {
@@ -148,4 +150,13 @@ public class Block {
     public static final int WEST = 2;
     public static final int EAST = 3;
 
+    public static final int[] rotationSides = {0,1,2,3,4,5,0,0,   5,4,2,3,0,1,0,0,    1,0,2,3,5,4,0,0,    4,5,2,3,1,0,0,0,
+                                               3,2,0,1,4,5,0,0,   5,4,0,1,3,2,0,0,    3,2,0,1,5,4,0,0,    5,4,1,0,2,3,0,0,
+                                               1,0,3,2,4,5,0,0,   5,4,3,2,1,0,0,0,    0,1,3,2,5,4,0,0,    4,5,3,2,0,1,0,0,
+                                               2,3,1,0,4,5,0,0,   5,4,1,0,2,3,0,0,    3,2,1,0,5,4,0,0,    4,5,1,0,3,2,0,0};
+
+    public static int getSide(int side, int rotX, int rotY) {
+        int value = side | rotX << 3 | rotY << 5;
+        return Block.rotationSides[value];
+    }
 }

@@ -118,7 +118,7 @@ public class WorldLoader {
         StringBuilder stringBuilder = new StringBuilder();
         InputStream stream = ShaderManager.class.getResourceAsStream(path);
         if(stream == null) {
-            System.out.println("Cant read file");
+            System.out.println("Cant read file: " + path);
             return "";
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));

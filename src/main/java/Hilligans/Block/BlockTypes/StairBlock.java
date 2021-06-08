@@ -10,7 +10,7 @@ import Hilligans.World.World;
 public class StairBlock extends Block {
     public StairBlock(String name, BlockProperties blockProperties) {
         super(name, blockProperties);
-        blockShape = new StairBlockShape();
+        blockProperties.blockShape = new StairBlockShape();
         blockProperties.transparent();
     }
 
