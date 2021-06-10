@@ -1,5 +1,6 @@
 package Hilligans.Data.Other.BlockShapes;
 
+import Hilligans.Block.Block;
 import Hilligans.Client.Rendering.NewRenderer.BlockModel;
 import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import Hilligans.Data.Other.BlockState;
@@ -8,11 +9,17 @@ import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BoundingBox;
 import Hilligans.World.World;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.Int2ShortOpenHashMap;
 import org.joml.Vector3f;
 
 public class BlockShape {
 
     public BlockModel data;
+
+    public Int2ShortOpenHashMap rotations = new Int2ShortOpenHashMap();
+    public Int2ObjectOpenHashMap<BoundingBox> boundingBoxes = new Int2ObjectOpenHashMap<>();
+    public BoundingBox defaultBoundingBox = new BoundingBox(0,0,0,1,1,1);
 
     public BlockShape() {
         data = BlockModel.create("/Models/Blocks/block.txt");
@@ -23,19 +30,48 @@ public class BlockShape {
     }
 
     public BoundingBox getBoundingBox(World world, BlockPos pos) {
-        return new BoundingBox(0,0,0,1,1,1);
+        int val = world.getBlockState(pos).readData();
+        return boundingBoxes.getOrDefault(val,defaultBoundingBox).duplicate();
     }
 
     public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset) {
-        data.addData(primitiveBuilder,blockTextureManager,side,size,offset,0,0);
+        int rot = getRotation(blockState);
+        if (rot != -1) {
+            data.addData(primitiveBuilder,blockTextureManager,side,size,offset,rot & 3,(rot & 12) >> 2);
+        } else {
+            data.addData(primitiveBuilder, blockTextureManager, side, size, offset, 0, 0);
+        }
     }
 
     public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset, float offsetX, float offsetY, float offsetZ) {
-        data.addData(primitiveBuilder,blockTextureManager,side,size,offset.add(offsetX,offsetY,offsetZ),0,0);
+        int rot = getRotation(blockState);
+        if (rot != -1) {
+            data.addData(primitiveBuilder,blockTextureManager,side,size,offset.add(offsetX,offsetY,offsetZ),rot & 3,(rot & 12) >> 2);
+        } else {
+            data.addData(primitiveBuilder, blockTextureManager, side, size, offset.add(offsetX, offsetY, offsetZ), 0, 0);
+        }
     }
 
+    public void putRotation(int blockState, int rotX, int rotY) {
+        boundingBoxes.put(blockState,defaultBoundingBox.rotateX(rotX,1.0f).rotateY(-rotY,1.0f));
+        rotations.put(blockState, (short) (rotX | rotY << 2));
+    }
+
+
     public int getSide(BlockState blockState, int side) {
+        int val = getRotation(blockState);
+        if(val != -1) {
+            return Block.rotationSides[val << 3 | side];
+        }
         return side;
+    }
+
+    public short getRotation(BlockState blockState) {
+        int sideVal = blockState.readData();
+        if(sideVal != -1 && rotations.containsKey(sideVal)) {
+            return rotations.get(sideVal);
+        }
+        return -1;
     }
 
     public int generateOutline(World world, BlockPos pos) {

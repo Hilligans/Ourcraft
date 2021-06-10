@@ -1,6 +1,16 @@
 {
    "blue":{
-      "textures":["blue.png","stone.png","dirt.png","dirt.png"],
+      "textures":["blue.png"],
       "data":"Blocks/slab.json"
+   },
+
+   "newStair": {
+      "textures":["blue.png"],
+      "data":"Blocks/stair.json"
+   },
+
+   "stairCorner": {
+      "textures": ["blue.png"],
+      "data": "Blocks/stairSmall.json"
    }
 }

@@ -5,6 +5,7 @@ import netscape.javascript.JSObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ClientMain {
@@ -18,7 +19,6 @@ public class ClientMain {
 
 
     public static void main(String[] args) {
-
         client = new Client();
         client.startClient();
     }

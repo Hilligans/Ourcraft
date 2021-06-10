@@ -15,6 +15,7 @@ import Hilligans.ModHandler.ModLoader;
 import Hilligans.Ourcraft;
 import Hilligans.Util.Vector5f;
 import Hilligans.World.DataProvider;
+import Hilligans.World.DataProviders.ShortBlockState;
 import Hilligans.World.World;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
@@ -79,7 +80,7 @@ public class Block {
     }
 
     public boolean hasBlockState() {
-        return false;
+        return blockProperties.blockStateSize != 0;
     }
 
     public int blockStateByteCount() {
@@ -87,11 +88,33 @@ public class Block {
     }
 
     public BlockState getStateWithData(short data) {
-        return new BlockState(this);
+        if(blockProperties.blockStateSize != 0) {
+            return new DataBlockState(this,new ShortBlockState(data));
+        } else {
+            return new BlockState(this);
+        }
     }
 
     public BlockState getStateForPlacement(Vector3d playerPos, RayResult rayResult) {
-        return getDefaultState();
+        switch (blockProperties.placementMode) {
+            default -> {
+                return getDefaultState();
+            }
+            case "slab" -> {
+                return new DataBlockState(this, new ShortBlockState((short) rayResult.side));
+            }
+            case "directional" -> {
+                double x = playerPos.x - rayResult.pos.x;
+                double z = playerPos.z - rayResult.pos.z;
+                return new DataBlockState(this,new ShortBlockState((short)getSideFromLargest(x,z)));
+            }
+
+            case "directionalInverted" -> {
+                double x = playerPos.x - rayResult.pos.x;
+                double z = playerPos.z - rayResult.pos.z;
+                return new DataBlockState(this,new ShortBlockState((short)getSideFromLargestInverted(x,z)));
+            }
+        }
     }
 
     public Block getDroppedBlock() {
@@ -111,7 +134,7 @@ public class Block {
     }
 
     public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockPos blockPos, int x, int z) {
-        blockProperties.blockShape.addVertices(primitiveBuilder,side,size,blockState,blockProperties.blockTextureManager, new BlockPos(x,blockPos.y,z).get3f());
+        blockProperties.blockShape. addVertices(primitiveBuilder,side,size,blockState,blockProperties.blockTextureManager, new BlockPos(x,blockPos.y,z).get3f());
     }
 
     public int getSide(BlockState blockState, int side) {
@@ -132,6 +155,22 @@ public class Block {
                 return new BlockPos(0,-1,0);
             default:
                 return new BlockPos(0,1,0);
+        }
+    }
+
+    public static int getSideFromLargest(double x, double z) {
+        if(Math.abs(x) > Math.abs(z)) {
+            return x > 0 ? 3 : 2;
+        } else {
+            return z > 0 ? 1 : 0;
+        }
+    }
+
+    public static int getSideFromLargestInverted(double x, double z) {
+        if(Math.abs(x) > Math.abs(z)) {
+            return x > 0 ? 2 : 3;
+        } else {
+            return z > 0 ? 0 : 1;
         }
     }
 

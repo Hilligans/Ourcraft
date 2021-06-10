@@ -34,6 +34,16 @@ public class BoundingBox {
         this.eyeHeight = eyeHeight;
     }
 
+    public BoundingBox(float[] values) {
+        this.minX = values[0];
+        this.minY = values[1];
+        this.minZ = values[2];
+        this.maxX = values[3];
+        this.maxY = values[4];
+        this.maxZ = values[5];
+        eyeHeight = maxY;
+    }
+
     public boolean intersectsBox(BoundingBox other, Vector3d myPos, Vector3d otherPos) {
         return this.minX + myPos.x <= other.maxX + otherPos.x && this.maxX + myPos.x >= other.minX + otherPos.x && this.minY + myPos.y <= other.maxY + otherPos.y && this.maxY + myPos.y >= other.minY + otherPos.y && this.minZ + myPos.z <= other.maxZ + otherPos.z && this.maxZ  + myPos.z >= other.minZ + otherPos.z;
     }
@@ -88,9 +98,38 @@ public class BoundingBox {
         return getHitSide(new Vector3f((float)vector3d.x - source.x, (float)vector3d.y - source.y, (float)vector3d.z - source.z));
     }
 
+    public BoundingBox rotateX(int degrees, float size) {
+        float halfSize = size / 2;
+        Vector3f min = new Vector3f(minX - halfSize,minY - halfSize,minZ - halfSize);
+        min.rotateX((float) Math.toRadians(degrees * 90));
+        Vector3f max = new Vector3f(maxX - halfSize,maxY - halfSize,maxZ - halfSize);
+        max.rotateX((float) Math.toRadians(degrees * 90));
+        return new BoundingBox(Math.min(min.x + halfSize, max.x + halfSize),Math.min(min.y + halfSize,max.y + halfSize),Math.min(min.z + halfSize,max.z + halfSize),Math.max(min.x + halfSize, max.x + halfSize),Math.max(min.y + halfSize,max.y + halfSize),Math.max(min.z + halfSize,max.z + halfSize));
+    }
 
+    public BoundingBox rotateY(int degrees, float size) {
+        float halfSize = size / 2;
+        Vector3f min = new Vector3f(minX - halfSize,minY - halfSize,minZ - halfSize);
+        min.rotateY((float) Math.toRadians(degrees * 90));
+        Vector3f max = new Vector3f(maxX - halfSize,maxY - halfSize,maxZ - halfSize);
+        max.rotateY((float) Math.toRadians(degrees * 90));
+        return new BoundingBox(Math.min(min.x + halfSize, max.x + halfSize),Math.min(min.y + halfSize,max.y + halfSize),Math.min(min.z + halfSize,max.z + halfSize),Math.max(min.x + halfSize, max.x + halfSize),Math.max(min.y + halfSize,max.y + halfSize),Math.max(min.z + halfSize,max.z + halfSize));
+    }
 
+    public BoundingBox duplicate() {
+        return new BoundingBox(minX,minY,minZ,maxX,maxY,maxZ);
+    }
 
-
-
+    @Override
+    public String toString() {
+        return "BoundingBox{" +
+                "minX=" + minX +
+                ", minY=" + minY +
+                ", minZ=" + minZ +
+                ", maxX=" + maxX +
+                ", maxY=" + maxY +
+                ", maxZ=" + maxZ +
+                ", eyeHeight=" + eyeHeight +
+                '}';
+    }
 }

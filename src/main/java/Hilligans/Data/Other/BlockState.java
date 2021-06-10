@@ -32,6 +32,10 @@ public class BlockState {
         return blockId == that.blockId;
     }
 
+    public short readData() {
+        return -1;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(blockId);

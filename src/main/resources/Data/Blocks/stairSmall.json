@@ -1,0 +1,37 @@
+{
+  "model":{
+    "modelName":"stairSmall.txt",
+    "boundingBox": [0,0,0,1,0.5,1,0,0.5,0.5,0.5,1,1],
+    "blockStates":{
+      "0": {
+        "rotX":0,
+        "rotY":0
+      },
+      "1": {
+        "rotX":0,
+        "rotY":2
+      },
+      "2": {
+        "rotX":0,
+        "rotY":3
+      },
+      "3": {
+        "rotX":0,
+        "rotY":1
+      },
+      "4":{
+        "rotX":0,
+        "rotY":0
+      },
+      "5": {
+        "rotX":0,
+        "rotY":0
+      }
+    }
+  },
+  "properties":{
+    "transparent":true,
+    "placementMode":"directional",
+    "blockStateByteCount": 2
+  }
+}
