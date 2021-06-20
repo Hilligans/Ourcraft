@@ -16,6 +16,7 @@ menu.email::Email
 menu.disconnect::Disconnect
 menu.settings::Settings
 menu.done::Done
+menu.mod_list::Mod List
 
 
 

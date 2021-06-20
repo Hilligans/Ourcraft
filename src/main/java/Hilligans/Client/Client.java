@@ -35,6 +35,8 @@ import Hilligans.Network.Packet.AuthServerPackets.CGetToken;
 import Hilligans.Network.Packet.Client.*;
 import Hilligans.Network.PacketBase;
 import Hilligans.Ourcraft;
+import Hilligans.Server.IntegratedServer;
+import Hilligans.Server.MultiPlayerServer;
 import Hilligans.Tag.CompoundTag;
 import Hilligans.Tag.Tag;
 import Hilligans.Util.Settings;
@@ -91,6 +93,8 @@ public class Client {
 
 
     public ClientWorld clientWorld;
+
+    public MultiPlayerServer multiPlayerServer;
 
     public Client() {}
 

@@ -116,7 +116,7 @@ public class WorldLoader {
 
     public static String readString(String path) {
         StringBuilder stringBuilder = new StringBuilder();
-        InputStream stream = ShaderManager.class.getResourceAsStream(path);
+        InputStream stream = WorldLoader.class.getResourceAsStream(path);
         if(stream == null) {
             System.out.println("Cant read file: " + path);
             return "";
@@ -124,6 +124,13 @@ public class WorldLoader {
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         reader.lines().forEach(string -> stringBuilder.append(string).append("\n"));
         return stringBuilder.toString() + "\n\0";
+    }
+
+    public static String readString(InputStream stream) {
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+        reader.lines().forEach(string -> stringBuilder.append(string).append("\n"));
+        return stringBuilder.toString();
     }
 
     public static void save(CompoundTag compoundTag, String path) {

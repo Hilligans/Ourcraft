@@ -20,6 +20,13 @@ public class ToggleWidget extends Widget {
         this.value = defaultValue;
     }
 
+    public ToggleWidget(int x, int y, int width, int height, String name, boolean defaultValue) {
+        super(x, y, width, height);
+        this.toggleAction = value -> value = !value;
+        this.name = name;
+        this.value = defaultValue;
+    }
+
     public ToggleWidget isEnabled(boolean enabled) {
         this.enabled = enabled;
         return this;
@@ -34,7 +41,7 @@ public class ToggleWidget extends Widget {
         } else {
             Textures.BUTTON_DARK.drawTexture(matrixStack,x,y,width,height);
         }
-        StringRenderer.drawString(matrixStack, Languages.getTranslated(name) + (value ? " true" : " false"),x,y,0.5f);
+        StringRenderer.drawCenteredString(matrixStack, Languages.getTranslated(name) + (value ? ": ON" : ": OFF"),x + width / 2,y,0.5f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 

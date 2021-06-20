@@ -16,10 +16,17 @@ import Hilligans.Client.Rendering.Widgets.ButtonAction;
 import Hilligans.Client.Rendering.Widgets.InputField;
 import Hilligans.Network.ClientAuthNetworkHandler;
 import Hilligans.Network.ClientNetworkHandler;
+import Hilligans.Network.ClientNetworkInit;
 import Hilligans.Network.Packet.AuthServerPackets.CCreateAccount;
 import Hilligans.Network.Packet.AuthServerPackets.CGetToken;
 import Hilligans.Network.Packet.Client.CSendBlockChanges;
+import Hilligans.Network.ServerNetworkInit;
+import Hilligans.Server.IntegratedServer;
+import Hilligans.Server.MultiPlayerServer;
+import Hilligans.ServerMain;
 import Hilligans.Util.Settings;
+import Hilligans.World.Builders.OreBuilder;
+import Hilligans.World.ServerWorld;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_H;
 
@@ -41,7 +48,37 @@ public class JoinScreen extends ScreenBase {
         widgets.add(new ServerSelectorWidget(100,300,200,80,"localhost","25586",this));
         widgets.add(new Button(500, 200, 200, 50, "menu.create_account", () -> ClientMain.getClient().openScreen(new AccountCreationScreen())));
         widgets.add(new Button(500, 300, 200, 50, "menu.log_in", () -> ClientMain.getClient().openScreen(new LoginScreen())));
-        //widgets.add(new Button(500,500,500,200,"CAN YOU SEE THIS",() -> {}));
+        widgets.add(new Button(500,400,200,50,"menu.singleplayer", () -> {
+            ServerWorld world = new ServerWorld();
+            world.worldBuilders.add(new OreBuilder(Blocks.GRASS,Blocks.STONE).setFrequency(20));
+
+            ClientMain.getClient().multiPlayerServer = new MultiPlayerServer();
+            ClientMain.getClient().multiPlayerServer.addWorld(0,world);
+            ServerMain.server = ClientMain.getClient().multiPlayerServer;
+            int port = 0;
+            try {
+                port = ServerNetworkInit.getOpenPort();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+            String portString = port + "";
+            Thread thread = new Thread(() -> ClientMain.getClient().multiPlayerServer.startServer(portString));
+            thread.start();
+           this.portString = portString;
+        }));
+
+        widgets.add(new Button(500,500,200,50,"menu.singleplayerjoin", () -> {
+            try {
+                ClientNetworkHandler.clientNetworkHandler = new ClientNetworkHandler();
+                ClientNetworkInit.joinServer("localhost", portString, ClientNetworkHandler.clientNetworkHandler);
+                ClientMain.getClient().closeScreen();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }));
+
+        widgets.add(new Button(500,600,200,50,"menu.mod_list", () -> ClientMain.getClient().openScreen(new ModListScreen())));
 
         registerKeyPress(new KeyPress() {
             @Override
@@ -50,6 +87,8 @@ public class JoinScreen extends ScreenBase {
             }
         }, GLFW_KEY_H);
     }
+
+    public String portString;
 
     public void setActive(ServerSelectorWidget selected) {
         this.selected = selected;

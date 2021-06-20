@@ -25,7 +25,10 @@ public class BlockShape {
         data = BlockModel.create("/Models/Blocks/block.txt");
     }
 
+    public String path;
+
     public BlockShape(String path) {
+        this.path = path;
         data = BlockModel.create("/Models/Blocks/" + path);
     }
 

@@ -51,6 +51,10 @@ public class Textures {
         MAPPED_TEXTURES.clear();
     }
 
+    public static void registerTexture(Texture texture) {
+        TEXTURES.add(texture);
+    }
+
     public static Texture getTexture(int id) {
         if(id >= TEXTURES.size()) {
             return ServerSidedData.getInstance().TEXTURES.get(id - TEXTURES.size());

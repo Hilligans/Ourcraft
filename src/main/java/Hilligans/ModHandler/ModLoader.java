@@ -1,14 +1,15 @@
 package Hilligans.ModHandler;
 
-import Hilligans.Block.Block;
-import Hilligans.Client.Client;
-import Hilligans.Data.Primitives.DoubleTypeWrapper;
+import Hilligans.ModHandler.Content.ContentPack;
+import Hilligans.ModHandler.Content.ModContent;
 import Hilligans.Data.Primitives.TripleTypeWrapper;
+import Hilligans.Util.Settings;
+import Hilligans.WorldSave.WorldLoader;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -21,10 +22,13 @@ public class ModLoader {
     public String mod = "ourcraft";
 
     public HashMap<String, TripleTypeWrapper<Class<?>,String,Boolean>> mainClasses = new HashMap<>();
+    public ContentPack contentPack = new ContentPack();
 
     public void loadDefaultMods() {
         loadAllMods(new File("mods/"));
         loadClasses(new File("target/classes/"), "");
+        contentPack.load();
+        contentPack.generateData();
     }
 
     public void loadAllMods(File folder) {
@@ -46,11 +50,17 @@ public class ModLoader {
                     try {
                         URLClassLoader child = new URLClassLoader(new URL[]{mod.toURI().toURL()}, this.getClass().getClassLoader());
                         Class<?> testClass = Class.forName(topName + mod.getName().substring(0,mod.getName().length() - 6),false,child);
+                        JSONObject jsonObject = getContent(child);
                         String modID = getModID(testClass);
                         if(modID != null) {
                             this.mod = modID;
+                            ModContent modContent = new ModContent(modID);
+                            if(jsonObject != null) {
+                                modContent.readData(jsonObject);
+                            }
+                            modContent.mainClass = testClass;
+                            contentPack.mods.put(modID,modContent);
                             mainClasses.put(modID,new TripleTypeWrapper<>(testClass,mod.getAbsolutePath(),false));
-                            testClass.newInstance();
                         }
                     } catch (Exception ignored) {}
                 }
@@ -60,22 +70,23 @@ public class ModLoader {
 
 
     public boolean loadMod(File file) {
-
         try {
             URLClassLoader child = new URLClassLoader(new URL[]{file.toURI().toURL()}, this.getClass().getClassLoader());
             ArrayList<String> classNames = getClassNames(file);
+            JSONObject jsonObject = getContent(child);
             for(String name : classNames) {
                 Class<?> testClass = Class.forName(name,false,child);
                 String modID = getModID(testClass);
                 if(modID != null) {
+                    ModContent modContent = new ModContent(modID);
+                    if(jsonObject != null) {
+                        modContent.readData(jsonObject);
+                    }
                     mod = modID;
                     testClass = Class.forName(name,true,child);
                     mainClasses.put(modID,new TripleTypeWrapper<>(testClass,file.getAbsolutePath(),true));
-                    try {
-                        testClass.newInstance();
-                    } catch (NoClassDefFoundError | Exception e) {
-                        new Exception("Failed to load mod " + modID + " from " + file.getName(),e).printStackTrace();
-                    }
+                    modContent.mainClass = testClass;
+                    contentPack.mods.put(modID,modContent);
                     return true;
                 }
             }
@@ -85,6 +96,18 @@ public class ModLoader {
         }
         mod = "";
         return true;
+    }
+
+    public JSONObject getContent(URLClassLoader classLoader) throws Exception {
+        try {
+            return new JSONObject(WorldLoader.readString(classLoader.getResource("mod.json").openStream()));
+        } catch (Exception e) {
+            if(!Settings.loadModsWithoutInfo) {
+                mod = "";
+                throw new Exception("Cannot load file");
+            }
+        }
+        return null;
     }
 
     //https://stackoverflow.com/questions/15720822/how-to-get-names-of-classes-inside-a-jar-file
@@ -115,4 +138,8 @@ public class ModLoader {
         }
         return null;
     }
+
+
+
+
 }

@@ -71,66 +71,95 @@ public class BlockProperties {
         return this;
     }
 
+    public JSONObject getJsonObject() {
+        JSONObject jsonObject = new JSONObject();
+        JSONObject properties = new JSONObject();
+        JSONObject model = new JSONObject();
+        JSONArray boundingBox = new JSONArray ();
+        JSONObject blockStates = new JSONObject();
+
+        jsonObject.put("properties",properties);
+        jsonObject.put("model",model);
+
+        model.put("boundingBox",boundingBox);
+        model.put("blockStates",blockStates);
+
+        properties.put("canWalkThrough",canWalkThrough);
+        properties.put("airBlock",airBlock);
+        properties.put("transparent",transparent);
+        properties.put("placementMode",placementMode);
+        properties.put("blockStateByteCount",blockStateSize);
+
+        model.put("modelName",blockShape.path);
+
+        return jsonObject;
+    }
+
     public static BlockProperties loadProperties(String path) {
         BlockProperties blockProperties = new BlockProperties();
         String val = WorldLoader.readString(path);
         if(!val.equals("")) {
             try {
                 JSONObject jsonObject = new JSONObject(val);
-
-                if(jsonObject.has("properties")) {
-                    JSONObject properties = jsonObject.getJSONObject("properties");
-                    blockProperties.canWalkThrough(getBoolean(properties,"canWalkThrough",false));
-                    blockProperties.airBlock(getBoolean(properties,"airBlock",false));
-                    blockProperties.transparent(getBoolean(properties,"transparent",false));
-                    blockProperties.placementMode = properties.has("placementMode") ? properties.getString("placementMode") : "default";
-                    blockProperties.blockStateSize = properties.has("blockStateByteCount") ? properties.getInt("blockStateByteCount") : 0;
-
-                }
-                if(jsonObject.has("model")) {
-                    JSONObject model = jsonObject.getJSONObject("model");
-                    if(model.has("modelName")) {
-                        blockProperties.blockShape = new BlockShape(model.getString("modelName"));
-                    }
-                    BoundingBox boundingBox;
-                    if(model.has("boundingBox")) {
-                        JSONArray boundingBoxArray = model.getJSONArray("boundingBox");
-                        if(boundingBoxArray.length() > 6) {
-                            float[] vals = {0,0,0,1,1,1};
-                            for(int x = 0; x < 6; x++) {
-                                vals[x] = boundingBoxArray.getNumber(x).floatValue();
-                            }
-                            boundingBox = new JoinedBoundingBox(vals);
-                            for(int x = 6; x < boundingBoxArray.length(); x+=6) {
-                                ((JoinedBoundingBox) boundingBox).addBox(boundingBoxArray.getNumber(x).floatValue(),boundingBoxArray.getNumber(x + 1).floatValue(),boundingBoxArray.getNumber(x + 2).floatValue(),boundingBoxArray.getNumber(x + 3).floatValue(),boundingBoxArray.getNumber(x + 4).floatValue(),boundingBoxArray.getNumber(x + 5).floatValue());
-                            }
-                        } else {
-                            float[] vals = {0,0,0,1,1,1};
-                            for(int x = 0; x < boundingBoxArray.length(); x++) {
-                                vals[x] = boundingBoxArray.getNumber(x).floatValue();
-                            }
-                            boundingBox = new BoundingBox(vals);
-                        }
-                    } else {
-                        boundingBox = new BoundingBox(0,0,0,1,1,1);
-                    }
-                    blockProperties.blockShape.defaultBoundingBox = boundingBox;
-
-                    if(model.has("blockStates")) {
-                        JSONObject blockStates = model.getJSONObject("blockStates");
-                        for(String string : blockStates.keySet()) {
-                            try {
-                                int block = Integer.parseInt(string);
-                                JSONObject jsonObject1 = blockStates.getJSONObject(string);
-                                int rotX = jsonObject1.getInt("rotX");
-                                int rotY = jsonObject1.getInt("rotY");
-                                blockProperties.blockShape.putRotation(block,rotX,rotY);
-                            } catch (Exception ignored) {}
-                        }
-                    }
-
-                }
+                return loadProperties(jsonObject);
             } catch (Exception ignored) {}
+        }
+        return blockProperties;
+    }
+
+    public static BlockProperties loadProperties(JSONObject jsonObject) {
+        BlockProperties blockProperties = new BlockProperties();
+        if (jsonObject.has("properties")) {
+            JSONObject properties = jsonObject.getJSONObject("properties");
+            blockProperties.canWalkThrough(getBoolean(properties, "canWalkThrough", false));
+            blockProperties.airBlock(getBoolean(properties, "airBlock", false));
+            blockProperties.transparent(getBoolean(properties, "transparent", false));
+            blockProperties.placementMode = properties.has("placementMode") ? properties.getString("placementMode") : "default";
+            blockProperties.blockStateSize = properties.has("blockStateByteCount") ? properties.getInt("blockStateByteCount") : 0;
+        }
+        if (jsonObject.has("model")) {
+            JSONObject model = jsonObject.getJSONObject("model");
+            if (model.has("modelName")) {
+                blockProperties.blockShape = new BlockShape(model.getString("modelName"));
+            }
+            BoundingBox boundingBox;
+            if (model.has("boundingBox")) {
+                JSONArray boundingBoxArray = model.getJSONArray("boundingBox");
+                if (boundingBoxArray.length() > 6) {
+                    float[] vals = {0, 0, 0, 1, 1, 1};
+                    for (int x = 0; x < 6; x++) {
+                        vals[x] = boundingBoxArray.getNumber(x).floatValue();
+                    }
+                    boundingBox = new JoinedBoundingBox(vals);
+                    for (int x = 6; x < boundingBoxArray.length(); x += 6) {
+                        ((JoinedBoundingBox) boundingBox).addBox(boundingBoxArray.getNumber(x).floatValue(), boundingBoxArray.getNumber(x + 1).floatValue(), boundingBoxArray.getNumber(x + 2).floatValue(), boundingBoxArray.getNumber(x + 3).floatValue(), boundingBoxArray.getNumber(x + 4).floatValue(), boundingBoxArray.getNumber(x + 5).floatValue());
+                    }
+                } else {
+                    float[] vals = {0, 0, 0, 1, 1, 1};
+                    for (int x = 0; x < boundingBoxArray.length(); x++) {
+                        vals[x] = boundingBoxArray.getNumber(x).floatValue();
+                    }
+                    boundingBox = new BoundingBox(vals);
+                }
+            } else {
+                boundingBox = new BoundingBox(0, 0, 0, 1, 1, 1);
+            }
+            blockProperties.blockShape.defaultBoundingBox = boundingBox;
+
+            if (model.has("blockStates")) {
+                JSONObject blockStates = model.getJSONObject("blockStates");
+                for (String string : blockStates.keySet()) {
+                    try {
+                        int block = Integer.parseInt(string);
+                        JSONObject jsonObject1 = blockStates.getJSONObject(string);
+                        int rotX = jsonObject1.getInt("rotX");
+                        int rotY = jsonObject1.getInt("rotY");
+                        blockProperties.blockShape.putRotation(block, rotX, rotY);
+                    } catch (Exception ignored) {
+                    }
+                }
+            }
+
         }
         return blockProperties;
     }
@@ -141,6 +170,7 @@ public class BlockProperties {
         }
         return defaultValue;
     }
+
 
 
 

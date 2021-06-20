@@ -37,13 +37,12 @@ public class Block {
         id = Blocks.getNextId();
         this.blockProperties = blockProperties;
         droppedBlock = this;
-        if(!blockProperties.serverSide) {
-            Blocks.BLOCKS.add(this);
-            Blocks.MAPPED_BLOCKS.put(name, this);
-        } else {
-            ServerSidedData.getInstance().putBlock(name,this);
+        if(modId.equals("ourcraft")) {
+            if (!blockProperties.serverSide) {
+            } else {
+                //ServerSidedData.getInstance().putBlock(name, this);
+            }
         }
-        new BlockItem(name,this);
     }
 
     public Block(String name, String path) {

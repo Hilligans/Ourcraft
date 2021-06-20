@@ -33,7 +33,17 @@ public class SoundBuffer {
                 channelType = info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
             } catch (Exception ignored) {}
         }
+    }
 
+    public SoundBuffer(ShortBuffer shortBuffer) {
+        try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
+            try {
+                pcm = shortBuffer;
+                sampleRate = info.sample_rate();
+                length = samples / (float) sampleRate;
+                channelType = info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
+            } catch (Exception ignored) {}
+        }
     }
 
     public SoundSource createNewSound(boolean loop, boolean relative, SoundCategory soundCategory) {

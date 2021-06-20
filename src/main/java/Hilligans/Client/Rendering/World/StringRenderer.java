@@ -1,33 +1,23 @@
 package Hilligans.Client.Rendering.World;
 
-import Hilligans.Client.Lang.Language;
 import Hilligans.Client.Lang.Languages;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import Hilligans.Client.Rendering.NewRenderer.TextureAtlas;
-import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Client.Rendering.Textures;
 import Hilligans.Client.Rendering.World.Managers.ShaderManager;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
-import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.ClientMain;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Data.Primitives.IntList;
 import Hilligans.Data.Primitives.TripleTypeWrapper;
 import Hilligans.Ourcraft;
-import Hilligans.Util.Vector5f;
 import it.unimi.dsi.fastutil.chars.Char2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2BooleanArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import org.lwjgl.opengl.GL30;
 
-import javax.script.ScriptEngineManager;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -51,6 +41,10 @@ public class StringRenderer {
         instance.drawStringInternal(matrixStack,string,x,y,scale);
     }
 
+    public static void drawString(MatrixStack matrixStack, String[] strings, int x, int y, float scale) {
+        instance.drawStringInternal(matrixStack,strings,x,y,scale);
+    }
+
     public static void drawStringTranslated(MatrixStack matrixStack, String string, int x, int y, float scale) {
         drawString(matrixStack, Languages.getTranslated(string),x,y,scale);
     }
@@ -65,6 +59,10 @@ public class StringRenderer {
 
     public static void drawCenteredString(MatrixStack matrixStack, String string, int y, float scale) {
         instance.drawCenteredStringInternal(matrixStack, string, y, scale);
+    }
+
+    public static void drawCenteredString(MatrixStack matrixStack, String string, int x, int y, float scale) {
+        instance.drawCenteredStringInternal(matrixStack, Languages.getTranslated(string), x, y, scale);
     }
 
     public static void drawCenteredStringTranslated(MatrixStack matrixStack, String string, int y, float scale) {
@@ -102,7 +100,7 @@ public class StringRenderer {
     public void buildChars() {
         for(int x = 0; x < Short.MAX_VALUE / 128; x++) {
             int finalX = x;
-            Future<TextureAtlas> atlasFuture = Ourcraft.executor.submit(() -> {
+            Future<TextureAtlas> atlasFuture = Ourcraft.EXECUTOR.submit(() -> {
                 TextureAtlas textureAtlas = buildTextureAtlas(finalX);
                 textureAtlases.put(finalX,textureAtlas);
                 return textureAtlas;
@@ -182,6 +180,14 @@ public class StringRenderer {
         glEnable(GL_DEPTH_TEST);
     }
 
+    public void drawStringInternal(MatrixStack matrixStack, String[] strings, int x, int y, float scale) {
+        int z = 0;
+        for(String string : strings) {
+            drawString(matrixStack,string,x, (int) (y + scale * z * stringHeight),scale);
+            z++;
+        }
+    }
+
     public void drawStringWithBackgroundInternal(MatrixStack matrixStack, String string, int x, int y, float scale) {
         matrixStack.push();
         glDisable(GL_DEPTH_TEST);
@@ -227,6 +233,35 @@ public class StringRenderer {
             textureAtlas.bindTexture();
             PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
             primitiveBuilder.translate(ClientMain.getWindowX() / 2f - finalWidth / 2f,0,0);
+            primitiveBuilder.draw(matrixStack);
+        });
+        matrixStack.pop();
+        glEnable(GL_DEPTH_TEST);
+    }
+
+    public void drawCenteredStringInternal(MatrixStack matrixStack, String string,int x, int y, float scale) {
+        matrixStack.push();
+        glDisable(GL_DEPTH_TEST);
+        glUseProgram(ShaderManager.guiShader.shader);
+        IntList vals = getAtlases(string);
+        Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
+        vals.forEach((val) -> primitiveBuilders.put(val,new PrimitiveBuilder(GL_TRIANGLES,ShaderManager.guiShader)));
+        int width = 0;
+        for(int z = 0; z < string.length(); z++) {
+            PrimitiveBuilder primitiveBuilder = primitiveBuilders.get((int)string.charAt(z) >> 8);
+            addVertices(primitiveBuilder,string.charAt(z),width,y,scale);
+            width += getCharWidth(string.charAt(z)) * scale;
+        }
+        int finalWidth = width;
+        ensureTexturesBuilt(vals);
+        vals.forEach((val) -> {
+            TextureAtlas textureAtlas = textureAtlases.get(val);
+            if(textureAtlas == null) {
+                return;
+            }
+            textureAtlas.bindTexture();
+            PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
+            primitiveBuilder.translate(x - finalWidth / 2f,0,0);
             primitiveBuilder.draw(matrixStack);
         });
         matrixStack.pop();

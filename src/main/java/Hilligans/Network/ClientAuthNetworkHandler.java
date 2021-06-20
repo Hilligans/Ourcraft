@@ -23,14 +23,12 @@ public class ClientAuthNetworkHandler extends NetworkHandler {
     }
 
     public static ChannelFuture sendPacketDirect(PacketBase packetBase) {
-        //if(networkHandler == null || !networkHandler.channel.isWritable()) {
             networkHandler = new ClientAuthNetworkHandler();
             try {
                 ClientNetworkInit.joinServer("hilligans.dev", "25588", networkHandler);
             } catch (Exception ignored) {
                 ignored.printStackTrace();
             }
-      //  }
         return networkHandler.sendPacket(packetBase);
     }
 

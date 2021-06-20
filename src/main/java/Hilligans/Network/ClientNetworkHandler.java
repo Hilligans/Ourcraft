@@ -22,13 +22,9 @@ public class ClientNetworkHandler extends NetworkHandler {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Textures.clear();
         System.out.println("DISCONNECTED FROM SERVER");
-
-        if(!ClientMain.getClient().valid) {
-        }
         ClientMain.getClient().renderWorld = false;
         ClientMain.getClient().valid = false;
         ClientMain.getClient().clientWorld = new ClientWorld();
-
         super.channelInactive(ctx);
     }
 
@@ -46,13 +42,11 @@ public class ClientNetworkHandler extends NetworkHandler {
     }
 
     public static void sendPacketDirect(PacketBase packetBase) {
-     //  if(clientNetworkHandler.channel != null && clientNetworkHandler.channel.isOpen()) {
         if(ClientMain.getClient().valid || packetBase instanceof CHandshakePacket) {
             if (clientNetworkHandler != null) {
                 clientNetworkHandler.channel.writeAndFlush(new PacketData(packetBase));
             }
         }
-       // }
     }
 
     public static boolean close() {

@@ -16,5 +16,10 @@ public class Items {
         return val;
     }
 
+    public static void registerItem(Item item) {
+        Items.ITEMS.add(item);
+        Items.HASHED_ITEMS.put(item.name, item);
+    }
+
 
 }

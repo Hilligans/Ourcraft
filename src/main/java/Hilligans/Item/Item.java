@@ -18,12 +18,6 @@ public class Item {
         this.name = name;
         this.itemProperties = itemProperties;
         this.modID = Ourcraft.MOD_LOADER.mod;
-        if(itemProperties.serverSide) {
-
-        } else {
-            Items.ITEMS.add(this);
-            Items.HASHED_ITEMS.put(name, this);
-        }
         id = Items.getNextId();
     }
 

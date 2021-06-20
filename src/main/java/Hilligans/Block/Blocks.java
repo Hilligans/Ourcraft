@@ -4,6 +4,9 @@ import Hilligans.Block.BlockTypes.*;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.Data.Other.BlockProperties;
 import Hilligans.Data.Other.ServerSidedData;
+import Hilligans.ModHandler.Content.ContentPack;
+import Hilligans.ModHandler.Content.ModContent;
+import Hilligans.Ourcraft;
 import Hilligans.Util.Settings;
 import Hilligans.WorldSave.WorldLoader;
 import org.json.JSONArray;
@@ -17,12 +20,23 @@ public class Blocks {
     public static final HashMap<String, Block> MAPPED_BLOCKS = new HashMap<>();
     public static final ArrayList<Block> BLOCKS = new ArrayList<>();
 
+    public static void registerBlock(Block block) {
+        MAPPED_BLOCKS.put(block.name,block);
+        BLOCKS.add(block);
+    }
+
+    public static void registerBlock(Block... blocks) {
+        for(Block block : blocks) {
+            registerBlock(block);
+        }
+    }
+
+
     public static short id = 0;
 
     public static short getNextId() {
         short val = id;
         id++;
-        //System.out.println(id);
         return val;
     }
 
@@ -39,8 +53,6 @@ public class Blocks {
     public static final Block CACTUS = new Block("cactus",new BlockProperties().withTexture("cactus.png"));
 
     public static final Block SLAB = new SlabBlock("slab",new BlockProperties().withTexture("dirt.png"));
-
-    //public static final Block TAPE = new Block("tape").withTexture("flex_tape.png");
 
     public static final Block CHEST = new ChestBlock("chest",new BlockProperties().withTexture("flex_tape.png"));
 
@@ -90,9 +102,9 @@ public class Blocks {
 
     public static final Block SAPLING = new OakSapling("oak_sapling",new BlockProperties());
 
-    //public static final Block BLUE = new SlabChest("blue",new BlockProperties().serverSide().withTexture("blue.png"));
+    public static void register() {
 
-    public static void register() {}
+    }
 
 
     static {
@@ -142,5 +154,9 @@ public class Blocks {
         }
     }
 
+    static {
+        ModContent ourcraft = Ourcraft.OURCRAFT;
+        ourcraft.registerBlocks(AIR,STONE,DIRT,GRASS,BEDROCK,IRON_ORE,LEAVES,LOG,SAND,CACTUS,SLAB,CHEST,COLOR_BLOCK,STAIR_BLOCK,GRASS_PLANT,WEEPING_VINE,MAPLE_LOG,MAPLE_PLANKS,PINE_LOG,PINE_PLANKS,SPRUCE_LOG,SPRUCE_PLANKS,BIRCH_LOG,BIRCH_PLANKS,OAK_LOG,OAK_PLANKS,WILLOW_LOG,WILLOW_PLANKS,ACACIA_LOG,ACACIA_PLANKS,POPLAR_LOG,POPLAR_PLANKS,ELM_LOG,ELM_WOOD,PALM_LOG,PALM_WOOD,REDWOOD_LOG,REDWOOD_WOOD,SAPLING);
+    }
 
 }

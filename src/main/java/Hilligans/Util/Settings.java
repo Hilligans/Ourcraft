@@ -34,4 +34,15 @@ public class Settings {
     public static int tickingDistance = 5;
 
     public static boolean autoSave = false;
+
+
+
+    public static boolean pullResourcesFromUnloadedMods = true;
+    public static boolean loadModsWithoutInfo = false;
+    public static boolean asyncModLoading = true;
+
+    public static String getVersion() {
+        return gameVersion + "";
+    }
+
 }

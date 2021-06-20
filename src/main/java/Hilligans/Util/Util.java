@@ -227,4 +227,12 @@ public class Util {
       //  mappedCharacters = TextureManager.registerTexture(img);
     }
 
+    public static String toString(String[] strings) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for(String string : strings) {
+            stringBuilder.append(string).append(" ");
+        }
+        return stringBuilder.toString();
+    }
+
 }
