@@ -112,14 +112,14 @@ public class Blocks {
         JSONObject jsonObject = new JSONObject(WorldLoader.readString("/Data/Blocks.json"));
         for(String string : jsonObject.keySet()) {
             JSONObject blockData = jsonObject.getJSONObject(string);
-            Block block = new Block(string,"/Data/" + blockData.getString("data"));
-            Ourcraft.OURCRAFT.registerBlock(block);
+            //Block block = new Block(string,"/Data/" + blockData.getString("data"));
+            //Ourcraft.OURCRAFT.registerBlock(block);
             JSONArray textures = blockData.getJSONArray("textures");
             for(int x = 0; x < textures.length(); x++) {
                 if(x == 0) {
-                    block.blockProperties.withTexture(textures.getString(x));
+            //        block.blockProperties.withTexture(textures.getString(x));
                 } else {
-                    block.blockProperties.withSidedTexture(textures.getString(x),x - 1);
+              //      block.blockProperties.withSidedTexture(textures.getString(x),x - 1);
                 }
             }
 

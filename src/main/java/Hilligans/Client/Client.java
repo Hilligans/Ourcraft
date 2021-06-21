@@ -100,9 +100,9 @@ public class Client {
 
     public void startClient() {
         register();
-       // Ourcraft.MOD_LOADER.loadDefaultMods();
-        Ourcraft.CONTENT_PACK.load();
-        Ourcraft.CONTENT_PACK.generateData();
+        Ourcraft.MOD_LOADER.loadDefaultMods();
+       // Ourcraft.CONTENT_PACK.load();
+       // Ourcraft.CONTENT_PACK.generateData();
         CompoundTag tag = WorldLoader.loadTag("clientData.dat");
         if(tag != null) {
             new Thread(() -> {

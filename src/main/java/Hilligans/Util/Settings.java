@@ -33,7 +33,7 @@ public class Settings {
 
     public static int tickingDistance = 5;
 
-    public static boolean autoSave = false;
+    public static boolean autoSave = true;
 
 
 

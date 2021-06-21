@@ -20,6 +20,14 @@ public class CompoundTag extends Tag {
 
     public CompoundTag putTag(String id, Tag tag) {
         tags.put(id,tag);
+        if(tag == this) {
+            System.err.println("Attempting to put compound tag inside the same compound tag, this will cause an error when saving");
+            try {
+                throw new Exception();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         return this;
     }
 
@@ -58,6 +66,11 @@ public class CompoundTag extends Tag {
         return this;
     }
 
+    public CompoundTag putLong(String id, long val) {
+        putTag(id, new LongTag(val));
+        return this;
+    }
+
     public Tag getTag(String name) {
         return tags.get(name);
     }
@@ -76,6 +89,10 @@ public class CompoundTag extends Tag {
 
     public FloatTag getFloat(String id) {
         return (FloatTag)getTag(id);
+    }
+
+    public LongTag getLong(String id) {
+        return (LongTag)getTag(id);
     }
 
     public FullStringTag getFullString(String id) {

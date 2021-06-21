@@ -9,6 +9,7 @@ import Hilligans.Tag.*;
 import Hilligans.Util.Settings;
 import Hilligans.World.Chunk;
 import Hilligans.World.DataProvider;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 
@@ -23,9 +24,10 @@ public class ChunkLoader {
     }
 
     public static HashMap<String, CompoundTag> loadedGroups = new HashMap<>();
+    public static HashMap<String,Level> levels = new HashMap<>();
     public static HashMap<String, CompoundTag> loadedData = new HashMap<>();
 
-    public static final Short2ObjectOpenHashMap<String> blockMap = new Short2ObjectOpenHashMap<>();
+    public static Level level = new Level();
 
 
     public static CompoundTag createTag(Chunk chunk) {
@@ -73,7 +75,7 @@ public class ChunkLoader {
         return compoundTag;
     }
 
-    public static CompoundTag createTag3(Chunk chunk) {
+    public static CompoundTag createTag3(Chunk chunk, Level level) {
         CompoundTag compoundTag = new CompoundTag();
 
         ListTag<ShortTag> blocks = new ListTag<>();
@@ -81,15 +83,21 @@ public class ChunkLoader {
         ArrayList<DoubleTypeWrapper<BlockState,Integer>> blockList = chunk.getBlockChainedList();
 
         for(DoubleTypeWrapper<BlockState,Integer> block : blockList) {
-            blocks.tags.add(new ShortTag(block.getTypeA().blockId));
+            int id = level.ensureHasBlock(block.typeA.getBlock());
+            blocks.tags.add(new ShortTag((short) id));
             if(block.getTypeA().getBlock().hasBlockState()) {
-                blocks.tags.add(new ShortTag(((DataBlockState)block.getTypeA()).readData()));
+                if(block.getTypeA() instanceof DataBlockState) {
+                    blocks.tags.add(new ShortTag(((DataBlockState) block.getTypeA()).readData()));
+                } else {
+                    System.out.println(block.typeA.getBlock().name);
+                }
             }
             int val = block.getTypeB();
             blocks.tags.add(new ShortTag((short)val));
         }
         compoundTag.putTag("blocks", blocks);
         compoundTag.putTag("data",getDataProviderTag(chunk));
+
 
         return compoundTag;
     }
@@ -166,7 +174,7 @@ public class ChunkLoader {
         return chunk;
     }
 
-    public static Chunk createChunk3(int X, int Z, CompoundTag compoundTag) {
+    public static Chunk createChunk3(int X, int Z, CompoundTag compoundTag, Level level) {
         Chunk chunk = new Chunk(X, Z, null);
         try {
             ListTag<ShortTag> blocks = (ListTag<ShortTag>) compoundTag.getTag("blocks");
@@ -175,11 +183,13 @@ public class ChunkLoader {
             int offset = 0;
 
             while(offset < blocks.tags.size()) {
-                Block block = Blocks.getBlockWithID(blocks.tags.get(offset).val);
+                short val = blocks.tags.get(offset).val;
+                Block block = level.getBlock(val);
+                //Block block = Blocks.getBlockWithID(blocks.tags.get(offset).val);
                 offset++;
                 BlockState blockState;
-                if(block.hasBlockState()) {
-                    blockState = block.getStateWithData(blocks.tags.get(offset).val);
+                if(level.getBlockStateSize(val) != 0) {
+                    blockState = block.getStateWithData(val);
                     offset++;
                 } else {
                     blockState = block.getDefaultState();
@@ -226,9 +236,14 @@ public class ChunkLoader {
     public static void finishSave() {
         for(String string : loadedGroups.keySet()) {
             CompoundTag compoundTag = loadedGroups.get(string);
+            CompoundTag levelTag = new CompoundTag();
+            Level level = levels.get(string);
+            level.write(levelTag);
+            compoundTag.putTag("level",levelTag);
             WorldLoader.save(compoundTag, pathToWorld + string + ".dat");
         }
         loadedGroups.clear();
+        levels.clear();
     }
 
     public static CompoundTag fetchChunk(int x, int z) {
@@ -248,6 +263,22 @@ public class ChunkLoader {
                 return compoundTag.getCompoundTag("x" + x + "_z" + z);
             }
         }
+    }
+
+    public static Level fetchLevel(int x, int z) {
+        int X = x >> 3;
+        int Z = z >> 3;
+        Level level = levels.get("x" + X + "_z" + Z);
+        if (level == null) {
+            CompoundTag compoundTag = loadTag(X, Z);
+            if (compoundTag == null) {
+                level = new Level();
+            } else {
+                level = new Level(compoundTag.getCompoundTag("level"));
+            }
+            levels.put("x" + X + "_z" + Z, level);
+        }
+        return level;
     }
 
     public static void putTag(int x, int z, CompoundTag compoundTag) {
@@ -271,13 +302,13 @@ public class ChunkLoader {
     public static Chunk readChunk(int x, int z) {
         CompoundTag compoundTag = fetchChunk(x,z);
         if(compoundTag != null) {
-            return ChunkLoader.createChunk3(x, z, compoundTag);
+            return ChunkLoader.createChunk3(x, z, compoundTag,fetchLevel(x,z));
         }
         return null;
     }
 
     public static void writeChunk(Chunk chunk) {
-        CompoundTag compoundTag = ChunkLoader.createTag3(chunk);
+        CompoundTag compoundTag = ChunkLoader.createTag3(chunk,fetchLevel(chunk.x,chunk.z));
         putTag(chunk.x,chunk.z,compoundTag);
     }
 

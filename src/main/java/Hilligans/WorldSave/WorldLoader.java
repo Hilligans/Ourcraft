@@ -134,7 +134,7 @@ public class WorldLoader {
     }
 
     public static void save(CompoundTag compoundTag, String path) {
-            ByteBuffer byteBuffer = ByteBuffer.allocateDirect(maxSize);
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(maxSize);
         byteBuffer.mark();
         compoundTag.write(byteBuffer);
         byteBuffer.limit(byteBuffer.position());
