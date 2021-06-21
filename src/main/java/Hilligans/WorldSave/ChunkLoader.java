@@ -240,7 +240,7 @@ public class ChunkLoader {
             Level level = levels.get(string);
             level.write(levelTag);
             compoundTag.putTag("level",levelTag);
-            WorldLoader.save(compoundTag, pathToWorld + string + ".dat");
+            WorldLoader.save(compoundTag, pathToWorld + "chunks/" + string + ".dat");
         }
         loadedGroups.clear();
         levels.clear();

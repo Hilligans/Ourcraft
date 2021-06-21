@@ -22,7 +22,6 @@ public class Level {
         read(compoundTag);
     }
 
-
     public int getBlockStateSize(String name) {
         return blocks.get(name).getTypeB();
     }
@@ -52,6 +51,7 @@ public class Level {
         for(String string : blocks.tags.keySet()) {
             long val = blocks.getLong(string).val;
             this.blocks.put(string,new DoubleTypeWrapper<>((int)(val >> 32),(int)val));
+            this.idToNames.put((int) (val >> 32),string);
         }
     }
 
