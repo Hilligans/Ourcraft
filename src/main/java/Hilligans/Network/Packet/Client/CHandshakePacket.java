@@ -89,6 +89,10 @@ public class CHandshakePacket extends PacketBase {
         ServerNetworkHandler.sendPacket(new SHandshakePacket(playerId,ServerSidedData.getInstance().version),ctx);
         ServerMain.getServer().sendPacket(new SChatMessage(name + " has joined the game"));
         ServerNetworkHandler.sendPacketExcept(new SSendPlayerList(name,playerId,true),ctx);
+
+        //ServerMain.getServer().sendPacket(new SSendModContentPacket());
+
+
         int size = ServerNetworkHandler.mappedChannels.size();
         String[] players = new String[size];
         int[] ids = new int[size];

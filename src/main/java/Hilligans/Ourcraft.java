@@ -1,5 +1,6 @@
 package Hilligans;
 
+import Hilligans.ModHandler.Content.ContentPack;
 import Hilligans.ModHandler.Content.ModContent;
 import Hilligans.ModHandler.EventBus;
 import Hilligans.ModHandler.ModLoader;
@@ -20,6 +21,7 @@ public class Ourcraft {
     public static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
     public static final ResourceManager RESOURCE_MANAGER = new ResourceManager();
     public static final ModContent OURCRAFT = new ModContent("ourcraft");
+    public static final ContentPack CONTENT_PACK = new ContentPack();
 
     public static String path = System.getProperty("user.dir");
 
@@ -37,6 +39,6 @@ public class Ourcraft {
 
 
     static {
-        MOD_LOADER.contentPack.mods.put("ourcraft",OURCRAFT);
+        CONTENT_PACK.mods.put("ourcraft",OURCRAFT);
     }
 }

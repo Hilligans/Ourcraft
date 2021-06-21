@@ -21,6 +21,11 @@ public class Item {
         id = Items.getNextId();
     }
 
+    public Item(String name, ItemProperties itemProperties, String modID) {
+        this(name,itemProperties);
+        this.modID = modID;
+    }
+
     public void render(MatrixStack matrixStack,int x, int y, int size, ItemStack itemStack) {}
 
     public boolean onActivate(World world, PlayerEntity playerEntity) {
@@ -39,6 +44,9 @@ public class Item {
 
     public String getName() {
         return "item." + modID + "." + name;
+    }
+    public String getBlockName() {
+        return "block." + modID + "." + name;
     }
 
 

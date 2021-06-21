@@ -19,7 +19,7 @@ public class ModListScreen extends ScreenBase implements SelectorScreen {
 
     public ModListScreen() {
         widgets.add(folder);
-        for(String string : Ourcraft.MOD_LOADER.contentPack.mods.keySet()) {
+        for(String string : Ourcraft.CONTENT_PACK.mods.keySet()) {
             folder.addWidget(new SelectorWidget(0,0,200,50,string,this));
         }
         folder.update();
@@ -39,7 +39,7 @@ public class ModListScreen extends ScreenBase implements SelectorScreen {
     public void drawScreen(MatrixStack matrixStack) {
         super.drawScreen(matrixStack);
         if(selectorWidget != null) {
-            ModContent modContent = Ourcraft.MOD_LOADER.contentPack.mods.get(selectorWidget.name);
+            ModContent modContent = Ourcraft.CONTENT_PACK.mods.get(selectorWidget.name);
             StringRenderer.drawString(matrixStack,new String[]{modContent.modID,"Version: " + modContent.version, "Dependencies: " + Util.toString(modContent.getDependencies()), " ", modContent.description},350,100,0.5f);
         }
     }

@@ -15,15 +15,15 @@ import static org.lwjgl.opengl.GL20.glUseProgram;
 
 public class Texture {
 
-    String path;
-    String source;
+    public String path;
+    public String source;
 
     public int width;
     public int height;
 
     public int textureId;
 
-    BufferedImage texture;
+    public BufferedImage texture;
 
     public Texture(String path) {
         this(path,"");
@@ -36,6 +36,13 @@ public class Texture {
     }
 
     public Texture(BufferedImage texture) {
+        width = texture.getWidth();
+        height = texture.getHeight();
+        this.texture = texture;
+    }
+
+    public Texture(String path, BufferedImage texture) {
+        this.path = path;
         width = texture.getWidth();
         height = texture.getHeight();
         this.texture = texture;

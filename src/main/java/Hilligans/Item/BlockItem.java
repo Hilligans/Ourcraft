@@ -22,8 +22,8 @@ public class BlockItem extends Item {
 
     public Block block;
 
-    public BlockItem(String name, Block block) {
-        super(name, new ItemProperties().serverSide(block.blockProperties.serverSide));
+    public BlockItem(String name, Block block, String modID) {
+        super(name, new ItemProperties().serverSide(block.blockProperties.serverSide).block(block.getName()),modID);
         this.block = block;
     }
 

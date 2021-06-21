@@ -171,7 +171,17 @@ public class BlockProperties {
         return defaultValue;
     }
 
-
-
-
+    @Override
+    public String toString() {
+        return "BlockProperties{" +
+                "serverSide=" + serverSide +
+                ", transparent=" + transparent +
+                ", canWalkThrough=" + canWalkThrough +
+                ", airBlock=" + airBlock +
+                ", placementMode='" + placementMode + '\'' +
+                ", blockStateSize=" + blockStateSize +
+                ", blockTextureManager=" + blockTextureManager +
+                ", blockShape=" + blockShape +
+                '}';
+    }
 }

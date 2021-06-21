@@ -24,15 +24,15 @@ public class ContentPack {
             recursivelyLoad(string);
             shouldLoad.put(string,true);
         }
-    }
+    }  
 
     public void generateData() {
         Blocks.BLOCKS.clear();
         Blocks.MAPPED_BLOCKS.clear();
         Items.ITEMS.clear();
         Items.HASHED_ITEMS.clear();
-        Textures.TEXTURES.clear();
-        Textures.MAPPED_TEXTURES.clear();
+        //Textures.TEXTURES.clear();
+        //Textures.MAPPED_TEXTURES.clear();
         for(String string : mods.keySet()) {
             if(shouldLoad.get(string)) {
                 ModContent mod = mods.get(string);
@@ -70,4 +70,22 @@ public class ContentPack {
         loadedMods.put(modID,true);
     }
 
+
+    public String[] getModList() {
+        String[] modList = new String[mods.size() - 1];
+        int x = 0;
+        for(String string : mods.keySet()) {
+            if(!string.equals("ourcraft")) {
+                ModContent modContent = mods.get(string);
+                modList[x] = modContent.modID + ":::" + modContent.version;
+                x++;
+            }
+        }
+        return modList;
+    }
+
+    public void putMod(ModContent modContent) {
+        mods.put(modContent.modID,modContent);
+        shouldLoad.put(modContent.modID,true);
+    }
 }

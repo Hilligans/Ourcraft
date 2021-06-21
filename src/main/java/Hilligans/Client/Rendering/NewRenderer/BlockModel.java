@@ -23,7 +23,11 @@ public class BlockModel implements IModel {
     float[][] vertices = new float[6][];
     int[][] indices = new int[6][];
 
-    public BlockModel(String jsonString) throws Exception {
+    public String jsonString;
+    public String path;
+
+    public BlockModel(String jsonString) {
+        this.jsonString = jsonString;
         JSONObject jsonObject = new JSONObject(jsonString);
         for(int x = 0; x < 6; x++) {
             JSONObject jsonObject1;
@@ -45,10 +49,8 @@ public class BlockModel implements IModel {
             size.set(0);
             int[] indicesList = new int[indices.length()];
             indices.forEach(Q -> indicesList[size.getAndIncrement()] = (int)Q);
-           // for(int y = 0; y < 16; y++) {
-                this.vertices[x] = verticesList;
-                this.indices[x] = indicesList;
-            //}
+            this.vertices[x] = verticesList;
+            this.indices[x] = indicesList;
         }
     }
 
@@ -149,6 +151,16 @@ public class BlockModel implements IModel {
                 primitiveBuilder.add(vals, ints);
             }
         }
+    }
+
+    @Override
+    public String getModel() {
+        return jsonString;
+    }
+
+    @Override
+    public String getPath() {
+        return path;
     }
 
     public static void smallArrayCopy(int[] source, int startPos, int[] dest, int destPos, int length, int toAdd) {
@@ -359,7 +371,9 @@ public class BlockModel implements IModel {
     public static BlockModel create(String path) {
         String val = WorldLoader.readString(path);
         try {
-            return new BlockModel(val);
+            BlockModel blockModel = new BlockModel(val);
+            blockModel.path = path;
+            return blockModel;
         } catch (Exception ignored) {
             return null;
         }

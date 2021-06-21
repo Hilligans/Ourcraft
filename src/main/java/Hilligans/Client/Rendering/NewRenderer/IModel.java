@@ -18,4 +18,8 @@ public interface IModel {
     }
     void addData(PrimitiveBuilder primitiveBuilder, TextureManager textureManager, int side, float size, Vector3f offset, int rotX, int rotY);
 
+    String getModel();
+    String getPath();
+
+
 }

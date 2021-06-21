@@ -3,6 +3,7 @@ package Hilligans.ModHandler;
 import Hilligans.ModHandler.Content.ContentPack;
 import Hilligans.ModHandler.Content.ModContent;
 import Hilligans.Data.Primitives.TripleTypeWrapper;
+import Hilligans.Ourcraft;
 import Hilligans.Util.Settings;
 import Hilligans.WorldSave.WorldLoader;
 import org.json.JSONObject;
@@ -22,13 +23,12 @@ public class ModLoader {
     public String mod = "ourcraft";
 
     public HashMap<String, TripleTypeWrapper<Class<?>,String,Boolean>> mainClasses = new HashMap<>();
-    public ContentPack contentPack = new ContentPack();
 
     public void loadDefaultMods() {
         loadAllMods(new File("mods/"));
         loadClasses(new File("target/classes/"), "");
-        contentPack.load();
-        contentPack.generateData();
+        Ourcraft.CONTENT_PACK.load();
+        Ourcraft.CONTENT_PACK.generateData();
     }
 
     public void loadAllMods(File folder) {
@@ -59,7 +59,7 @@ public class ModLoader {
                                 modContent.readData(jsonObject);
                             }
                             modContent.mainClass = testClass;
-                            contentPack.mods.put(modID,modContent);
+                            Ourcraft.CONTENT_PACK.mods.put(modID,modContent);
                             mainClasses.put(modID,new TripleTypeWrapper<>(testClass,mod.getAbsolutePath(),false));
                         }
                     } catch (Exception ignored) {}
@@ -86,7 +86,7 @@ public class ModLoader {
                     testClass = Class.forName(name,true,child);
                     mainClasses.put(modID,new TripleTypeWrapper<>(testClass,file.getAbsolutePath(),true));
                     modContent.mainClass = testClass;
-                    contentPack.mods.put(modID,modContent);
+                    Ourcraft.CONTENT_PACK.mods.put(modID,modContent);
                     return true;
                 }
             }

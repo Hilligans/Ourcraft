@@ -21,7 +21,8 @@ public class Blocks {
     public static final ArrayList<Block> BLOCKS = new ArrayList<>();
 
     public static void registerBlock(Block block) {
-        MAPPED_BLOCKS.put(block.name,block);
+        MAPPED_BLOCKS.put(block.getName(),block);
+      //  System.out.println(BLOCKS.size() + " BlockID " + block.id);
         BLOCKS.add(block);
     }
 
@@ -112,6 +113,7 @@ public class Blocks {
         for(String string : jsonObject.keySet()) {
             JSONObject blockData = jsonObject.getJSONObject(string);
             Block block = new Block(string,"/Data/" + blockData.getString("data"));
+            Ourcraft.OURCRAFT.registerBlock(block);
             JSONArray textures = blockData.getJSONArray("textures");
             for(int x = 0; x < textures.length(); x++) {
                 if(x == 0) {
@@ -128,9 +130,9 @@ public class Blocks {
     }
 
     public static Block getBlockWithID(int id) {
-        if(id >= BLOCKS.size()) {
-            return ServerSidedData.getInstance().BLOCKS.get(id - BLOCKS.size());
-        }
+        //if(id >= BLOCKS.size()) {
+        //    return ServerSidedData.getInstance().BLOCKS.get(id - BLOCKS.size());
+        //}
         return BLOCKS.get(id);
     }
 

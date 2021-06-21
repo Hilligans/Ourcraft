@@ -37,12 +37,11 @@ public class Block {
         id = Blocks.getNextId();
         this.blockProperties = blockProperties;
         droppedBlock = this;
-        if(modId.equals("ourcraft")) {
-            if (!blockProperties.serverSide) {
-            } else {
-                //ServerSidedData.getInstance().putBlock(name, this);
-            }
-        }
+    }
+
+    public Block(String name, BlockProperties blockProperties, String modId) {
+        this(name,blockProperties);
+        this.modId = modId;
     }
 
     public Block(String name, String path) {
@@ -179,6 +178,16 @@ public class Block {
 
     public DataProvider getDataProvider() {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "Block{" +
+                "name='" + name + '\'' +
+                ", modId='" + modId + '\'' +
+                ", id=" + id +
+                ", blockProperties=" + blockProperties +
+                '}';
     }
 
     public static final int UP = 5;

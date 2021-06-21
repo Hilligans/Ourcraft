@@ -2,12 +2,16 @@ package Hilligans.ModHandler.Content;
 
 import Hilligans.Block.Block;
 import Hilligans.Client.Audio.SoundBuffer;
+import Hilligans.Client.Rendering.Model;
+import Hilligans.Client.Rendering.NewRenderer.IModel;
 import Hilligans.Client.Rendering.Texture;
 import Hilligans.Data.Other.BlockProperties;
+import Hilligans.Data.Other.ItemProperties;
 import Hilligans.Item.BlockItem;
 import Hilligans.Item.Item;
 import Hilligans.ModHandler.Mod;
 import Hilligans.Network.PacketData;
+import Hilligans.Util.ByteArray;
 import Hilligans.Util.Util;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import org.json.JSONArray;
@@ -25,18 +29,19 @@ public class ModContent {
     public ModDependency[] dependencies = new ModDependency[0];
     public int version = -1;
     public String description = "";
-    public String[] authors;
+    public String[] authors = new String[0];
 
     public ArrayList<Block> blocks = new ArrayList<>();
     public ArrayList<Item> items = new ArrayList<>();
     public ArrayList<Texture> textures = new ArrayList<>();
     public ArrayList<SoundBuffer> sounds = new ArrayList<>();
+    public ArrayList<IModel> models = new ArrayList<>();
 
     public ModContent(String modID) {
         this.modID = modID;
     }
 
-    public ModContent(PacketData packetData) {
+    public ModContent(ByteArray packetData) {
         readData(packetData);
     }
 
@@ -47,8 +52,9 @@ public class ModContent {
     }
 
     public void registerBlock(Block block) {
+        block.modId = modID;
         blocks.add(block);
-        items.add(new BlockItem(block.name,block));
+        items.add(new BlockItem(block.name,block,modID));
     }
 
     public void registerBlocks(Block... blocks) {
@@ -69,27 +75,57 @@ public class ModContent {
         textures.add(texture);
     }
 
-    public void putData(PacketData packetData) {
-        packetData.writeInt(version);
-        packetData.writeString(modID);
-        packetData.writeString(description);
-        packetData.writeString(Util.toString(authors));
-        packetData.writeString(Util.toString(getDependencies()));
-        packetData.writeInt(blocks.size());
+    public void putData(ByteArray byteArray) {
+        byteArray.writeInt(version);
+        byteArray.writeString(modID);
+        byteArray.writeString(description);
+        byteArray.writeString(Util.toString(authors));
+        byteArray.writeString(Util.toString(getDependencies()));
+        byteArray.writeInt(models.size());
+        for(IModel iModel : models) {
+            byteArray.writeString(iModel.getPath());
+            byteArray.writeString(iModel.getModel());
+        }
+        byteArray.writeInt(textures.size());
+        for(Texture texture : textures) {
+            byteArray.writeString(texture.path);
+            byteArray.writeTexture(texture.texture);
+        }
+        byteArray.writeInt(blocks.size());
         for(Block block : blocks) {
-            packetData.writeString(block.name);
-            packetData.writeString(block.blockProperties.getJsonObject().toString());
+            byteArray.writeString(block.name);
+            byteArray.writeString(block.blockProperties.getJsonObject().toString());
+        }
+        byteArray.writeInt(items.size());
+        for(Item item : items) {
+            byteArray.writeString(item.name);
+            byteArray.writeString(item.itemProperties.getJsonObject().toString());
         }
     }
 
-    public void readData(PacketData packetData) {
-        version = packetData.readInt();
-        modID = packetData.readString();
-        description = packetData.readString();
-        packetData.readString();
-        packetData.readString();
-        for(int x = 0; x < packetData.readInt(); x++) {
-            Block block = new Block(packetData.readString(),BlockProperties.loadProperties(new JSONObject(packetData.readString())));
+    public void readData(ByteArray byteArray) {
+        version = byteArray.readInt();
+        modID = byteArray.readString();
+        description = byteArray.readString();
+        byteArray.readString();
+        byteArray.readString();
+        int size = byteArray.readInt();
+        for(int x = 0; x < size; x++) {
+            byteArray.readString();
+            byteArray.readString();
+        }
+        size = byteArray.readInt();
+        for(int x = 0; x < size; x++) {
+            textures.add(new Texture(byteArray.readString(), byteArray.readTexture()));
+        }
+        size = byteArray.readInt();
+        for(int x = 0; x < size; x++) {
+            blocks.add(new Block(byteArray.readString(),BlockProperties.loadProperties(new JSONObject(byteArray.readString())), modID));
+        }
+        size = byteArray.readInt();
+        for(int x = 0; x < size; x++) {
+            String name = byteArray.readString();
+            items.add(ItemProperties.loadProperties(new JSONObject(byteArray.readString())).getItem(name,this));
         }
     }
 
