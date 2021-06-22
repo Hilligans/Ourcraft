@@ -12,7 +12,7 @@ public class SSendModContentPacket extends PacketBase {
     ModContent modContent;
 
     public SSendModContentPacket() {
-        super(30);
+        super(26);
     }
 
     public SSendModContentPacket(ModContent modContent) {

@@ -21,7 +21,6 @@ import Hilligans.Container.Slot;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Data.Other.PlayerList;
-import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Item.ItemStack;
@@ -35,7 +34,6 @@ import Hilligans.Network.Packet.AuthServerPackets.CGetToken;
 import Hilligans.Network.Packet.Client.*;
 import Hilligans.Network.PacketBase;
 import Hilligans.Ourcraft;
-import Hilligans.Server.IntegratedServer;
 import Hilligans.Server.MultiPlayerServer;
 import Hilligans.Tag.CompoundTag;
 import Hilligans.Tag.Tag;
@@ -52,7 +50,6 @@ import java.nio.DoubleBuffer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -103,9 +100,9 @@ public class Client {
 
     public void startClient() {
         register();
-        Ourcraft.MOD_LOADER.loadDefaultMods();
-       // Ourcraft.CONTENT_PACK.load();
-        //Ourcraft.CONTENT_PACK.generateData();
+       // Ourcraft.MOD_LOADER.loadDefaultMods();
+        Ourcraft.CONTENT_PACK.load();
+        Ourcraft.CONTENT_PACK.generateData();
         CompoundTag tag = WorldLoader.loadTag("clientData.dat");
         if(tag != null) {
             new Thread(() -> {
@@ -137,7 +134,7 @@ public class Client {
         ClientNetworkHandler.close();
         glfwTerminate();
         soundEngine.cleanup();
-        for(SoundBuffer soundBuffer : Sounds.sounds) {
+        for(SoundBuffer soundBuffer : Sounds.SOUNDS) {
             soundBuffer.cleanup();
         }
     }
@@ -149,7 +146,7 @@ public class Client {
         Widget.register();
         Entity.register();
         Blocks.register();
-        Sounds.sounds.size();
+        Sounds.SOUNDS.size();
     }
 
     public void createGL() {
@@ -221,8 +218,6 @@ public class Client {
             texture = WorldTextureManager.instance.registerTexture();
             refreshTexture = false;
         }
-
-        ServerSidedData.getInstance().tick();
 
         glUseProgram(shaderManager.shaderProgram);
         glBindTexture(GL_TEXTURE_2D, texture);

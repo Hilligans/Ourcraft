@@ -8,7 +8,7 @@ import Hilligans.Network.PacketData;
 public class SDisconnectPacket extends PacketBase {
 
     public SDisconnectPacket() {
-        super(26);
+        super(22);
     }
 
     String disconnectReason;

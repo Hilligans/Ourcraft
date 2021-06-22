@@ -2,6 +2,8 @@ package Hilligans.ModHandler.Content;
 
 import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
+import Hilligans.Client.Audio.SoundBuffer;
+import Hilligans.Client.Audio.Sounds;
 import Hilligans.Client.Rendering.Texture;
 import Hilligans.Client.Rendering.Textures;
 import Hilligans.ClientMain;
@@ -9,13 +11,9 @@ import Hilligans.Item.Item;
 import Hilligans.Item.Items;
 import Hilligans.ModHandler.Events.Client.RenderEndEvent;
 import Hilligans.Ourcraft;
-import Hilligans.Resource.ResourceManager;
 import Hilligans.Util.Settings;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.stream.Collectors;
 
 public class ContentPack {
 
@@ -59,7 +57,10 @@ public class ContentPack {
         Blocks.MAPPED_BLOCKS.clear();
         Items.ITEMS.clear();
         Items.HASHED_ITEMS.clear();
+        Sounds.SOUNDS.clear();
+        Sounds.MAPPED_SOUND.clear();
         Ourcraft.RESOURCE_MANAGER.clearData();
+
         //Textures.TEXTURES.clear();
         //Textures.MAPPED_TEXTURES.clear();
         for(String string : mods.keySet()) {
@@ -76,6 +77,9 @@ public class ContentPack {
                 }
                 for (Item item : mod.items) {
                     Items.registerItem(item);
+                }
+                for(SoundBuffer soundBuffer : mod.sounds) {
+                    Sounds.registerSound(soundBuffer.file,soundBuffer);
                 }
             }
         }

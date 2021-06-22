@@ -10,7 +10,6 @@ import Hilligans.Container.Containers.ChestContainer;
 import Hilligans.Container.Containers.CreativeContainer;
 import Hilligans.Container.Containers.InventoryContainer;
 import Hilligans.Data.Other.IInventory;
-import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Item.ItemStack;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CActivateButton;
@@ -187,7 +186,7 @@ public abstract class Container {
 
     public static Container getContainer(int slot) {
         if(slot >= CONTAINERS.size()) {
-            return ServerSidedData.getInstance().CONTAINERS.get(slot - CONTAINERS.size()).getContainer();
+            return null;
         } else {
             return CONTAINERS.get(slot).getContainer();
         }

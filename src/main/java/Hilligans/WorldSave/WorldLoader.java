@@ -6,6 +6,7 @@ import Hilligans.Data.Other.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Data.Other.DataBlockState;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
+import Hilligans.Ourcraft;
 import Hilligans.Tag.*;
 import Hilligans.Util.Settings;
 import Hilligans.World.Chunk;
@@ -74,7 +75,7 @@ public class WorldLoader {
         }
     }
 
-    public static ByteBuffer readResource(String path) {
+    public static ByteBuffer readResourceDirect(String path) {
         try {
 
             //WorldLoader.class.getResourceAsStream(path).
@@ -83,7 +84,7 @@ public class WorldLoader {
            // File file = new File(path);
             //if(file.exists()) {
            // ScheduledExecutorService
-            InputStream inputStream = WorldLoader.class.getResourceAsStream(path);
+            InputStream inputStream = Ourcraft.RESOURCE_MANAGER.getResource(path);
             byte[] vals = inputStream.readAllBytes();
             ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vals.length);
             byteBuffer.put(vals);
@@ -107,6 +108,20 @@ public class WorldLoader {
            // return null;
         } catch (Exception e) {
             System.err.println("Failed to find file " + path);
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static ByteBuffer readResource(String path) {
+        try {
+            InputStream inputStream = Ourcraft.RESOURCE_MANAGER.getResource(path);
+            byte[] vals = inputStream.readAllBytes();
+            ByteBuffer byteBuffer = ByteBuffer.allocate(vals.length);
+            byteBuffer.put(vals);
+            byteBuffer.flip();
+            return byteBuffer;
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

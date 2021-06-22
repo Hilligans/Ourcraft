@@ -12,7 +12,7 @@ public class SSendPlayerList extends PacketBase {
     int[] playerIds;
 
     public SSendPlayerList() {
-        super(28);
+        super(24);
     }
 
     public SSendPlayerList(String player, int id, boolean join) {

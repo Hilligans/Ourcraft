@@ -1,10 +1,7 @@
 package Hilligans.Client.Rendering;
 
-import Hilligans.ClientMain;
-import Hilligans.Data.Other.ServerSidedData;
 import org.lwjgl.opengl.GL30;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -56,18 +53,12 @@ public class Textures {
     }
 
     public static Texture getTexture(int id) {
-        if(id >= TEXTURES.size()) {
-            return ServerSidedData.getInstance().TEXTURES.get(id - TEXTURES.size());
-        }
         return TEXTURES.get(id);
     }
 
     public static Texture getTexture(String name) {
         Texture texture = MAPPED_TEXTURES.get(name);
-        if(texture != null) {
-            return texture;
-        }
-        return ServerSidedData.getInstance().MAPPED_TEXTURES.get(name);
+        return texture;
     }
 
 

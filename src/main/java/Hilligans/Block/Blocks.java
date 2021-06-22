@@ -3,8 +3,6 @@ package Hilligans.Block;
 import Hilligans.Block.BlockTypes.*;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.Data.Other.BlockProperties;
-import Hilligans.Data.Other.ServerSidedData;
-import Hilligans.ModHandler.Content.ContentPack;
 import Hilligans.ModHandler.Content.ModContent;
 import Hilligans.Ourcraft;
 import Hilligans.Util.Settings;
@@ -137,15 +135,8 @@ public class Blocks {
 
     public static void generateTextures() {
         WorldTextureManager.instance.clear();
-        if(Settings.isServer) {
-            for(Block block : ServerSidedData.getInstance().BLOCKS) {
-                block.generateTextures();
-            }
-        } else {
+        if(!Settings.isServer) {
             for (Block block : BLOCKS) {
-                block.generateTextures();
-            }
-            for(Block block : ServerSidedData.getInstance().BLOCKS) {
                 block.generateTextures();
             }
         }

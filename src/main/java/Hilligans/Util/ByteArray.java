@@ -132,6 +132,60 @@ public class ByteArray {
         return values;
     }
 
+    public int[] readInts() {
+        int length = readInt();
+        int[] values = new int[length];
+        for(int x = 0; x < length; x++) {
+            values[x] = readInt();
+        }
+        return values;
+    }
+
+    public float[] readFloats() {
+        int length = readInt();
+        float[] values = new float[length];
+        for(int x = 0; x < length; x++) {
+            values[x] = readFloat();
+        }
+        return values;
+    }
+
+    public short[] readShorts() {
+        int length = readInt();
+        short[] values = new short[length];
+        for(int x = 0; x < length; x++) {
+            values[x] = readShort();
+        }
+        return values;
+    }
+
+    public byte[] readBytes() {
+        int length = readInt();
+        byte[] values = new byte[length];
+        for(int x = 0; x < length; x++) {
+            values[x] = readByte();
+        }
+        return values;
+    }
+
+    public long[] readLongs() {
+        int length = readInt();
+        long[] values = new long[length];
+        for(int x = 0; x < length; x++) {
+            values[x] = readLong();
+        }
+        return values;
+    }
+
+    public double[] readDoubles() {
+        int length = readInt();
+        double[] values = new double[length];
+        for(int x = 0; x < length; x++) {
+            values[x] = readDouble();
+        }
+        return values;
+    }
+
     public void writeInt(int val) {
         size += 4;
         byteBuf.writeInt(val);
@@ -221,6 +275,48 @@ public class ByteArray {
         writeShort((short) strings.length);
         for(String string : strings) {
             writeString(string);
+        }
+    }
+
+    public void writeInts(int[] vals) {
+        writeInt(vals.length);
+        for(int val : vals) {
+            writeInt(val);
+        }
+    }
+
+    public void writeFloats(float[] vals) {
+        writeInt(vals.length);
+        for(float val : vals) {
+            writeFloat(val);
+        }
+    }
+
+    public void writeShorts(short[] vals) {
+        writeInt(vals.length);
+        for(short val : vals) {
+            writeShort(val);
+        }
+    }
+
+    public void writeBytes(byte[] vals) {
+        writeInt(vals.length);
+        for(byte val : vals) {
+            writeByte(val);
+        }
+    }
+
+    public void writeLongs(long[] vals) {
+        writeInt(vals.length);
+        for(long val : vals) {
+            writeLong(val);
+        }
+    }
+
+    public void writeDoubles(double[] vals) {
+        writeInt(vals.length);
+        for(double val : vals) {
+            writeDouble(val);
         }
     }
 

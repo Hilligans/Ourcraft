@@ -1,9 +1,7 @@
 package Hilligans.Network.Packet.Client;
 
-import Hilligans.Client.ClientPlayerData;
 import Hilligans.ClientMain;
 import Hilligans.Data.Other.BlockPos;
-import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
@@ -17,9 +15,7 @@ import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.ServerMain;
 import Hilligans.Util.Settings;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelId;
 
 import java.net.InetSocketAddress;
 import java.security.SecureRandom;
@@ -41,7 +37,6 @@ public class CHandshakePacket extends PacketBase {
     public void encode(PacketData packetData) {
         packetData.writeInt(Settings.gameVersion);
         packetData.writeString(ClientMain.getClient().playerData.userName);
-        packetData.writeLong(ServerSidedData.getInstance().version);
         packetData.writeString(ClientMain.getClient().playerData.authToken);
     }
 
@@ -49,7 +44,6 @@ public class CHandshakePacket extends PacketBase {
     public void decode(PacketData packetData) {
         id = packetData.readInt();
         name = packetData.readString();
-        version = packetData.readLong();
         authToken = packetData.readString();
     }
 
@@ -86,7 +80,7 @@ public class CHandshakePacket extends PacketBase {
         ServerNetworkHandler.mappedName.put(ctx.channel().id(),name);
         ServerNetworkHandler.nameToChannel.put(name, ctx.channel().id());
         ServerMain.getWorld(serverPlayerData.getDimension()).addEntity(playerEntity);
-        ServerNetworkHandler.sendPacket(new SHandshakePacket(playerId,ServerSidedData.getInstance().version),ctx);
+        ServerNetworkHandler.sendPacket(new SHandshakePacket(playerId),ctx);
         ServerMain.getServer().sendPacket(new SChatMessage(name + " has joined the game"));
         ServerNetworkHandler.sendPacketExcept(new SSendPlayerList(name,playerId,true),ctx);
 

@@ -44,7 +44,7 @@ public class SoundEngine {
 
         listener = new SoundListener(Camera.pos.get(new Vector3f()));
 
-        for(SoundBuffer soundBuffer : Sounds.sounds) {
+        for(SoundBuffer soundBuffer : Sounds.SOUNDS) {
             soundBuffer.soundCategory.sounds.add(soundBuffer);
         }
 

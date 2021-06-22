@@ -24,7 +24,7 @@ public class COpenScreen extends PacketBase {
     }
 
     public COpenScreen() {
-        super(27);
+        super(23);
     }
 
     @Override

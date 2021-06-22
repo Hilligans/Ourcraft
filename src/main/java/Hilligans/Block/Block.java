@@ -4,24 +4,13 @@ import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Data.Other.*;
-import Hilligans.Data.Other.BlockShapes.BlockShape;
-import Hilligans.Data.Other.ServerSidedData;
-import Hilligans.Data.Primitives.FloatList;
-import Hilligans.Data.Primitives.IntList;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
-import Hilligans.Item.BlockItem;
 import Hilligans.Item.ItemStack;
-import Hilligans.ModHandler.ModLoader;
 import Hilligans.Ourcraft;
-import Hilligans.Util.Vector5f;
 import Hilligans.World.DataProvider;
 import Hilligans.World.DataProviders.ShortBlockState;
 import Hilligans.World.World;
 import org.joml.Vector3d;
-import org.joml.Vector3f;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Block {
 

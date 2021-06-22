@@ -1,10 +1,8 @@
 package Hilligans.Network.Packet.Client;
 
 import Hilligans.Data.Other.Server.ServerPlayerData;
-import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
-import Hilligans.ModHandler.Content.ContentPack;
 import Hilligans.ModHandler.Content.ModContent;
 import Hilligans.Network.Packet.Server.*;
 import Hilligans.Network.PacketBase;
@@ -21,7 +19,7 @@ public class CRequestContent extends PacketBase {
     ArrayList<String> mods;
 
     public CRequestContent() {
-        super(31);
+        super(27);
     }
 
     public CRequestContent(ArrayList<String> mods) {

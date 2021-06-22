@@ -1,7 +1,6 @@
 package Hilligans.Network.Packet.Client;
 
 import Hilligans.Data.Other.Server.ServerPlayerData;
-import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Entity.Entity;
 import Hilligans.Network.Packet.Server.SUpdateEntityPacket;
 import Hilligans.Network.PacketBase;

@@ -12,7 +12,7 @@ public class SSetGameMode extends PacketBase {
     int id;
 
     public SSetGameMode() {
-        super(29);
+        super(25);
     }
 
     public SSetGameMode(int id) {

@@ -1,6 +1,5 @@
 package Hilligans.Container.Containers;
 
-import Hilligans.Client.ClientPlayerData;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.CreativeInventoryScreen;
 import Hilligans.ClientMain;
@@ -9,7 +8,6 @@ import Hilligans.Container.Slot;
 import Hilligans.Data.Other.IInventory;
 import Hilligans.Data.Other.Inventory;
 import Hilligans.Data.Other.JoinedInventory;
-import Hilligans.Data.Other.ServerSidedData;
 import Hilligans.Item.BlockItem;
 import Hilligans.Item.Item;
 import Hilligans.Item.ItemStack;
@@ -18,7 +16,7 @@ import Hilligans.Item.Items;
 public class CreativeContainer extends Container {
 
     public CreativeContainer() {
-        this(ClientMain.getClient().playerData.inventory,new Inventory(Math.max(Items.ITEMS.size() + ServerSidedData.getInstance().ITEMS.size(),54)));
+        this(ClientMain.getClient().playerData.inventory,new Inventory(Math.max(Items.ITEMS.size(),54)));
     }
 
     public CreativeContainer(IInventory playerInventory, IInventory creativeInventory) {
@@ -63,15 +61,9 @@ public class CreativeContainer extends Container {
     }
 
     public static IInventory createInventory() {
-        Inventory inventory = new Inventory(Math.max(Items.ITEMS.size() + ServerSidedData.getInstance().ITEMS.size(),54));
+        Inventory inventory = new Inventory(Math.max(Items.ITEMS.size() ,54));
         int x = 0;
         for(Item item : Items.ITEMS) {
-            if(item instanceof BlockItem && !((BlockItem) item).block.blockProperties.airBlock) {
-                inventory.setItem(x, new ItemStack(item, (byte) 1));
-                x++;
-            }
-        }
-        for(Item item : ServerSidedData.getInstance().ITEMS) {
             if(item instanceof BlockItem && !((BlockItem) item).block.blockProperties.airBlock) {
                 inventory.setItem(x, new ItemStack(item, (byte) 1));
                 x++;

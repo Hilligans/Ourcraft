@@ -74,12 +74,30 @@ public class ModContent {
         items.add(item);
     }
 
+    public void registerItems(Item... items) {
+        for(Item item : items) {
+            registerItem(item);
+        }
+    }
+
     public void registerSound(SoundBuffer soundBuffer) {
         sounds.add(soundBuffer);
     }
 
+    public void registerSounds(SoundBuffer... soundBuffers) {
+        for(SoundBuffer soundBuffer : soundBuffers) {
+            registerSound(soundBuffer);
+        }
+    }
+
     public void registerTexture(Texture texture) {
         textures.add(texture);
+    }
+
+    public void registerTextures(Texture... textures) {
+        for(Texture texture : textures) {
+            registerTexture(texture);
+        }
     }
 
     public void putData(ByteArray byteArray) {
@@ -102,6 +120,11 @@ public class ModContent {
         for(String string : blockTextures.keySet()) {
             byteArray.writeString(string);
             byteArray.writeTexture(blockTextures.get(string));
+        }
+        byteArray.writeInt(sounds.size());
+        for(SoundBuffer soundBuffer : sounds) {
+            byteArray.writeString(soundBuffer.file);
+            byteArray.writeBytes(soundBuffer.data.array());
         }
         byteArray.writeInt(blocks.size());
         for(Block block : blocks) {
@@ -134,6 +157,10 @@ public class ModContent {
         size = byteArray.readInt();
         for(int x = 0; x < size; x++) {
             blockTextures.put(byteArray.readString(),byteArray.readTexture());
+        }
+        size = byteArray.readInt();
+        for(int x = 0; x < size; x++) {
+            sounds.add(new SoundBuffer(byteArray.readString(),byteArray.readBytes()));
         }
         size = byteArray.readInt();
         for(int x = 0; x < size; x++) {
