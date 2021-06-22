@@ -17,8 +17,12 @@ import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.awt.image.BufferedImage;
+import java.net.URLClassLoader;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 public class ModContent {
 
@@ -26,6 +30,7 @@ public class ModContent {
 
     public Mod mod;
     public Class<?> mainClass;
+    public URLClassLoader classLoader;
     public ModDependency[] dependencies = new ModDependency[0];
     public int version = -1;
     public String description = "";
@@ -34,6 +39,7 @@ public class ModContent {
     public ArrayList<Block> blocks = new ArrayList<>();
     public ArrayList<Item> items = new ArrayList<>();
     public ArrayList<Texture> textures = new ArrayList<>();
+    public HashMap<String,BufferedImage> blockTextures = new HashMap<>();
     public ArrayList<SoundBuffer> sounds = new ArrayList<>();
     public ArrayList<IModel> models = new ArrayList<>();
 
@@ -54,6 +60,7 @@ public class ModContent {
     public void registerBlock(Block block) {
         block.modId = modID;
         blocks.add(block);
+        blockTextures.putAll(block.blockProperties.blockTextureManager.getAllTextures());
         items.add(new BlockItem(block.name,block,modID));
     }
 
@@ -91,10 +98,16 @@ public class ModContent {
             byteArray.writeString(texture.path);
             byteArray.writeTexture(texture.texture);
         }
+        byteArray.writeInt(blockTextures.size());
+        for(String string : blockTextures.keySet()) {
+            byteArray.writeString(string);
+            byteArray.writeTexture(blockTextures.get(string));
+        }
         byteArray.writeInt(blocks.size());
         for(Block block : blocks) {
             byteArray.writeString(block.name);
             byteArray.writeString(block.blockProperties.getJsonObject().toString());
+            byteArray.writeStrings(block.blockProperties.blockTextureManager.getTextures());
         }
         byteArray.writeInt(items.size());
         for(Item item : items) {
@@ -120,7 +133,13 @@ public class ModContent {
         }
         size = byteArray.readInt();
         for(int x = 0; x < size; x++) {
-            blocks.add(new Block(byteArray.readString(),BlockProperties.loadProperties(new JSONObject(byteArray.readString())), modID));
+            blockTextures.put(byteArray.readString(),byteArray.readTexture());
+        }
+        size = byteArray.readInt();
+        for(int x = 0; x < size; x++) {
+            Block block = new Block(byteArray.readString(),BlockProperties.loadProperties(new JSONObject(byteArray.readString())), modID);
+            block.blockProperties.blockTextureManager.addStrings(byteArray.readStrings());
+            blocks.add(block);
         }
         size = byteArray.readInt();
         for(int x = 0; x < size; x++) {

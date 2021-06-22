@@ -52,6 +52,7 @@ import java.nio.DoubleBuffer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -95,6 +96,8 @@ public class Client {
     public ClientWorld clientWorld;
 
     public MultiPlayerServer multiPlayerServer;
+    public boolean rendering = false;
+
 
     public Client() {}
 
@@ -102,7 +105,7 @@ public class Client {
         register();
         Ourcraft.MOD_LOADER.loadDefaultMods();
        // Ourcraft.CONTENT_PACK.load();
-       // Ourcraft.CONTENT_PACK.generateData();
+        //Ourcraft.CONTENT_PACK.generateData();
         CompoundTag tag = WorldLoader.loadTag("clientData.dat");
         if(tag != null) {
             new Thread(() -> {
@@ -235,7 +238,8 @@ public class Client {
 
         //StringRenderer.instance.drawString(screenStack,"abcd",1000,100,0.5f);
         //StringRenderer.drawString(screenStack,"abcd",1000,150,0.5f);
-        if(renderWorld) {
+        if(renderWorld && !Ourcraft.REBUILDING.get()) {
+            rendering = true;
             clientWorld.tick();
             clientWorld.render(matrixStack);
 
@@ -320,7 +324,7 @@ public class Client {
         Ourcraft.EVENT_BUS.postEvent(new RenderEndEvent(matrixStack,screenStack,this));
 
         glfwSwapBuffers(window);
-
+        rendering = false;
         soundEngine.tick();
         if(screenShot) {
             screenShot = false;

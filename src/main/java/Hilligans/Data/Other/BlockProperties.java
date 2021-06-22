@@ -17,6 +17,7 @@ public class BlockProperties {
     public boolean airBlock = false;
     public String placementMode = "default";
     public int blockStateSize = 0;
+    public String texture = "";
     public BlockTextureManager blockTextureManager = new BlockTextureManager();
     public BlockShape blockShape = defaultShape;
 

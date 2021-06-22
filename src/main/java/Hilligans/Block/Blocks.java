@@ -46,14 +46,12 @@ public class Blocks {
 
     public static final Block DIRT = new Block("dirt",new BlockProperties().withTexture("dirt.png"));
     public static final Block GRASS = new Block("grass", new BlockProperties().withTexture("grass_side.png").withSidedTexture("grass_block.png",Block.UP).withSidedTexture("dirt.png",Block.DOWN)).setBlockDrop(Blocks.DIRT);
-    public static final Block BEDROCK = new Block("bedrock",new BlockProperties().withTexture("bedrock.png"));
+    public static final Block BEDROCK = new Block( "bedrock",new BlockProperties().withTexture("bedrock.png"));
     public static final Block IRON_ORE = new Block("iron_ore",new BlockProperties().withTexture("swag_ore.png"));
     public static final Block LEAVES = new Block("leaves",new BlockProperties().withTexture("leaves.png").transparent()).setBlockDrop(Blocks.AIR);
     public static final Block LOG = new Block("log", new BlockProperties().withTexture("log.png").withSidedTexture("log_top.png",Block.UP).withSidedTexture("log_top.png",Block.DOWN));
     public static final Block SAND = new Block("sand",new BlockProperties().withTexture("sand.png"));
     public static final Block CACTUS = new Block("cactus",new BlockProperties().withTexture("cactus.png"));
-
-    public static final Block SLAB = new SlabBlock("slab",new BlockProperties().withTexture("dirt.png"));
 
     public static final Block CHEST = new ChestBlock("chest",new BlockProperties().withTexture("flex_tape.png"));
 
@@ -64,8 +62,6 @@ public class Blocks {
 
     public static final Block GRASS_PLANT = new PlantBlock("grass_plant", new BlockProperties().withTexture("grass_plant.png"));
     public static final Block WEEPING_VINE = new WeepingVineBlock("weeping_vine" ,new BlockProperties().withTexture("weeping_vine1.png"));
-
-
 
     // Tree types
     public static final Block MAPLE_LOG = new Block("maple_log", new BlockProperties());
@@ -110,7 +106,7 @@ public class Blocks {
 
     static {
         ModContent ourcraft = Ourcraft.OURCRAFT;
-        ourcraft.registerBlocks(AIR,STONE,DIRT,GRASS,BEDROCK,IRON_ORE,LEAVES,LOG,SAND,CACTUS,SLAB,CHEST,COLOR_BLOCK,STAIR_BLOCK,GRASS_PLANT,WEEPING_VINE,MAPLE_LOG,MAPLE_PLANKS,PINE_LOG,PINE_PLANKS,SPRUCE_LOG,SPRUCE_PLANKS,BIRCH_LOG,BIRCH_PLANKS,OAK_LOG,OAK_PLANKS,WILLOW_LOG,WILLOW_PLANKS,ACACIA_LOG,ACACIA_PLANKS,POPLAR_LOG,POPLAR_PLANKS,ELM_LOG,ELM_WOOD,PALM_LOG,PALM_WOOD,REDWOOD_LOG,REDWOOD_WOOD,SAPLING);
+        ourcraft.registerBlocks(AIR,STONE,DIRT,GRASS,BEDROCK,IRON_ORE,LEAVES,LOG,SAND,CACTUS,CHEST,COLOR_BLOCK,STAIR_BLOCK,GRASS_PLANT,WEEPING_VINE,MAPLE_LOG,MAPLE_PLANKS,PINE_LOG,PINE_PLANKS,SPRUCE_LOG,SPRUCE_PLANKS,BIRCH_LOG,BIRCH_PLANKS,OAK_LOG,OAK_PLANKS,WILLOW_LOG,WILLOW_PLANKS,ACACIA_LOG,ACACIA_PLANKS,POPLAR_LOG,POPLAR_PLANKS,ELM_LOG,ELM_WOOD,PALM_LOG,PALM_WOOD,REDWOOD_LOG,REDWOOD_WOOD,SAPLING);
         JSONObject jsonObject = new JSONObject(WorldLoader.readString("/Data/Blocks.json"));
         for(String string : jsonObject.keySet()) {
             JSONObject blockData = jsonObject.getJSONObject(string);
@@ -132,9 +128,6 @@ public class Blocks {
     }
 
     public static Block getBlockWithID(int id) {
-        //if(id >= BLOCKS.size()) {
-        //    return ServerSidedData.getInstance().BLOCKS.get(id - BLOCKS.size());
-        //}
         return BLOCKS.get(id);
     }
 

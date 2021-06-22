@@ -3,6 +3,7 @@ package Hilligans.Client.Rendering.Widgets;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Client.Rendering.Screens.JoinScreen;
+import Hilligans.Client.Rendering.Screens.LoadingScreen;
 import Hilligans.Client.Rendering.Texture;
 import Hilligans.Client.Rendering.Textures;
 import Hilligans.Client.Rendering.World.StringRenderer;
@@ -39,6 +40,7 @@ public class ServerSelectorWidget extends Widget {
             ClientNetworkHandler.clientNetworkHandler = new ClientNetworkHandler();
             ClientNetworkInit.joinServer(ip, port, ClientNetworkHandler.clientNetworkHandler);
             ClientMain.getClient().closeScreen();
+         //   ClientMain.getClient().openScreen(new LoadingScreen());
         } catch (Exception e) {
             e.printStackTrace();
         }

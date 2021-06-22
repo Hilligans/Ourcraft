@@ -4,6 +4,10 @@ package Hilligans.Client.Rendering.World.Managers;
 import Hilligans.ClientMain;
 import Hilligans.Util.Settings;
 
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class BlockTextureManager implements TextureManager {
 
     public int[] textures = new int[6];
@@ -29,6 +33,16 @@ public class BlockTextureManager implements TextureManager {
         textureNames[side] = location;
     }
 
+    public void addStrings(String[] strings) {
+        for(int x = 0; x < strings.length; x++) {
+            if(x == 0) {
+                addString(strings[x]);
+            } else {
+                addString(strings[x],x - 1);
+            }
+        }
+    }
+
     public void generate() {
         if(location != null) {
             int id = WorldTextureManager.instance.loadTextureId("Blocks/" + location, location.substring(0,location.length() - 4),textureSource);
@@ -46,6 +60,34 @@ public class BlockTextureManager implements TextureManager {
         }
     }
 
+    public HashMap<String, BufferedImage> getAllTextures() {
+        HashMap<String, BufferedImage> map = new HashMap<>();
+        if(textureNames != null) {
+            for (String string : textureNames) {
+                if (!map.containsKey(string)) {
+                    map.put(string, WorldTextureManager.loadImage("Blocks/" + string));
+                }
+            }
+        }
+        if(location != null) {
+            if(!map.containsKey(location)) {
+                map.put(location, WorldTextureManager.loadImage("Blocks/" + location));
+            }
+        }
+
+        return map;
+    }
+
+    public String[] getTextures() {
+        if(textureNames != null) {
+            String[] string = new String[textureNames.length + 1];
+            System.arraycopy(textureNames,0,string,1,textureNames.length);
+            string[0] = location;
+            return string;
+        } else {
+            return new String[]{location};
+        }
+    }
 
     @Override
     public int getTextureId() {

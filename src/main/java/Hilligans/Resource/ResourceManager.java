@@ -5,6 +5,7 @@ import Hilligans.Client.Lang.Languages;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.ClientMain;
 import Hilligans.Data.Primitives.TripleTypeWrapper;
+import Hilligans.ModHandler.Content.ModContent;
 import Hilligans.Ourcraft;
 
 import javax.imageio.ImageIO;
@@ -14,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLClassLoader;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +29,8 @@ public class ResourceManager {
     public HashMap<String, ArrayList<Image>> textures = new HashMap<>();
     public HashMap<String, ArrayList<Sound>> sounds = new HashMap<>();
     public HashMap<String, ArrayList<Model>> models = new HashMap<>();
+
+    public ArrayList<URLClassLoader> classLoaders = new ArrayList<>();
 
     public void setLanguageFile(String languageFile) {
         Languages.switchingLanguage.set(true);
@@ -47,15 +51,38 @@ public class ResourceManager {
     public BufferedImage getImage(String name) {
         ArrayList<Image> images = textures.get(name);
         if(images != null) {
+            //System.out.println(name);
             return images.get(0).bufferedImage;
         }
-        return WorldTextureManager.DefaultImage();
+        return null;
     }
 
     public void loadTexture(String path, String source,  String name) {
         BufferedImage image = createFlipped(loadImage(path,source));;
         ArrayList<Image> images = textures.computeIfAbsent(name,(T) -> new ArrayList<Image>());
         images.add(new Image(source,image));
+    }
+
+    public void putImage(String name, BufferedImage bufferedImage) {
+        textures.computeIfAbsent(name, k -> new ArrayList<>());
+        textures.get(name).add(new Image(name,bufferedImage));
+    }
+
+    public InputStream getResource(String path) {
+        InputStream stream = ResourceManager.class.getResourceAsStream("/" + path);
+        if(stream == null) {
+            for(URLClassLoader classLoader : classLoaders) {
+                stream = classLoader.getResourceAsStream(path);
+                if(stream != null) {
+                    break;
+                }
+            }
+        }
+        return stream;
+    }
+
+    public void clearData() {
+        textures.clear();
     }
 
     static class Image {

@@ -58,6 +58,8 @@ public class ServerMain {
         ServerWorld world = new ServerWorld();
         world.worldBuilders.add(new OreBuilder(Blocks.GRASS,Blocks.STONE).setFrequency(20));
 
+       // Ourcraft.CONTENT_PACK.releaseMod("test_mod");
+
         server = new MultiPlayerServer();
         server.addWorld(0,world);
         server.startServer("25586");

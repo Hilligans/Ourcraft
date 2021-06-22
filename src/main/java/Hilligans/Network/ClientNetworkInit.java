@@ -16,9 +16,11 @@ import javax.net.ssl.TrustManagerFactory;
 public class ClientNetworkInit extends ChannelInitializer<SocketChannel> {
 
     public static Channel authChannel;
+    public static ClientNetworkInit networkInit;
 
     private final SslContext sslCtx;
     private final SimpleChannelInboundHandler<PacketData> networkHandler;
+    public PacketDecoder packetDecoder;
 
     public ClientNetworkInit(SslContext sslCtx, SimpleChannelInboundHandler<PacketData> networkHandler) {
         this.sslCtx = sslCtx;
@@ -36,7 +38,8 @@ public class ClientNetworkInit extends ChannelInitializer<SocketChannel> {
         EventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap b = new Bootstrap();
-            b.group(group).channel(NioSocketChannel.class).handler(new ClientNetworkInit(sslCtx, networkHandler));
+            networkInit = new ClientNetworkInit(sslCtx, networkHandler);
+            b.group(group).channel(NioSocketChannel.class).handler(networkInit);
             networkHandler.setData(b.connect(HOST, PORT).sync().channel(), group, ip, port);
         } finally {}
     }
@@ -57,8 +60,8 @@ public class ClientNetworkInit extends ChannelInitializer<SocketChannel> {
         //pipeline.addLast(new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));
         //pipeline.addLast(new DelimiterBasedFrameDecoder(65536, Delimiters.lineDelimiter()));
 
-
-        pipeline.addLast(new PacketDecoder());
+        packetDecoder = new PacketDecoder();
+        pipeline.addLast(packetDecoder);
         pipeline.addLast(new PacketEncoder());
 //        pipeline.addLast(new StringDecoder());
 

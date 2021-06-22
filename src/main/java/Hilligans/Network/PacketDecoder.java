@@ -7,16 +7,23 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import java.util.List;
 
 public class PacketDecoder extends ByteToMessageDecoder {
+
+    int id = -1;
+    public int dataLength = -1;
+    public int packetLength = -1;
+
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
 
         if(in.readableBytes() >= 4) {
-            int length = in.readableBytes();
+            packetLength = in.readableBytes();
             in.resetReaderIndex();
             in.markReaderIndex();
-            //in.resetWriterIndex();
-            int dataLength = in.readInt();
-            if (length < dataLength) {
+            dataLength = in.readInt();
+            if (packetLength < dataLength) {
+                if(packetLength >= 8) {
+                    id = in.readInt();
+                }
                 in.resetReaderIndex();
                 return;
             }
@@ -27,5 +34,9 @@ public class PacketDecoder extends ByteToMessageDecoder {
             out.add(packetData);
             in.markReaderIndex();
         }
+    }
+
+    public float getPercentage() {
+        return (float)dataLength / packetLength;
     }
 }

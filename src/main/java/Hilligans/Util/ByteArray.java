@@ -104,7 +104,7 @@ public class ByteArray {
         short item = readShort();
         int count = readInt();
         if(item != -1) {
-            return new ItemStack(Items.ITEMS.get(item), count);
+            return new ItemStack(Items.getItem(item), count);
         } else {
             return new ItemStack(null,count);
         }
@@ -121,6 +121,15 @@ public class ByteArray {
             }
         }
         return bufferedImage;
+    }
+
+    public String[] readStrings() {
+        int length = readShort();
+        String[] values = new String[length];
+        for(int x = 0; x < length; x++) {
+            values[x] = readString();
+        }
+        return values;
     }
 
     public void writeInt(int val) {
@@ -205,6 +214,13 @@ public class ByteArray {
             for(int y = 0; y < bufferedImage.getHeight(); y++) {
                 writeInt(bufferedImage.getRGB(x,y));
             }
+        }
+    }
+
+    public void writeStrings(String[] strings) {
+        writeShort((short) strings.length);
+        for(String string : strings) {
+            writeString(string);
         }
     }
 

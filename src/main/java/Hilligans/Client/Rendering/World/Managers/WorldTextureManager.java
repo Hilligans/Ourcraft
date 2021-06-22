@@ -3,6 +3,7 @@ package Hilligans.Client.Rendering.World.Managers;
 import Hilligans.ClientMain;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Data.Primitives.TripleTypeWrapper;
+import Hilligans.ModHandler.ModLoader;
 import Hilligans.Ourcraft;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
@@ -63,6 +64,7 @@ public class WorldTextureManager {
 
     public int loadTextureId(String path, String textureName, String source) {
         Integer id = idHashMap.get(source + ":" + textureName);
+        //System.out.println(path + ":" + textureName + ":" + source);
         if(id == null) {
             BufferedImage image = createFlipped(loadImage(path,source));
             bufferedImageHashMap.put(source + ":" + textureName,image);
@@ -144,16 +146,11 @@ public class WorldTextureManager {
         if(img != null) {
             return img;
         }
-        try {
-            File file = new File(WorldTextureManager.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-            ZipFile zipFile = new ZipFile(file);
-            ZipEntry zipEntry = zipFile.getEntry("Images/" + path);
-            if (zipEntry != null) {
-                return ImageIO.read(zipFile.getInputStream(zipEntry));
-            }
-        } catch (Exception ignored) {}
-
-        InputStream url = ClientMain.class.getResourceAsStream("/Images/" + path);
+        img = Ourcraft.RESOURCE_MANAGER.getImage(path);
+        if(img != null) {
+            return img;
+        }
+        InputStream url = Ourcraft.RESOURCE_MANAGER.getResource("Images/" + path);
         if(url != null) {
             try {
                 return ImageIO.read(url);

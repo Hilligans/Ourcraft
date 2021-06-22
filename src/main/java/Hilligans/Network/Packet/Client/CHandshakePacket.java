@@ -92,7 +92,7 @@ public class CHandshakePacket extends PacketBase {
 
         //ServerMain.getServer().sendPacket(new SSendModContentPacket());
 
-
+/*
         int size = ServerNetworkHandler.mappedChannels.size();
         String[] players = new String[size];
         int[] ids = new int[size];
@@ -113,7 +113,7 @@ public class CHandshakePacket extends PacketBase {
             ServerSidedData.getInstance().sendDataToClient(ctx);
         }
 
-        ServerNetworkHandler.sendPacket(new SUpdateInventory(serverPlayerData.playerInventory),ctx);
+ */
     }
 
     public static final String alphanum = "ABCDEFGHIJKLMNOPQRSTUVQXYZabcdefghijklmnopqrstuvwxyz1234567890`!@#$%^&*()-_=+~[]\\;',./{}|:\"<>?;";

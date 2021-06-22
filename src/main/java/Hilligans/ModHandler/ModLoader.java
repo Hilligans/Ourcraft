@@ -14,7 +14,9 @@ import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -59,7 +61,9 @@ public class ModLoader {
                                 modContent.readData(jsonObject);
                             }
                             modContent.mainClass = testClass;
+                            modContent.classLoader = child;
                             Ourcraft.CONTENT_PACK.mods.put(modID,modContent);
+                            Ourcraft.RESOURCE_MANAGER.classLoaders.add(child);
                             mainClasses.put(modID,new TripleTypeWrapper<>(testClass,mod.getAbsolutePath(),false));
                         }
                     } catch (Exception ignored) {}
@@ -86,7 +90,9 @@ public class ModLoader {
                     testClass = Class.forName(name,true,child);
                     mainClasses.put(modID,new TripleTypeWrapper<>(testClass,file.getAbsolutePath(),true));
                     modContent.mainClass = testClass;
+                    modContent.classLoader = child;
                     Ourcraft.CONTENT_PACK.mods.put(modID,modContent);
+                    Ourcraft.RESOURCE_MANAGER.classLoaders.add(child);
                     return true;
                 }
             }

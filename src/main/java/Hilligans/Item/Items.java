@@ -21,5 +21,12 @@ public class Items {
         Items.HASHED_ITEMS.put(item.name, item);
     }
 
+    public static Item getItem(int id) {
+        if(ITEMS.size() > id) {
+            return ITEMS.get(id);
+        }
+        return null;
+    }
+
 
 }

@@ -1,8 +1,6 @@
 package Hilligans.Network.Packet.Server;
 
 import Hilligans.Block.Block;
-import Hilligans.Block.BlockTypes.SlabBlock;
-import Hilligans.Block.Blocks;
 import Hilligans.ClientMain;
 import Hilligans.Data.Other.BlockProperties;
 import Hilligans.Network.PacketBase;
@@ -22,9 +20,6 @@ public class SRegisterBlock extends PacketBase {
         this();
         this.block = block;
         this.stateSize = (byte) block.blockStateByteCount();
-        if(block instanceof SlabBlock) {
-            type = 1;
-        }
     }
 
     @Override
@@ -55,7 +50,7 @@ public class SRegisterBlock extends PacketBase {
                 block = new Block(name, blockProperties);
                 break;
             case 1:
-                block = new SlabBlock(name,blockProperties);
+                block = new Block(name,blockProperties);
                 break;
         }
         block.blockProperties.blockStateSize = packetData.readByte();

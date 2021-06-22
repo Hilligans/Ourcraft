@@ -11,6 +11,7 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 public class Ourcraft {
@@ -22,6 +23,7 @@ public class Ourcraft {
     public static final ResourceManager RESOURCE_MANAGER = new ResourceManager();
     public static final ModContent OURCRAFT = new ModContent("ourcraft");
     public static final ContentPack CONTENT_PACK = new ContentPack();
+    public static final AtomicBoolean REBUILDING = new AtomicBoolean(false);
 
     public static String path = System.getProperty("user.dir");
 
