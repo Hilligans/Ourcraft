@@ -40,6 +40,7 @@ import Hilligans.Tag.Tag;
 import Hilligans.Util.Settings;
 import Hilligans.World.ClientWorld;
 import Hilligans.WorldSave.WorldLoader;
+import org.joml.FrustumIntersection;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.openal.AL11;
@@ -225,6 +226,7 @@ public class Client {
         MatrixStack matrixStack = Camera.getWorldStack();
         matrixStack.applyColor();
         matrixStack.applyTransformation();
+
 
         MatrixStack screenStack = Camera.getScreenStack();
         screenStack.applyColor();

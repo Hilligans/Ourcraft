@@ -43,7 +43,7 @@ public class Settings {
     public static boolean cacheDownloadedMods = true;
     public static boolean storeServerModsIndividually = false;
 
-    public static boolean asyncChunkBuilding = false;
+    public static boolean asyncChunkBuilding = true;
 
     public static String getVersion() {
         return gameVersion + "";

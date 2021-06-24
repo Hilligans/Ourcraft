@@ -2,10 +2,7 @@ package Hilligans.Client;
 
 import Hilligans.Client.Rendering.World.Managers.ShaderManager;
 import Hilligans.ClientMain;
-import org.joml.Matrix4d;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
+import org.joml.*;
 
 import java.util.Stack;
 
@@ -18,15 +15,18 @@ public class MatrixStack {
     public Stack<Vector4f> colorStack = new Stack<>();
     public Matrix4f matrix4f;
     public Vector4f color;
+    public FrustumIntersection frustumIntersection = new FrustumIntersection();
 
     public MatrixStack(Matrix4f matrix4f) {
         this.matrix4f = matrix4f;
         color = new Vector4f(1.0f,1.0f,1.0f,1.0f);
+
     }
 
     public MatrixStack(Matrix4d matrix4d) {
         this.matrix4f = new Matrix4f(matrix4d);
         color = new Vector4f(1.0f,1.0f,1.0f,1.0f);
+        frustumIntersection.set(matrix4f);
     }
 
     public void push() {

@@ -14,7 +14,9 @@ import Hilligans.ClientMain;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Entity.Entity;
 import Hilligans.Util.Settings;
+import org.joml.FrustumIntersection;
 import org.joml.Vector3d;
+import org.joml.Vector3f;
 import org.joml.Vector3i;
 
 import java.util.ArrayList;
@@ -164,11 +166,13 @@ public class ClientWorld extends World {
         } else {
             vertices += chunk.getTotalVertices();
             count++;
-            if(Camera.shouldRenderChunk(x * 16 + (int) pos.x >> 4, z * 16 + (int) pos.z >> 4)) {
-                matrixStack.push();
-                matrixStack.translate((chunk.x - playerChunkPos.x) * 16, 0, (chunk.z - playerChunkPos.z) * 16);
-                chunk.render(matrixStack);
-                matrixStack.pop();
+            if(Camera.shouldRenderChunk(x * 16 + (int) pos.x >> 4, z * 16 + (int) pos.z >> 4,matrixStack)) {
+                if(matrixStack.frustumIntersection.testAab(new Vector3f((chunk.x - playerChunkPos.x) * 16, 0, (chunk.z - playerChunkPos.z) * 16),new Vector3f((chunk.x + 1 - playerChunkPos.x) * 16, (float) pos.y, (chunk.z + 1 - playerChunkPos.z) * 16))) {
+                    matrixStack.push();
+                    matrixStack.translate((chunk.x - playerChunkPos.x) * 16, 0, (chunk.z - playerChunkPos.z) * 16);
+                    chunk.render(matrixStack);
+                    matrixStack.pop();
+                }
             }
         }
     }

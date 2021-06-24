@@ -11,6 +11,7 @@ import Hilligans.ClientMain;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Util.Settings;
 import Hilligans.Util.Vector5f;
+import org.joml.Vector3f;
 import org.lwjgl.opengl.GL30;
 
 import java.util.ArrayList;
@@ -124,7 +125,6 @@ public class SubChunk {
         if (verticesCount != 0) {
             GL30.glBindVertexArray(id);
             matrixStack.push();
-            //matrixStack.applyTransformation(ClientMain.getClient().shaderManager.colorShader);
             matrixStack.applyTransformation(ShaderManager.worldShader.shader);
             glDrawElements(GL_TRIANGLES, verticesCount, GL_UNSIGNED_INT, 0);
             matrixStack.pop();

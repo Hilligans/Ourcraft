@@ -391,7 +391,7 @@ public class Camera {
         return "x:" + pos.x + " y:" + pos.y + " z:" + pos.z;
     }
 
-    public static boolean shouldRenderChunk(int chunkX, int chunkZ) {
+    public static boolean shouldRenderChunk(int chunkX, int chunkZ, MatrixStack matrixStack) {
 
         return true;
 
