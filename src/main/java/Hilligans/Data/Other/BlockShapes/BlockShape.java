@@ -22,14 +22,14 @@ public class BlockShape {
     public BoundingBox defaultBoundingBox = new BoundingBox(0,0,0,1,1,1);
 
     public BlockShape() {
-        data = BlockModel.create("/Models/Blocks/block.txt");
+        data = BlockModel.create("Models/Blocks/block.txt");
     }
 
     public String path;
 
     public BlockShape(String path) {
         this.path = path;
-        data = BlockModel.create("/Models/Blocks/" + path);
+        data = BlockModel.create("Models/Blocks/" + path);
     }
 
     public BoundingBox getBoundingBox(World world, BlockPos pos) {

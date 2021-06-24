@@ -270,8 +270,11 @@ public class Camera {
 
     public static Vector3d duplicateAndAssign() {
         playerChunkPos = new Vector3i((int)Camera.pos.x >> 4, 0, (int)Camera.pos.z >> 4);
+        renderPos = duplicate();
         return new Vector3d(Camera.pos.x - (playerChunkPos.x << 4), Camera.pos.y, Camera.pos.z - (playerChunkPos.z << 4));
     }
+
+    public static Vector3d renderPos = new Vector3d();
 
     public static Vector3d duplicateExtra() {
         return new Vector3d(Camera.pos.x - (playerChunkPos.x << 4), Camera.pos.y, Camera.pos.z - (playerChunkPos.z << 4));

@@ -48,6 +48,12 @@ public class SubChunk {
     }
 
     public void createMesh1() {
+        PrimitiveBuilder primitiveBuilder = getMeshBuilder();
+        verticesCount = primitiveBuilder.indices.size();
+        id = VAOManager.createVAO(primitiveBuilder);
+    }
+
+    public PrimitiveBuilder getMeshBuilder() {
         PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES,ShaderManager.worldShader);
         for(int x = 0; x < 16; x++) {
             for(int y = 0; y < 16; y++) {
@@ -64,8 +70,7 @@ public class SubChunk {
                 }
             }
         }
-        verticesCount = primitiveBuilder.indices.size();
-        id = VAOManager.createVAO(primitiveBuilder);
+        return primitiveBuilder;
     }
 
 
@@ -104,9 +109,6 @@ public class SubChunk {
 
     public void renderMesh(MatrixStack matrixStack) {
 
-        if (id == -1) {
-            createMesh1();
-        }
         if (id == -2) {
             if (world instanceof ClientWorld) {
                 ((ClientWorld) world).queuedChunks.add(this);
@@ -114,6 +116,9 @@ public class SubChunk {
             } else {
                 id = -1;
             }
+        }
+        if (id == -1) {
+            createMesh1();
         }
 
         if (verticesCount != 0) {

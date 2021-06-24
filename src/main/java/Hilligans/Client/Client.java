@@ -141,6 +141,7 @@ public class Client {
 
     public static void register() {
         PacketBase.register();
+        ClientUtil.register();
         Container.register();
         Tag.register();
         Widget.register();
@@ -231,8 +232,6 @@ public class Client {
 
         Ourcraft.EVENT_BUS.postEvent(new RenderStartEvent(matrixStack,screenStack,this));
 
-        //StringRenderer.instance.drawString(screenStack,"abcd",1000,100,0.5f);
-        //StringRenderer.drawString(screenStack,"abcd",1000,150,0.5f);
         if(renderWorld && !Ourcraft.REBUILDING.get()) {
             rendering = true;
             clientWorld.tick();
@@ -383,16 +382,6 @@ public class Client {
     }
 
     public void registerKeyHandlers() {
-
-       //  KeyHandler.register(new KeyPress() {
-       //     @Override
-       //     public void onPress() {
-                //if(KeyHandler.keyPressed[GLFW_KEY_RIGHT_ALT]) {
-               //     System.out.println(KeyHandler.keyPressed[GLFW_KEY_LEFT_ALT]);
-               //     openScreen(new TagEditorScreen());
-              //  }
-      //      }
-      //  }, GLFW_KEY_H);
 
         KeyHandler.register(new KeyPress() {
             @Override

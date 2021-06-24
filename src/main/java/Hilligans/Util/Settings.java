@@ -40,6 +40,10 @@ public class Settings {
     public static boolean pullResourcesFromUnloadedMods = true;
     public static boolean loadModsWithoutInfo = false;
     public static boolean asyncModLoading = true;
+    public static boolean cacheDownloadedMods = true;
+    public static boolean storeServerModsIndividually = false;
+
+    public static boolean asyncChunkBuilding = false;
 
     public static String getVersion() {
         return gameVersion + "";

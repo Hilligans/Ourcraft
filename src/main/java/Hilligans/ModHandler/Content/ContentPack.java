@@ -4,6 +4,7 @@ import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.Audio.SoundBuffer;
 import Hilligans.Client.Audio.Sounds;
+import Hilligans.Client.Rendering.NewRenderer.IModel;
 import Hilligans.Client.Rendering.Texture;
 import Hilligans.Client.Rendering.Textures;
 import Hilligans.ClientMain;
@@ -20,7 +21,6 @@ public class ContentPack {
     public HashMap<String, ModContent> mods = new HashMap<>();
     public HashMap<String, Boolean> loadedMods = new HashMap<>();
     public HashMap<String, Boolean> shouldLoad = new HashMap<>();
-
     public ContentPack() {
         Ourcraft.EVENT_BUS.register(t -> {
             if(waiting) {
@@ -41,6 +41,7 @@ public class ContentPack {
 
     public void generateData() {
         Ourcraft.REBUILDING.set(true);
+        ///TODO Could potentially rebuild when rendering but very unlikely
        if(!Settings.isServer && ClientMain.getClient().rendering) {
            waiting = true;
        } else {
@@ -63,6 +64,8 @@ public class ContentPack {
 
         //Textures.TEXTURES.clear();
         //Textures.MAPPED_TEXTURES.clear();
+
+
         for(String string : mods.keySet()) {
             if(shouldLoad.get(string)) {
                 ModContent mod = mods.get(string);
@@ -80,6 +83,9 @@ public class ContentPack {
                 }
                 for(SoundBuffer soundBuffer : mod.sounds) {
                     Sounds.registerSound(soundBuffer.file,soundBuffer);
+                }
+                for(IModel model : mod.models) {
+                    Ourcraft.RESOURCE_MANAGER.putModel(model.getPath(),model);
                 }
             }
         }

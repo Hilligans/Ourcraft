@@ -4,13 +4,18 @@ package Hilligans.World;
 
 import Hilligans.Client.Audio.SoundBuffer;
 import Hilligans.Client.Audio.Sounds;
+import Hilligans.Client.Rendering.ClientUtil;
+import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
+import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Client.Camera;
 import Hilligans.Client.MatrixStack;
 import Hilligans.ClientMain;
+import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Entity.Entity;
 import Hilligans.Util.Settings;
 import org.joml.Vector3d;
+import org.joml.Vector3i;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -20,7 +25,9 @@ import static org.lwjgl.opengl.GL20.glUseProgram;
 
 public class ClientWorld extends World {
 
-    public ArrayList<SubChunk> queuedChunks = new ArrayList<>();
+    public ConcurrentLinkedQueue<SubChunk> queuedChunks = new ConcurrentLinkedQueue<>();
+
+    public ConcurrentLinkedQueue<DoubleTypeWrapper<PrimitiveBuilder, SubChunk>> asyncChunkQueue = new ConcurrentLinkedQueue<>();
 
     public ClientWorld() {
         getChunk(0,0);
@@ -49,7 +56,23 @@ public class ClientWorld extends World {
             purgeTime = 0;
             purgeChunks(Settings.renderDistance + 2);
         } else {
-            buildChunks(12);
+            if(Settings.asyncChunkBuilding) {
+                while(!queuedChunks.isEmpty()) {
+                    SubChunk subChunk = queuedChunks.poll();
+                    ClientUtil.chunkBuilder.submit(() -> {
+                        PrimitiveBuilder primitiveBuilder = subChunk.getMeshBuilder();
+                        asyncChunkQueue.add(new DoubleTypeWrapper<>(primitiveBuilder,subChunk));
+                    });
+                }
+
+                while(!asyncChunkQueue.isEmpty()) {
+                    DoubleTypeWrapper<PrimitiveBuilder,SubChunk> type = asyncChunkQueue.poll();
+                    type.getTypeB().verticesCount = type.getTypeA().indices.size();
+                    type.getTypeB().id = VAOManager.createVAO(type.getTypeA());
+                }
+            } else {
+                buildChunks(12);
+            }
             purgeTime++;
         }
 
@@ -60,8 +83,7 @@ public class ClientWorld extends World {
 
     public void buildChunks(int count) {
         for(int x = 0; x < Math.min(count,queuedChunks.size()); x++) {
-            queuedChunks.get(0).createMesh1();
-            queuedChunks.remove(0);
+            queuedChunks.poll().createMesh1();
         }
     }
 
@@ -95,7 +117,7 @@ public class ClientWorld extends World {
         }
         glUseProgram(ClientMain.getClient().shaderManager.colorShader);
 
-        Vector3d pos = Camera.pos;
+        Vector3d pos = Camera.renderPos;
         for(int x = 0; x < Settings.renderDistance; x++) {
             for(int z = 0; z < Settings.renderDistance; z++) {
                 drawChunk(matrixStack,pos,x,z);
@@ -129,6 +151,7 @@ public class ClientWorld extends World {
     public int count = 0;
 
     private void drawChunk(MatrixStack matrixStack, Vector3d pos, int x, int z) {
+        Vector3i playerChunkPos = new Vector3i((int)pos.x >> 4, 0, (int)pos.z >> 4);
         Chunk chunk = getChunk(x * 16 + (int)pos.x >> 4,z * 16 + (int)pos.z >> 4);
         if(chunk == null) {
             if(!ClientMain.getClient().joinServer) {
@@ -143,6 +166,7 @@ public class ClientWorld extends World {
             count++;
             if(Camera.shouldRenderChunk(x * 16 + (int) pos.x >> 4, z * 16 + (int) pos.z >> 4)) {
                 matrixStack.push();
+                matrixStack.translate((chunk.x - playerChunkPos.x) * 16, 0, (chunk.z - playerChunkPos.z) * 16);
                 chunk.render(matrixStack);
                 matrixStack.pop();
             }
@@ -217,5 +241,6 @@ public class ClientWorld extends World {
             this.z = z;
         }
     }
+
 
 }

@@ -9,7 +9,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class Level {
+public class  Level {
 
     public HashMap<String, DoubleTypeWrapper<Integer,Integer>> blocks = new HashMap<>();
     public Int2ObjectOpenHashMap<String> idToNames = new Int2ObjectOpenHashMap<>();

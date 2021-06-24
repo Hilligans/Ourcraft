@@ -3,6 +3,7 @@ package Hilligans.ModHandler.Content;
 import Hilligans.Block.Block;
 import Hilligans.Client.Audio.SoundBuffer;
 import Hilligans.Client.Rendering.Model;
+import Hilligans.Client.Rendering.NewRenderer.BlockModel;
 import Hilligans.Client.Rendering.NewRenderer.IModel;
 import Hilligans.Client.Rendering.Texture;
 import Hilligans.Data.Other.BlockProperties;
@@ -12,6 +13,7 @@ import Hilligans.Item.Item;
 import Hilligans.ModHandler.Mod;
 import Hilligans.Network.PacketData;
 import Hilligans.Util.ByteArray;
+import Hilligans.Util.Settings;
 import Hilligans.Util.Util;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import org.json.JSONArray;
@@ -43,18 +45,28 @@ public class ModContent {
     public ArrayList<SoundBuffer> sounds = new ArrayList<>();
     public ArrayList<IModel> models = new ArrayList<>();
 
+    public boolean loaded = false;
+
     public ModContent(String modID) {
         this.modID = modID;
     }
 
     public ModContent(ByteArray packetData) {
         readData(packetData);
+        if(Settings.cacheDownloadedMods) {
+            if(Settings.storeServerModsIndividually) {
+
+            } else {
+
+            }
+        }
     }
 
     public void load() throws Exception {
         if(mainClass != null) {
             mainClass.getConstructor(ModContent.class).newInstance(this);
         }
+        loaded = true;
     }
 
     public void registerBlock(Block block) {
@@ -100,6 +112,16 @@ public class ModContent {
         }
     }
 
+    public void registerModel(IModel model) {
+        models.add(model);
+    }
+
+    public void registerModels(IModel... models) {
+        for(IModel iModel : models) {
+            registerModel(iModel);
+        }
+    }
+
     public void putData(ByteArray byteArray) {
         byteArray.writeInt(version);
         byteArray.writeString(modID);
@@ -125,6 +147,11 @@ public class ModContent {
         for(SoundBuffer soundBuffer : sounds) {
             byteArray.writeString(soundBuffer.file);
             byteArray.writeBytes(soundBuffer.data.array());
+        }
+        byteArray.writeInt(models.size());
+        for(IModel model : models) {
+            byteArray.writeString(model.getPath());
+            byteArray.writeString(model.getModel());
         }
         byteArray.writeInt(blocks.size());
         for(Block block : blocks) {
@@ -161,6 +188,13 @@ public class ModContent {
         size = byteArray.readInt();
         for(int x = 0; x < size; x++) {
             sounds.add(new SoundBuffer(byteArray.readString(),byteArray.readBytes()));
+        }
+        size = byteArray.readInt();
+        for(int x = 0; x < size; x++) {
+            String path = byteArray.readString();
+            BlockModel blockModel = new BlockModel(byteArray.readString());
+            blockModel.path = path;
+            models.add(blockModel);
         }
         size = byteArray.readInt();
         for(int x = 0; x < size; x++) {

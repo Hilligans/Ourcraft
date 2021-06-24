@@ -88,7 +88,6 @@ public class Chunk {
     }
 
     public void render(MatrixStack matrixStack) {
-        matrixStack.translate((x - Camera.playerChunkPos.x) * 16, 0, (z - Camera.playerChunkPos.z) * 16);
         for(SubChunk subChunk : chunks) {
             subChunk.renderMesh(matrixStack);
         }
