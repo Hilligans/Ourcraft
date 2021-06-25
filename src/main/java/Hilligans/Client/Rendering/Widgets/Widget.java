@@ -11,6 +11,11 @@ public class Widget {
     public int y;
     public int width;
     public int height;
+
+    public float percentX = -1;
+    public float percentY = -1;
+
+
     public short widgetId = -1;
     public String name;
 
@@ -31,6 +36,12 @@ public class Widget {
 
     public Widget addOffset(IntegerWrapper integerWrapper) {
         this.yOffset = integerWrapper;
+        return this;
+    }
+
+    public Widget setPercentages(float x, float y) {
+        this.percentX = x / 100f;
+        this.percentY = y / 100f;
         return this;
     }
 
@@ -64,11 +75,20 @@ public class Widget {
         return this.getY() >= minY;
     }
 
+    public void onScreenResize(int sizeX, int sizeY) {
+        if(percentX != -1) {
+            this.x = (int) (sizeX * percentX) - width / 2;
+            this.y = (int) (sizeY * percentY) - height / 2;
+        }
+    }
+
     public static ArrayList<WidgetFetcher> widgets = new ArrayList<>();
 
     public static void register() {
         widgets.add(Button::new);
     }
+
+
 
 
 

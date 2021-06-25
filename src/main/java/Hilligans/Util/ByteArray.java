@@ -11,6 +11,7 @@ import org.joml.Vector4f;
 
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public class ByteArray {
 
@@ -29,6 +30,7 @@ public class ByteArray {
     public ByteArray(byte[] bytes) {
         byteBuf = Unpooled.buffer();
         byteBuf.writeBytes(bytes);
+        this.size = bytes.length;
     }
 
     public ByteArray(ByteBuffer buffer) {
@@ -36,8 +38,11 @@ public class ByteArray {
     }
 
     public ByteBuffer toByteBuffer() {
-        ByteBuffer buffer = ByteBuffer.allocate(byteBuf.capacity());
-        buffer.put(byteBuf.array());
+        byte[] bytes = byteBuf.array();
+        ByteBuffer buffer = ByteBuffer.allocateDirect(bytes.length);
+        buffer.mark();
+        buffer.put(bytes);
+        buffer.reset();
         return buffer;
     }
 

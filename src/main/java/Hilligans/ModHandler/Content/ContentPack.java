@@ -11,9 +11,13 @@ import Hilligans.ClientMain;
 import Hilligans.Item.Item;
 import Hilligans.Item.Items;
 import Hilligans.ModHandler.Events.Client.RenderEndEvent;
+import Hilligans.ModHandler.Mod;
 import Hilligans.Ourcraft;
+import Hilligans.Util.ByteArray;
 import Hilligans.Util.Settings;
+import Hilligans.WorldSave.WorldLoader;
 
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 
 public class ContentPack {
@@ -139,6 +143,13 @@ public class ContentPack {
             modContent.classLoader.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void loadCachedMod(String name) {
+        ModContent modContent = ModContent.readLocal(name);
+        if(modContent != null) {
+            putMod(modContent);
         }
     }
 }

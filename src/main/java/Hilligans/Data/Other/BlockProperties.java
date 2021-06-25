@@ -1,5 +1,6 @@
 package Hilligans.Data.Other;
 
+import Hilligans.Client.Rendering.NewRenderer.BlockModel;
 import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
 import Hilligans.Data.Other.BlockShapes.BlockShape;
 import Hilligans.WorldSave.WorldLoader;
@@ -121,7 +122,16 @@ public class BlockProperties {
         if (jsonObject.has("model")) {
             JSONObject model = jsonObject.getJSONObject("model");
             if (model.has("modelName")) {
-                blockProperties.blockShape = new BlockShape(model.getString("modelName"));
+                if(model.getString("modelName").endsWith(".obj")) {
+                    blockProperties.blockShape = new BlockShape();
+                    try {
+                        blockProperties.blockShape.data = new BlockModel(new ObjFile(WorldLoader.readString("/Models/Blocks/" + model.getString("modelName"))).toBlockModel().toString());
+                    } catch (Exception ignored) {
+                        ignored.printStackTrace();
+                    }
+                } else {
+                    blockProperties.blockShape = new BlockShape(model.getString("modelName"));
+                }
             }
             BoundingBox boundingBox;
             if (model.has("boundingBox")) {

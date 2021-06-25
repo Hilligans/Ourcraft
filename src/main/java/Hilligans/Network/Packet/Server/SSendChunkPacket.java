@@ -1,7 +1,10 @@
 package Hilligans.Network.Packet.Server;
 
+import Hilligans.Block.Block;
 import Hilligans.ClientMain;
 import Hilligans.Data.Other.DataBlockState;
+import Hilligans.Data.Primitives.DoubleTypeWrapper;
+import Hilligans.Tag.ShortTag;
 import Hilligans.Util.Settings;
 import Hilligans.World.Chunk;
 import Hilligans.Block.Blocks;
@@ -19,12 +22,12 @@ public class SSendChunkPacket extends PacketBase {
 
     public SSendChunkPacket() {
         super(2);
-        mode = 1;
+        mode = 2;
     }
 
     public SSendChunkPacket(Chunk chunk) {
         this();
-        mode = 1;
+        mode = 2;
         this.chunk = chunk;
     }
 
@@ -75,15 +78,28 @@ public class SSendChunkPacket extends PacketBase {
             for(int x = 0; x < size; x++) {
                 packetData.writeShort(blockIds.get(x));
                 packetData.writeShort(blockData.get(x));
-               // packetData.writeByte(mappedBlocks.get(shortVal));
             }
 
             for(Byte byteVal : blocks) {
                 packetData.writeByte(byteVal);
             }
 
+        } else if(mode == 2) {
+            ArrayList<DoubleTypeWrapper<BlockState,Integer>> blockList = chunk.getBlockChainedList();
+            packetData.writeInt(blockList.size());
+            for(DoubleTypeWrapper<BlockState,Integer> block : blockList) {
+                packetData.writeShort(block.getTypeA().blockId);
+                if(block.getTypeA().getBlock().hasBlockState()) {
+                    if(block.getTypeA() instanceof DataBlockState) {
+                        packetData.writeShort(block.getTypeA().readData());
+                    }
+                }
+                packetData.writeInt(block.getTypeB());
+            }
+
         }
     }
+
 
     @Override
     public void decode(PacketData packetData) {
@@ -117,6 +133,19 @@ public class SSendChunkPacket extends PacketBase {
                         }
                     }
                 }
+            } else if(mode == 2) {
+                ArrayList<DoubleTypeWrapper<BlockState, Integer>> blockList = new ArrayList<>();
+                int length = packetData.readInt();
+                for(int x = 0; x < length; x++) {
+                    short blockID = packetData.readShort();
+                    Block block = Blocks.getBlockWithID(blockID);
+                    if(block.hasBlockState()) {
+                        blockList.add(new DoubleTypeWrapper<>(block.getStateWithData(packetData.readShort()),packetData.readInt()));
+                    } else {
+                        blockList.add(new DoubleTypeWrapper<>(block.getDefaultState(),packetData.readInt()));
+                    }
+                }
+                chunk.setFromChainedList(blockList);
             }
         } catch (Exception ignored) {}
     }

@@ -6,6 +6,7 @@ import Hilligans.Client.Rendering.Model;
 import Hilligans.Client.Rendering.NewRenderer.BlockModel;
 import Hilligans.Client.Rendering.NewRenderer.IModel;
 import Hilligans.Client.Rendering.Texture;
+import Hilligans.ClientMain;
 import Hilligans.Data.Other.BlockProperties;
 import Hilligans.Data.Other.ItemProperties;
 import Hilligans.Item.BlockItem;
@@ -15,6 +16,7 @@ import Hilligans.Network.PacketData;
 import Hilligans.Util.ByteArray;
 import Hilligans.Util.Settings;
 import Hilligans.Util.Util;
+import Hilligans.WorldSave.WorldLoader;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -55,11 +57,24 @@ public class ModContent {
         readData(packetData);
         if(Settings.cacheDownloadedMods) {
             if(Settings.storeServerModsIndividually) {
-
+                String ip = ClientMain.getClient().serverIP.replace(':','_');
+                if(!ip.equals("")) {
+                    WorldLoader.write("mod_cache/servers/" + ip + "/" + modID + "-" + version + ".dat",packetData.toByteBuffer());
+                }
             } else {
-
+                WorldLoader.write("mod_cache/mods/" + modID + "-" + version + ".dat",packetData.toByteBuffer());
             }
         }
+    }
+
+    public static ModContent readLocal(String name) {
+        ByteBuffer buffer = WorldLoader.readBuffer("mod_cache/" + (Settings.storeServerModsIndividually ? "servers/" + ClientMain.getClient().serverIP.replace(':','_') + "/" : "mods/") + name + ".dat");
+        if(buffer != null) {
+            ModContent modContent = new ModContent("");
+            modContent.readData(new PacketData(buffer));
+            return modContent;
+        }
+        return null;
     }
 
     public void load() throws Exception {
@@ -235,6 +250,25 @@ public class ModContent {
         description = jsonObject.has("description") ? jsonObject.getString("description") : "";
 
     }
-    
 
+    @Override
+    public String toString() {
+        return "ModContent{" +
+                "modID='" + modID + '\'' +
+                ", mod=" + mod +
+                ", mainClass=" + mainClass +
+                ", classLoader=" + classLoader +
+                ", dependencies=" + Arrays.toString(dependencies) +
+                ", version=" + version +
+                ", description='" + description + '\'' +
+                ", authors=" + Arrays.toString(authors) +
+                ", blocks=" + blocks +
+                ", items=" + items +
+                ", textures=" + textures +
+                ", blockTextures=" + blockTextures +
+                ", sounds=" + sounds +
+                ", models=" + models +
+                ", loaded=" + loaded +
+                '}';
+    }
 }

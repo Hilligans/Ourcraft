@@ -271,11 +271,13 @@ public class StringRenderer {
 
     public IntList getAtlases(String string) {
         IntList intList = new IntList(1);
-        for(int x = 0; x < string.length(); x++) {
-            char character = string.charAt(x);
-            int val = character >> 8;
-            if(!intList.containsValues(val)) {
-                intList.add(val);
+        if(string != null) {
+            for (int x = 0; x < string.length(); x++) {
+                char character = string.charAt(x);
+                int val = character >> 8;
+                if (!intList.containsValues(val)) {
+                    intList.add(val);
+                }
             }
         }
         return intList;

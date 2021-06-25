@@ -40,6 +40,7 @@ public class ServerSelectorWidget extends Widget {
             ClientNetworkHandler.clientNetworkHandler = new ClientNetworkHandler();
             ClientNetworkInit.joinServer(ip, port, ClientNetworkHandler.clientNetworkHandler);
             ClientMain.getClient().closeScreen();
+            ClientMain.getClient().serverIP = ip + ":" + port;
          //   ClientMain.getClient().openScreen(new LoadingScreen());
         } catch (Exception e) {
             e.printStackTrace();

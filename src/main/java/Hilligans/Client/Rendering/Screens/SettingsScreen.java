@@ -27,6 +27,7 @@ public class SettingsScreen extends ScreenBase {
         }));
         widgets.add(new Button(300, 50, 200, 40, "settings.sound_options", () -> ClientMain.getClient().openScreen(new VolumeScreen())));
         widgets.add(new Button(300,100,200,40,"settings.languages",() -> ClientMain.getClient().openScreen(new LanguageScreen())));
+        widgets.add(new Button(300,150,200,40,"Settings.advanced_settings",() -> ClientMain.getClient().openScreen(new AdvancedSettingsScreen())));
         //widgets.add(new SliderWidget(300,50,200,40,0,100,100,value -> {}));
     }
 }

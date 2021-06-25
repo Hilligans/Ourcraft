@@ -1,12 +1,15 @@
 package Hilligans.Network.Packet.Server;
 
 import Hilligans.ClientMain;
+import Hilligans.ModHandler.Content.ContentPack;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CRequestContent;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.Ourcraft;
+import Hilligans.Util.Settings;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -53,11 +56,17 @@ public class SHandshakePacket extends PacketBase {
         ArrayList<String> neededMods = new ArrayList<>();
         for(String string : mods) {
             if(!localMods.contains(string)) {
-                neededMods.add(string);
+                if(!new File("mod_cache/" + (Settings.storeServerModsIndividually ? "servers/" + ClientMain.getClient().serverIP.replace(':','_') + "/" : "mods/") + string.replace(":::","-") + ".dat").exists()) {
+                    neededMods.add(string);
+                } else {
+                    Ourcraft.CONTENT_PACK.loadCachedMod(string.replace(":::","-"));
+                }
             }
         }
         if(neededMods.size() != 0) {
             ClientNetworkHandler.sendPacketDirect(new CRequestContent(neededMods));
+        } else if(mods.length != 0) {
+            Ourcraft.CONTENT_PACK.generateData();
         }
     }
 }

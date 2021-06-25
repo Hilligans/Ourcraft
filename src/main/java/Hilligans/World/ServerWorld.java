@@ -18,6 +18,10 @@ import Hilligans.Util.Settings;
 import Hilligans.WorldSave.ChunkLoader;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServerWorld extends World {
 
@@ -67,6 +71,8 @@ public class ServerWorld extends World {
         super.unloadChunk(x,z);
     }
 
+    public static ExecutorService executorService = Executors.newFixedThreadPool(4);
+
     @Override
     public void tick() {
         int x = 0;
@@ -89,36 +95,58 @@ public class ServerWorld extends World {
             if (System.currentTimeMillis() - autoSave > autoSaveAfter) {
                 try {
                     autoSave = System.currentTimeMillis();
-                    long start = System.currentTimeMillis();
+                    final long start = System.currentTimeMillis();
                     ArrayList<Long> players = new ArrayList<>();
                     for (ServerPlayerData playerData : ServerNetworkHandler.playerData.values()) {
                         players.add(ChunkPos.fromPos((int) playerData.playerEntity.x, (int) playerData.playerEntity.z));
-                        //System.out.println(players.get(players.size() - 1));
                         playerData.save();
                     }
 
-                    boolean inBounds;
-                    int purgeCount = 0;
-                    for (Chunk chunk : chunks.values()) {
-                        ChunkLoader.writeChunk(chunk);
-                        inBounds = false;
-                        for (Long longVal : players) {
-                            if (isInBounds(chunk.x, chunk.z, longVal, Settings.renderDistance)) {
-                                inBounds = true;
-                                break;
-                            }
-                        }
-                        if (!inBounds) {
-                            purgeCount++;
-                            removeChunk(chunk.x, chunk.z);
-                        }
-                    }
+                   if(Settings.asyncWorldSave) {
+                       AtomicInteger chunkList = new AtomicInteger(0);
+                       final int size = chunks.size();
+                       for (Chunk chunk : chunks.values()) {
+                           executorService.submit(() -> {
+                               ChunkLoader.writeChunk(chunk);
+                               boolean inBounds = false;
+                               for (Long longVal : players) {
+                                   if (isInBounds(chunk.x, chunk.z, longVal, Settings.renderDistance)) {
+                                       inBounds = true;
+                                       break;
+                                   }
+                               }
+                               if (!inBounds) {
+                                   removeChunk(chunk.x, chunk.z);
+                               }
+                               if (chunkList.addAndGet(1) == size) {
+                                   System.out.println("SAVE FINISH:" + (System.currentTimeMillis() - start) + "MS");
+                                   ChunkLoader.finishSave();
+                               }
+                           });
+                       }
+                   } else {
+                       for (Chunk chunk : chunks.values()) {
+                           ChunkLoader.writeChunk(chunk);
+                           boolean inBounds = false;
+                           for (Long longVal : players) {
+                               if (isInBounds(chunk.x, chunk.z, longVal, Settings.renderDistance)) {
+                                   inBounds = true;
+                                   break;
+                               }
+                           }
+                           if (!inBounds) {
+                               removeChunk(chunk.x, chunk.z);
+                           }
+                       }
+                       System.out.println("SAVE FINISH:" + (System.currentTimeMillis() - start) + "MS");
+                       ChunkLoader.finishSave();
+                   }
 
 
-                    ChunkLoader.finishSave();
 
 
-                    System.out.println("SAVE FINISH:" + (System.currentTimeMillis() - start) + "MS");
+
+                   // System.out.println("SAVE FINISH:" + (System.currentTimeMillis() - start) + "MS");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -8,6 +8,7 @@ import Hilligans.Data.Other.DataBlockState;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Ourcraft;
 import Hilligans.Tag.*;
+import Hilligans.Util.ByteArray;
 import Hilligans.Util.Settings;
 import Hilligans.World.Chunk;
 import Hilligans.World.DataProvider;
@@ -20,6 +21,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
@@ -33,6 +35,8 @@ public class WorldLoader {
 
     public static void write(String fileName, ByteBuffer byteBuffer) {
         try {
+            File file = new File(fileName);
+            file.getParentFile().mkdirs();
             RandomAccessFile aFile = new RandomAccessFile(fileName, "rw");
             FileChannel inChannel = aFile.getChannel();
             inChannel.write(byteBuffer);
@@ -41,6 +45,8 @@ public class WorldLoader {
             ingored.printStackTrace();
         }
     }
+
+
 
     public static CompoundTag loadTag(String path) {
         try {

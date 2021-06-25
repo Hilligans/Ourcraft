@@ -45,6 +45,8 @@ public class Settings {
 
     public static boolean asyncChunkBuilding = true;
 
+    public static boolean asyncWorldSave = true;
+
     public static String getVersion() {
         return gameVersion + "";
     }

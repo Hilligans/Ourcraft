@@ -15,6 +15,7 @@ import io.netty.channel.ChannelHandlerContext;
 import org.joml.Vector4f;
 
 import java.awt.image.BufferedImage;
+import java.nio.ByteBuffer;
 
 public class PacketData extends ByteArray {
 
@@ -37,11 +38,17 @@ public class PacketData extends ByteArray {
         byteBuf = Unpooled.buffer();
         byteBuf.writeBytes(bytes);
         packetId = byteBuf.readInt();
+        size = bytes.length;
     }
 
     public PacketData(ByteBuf byteBuf) {
         packetId = byteBuf.readInt();
         byteBuf.readBytes(packetId);
+        size = byteBuf.readableBytes();
+    }
+
+    public PacketData(ByteBuffer buffer) {
+        this(buffer.array());
     }
 
     public void writeToByteBuf(ByteBuf byteBuf) {

@@ -5,6 +5,7 @@ import Hilligans.Client.Key.KeyHandler;
 import Hilligans.Client.Key.KeyPress;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.Widgets.Widget;
+import Hilligans.ClientMain;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CCloseScreen;
 
@@ -69,5 +70,16 @@ public abstract class ScreenBase implements Screen {
         for(Widget widget : widgets) {
             widget.mouseScroll(x,y,amount);
         }
+    }
+
+    public void resize(int x, int y) {
+        for(Widget widget : widgets) {
+            widget.onScreenResize(x,y);
+        }
+    }
+
+    public void addWidget(Widget widget) {
+        widgets.add(widget);
+        widget.onScreenResize(ClientMain.getWindowX(),ClientMain.getWindowY());
     }
 }

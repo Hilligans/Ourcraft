@@ -1,6 +1,8 @@
 package Hilligans;
 
 import Hilligans.Client.*;
+import Hilligans.Data.Other.ObjFile;
+import Hilligans.WorldSave.WorldLoader;
 
 public class ClientMain {
 
@@ -13,6 +15,12 @@ public class ClientMain {
 
 
     public static void main(String[] args) {
+        try {
+           // System.out.println(new ObjFile(WorldLoader.readString("/Models/Blocks/3d_printer.obj")).toBlockModel().toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         client = new Client();
         client.startClient();

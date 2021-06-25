@@ -40,7 +40,6 @@ import Hilligans.Tag.Tag;
 import Hilligans.Util.Settings;
 import Hilligans.World.ClientWorld;
 import Hilligans.WorldSave.WorldLoader;
-import org.joml.FrustumIntersection;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.openal.AL11;
@@ -75,6 +74,7 @@ public class Client {
     public PlayerList playerList;
     public boolean glStarted = false;
     public long renderTime = 0;
+    public String serverIP = "";
 
     public MouseHandler mouseHandler;
 
@@ -101,9 +101,9 @@ public class Client {
 
     public void startClient() {
         register();
-       // Ourcraft.MOD_LOADER.loadDefaultMods();
-        Ourcraft.CONTENT_PACK.load();
-        Ourcraft.CONTENT_PACK.generateData();
+        Ourcraft.MOD_LOADER.loadDefaultMods();
+       // Ourcraft.CONTENT_PACK.load();
+       // Ourcraft.CONTENT_PACK.generateData();
         CompoundTag tag = WorldLoader.loadTag("clientData.dat");
         if(tag != null) {
             new Thread(() -> {
@@ -483,6 +483,9 @@ public class Client {
             windowY = height;
             if(playerData.openContainer != null) {
                 playerData.openContainer.resize();
+            }
+            if(screen != null) {
+                screen.resize(windowX,windowY);
             }
         });
 

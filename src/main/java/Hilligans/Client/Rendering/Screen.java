@@ -15,4 +15,6 @@ public interface Screen {
 
     default void mouseScroll(int x, int y, float amount) {}
 
+    default void resize(int x, int y) {}
+
 }
