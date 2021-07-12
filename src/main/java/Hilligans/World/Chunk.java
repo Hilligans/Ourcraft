@@ -14,6 +14,8 @@ import Hilligans.Util.Settings;
 import Hilligans.World.Builders.WorldBuilder;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.shorts.Short2IntArrayMap;
+import it.unimi.dsi.fastutil.shorts.Short2IntOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 
 import java.util.ArrayList;
@@ -30,6 +32,8 @@ public class Chunk {
 
     public Int2ObjectOpenHashMap<Entity> entities = new Int2ObjectOpenHashMap<>();
     public Long2ObjectOpenHashMap<ArrayList<BlockPos>> blockTicks = new Long2ObjectOpenHashMap<>();
+    public Short2IntOpenHashMap heightMap = new Short2IntOpenHashMap();
+
 
     public boolean needsSaving = false;
 
@@ -103,7 +107,6 @@ public class Chunk {
     }
 
     public void generate() {
-        // System.out.println("generating " + x + " " + z);
         for(int x = 0; x < 16; x++) {
             for(int z = 0; z < 16; z++) {
                 int offset = getBlockHeight(x + this.x * 16,z + this.z * 16);
@@ -195,6 +198,10 @@ public class Chunk {
         return subChunk.getBlock(x & 15, y & 15, z & 15);
     }
 
+    public BlockState getBlockState(BlockPos blockPos) {
+        return getBlockState(blockPos.x,blockPos.y,blockPos.z);
+    }
+
     public DataProvider getDataProvider(BlockPos pos) {
         needsSaving = true;
         //int height = pos.y >> 4;
@@ -216,8 +223,33 @@ public class Chunk {
         if(y > Settings.chunkHeight * 16 || y < 0) {
            return;
         }
+
+        if(populated) {
+            short height = (short) (x << 4 | z);
+            if (blockState.getBlock().blockProperties.airBlock) {
+                if (heightMap.get(height) == y) {
+                    for (int i = y; i > 0; i--) {
+                        if (!getBlockState(x, i, z).getBlock().blockProperties.airBlock) {
+                            heightMap.put(height, i);
+                        }
+                    }
+                }
+            } else {
+                if (heightMap.get(height) < y) {
+                    heightMap.put(height, y);
+                }
+            }
+        }
         int pos = y >> 4;
         chunks.get(pos).setBlockState(x,y,z,blockState);
+    }
+
+    public BlockPos getHeight(int x, int z) {
+        return new BlockPos(x,heightMap.get((short)((x << 4) | z)),z);
+    }
+
+    public int getHeightInt(int x, int z) {
+        return heightMap.get((short)(((x & 0xF ) << 4) | (z  /*& 0xF */)));
     }
 
     public void updateBlock(BlockPos pos) {
@@ -250,6 +282,7 @@ public class Chunk {
     }
 
     public void setFromChainedList(ArrayList<DoubleTypeWrapper<BlockState,Integer>> values) {
+        populated = true;
         int offset = 0;
         for(DoubleTypeWrapper<BlockState, Integer> block : values) {
             for(int i = 0; i < block.getTypeB(); i++) {
@@ -262,7 +295,4 @@ public class Chunk {
         }
     }
 
-    public void writeData() {
-
-    }
 }

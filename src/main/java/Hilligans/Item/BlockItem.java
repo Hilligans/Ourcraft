@@ -2,6 +2,8 @@ package Hilligans.Item;
 
 import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
+import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
+import Hilligans.Client.Rendering.World.Managers.ShaderManager;
 import Hilligans.Data.Other.BlockState;
 import Hilligans.Client.Camera;
 import Hilligans.Client.MatrixStack;
@@ -17,6 +19,8 @@ import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.World.World;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
+
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 
 public class BlockItem extends Item {
 
@@ -72,15 +76,27 @@ public class BlockItem extends Item {
         }
 
         block.onPlace(world,pos);
-        if (world.isServer()) {
-           // ServerNetworkHandler.sendPacket(new SSendBlockChanges(pos,blockState));
-        }
         return true;
     }
 
     @Override
     public void render(MatrixStack matrixStack, int x, int y, int size, ItemStack itemStack) {
         block.renderItem(matrixStack,x,y,size,itemStack);
+
+
+
         drawString(matrixStack,x - size / 2,y,size,itemStack.count);
+    }
+
+    @Override
+    public void addData(PrimitiveBuilder primitiveBuilder, float size) {
+        for(int z = 0; z < 6; z++) {
+            block.addVertices(primitiveBuilder,z,size,block.getDefaultState(),new BlockPos(0,0,0),0,0);
+        }
+        primitiveBuilder.translate(size / 3f,size / 1.3f,0);
+        primitiveBuilder.rotate(0.785f,new Vector3f(0.5f,-1,0));
+        primitiveBuilder.rotate(0.186f,new Vector3f(0,0,-1));
+        primitiveBuilder.rotate(3.1415f,new Vector3f(0,0,1));
+        primitiveBuilder.translate(0,0 ,-size * 2);
     }
 }

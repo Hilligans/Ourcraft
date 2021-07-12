@@ -7,6 +7,8 @@ import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import Hilligans.Client.Rendering.World.Managers.*;
 import Hilligans.ClientMain;
 import Hilligans.Data.Other.BlockPos;
+import Hilligans.Item.Item;
+import Hilligans.Item.ItemStack;
 import Hilligans.Util.Settings;
 import Hilligans.Util.Util;
 import org.joml.Matrix4f;
@@ -32,17 +34,20 @@ public class Renderer {
         VAOManager.destroyBuffer(vao);
     }
 
-    public static void renderBlockItem(MatrixStack matrixStack, int x, int y, int size, Block block) {
+    public static void renderBlockItem(MatrixStack matrixStack, int x, int y, int size, Block block, ItemStack itemStack) {
+        Item item = itemStack.item;
         glUseProgram(ClientMain.getClient().shaderManager.colorShader);
         glDisable(GL_DEPTH_TEST);
-        PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES,ShaderManager.worldShader);
-        for(int z = 0; z < 6; z++) {
-            block.addVertices(primitiveBuilder,z,size,block.getDefaultState(),new BlockPos(0,0,0),0,0);
+        if(item.itemProperties.dynamicModel || item.vao == -1) {
+            PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
+            for (int z = 0; z < 6; z++) {
+                block.addVertices(primitiveBuilder, z, size, block.getDefaultState(), new BlockPos(0, 0, 0), 0, 0);
+            }
+            item.vertexCount = primitiveBuilder.indices.size();
+            item.vao = VAOManager.createVAO(primitiveBuilder);
         }
-        int verticesCount = primitiveBuilder.indices.size();
-        int vao = VAOManager.createVAO(primitiveBuilder);
         matrixStack.push();
-        GL30.glBindVertexArray(vao);
+        GL30.glBindVertexArray(item.vao);
         glBindTexture(GL_TEXTURE_2D, ClientMain.getClient().texture);
         matrixStack.translate(x + size / 3f,y + size / 1.3f,0);
         matrixStack.rotate(0.785f,new Vector3f(0.5f,-1,0));
@@ -50,9 +55,11 @@ public class Renderer {
         matrixStack.rotate(3.1415f,new Vector3f(0,0,1));
         matrixStack.translate(0,0 ,-size * 2);
         matrixStack.applyTransformation(ClientMain.getClient().shaderManager.colorShader);
-        glDrawElements(GL_TRIANGLES, verticesCount,GL_UNSIGNED_INT,0);
+        glDrawElements(GL_TRIANGLES, item.vertexCount,GL_UNSIGNED_INT,0);
         matrixStack.pop();
-        VAOManager.destroyBuffer(vao);
+        if(item.itemProperties.dynamicModel) {
+            VAOManager.destroyBuffer(item.vao);
+        }
         glEnable(GL_DEPTH_TEST);
     }
 

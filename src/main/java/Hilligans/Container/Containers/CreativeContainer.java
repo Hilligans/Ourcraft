@@ -64,7 +64,7 @@ public class CreativeContainer extends Container {
         Inventory inventory = new Inventory(Math.max(Items.ITEMS.size() ,54));
         int x = 0;
         for(Item item : Items.ITEMS) {
-            if(item instanceof BlockItem && !((BlockItem) item).block.blockProperties.airBlock) {
+            if(!(item instanceof BlockItem) || !((BlockItem) item).block.blockProperties.airBlock) {
                 inventory.setItem(x, new ItemStack(item, (byte) 1));
                 x++;
             }

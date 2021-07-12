@@ -8,7 +8,9 @@ import Hilligans.ClientMain;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Data.Primitives.FloatList;
 import Hilligans.Data.Primitives.IntList;
+import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.opengl.GL30;
 
 import java.nio.IntBuffer;
@@ -43,6 +45,12 @@ public class PrimitiveBuilder {
         size++;
     }
 
+    public void addMinus(float... floats) {
+        count += floats.length;
+        vertices.add(floats);
+        size++;
+    }
+
     public void add(float[] vertices, int[] indices) {
         count += vertices.length;
         this.vertices.add(vertices);
@@ -53,6 +61,23 @@ public class PrimitiveBuilder {
     public void addQuad(float... vertices) {
         int count = getVerticesCount();
         this.indices.add(count,count + 1, count + 2,count + 3, count + 2, count + 1);
+        this.vertices.add(vertices);
+        size+= 4;
+    }
+
+    public void addQuadIndices() {
+        int count = getVerticesCount();
+        this.indices.add(count,count + 1, count + 2,count + 3, count + 2, count + 1);
+    }
+
+    public void addQuadIndicesInverse() {
+        int count = getVerticesCount();
+        this.indices.add(count,count + 2, count + 1,count + 3, count + 1, count + 2);
+    }
+
+    public void addQuadInverse(float... vertices) {
+        int count = getVerticesCount();
+        this.indices.add(count,count + 2, count + 1,count + 3, count + 1, count + 2);
         this.vertices.add(vertices);
         size+= 4;
     }
@@ -206,6 +231,30 @@ public class PrimitiveBuilder {
         matrixStack.pop();
         glDeleteVertexArrays(VAO);
     }
+
+    public void rotate(float degrees, Vector3f vector) {
+        rotate(degrees,vector,0);
+    }
+
+    public void rotate(float degrees, Vector3f vector, int startPos) {
+        Matrix3f matrix3f = new Matrix3f(1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f);
+        matrix3f.rotate(degrees,vector);
+        for(int x = startPos; x < vertices.size(); x+=shader.shaderElementCount) {
+            Vector3f vector3f = new Vector3f(vertices.elementData[x],vertices.elementData[x] + 1, vertices.elementData[x] + 2).mul(matrix3f);
+            vertices.elementData[x] = vector3f.x;
+            vertices.elementData[x + 1] = vector3f.y;
+            vertices.elementData[x + 2] = vector3f.z;
+        }
+    }
+
+    public void translate(float x, float y, float z, int startPos) {
+        for(int i = startPos; i < vertices.size(); i+=shader.shaderElementCount) {
+            vertices.elementData[i] += x;
+            vertices.elementData[i + 1] += y;
+            vertices.elementData[i + 2] += z;
+        }
+    }
+
 
     public void applyTransformation(Matrix4f matrix4f, int shaderId, String name) {
         int trans = glGetUniformLocation(shaderId, name);

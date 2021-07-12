@@ -4,6 +4,11 @@ import Hilligans.Client.*;
 import Hilligans.Data.Other.ObjFile;
 import Hilligans.WorldSave.WorldLoader;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+
 public class ClientMain {
 
     public static Client client;
@@ -15,12 +20,6 @@ public class ClientMain {
 
 
     public static void main(String[] args) {
-        try {
-           // System.out.println(new ObjFile(WorldLoader.readString("/Models/Blocks/3d_printer.obj")).toBlockModel().toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
 
         client = new Client();
         client.startClient();
@@ -41,4 +40,7 @@ public class ClientMain {
     public static int getWindowY() {
         return client == null ? 0 : client.windowY;
     }
+
+
+
 }

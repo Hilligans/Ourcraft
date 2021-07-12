@@ -162,7 +162,7 @@ public class Block {
     }
 
     public void renderItem(MatrixStack matrixStack, int x, int y, int size, ItemStack itemStack) {
-        Renderer.renderBlockItem(matrixStack,x,y,size,this);
+        Renderer.renderBlockItem(matrixStack,x,y,size,this, itemStack);
     }
 
     public DataProvider getDataProvider() {

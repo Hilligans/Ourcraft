@@ -2,7 +2,6 @@ package Hilligans.ModHandler.Content;
 
 import Hilligans.Block.Block;
 import Hilligans.Client.Audio.SoundBuffer;
-import Hilligans.Client.Rendering.Model;
 import Hilligans.Client.Rendering.NewRenderer.BlockModel;
 import Hilligans.Client.Rendering.NewRenderer.IModel;
 import Hilligans.Client.Rendering.Texture;
@@ -17,7 +16,6 @@ import Hilligans.Util.ByteArray;
 import Hilligans.Util.Settings;
 import Hilligans.Util.Util;
 import Hilligans.WorldSave.WorldLoader;
-import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -171,7 +169,7 @@ public class ModContent {
         byteArray.writeInt(blocks.size());
         for(Block block : blocks) {
             byteArray.writeString(block.name);
-            byteArray.writeString(block.blockProperties.getJsonObject().toString());
+            byteArray.writeString(block.blockProperties.write().toString());
             byteArray.writeStrings(block.blockProperties.blockTextureManager.getTextures());
         }
         byteArray.writeInt(items.size());

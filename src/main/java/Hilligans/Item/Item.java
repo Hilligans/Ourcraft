@@ -1,11 +1,22 @@
 package Hilligans.Item;
 
 import Hilligans.Client.MatrixStack;
+import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
+import Hilligans.Client.Rendering.World.Managers.ShaderManager;
+import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.Client.Rendering.World.StringRenderer;
+import Hilligans.ClientMain;
+import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.ItemProperties;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Ourcraft;
+import Hilligans.Util.Settings;
 import Hilligans.World.World;
+import org.joml.Vector3f;
+import org.lwjgl.opengl.GL30;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.glUseProgram;
 
 public class Item {
 
@@ -13,6 +24,9 @@ public class Item {
     public ItemProperties itemProperties;
     public int id;
     public String modID;
+
+    public int vao = -1;
+    public int vertexCount = -1;
 
     public Item(String name, ItemProperties itemProperties) {
         this.name = name;
@@ -26,7 +40,77 @@ public class Item {
         this.modID = modID;
     }
 
-    public void render(MatrixStack matrixStack,int x, int y, int size, ItemStack itemStack) {}
+    public void generateTextures() {
+        if(itemProperties.itemTextureManager != null) {
+            itemProperties.itemTextureManager.generate();
+        }
+    }
+
+    public void render(MatrixStack matrixStack,int x, int y, int size, ItemStack itemStack) {
+        size *= 2;
+        size -= Settings.guiSize * 2;
+        x += Settings.guiSize;
+        y += Settings.guiSize;
+        glUseProgram(ClientMain.getClient().shaderManager.colorShader);
+        glDisable(GL_DEPTH_TEST);
+        if(itemProperties.dynamicModel || vao == -1) {
+            PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
+            addData(primitiveBuilder, size);
+            vertexCount = primitiveBuilder.indices.size();
+            vao = VAOManager.createVAO(primitiveBuilder);
+        }
+        matrixStack.push();
+        GL30.glBindVertexArray(vao);
+        glBindTexture(GL_TEXTURE_2D, ClientMain.getClient().texture);
+
+        matrixStack.translate(x,y,0);
+     //   matrixStack.rotate((float) Math.toRadians(45),new Vector3f(0,1,0));
+        matrixStack.applyTransformation(ClientMain.getClient().shaderManager.colorShader);
+        glDrawElements(GL_TRIANGLES, vertexCount,GL_UNSIGNED_INT,0);
+        matrixStack.pop();
+        if(itemProperties.dynamicModel) {
+            VAOManager.destroyBuffer(vao);
+        }
+        glEnable(GL_DEPTH_TEST);
+        drawString(matrixStack,x - size / 2,y,size/2,itemStack.count);
+    }
+
+    public void renderHolding(MatrixStack matrixStack, int size, ItemStack itemStack) {
+        int x = ClientMain.getWindowX() / 16 * 12;
+        int y = ClientMain.getWindowY() / 16 * 12;
+
+        size *= 2;
+        size -= Settings.guiSize * 2;
+        x += Settings.guiSize;
+        y += Settings.guiSize;
+        glUseProgram(ClientMain.getClient().shaderManager.colorShader);
+        glDisable(GL_DEPTH_TEST);
+        if(itemProperties.dynamicModel || vao == -1) {
+            PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
+            addData(primitiveBuilder, size);
+            vertexCount = primitiveBuilder.indices.size();
+            vao = VAOManager.createVAO(primitiveBuilder);
+        }
+        matrixStack.push();
+        GL30.glBindVertexArray(vao);
+        glBindTexture(GL_TEXTURE_2D, ClientMain.getClient().texture);
+
+        matrixStack.translate(x,y,-10);
+        matrixStack.rotate((float) Math.toRadians(ClientMain.getClient().renderTime / 5),new Vector3f(0,1,0));
+        matrixStack.applyTransformation(ClientMain.getClient().shaderManager.colorShader);
+        matrixStack.translate(0,0,-5);
+        glDrawElements(GL_TRIANGLES, vertexCount,GL_UNSIGNED_INT,0);
+        matrixStack.pop();
+        if(itemProperties.dynamicModel) {
+            VAOManager.destroyBuffer(vao);
+        }
+        glEnable(GL_DEPTH_TEST);
+        drawString(matrixStack,x - size / 2,y,size/2,itemStack.count);
+    }
+
+    public void addData(PrimitiveBuilder primitiveBuilder, float size) {
+        itemProperties.itemModel.addData(primitiveBuilder,itemProperties.itemTextureManager,0,size,null,0,0);
+    }
 
     public boolean onActivate(World world, PlayerEntity playerEntity) {
         return true;

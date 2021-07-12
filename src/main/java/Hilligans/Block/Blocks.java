@@ -3,6 +3,8 @@ package Hilligans.Block;
 import Hilligans.Block.BlockTypes.*;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.Data.Other.BlockProperties;
+import Hilligans.Item.Item;
+import Hilligans.Item.Items;
 import Hilligans.ModHandler.Content.ModContent;
 import Hilligans.Ourcraft;
 import Hilligans.Util.Settings;
@@ -20,7 +22,6 @@ public class Blocks {
 
     public static void registerBlock(Block block) {
         MAPPED_BLOCKS.put(block.getName(),block);
-      //  System.out.println(BLOCKS.size() + " BlockID " + block.id);
         BLOCKS.add(block);
     }
 
@@ -138,6 +139,9 @@ public class Blocks {
         if(!Settings.isServer) {
             for (Block block : BLOCKS) {
                 block.generateTextures();
+            }
+            for(Item item : Items.ITEMS) {
+                item.generateTextures();
             }
         }
     }

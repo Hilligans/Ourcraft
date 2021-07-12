@@ -2,6 +2,9 @@ package Hilligans.Data.Other;
 
 import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
+import Hilligans.Client.Rendering.ItemModel;
+import Hilligans.Client.Rendering.NewRenderer.IModel;
+import Hilligans.Client.Rendering.World.Managers.ItemTextureManager;
 import Hilligans.Item.BlockItem;
 import Hilligans.Item.Item;
 import Hilligans.ModHandler.Content.ModContent;
@@ -10,7 +13,10 @@ import org.json.JSONObject;
 public class ItemProperties {
 
     public boolean serverSide = false;
+    public boolean dynamicModel = false;
     public String block;
+    public IModel itemModel;
+    public ItemTextureManager itemTextureManager;
 
     public ItemProperties serverSide(boolean val) {
         serverSide = val;
@@ -22,6 +28,17 @@ public class ItemProperties {
         return this;
     }
 
+    public ItemProperties addModel(String model) {
+        itemModel = new ItemModel(model,"");
+        itemTextureManager = new ItemTextureManager(model);
+        return this;
+    }
+
+    public ItemProperties dynamicModel() {
+        dynamicModel = true;
+        return this;
+    }
+
     public static ItemProperties loadProperties(JSONObject jsonObject) {
         ItemProperties itemProperties = new ItemProperties();
         if(jsonObject.has("properties")) {
@@ -29,6 +46,7 @@ public class ItemProperties {
             if(properties.has("block")) {
                 itemProperties.block = properties.getString("block");
             }
+            itemProperties.dynamicModel = properties.has("dynamicModel") && properties.getBoolean("dynamicModel");
         }
         return itemProperties;
     }

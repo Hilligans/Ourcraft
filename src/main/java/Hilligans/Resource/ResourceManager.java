@@ -2,12 +2,14 @@ package Hilligans.Resource;
 
 import Hilligans.Client.Lang.Language;
 import Hilligans.Client.Lang.Languages;
+import Hilligans.Client.Rendering.ClientUtil;
 import Hilligans.Client.Rendering.NewRenderer.IModel;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.ClientMain;
 import Hilligans.Data.Primitives.TripleTypeWrapper;
 import Hilligans.ModHandler.Content.ModContent;
 import Hilligans.Ourcraft;
+import Hilligans.Util.Settings;
 import Hilligans.WorldSave.WorldLoader;
 
 import javax.imageio.ImageIO;
@@ -59,6 +61,14 @@ public class ResourceManager {
         return null;
     }
 
+    public int getColor(String name) {
+        ArrayList<Image> images = textures.get(name);
+        if(images != null) {
+            return images.get(0).color;
+        }
+        return 0;
+    }
+
     public void loadTexture(String path, String source,  String name) {
         BufferedImage image = createFlipped(loadImage(path,source));;
         ArrayList<Image> images = textures.computeIfAbsent(name,(T) -> new ArrayList<Image>());
@@ -106,10 +116,31 @@ public class ResourceManager {
         public String name;
         public String source;
         public BufferedImage bufferedImage;
+        public int color = -1;
 
         public Image(String source, BufferedImage bufferedImage) {
             this.source = source;
             this.bufferedImage = bufferedImage;
+            if(!Settings.isServer) {
+                ClientUtil.randomExecutor.submit(() -> {
+                    long r = 0;
+                    long g = 0;
+                    long b = 0;
+                    int size = 0;
+                    for (int x = 0; x < bufferedImage.getWidth(); x++) {
+                        for (int y = 0; y < bufferedImage.getHeight(); y++) {
+                            int color = bufferedImage.getRGB(x, y);
+                            if(((color >> 24) & 0xFF) != 0) {
+                                r += (color >> 16) & 0xFF;
+                                g += (color >> 8) & 0xFF;
+                                b += (color) & 0xFF;
+                                size++;
+                            }
+                        }
+                    }
+                    color = new Color((int)(r / size), (int)(g / size), (int)(b / size)).getRGB();
+                });
+            }
         }
     }
 

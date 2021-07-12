@@ -18,6 +18,7 @@ public class Textures {
     public static final Texture CHEST = new Texture("GUI/chest.png");
     public static final Texture CREATIVE_INVENTORY = new Texture("GUI/creative_inventory.png");
     public static final Texture CURSOR = new Texture("cursor.png");
+    public static final Texture EMPTY_CHUNK = new Texture("GUI/empty_chunk.png");
 
 
     public static final Texture FOLDER = new Texture("GUI/folder.png");

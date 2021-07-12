@@ -2,6 +2,7 @@ package Hilligans;
 
 import Hilligans.Block.Blocks;
 import Hilligans.Client.Rendering.Widgets.Widget;
+import Hilligans.Item.Items;
 import Hilligans.Server.MultiPlayerServer;
 import Hilligans.Tag.Tag;
 import Hilligans.Util.Profiler;
@@ -25,6 +26,7 @@ public class ServerMain {
         Tag.register();
         Blocks.generateTextures();
         Widget.register();
+        Items.register();
 
         Ourcraft.MOD_LOADER.loadDefaultMods();
         ServerWorld world = new ServerWorld();

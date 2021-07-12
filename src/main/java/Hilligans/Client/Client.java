@@ -6,10 +6,12 @@ import Hilligans.Client.Key.KeyPress;
 import Hilligans.Client.Lang.Languages;
 import Hilligans.Client.Mouse.MouseHandler;
 import Hilligans.Client.Rendering.*;
+import Hilligans.Client.Rendering.MiniMap.MapChunk;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.CreativeInventoryScreen;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
 import Hilligans.Client.Rendering.Screens.EscapeScreen;
 import Hilligans.Client.Rendering.Screens.JoinScreen;
+import Hilligans.Client.Rendering.Screens.MiniMapScreen;
 import Hilligans.Client.Rendering.Widgets.Widget;
 import Hilligans.Client.Rendering.World.Managers.ShaderManager;
 import Hilligans.Client.Rendering.World.Managers.VAOManager;
@@ -24,6 +26,7 @@ import Hilligans.Data.Other.PlayerList;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Item.ItemStack;
+import Hilligans.Item.Items;
 import Hilligans.ModHandler.Events.Client.GLInitEvent;
 import Hilligans.ModHandler.Events.Client.OpenScreenEvent;
 import Hilligans.ModHandler.Events.Client.RenderEndEvent;
@@ -65,7 +68,7 @@ public class Client {
 
     public int playerId;
 
-    public int windowX = 1600;
+    public int  windowX = 1600;
     public int windowY = 800;
     public boolean joinServer = true;
     public boolean valid = false;
@@ -149,6 +152,7 @@ public class Client {
         Entity.register();
         Blocks.register();
         Sounds.SOUNDS.size();
+        Items.register();
     }
 
     public void createGL() {
@@ -236,9 +240,10 @@ public class Client {
 
         if(renderWorld && !Ourcraft.REBUILDING.get()) {
             rendering = true;
-            clientWorld.tick();
-            clientWorld.render(matrixStack);
-
+          //  if(screen == null || screen.renderWorld()) {
+                clientWorld.tick();
+                clientWorld.render(matrixStack);
+         //   }
 
 /*
             PrimitiveBuilder builder = new PrimitiveBuilder(GL_POINTS,ShaderManager.particleShader);
@@ -299,7 +304,11 @@ public class Client {
                 StringRenderer.drawString(screenStack, "Yaw:" + Math.toDegrees(Camera.yaw),windowX/2,184,0.5f);
                 StringRenderer.drawString(screenStack, "Sounds:" + soundEngine.sounds.size(),windowX/2,213,0.5f);
             }
-
+            ItemStack stack = playerData.inventory.getItem(playerData.handSlot);
+            if(stack != null && stack.item != null) {
+                int width = (int) (32 * Settings.guiSize);
+                stack.item.renderHolding(screenStack,width,stack);
+            }
 
             InventoryScreen.drawHotbar(screenStack);
             ChatWindow.render1(screenStack);
@@ -316,6 +325,10 @@ public class Client {
                     playerList.render(screenStack);
                 }
             }
+            int s = 200;
+            BlockPos blockPos = new BlockPos(Camera.renderPos);
+
+           // clientWorld.miniMap.draw(screenStack,(int)blockPos.getChunkX(), (int) blockPos.getChunkZ(),windowX - s,0,s,s);
         }
         Ourcraft.EVENT_BUS.postEvent(new RenderEndEvent(matrixStack,screenStack,this));
 
@@ -466,6 +479,13 @@ public class Client {
                 screenShot = true;
             }
         }, GLFW_KEY_F2);
+
+        KeyHandler.register(new KeyPress() {
+            @Override
+            public void onPress() {
+                openScreen(new MiniMapScreen(clientWorld.miniMap));
+            }
+        }, GLFW_KEY_K);
     }
 
     public void createCallbacks() {
@@ -529,6 +549,8 @@ public class Client {
                 }
             }
         });
+
+
     }
 
     static long timeSinceLastDraw = 0;

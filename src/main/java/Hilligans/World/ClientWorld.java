@@ -5,6 +5,8 @@ package Hilligans.World;
 import Hilligans.Client.Audio.SoundBuffer;
 import Hilligans.Client.Audio.Sounds;
 import Hilligans.Client.Rendering.ClientUtil;
+import Hilligans.Client.Rendering.MiniMap.MapChunk;
+import Hilligans.Client.Rendering.MiniMap.MiniMap;
 import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.Data.Other.BlockState;
@@ -14,6 +16,7 @@ import Hilligans.ClientMain;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Entity.Entity;
 import Hilligans.Util.Settings;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import org.joml.FrustumIntersection;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
@@ -30,6 +33,8 @@ public class ClientWorld extends World {
     public ConcurrentLinkedQueue<SubChunk> queuedChunks = new ConcurrentLinkedQueue<>();
 
     public ConcurrentLinkedQueue<DoubleTypeWrapper<PrimitiveBuilder, SubChunk>> asyncChunkQueue = new ConcurrentLinkedQueue<>();
+
+    public MiniMap miniMap = new MiniMap(this);
 
     public ClientWorld() {
         getChunk(0,0);
@@ -79,6 +84,13 @@ public class ClientWorld extends World {
         }
 
     }
+
+
+    public void setChunk(Chunk chunk) {
+        super.setChunk(chunk);
+        miniMap.update(chunk.x,chunk.z);
+    }
+
 
 
     int purgeTime = 0;

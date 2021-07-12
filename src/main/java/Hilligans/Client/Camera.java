@@ -289,7 +289,7 @@ public class Camera {
         if(thirdPerson) {
               view.translate(0,0,-thirdPersonScroll);
         }
-        projection.perspective((float) Math.toRadians(fov), (float) ClientMain.getWindowX() / ClientMain.getWindowY(),0.1f,10000.0f);
+        projection.perspective((float) Math.toRadians(fov), (float) ClientMain.getWindowX() / ClientMain.getWindowY(),0.1f,1000000.0f);
         matrix4d.mul(projection).mul(view);
         matrix4d.lookAt(Camera.duplicate().add((float)(Math.cos(Camera.yaw) * Math.cos(Camera.pitch)),(float)(Math.sin(Camera.pitch)),(float)(Math.sin(Camera.yaw) * Math.cos(Camera.pitch))),Camera.duplicate(), cameraUp);
     }
@@ -345,7 +345,7 @@ public class Camera {
 
     public static MatrixStack getScreenStack() {
         Matrix4d matrix4d = new Matrix4d();
-        matrix4d.ortho(0,ClientMain.getWindowX(),ClientMain.getWindowY(),0,-1,200);
+        matrix4d.ortho(0,ClientMain.getWindowX(),ClientMain.getWindowY(),0,-1,20000);
         return new MatrixStack(matrix4d);
     }
 

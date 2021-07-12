@@ -71,6 +71,11 @@ public class CompoundTag extends Tag {
         return this;
     }
 
+    public CompoundTag putBoolean(String id, boolean val) {
+        putTag(id, new ByteTag((byte) (val ? 1 : 0)));
+        return this;
+    }
+
     public Tag getTag(String name) {
         return tags.get(name);
     }
@@ -93,6 +98,10 @@ public class CompoundTag extends Tag {
 
     public LongTag getLong(String id) {
         return (LongTag)getTag(id);
+    }
+
+    public boolean getBoolean(String id) {
+        return ((ByteTag)getTag(id)).val == 1;
     }
 
     public FullStringTag getFullString(String id) {

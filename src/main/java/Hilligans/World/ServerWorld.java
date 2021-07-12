@@ -115,6 +115,7 @@ public class ServerWorld extends World {
                                        break;
                                    }
                                }
+                               chunk.needsSaving = false;
                                if (!inBounds) {
                                    removeChunk(chunk.x, chunk.z);
                                }
@@ -134,6 +135,7 @@ public class ServerWorld extends World {
                                    break;
                                }
                            }
+                           chunk.needsSaving = false;
                            if (!inBounds) {
                                removeChunk(chunk.x, chunk.z);
                            }

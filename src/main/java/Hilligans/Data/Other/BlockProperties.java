@@ -16,6 +16,9 @@ public class BlockProperties {
     public boolean transparent = false;
     public boolean canWalkThrough = false;
     public boolean airBlock = false;
+    public boolean flammable = false;
+    public boolean dynamicItemModel = false;
+    public int mapColor = 0;
     public String placementMode = "default";
     public int blockStateSize = 0;
     public String texture = "";
@@ -73,7 +76,12 @@ public class BlockProperties {
         return this;
     }
 
-    public JSONObject getJsonObject() {
+    public BlockProperties mapColor(int color) {
+        this.mapColor = color;
+        return this;
+    }
+
+    public JSONObject write() {
         JSONObject jsonObject = new JSONObject();
         JSONObject properties = new JSONObject();
         JSONObject model = new JSONObject();
@@ -91,46 +99,39 @@ public class BlockProperties {
         properties.put("transparent",transparent);
         properties.put("placementMode",placementMode);
         properties.put("blockStateByteCount",blockStateSize);
+        properties.put("mapColor",mapColor);
+        properties.put("flammable",flammable);
+        properties.put("dynamicItemModel",dynamicItemModel);
 
         model.put("modelName",blockShape.path);
 
         return jsonObject;
     }
 
-    public static BlockProperties loadProperties(String path) {
-        BlockProperties blockProperties = new BlockProperties();
-        String val = WorldLoader.readString(path);
-        if(!val.equals("")) {
-            try {
-                JSONObject jsonObject = new JSONObject(val);
-                return loadProperties(jsonObject);
-            } catch (Exception ignored) {}
-        }
-        return blockProperties;
-    }
-
-    public static BlockProperties loadProperties(JSONObject jsonObject) {
-        BlockProperties blockProperties = new BlockProperties();
+    public void read(JSONObject jsonObject) {
         if (jsonObject.has("properties")) {
             JSONObject properties = jsonObject.getJSONObject("properties");
-            blockProperties.canWalkThrough(getBoolean(properties, "canWalkThrough", false));
-            blockProperties.airBlock(getBoolean(properties, "airBlock", false));
-            blockProperties.transparent(getBoolean(properties, "transparent", false));
-            blockProperties.placementMode = properties.has("placementMode") ? properties.getString("placementMode") : "default";
-            blockProperties.blockStateSize = properties.has("blockStateByteCount") ? properties.getInt("blockStateByteCount") : 0;
+            canWalkThrough(getBoolean(properties, "canWalkThrough", false));
+            airBlock(getBoolean(properties, "airBlock", false));
+            transparent(getBoolean(properties, "transparent", false));
+            flammable = getBoolean(properties,"flammable",false);
+            placementMode = properties.has("placementMode") ? properties.getString("placementMode") : "default";
+            blockStateSize = properties.has("blockStateByteCount") ? properties.getInt("blockStateByteCount") : 0;
+            mapColor = properties.has("mapColor") ? properties.getInt("mapColor") : 0;
+            dynamicItemModel = getBoolean(properties,"dynamicItemModel",false);
         }
         if (jsonObject.has("model")) {
             JSONObject model = jsonObject.getJSONObject("model");
             if (model.has("modelName")) {
                 if(model.getString("modelName").endsWith(".obj")) {
-                    blockProperties.blockShape = new BlockShape();
+                    blockShape = new BlockShape();
                     try {
-                        blockProperties.blockShape.data = new BlockModel(new ObjFile(WorldLoader.readString("/Models/Blocks/" + model.getString("modelName"))).toBlockModel().toString());
+                        blockShape.data = new BlockModel(new ObjFile(WorldLoader.readString("/Models/Blocks/" + model.getString("modelName"))).toBlockModel().toString());
                     } catch (Exception ignored) {
                         ignored.printStackTrace();
                     }
                 } else {
-                    blockProperties.blockShape = new BlockShape(model.getString("modelName"));
+                    blockShape = new BlockShape(model.getString("modelName"));
                 }
             }
             BoundingBox boundingBox;
@@ -155,7 +156,7 @@ public class BlockProperties {
             } else {
                 boundingBox = new BoundingBox(0, 0, 0, 1, 1, 1);
             }
-            blockProperties.blockShape.defaultBoundingBox = boundingBox;
+            blockShape.defaultBoundingBox = boundingBox;
 
             if (model.has("blockStates")) {
                 JSONObject blockStates = model.getJSONObject("blockStates");
@@ -165,13 +166,29 @@ public class BlockProperties {
                         JSONObject jsonObject1 = blockStates.getJSONObject(string);
                         int rotX = jsonObject1.getInt("rotX");
                         int rotY = jsonObject1.getInt("rotY");
-                        blockProperties.blockShape.putRotation(block, rotX, rotY);
+                        blockShape.putRotation(block, rotX, rotY);
                     } catch (Exception ignored) {
                     }
                 }
             }
-
         }
+    }
+
+    public static BlockProperties loadProperties(String path) {
+        BlockProperties blockProperties = new BlockProperties();
+        String val = WorldLoader.readString(path);
+        if(!val.equals("")) {
+            try {
+                JSONObject jsonObject = new JSONObject(val);
+                return loadProperties(jsonObject);
+            } catch (Exception ignored) {}
+        }
+        return blockProperties;
+    }
+
+    public static BlockProperties loadProperties(JSONObject jsonObject) {
+        BlockProperties blockProperties = new BlockProperties();
+        blockProperties.read(jsonObject);
         return blockProperties;
     }
 

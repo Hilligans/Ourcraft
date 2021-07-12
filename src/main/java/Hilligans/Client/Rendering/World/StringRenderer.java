@@ -38,7 +38,7 @@ public class StringRenderer {
     public int stringHeight = 58;
 
     public static void drawString(MatrixStack matrixStack, String string, int x, int y, float scale) {
-        instance.drawStringInternal(matrixStack,string,x,y,scale);
+        instance.drawStringInternal(matrixStack, string, x, y, scale);
     }
 
     public static void drawString(MatrixStack matrixStack, String[] strings, int x, int y, float scale) {
@@ -138,44 +138,48 @@ public class StringRenderer {
     }
 
     public void addVertices(PrimitiveBuilder primitiveBuilder, char character, int x, int y, float scale) {
-        TextureAtlas textureAtlas = textureAtlases.getOrDefault(character >> 8,null);
-        if (textureAtlas == null) {
-            return;
-        }
-        //TODO fix this
-        int id;
-        try {
-            id = idMap.get(character);
-        } catch (Exception ignored) {
-            return;
-        }
-        float minX = textureAtlas.minX(id);
-        float minY = textureAtlas.minY(id);
-        float maxX = textureAtlas.maxX(id);
-        float maxY = textureAtlas.maxY(id);
+        if(textureAtlases.containsKey(character >> 8)) {
+            TextureAtlas textureAtlas = textureAtlases.getOrDefault(character >> 8, null);
+            if (textureAtlas == null) {
+                return;
+            }
+            //TODO fix this
+            int id;
+            try {
+                id = idMap.get(character);
+            } catch (Exception ignored) {
+                return;
+            }
+            float minX = textureAtlas.minX(id);
+            float minY = textureAtlas.minY(id);
+            float maxX = textureAtlas.maxX(id);
+            float maxY = textureAtlas.maxY(id);
 
-        maxX = (maxX - minX) * (getCharWidth(character) / 64.0f) + minX;
-        maxY = (maxY - minY) * (52 / 64.0f) + minY;
+            maxX = (maxX - minX) * (getCharWidth(character) / 64.0f) + minX;
+            maxY = (maxY - minY) * (52 / 64.0f) + minY;
 
-        int width = getCharWidth(character);
-        int height = stringHeight;
-        primitiveBuilder.addQuad(x, y, 0, minX, minY, x, y + height * scale, 0, minX, maxY, x + width * scale, y, 0, maxX, minY, x + width * scale, y + height * scale, 0, maxX, maxY);
+            int width = getCharWidth(character);
+            int height = stringHeight;
+            primitiveBuilder.addQuad(x, y, 0, minX, minY, x, y + height * scale, 0, minX, maxY, x + width * scale, y, 0, maxX, minY, x + width * scale, y + height * scale, 0, maxX, maxY);
+        }
     }
 
     public void drawStringInternal(MatrixStack matrixStack, String string, int x, int y, float scale) {
         matrixStack.push();
         glDisable(GL_DEPTH_TEST);
         glUseProgram(ShaderManager.guiShader.shader);
-        IntList vals = getAtlases(string);
-        Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
-        vals.forEach((val) -> primitiveBuilders.put(val,new PrimitiveBuilder(GL_TRIANGLES,ShaderManager.guiShader)));
-        int width = 0;
-        for(int z = 0; z < string.length(); z++) {
-            PrimitiveBuilder primitiveBuilder = primitiveBuilders.get((int)string.charAt(z) >> 8);
-            addVertices(primitiveBuilder,string.charAt(z),x + width,y,scale);
-            width += getCharWidth(string.charAt(z)) * scale;
-        }
-        draw(matrixStack,vals,primitiveBuilders);
+        try {
+            IntList vals = getAtlases(string);
+            Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
+            vals.forEach((val) -> primitiveBuilders.put(val, new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.guiShader)));
+            int width = 0;
+            for (int z = 0; z < string.length(); z++) {
+                PrimitiveBuilder primitiveBuilder = primitiveBuilders.get((int) string.charAt(z) >> 8);
+                addVertices(primitiveBuilder, string.charAt(z), x + width, y, scale);
+                width += getCharWidth(string.charAt(z)) * scale;
+            }
+            draw(matrixStack, vals, primitiveBuilders);
+        } catch (Exception ignored) {}
         matrixStack.pop();
         glEnable(GL_DEPTH_TEST);
     }
@@ -192,20 +196,22 @@ public class StringRenderer {
         matrixStack.push();
         glDisable(GL_DEPTH_TEST);
         glUseProgram(ShaderManager.guiShader.shader);
-        IntList vals = getAtlases(string);
-        Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
-        vals.forEach((val) -> primitiveBuilders.put(val,new PrimitiveBuilder(GL_TRIANGLES,ShaderManager.guiShader)));
-        int width = 0;
-        for(int z = 0; z < string.length(); z++) {
-            PrimitiveBuilder primitiveBuilder = primitiveBuilders.get((int)string.charAt(z) >> 8);
-            addVertices(primitiveBuilder,string.charAt(z),x + width,y,scale);
-            width += getCharWidth(string.charAt(z)) * scale;
-        }
-        glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
-        matrixStack.applyColor();
-        matrixStack.applyTransformation();
-        Textures.BACKGROUND.drawTexture(matrixStack,x,y,width, (int) (instance.stringHeight * scale));
-        draw(matrixStack,vals,primitiveBuilders);
+        try {
+            IntList vals = getAtlases(string);
+            Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
+            vals.forEach((val) -> primitiveBuilders.put(val, new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.guiShader)));
+            int width = 0;
+            for (int z = 0; z < string.length(); z++) {
+                PrimitiveBuilder primitiveBuilder = primitiveBuilders.get((int) string.charAt(z) >> 8);
+                addVertices(primitiveBuilder, string.charAt(z), x + width, y, scale);
+                width += getCharWidth(string.charAt(z)) * scale;
+            }
+            glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
+            matrixStack.applyColor();
+            matrixStack.applyTransformation();
+            Textures.BACKGROUND.drawTexture(matrixStack, x, y, width, (int) (instance.stringHeight * scale));
+            draw(matrixStack, vals, primitiveBuilders);
+        } catch (Exception ignored) {}
         matrixStack.pop();
         glEnable(GL_DEPTH_TEST);
     }
@@ -214,6 +220,7 @@ public class StringRenderer {
         matrixStack.push();
         glDisable(GL_DEPTH_TEST);
         glUseProgram(ShaderManager.guiShader.shader);
+        try {
         IntList vals = getAtlases(string);
         Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
         vals.forEach((val) -> primitiveBuilders.put(val,new PrimitiveBuilder(GL_TRIANGLES,ShaderManager.guiShader)));
@@ -235,6 +242,7 @@ public class StringRenderer {
             primitiveBuilder.translate(ClientMain.getWindowX() / 2f - finalWidth / 2f,0,0);
             primitiveBuilder.draw(matrixStack);
         });
+        } catch (Exception ignored) {}
         matrixStack.pop();
         glEnable(GL_DEPTH_TEST);
     }
@@ -243,6 +251,7 @@ public class StringRenderer {
         matrixStack.push();
         glDisable(GL_DEPTH_TEST);
         glUseProgram(ShaderManager.guiShader.shader);
+        try {
         IntList vals = getAtlases(string);
         Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
         vals.forEach((val) -> primitiveBuilders.put(val,new PrimitiveBuilder(GL_TRIANGLES,ShaderManager.guiShader)));
@@ -264,6 +273,7 @@ public class StringRenderer {
             primitiveBuilder.translate(x - finalWidth / 2f,0,0);
             primitiveBuilder.draw(matrixStack);
         });
+        } catch (Exception ignored) {}
         matrixStack.pop();
         glEnable(GL_DEPTH_TEST);
     }

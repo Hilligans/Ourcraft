@@ -98,4 +98,8 @@ public class MatrixStack {
     public void rotate(float rot, Vector3f vector) {
         matrix4f.rotate(rot,vector);
     }
+
+    public void scale(float amount) {
+        matrix4f.scale(amount);
+    }
 }

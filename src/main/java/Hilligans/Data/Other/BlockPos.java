@@ -28,6 +28,18 @@ public class BlockPos {
         this.z = Math.round(vector3f.z);
     }
 
+    public BlockPos(Vector3d vector3d) {
+        this.x = (int)Math.round(vector3d.x);
+        this.y = (int)Math.round(vector3d.y);
+        this.z = (int)Math.round(vector3d.z);
+    }
+
+    public BlockPos(double x, double y, double z) {
+        this.x = (int)Math.round(x);
+        this.y = (int)Math.round(y);
+        this.z = (int)Math.round(z);
+    }
+
     public BlockPos add(BlockPos pos) {
         x += pos.x;
         y += pos.y;
@@ -63,6 +75,14 @@ public class BlockPos {
 
     public long getChunkPos() {
         return (long)x >> 4 & 4294967295L | ((long)z >> 4 & 4294967295L) << 32;
+    }
+
+    public long getChunkX() {
+        return x >> 4 & 4294967295L;
+    }
+
+    public long getChunkZ() {
+        return z >> 4 & 4294967295L;
     }
 
     public boolean isSubChunkValid() {

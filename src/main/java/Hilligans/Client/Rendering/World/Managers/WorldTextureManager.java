@@ -37,7 +37,7 @@ public class WorldTextureManager {
     int height = 1;
 
 
-    public static final int MAX_TEXTURE_SIZE = 256;
+    public static final int MAX_TEXTURE_SIZE = 512;
     public static final int MIN_TEXTURE_SIZE = 16;
     public static final int RATIO = MAX_TEXTURE_SIZE / MIN_TEXTURE_SIZE;
 
@@ -64,7 +64,6 @@ public class WorldTextureManager {
 
     public int loadTextureId(String path, String textureName, String source) {
         Integer id = idHashMap.get(source + ":" + textureName);
-        //System.out.println(path + ":" + textureName + ":" + source);
         if(id == null) {
             BufferedImage image = createFlipped(loadImage(path,source));
             bufferedImageHashMap.put(source + ":" + textureName,image);
@@ -267,6 +266,7 @@ public class WorldTextureManager {
         int y = id / width;
         return (float)(1 / height) * (y + 1);
     }
+    //TODO Fix nullPointerException
     public static float getMinX(int id) {
         return instance.imageMap.get(id).minX(id) / instance.width;
     }

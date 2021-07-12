@@ -2,6 +2,8 @@ package Hilligans.Client.Rendering.World.Managers;
 
 
 import Hilligans.ClientMain;
+import Hilligans.Ourcraft;
+import Hilligans.Resource.ResourceManager;
 import Hilligans.Util.Settings;
 
 import java.awt.image.BufferedImage;
@@ -18,6 +20,8 @@ public class BlockTextureManager implements TextureManager {
     public String location;
 
     public String textureSource = "";
+
+    public int[] colors = new int[6];
 
     public void addString(String location) {
         this.location = location;
@@ -53,10 +57,15 @@ public class BlockTextureManager implements TextureManager {
                     textures[x] = WorldTextureManager.instance.loadTextureId("Blocks/" + textureNames[x], textureNames[x].substring(0,textureNames[x].length() - 4),textureSource);
                 }
             }
-           // if(!Settings.isServer) {
-                //texture = WorldTextureManager.loadAndRegisterUnflippedTexture("Blocks/" + location, textureSource);
-
-          //  }
+        }
+        if(location != null) {
+            for(int x = 0; x < 6; x++) {
+                if(textureNames != null) {
+                    colors[x] = Ourcraft.getResourceManager().getColor("Blocks/" + (textureNames[x] == null ? location : textureNames[x]));
+                } else {
+                    colors[x] = Ourcraft.getResourceManager().getColor("Blocks/" + location);
+                }
+            }
         }
     }
 
