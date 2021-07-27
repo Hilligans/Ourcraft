@@ -3,7 +3,7 @@ package Hilligans.Block.BlockTypes;
 import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BlockProperties;
-import Hilligans.Data.Other.BlockState;
+import Hilligans.Data.Other.BlockStates.BlockState;
 
 import java.util.Random;
 

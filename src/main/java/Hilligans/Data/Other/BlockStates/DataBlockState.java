@@ -1,4 +1,4 @@
-package Hilligans.Data.Other;
+package Hilligans.Data.Other.BlockStates;
 
 import Hilligans.Block.Block;
 import Hilligans.World.BlockStateDataProvider;

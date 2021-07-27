@@ -2,11 +2,11 @@ package Hilligans.Data.Other.BlockShapes;
 
 import Hilligans.Client.Rendering.NewRenderer.BlockModel;
 import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
-import Hilligans.Data.Other.BlockState;
+import Hilligans.Data.Other.BlockStates.BlockState;
 import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BoundingBox;
-import Hilligans.Data.Other.DataBlockState;
+import Hilligans.Data.Other.BlockStates.DataBlockState;
 import Hilligans.World.World;
 import org.joml.Vector3f;
 

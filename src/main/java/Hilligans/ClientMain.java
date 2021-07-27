@@ -23,6 +23,8 @@ public class ClientMain {
 
         client = new Client();
         client.startClient();
+
+
     }
 
     public static void handleArgs(String[] args) {

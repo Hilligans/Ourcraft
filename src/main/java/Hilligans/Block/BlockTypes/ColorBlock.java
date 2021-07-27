@@ -1,14 +1,10 @@
 package Hilligans.Block.BlockTypes;
 
 import Hilligans.Block.Block;
-import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BlockProperties;
-import Hilligans.Data.Other.BlockState;
-import Hilligans.Data.Other.DataBlockState;
-import Hilligans.Util.Vector5f;
+import Hilligans.Data.Other.BlockStates.BlockState;
+import Hilligans.Data.Other.BlockStates.DataBlockState;
 import Hilligans.World.DataProviders.ShortBlockState;
-
-import org.joml.Vector3f;
 
 import java.util.Random;
 

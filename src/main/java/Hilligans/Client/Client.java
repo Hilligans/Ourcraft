@@ -6,7 +6,7 @@ import Hilligans.Client.Key.KeyPress;
 import Hilligans.Client.Lang.Languages;
 import Hilligans.Client.Mouse.MouseHandler;
 import Hilligans.Client.Rendering.*;
-import Hilligans.Client.Rendering.MiniMap.MapChunk;
+import Hilligans.Client.Rendering.NewRenderer.GLRenderer;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.CreativeInventoryScreen;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
 import Hilligans.Client.Rendering.Screens.EscapeScreen;
@@ -21,7 +21,7 @@ import Hilligans.Client.Audio.*;
 import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
 import Hilligans.Data.Other.BlockPos;
-import Hilligans.Data.Other.BlockState;
+import Hilligans.Data.Other.BlockStates.BlockState;
 import Hilligans.Data.Other.PlayerList;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
@@ -103,6 +103,9 @@ public class Client {
     public Client() {}
 
     public void startClient() {
+
+
+
         register();
         Ourcraft.MOD_LOADER.loadDefaultMods();
        // Ourcraft.CONTENT_PACK.load();
@@ -210,6 +213,7 @@ public class Client {
 
     public void render() {
         glGetError();
+        GLRenderer.resetFrame();
         long currentTime = System.currentTimeMillis();
         if(currentTime - timeSinceLastDraw < drawTime) {
             return;
@@ -286,7 +290,7 @@ public class Client {
                 matrixStack.push();
                 matrixStack.translateMinusOffset(pos.x, pos.y, pos.z);
                 matrixStack.applyTransformation(shaderManager.lineShader);
-                glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, 0);
+                GLRenderer.glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, 0);
                 matrixStack.pop();
                 VAOManager.destroyBuffer(id);
             }
@@ -303,6 +307,7 @@ public class Client {
                 StringRenderer.drawString(screenStack, "Pitch:" + Math.toDegrees(Camera.pitch),windowX/2,155,0.5f);
                 StringRenderer.drawString(screenStack, "Yaw:" + Math.toDegrees(Camera.yaw),windowX/2,184,0.5f);
                 StringRenderer.drawString(screenStack, "Sounds:" + soundEngine.sounds.size(),windowX/2,213,0.5f);
+                StringRenderer.drawString(screenStack, "Render Calls:" + GLRenderer.drawCalls, windowX/2,242,0.5f);
             }
             ItemStack stack = playerData.inventory.getItem(playerData.handSlot);
             if(stack != null && stack.item != null) {

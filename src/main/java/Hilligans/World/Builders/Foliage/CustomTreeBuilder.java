@@ -3,13 +3,11 @@ package Hilligans.World.Builders.Foliage;
 import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
 import Hilligans.Data.Other.BlockPos;
-import Hilligans.Data.Other.BlockState;
 import Hilligans.Data.Other.BlockTemplate;
 import Hilligans.Data.Other.JoinedBlockTemplate;
 import Hilligans.Util.Ray;
 import Hilligans.World.Builders.SurfaceBuilder;
 import org.joml.Vector2d;
-import org.joml.Vector3d;
 
 public class CustomTreeBuilder extends SurfaceBuilder {
 

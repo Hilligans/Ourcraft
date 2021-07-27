@@ -2,15 +2,14 @@ package Hilligans.Network.Packet.Server;
 
 import Hilligans.Block.Block;
 import Hilligans.ClientMain;
-import Hilligans.Data.Other.DataBlockState;
+import Hilligans.Data.Other.BlockStates.DataBlockState;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
-import Hilligans.Tag.ShortTag;
 import Hilligans.Util.Settings;
 import Hilligans.World.Chunk;
 import Hilligans.Block.Blocks;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
-import Hilligans.Data.Other.BlockState;
+import Hilligans.Data.Other.BlockStates.BlockState;
 import it.unimi.dsi.fastutil.shorts.Short2ByteOpenHashMap;
 
 import java.util.ArrayList;

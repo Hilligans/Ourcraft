@@ -1,6 +1,6 @@
 package Hilligans.Network.Packet.Client;
 
-import Hilligans.Data.Other.BlockState;
+import Hilligans.Data.Other.BlockStates.BlockState;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Item.ItemStack;
 import Hilligans.Network.PacketBase;

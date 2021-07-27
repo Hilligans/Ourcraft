@@ -2,6 +2,9 @@ package Hilligans.Data.Other;
 
 import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
+import Hilligans.Client.Rendering.World.Managers.ShaderManager;
+import Hilligans.Data.Other.BlockStates.BlockState;
+import Hilligans.Data.Other.BlockStates.DataBlockState;
 import Hilligans.Tag.CompoundTag;
 import Hilligans.Tag.IntegerTag;
 import Hilligans.Tag.ListTag;
@@ -26,7 +29,6 @@ public class Structure {
     }
 
     public void placeInWorld(World world, BlockPos pos, int rotation) {
-
     }
 
 

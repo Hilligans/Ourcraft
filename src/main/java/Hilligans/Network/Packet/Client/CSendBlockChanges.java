@@ -4,13 +4,12 @@ import Hilligans.Block.Block;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Entity.Entities.ItemEntity;
 import Hilligans.Entity.Entity;
-import Hilligans.Network.Packet.Server.SSendBlockChanges;
 import Hilligans.Block.Blocks;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.ServerMain;
-import Hilligans.Data.Other.BlockState;
+import Hilligans.Data.Other.BlockStates.BlockState;
 
 public class CSendBlockChanges extends PacketBase {
 

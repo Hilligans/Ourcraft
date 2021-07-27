@@ -31,7 +31,7 @@ public class PrimitiveBuilder {
     public int size = 0;
     public int count = 0;
 
-    Shader shader;
+    public Shader shader;
 
     public PrimitiveBuilder(int type, Shader shader) {
         this.type = type;
@@ -57,6 +57,25 @@ public class PrimitiveBuilder {
         this.indices.add(indices);
         size++;
     }
+
+    public void add(int[] indices) {
+        int count = sizeVal;
+        for(int index : indices) {
+            this.indices.add(index + count);
+        }
+    }
+
+    public void addLargest(int[] indices) {
+        int val = largest;
+        for(int index : indices) {
+            this.indices.add(index + val);
+            if(index > largest) {
+                largest = index;
+            }
+        }
+    }
+    public int sizeVal = 0;
+    int largest = 0;
 
     public void addQuad(float... vertices) {
         int count = getVerticesCount();

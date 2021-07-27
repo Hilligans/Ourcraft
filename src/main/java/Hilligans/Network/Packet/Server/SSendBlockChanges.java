@@ -1,10 +1,10 @@
 package Hilligans.Network.Packet.Server;
 
-import Hilligans.Data.Other.BlockState;
+import Hilligans.Data.Other.BlockStates.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.ClientMain;
 import Hilligans.Data.Other.BlockPos;
-import Hilligans.Data.Other.DataBlockState;
+import Hilligans.Data.Other.BlockStates.DataBlockState;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.World.ClientWorld;

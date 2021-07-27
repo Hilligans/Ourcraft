@@ -1,8 +1,7 @@
-package Hilligans.Data.Other;
+package Hilligans.Data.Other.BlockStates;
 
 import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
-import Hilligans.World.BlockStateDataProvider;
 
 import java.util.Objects;
 

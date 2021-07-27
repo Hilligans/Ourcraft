@@ -5,28 +5,35 @@ package Hilligans.World;
 import Hilligans.Client.Audio.SoundBuffer;
 import Hilligans.Client.Audio.Sounds;
 import Hilligans.Client.Rendering.ClientUtil;
-import Hilligans.Client.Rendering.MiniMap.MapChunk;
 import Hilligans.Client.Rendering.MiniMap.MiniMap;
 import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
+import Hilligans.Client.Rendering.NewRenderer.Shader;
+import Hilligans.Client.Rendering.World.Managers.ShaderManager;
 import Hilligans.Client.Rendering.World.Managers.VAOManager;
-import Hilligans.Data.Other.BlockState;
+import Hilligans.Data.Other.BlockStates.BlockState;
 import Hilligans.Client.Camera;
 import Hilligans.Client.MatrixStack;
 import Hilligans.ClientMain;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Entity.Entity;
 import Hilligans.Util.Settings;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import org.joml.FrustumIntersection;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
+import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL31;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.glUseProgram;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import static org.lwjgl.opengl.GL31C.GL_COPY_READ_BUFFER;
+import static org.lwjgl.opengl.GL31C.GL_COPY_WRITE_BUFFER;
 
 public class ClientWorld extends World {
 

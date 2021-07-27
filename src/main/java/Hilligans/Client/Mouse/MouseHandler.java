@@ -3,15 +3,12 @@ package Hilligans.Client.Mouse;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.Camera;
 import Hilligans.Client.Client;
-import Hilligans.ClientMain;
 import Hilligans.Data.Other.BlockPos;
-import Hilligans.Data.Other.BlockState;
+import Hilligans.Data.Other.BlockStates.BlockState;
 import Hilligans.Item.ItemStack;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CSendBlockChanges;
 import Hilligans.Network.Packet.Client.CUseItem;
-import org.joml.Vector2i;
-import org.lwjgl.BufferUtils;
 
 import java.nio.DoubleBuffer;
 

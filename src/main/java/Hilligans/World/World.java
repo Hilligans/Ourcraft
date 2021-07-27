@@ -1,7 +1,7 @@
 package Hilligans.World;
 
 import Hilligans.Block.Block;
-import Hilligans.Data.Other.BlockState;
+import Hilligans.Data.Other.BlockStates.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BoundingBox;
@@ -12,8 +12,6 @@ import Hilligans.Item.ItemStack;
 import Hilligans.Network.ClientNetworkHandler;
 import Hilligans.Network.Packet.Client.CRequestChunkPacket;
 import Hilligans.Network.Packet.Server.SSendBlockChanges;
-import Hilligans.Network.ServerNetworkHandler;
-import Hilligans.Server.MultiPlayerServer;
 import Hilligans.ServerMain;
 import Hilligans.Util.*;
 import Hilligans.Util.Noises.*;

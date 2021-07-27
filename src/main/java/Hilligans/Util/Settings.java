@@ -12,7 +12,7 @@ public class Settings {
 
     public static final int gameVersion = 3;
 
-    public static final int maxFps = 200;
+    public static final int maxFps = 1000;
 
     public static final boolean renderSameTransparent = true;
     public static boolean renderTransparency = true;
@@ -33,7 +33,9 @@ public class Settings {
 
     public static int tickingDistance = 5;
 
-    public static boolean autoSave = true;
+    public static boolean autoSave = false;
+
+    public static boolean optimizeMesh = true;
 
 
 

@@ -3,24 +3,18 @@ package Hilligans.Item;
 import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
-import Hilligans.Client.Rendering.World.Managers.ShaderManager;
-import Hilligans.Data.Other.BlockState;
+import Hilligans.Data.Other.BlockStates.BlockState;
 import Hilligans.Client.Camera;
 import Hilligans.Client.MatrixStack;
-import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.ItemProperties;
 import Hilligans.Data.Other.RayResult;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Entity.LivingEntity;
-import Hilligans.Network.Packet.Server.SSendBlockChanges;
-import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.World.World;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
-
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 
 public class BlockItem extends Item {
 

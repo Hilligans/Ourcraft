@@ -4,6 +4,7 @@ import Hilligans.Client.Rendering.NewRenderer.Shader;
 import Hilligans.Util.Util;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL32;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -13,6 +14,7 @@ import java.util.Arrays;
 
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL20.glDeleteShader;
+import static org.lwjgl.opengl.GL31.glCopyBufferSubData;
 import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
 public class ShaderManager {
@@ -60,6 +62,7 @@ public class ShaderManager {
     public static int registerShader(String vertexShader, String fragmentShader) {
         int vertex =  GL30.glCreateShader(GL30.GL_VERTEX_SHADER);
         int fragment = GL30.glCreateShader(GL20.GL_FRAGMENT_SHADER);
+
         glShaderSource(vertex, vertexShader);
         glShaderSource(fragment,fragmentShader);
         glCompileShader(vertex);
@@ -80,6 +83,7 @@ public class ShaderManager {
         glDeleteShader(vertex);
         glDeleteShader(fragment);
         //System.out.println(shaderProgram);
+
         return shaderProgram;
     }
 

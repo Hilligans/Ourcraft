@@ -36,7 +36,7 @@ public class Shader {
         return this;
     }
 
-    static class ShaderElement {
+    public static class ShaderElement {
 
         public int type;
         public int count;

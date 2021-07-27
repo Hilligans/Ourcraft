@@ -3,7 +3,7 @@ package Hilligans.Data.Other.BlockShapes;
 import Hilligans.Block.Block;
 import Hilligans.Client.Rendering.NewRenderer.BlockModel;
 import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
-import Hilligans.Data.Other.BlockState;
+import Hilligans.Data.Other.BlockStates.BlockState;
 import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
 import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.Data.Other.BlockPos;

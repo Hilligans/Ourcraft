@@ -1,26 +1,35 @@
 package Hilligans.World;
 
 import Hilligans.Biome.Biome;
-import Hilligans.Block.Block;
-import Hilligans.Client.Camera;
-import Hilligans.Data.Other.BlockState;
+import Hilligans.Client.Rendering.NewRenderer.GLRenderer;
+import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
+import Hilligans.Client.Rendering.NewRenderer.Shader;
+import Hilligans.Client.Rendering.World.Managers.ShaderManager;
+import Hilligans.Client.Rendering.World.Managers.VAOManager;
+import Hilligans.Data.Other.BlockStates.BlockState;
 import Hilligans.Block.Blocks;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Entity.Entity;
-import Hilligans.ServerMain;
 import Hilligans.Util.Settings;
 import Hilligans.World.Builders.WorldBuilder;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.shorts.Short2IntArrayMap;
 import it.unimi.dsi.fastutil.shorts.Short2IntOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
+import org.lwjgl.opengl.*;
+import org.lwjgl.opengles.GLES31;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 
-import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL15.glGetBufferSubData;
+import static org.lwjgl.opengl.GL31C.GL_COPY_READ_BUFFER;
+import static org.lwjgl.opengl.GL31C.GL_COPY_WRITE_BUFFER;
 
 public class Chunk {
 
@@ -92,9 +101,25 @@ public class Chunk {
     }
 
     public void render(MatrixStack matrixStack) {
-        for(SubChunk subChunk : chunks) {
-            subChunk.renderMesh(matrixStack);
+        if(id == -1 || !Settings.optimizeMesh) {
+            boolean val = true;
+            for (SubChunk subChunk : chunks) {
+                subChunk.renderMesh(matrixStack);
+                val = val && subChunk.id != -2 && subChunk.id != -3 && subChunk.id != -1;
+            }
+            if(val && Settings.optimizeMesh) {
+                buildMesh1();
+            }
+        } else {
+            if (sizeVal != 0) {
+                GL30.glBindVertexArray(id);
+                matrixStack.push();
+                matrixStack.applyTransformation(ShaderManager.worldShader.shader);
+                GLRenderer.glDrawElements(GL_TRIANGLES, sizeVal, GL_UNSIGNED_INT, 0);
+                matrixStack.pop();
+            }
         }
+
     }
 
     public void destroy() {
@@ -295,4 +320,66 @@ public class Chunk {
         }
     }
 
+    int id = -1;
+    int sizeVal = -1;
+
+    public void buildMesh1() {
+        glGetError();
+        PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
+        int pointer = 0;
+
+        int size = 0;
+        for(SubChunk subChunk : chunks) {
+            if (subChunk.id == -1 || subChunk.id == -2 || subChunk.verticesCount == -1) {
+                continue;
+            }
+            int vertexID = VAOManager.buffers.get(subChunk.id).typeA;
+            glBindBuffer           (GL_COPY_READ_BUFFER, vertexID);
+            size += GL30.glGetBufferParameteri(GL_COPY_READ_BUFFER,GL_BUFFER_SIZE);
+        }
+        int VBO = glGenBuffers();
+        glBindBuffer(GL_COPY_WRITE_BUFFER, VBO);
+        glBufferData(GL_COPY_WRITE_BUFFER,size,GL_STATIC_DRAW);
+
+        for(SubChunk subChunk : chunks) {
+            if (subChunk.id == -1 || subChunk.id == -2 || subChunk.verticesCount == -1 || subChunk.verticesCount == 0) {
+                continue;
+            }
+            int vertexID = VAOManager.buffers.get(subChunk.id).typeA;
+            int indexID = VAOManager.buffers.get(subChunk.id).typeB;
+            glBindBuffer           (GL_COPY_READ_BUFFER, vertexID);
+            int sizeVal = GL30.glGetBufferParameteri(GL_COPY_READ_BUFFER,GL_BUFFER_SIZE);
+            glBindBuffer           (GL_COPY_WRITE_BUFFER, VBO);
+            GL31.glCopyBufferSubData(GL_COPY_READ_BUFFER,GL_COPY_WRITE_BUFFER, 0, pointer, sizeVal);
+            int[] indices = new int[subChunk.verticesCount];
+            glBindBuffer(GL_COPY_READ_BUFFER,indexID);
+            glGetBufferSubData(GL_COPY_READ_BUFFER, 0, indices);
+
+            primitiveBuilder.add(indices);
+            primitiveBuilder.sizeVal += sizeVal / 4 / primitiveBuilder.shader.shaderElementCount;
+            pointer += sizeVal;
+        }
+
+        int VAO = glGenVertexArrays();
+        int EBO = glGenBuffers();
+        glBindVertexArray(VAO);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, primitiveBuilder.indices.getElementData(), GL_STATIC_DRAW);
+        int x = 0;
+        pointer = 0;
+        for(Shader.ShaderElement shaderElement : primitiveBuilder.shader.shaderElements) {
+            glVertexAttribPointer(x,shaderElement.count,shaderElement.type,shaderElement.normalised,primitiveBuilder.shader.shaderElementCount * 4,pointer * 4);
+            glEnableVertexAttribArray(x);
+            x++;
+            pointer += shaderElement.count;
+        }
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        VAOManager.buffers.put((VAO),new DoubleTypeWrapper<>(VBO,EBO));
+        sizeVal = primitiveBuilder.indices.size();
+        id = VAO;
+    }
+
 }
+
+
