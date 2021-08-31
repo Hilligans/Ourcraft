@@ -1,5 +1,6 @@
 package Hilligans.Container.Containers;
 
+import Hilligans.Client.Client;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.CreativeInventoryScreen;
 import Hilligans.ClientMain;
@@ -56,8 +57,8 @@ public class CreativeContainer extends Container {
     }
 
     @Override
-    public ContainerScreen<?> getContainerScreen() {
-        return new CreativeInventoryScreen();
+    public ContainerScreen<?> getContainerScreen(Client client) {
+        return new CreativeInventoryScreen(client);
     }
 
     public static IInventory createInventory() {

@@ -1,5 +1,6 @@
 package Hilligans.Client.Rendering.Screens;
 
+import Hilligans.Client.Client;
 import Hilligans.Client.Lang.Languages;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.Renderer;
@@ -13,7 +14,8 @@ public class LanguageScreen extends ScreenBase implements SelectorScreen {
 
     SelectorWidget selectorWidget;
 
-    public LanguageScreen() {
+    public LanguageScreen(Client client) {
+        super(client);
         FolderWidget folderWidget = new InvisibleFolder(100,50,0,0,"");
         widgets.add(folderWidget);
         for(String string : Languages.languages) {
@@ -33,7 +35,7 @@ public class LanguageScreen extends ScreenBase implements SelectorScreen {
             if(selectorWidget != null) {
                 Languages.setCurrentLanguage(selectorWidget.name);
             }
-            ClientMain.getClient().openScreen(new SettingsScreen());
+            client.openScreen(new SettingsScreen(client));
         }));
     }
 

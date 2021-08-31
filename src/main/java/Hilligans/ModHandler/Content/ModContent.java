@@ -11,7 +11,9 @@ import Hilligans.Data.Other.ItemProperties;
 import Hilligans.Item.BlockItem;
 import Hilligans.Item.Item;
 import Hilligans.ModHandler.Mod;
+import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
+import Hilligans.Network.Protocol;
 import Hilligans.Util.ByteArray;
 import Hilligans.Util.Settings;
 import Hilligans.Util.Util;
@@ -25,6 +27,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class ModContent {
 
@@ -44,6 +48,8 @@ public class ModContent {
     public HashMap<String,BufferedImage> blockTextures = new HashMap<>();
     public ArrayList<SoundBuffer> sounds = new ArrayList<>();
     public ArrayList<IModel> models = new ArrayList<>();
+
+    public HashMap<String,Protocol> protocols = new HashMap<>();
 
     public boolean loaded = false;
 
@@ -134,6 +140,31 @@ public class ModContent {
             registerModel(iModel);
         }
     }
+
+    public void registerPacket(Supplier<PacketBase> packet) {
+        Protocol protocol = protocols.computeIfAbsent("Play", Protocol::new);
+        protocol.register(packet);
+    }
+
+    @SafeVarargs
+    public final void registerPackets(Supplier<PacketBase>... packets) {
+        for(Supplier<PacketBase> packet : packets) {
+            registerPacket(packet);
+        }
+    }
+
+    public void registerPacket(String protocolName, Supplier<PacketBase> packet) {
+        Protocol protocol = protocols.computeIfAbsent(protocolName, Protocol::new);
+        protocol.register(packet);
+    }
+
+    @SafeVarargs
+    public final void registerPackets(String protocolName, Supplier<PacketBase>... packets) {
+        for(Supplier<PacketBase> packet : packets) {
+            registerPacket(protocolName,packet);
+        }
+    }
+
 
     public void putData(ByteArray byteArray) {
         byteArray.writeInt(version);

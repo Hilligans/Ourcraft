@@ -2,6 +2,10 @@ package Hilligans;
 
 import Hilligans.Client.*;
 import Hilligans.Data.Other.ObjFile;
+import Hilligans.Network.PacketBase;
+import Hilligans.Network.PacketFetcher;
+import Hilligans.Network.Protocol;
+import Hilligans.Network.Protocols;
 import Hilligans.WorldSave.WorldLoader;
 
 import java.io.BufferedReader;
@@ -21,9 +25,10 @@ public class ClientMain {
 
     public static void main(String[] args) {
 
-        client = new Client();
-        client.startClient();
 
+        client = new Client();
+
+        client.startClient();
 
     }
 

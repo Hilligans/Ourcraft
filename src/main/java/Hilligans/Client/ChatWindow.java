@@ -169,7 +169,7 @@ public class ChatWindow implements Screen {
                     }
                     messageIndex = -1;
                     if(!getString().equals("")) {
-                        ClientNetworkHandler.sendPacketDirect(new CSendMessage(string));
+                        ClientMain.getClient().sendPacket(new CSendMessage(string));
                         string = "";
                         typing = false;
                         ClientMain.getClient().closeScreen();

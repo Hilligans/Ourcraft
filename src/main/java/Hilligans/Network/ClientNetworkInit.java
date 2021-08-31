@@ -31,9 +31,7 @@ public class ClientNetworkInit extends ChannelInitializer<SocketChannel> {
     public static void joinServer(String ip, String port, NetworkHandler networkHandler) throws Exception {
         final String HOST = System.getProperty("host", ip);
         final int PORT = Integer.parseInt(System.getProperty("port", port));
-        //TrustManagerFactory.
         final SslContext sslCtx = SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
-        //final SslContext s slCtx1 = SslContextBuilder.forClient().trustManager(TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())).build();
 
         EventLoopGroup group = new NioEventLoopGroup();
         try {

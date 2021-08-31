@@ -31,11 +31,9 @@ import Hilligans.ModHandler.Events.Client.GLInitEvent;
 import Hilligans.ModHandler.Events.Client.OpenScreenEvent;
 import Hilligans.ModHandler.Events.Client.RenderEndEvent;
 import Hilligans.ModHandler.Events.Client.RenderStartEvent;
-import Hilligans.Network.ClientAuthNetworkHandler;
-import Hilligans.Network.ClientNetworkHandler;
+import Hilligans.Network.*;
 import Hilligans.Network.Packet.AuthServerPackets.CGetToken;
 import Hilligans.Network.Packet.Client.*;
-import Hilligans.Network.PacketBase;
 import Hilligans.Ourcraft;
 import Hilligans.Server.MultiPlayerServer;
 import Hilligans.Tag.CompoundTag;
@@ -78,6 +76,7 @@ public class Client {
     public boolean glStarted = false;
     public long renderTime = 0;
     public String serverIP = "";
+    Client client = this;
 
     public MouseHandler mouseHandler;
 
@@ -99,24 +98,30 @@ public class Client {
     public MultiPlayerServer multiPlayerServer;
     public boolean rendering = false;
 
+    public ClientNetwork network;
+    public ClientNetwork authNetwork;
+
 
     public Client() {}
 
     public void startClient() {
-
+        network = new ClientNetwork(Protocols.PLAY);
+        authNetwork = new ClientNetwork(Protocols.AUTH);
 
 
         register();
         Ourcraft.MOD_LOADER.loadDefaultMods();
-       // Ourcraft.CONTENT_PACK.load();
-       // Ourcraft.CONTENT_PACK.generateData();
+
         CompoundTag tag = WorldLoader.loadTag("clientData.dat");
         if(tag != null) {
             new Thread(() -> {
-                readUsernameAndPassword(tag);
-                ClientAuthNetworkHandler.sendPacketDirect(new CGetToken(playerData.userName, playerData.login_token));
+                try {
+                    authNetwork.joinServer("hilligans.dev", "25588", this);
+                } catch (Exception e) {}
             }).start();
         }
+        readUsernameAndPassword(tag);
+        authNetwork.sendPacket(new CGetToken(playerData.userName, playerData.login_token));
 
         createGL();
 
@@ -138,7 +143,6 @@ public class Client {
     }
 
     public void cleanUp() {
-        ClientNetworkHandler.close();
         glfwTerminate();
         soundEngine.cleanup();
         for(SoundBuffer soundBuffer : Sounds.SOUNDS) {
@@ -187,10 +191,10 @@ public class Client {
         for(Texture texture : Textures.TEXTURES) {
             texture.register();
         }
-        screen = new JoinScreen();
+        screen = new JoinScreen(this);
         texture = WorldTextureManager.instance.registerTexture();
         Renderer.create(texture);
-        clientWorld = new ClientWorld();
+        clientWorld = new ClientWorld(client);
 
        // glEnable(GL_DEPTH);
 
@@ -348,7 +352,7 @@ public class Client {
 
     public void closeScreen() {
         if(!playerData.heldStack.isEmpty()) {
-            ClientNetworkHandler.sendPacketDirect(new CDropItem((short)-1,(byte)-1));
+            sendPacket(new CDropItem((short)-1,(byte)-1));
             playerData.heldStack = ItemStack.emptyStack();
         }
         if(screen != null) {
@@ -361,7 +365,7 @@ public class Client {
             playerData.openContainer.closeContainer();
         }
 
-        ClientNetworkHandler.sendPacketDirect(new CCloseScreen(false));
+        sendPacket(new CCloseScreen(false));
     }
 
     public void openScreen(Screen screen1) {
@@ -383,12 +387,12 @@ public class Client {
             }
             playerData.openContainer = container;
         }
-        ClientNetworkHandler.sendPacketDirect(new COpenScreen(screen1));
+        sendPacket(new COpenScreen(screen1));
     }
 
     public void openScreen(Container container) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        ContainerScreen<?> containerScreen = container.getContainerScreen();
+        ContainerScreen<?> containerScreen = container.getContainerScreen(this);
         Ourcraft.EVENT_BUS.postEvent(new OpenScreenEvent(containerScreen,screen));
         if(screen != null) {
             screen.close(true);
@@ -411,18 +415,17 @@ public class Client {
         },KeyHandler.GLFW_KEY_F6);
 
 
-
         KeyHandler.register(new KeyPress() {
             @Override
             public void onPress() {
                 if(renderWorld) {
                     if (screen == null) {
-                        openScreen(new EscapeScreen());
+                        openScreen(new EscapeScreen(client));
                     } else {
                         closeScreen();
                     }
                 } else {
-                    openScreen(new JoinScreen());
+                    openScreen(new JoinScreen(client));
                 }
             }
         },KeyHandler.GLFW_KEY_ESCAPE);
@@ -439,9 +442,9 @@ public class Client {
             public void onPress() {
                 if(screen == null) {
                     if(playerData.creative) {
-                        openScreen(new CreativeInventoryScreen());
+                        openScreen(new CreativeInventoryScreen(client));
                     } else {
-                        openScreen(new InventoryScreen());
+                        openScreen(new InventoryScreen(client));
                     }
                 } else if(screen instanceof ContainerScreen) {
                     closeScreen();
@@ -465,10 +468,10 @@ public class Client {
                         if(slot != null) {
                             if(KeyHandler.keyPressed[GLFW_KEY_LEFT_CONTROL]) {
                                 slot.setContents(ItemStack.emptyStack());
-                                ClientNetworkHandler.sendPacketDirect(new CDropItem(slot.id,(byte)-1));
+                                sendPacket(new CDropItem(slot.id,(byte)-1));
                             } else {
                                 slot.getContents().removeCount(1);
-                                ClientNetworkHandler.sendPacketDirect(new CDropItem(slot.id,(byte)1));
+                                sendPacket(new CDropItem(slot.id,(byte)1));
                             }
                         }
                     }
@@ -488,7 +491,7 @@ public class Client {
         KeyHandler.register(new KeyPress() {
             @Override
             public void onPress() {
-                openScreen(new MiniMapScreen(clientWorld.miniMap));
+                openScreen(new MiniMapScreen(client,clientWorld.miniMap));
             }
         }, GLFW_KEY_K);
     }
@@ -547,9 +550,9 @@ public class Client {
             if(!focused) {
                 if(screen == null) {
                     if (renderWorld) {
-                        openScreen(new EscapeScreen());
+                        openScreen(new EscapeScreen(client));
                     } else {
-                        openScreen(new JoinScreen());
+                        openScreen(new JoinScreen(client));
                     }
                 }
             }
@@ -595,6 +598,9 @@ public class Client {
         }
     }
 
+    public void sendPacket(PacketBase packetBase) {
+         network.sendPacket(packetBase);
+    }
 
     public DoubleBuffer getMousePos() {
         DoubleBuffer x = BufferUtils.createDoubleBuffer(1);

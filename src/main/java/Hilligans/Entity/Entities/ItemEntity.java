@@ -11,6 +11,7 @@ import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BoundingBox;
 import Hilligans.Entity.Entity;
 import Hilligans.Item.BlockItem;
+import Hilligans.Item.Item;
 import Hilligans.Item.ItemStack;
 import Hilligans.Item.Items;
 import Hilligans.Network.PacketData;
@@ -33,7 +34,6 @@ public class ItemEntity extends Entity {
         super(x, y, z, id);
         this.block = block;
         type = 1;
-       // boundingBox = new BoundingBox(-0.125f,-0.125f,-0.125f,0.125f,0.125f,0.125f);
         velY = 0.30f;
         itemStack = new ItemStack(Items.HASHED_ITEMS.get(block.name),(byte)1);
         boundingBox = new BoundingBox(-0.25f,-0.25f,-0.25f,0.25f,0.25f,0.25f);
@@ -54,10 +54,12 @@ public class ItemEntity extends Entity {
     public ItemEntity(PacketData packetData) {
         super(packetData);
         type = 1;
-        block = Blocks.getBlockWithID(packetData.readInt());
+        Item item = Items.getItem(packetData.readInt());
+        if(item instanceof BlockItem) {
+            this.block = Blocks.MAPPED_BLOCKS.get(item.name);
+        }
         boundingBox = new BoundingBox(-0.25f,-0.25f,-0.25f,0.25f,0.25f,0.25f);
-        itemStack = new ItemStack(Items.HASHED_ITEMS.get(block.name),(byte)1);
-        //velY = 1f;
+        itemStack = new ItemStack(item,(byte)1);
     }
 
     @Override
@@ -71,15 +73,13 @@ public class ItemEntity extends Entity {
         if(this.velY < -0.4) {
             this.velY = -0.4f;
         }
-        //this.velZ = -0.1f;
-       // System.out.println("x " + x + " z " + z);
         move();
     }
 
     @Override
     public void writeData(PacketData packetData) {
         super.writeData(packetData);
-        packetData.writeInt(block.id);
+        packetData.writeInt(itemStack.item.id);
     }
 
     @Override

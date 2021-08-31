@@ -1,5 +1,6 @@
 package Hilligans.Container.Containers;
 
+import Hilligans.Client.Client;
 import Hilligans.Client.ClientPlayerData;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.ChestScreen;
@@ -35,7 +36,7 @@ public class ChestContainer extends Container {
     }
 
     @Override
-    public ContainerScreen<?> getContainerScreen() {
-        return new ChestScreen();
+    public ContainerScreen<?> getContainerScreen(Client client) {
+        return new ChestScreen(client);
     }
 }

@@ -1,5 +1,6 @@
 package Hilligans.Data.Other;
 
+import Hilligans.Item.BlockItem;
 import Hilligans.Item.ItemStack;
 import Hilligans.Network.PacketData;
 import Hilligans.Data.Other.Server.IInventoryChanged;
@@ -92,10 +93,15 @@ public class Inventory implements IInventory {
             int size = packetData.readInt();
             for (int x = 0; x < size; x++) {
                 items[x] = packetData.readItemStack();
-                if(!items[x].isEmpty()) {
-                    //if(items[x].item instanceof BlockItem)
-                    //System.out.println(((BlockItem) items[x].item).block);
+              /*  if(!items[x].isEmpty()) {
+                    if(items[x].item instanceof BlockItem) {
+                        System.out.println(((BlockItem) items[x].item).block);
+                    } else {
+                        System.out.println(items[x].item.getName());
+                    }
                 }
+
+               */
             }
         }
         //System.out.println(this.toString());

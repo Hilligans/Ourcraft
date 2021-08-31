@@ -1,11 +1,16 @@
 package Hilligans.Client.Rendering.Screens;
 
+import Hilligans.Client.Client;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ScreenBase;
 import Hilligans.Client.Rendering.World.StringRenderer;
 import Hilligans.Network.ClientNetworkInit;
 
 public class LoadingScreen extends ScreenBase {
+
+    public LoadingScreen(Client client) {
+        super(client);
+    }
 
     @Override
     public void drawScreen(MatrixStack matrixStack) {

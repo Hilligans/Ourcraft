@@ -1,5 +1,6 @@
 package Hilligans.Container.Containers;
 
+import Hilligans.Client.Client;
 import Hilligans.Client.ClientPlayerData;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
@@ -29,8 +30,8 @@ public class InventoryContainer extends Container {
     }
 
     @Override
-    public ContainerScreen<?> getContainerScreen() {
-        return new InventoryScreen();
+    public ContainerScreen<?> getContainerScreen(Client client) {
+        return new InventoryScreen(client);
     }
 
 }

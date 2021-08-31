@@ -1,8 +1,7 @@
 package Hilligans.Data.Other;
 
-import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
-import Hilligans.Client.Rendering.ItemModel;
+import Hilligans.Client.Rendering.NewRenderer.ItemModel;
 import Hilligans.Client.Rendering.NewRenderer.IModel;
 import Hilligans.Client.Rendering.World.Managers.ItemTextureManager;
 import Hilligans.Item.BlockItem;

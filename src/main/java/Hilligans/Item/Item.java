@@ -55,7 +55,7 @@ public class Item {
         glDisable(GL_DEPTH_TEST);
         if(itemProperties.dynamicModel || vao == -1) {
             PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
-            addData(primitiveBuilder, size);
+            addData(primitiveBuilder, 1);
             vertexCount = primitiveBuilder.indices.size();
             vao = VAOManager.createVAO(primitiveBuilder);
         }
@@ -64,7 +64,7 @@ public class Item {
         glBindTexture(GL_TEXTURE_2D, ClientMain.getClient().texture);
 
         matrixStack.translate(x,y,0);
-     //   matrixStack.rotate((float) Math.toRadians(45),new Vector3f(0,1,0));
+        matrixStack.scale(size);
         matrixStack.applyTransformation(ClientMain.getClient().shaderManager.colorShader);
         glDrawElements(GL_TRIANGLES, vertexCount,GL_UNSIGNED_INT,0);
         matrixStack.pop();
@@ -87,7 +87,7 @@ public class Item {
         glDisable(GL_DEPTH_TEST);
         if(itemProperties.dynamicModel || vao == -1) {
             PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
-            addData(primitiveBuilder, size);
+            addData(primitiveBuilder, 1);
             vertexCount = primitiveBuilder.indices.size();
             vao = VAOManager.createVAO(primitiveBuilder);
         }
@@ -95,8 +95,9 @@ public class Item {
         GL30.glBindVertexArray(vao);
         glBindTexture(GL_TEXTURE_2D, ClientMain.getClient().texture);
 
-        matrixStack.translate(x,y,-10);
-        matrixStack.rotate((float) Math.toRadians(ClientMain.getClient().renderTime / 5),new Vector3f(0,1,0));
+        matrixStack.translate(x,y,-250);
+        matrixStack.scale(size);
+        matrixStack.rotate((float) Math.toRadians(ClientMain.getClient().renderTime / 25),new Vector3f(0,1,0));
         matrixStack.applyTransformation(ClientMain.getClient().shaderManager.colorShader);
         matrixStack.translate(0,0,-5);
         glDrawElements(GL_TRIANGLES, vertexCount,GL_UNSIGNED_INT,0);
@@ -121,7 +122,7 @@ public class Item {
             if(count >= 10) {
                 StringRenderer.drawString(matrixStack, count + "", x + size + 14 , (int) (y + size * 1f), 0.5f);
             } else {
-                StringRenderer.drawString(matrixStack, count + "", (int) (x + size ) + 29, (int) (y + size * 1f), 0.5f);
+                StringRenderer.drawString(matrixStack, count + "", (int) (x + size) + 29, (int) (y + size * 1f), 0.5f);
             }
         }
     }

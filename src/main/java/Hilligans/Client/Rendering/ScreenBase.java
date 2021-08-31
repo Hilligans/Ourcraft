@@ -1,5 +1,6 @@
 package Hilligans.Client.Rendering;
 
+import Hilligans.Client.Client;
 import Hilligans.Client.Key.CharPress;
 import Hilligans.Client.Key.KeyHandler;
 import Hilligans.Client.Key.KeyPress;
@@ -18,6 +19,15 @@ public abstract class ScreenBase implements Screen {
     public ArrayList<Widget> widgets = new ArrayList<>();
     public ArrayList<CharPress> charPresses = new ArrayList<>();
     public ArrayList<KeyPress> keyPresses = new ArrayList<>();
+
+    public Client client;
+
+    public ScreenBase() {}
+
+    public ScreenBase(Client client) {
+        this.client = client;
+    }
+
 
     public void drawScreen(MatrixStack matrixStack) {}
 
@@ -51,7 +61,7 @@ public abstract class ScreenBase implements Screen {
         for(KeyPress keyPress : keyPresses) {
             KeyHandler.remove(keyPress);
         }
-        ClientNetworkHandler.sendPacketDirect(new CCloseScreen(replaced));
+        client.sendPacket(new CCloseScreen(replaced));
     }
 
     @Override
@@ -80,6 +90,7 @@ public abstract class ScreenBase implements Screen {
 
     public void addWidget(Widget widget) {
         widgets.add(widget);
-        widget.onScreenResize(ClientMain.getWindowX(),ClientMain.getWindowY());
+        widget.screenBase = this;
+        widget.onScreenResize(client.windowX,client.windowY);
     }
 }

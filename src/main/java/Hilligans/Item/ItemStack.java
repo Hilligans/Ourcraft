@@ -41,6 +41,10 @@ public class ItemStack {
         return this;
     }
 
+    public String getName() {
+        return item == null ? "" : item.name;
+    }
+
     public ItemStack mergeStack(ItemStack itemStack) {
         int leftOver = itemStack.count - addItem(itemStack);
         if(leftOver == 0) {

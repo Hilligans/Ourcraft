@@ -22,8 +22,6 @@ import java.util.Random;
 
 public class ServerNetworkInit extends ChannelInitializer<SocketChannel> {
 
-    public static Channel channel;
-
     public static void startServer(String port) throws Exception {
         PacketBase.register();
         Container.register();

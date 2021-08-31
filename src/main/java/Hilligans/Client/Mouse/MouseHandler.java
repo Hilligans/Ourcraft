@@ -46,7 +46,7 @@ public class MouseHandler {
                 BlockPos pos = client.clientWorld.traceBlockToBreak(Camera.pos.x, Camera.pos.y + Camera.playerBoundingBox.eyeHeight, Camera.pos.z, Camera.pitch, Camera.yaw);
                 if (pos != null) {
                     if (client.joinServer) {
-                        ClientNetworkHandler.sendPacketDirect(new CSendBlockChanges(pos.x, pos.y, pos.z, Blocks.AIR.id));
+                        client.sendPacket(new CSendBlockChanges(pos.x, pos.y, pos.z, Blocks.AIR.id));
                     }
                     client.clientWorld.setBlockState(pos, Blocks.AIR.getDefaultState());
                 }
@@ -55,20 +55,20 @@ public class MouseHandler {
                 if(blockPos != null) {
                     BlockState blockState = client.clientWorld.getBlockState(blockPos);
                     if (blockState != null && blockState.getBlock().activateBlock(client.clientWorld, null, blockPos)) {
-                        ClientNetworkHandler.sendPacketDirect(new CUseItem((byte) client.playerData.handSlot));
+                        client.sendPacket(new CUseItem((byte) client.playerData.handSlot));
                         return;
                     }
                 }
                 ItemStack itemStack = client.playerData.inventory.getItem(client.playerData.handSlot);
                 if(!itemStack.isEmpty()) {
                     if(itemStack.item.onActivate(client.clientWorld,null)) {
-                        ClientNetworkHandler.sendPacketDirect(new CUseItem((byte) client.playerData.handSlot));
+                        client.sendPacket(new CUseItem((byte) client.playerData.handSlot));
                         if(!client.playerData.creative) {
                             itemStack.removeCount(1);
                         }
                     }
                 } else {
-                    ClientNetworkHandler.sendPacketDirect(new CUseItem((byte) client.playerData.handSlot));
+                    client.sendPacket(new CUseItem((byte) client.playerData.handSlot));
                 }
             }
         } else {

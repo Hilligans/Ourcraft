@@ -6,10 +6,11 @@ import Hilligans.Network.Packet.Server.*;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.util.ArrayList;
+import java.util.function.Supplier;
 
 public abstract class PacketBase {
 
-    public static ArrayList<PacketFetcher> packets = new ArrayList<>();
+    public static ArrayList<Supplier<PacketBase>> packets = new ArrayList<>();
 
     public ChannelHandlerContext ctx;
 

@@ -1,6 +1,7 @@
 package Hilligans.Client.Rendering.Widgets;
 
 import Hilligans.Client.MatrixStack;
+import Hilligans.Client.Rendering.ScreenBase;
 import Hilligans.Data.Primitives.IntegerWrapper;
 
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ public class Widget {
     public boolean enabled = true;
 
     public IntegerWrapper yOffset = new IntegerWrapper(0);
+
+    public ScreenBase screenBase;
 
     public Widget(int x, int y, int width, int height) {
         this.x = x;

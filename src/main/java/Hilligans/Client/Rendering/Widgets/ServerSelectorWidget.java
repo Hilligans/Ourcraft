@@ -37,11 +37,10 @@ public class ServerSelectorWidget extends Widget {
 
     public void joinServer() {
         try {
-            ClientNetworkHandler.clientNetworkHandler = new ClientNetworkHandler();
-            ClientNetworkInit.joinServer(ip, port, ClientNetworkHandler.clientNetworkHandler);
-            ClientMain.getClient().closeScreen();
-            ClientMain.getClient().serverIP = ip + ":" + port;
-         //   ClientMain.getClient().openScreen(new LoadingScreen());
+            screenBase.client.network.joinServer(ip,port,ClientMain.getClient());
+            screenBase.client.closeScreen();
+            screenBase.client.serverIP = ip + ":" + port;
+            screenBase.client.openScreen(new LoadingScreen(screenBase.client));
         } catch (Exception e) {
             e.printStackTrace();
         }

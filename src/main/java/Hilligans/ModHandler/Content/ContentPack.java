@@ -11,13 +11,11 @@ import Hilligans.ClientMain;
 import Hilligans.Item.Item;
 import Hilligans.Item.Items;
 import Hilligans.ModHandler.Events.Client.RenderEndEvent;
-import Hilligans.ModHandler.Mod;
+import Hilligans.Network.Protocol;
+import Hilligans.Network.Protocols;
 import Hilligans.Ourcraft;
-import Hilligans.Util.ByteArray;
 import Hilligans.Util.Settings;
-import Hilligans.WorldSave.WorldLoader;
 
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 
 public class ContentPack {
@@ -65,6 +63,7 @@ public class ContentPack {
         Sounds.SOUNDS.clear();
         Sounds.MAPPED_SOUND.clear();
         Ourcraft.RESOURCE_MANAGER.clearData();
+        Protocols.clear();
 
         //Textures.TEXTURES.clear();
         //Textures.MAPPED_TEXTURES.clear();
@@ -90,6 +89,9 @@ public class ContentPack {
                 }
                 for(IModel model : mod.models) {
                     Ourcraft.RESOURCE_MANAGER.putModel(model.getPath(),model);
+                }
+                for(Protocol protocol : mod.protocols.values()) {
+                    Protocols.register(protocol);
                 }
             }
         }

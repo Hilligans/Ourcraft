@@ -64,7 +64,7 @@ public class SHandshakePacket extends PacketBase {
             }
         }
         if(neededMods.size() != 0) {
-            ClientNetworkHandler.sendPacketDirect(new CRequestContent(neededMods));
+            ctx.channel().writeAndFlush(new PacketData(new CRequestContent(neededMods)));
         } else if(mods.length != 0) {
             Ourcraft.CONTENT_PACK.generateData();
         }

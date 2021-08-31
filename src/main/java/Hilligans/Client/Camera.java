@@ -154,7 +154,7 @@ public class Camera {
 
         if(ClientMain.getClient().playerData.spectator) {
             pos.add(x * 4, y * 4, z * 4);
-            ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.getClient().playerId));
+            ClientMain.getClient().sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.getClient().playerId));
         } else {
 
             maxX += x;
@@ -255,13 +255,13 @@ public class Camera {
             yaw = 6.283;
         }
 
-        ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.getClient().playerId));
+        ClientMain.getClient().sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.getClient().playerId));
 
     }
 
     public static void addYaw(double amount) {
         yaw += amount;
-        ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.getClient().playerId));
+        ClientMain.getClient().sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.getClient().playerId));
     }
 
     public static Vector3d duplicate() {
@@ -422,7 +422,7 @@ public class Camera {
             for (int a = 0; a < count; a++) {
                 move(velX / count, velY / count, velZ / count);
             }
-            ClientNetworkHandler.sendPacketDirect(new CUpdatePlayerPacket(pos.x, pos.y, pos.z, (float) pitch, (float) yaw, ClientMain.getClient().playerId));
+            ClientMain.getClient().sendPacket(new CUpdatePlayerPacket(pos.x, pos.y, pos.z, (float) pitch, (float) yaw, ClientMain.getClient().playerId));
 
         }
     }

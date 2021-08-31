@@ -21,11 +21,11 @@ public class PacketData extends ByteArray {
 
 
     public ChannelHandlerContext ctx;
-    int packetId = 0;
+    short packetId = 0;
 
     public PacketData(PacketBase packetBase) {
         byteBuf = Unpooled.buffer();
-        packetId = packetBase.packetId;
+        packetId = (short) packetBase.packetId;
         packetBase.encode(this);
     }
 
@@ -37,12 +37,12 @@ public class PacketData extends ByteArray {
     public PacketData(byte[] bytes) {
         byteBuf = Unpooled.buffer();
         byteBuf.writeBytes(bytes);
-        packetId = byteBuf.readInt();
+        packetId = byteBuf.readShort();
         size = bytes.length;
     }
 
     public PacketData(ByteBuf byteBuf) {
-        packetId = byteBuf.readInt();
+        packetId =  byteBuf.readShort();
         byteBuf.readBytes(packetId);
         size = byteBuf.readableBytes();
     }
@@ -52,13 +52,20 @@ public class PacketData extends ByteArray {
     }
 
     public void writeToByteBuf(ByteBuf byteBuf) {
-        byteBuf.writeInt(size + 8);
-        byteBuf.writeInt(packetId);
+        byteBuf.writeInt(size + 6);
+        byteBuf.writeShort(packetId);
         byteBuf.writeBytes(this.byteBuf);
     }
 
     public PacketBase createPacket() {
-        PacketBase packetBase = PacketBase.packets.get(packetId).getPacket();
+        PacketBase packetBase = PacketBase.packets.get(packetId).get();
+        packetBase.ctx = ctx;
+        packetBase.decode(this);
+        return packetBase;
+    }
+
+    public PacketBase createPacket(Protocol protocol) {
+        PacketBase packetBase = protocol.packets.get(packetId).getPacket();
         packetBase.ctx = ctx;
         packetBase.decode(this);
         return packetBase;
@@ -79,7 +86,6 @@ public class PacketData extends ByteArray {
         packetBase.decode(this);
         return packetBase;
     }
-
 
 
 

@@ -10,6 +10,10 @@ public class CTokenValid extends PacketBase {
     String ip;
     String tempId;
 
+    public CTokenValid() {
+        super(2);
+    }
+
     public CTokenValid(String username, String token, String ip, String tempId) {
         super(2);
         this.username = username;

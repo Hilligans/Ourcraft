@@ -42,19 +42,20 @@ public class JoinScreen extends ScreenBase {
         }
     }).isEnabled(false);
 
-    public JoinScreen() {
-        widgets.add(play);
-        widgets.add(new ServerSelectorWidget(100,200,200,80,"72.172.99.188","25586",this));
-        widgets.add(new ServerSelectorWidget(100,300,200,80,"localhost","25586",this));
-        widgets.add(new Button(500, 200, 200, 50, "menu.create_account", () -> ClientMain.getClient().openScreen(new AccountCreationScreen())));
-        widgets.add(new Button(500, 300, 200, 50, "menu.log_in", () -> ClientMain.getClient().openScreen(new LoginScreen())));
-        widgets.add(new Button(500,400,200,50,"menu.singleplayer", () -> {
+    public JoinScreen(Client client) {
+        super(client);
+        addWidget(play);
+        addWidget(new ServerSelectorWidget(100,200,200,80,"72.172.99.188","25586",this));
+        addWidget(new ServerSelectorWidget(100,300,200,80,"localhost","25586",this));
+        addWidget(new Button(500, 200, 200, 50, "menu.create_account", () -> client.openScreen(new AccountCreationScreen(client))));
+        addWidget(new Button(500, 300, 200, 50, "menu.log_in", () -> client.openScreen(new LoginScreen(client))));
+        addWidget(new Button(500,400,200,50,"menu.singleplayer", () -> {
             ServerWorld world = new ServerWorld();
             world.worldBuilders.add(new OreBuilder(Blocks.GRASS,Blocks.STONE).setFrequency(20));
 
-            ClientMain.getClient().multiPlayerServer = new MultiPlayerServer();
-            ClientMain.getClient().multiPlayerServer.addWorld(0,world);
-            ServerMain.server = ClientMain.getClient().multiPlayerServer;
+            client.multiPlayerServer = new MultiPlayerServer();
+            client.multiPlayerServer.addWorld(0,world);
+            ServerMain.server = client.multiPlayerServer;
             int port = 0;
             try {
                 port = ServerNetworkInit.getOpenPort();
@@ -63,27 +64,26 @@ public class JoinScreen extends ScreenBase {
                 return;
             }
             String portString = port + "";
-            Thread thread = new Thread(() -> ClientMain.getClient().multiPlayerServer.startServer(portString));
+            Thread thread = new Thread(() -> client.multiPlayerServer.startServer(portString));
             thread.start();
            this.portString = portString;
         }));
 
         widgets.add(new Button(500,500,200,50,"menu.singleplayerjoin", () -> {
             try {
-                ClientNetworkHandler.clientNetworkHandler = new ClientNetworkHandler();
-                ClientNetworkInit.joinServer("localhost", portString, ClientNetworkHandler.clientNetworkHandler);
-                ClientMain.getClient().closeScreen();
+                client.network.joinServer("localhost",portString,client);
+                client.closeScreen();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }));
 
-        widgets.add(new Button(500,600,200,50,"menu.mod_list", () -> ClientMain.getClient().openScreen(new ModListScreen())));
+        widgets.add(new Button(500,600,200,50,"menu.mod_list", () -> client.openScreen(new ModListScreen(client))));
 
         registerKeyPress(new KeyPress() {
             @Override
             public void onPress() {
-                ClientMain.getClient().openScreen(new TagEditorScreen());
+                client.openScreen(new TagEditorScreen(client));
             }
         }, GLFW_KEY_H);
     }
@@ -98,8 +98,8 @@ public class JoinScreen extends ScreenBase {
     @Override
     public void drawScreen(MatrixStack matrixStack) {
         super.drawScreen(matrixStack);
-        if(ClientMain.getClient().playerData.valid_account) {
-            StringRenderer.drawString(matrixStack,ClientMain.getClient().playerData.userName, (int) (Settings.guiSize * 8), (int) (1 * Settings.guiSize),0.5f);
+        if(client.playerData.valid_account) {
+            StringRenderer.drawString(matrixStack,client.playerData.userName, (int) (Settings.guiSize * 8), (int) (1 * Settings.guiSize),0.5f);
             Textures.CHECK_MARK.drawTexture(matrixStack,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
         } else {
             Textures.X_MARK.drawTexture(matrixStack,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));

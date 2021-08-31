@@ -13,12 +13,15 @@ public class MiniMapScreen extends ScreenBase {
 
     MiniMap miniMap;
 
-    public MiniMapScreen(MiniMap miniMap) {
+    public MiniMapScreen(Client client, MiniMap miniMap) {
+        super(client);
         this.miniMap = miniMap;
     }
 
     int mouseLastX = 0;
     int mouseLastY = 0;
+
+
 
     @Override
     public void drawScreen(MatrixStack matrixStack) {

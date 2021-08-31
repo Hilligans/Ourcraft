@@ -4,6 +4,7 @@ package Hilligans.World;
 
 import Hilligans.Client.Audio.SoundBuffer;
 import Hilligans.Client.Audio.Sounds;
+import Hilligans.Client.Client;
 import Hilligans.Client.Rendering.ClientUtil;
 import Hilligans.Client.Rendering.MiniMap.MiniMap;
 import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
@@ -16,6 +17,8 @@ import Hilligans.Client.MatrixStack;
 import Hilligans.ClientMain;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Entity.Entity;
+import Hilligans.Network.ClientNetworkHandler;
+import Hilligans.Network.Packet.Client.CRequestChunkPacket;
 import Hilligans.Util.Settings;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
@@ -43,8 +46,11 @@ public class ClientWorld extends World {
 
     public MiniMap miniMap = new MiniMap(this);
 
-    public ClientWorld() {
+    public Client client;
+
+    public ClientWorld(Client client) {
         getChunk(0,0);
+        this.client = client;
     }
 
     @Override
@@ -194,6 +200,16 @@ public class ClientWorld extends World {
                 }
             }
         }
+    }
+
+    public void requestChunk(int x, int z) {
+        for (ClientWorld.XZHolder requestedChunk : requestedChunks) {
+            if (requestedChunk.x == x && requestedChunk.z == z) {
+                return;
+            }
+        }
+        requestedChunks.add(new ClientWorld.XZHolder(x,z));
+        client.sendPacket(new CRequestChunkPacket(x, z));
     }
 
     public void playSound(SoundBuffer soundBuffer, Vector3d pos) {

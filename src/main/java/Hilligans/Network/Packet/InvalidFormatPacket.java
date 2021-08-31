@@ -10,19 +10,13 @@ public class InvalidFormatPacket extends PacketBase {
     }
 
     @Override
-    public void encode(PacketData packetData) { }
+    public void encode(PacketData packetData) {}
 
     @Override
-    public void decode(PacketData packetData) {
-
-    }
+    public void decode(PacketData packetData) {}
 
     @Override
     public void handle() {
         System.err.println("Received an invalid packet");
-    }
-
-    public PacketBase createNew() {
-        return new InvalidFormatPacket();
     }
 }

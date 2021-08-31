@@ -11,50 +11,40 @@ public class ClientNetworkHandler extends NetworkHandler {
 
     public static ClientNetworkHandler clientNetworkHandler;
 
+    public ClientNetwork network;
+
+    public ClientNetworkHandler(ClientNetwork network) {
+        this.network = network;
+    }
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        ClientNetworkHandler.sendPacketDirect(new CHandshakePacket());
-        ClientMain.getClient().renderWorld = true;
+        network.client.sendPacket(new CHandshakePacket());
+        network.client.renderWorld = true;
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Textures.clear();
         System.out.println("DISCONNECTED FROM SERVER");
-        ClientMain.getClient().renderWorld = false;
-        ClientMain.getClient().valid = false;
-        ClientMain.getClient().clientWorld = new ClientWorld();
+        network.client.renderWorld = false;
+        network.client.valid = false;
+        network.client.clientWorld = new ClientWorld(network.client);
         super.channelInactive(ctx);
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, PacketData msg) throws Exception {
-        PacketBase packetBase = msg.createPacket();
+        PacketBase packetBase = msg.createPacket(network.protocol);
         packetBase.handle();
     }
 
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         ctx.close();
         cause.printStackTrace();
-        ClientMain.getClient().clientWorld = new ClientWorld();
-        ClientMain.getClient().openScreen(new DisconnectScreen(cause.getMessage()));
-    }
-
-    public static void sendPacketDirect(PacketBase packetBase) {
-        if(ClientMain.getClient().valid || packetBase instanceof CHandshakePacket) {
-            if (clientNetworkHandler != null) {
-                clientNetworkHandler.channel.writeAndFlush(new PacketData(packetBase));
-            }
-        }
-    }
-
-    public static boolean close() {
-        if(clientNetworkHandler != null && clientNetworkHandler.channel != null) {
-            clientNetworkHandler.channel.close();
-            return true;
-        }
-        return false;
+        network.client.clientWorld = new ClientWorld(network.client);
+        network.client.openScreen(new DisconnectScreen(network.client,cause.getMessage()));
     }
 
 }

@@ -48,7 +48,7 @@ public class ShaderManager {
         StringBuilder stringBuilder = new StringBuilder();
         InputStream stream = ShaderManager.class.getResourceAsStream(source);
         if(stream == null) {
-            System.out.println("Cant read file");
+            System.err.println("Cant read file " + source);
             return "";
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));

@@ -1,5 +1,6 @@
 package Hilligans.Client.Rendering.Screens;
 
+import Hilligans.Client.Client;
 import Hilligans.Client.Rendering.ScreenBase;
 import Hilligans.Client.Rendering.Widgets.Button;
 import Hilligans.Client.Rendering.Widgets.ButtonAction;
@@ -15,18 +16,19 @@ public class LoginScreen extends ScreenBase {
     InputField password = new InputField(100,250,200,100, "menu.password");
     InputField email = new InputField(100,400,200,100,"menu.email");
 
-    public LoginScreen() {
+    public LoginScreen(Client client) {
+        super(client);
         widgets.add(username);
         widgets.add(password);
         widgets.add(email);
 
         widgets.add(new Button(100, 550, 200, 50, "Log in", () -> {
-            ClientMain.getClient().playerData.email = email.string;
+            client.playerData.email = email.string;
             String passwordVal = Ourcraft.hashString(password.string, email.string);
-            ClientMain.getClient().playerData.userName = username.string;
-            ClientMain.getClient().saveUsernameAndPassword();
-            ClientAuthNetworkHandler.sendPacketDirect(new CLogin(username.string,passwordVal,email.string));
-            ClientMain.getClient().openScreen(new JoinScreen());
+            client.playerData.userName = username.string;
+            client.saveUsernameAndPassword();
+            client.authNetwork.sendPacket(new CLogin(username.string,passwordVal,email.string));
+            client.openScreen(new JoinScreen(client));
         }));
     }
 

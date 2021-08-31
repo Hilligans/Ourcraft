@@ -1,5 +1,6 @@
 package Hilligans.Client.Rendering.Screens;
 
+import Hilligans.Client.Client;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ScreenBase;
 import Hilligans.Client.Rendering.Widgets.Button;
@@ -23,7 +24,8 @@ public class TagEditorScreen extends ScreenBase {
     public FolderWidget folderWidget;
     public IntegerWrapper yOffset;
 
-    public TagEditorScreen() {
+    public TagEditorScreen(Client client) {
+        super(client);
         folderWidget = new FolderWidget(100,100,100,40,"Data");
         folderWidget.minY = 100 + FolderWidget.spacing;
         widgets.add(folderWidget);
@@ -37,13 +39,12 @@ public class TagEditorScreen extends ScreenBase {
                 yOffset = new IntegerWrapper(0);
                 folderWidget.addAll(compoundTag);
                 folderWidget.addOffset(yOffset);
-                //System.out.println(compoundTag);
                 folderWidget.yOffset = new IntegerWrapper(0);
                 folderWidget.minY = 100;
             }
             @Override
             public void cancel() {
-                ClientMain.getClient().openScreen(new JoinScreen());
+                client.openScreen(new JoinScreen(client));
             }
         })));
         widgets.add(new Button(100, 0, 100, 40, "Save", () -> WorldLoader.save(compoundTag,filePath)));

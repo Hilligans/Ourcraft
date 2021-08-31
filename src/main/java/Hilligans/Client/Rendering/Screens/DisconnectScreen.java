@@ -1,5 +1,6 @@
 package Hilligans.Client.Rendering.Screens;
 
+import Hilligans.Client.Client;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ScreenBase;
 import Hilligans.Client.Rendering.Widgets.Button;
@@ -12,12 +13,13 @@ public class DisconnectScreen extends ScreenBase {
 
     String message;
 
-    public DisconnectScreen(String message) {
+    public DisconnectScreen(Client client, String message) {
+        super(client);
         this.message = message;
         widgets.add(new Button(ClientMain.getWindowX() / 2 - 100, (int) (ClientMain.getWindowY() / 2 + Settings.guiSize * 58), 200, 50, "menu.main_menu", new ButtonAction() {
             @Override
             public void onPress() {
-                ClientMain.getClient().openScreen(new JoinScreen());
+                ClientMain.getClient().openScreen(new JoinScreen(client));
             }
         }));
     }

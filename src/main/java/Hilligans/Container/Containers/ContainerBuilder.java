@@ -1,5 +1,6 @@
 package Hilligans.Container.Containers;
 
+import Hilligans.Client.Client;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Client.Rendering.Renderer;
@@ -38,8 +39,8 @@ public class ContainerBuilder implements ContainerFetcher {
         Inventory inventory = new Inventory(slots.length);
         Container container = new Container(id,inventory) {
             @Override
-            public ContainerScreen<?> getContainerScreen() {
-                return new CustomContainerScreen() {
+            public ContainerScreen<?> getContainerScreen(Client client) {
+                return new CustomContainerScreen(null) {
                     @Override
                     public void drawScreen(MatrixStack matrixStack) {
                         Texture texture1 = Textures.getTexture(textureName);

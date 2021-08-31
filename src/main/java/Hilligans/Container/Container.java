@@ -1,5 +1,6 @@
 package Hilligans.Container;
 
+import Hilligans.Client.Client;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.Client.Rendering.Widgets.Button;
@@ -84,7 +85,7 @@ public abstract class Container {
 
     public void addWidget(Widget widget) {
         if(widget instanceof Button && !Settings.isServer) {
-            ((Button) widget).buttonAction = () -> ClientNetworkHandler.sendPacketDirect(new CActivateButton(widgets.size()));
+            ((Button) widget).buttonAction = () -> ClientMain.getClient().sendPacket(new CActivateButton(widgets.size()));
         }
         widgets.add(widget);
     }
@@ -131,7 +132,7 @@ public abstract class Container {
     }
 
 
-    public abstract ContainerScreen<?> getContainerScreen();
+    public abstract ContainerScreen<?> getContainerScreen(Client client);
 
     public void closeContainer() {
         for(Slot slot : slots) {

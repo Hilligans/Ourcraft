@@ -1,5 +1,6 @@
 package Hilligans.Client.Rendering.Screens.ContainerScreens;
 
+import Hilligans.Client.Client;
 import Hilligans.Client.ClientPlayerData;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ContainerScreen;
@@ -12,6 +13,10 @@ import Hilligans.Item.ItemStack;
 import Hilligans.Util.Settings;
 
 public class InventoryScreen extends ContainerScreen<InventoryContainer> {
+
+    public InventoryScreen(Client client) {
+        super(client);
+    }
 
     @Override
     public InventoryContainer getContainer() {

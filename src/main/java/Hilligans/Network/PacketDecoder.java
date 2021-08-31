@@ -14,16 +14,12 @@ public class PacketDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
-
-        if(in.readableBytes() >= 4) {
-            packetLength = in.readableBytes();
+        packetLength = in.readableBytes();
+        if(packetLength >= 6) {
             in.resetReaderIndex();
             in.markReaderIndex();
             dataLength = in.readInt();
             if (packetLength < dataLength) {
-                if(packetLength >= 8) {
-                    id = in.readInt();
-                }
                 in.resetReaderIndex();
                 return;
             }

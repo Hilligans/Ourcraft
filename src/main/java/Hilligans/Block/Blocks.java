@@ -40,6 +40,15 @@ public class Blocks {
         return val;
     }
 
+
+
+
+
+
+
+
+
+
     public static final Block AIR = new Block("air", new BlockProperties().transparent().airBlock().canWalkThrough());
     public static final Block STONE = new Block("stone",new BlockProperties().withTexture("stone.png"));
 

@@ -77,9 +77,9 @@ public class IntegratedServer implements IServer {
 
     @Override
     public void sendPacket(PacketBase packetBase) {
-        PacketData packetData = new PacketData(packetBase);
-        PacketBase packet = packetData.createPacket();
-        packet.handle();
+       // PacketData packetData = new PacketData(packetBase);
+       // PacketBase packet = packetData.createPacket();
+       // packet.handle();
     }
 
     @Override

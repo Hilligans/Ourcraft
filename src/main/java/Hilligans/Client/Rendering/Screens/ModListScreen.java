@@ -1,5 +1,6 @@
 package Hilligans.Client.Rendering.Screens;
 
+import Hilligans.Client.Client;
 import Hilligans.Client.Lang.Languages;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ScreenBase;
@@ -17,13 +18,13 @@ public class ModListScreen extends ScreenBase implements SelectorScreen {
     SelectorWidget selectorWidget = null;
     ToggleWidget toggleWidget;
 
-    public ModListScreen() {
+    public ModListScreen(Client client) {
+        super(client);
         widgets.add(folder);
         for(String string : Ourcraft.CONTENT_PACK.mods.keySet()) {
             folder.addWidget(new SelectorWidget(0,0,200,50,string,this));
         }
         folder.update();
-        //widgets.add(new ToggleWidget("Enabled"))
     }
 
 

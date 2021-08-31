@@ -12,7 +12,7 @@ public class Items {
     public static final ArrayList<Item> ITEMS = new ArrayList<>();
     public static final HashMap<String, Item> HASHED_ITEMS = new HashMap<>();
 
-    public static Item TEST_ITEM = new Item("test_item",new ItemProperties().addModel("leaves.png").dynamicModel(),"ourcraft");
+    public static Item TEST_ITEM = new Item("test_item",new ItemProperties().addModel("pickaxe.png"),"ourcraft");
 
 
     static short id = 0;

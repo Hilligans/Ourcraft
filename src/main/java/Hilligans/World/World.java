@@ -190,15 +190,6 @@ public abstract class World {
     public void tick() {
     }
 
-    public void requestChunk(int x, int z) {
-        for (ClientWorld.XZHolder requestedChunk : requestedChunks) {
-            if (requestedChunk.x == x && requestedChunk.z == z) {
-                return;
-            }
-        }
-        requestedChunks.add(new ClientWorld.XZHolder(x,z));
-        ClientNetworkHandler.sendPacketDirect(new CRequestChunkPacket(x, z));
-    }
 
     ConcurrentLinkedQueue<ClientWorld.XZHolder> requestedChunks = new ConcurrentLinkedQueue<>();
 

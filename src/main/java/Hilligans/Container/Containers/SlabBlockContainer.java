@@ -1,5 +1,6 @@
 package Hilligans.Container.Containers;
 
+import Hilligans.Client.Client;
 import Hilligans.Client.ClientPlayerData;
 import Hilligans.Client.Rendering.ContainerScreen;
 import Hilligans.ClientMain;
@@ -33,7 +34,7 @@ public class SlabBlockContainer extends Container {
     }
 
     @Override
-    public ContainerScreen<?> getContainerScreen() {
+    public ContainerScreen<?> getContainerScreen(Client client) {
         return null;
     }
 }
