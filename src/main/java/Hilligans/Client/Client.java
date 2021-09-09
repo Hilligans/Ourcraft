@@ -27,10 +27,7 @@ import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Item.ItemStack;
 import Hilligans.Item.Items;
-import Hilligans.ModHandler.Events.Client.GLInitEvent;
-import Hilligans.ModHandler.Events.Client.OpenScreenEvent;
-import Hilligans.ModHandler.Events.Client.RenderEndEvent;
-import Hilligans.ModHandler.Events.Client.RenderStartEvent;
+import Hilligans.ModHandler.Events.Client.*;
 import Hilligans.Network.*;
 import Hilligans.Network.Packet.AuthServerPackets.CGetToken;
 import Hilligans.Network.Packet.Client.*;
@@ -120,7 +117,9 @@ public class Client {
                 } catch (Exception e) {}
             }).start();
         }
-        readUsernameAndPassword(tag);
+        if(tag != null) {
+            readUsernameAndPassword(tag);
+        }
         authNetwork.sendPacket(new CGetToken(playerData.userName, playerData.login_token));
 
         createGL();
@@ -130,7 +129,7 @@ public class Client {
         registerKeyHandlers();
         createCallbacks();
 
-
+        Ourcraft.EVENT_BUS.postEvent(new ClientStartRenderingEvent());
 
         while(!glfwWindowShouldClose(window)) {
             mouseLocked = screen == null;
@@ -160,6 +159,7 @@ public class Client {
         Blocks.register();
         Sounds.SOUNDS.size();
         Items.register();
+        Ourcraft.register();
     }
 
     public void createGL() {
@@ -247,6 +247,7 @@ public class Client {
         Ourcraft.EVENT_BUS.postEvent(new RenderStartEvent(matrixStack,screenStack,this));
 
         if(renderWorld && !Ourcraft.REBUILDING.get()) {
+            Ourcraft.EVENT_BUS.postEvent(new RenderWorldEvent(matrixStack,screenStack,this));
             rendering = true;
           //  if(screen == null || screen.renderWorld()) {
                 clientWorld.tick();
@@ -286,8 +287,9 @@ public class Client {
 
 
             BlockPos pos = clientWorld.traceBlockToBreak(Camera.pos.x, Camera.pos.y + Camera.playerBoundingBox.eyeHeight, Camera.pos.z, Camera.pitch, Camera.yaw);
+            BlockState blockState = null;
             if (pos != null) {
-                BlockState blockState = clientWorld.getBlockState(pos);
+                blockState = clientWorld.getBlockState(pos);
                 int id = blockState.getBlock().blockProperties.blockShape.generateOutline(clientWorld, pos);
                 glUseProgram(shaderManager.lineShader);
                 GL30.glBindVertexArray(id);
@@ -312,6 +314,7 @@ public class Client {
                 StringRenderer.drawString(screenStack, "Yaw:" + Math.toDegrees(Camera.yaw),windowX/2,184,0.5f);
                 StringRenderer.drawString(screenStack, "Sounds:" + soundEngine.sounds.size(),windowX/2,213,0.5f);
                 StringRenderer.drawString(screenStack, "Render Calls:" + GLRenderer.drawCalls, windowX/2,242,0.5f);
+                StringRenderer.drawString(screenStack, "Block:" + (blockState == null ? "null" : blockState.getBlock().getName()),windowX/2,261,0.5f);
             }
             ItemStack stack = playerData.inventory.getItem(playerData.handSlot);
             if(stack != null && stack.item != null) {
@@ -488,12 +491,12 @@ public class Client {
             }
         }, GLFW_KEY_F2);
 
-        KeyHandler.register(new KeyPress() {
-            @Override
-            public void onPress() {
-                openScreen(new MiniMapScreen(client,clientWorld.miniMap));
-            }
-        }, GLFW_KEY_K);
+    //    KeyHandler.register(new KeyPress() {
+     //       @Override
+  //          public void onPress() {
+     //           openScreen(new MiniMapScreen(client,clientWorld.miniMap));
+  //          }
+       // }, GLFW_KEY_K);
     }
 
     public void createCallbacks() {

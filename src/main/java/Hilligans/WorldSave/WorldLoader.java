@@ -4,8 +4,11 @@ import Hilligans.Ourcraft;
 import Hilligans.Tag.*;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Enumeration;
+import java.util.Iterator;
 
 import static org.lwjgl.stb.STBImage.stbi_load;
 import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
@@ -34,7 +37,7 @@ public class WorldLoader {
             ByteBuffer byteBuffer = readBuffer(path);
             if(byteBuffer != null) {
                 CompoundTag compoundTag = new CompoundTag();
-                compoundTag.read(byteBuffer);
+                compoundTag.readFrom(byteBuffer);
                 return compoundTag;
             }
             return null;
@@ -128,7 +131,11 @@ public class WorldLoader {
         return stringBuilder.toString() + "\n\0";
     }
 
+
     public static String readString(InputStream stream) {
+        if(stream == null) {
+            return "";
+        }
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         reader.lines().forEach(string -> stringBuilder.append(string).append("\n"));
@@ -138,7 +145,7 @@ public class WorldLoader {
     public static void save(CompoundTag compoundTag, String path) {
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(maxSize);
         byteBuffer.mark();
-        compoundTag.write(byteBuffer);
+        compoundTag.writeTo(byteBuffer);
         byteBuffer.limit(byteBuffer.position());
         byteBuffer.reset();
         write(path,byteBuffer);

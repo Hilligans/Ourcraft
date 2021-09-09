@@ -5,7 +5,6 @@ import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
-import Hilligans.Network.ClientAuthNetworkHandler;
 import Hilligans.Network.Packet.AuthServerPackets.CTokenValid;
 import Hilligans.Network.Packet.Server.*;
 import Hilligans.Data.Other.Server.ServerPlayerData;
@@ -14,7 +13,6 @@ import Hilligans.Network.PacketData;
 import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.ServerMain;
 import Hilligans.Util.Settings;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.net.InetSocketAddress;

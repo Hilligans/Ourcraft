@@ -1,14 +1,11 @@
 package Hilligans.Client.Rendering.Screens;
 
 import Hilligans.Client.Client;
-import Hilligans.Client.ClientPlayerData;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.ScreenBase;
 import Hilligans.Client.Rendering.Widgets.Button;
 import Hilligans.Client.Rendering.Widgets.InputField;
 import Hilligans.Client.Rendering.World.StringRenderer;
-import Hilligans.ClientMain;
-import Hilligans.Network.ClientAuthNetworkHandler;
 import Hilligans.Network.Packet.AuthServerPackets.CCreateAccount;
 import Hilligans.Ourcraft;
 

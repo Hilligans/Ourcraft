@@ -10,7 +10,6 @@ import Hilligans.Data.Primitives.TripleTypeWrapper;
 import Hilligans.ModHandler.Content.ModContent;
 import Hilligans.Ourcraft;
 import Hilligans.Util.Settings;
-import Hilligans.WorldSave.WorldLoader;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -19,11 +18,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.concurrent.Future;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -106,6 +106,23 @@ public class ResourceManager {
         return stream;
     }
 
+    public InputStream getResource(String path, String mod) {
+        ModContent modContent = Ourcraft.CONTENT_PACK.mods.get(mod);
+        try {
+            if (modContent != null) {
+                String jarPath = modContent.classLoader.getURLs()[0].getPath();
+                for (Iterator<URL> it = ResourceManager.class.getClassLoader().getResources(path).asIterator(); it.hasNext(); ) {
+                    URL url = it.next();
+                    String urlPath = url.getPath();
+                    if((urlPath.startsWith(jarPath)) || (urlPath.startsWith("file:") && urlPath.substring(5).startsWith(jarPath)) || (jarPath.startsWith(urlPath.substring(0,urlPath.length() - path.length())))) {
+                        return url.openStream();
+                    }
+                }
+            }
+        } catch (Exception ignored) {}
+        return null;
+    }
+
     public void clearData() {
         textures.clear();
         models.clear();
@@ -184,13 +201,13 @@ public class ResourceManager {
         try {
             File file = new File(WorldTextureManager.class.getProtectionDomain().getCodeSource().getLocation().toURI());
             ZipFile zipFile = new ZipFile(file);
-            ZipEntry zipEntry = zipFile.getEntry("Images/" + path);
+            ZipEntry zipEntry = zipFile.getEntry("images/" + path);
             if (zipEntry != null) {
                 return ImageIO.read(zipFile.getInputStream(zipEntry));
             }
         } catch (Exception ignored) {}
 
-        InputStream url = ClientMain.class.getResourceAsStream("/Images/" + path);
+        InputStream url = ClientMain.class.getResourceAsStream("/images/" + path);
         if(url != null) {
             try {
                 return ImageIO.read(url);
@@ -209,7 +226,7 @@ public class ResourceManager {
             if (filePath != null) {
                 try {
                     ZipFile zipFile = new ZipFile(filePath);
-                    ZipEntry zipEntry = zipFile.getEntry("Images/" + path);
+                    ZipEntry zipEntry = zipFile.getEntry("images/" + path);
                     if (zipEntry != null) {
                         return ImageIO.read(zipFile.getInputStream(zipEntry));
                     }

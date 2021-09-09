@@ -1,10 +1,7 @@
 package Hilligans.Network.Packet.AuthServerPackets;
 
-import Hilligans.Client.Client;
-import Hilligans.Client.ClientPlayerData;
 import Hilligans.Client.Rendering.Screens.AccountCreationScreen;
 import Hilligans.ClientMain;
-import Hilligans.Network.ClientAuthNetworkHandler;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 

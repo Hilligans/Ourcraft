@@ -16,12 +16,14 @@ import org.joml.Vector4f;
 
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.zip.Deflater;
 
 public class PacketData extends ByteArray {
 
 
     public ChannelHandlerContext ctx;
-    short packetId = 0;
+    public short packetId = 0;
 
     public PacketData(PacketBase packetBase) {
         byteBuf = Unpooled.buffer();
@@ -34,10 +36,16 @@ public class PacketData extends ByteArray {
         byteBuf.writeByte(val);
     }
 
-    public PacketData(byte[] bytes) {
+    public PacketData(byte[] bytes, int packetWidth) {
         byteBuf = Unpooled.buffer();
         byteBuf.writeBytes(bytes);
         packetId = byteBuf.readShort();
+        size = bytes.length;
+    }
+
+    public PacketData(byte[] bytes) {
+        byteBuf = Unpooled.buffer();
+        byteBuf.writeBytes(bytes);
         size = bytes.length;
     }
 
@@ -47,14 +55,39 @@ public class PacketData extends ByteArray {
         size = byteBuf.readableBytes();
     }
 
-    public PacketData(ByteBuffer buffer) {
-        this(buffer.array());
+    public PacketData(ByteBuffer buffer, int packetWidth) {
+        this(buffer.array(),packetWidth);
     }
 
-    public void writeToByteBuf(ByteBuf byteBuf) {
-        byteBuf.writeInt(size + 6);
-        byteBuf.writeShort(packetId);
-        byteBuf.writeBytes(this.byteBuf);
+    public void writeToByteBuf(ByteBuf byteBuf, int packetWidth, boolean compressed) {
+        byteBuf.writeInt(size + 4 + packetWidth);
+        if(compressed) {
+            Deflater compressor = new Deflater();
+            ByteBuffer buffer;
+            if(packetWidth == 1) {
+                buffer = this.byteBuf.nioBuffer(1,this.size);
+                buffer.put(0, (byte) packetId);
+            } else {
+                buffer = this.byteBuf.nioBuffer(2,this.size);
+                buffer.putShort(0,packetId);
+            }
+            compressor.setInput(buffer);
+            compressor.finish();
+            ByteBuffer newBuffer = ByteBuffer.allocate(4);
+            int length = compressor.deflate(newBuffer);
+            compressor.end();
+            byteBuf.writeIntLE(length);
+            byteBuf.writeBytes(newBuffer);
+        } else {
+            if (packetWidth == 1) {
+                byteBuf.writeByte(packetId);
+            } else {
+                byteBuf.writeShort(packetId);
+            }
+            byteBuf.writeBytes(this.byteBuf);
+        }
+
+
     }
 
     public PacketBase createPacket() {
@@ -70,23 +103,6 @@ public class PacketData extends ByteArray {
         packetBase.decode(this);
         return packetBase;
     }
-
-    public PacketBase createAltPacket() {
-        PacketBase packetBase;
-        if(packetId == 0) {
-            packetBase = new SAccountPacket();
-        } else if(packetId == 1) {
-            packetBase = new SSendToken();
-        } else if(packetId == 2) {
-            packetBase = new STokenValid();
-        } else {
-            packetBase = new SSendLoginToken();
-        }
-        packetBase.ctx = ctx;
-        packetBase.decode(this);
-        return packetBase;
-    }
-
 
 
 }

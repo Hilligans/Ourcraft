@@ -6,12 +6,14 @@ import Hilligans.Client.Rendering.World.RenderableString;
 import Hilligans.Client.Rendering.World.StringRenderer;
 import Hilligans.ClientMain;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
+import Hilligans.ModHandler.Events.Client.ClientSendMessageEvent;
 import Hilligans.Network.Packet.Client.CSendMessage;
 import Hilligans.Client.Key.CharPress;
 import Hilligans.Client.Key.KeyHandler;
 import Hilligans.Client.Key.KeyPress;
 import Hilligans.Client.Rendering.Screen;
 import Hilligans.Network.ClientNetworkHandler;
+import Hilligans.Ourcraft;
 import Hilligans.Util.Settings;
 
 import java.util.ArrayList;
@@ -170,6 +172,7 @@ public class ChatWindow implements Screen {
                     messageIndex = -1;
                     if(!getString().equals("")) {
                         ClientMain.getClient().sendPacket(new CSendMessage(string));
+                        Ourcraft.EVENT_BUS.postEvent(new ClientSendMessageEvent(string));
                         string = "";
                         typing = false;
                         ClientMain.getClient().closeScreen();

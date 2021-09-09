@@ -21,7 +21,7 @@ public class TextureAtlas {
     int width = 0;
     int height = 1;
 
-    public static final int MAX_TEXTURE_SIZE = 256;
+    public static final int MAX_TEXTURE_SIZE = 512;
     public static final int MIN_TEXTURE_SIZE = 16;
     public static final int RATIO = MAX_TEXTURE_SIZE / MIN_TEXTURE_SIZE;
 

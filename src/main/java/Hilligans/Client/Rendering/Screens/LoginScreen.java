@@ -3,10 +3,7 @@ package Hilligans.Client.Rendering.Screens;
 import Hilligans.Client.Client;
 import Hilligans.Client.Rendering.ScreenBase;
 import Hilligans.Client.Rendering.Widgets.Button;
-import Hilligans.Client.Rendering.Widgets.ButtonAction;
 import Hilligans.Client.Rendering.Widgets.InputField;
-import Hilligans.ClientMain;
-import Hilligans.Network.ClientAuthNetworkHandler;
 import Hilligans.Network.Packet.AuthServerPackets.CLogin;
 import Hilligans.Ourcraft;
 

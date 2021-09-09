@@ -11,7 +11,7 @@ import Hilligans.ServerMain;
 
 public class CSendMessage extends PacketBase {
 
-    String message;
+    public String message;
 
     public CSendMessage() {
         super(11);

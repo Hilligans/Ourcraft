@@ -1,8 +1,6 @@
 package Hilligans.Network.Packet.AuthServerPackets;
 
-import Hilligans.Client.ClientPlayerData;
 import Hilligans.ClientMain;
-import Hilligans.Network.ClientAuthNetworkHandler;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 

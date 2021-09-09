@@ -14,6 +14,7 @@ import Hilligans.ModHandler.Mod;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.Network.Protocol;
+import Hilligans.Ourcraft;
 import Hilligans.Util.ByteArray;
 import Hilligans.Util.Settings;
 import Hilligans.Util.Util;
@@ -22,12 +23,17 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 public class ModContent {
@@ -48,6 +54,16 @@ public class ModContent {
     public HashMap<String,BufferedImage> blockTextures = new HashMap<>();
     public ArrayList<SoundBuffer> sounds = new ArrayList<>();
     public ArrayList<IModel> models = new ArrayList<>();
+
+    public BiFunction<JSONObject,String,Block> blockParser = (blockData, string) -> {
+        Block block = new Block(string, "/Data/" + blockData.getString("data"),modID);
+        JSONArray textures = blockData.getJSONArray("textures");
+        for(int x = 0; x < textures.length(); x++) {
+            block.blockProperties.addTexture(textures.getString(x),x);
+        }
+        return block;
+    };
+
 
     public HashMap<String,Protocol> protocols = new HashMap<>();
 
@@ -71,11 +87,16 @@ public class ModContent {
         }
     }
 
+    public ModContent addClassLoader(URLClassLoader classLoader) {
+        this.classLoader = classLoader;
+        return this;
+    }
+
     public static ModContent readLocal(String name) {
         ByteBuffer buffer = WorldLoader.readBuffer("mod_cache/" + (Settings.storeServerModsIndividually ? "servers/" + ClientMain.getClient().serverIP.replace(':','_') + "/" : "mods/") + name + ".dat");
         if(buffer != null) {
             ModContent modContent = new ModContent("");
-            modContent.readData(new PacketData(buffer));
+            modContent.readData(new PacketData(buffer,2));
             return modContent;
         }
         return null;
@@ -86,6 +107,7 @@ public class ModContent {
             mainClass.getConstructor(ModContent.class).newInstance(this);
         }
         loaded = true;
+        readInitializers();
     }
 
     public void registerBlock(Block block) {
@@ -163,6 +185,29 @@ public class ModContent {
         for(Supplier<PacketBase> packet : packets) {
             registerPacket(protocolName,packet);
         }
+    }
+
+    public void registerPacket(String protocolName, int id, Supplier<PacketBase> packet) {
+        Protocol protocol = protocols.computeIfAbsent(protocolName, Protocol::new);
+        protocol.register(packet,id);
+    }
+
+    @SafeVarargs
+    public final void registerPackets(String protocolName, int id, Supplier<PacketBase>... packets) {
+        for(Supplier<PacketBase> packet : packets) {
+            registerPacket(protocolName,id,packet);
+        }
+    }
+
+    public void readInitializers() {
+        try {
+            JSONObject blocks = new JSONObject(WorldLoader.readString(Ourcraft.RESOURCE_MANAGER.getResource("Data/Blocks.json", modID)));
+            for(String string : blocks.keySet()) {
+                JSONObject blockData = blocks.getJSONObject(string);
+                Block block = blockParser.apply(blockData,string);
+                registerBlock(block);
+            }
+        } catch (Exception ignored) {}
     }
 
 

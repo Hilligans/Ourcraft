@@ -32,6 +32,10 @@ public class BlockShape {
         data = BlockModel.create("Models/Blocks/" + path);
     }
 
+    public BlockShape(BlockModel model) {
+        this.data = model;
+    }
+
     public BoundingBox getBoundingBox(World world, BlockPos pos) {
         int val = world.getBlockState(pos).readData();
         return boundingBoxes.getOrDefault(val,defaultBoundingBox).duplicate();

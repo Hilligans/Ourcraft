@@ -12,6 +12,7 @@ import Hilligans.WorldSave.WorldLoader;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -116,9 +117,9 @@ public class Blocks {
         ModContent ourcraft = Ourcraft.OURCRAFT;
         ourcraft.registerBlocks(AIR,STONE,DIRT,GRASS,BEDROCK,IRON_ORE,LEAVES,LOG,SAND,CACTUS,CHEST,COLOR_BLOCK,STAIR_BLOCK,GRASS_PLANT,WEEPING_VINE,MAPLE_LOG,MAPLE_PLANKS,PINE_LOG,PINE_PLANKS,SPRUCE_LOG,SPRUCE_PLANKS,BIRCH_LOG,BIRCH_PLANKS,OAK_LOG,OAK_PLANKS,WILLOW_LOG,WILLOW_PLANKS,ACACIA_LOG,ACACIA_PLANKS,POPLAR_LOG,POPLAR_PLANKS,ELM_LOG,ELM_WOOD,PALM_LOG,PALM_WOOD,REDWOOD_LOG,REDWOOD_WOOD,SAPLING);
         JSONObject jsonObject = new JSONObject(WorldLoader.readString("/Data/Blocks.json"));
-        for(String string : jsonObject.keySet()) {
+  /*      for(String string : jsonObject.keySet()) {
             JSONObject blockData = jsonObject.getJSONObject(string);
-            Block block = new Block(string,"/Data/" + blockData.getString("data"));
+            Block block = new Block(string,"/Data/" + blockData.getString("data"),Ourcraft.OURCRAFT.modID);
             Ourcraft.OURCRAFT.registerBlock(block);
             JSONArray textures = blockData.getJSONArray("textures");
             for(int x = 0; x < textures.length(); x++) {
@@ -128,12 +129,12 @@ public class Blocks {
                     block.blockProperties.withSidedTexture(textures.getString(x),x - 1);
                 }
             }
-
         }
 
-
-
+   */
     }
+
+
 
     public static Block getBlockWithID(int id) {
         return BLOCKS.get(id);

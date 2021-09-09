@@ -60,13 +60,13 @@ public class TextureLocation {
         try {
             File file = new File(WorldTextureManager.class.getProtectionDomain().getCodeSource().getLocation().toURI());
             ZipFile zipFile = new ZipFile(file);
-            ZipEntry zipEntry = zipFile.getEntry("Images/" + path);
+            ZipEntry zipEntry = zipFile.getEntry("images/" + path);
             if (zipEntry != null) {
                 return ImageIO.read(zipFile.getInputStream(zipEntry));
             }
         } catch (Exception ignored) {}
 
-        InputStream url = ClientMain.class.getResourceAsStream("/Images/" + path);
+        InputStream url = ClientMain.class.getResourceAsStream("/images/" + path);
         if(url != null) {
             try {
                 return ImageIO.read(url);
@@ -85,7 +85,7 @@ public class TextureLocation {
             if (filePath != null) {
                 try {
                     ZipFile zipFile = new ZipFile(filePath);
-                    ZipEntry zipEntry = zipFile.getEntry("Images/" + path);
+                    ZipEntry zipEntry = zipFile.getEntry("images/" + path);
                     if (zipEntry != null) {
                         return ImageIO.read(zipFile.getInputStream(zipEntry));
                     }

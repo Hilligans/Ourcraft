@@ -61,10 +61,9 @@ public class ModLoader {
                                 modContent.readData(jsonObject);
                             }
                             modContent.mainClass = testClass;
-                            modContent.classLoader = child;
-                            Ourcraft.CONTENT_PACK.mods.put(modID,modContent);
-                            Ourcraft.RESOURCE_MANAGER.classLoaders.add(child);
+                            modContent.addClassLoader(child);
                             mainClasses.put(modID,new TripleTypeWrapper<>(testClass,mod.getAbsolutePath(),false));
+                            Ourcraft.CONTENT_PACK.registerModContent(modContent);
                         }
                     } catch (Exception ignored) {}
                 }
@@ -90,9 +89,8 @@ public class ModLoader {
                     testClass = Class.forName(name,true,child);
                     mainClasses.put(modID,new TripleTypeWrapper<>(testClass,file.getAbsolutePath(),true));
                     modContent.mainClass = testClass;
-                    modContent.classLoader = child;
-                    Ourcraft.CONTENT_PACK.mods.put(modID,modContent);
-                    Ourcraft.RESOURCE_MANAGER.classLoaders.add(child);
+                    modContent.addClassLoader(child);
+                    Ourcraft.CONTENT_PACK.registerModContent(modContent);
                     return true;
                 }
             }

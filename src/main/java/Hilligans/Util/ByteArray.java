@@ -5,12 +5,16 @@ import Hilligans.Item.Item;
 import Hilligans.Item.ItemStack;
 import Hilligans.Item.Items;
 import Hilligans.Network.PacketBase;
+import Hilligans.Tag.CompoundTag;
+import Hilligans.WorldSave.WorldLoader;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.joml.Vector4f;
 
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 public class ByteArray {
@@ -89,6 +93,14 @@ public class ByteArray {
         return val.toString();
     }
 
+    public String readUTF8() {
+        int length = readVarInt();
+        String string = byteBuf.toString(byteBuf.readerIndex(), length, StandardCharsets.UTF_8);
+        byteBuf.readerIndex(byteBuf.readerIndex() + length);
+        size -= length;
+        return string;
+    }
+
     public boolean readBoolean() {
         byte val = readByte();
         return val == (byte) 1;
@@ -135,6 +147,57 @@ public class ByteArray {
             values[x] = readString();
         }
         return values;
+    }
+
+    public int readVarInt() {
+        int numRead = 0;
+        int result = 0;
+        byte read;
+        do {
+            read = readByte();
+            int value = (read & 0b01111111);
+            result |= (value << (7 * numRead));
+
+            numRead++;
+            if (numRead > 5) {
+                throw new RuntimeException("VarInt is too big");
+            }
+        } while ((read & 0b10000000) != 0);
+
+        return result;
+    }
+
+    public long readVarLong() {
+        int numRead = 0;
+        long result = 0;
+        byte read;
+        do {
+            read = readByte();
+            size -= 1;
+            long value = (read & 0b01111111);
+            result |= (value << (7 * numRead));
+
+            numRead++;
+            if (numRead > 10) {
+                throw new RuntimeException("VarLong is too big");
+            }
+        } while ((read & 0b10000000) != 0);
+
+        return result;
+    }
+
+    public CompoundTag readCompoundTag() {
+        byteBuf.markReaderIndex();
+        if(byteBuf.readByte() == 0) {
+            return null;
+        }
+        byteBuf.resetReaderIndex();
+        CompoundTag compoundTag = new CompoundTag();
+        ByteBuffer buffer = byteBuf.nioBuffer();
+        compoundTag.readFrom(buffer);
+        size = buffer.position();
+        byteBuf.readerIndex(buffer.position());
+        return compoundTag;
     }
 
     public int[] readInts() {
@@ -191,6 +254,22 @@ public class ByteArray {
         return values;
     }
 
+    public byte[] readBytes(int count) {
+        byte[] bytes = new byte[count];
+        for(int x = 0; x < count; x++) {
+            bytes[x] = readByte();
+        }
+        return bytes;
+    }
+
+    public long[] readLongs(int count) {
+        long[] longs = new long[count];
+        for(int x = 0; x < count; x++) {
+            longs[x] = readLong();
+        }
+        return longs;
+    }
+
     public void writeInt(int val) {
         size += 4;
         byteBuf.writeInt(val);
@@ -207,6 +286,11 @@ public class ByteArray {
     }
 
     public void writeByte(byte val) {
+        size += 1;
+        byteBuf.writeByte(val);
+    }
+
+    public void writeByte(int val) {
         size += 1;
         byteBuf.writeByte(val);
     }
@@ -229,9 +313,17 @@ public class ByteArray {
         short stringLength = (short) val.length();
         writeShort(stringLength);
 
+
         for(short x = 0; x < stringLength; x++) {
             writeByte((byte)val.charAt(x));
         }
+    }
+
+    public void writeUTF8(String string) {
+        byte[] bytes = string.getBytes(StandardCharsets.UTF_8);
+        writeVarInt(bytes.length);
+        size += bytes.length;
+        byteBuf.writeBytes(bytes);
     }
 
     public void writeBoolean(boolean val) {
@@ -274,6 +366,41 @@ public class ByteArray {
                 writeInt(bufferedImage.getRGB(x,y));
             }
         }
+    }
+
+    public void writeVarInt(int value) {
+        while (true) {
+            if ((value & 0xFFFFFF80) == 0) {
+                writeByte(value);
+                return;
+            }
+
+            writeByte((value & 0x7F | 0x80));
+            value >>>= 7;
+        }
+    }
+
+    public void writeVarLong(long value) {
+        while (true) {
+            if ((value & 0xFFFFFFFFFFFFFF80L) == 0) {
+                writeByte((byte) value);
+                size += 1;
+                return;
+            }
+
+            writeByte((byte) (value & 0x7F | 0x80));
+            size += 1;
+            value >>>= 7;
+        }
+    }
+
+    public void writeCompoundTag(CompoundTag compoundTag) {
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(WorldLoader.maxSize);
+        byteBuffer.mark();
+        compoundTag.writeTo(byteBuffer);
+        byteBuffer.limit(byteBuffer.position());
+        byteBuffer.reset();
+        byteBuf.writeBytes(byteBuffer);
     }
 
     public void writeStrings(String[] strings) {
@@ -324,5 +451,6 @@ public class ByteArray {
             writeDouble(val);
         }
     }
+
 
 }

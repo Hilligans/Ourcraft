@@ -15,6 +15,8 @@ import Hilligans.Network.Protocol;
 import Hilligans.Network.Protocols;
 import Hilligans.Ourcraft;
 import Hilligans.Util.Settings;
+import Hilligans.WorldSave.WorldLoader;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -49,6 +51,11 @@ public class ContentPack {
        } else {
            rebuild();
        }
+    }
+
+    public void registerModContent(ModContent modContent) {
+        mods.put(modContent.modID,modContent);
+        Ourcraft.RESOURCE_MANAGER.classLoaders.add(modContent.classLoader);
     }
 
     ///TODO use Blocks, Items, Entity Instances so the game can still render while its being reupdated.

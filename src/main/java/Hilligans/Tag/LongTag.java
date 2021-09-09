@@ -19,7 +19,7 @@ public class LongTag extends Tag {
 
     @Override
     public byte getId() {
-        return 5;
+        return 4;
     }
 
     @Override
@@ -35,5 +35,12 @@ public class LongTag extends Tag {
     @Override
     public String getVal() {
         return val + "";
+    }
+
+    @Override
+    public String toString() {
+        return "LongTag{" +
+                "val=" + val +
+                '}';
     }
 }

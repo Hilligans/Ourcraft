@@ -14,13 +14,13 @@ public class ListTag<T extends Tag> extends Tag {
 
     @Override
     public byte getId() {
-        return 10;
+        return 9;
     }
 
     @Override
     public void read(ByteBuffer byteBuf) {
-        int size = byteBuf.getInt();
         byte type = byteBuf.get();
+        int size = byteBuf.getInt();
         for(int x = 0; x < size; x++) {
             Tag tag = Tag.tags.get(type).get();
             tag.read(byteBuf);
@@ -30,12 +30,12 @@ public class ListTag<T extends Tag> extends Tag {
 
     @Override
     public void write(ByteBuffer byteBuf) {
-        byteBuf.putInt(tags.size());
         if(tags.size() != 0) {
             byteBuf.put(tags.get(0).getId());
         } else {
             byteBuf.put((byte)0);
         }
+        byteBuf.putInt(tags.size());
         for(T tag : tags) {
             tag.write(byteBuf);
         }

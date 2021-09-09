@@ -29,7 +29,7 @@ public class TagEditorScreen extends ScreenBase {
         folderWidget = new FolderWidget(100,100,100,40,"Data");
         folderWidget.minY = 100 + FolderWidget.spacing;
         widgets.add(folderWidget);
-        widgets.add(new Button(0, 0, 100, 40, "Open", () -> FileLoader.openFile("dat", null, new FileLoader.HandleFile() {
+        widgets.add(new Button(0, 0, 100, 40, "Open", () -> FileLoader.openFile("", null, new FileLoader.HandleFile() {
             @Override
             public void success(PointerBuffer path) {
                 path.mark();

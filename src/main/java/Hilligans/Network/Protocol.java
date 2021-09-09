@@ -23,6 +23,7 @@ public class Protocol {
     public ArrayList<PacketFetcher> packets = new ArrayList<>();
     public HashMap<Class<PacketBase>, Integer> packetMap = new HashMap<>();
     public Int2BooleanOpenHashMap requiredIds = new Int2BooleanOpenHashMap();
+    public boolean compressed;
 
     public void register(Supplier<PacketBase> packet) {
         register(new PacketFetcher(packets.size(),packet));
@@ -67,7 +68,7 @@ public class Protocol {
 
     public Protocol(String protocolName) {
         this.protocolName = protocolName;
-        register(InvalidFormatPacket::new,0);
+        register(InvalidFormatPacket::new);
     }
 
     public void mergeProtocols(Protocol protocol) {
@@ -88,7 +89,7 @@ public class Protocol {
         packets.clear();
         packetMap.clear();
         requiredIds.clear();
-        register(InvalidFormatPacket::new,0);
+        register(InvalidFormatPacket::new);
     }
 
     @Override

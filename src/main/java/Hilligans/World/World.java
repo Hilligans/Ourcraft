@@ -280,28 +280,30 @@ public abstract class World {
     }
 
     public BlockPos traceBlockToBreak(double x, double y, double z, double pitch, double yaw) {
-        double addX = (Math.cos(yaw) * Math.cos(pitch))  * stepCount;
-        double addY = Math.sin(pitch) * stepCount;
-        double addZ = Math.sin(yaw) * Math.cos(pitch) * stepCount;
+        try {
+            double addX = (Math.cos(yaw) * Math.cos(pitch)) * stepCount;
+            double addY = Math.sin(pitch) * stepCount;
+            double addZ = Math.sin(yaw) * Math.cos(pitch) * stepCount;
 
-        double Z = z + offSet;
-        double Y = y + offSet;
-        double X = x + offSet;
-        for(int a = 0; a < distance / stepCount; a++) {
-            Z -= addZ;
-            Y -= addY;
-            X -= addX;
-            //final double Z = z - Math.sin(yaw) * Math.cos(pitch) * a * 0.1 + offSet;
-            //final double Y = y - Math.sin(pitch) * 0.1 * a + offSet;
-            //final double X = (x - Math.cos(yaw) * Math.cos(pitch) * a * 0.1) + offSet;
-            BlockPos pos = new BlockPos((int) Math.round(X), (int) Math.round(Y), (int) Math.round(Z));
-            BlockState blockState = getBlockState(pos);
-            if(blockState.getBlock() != Blocks.AIR) {
-                if(blockState.getBlock().getBoundingBox(this,pos).intersectVector(new Vector3f((float)X - offSet,(float)Y - offSet,(float)Z - offSet), pos)) {
-                    return pos;
+            double Z = z + offSet;
+            double Y = y + offSet;
+            double X = x + offSet;
+            for (int a = 0; a < distance / stepCount; a++) {
+                Z -= addZ;
+                Y -= addY;
+                X -= addX;
+                //final double Z = z - Math.sin(yaw) * Math.cos(pitch) * a * 0.1 + offSet;
+                //final double Y = y - Math.sin(pitch) * 0.1 * a + offSet;
+                //final double X = (x - Math.cos(yaw) * Math.cos(pitch) * a * 0.1) + offSet;
+                BlockPos pos = new BlockPos((int) Math.round(X), (int) Math.round(Y), (int) Math.round(Z));
+                BlockState blockState = getBlockState(pos);
+                if (blockState.getBlock() != Blocks.AIR) {
+                    if (blockState.getBlock().getBoundingBox(this, pos).intersectVector(new Vector3f((float) X - offSet, (float) Y - offSet, (float) Z - offSet), pos)) {
+                        return pos;
+                    }
                 }
             }
-        }
+        } catch (Exception ignored) {}
         return null;
     }
 

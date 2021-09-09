@@ -11,28 +11,43 @@ public class PacketDecoder extends ByteToMessageDecoder {
     int id = -1;
     public int dataLength = -1;
     public int packetLength = -1;
+    public int packetWidth = 2;
+    public boolean compressed;
+
+    public PacketDecoder(int packetWidth, boolean compressed) {
+        this.packetWidth = packetWidth;
+        this.compressed = compressed;
+    }
+
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
         packetLength = in.readableBytes();
-        if(packetLength >= 6) {
-            in.resetReaderIndex();
-            in.markReaderIndex();
-            dataLength = in.readInt();
-            if (packetLength < dataLength) {
-                in.resetReaderIndex();
-                return;
+        if(compressed) {
+            if(packetLength >= 5) {
+
             }
-            byte[] bytes = new byte[dataLength - 4];
-            in.readBytes(bytes);
-            PacketData packetData = new PacketData(bytes);
-            packetData.ctx = ctx;
-            out.add(packetData);
-            in.markReaderIndex();
+        } else {
+            if (packetLength >= 4 + packetWidth) {
+                in.resetReaderIndex();
+                in.markReaderIndex();
+                dataLength = in.readInt();
+                if (packetLength < dataLength) {
+                    in.resetReaderIndex();
+                    return;
+                }
+                byte[] bytes = new byte[dataLength - 4];
+                in.readBytes(bytes);
+                PacketData packetData = new PacketData(bytes, packetWidth);
+                packetData.ctx = ctx;
+                out.add(packetData);
+                in.markReaderIndex();
+            }
         }
     }
 
     public float getPercentage() {
         return (float)dataLength / packetLength;
     }
+
 }

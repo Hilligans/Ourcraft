@@ -74,13 +74,13 @@ public class BlockTextureManager implements TextureManager {
         if(textureNames != null) {
             for (String string : textureNames) {
                 if (!map.containsKey(string)) {
-                    map.put(string, WorldTextureManager.loadImage("Blocks/" + string));
+                    map.put(string, WorldTextureManager.loadImage("blocks/" + string));
                 }
             }
         }
         if(location != null) {
             if(!map.containsKey(location)) {
-                map.put(location, WorldTextureManager.loadImage("Blocks/" + location));
+                map.put(location, WorldTextureManager.loadImage("blocks/" + location));
             }
         }
 

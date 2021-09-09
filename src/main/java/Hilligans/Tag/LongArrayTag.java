@@ -3,47 +3,42 @@ package Hilligans.Tag;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-public class ShortArrayTag extends Tag {
+public class LongArrayTag extends Tag {
 
-    public short[] val;
-
-    public ShortArrayTag() {}
-
-    public ShortArrayTag(short[] val) {
-        this.val = val;
-    }
+    public long[] val;
 
     @Override
     int getSize() {
-        return val.length * 2;
+        return 0;
     }
 
     @Override
     public byte getId() {
-        return 13;
+        return 12;
     }
 
     @Override
     public void read(ByteBuffer byteBuf) {
         int length = byteBuf.getInt();
-        val = new short[length];
+        val = new long[length];
         for(int x = 0; x < length; x++) {
-            val[x] = byteBuf.getShort();
+            val[x] = byteBuf.getLong();
         }
     }
 
     @Override
     public void write(ByteBuffer byteBuf) {
         byteBuf.putInt(val.length);
-        for (short b : val) {
-            byteBuf.putShort(b);
+        for (long b : val) {
+            byteBuf.putLong(b);
         }
     }
 
     @Override
     public String toString() {
-        return "ShortArrayTag{" +
+        return "LongArrayTag{" +
                 "val=" + Arrays.toString(val) +
+                ",size=" + val.length +
                 '}';
     }
 }

@@ -147,11 +147,11 @@ public class FolderWidget extends Widget {
         TreeMap<String, Tag> tags = new TreeMap<>(compoundTag.tags);
         for(String string : tags.keySet()) {
             Tag tag = compoundTag.getTag(string);
-            if(tag.getId() == 0) {
+            if(tag.getId() == 10) {
                 FolderWidget folderWidget = new FolderWidget(string);
                 addWidget(folderWidget);
                 folderWidget.addAll((CompoundTag) tag);
-            } else if(tag.getId() == 10) {
+            } else if(tag.getId() == 9) {
                 FolderWidget folderWidget = new FolderWidget(string);
                 folderWidget.isList = true;
                 addWidget(folderWidget);

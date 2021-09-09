@@ -36,4 +36,11 @@ public class DoubleTag extends Tag {
     public String getVal() {
         return val + "";
     }
+
+    @Override
+    public String toString() {
+        return "DoubleTag{" +
+                "val=" + val +
+                '}';
+    }
 }

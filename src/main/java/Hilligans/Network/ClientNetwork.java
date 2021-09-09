@@ -9,6 +9,7 @@ import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedList;
 
 public class ClientNetwork extends Network {
@@ -18,6 +19,10 @@ public class ClientNetwork extends Network {
 
     public ClientNetwork(Protocol protocol) {
         super(protocol);
+    }
+
+    public ClientNetwork(Protocol sendProtocol, Protocol receiveProtocol, int packetIdWidth) {
+        super(sendProtocol, receiveProtocol, packetIdWidth, false);
     }
 
     public void joinServer(String ip, String port, Client client) throws Exception {
@@ -37,17 +42,27 @@ public class ClientNetwork extends Network {
             ((NetworkHandler) networkHandler).setData(b.connect(HOST, PORT).sync().channel(), group, ip, port);
         } finally {
         }
+        flush();
+    }
+
+    @Override
+    public void sendPacket(PacketBase packetBase) {
+        if(networkHandler != null && ((ClientNetworkHandler)networkHandler).enabled) {
+            packetBase.packetId = sendProtocol.packetMap.get(packetBase.getClass());
+            sendPacketDirect(packetBase);
+        } else {
+            packets.add(packetBase);
+        }
+    }
+
+    public void flush() {
         for (PacketBase packet : packets) {
             ((ClientNetworkHandler) networkHandler).sendPacket(packet);
         }
     }
 
     @Override
-    public void sendPacket(PacketBase packetBase) {
-        if(networkHandler != null && ((ClientNetworkHandler)networkHandler).enabled) {
-            ((ClientNetworkHandler)networkHandler).sendPacket(packetBase);
-        } else {
-            packets.add(packetBase);
-        }
+    public void sendPacketDirect(PacketBase packetBase) {
+        ((ClientNetworkHandler)networkHandler).sendPacket(packetBase);
     }
 }

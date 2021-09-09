@@ -35,7 +35,7 @@ public class Block {
         this.modId = modId;
     }
 
-    public Block(String name, String path) {
+    public Block(String name, String path, String modId) {
         this(name,BlockProperties.loadProperties(path));
     }
 

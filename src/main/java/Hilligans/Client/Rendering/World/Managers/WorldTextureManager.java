@@ -1,9 +1,7 @@
 package Hilligans.Client.Rendering.World.Managers;
 
 import Hilligans.ClientMain;
-import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Data.Primitives.TripleTypeWrapper;
-import Hilligans.ModHandler.ModLoader;
 import Hilligans.Ourcraft;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
@@ -14,22 +12,17 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
-import static org.lwjgl.opengl.GL32C.GL_TEXTURE_2D_MULTISAMPLE;
-import static org.lwjgl.opengl.GL32C.glTexImage2DMultisample;
 
 public class WorldTextureManager {
 

@@ -20,6 +20,7 @@ public class BlockProperties {
     public boolean dynamicItemModel = false;
     public int mapColor = 0;
     public String placementMode = "default";
+    public String textureFolder = "Blocks/";
     public int blockStateSize = 0;
     public String texture = "";
     public BlockTextureManager blockTextureManager = new BlockTextureManager();
@@ -68,6 +69,15 @@ public class BlockProperties {
 
     public BlockProperties withSidedTexture(String texture, int side) {
         blockTextureManager.addString(texture,side);
+        return this;
+    }
+
+    public BlockProperties addTexture(String texture, int side) {
+        if(side == 0) {
+            withTexture(texture);
+        } else {
+            withSidedTexture(texture,side);
+        }
         return this;
     }
 

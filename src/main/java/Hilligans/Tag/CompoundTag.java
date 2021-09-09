@@ -136,15 +136,14 @@ public class CompoundTag extends Tag {
 
     @Override
     public byte getId() {
-        return 0;
+        return 10;
     }
 
     @Override
     public void read(ByteBuffer byteBuf) {
-        byte tagCount = byteBuf.get();
-        for(int x = 0; x < tagCount; x++) {
+        byte tagId;
+        while((tagId = byteBuf.get()) != 0) {
             String string = readString(byteBuf);
-            byte tagId = byteBuf.get();
             Tag tag = Tag.tags.get(tagId).get();
             tag.read(byteBuf);
             tags.put(string,tag);
@@ -154,13 +153,24 @@ public class CompoundTag extends Tag {
     @Override
     public void write(ByteBuffer byteBuf) {
         Collection<String> tagCollection = tags.keySet();
-        byte length = (byte) tagCollection.size();
-        byteBuf.put(length);
         for(String string : tagCollection) {
-            writeString(byteBuf,string);
             byteBuf.put(tags.get(string).getId());
+            writeString(byteBuf,string);
             tags.get(string).write(byteBuf);
         }
+        byteBuf.put((byte)0);
+    }
+
+    public void writeTo(ByteBuffer buffer) {
+        buffer.put(getId());
+        writeString(buffer,"");
+        write(buffer);
+    }
+
+    public void readFrom(ByteBuffer buffer) {
+        buffer.get();
+        readString(buffer);
+        read(buffer);
     }
 
     @Override

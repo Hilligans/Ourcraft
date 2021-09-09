@@ -19,7 +19,7 @@ public class FloatTag extends Tag {
 
     @Override
     public byte getId() {
-        return 4;
+        return 5;
     }
 
     @Override
@@ -35,5 +35,12 @@ public class FloatTag extends Tag {
     @Override
     public String getVal() {
         return val + "";
+    }
+
+    @Override
+    public String toString() {
+        return "FloatTag{" +
+                "val=" + val +
+                '}';
     }
 }

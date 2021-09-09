@@ -64,8 +64,8 @@ public class ServerNetworkInit extends ChannelInitializer<SocketChannel> {
         //pipeline.addLast(new DelimiterBasedFrameDecoder(65536, Delimiters.lineDelimiter()));
 
 
-        pipeline.addLast(new PacketEncoder());
-        pipeline.addLast(new PacketDecoder());
+        pipeline.addLast(new PacketEncoder(2,false));
+        pipeline.addLast(new PacketDecoder(2,false));
 //        pipeline.addLast(new StringDecoder());
 
         // and then business logic.

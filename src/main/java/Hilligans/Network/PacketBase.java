@@ -21,6 +21,8 @@ public abstract class PacketBase {
         this.packetId = id;
     }
 
+    public PacketBase() {}
+
     public abstract void encode(PacketData packetData);
 
     public abstract void decode(PacketData packetData);

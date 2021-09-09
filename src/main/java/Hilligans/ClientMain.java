@@ -27,7 +27,6 @@ public class ClientMain {
 
 
         client = new Client();
-
         client.startClient();
 
     }

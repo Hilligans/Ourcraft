@@ -1,6 +1,8 @@
 package Hilligans.Tag;
 
+import java.io.DataOutput;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public abstract class Tag {
@@ -14,13 +16,21 @@ public abstract class Tag {
     public abstract void read(ByteBuffer byteBuf);
     public abstract void write(ByteBuffer byteBuf);
 
-    public String readString(ByteBuffer byteBuffer) {
-        byte length = byteBuffer.get();
-        StringBuilder string = new StringBuilder();
-        for(int x = 0; x < length; x++) {
-            string.append(readChar(byteBuffer));
+    public static String readString(ByteBuffer byteBuffer) {
+
+        short size = byteBuffer.getShort();
+        byte[] vals = new byte[size];
+        for(int x = 0; x < size; x++) {
+            vals[x] = byteBuffer.get();
         }
-        return string.toString();
+        return new String(vals,StandardCharsets.UTF_8);
+
+        //byte length = byteBuffer.get();
+       // StringBuilder string = new StringBuilder();
+        //for(int x = 0; x < length; x++) {
+        //    string.append(readChar(byteBuffer));
+        //}
+        //return string.toString();
     }
 
     public String readFullString(ByteBuffer byteBuffer) {
@@ -32,11 +42,18 @@ public abstract class Tag {
         return string.toString();
     }
 
-    public void writeString(ByteBuffer byteBuffer, String string) {
-        byteBuffer.put((byte) string.length());
-        for(int x = 0; x < string.length(); x++) {
-            byteBuffer.put((byte) string.charAt(x));
+    public static void writeString(ByteBuffer byteBuffer, String string) {
+
+        byte[] vals = string.getBytes(StandardCharsets.UTF_8);
+        byteBuffer.putShort((short) vals.length);
+        for(byte val : vals) {
+            byteBuffer.put(val);
         }
+        //byteBuffer.put((byte) string.length());
+       // for(int x = 0; x < string.length(); x++) {
+       //     byteBuffer.put((byte) string.charAt(x));
+       // }
+       // //DataOutput a;
     }
 
     public void writeFullString(ByteBuffer byteBuffer, String string) {
@@ -63,15 +80,15 @@ public abstract class Tag {
         tags.add(ByteTag::new);
         tags.add(ShortTag::new);
         tags.add(IntegerTag::new);
-        tags.add(FloatTag::new);
         tags.add(LongTag::new);
+        tags.add(FloatTag::new);
         tags.add(DoubleTag::new);
         tags.add(ByteArrayTag::new);
-        tags.add(ShortArrayTag::new);
-        tags.add(IntegerArrayTag::new);
-        tags.add(ListTag::new);
         tags.add(StringTag::new);
-        tags.add(FullStringTag::new);
+        tags.add(ListTag::new);
+        tags.add(CompoundTag::new);
+        tags.add(IntegerArrayTag::new);
+        tags.add(LongArrayTag::new);
     }
 
     public interface TagFetcher {

@@ -36,7 +36,7 @@ public class ClientNetworkHandler extends NetworkHandler {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, PacketData msg) throws Exception {
-        PacketBase packetBase = msg.createPacket(network.protocol);
+        PacketBase packetBase = msg.createPacket(network.receiveProtocol);
         packetBase.handle();
     }
 

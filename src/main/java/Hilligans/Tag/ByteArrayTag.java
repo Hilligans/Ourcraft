@@ -1,6 +1,7 @@
 package Hilligans.Tag;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public class ByteArrayTag extends Tag {
 
@@ -37,5 +38,12 @@ public class ByteArrayTag extends Tag {
         for (byte b : val) {
             byteBuf.put(b);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ByteArrayTag{" +
+                "val=" + Arrays.toString(val) +
+                '}';
     }
 }

@@ -1,15 +1,11 @@
 package Hilligans.Client.Rendering.Widgets;
 
 import Hilligans.Client.MatrixStack;
-import Hilligans.Client.Rendering.Renderer;
 import Hilligans.Client.Rendering.Screens.JoinScreen;
 import Hilligans.Client.Rendering.Screens.LoadingScreen;
-import Hilligans.Client.Rendering.Texture;
 import Hilligans.Client.Rendering.Textures;
 import Hilligans.Client.Rendering.World.StringRenderer;
 import Hilligans.ClientMain;
-import Hilligans.Network.ClientNetworkHandler;
-import Hilligans.Network.ClientNetworkInit;
 import Hilligans.Util.Settings;
 
 public class ServerSelectorWidget extends Widget {
