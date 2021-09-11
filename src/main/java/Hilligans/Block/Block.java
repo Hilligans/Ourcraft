@@ -13,6 +13,7 @@ import Hilligans.World.DataProvider;
 import Hilligans.World.DataProviders.ShortBlockState;
 import Hilligans.World.World;
 import org.joml.Vector3d;
+import org.json.JSONObject;
 
 public class Block {
 
@@ -35,8 +36,8 @@ public class Block {
         this.modId = modId;
     }
 
-    public Block(String name, String path, String modId) {
-        this(name,BlockProperties.loadProperties(path));
+    public Block(String name, String path, String modId, JSONObject overrides) {
+        this(name,BlockProperties.loadProperties(path,overrides));
     }
 
     public Block setBlockDrop(Block blockDrop) {

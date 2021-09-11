@@ -11,6 +11,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
@@ -84,14 +86,14 @@ public class TextureAtlas {
         int id;
         for(TextureAtlas.ImageHolder imageHolder : imageHolders) {
             if(imageHolder.imageSize == img.getWidth() && imageHolder.canAddImage()) {
-                imageHolder.addTexture(img);
+                EXECUTOR.submit(() -> imageHolder.addTexture(img));
                 id = imageHolder.getNextID();
                 imageMap.put(id,imageHolder);
                 return id;
             }
         }
         TextureAtlas.ImageHolder imageHolder = new TextureAtlas.ImageHolder(img.getWidth(),imageHolders.size(), this);
-        imageHolder.addTexture(img);
+        EXECUTOR.submit(() -> imageHolder.addTexture(img));
         imageHolders.add(imageHolder);
         id = imageHolder.getNextID();
         imageMap.put(id,imageHolder);
@@ -103,14 +105,14 @@ public class TextureAtlas {
         int id;
         for(TextureAtlas.ImageHolder imageHolder : imageHolders) {
             if(imageHolder.imageSize == width && imageHolder.canAddImage()) {
-                imageHolder.addTexture(img);
+                EXECUTOR.submit(() -> imageHolder.addTexture(img));
                 id = imageHolder.getNextID();
                 imageMap.put(id,imageHolder);
                 return id;
             }
         }
         TextureAtlas.ImageHolder imageHolder = new TextureAtlas.ImageHolder(width,imageHolders.size(), this);
-        imageHolder.addTexture(img);
+        EXECUTOR.submit(() -> imageHolder.addTexture(img));
         imageHolders.add(imageHolder);
         id = imageHolder.getNextID();
         imageMap.put(id,imageHolder);
@@ -217,6 +219,8 @@ public class TextureAtlas {
             }
         }
     }
+
+    public final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
 
     public static class ImageHolder {
 

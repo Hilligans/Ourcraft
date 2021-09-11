@@ -56,7 +56,7 @@ public class ModContent {
     public ArrayList<IModel> models = new ArrayList<>();
 
     public BiFunction<JSONObject,String,Block> blockParser = (blockData, string) -> {
-        Block block = new Block(string, "/Data/" + blockData.getString("data"),modID);
+        Block block = new Block(string, "/Data/" + blockData.getString("data"),modID,blockData.optJSONObject("overrides"));
         JSONArray textures = blockData.getJSONArray("textures");
         for(int x = 0; x < textures.length(); x++) {
             block.blockProperties.addTexture(textures.getString(x),x);
@@ -207,7 +207,9 @@ public class ModContent {
                 Block block = blockParser.apply(blockData,string);
                 registerBlock(block);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+           // ignored.printStackTrace();
+        }
     }
 
 

@@ -36,6 +36,7 @@ import Hilligans.Server.MultiPlayerServer;
 import Hilligans.Tag.CompoundTag;
 import Hilligans.Tag.Tag;
 import Hilligans.Util.Settings;
+import Hilligans.World.Chunk;
 import Hilligans.World.ClientWorld;
 import Hilligans.WorldSave.WorldLoader;
 import org.lwjgl.BufferUtils;
@@ -432,6 +433,15 @@ public class Client {
                 }
             }
         },KeyHandler.GLFW_KEY_ESCAPE);
+
+        KeyHandler.register(new KeyPress() {
+            @Override
+            public void onPress() {
+                for(Chunk chunk : clientWorld.chunks.values()) {
+                    chunk.destroy();
+                }
+            }
+        },KeyHandler.GLFW_KEY_F9);
 
         KeyHandler.register(new KeyPress() {
             @Override

@@ -188,6 +188,7 @@ public class ByteArray {
 
     public CompoundTag readCompoundTag() {
         byteBuf.markReaderIndex();
+        int x = byteBuf.readerIndex();
         if(byteBuf.readByte() == 0) {
             return null;
         }
@@ -195,8 +196,8 @@ public class ByteArray {
         CompoundTag compoundTag = new CompoundTag();
         ByteBuffer buffer = byteBuf.nioBuffer();
         compoundTag.readFrom(buffer);
-        size = buffer.position();
-        byteBuf.readerIndex(buffer.position());
+        size = x + buffer.position();
+        byteBuf.readerIndex(x + buffer.position());
         return compoundTag;
     }
 

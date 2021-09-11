@@ -76,7 +76,7 @@ public class BlockProperties {
         if(side == 0) {
             withTexture(texture);
         } else {
-            withSidedTexture(texture,side);
+            withSidedTexture(texture,side - 1);
         }
         return this;
     }
@@ -184,16 +184,32 @@ public class BlockProperties {
         }
     }
 
-    public static BlockProperties loadProperties(String path) {
+    public static BlockProperties loadProperties(String path, JSONObject overrides) {
         BlockProperties blockProperties = new BlockProperties();
         String val = WorldLoader.readString(path);
         if(!val.equals("")) {
             try {
                 JSONObject jsonObject = new JSONObject(val);
+                if(overrides != null) {
+                    try {
+                        recursivelyOverride(jsonObject, overrides);
+                    } catch (Exception ignored) {} //tried to override something that doesnt exist
+                }
                 return loadProperties(jsonObject);
             } catch (Exception ignored) {}
         }
         return blockProperties;
+    }
+
+    private static void recursivelyOverride(JSONObject jsonObject, JSONObject override) {
+        for (String string : override.keySet()) {
+            Object object = override.get(string);
+            if(object instanceof JSONObject) {
+                recursivelyOverride(jsonObject.getJSONObject(string),override.getJSONObject(string));
+            } else {
+                jsonObject.put(string, object);
+            }
+        }
     }
 
     public static BlockProperties loadProperties(JSONObject jsonObject) {

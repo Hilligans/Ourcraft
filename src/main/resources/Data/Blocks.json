@@ -11,7 +11,12 @@
 
    "stairCorner": {
       "textures": ["blue.png"],
-      "data": "Blocks/stairSmall.json"
+      "data": "Blocks/stairSmall.json",
+      "overrides": {
+         "properties":{
+            "transparent":true
+         }
+      }
    }
 
 }

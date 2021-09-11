@@ -30,7 +30,7 @@ public abstract class World {
     public Int2ObjectOpenHashMap<Entity> entities = new Int2ObjectOpenHashMap<>();
     public ConcurrentLinkedQueue<BlockChange> blockChanges = new ConcurrentLinkedQueue<>();
     public int dimensionId = 1;
-    Long2ObjectOpenHashMap<Chunk> chunks = new Long2ObjectOpenHashMap<>();
+    public Long2ObjectOpenHashMap<Chunk> chunks = new Long2ObjectOpenHashMap<>();
 
     long seed = 1342;
 
