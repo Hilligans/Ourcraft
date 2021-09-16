@@ -5,8 +5,6 @@ import Hilligans.Client.MatrixStack;
 public interface Screen {
 
 
-
-
     default void render(MatrixStack matrixStack) {}
 
     default void close(boolean replaced) {}

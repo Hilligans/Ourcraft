@@ -7,6 +7,7 @@ import Hilligans.Client.Lang.Languages;
 import Hilligans.Client.Mouse.MouseHandler;
 import Hilligans.Client.Rendering.*;
 import Hilligans.Client.Rendering.NewRenderer.GLRenderer;
+import Hilligans.Client.Rendering.NewRenderer.TextAtlas;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.CreativeInventoryScreen;
 import Hilligans.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
 import Hilligans.Client.Rendering.Screens.EscapeScreen;
@@ -193,7 +194,7 @@ public class Client {
             texture.register();
         }
         screen = new JoinScreen(this);
-        texture = WorldTextureManager.instance.registerTexture();
+        texture = TextAtlas.instance.upload();
         Renderer.create(texture);
         clientWorld = new ClientWorld(client);
 
@@ -230,7 +231,7 @@ public class Client {
 
         if(refreshTexture) {
             Blocks.generateTextures();
-            texture = WorldTextureManager.instance.registerTexture();
+            texture = TextAtlas.instance.upload();
             refreshTexture = false;
         }
 
@@ -315,7 +316,8 @@ public class Client {
                 StringRenderer.drawString(screenStack, "Yaw:" + Math.toDegrees(Camera.yaw),windowX/2,184,0.5f);
                 StringRenderer.drawString(screenStack, "Sounds:" + soundEngine.sounds.size(),windowX/2,213,0.5f);
                 StringRenderer.drawString(screenStack, "Render Calls:" + GLRenderer.drawCalls, windowX/2,242,0.5f);
-                StringRenderer.drawString(screenStack, "Block:" + (blockState == null ? "null" : blockState.getBlock().getName()),windowX/2,261,0.5f);
+                StringRenderer.drawString(screenStack, "Vertices:" + GLRenderer.count, windowX/2,271,0.5f);
+                StringRenderer.drawString(screenStack, "Block:" + (blockState == null ? "null" : blockState.getBlock().getName()),windowX/2,200,0.5f);
             }
             ItemStack stack = playerData.inventory.getItem(playerData.handSlot);
             if(stack != null && stack.item != null) {

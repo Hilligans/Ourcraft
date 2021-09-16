@@ -1,6 +1,7 @@
 package Hilligans.Client.Rendering.World.Managers;
 
 import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
+import Hilligans.Client.Rendering.NewRenderer.TextAtlas;
 
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 
@@ -15,7 +16,7 @@ public class ItemTextureManager implements TextureManager {
     }
 
     public void generate() {
-        id = WorldTextureManager.instance.loadTextureId("Items/" + path,"Items/" + path.substring(0,path.length() - 4),"");
+        id = TextAtlas.instance.loadTextureId("Items/" + path,"Items/" + path.substring(0,path.length() - 4),"");
         PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
     }
 

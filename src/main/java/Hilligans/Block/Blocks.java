@@ -1,6 +1,7 @@
 package Hilligans.Block;
 
 import Hilligans.Block.BlockTypes.*;
+import Hilligans.Client.Rendering.NewRenderer.TextAtlas;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.Data.Other.BlockProperties;
 import Hilligans.Item.Item;
@@ -145,7 +146,7 @@ public class Blocks {
     }
 
     public static void generateTextures() {
-        WorldTextureManager.instance.clear();
+        TextAtlas.instance.clear();
         if(!Settings.isServer) {
             for (Block block : BLOCKS) {
                 block.generateTextures();

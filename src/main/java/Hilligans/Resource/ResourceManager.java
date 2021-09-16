@@ -6,7 +6,7 @@ import Hilligans.Client.Rendering.ClientUtil;
 import Hilligans.Client.Rendering.NewRenderer.IModel;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.ClientMain;
-import Hilligans.Data.Primitives.TripleTypeWrapper;
+import Hilligans.Data.Primitives.Triplet;
 import Hilligans.ModHandler.Content.ModContent;
 import Hilligans.Ourcraft;
 import Hilligans.Util.Settings;
@@ -106,7 +106,7 @@ public class ResourceManager {
         return stream;
     }
 
-    public InputStream getResource(String path, String mod) {
+    public synchronized InputStream getResource(String path, String mod) {
         ModContent modContent = Ourcraft.CONTENT_PACK.mods.get(mod);
         try {
             if (modContent != null) {
@@ -220,7 +220,7 @@ public class ResourceManager {
         if(source.equals("")) {
             return loadImage(path);
         }
-        TripleTypeWrapper<Class<?>,String,Boolean> type = Ourcraft.MOD_LOADER.mainClasses.get(source);
+        Triplet<Class<?>,String,Boolean> type = Ourcraft.MOD_LOADER.mainClasses.get(source);
         String filePath = type.getTypeB();
         if(type.getTypeC()) {
             if (filePath != null) {

@@ -1,8 +1,7 @@
 package Hilligans.ModHandler;
 
-import Hilligans.ModHandler.Content.ContentPack;
 import Hilligans.ModHandler.Content.ModContent;
-import Hilligans.Data.Primitives.TripleTypeWrapper;
+import Hilligans.Data.Primitives.Triplet;
 import Hilligans.Ourcraft;
 import Hilligans.Util.Settings;
 import Hilligans.WorldSave.WorldLoader;
@@ -14,9 +13,7 @@ import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -24,7 +21,7 @@ public class ModLoader {
 
     public String mod = "ourcraft";
 
-    public HashMap<String, TripleTypeWrapper<Class<?>,String,Boolean>> mainClasses = new HashMap<>();
+    public HashMap<String, Triplet<Class<?>,String,Boolean>> mainClasses = new HashMap<>();
 
     public void loadDefaultMods() {
         loadAllMods(new File("mods/"));
@@ -62,7 +59,7 @@ public class ModLoader {
                             }
                             modContent.mainClass = testClass;
                             modContent.addClassLoader(child);
-                            mainClasses.put(modID,new TripleTypeWrapper<>(testClass,mod.getAbsolutePath(),false));
+                            mainClasses.put(modID,new Triplet<>(testClass,mod.getAbsolutePath(),false));
                             Ourcraft.CONTENT_PACK.registerModContent(modContent);
                         }
                     } catch (Exception ignored) {}
@@ -87,7 +84,7 @@ public class ModLoader {
                     }
                     mod = modID;
                     testClass = Class.forName(name,true,child);
-                    mainClasses.put(modID,new TripleTypeWrapper<>(testClass,file.getAbsolutePath(),true));
+                    mainClasses.put(modID,new Triplet<>(testClass,file.getAbsolutePath(),true));
                     modContent.mainClass = testClass;
                     modContent.addClassLoader(child);
                     Ourcraft.CONTENT_PACK.registerModContent(modContent);

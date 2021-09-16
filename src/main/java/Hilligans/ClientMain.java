@@ -1,17 +1,12 @@
 package Hilligans;
 
 import Hilligans.Client.*;
-import Hilligans.Data.Other.ObjFile;
-import Hilligans.Network.PacketBase;
-import Hilligans.Network.PacketFetcher;
-import Hilligans.Network.Protocol;
-import Hilligans.Network.Protocols;
-import Hilligans.WorldSave.WorldLoader;
+import Hilligans.Client.Rendering.NewRenderer.ImageLocation;
+import Hilligans.Client.Rendering.NewRenderer.TextAtlas;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Scanner;
+import java.util.Arrays;
+import java.util.PriorityQueue;
+import java.util.concurrent.TimeUnit;
 
 public class ClientMain {
 

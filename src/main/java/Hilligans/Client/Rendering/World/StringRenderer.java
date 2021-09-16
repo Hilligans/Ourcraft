@@ -10,7 +10,7 @@ import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.ClientMain;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Data.Primitives.IntList;
-import Hilligans.Data.Primitives.TripleTypeWrapper;
+import Hilligans.Data.Primitives.Triplet;
 import Hilligans.Ourcraft;
 import it.unimi.dsi.fastutil.chars.Char2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2BooleanArrayMap;
@@ -28,7 +28,7 @@ public class StringRenderer {
     public static StringRenderer instance = new StringRenderer();
 
     public HashMap<String, DoubleTypeWrapper<Integer,Integer>> characterOffset = new HashMap<>();
-    public HashMap<String, TripleTypeWrapper<Integer,Integer, Integer>> characterOffset1 = new HashMap<>();
+    public HashMap<String, Triplet<Integer,Integer, Integer>> characterOffset1 = new HashMap<>();
 
     public int width;
     public int height;

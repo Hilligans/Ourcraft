@@ -13,6 +13,10 @@ public class Profiler {
         profiles.put(name, new DoubleTypeWrapper<>(System.currentTimeMillis(), parent));
     }
 
+    public void profile(String name) {
+        profiles.put(name, new DoubleTypeWrapper<>(System.currentTimeMillis(), parent));
+    }
+
     public void stopProfiling(String name) {
         DoubleTypeWrapper<Long,String> data = profiles.get(name);
         if(data != null) {

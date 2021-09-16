@@ -1,9 +1,7 @@
 package Hilligans.Client.Rendering.NewRenderer;
 
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
-import Hilligans.Client.Rendering.*;
-import Hilligans.Data.Primitives.DoubleTypeWrapper;
-import Hilligans.Data.Primitives.TripleTypeWrapper;
+import Hilligans.Data.Primitives.Triplet;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.lwjgl.opengl.GL30;
 
@@ -23,9 +21,9 @@ public class TextureAtlas {
     int width = 0;
     int height = 1;
 
-    public static final int MAX_TEXTURE_SIZE = 512;
+    public static final int MAX_TEXTURE_SIZE = 256;
     public static final int MIN_TEXTURE_SIZE = 16;
-    public static final int RATIO = MAX_TEXTURE_SIZE / MIN_TEXTURE_SIZE;
+    public static final int RATIO = MAX_TEXTURE_SIZE /  MIN_TEXTURE_SIZE;
 
     public int maxTextureSize;
     public int minTextureSize;
@@ -34,7 +32,7 @@ public class TextureAtlas {
     public Int2ObjectOpenHashMap<TextureAtlas.ImageHolder> imageMap = new Int2ObjectOpenHashMap<>();
 
     public ArrayList<TextureAtlas.ImageHolder> imageHolders = new ArrayList<>();
-    public ArrayList<TripleTypeWrapper<Integer,TextureSource,TextureLocation>> textures = new ArrayList<>();
+    public ArrayList<Triplet<Integer,TextureSource,TextureLocation>> textures = new ArrayList<>();
 
     public static WorldTextureManager instance = new WorldTextureManager();
 
@@ -68,7 +66,7 @@ public class TextureAtlas {
         BufferedImage img = textureLocation.getImage();
         int id = addImage(img);
         TextureSource textureSource = new TextureSource(this,getNextSourceId());
-        textures.add(new TripleTypeWrapper<>(id,textureSource,textureLocation));
+        textures.add(new Triplet<>(id,textureSource,textureLocation));
         return textureSource;
     }
 
@@ -148,7 +146,7 @@ public class TextureAtlas {
         height = 1;
         imageHolders.clear();
         imageMap.clear();
-        for(TripleTypeWrapper<Integer,TextureSource,TextureLocation> texture : textures) {
+        for(Triplet<Integer,TextureSource,TextureLocation> texture : textures) {
             BufferedImage img = texture.getTypeC().reloadGetImage();
             texture.typeA = addImage(img);
         }

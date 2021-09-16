@@ -1,6 +1,5 @@
 package Hilligans.Data.Other;
 
-import Hilligans.Data.Primitives.TripleTypeWrapper;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector3i;

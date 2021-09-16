@@ -40,11 +40,11 @@ public class ItemModel implements IModel {
     @Override
     public void addData(PrimitiveBuilder primitiveBuilder, TextureManager textureManager, int side, float size, Vector3f offset, int rotX, int rotY) {
         int id = textureManager.getTextureId();
-        BufferedImage bufferedImage = WorldTextureManager.loadImage("Items/" + path);
-        float minX = WorldTextureManager.getMinX(id);
-        float minY = WorldTextureManager.getMinY(id);
-        float maxX = WorldTextureManager.getMaxX(id);
-        float maxY = WorldTextureManager.getMaxY(id);
+       /* BufferedImage bufferedImage = TextAtlas.instance.register(new ImageLocation("Items/" + path,"purcraft"));
+        float minX = TextAtlas.getMinX(id);
+        float minY = TextAtlas.getMinY(id);
+        float maxX = TextAtlas.getMaxX(id);
+        float maxY = TextAtlas.getMaxY(id);
 
         float light = 1.2f;
 
@@ -87,6 +87,8 @@ public class ItemModel implements IModel {
         primitiveBuilder.addQuadInverse(0,0,0,1,1,1,1,minX,minY,0,size,0,1,1,1,1,minX,maxY,size,0,0,1,1,1,1,maxX,minY,size,size,0,1,1,1,1,maxX,maxY);
         primitiveBuilder.addQuad(0,0,width,1,1,1,1,minX,minY,0,size,width,1,1,1,1,minX,maxY,size,0,width,1,1,1,1,maxX,minY,size,size,width,1,1,1,1,maxX,maxY);
 
+
+        */
 
     }
 

@@ -2,7 +2,7 @@ package Hilligans.Client.Rendering.NewRenderer;
 
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.ClientMain;
-import Hilligans.Data.Primitives.TripleTypeWrapper;
+import Hilligans.Data.Primitives.Triplet;
 import Hilligans.Ourcraft;
 
 import javax.imageio.ImageIO;
@@ -79,7 +79,7 @@ public class TextureLocation {
         if(source.equals("")) {
             return loadImage(path);
         }
-        TripleTypeWrapper<Class<?>,String,Boolean> type = Ourcraft.MOD_LOADER.mainClasses.get(source);
+        Triplet<Class<?>,String,Boolean> type = Ourcraft.MOD_LOADER.mainClasses.get(source);
         String filePath = type.getTypeB();
         if(type.getTypeC()) {
             if (filePath != null) {

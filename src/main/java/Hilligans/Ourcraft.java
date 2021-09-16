@@ -33,7 +33,7 @@ public class Ourcraft {
         return new String(BCrypt.withDefaults().hash(12,"abcdefghjklmmopq".getBytes(), (password + salt).getBytes()), StandardCharsets.UTF_8);
     }
 
-    public static ResourceManager getResourceManager() {
+    public static synchronized ResourceManager getResourceManager() {
         return RESOURCE_MANAGER;
     }
 
