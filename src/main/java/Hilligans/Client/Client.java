@@ -29,6 +29,7 @@ import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Item.ItemStack;
 import Hilligans.Item.Items;
 import Hilligans.ModHandler.Events.Client.*;
+import Hilligans.ModHandler.ModLoader;
 import Hilligans.Network.*;
 import Hilligans.Network.Packet.AuthServerPackets.CGetToken;
 import Hilligans.Network.Packet.Client.*;
@@ -87,7 +88,7 @@ public class Client {
 
     public int texture;
 
-    public boolean refreshTexture = false;
+    public boolean refreshTexture = true;
 
     public ClientPlayerData playerData = new ClientPlayerData();
 
@@ -194,7 +195,7 @@ public class Client {
             texture.register();
         }
         screen = new JoinScreen(this);
-        texture = TextAtlas.instance.upload();
+        texture = -1;
         Renderer.create(texture);
         clientWorld = new ClientWorld(client);
 
@@ -317,7 +318,7 @@ public class Client {
                 StringRenderer.drawString(screenStack, "Sounds:" + soundEngine.sounds.size(),windowX/2,213,0.5f);
                 StringRenderer.drawString(screenStack, "Render Calls:" + GLRenderer.drawCalls, windowX/2,242,0.5f);
                 StringRenderer.drawString(screenStack, "Vertices:" + GLRenderer.count, windowX/2,271,0.5f);
-                StringRenderer.drawString(screenStack, "Block:" + (blockState == null ? "null" : blockState.getBlock().getName()),windowX/2,200,0.5f);
+                StringRenderer.drawString(screenStack, "Block:" + (blockState == null ? "null" : blockState.getBlock().getName()),windowX/2,300,0.5f);
             }
             ItemStack stack = playerData.inventory.getItem(playerData.handSlot);
             if(stack != null && stack.item != null) {

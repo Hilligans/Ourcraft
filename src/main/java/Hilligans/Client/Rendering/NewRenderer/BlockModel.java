@@ -379,6 +379,8 @@ public class BlockModel implements IModel {
             blockModel.path = path;
             return blockModel;
         } catch (Exception ignored) {
+            ignored.printStackTrace();
+            System.err.println(val);
             return null;
         }
     }

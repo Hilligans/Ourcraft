@@ -59,7 +59,7 @@ public class ModContent {
         Block block = new Block(string, "/Data/" + blockData.getString("data"),modID,blockData.optJSONObject("overrides"));
         JSONArray textures = blockData.getJSONArray("textures");
         for(int x = 0; x < textures.length(); x++) {
-            block.blockProperties.addTexture(textures.getString(x),x);
+            block.blockProperties.addTexture(textures.getString(x),x,textures.length());
         }
         return block;
     };
@@ -68,6 +68,7 @@ public class ModContent {
     public HashMap<String,Protocol> protocols = new HashMap<>();
 
     public boolean loaded = false;
+    public boolean shouldLoad = true;
 
     public ModContent(String modID) {
         this.modID = modID;
@@ -92,6 +93,12 @@ public class ModContent {
         return this;
     }
 
+    public ModContent addMainClass(Class<?> classVal) {
+        mainClass = classVal;
+        shouldLoad = false;
+        return this;
+    }
+
     public static ModContent readLocal(String name) {
         ByteBuffer buffer = WorldLoader.readBuffer("mod_cache/" + (Settings.storeServerModsIndividually ? "servers/" + ClientMain.getClient().serverIP.replace(':','_') + "/" : "mods/") + name + ".dat");
         if(buffer != null) {
@@ -103,7 +110,7 @@ public class ModContent {
     }
 
     public void load() throws Exception {
-        if(mainClass != null) {
+        if(mainClass != null && shouldLoad) {
             mainClass.getConstructor(ModContent.class).newInstance(this);
         }
         loaded = true;

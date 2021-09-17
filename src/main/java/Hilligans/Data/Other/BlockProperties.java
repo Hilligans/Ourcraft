@@ -14,6 +14,7 @@ public class BlockProperties {
 
     public boolean serverSide = false;
     public boolean transparent = false;
+    public boolean alwaysRender = false;
     public boolean canWalkThrough = false;
     public boolean airBlock = false;
     public boolean flammable = false;
@@ -72,11 +73,11 @@ public class BlockProperties {
         return this;
     }
 
-    public BlockProperties addTexture(String texture, int side) {
-        if(side == 0) {
+    public BlockProperties addTexture(String texture, int side, int count) {
+        if(count == 1) {
             withTexture(texture);
         } else {
-            withSidedTexture(texture,side - 1);
+            withSidedTexture(texture,side);
         }
         return this;
     }
@@ -112,6 +113,7 @@ public class BlockProperties {
         properties.put("mapColor",mapColor);
         properties.put("flammable",flammable);
         properties.put("dynamicItemModel",dynamicItemModel);
+        properties.put("alwaysRender",alwaysRender);
 
         model.put("modelName",blockShape.path);
 
@@ -129,6 +131,7 @@ public class BlockProperties {
             blockStateSize = properties.has("blockStateByteCount") ? properties.getInt("blockStateByteCount") : 0;
             mapColor = properties.has("mapColor") ? properties.getInt("mapColor") : 0;
             dynamicItemModel = getBoolean(properties,"dynamicItemModel",false);
+            alwaysRender = properties.optBoolean("alwaysRender");
         }
         if (jsonObject.has("model")) {
             JSONObject model = jsonObject.getJSONObject("model");
@@ -172,12 +175,17 @@ public class BlockProperties {
                 JSONObject blockStates = model.getJSONObject("blockStates");
                 for (String string : blockStates.keySet()) {
                     try {
+                        if(string.equals("default")) {
+                            return;
+                        }
                         int block = Integer.parseInt(string);
                         JSONObject jsonObject1 = blockStates.getJSONObject(string);
                         int rotX = jsonObject1.getInt("rotX");
                         int rotY = jsonObject1.getInt("rotY");
                         blockShape.putRotation(block, rotX, rotY);
+                        blockShape.putModel(block,jsonObject1.optString("modelName"));
                     } catch (Exception ignored) {
+                        ignored.printStackTrace();
                     }
                 }
             }

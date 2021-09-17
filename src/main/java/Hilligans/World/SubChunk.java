@@ -67,7 +67,7 @@ public class SubChunk {
                     for(int a = 0; a < 6; a++) {
                         if(block.getBlock() != Blocks.AIR) {
                             BlockState blockState = getBlock(new BlockPos(x, y, z).add(Block.getBlockPos(block.getBlock().getSide(block,a))));
-                            if (blockState.getBlock().blockProperties.transparent && (Settings.renderSameTransparent || block.getBlock() != blockState.getBlock())) {
+                            if ((blockState.getBlock().blockProperties.transparent && (Settings.renderSameTransparent || block.getBlock() != blockState.getBlock())) || block.getBlock().blockProperties.alwaysRender) {
                                 block.getBlock().addVertices(primitiveBuilder,a,1.0f,block,new BlockPos(x + this.x,y + this.y,z + this.z),x,z);
                             }
                         }

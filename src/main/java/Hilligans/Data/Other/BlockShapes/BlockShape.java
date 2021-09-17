@@ -19,6 +19,8 @@ public class BlockShape {
 
     public Int2ShortOpenHashMap rotations = new Int2ShortOpenHashMap();
     public Int2ObjectOpenHashMap<BoundingBox> boundingBoxes = new Int2ObjectOpenHashMap<>();
+    public Int2ObjectOpenHashMap<BlockModel> models = new Int2ObjectOpenHashMap<>();
+    public Int2ObjectOpenHashMap<BlockTextureManager> textures = new Int2ObjectOpenHashMap<>();
     public BoundingBox defaultBoundingBox = new BoundingBox(0,0,0,1,1,1);
 
     public BlockShape() {
@@ -44,24 +46,31 @@ public class BlockShape {
     public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset) {
         int rot = getRotation(blockState);
         if (rot != -1) {
-            data.addData(primitiveBuilder,blockTextureManager,side,size,offset,rot & 3,(rot & 12) >> 2);
+            getModel(blockState).addData(primitiveBuilder,blockTextureManager,side,size,offset,rot & 3,(rot & 12) >> 2);
         } else {
-            data.addData(primitiveBuilder, blockTextureManager, side, size, offset, 0, 0);
+            getModel(blockState).addData(primitiveBuilder, blockTextureManager, side, size, offset, 0, 0);
         }
     }
 
     public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset, float offsetX, float offsetY, float offsetZ) {
         int rot = getRotation(blockState);
         if (rot != -1) {
-            data.addData(primitiveBuilder,blockTextureManager,side,size,offset.add(offsetX,offsetY,offsetZ),rot & 3,(rot & 12) >> 2);
+            getModel(blockState).addData(primitiveBuilder,blockTextureManager,side,size,offset.add(offsetX,offsetY,offsetZ),rot & 3,(rot & 12) >> 2);
         } else {
-            data.addData(primitiveBuilder, blockTextureManager, side, size, offset.add(offsetX, offsetY, offsetZ), 0, 0);
+            getModel(blockState).addData(primitiveBuilder, blockTextureManager, side, size, offset.add(offsetX, offsetY, offsetZ), 0, 0);
         }
     }
 
     public void putRotation(int blockState, int rotX, int rotY) {
         boundingBoxes.put(blockState,defaultBoundingBox.rotateX(rotX,1.0f).rotateY(-rotY,1.0f));
         rotations.put(blockState, (short) (rotX | rotY << 2));
+    }
+
+    public void putModel(int blockState,String path) {
+        if(path != null && !path.equals("")) {
+            System.err.println("created model " + path);
+            models.put(blockState, BlockModel.create("Models/Blocks/" + path));
+        }
     }
 
 
@@ -71,6 +80,10 @@ public class BlockShape {
             return Block.rotationSides[val << 3 | side];
         }
         return side;
+    }
+
+    public BlockModel getModel(BlockState blockState) {
+        return models.getOrDefault(blockState.blockId,data);
     }
 
     public short getRotation(BlockState blockState) {

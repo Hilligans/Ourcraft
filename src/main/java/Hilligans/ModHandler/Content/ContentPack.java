@@ -8,6 +8,7 @@ import Hilligans.Client.Rendering.NewRenderer.IModel;
 import Hilligans.Client.Rendering.Texture;
 import Hilligans.Client.Rendering.Textures;
 import Hilligans.ClientMain;
+import Hilligans.Data.Primitives.Triplet;
 import Hilligans.Item.Item;
 import Hilligans.Item.Items;
 import Hilligans.ModHandler.Events.Client.RenderEndEvent;
@@ -56,6 +57,7 @@ public class ContentPack {
     public void registerModContent(ModContent modContent) {
         mods.put(modContent.modID,modContent);
         Ourcraft.RESOURCE_MANAGER.classLoaders.add(modContent.classLoader);
+        Ourcraft.MOD_LOADER.mainClasses.computeIfAbsent(modContent.modID,a -> new Triplet<>(modContent.mainClass, modContent.mainClass.getProtectionDomain().getCodeSource().getLocation().getPath(), false));
     }
 
     ///TODO use Blocks, Items, Entity Instances so the game can still render while its being reupdated.

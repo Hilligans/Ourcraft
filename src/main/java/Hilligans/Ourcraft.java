@@ -23,7 +23,7 @@ public class Ourcraft {
     public static final Logger LOGGER = Logger.getGlobal();
     public static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
     public static final ResourceManager RESOURCE_MANAGER = new ResourceManager();
-    public static final ModContent OURCRAFT = new ModContent("ourcraft").addClassLoader(new URLClassLoader(new URL[]{Ourcraft.class.getProtectionDomain().getCodeSource().getLocation()}));
+    public static final ModContent OURCRAFT = new ModContent("ourcraft").addClassLoader(new URLClassLoader(new URL[]{Ourcraft.class.getProtectionDomain().getCodeSource().getLocation()})).addMainClass(Ourcraft.class);
     public static final ContentPack CONTENT_PACK = new ContentPack();
     public static final AtomicBoolean REBUILDING = new AtomicBoolean(false);
 

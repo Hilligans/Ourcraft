@@ -20,7 +20,6 @@ public class Image {
     }
 
     public Image(String path, String modId) {
-        int x = -1;
         try {
             byte[] rawImageData = Ourcraft.getResourceManager().getResource(path, modId).readAllBytes();
             ByteBuffer rawData = ByteBuffer.allocateDirect(rawImageData.length);
@@ -32,7 +31,7 @@ public class Image {
             ByteBuffer temp = STBImage.stbi_load_from_memory(rawData, width, height, components, 4);
             this.buffer = ByteBuffer.allocateDirect(temp.capacity());
             int length = temp.capacity();
-            for(x = 0; x < length / 4; x++) {
+            for(int x = 0; x < length / 4; x++) {
                 buffer.put(x * 4 + 3,temp.get(length - x * 4 - 1));
                 buffer.put(x * 4 + 2,temp.get(length - x * 4 - 2));
                 buffer.put(x * 4 + 1,temp.get(length - x * 4 - 3));
@@ -44,6 +43,7 @@ public class Image {
             this.height = height[0];
         } catch (Exception ignored) {
             ignored.printStackTrace();
+            System.err.println("Failed to load image " + path + " from mod " + modId);
         }
     }
 

@@ -16,7 +16,7 @@ import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 public class TextAtlas {
 
     public Image image;
-    public int size = 2048;
+    public int size = 4096;
     public int minWidth = 16;
     public ExecutorService executorService;
 
