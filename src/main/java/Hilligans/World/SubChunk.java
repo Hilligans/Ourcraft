@@ -21,7 +21,7 @@ import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 
 public class SubChunk {
 
-    int id = -2;
+    public int id = -2;
     int verticesCount = -1;
     World world;
     long y;

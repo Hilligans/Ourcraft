@@ -19,7 +19,6 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2IntOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 import org.lwjgl.opengl.*;
-import org.lwjgl.opengles.GLES31;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +32,7 @@ import static org.lwjgl.opengl.GL31C.GL_COPY_WRITE_BUFFER;
 
 public class Chunk {
 
-    ArrayList<SubChunk> chunks = new ArrayList<>();
+    public ArrayList<SubChunk> chunks = new ArrayList<>();
 
     public World world;
 

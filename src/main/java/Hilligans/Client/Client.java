@@ -34,12 +34,14 @@ import Hilligans.Network.*;
 import Hilligans.Network.Packet.AuthServerPackets.CGetToken;
 import Hilligans.Network.Packet.Client.*;
 import Hilligans.Ourcraft;
+import Hilligans.Resource.ResourceManager;
 import Hilligans.Server.MultiPlayerServer;
 import Hilligans.Tag.CompoundTag;
 import Hilligans.Tag.Tag;
 import Hilligans.Util.Settings;
 import Hilligans.World.Chunk;
 import Hilligans.World.ClientWorld;
+import Hilligans.World.SubChunk;
 import Hilligans.WorldSave.WorldLoader;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
@@ -318,7 +320,7 @@ public class Client {
                 StringRenderer.drawString(screenStack, "Sounds:" + soundEngine.sounds.size(),windowX/2,213,0.5f);
                 StringRenderer.drawString(screenStack, "Render Calls:" + GLRenderer.drawCalls, windowX/2,242,0.5f);
                 StringRenderer.drawString(screenStack, "Vertices:" + GLRenderer.count, windowX/2,271,0.5f);
-                StringRenderer.drawString(screenStack, "Block:" + (blockState == null ? "null" : blockState.getBlock().getName()),windowX/2,300,0.5f);
+                StringRenderer.drawString(screenStack, "Block:" + (blockState == null ? "null" : blockState.getBlock().getName() + ":" + blockState.readData()),windowX/2,300,0.5f);
             }
             ItemStack stack = playerData.inventory.getItem(playerData.handSlot);
             if(stack != null && stack.item != null) {
@@ -440,11 +442,28 @@ public class Client {
         KeyHandler.register(new KeyPress() {
             @Override
             public void onPress() {
-                for(Chunk chunk : clientWorld.chunks.values()) {
-                    chunk.destroy();
+                for (Chunk chunk : clientWorld.chunks.values()) {
+                    for (SubChunk subChunk : chunk.chunks) {
+                        subChunk.destroy();
+                        subChunk.id = -2;
+                    }
                 }
             }
         },KeyHandler.GLFW_KEY_F9);
+
+        KeyHandler.register(new KeyPress() {
+            @Override
+            public void onPress() {
+                ResourceManager.reload();
+                Blocks.reload();
+                for(Chunk chunk : clientWorld.chunks.values()) {
+                    for(SubChunk subChunk : chunk.chunks) {
+                        subChunk.destroy();
+                        subChunk.id = -2;
+                    }
+                }
+            }
+        },KeyHandler.GLFW_KEY_F8);
 
         KeyHandler.register(new KeyPress() {
             @Override

@@ -54,6 +54,8 @@ public class ModLoader {
                         if(modID != null) {
                             this.mod = modID;
                             ModContent modContent = new ModContent(modID);
+                            modContent.isJar = false;
+                            modContent.path = folder.getPath();
                             if(jsonObject != null) {
                                 modContent.readData(jsonObject);
                             }
@@ -79,6 +81,7 @@ public class ModLoader {
                 String modID = getModID(testClass);
                 if(modID != null) {
                     ModContent modContent = new ModContent(modID);
+                    modContent.path = name;
                     if(jsonObject != null) {
                         modContent.readData(jsonObject);
                     }

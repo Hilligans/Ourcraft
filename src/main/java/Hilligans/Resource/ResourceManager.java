@@ -7,11 +7,16 @@ import Hilligans.Client.Rendering.NewRenderer.IModel;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.ClientMain;
 import Hilligans.Data.Primitives.Triplet;
+import Hilligans.ModHandler.Content.ContentPack;
 import Hilligans.ModHandler.Content.ModContent;
+import Hilligans.ModHandler.ModLoader;
 import Hilligans.Ourcraft;
 import Hilligans.Util.Settings;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFileFilter;
 
 import javax.imageio.ImageIO;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -21,6 +26,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.ByteBuffer;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -104,6 +112,19 @@ public class ResourceManager {
             }
         }
         return stream;
+    }
+
+    public static void reload() {
+        for(String string : Ourcraft.CONTENT_PACK.mods.keySet()) {
+            if(!Ourcraft.CONTENT_PACK.mods.get(string).isJar) {
+                try {
+                    FileUtils.copyDirectory(new File("src/main/resources/" + string + "/Data/"), new File("target/classes/" + string + "/Data/"),false);
+                    FileUtils.copyDirectory(new File("src/main/resources/Models"), new File("target/classes/Models"),false);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public synchronized InputStream getResource(String path, String mod) {

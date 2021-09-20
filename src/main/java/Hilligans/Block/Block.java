@@ -3,6 +3,7 @@ package Hilligans.Block;
 import Hilligans.Client.MatrixStack;
 import Hilligans.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import Hilligans.Client.Rendering.Renderer;
+import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
 import Hilligans.Data.Other.*;
 import Hilligans.Data.Other.BlockStates.BlockState;
 import Hilligans.Data.Other.BlockStates.DataBlockState;
@@ -12,6 +13,7 @@ import Hilligans.Ourcraft;
 import Hilligans.World.DataProvider;
 import Hilligans.World.DataProviders.ShortBlockState;
 import Hilligans.World.World;
+import Hilligans.WorldSave.WorldLoader;
 import org.joml.Vector3d;
 import org.json.JSONObject;
 
@@ -64,6 +66,14 @@ public class Block {
     public void tick(World world, BlockPos pos) {}
 
     public void randomTick(World world, BlockPos pos) {}
+
+    public void reload() {
+        if(blockProperties.fromFile) {
+            BlockTextureManager blockTextureManager = blockProperties.blockTextureManager;
+            blockProperties = BlockProperties.loadProperties(blockProperties.path, blockProperties.overrides);
+            blockProperties.blockTextureManager = blockTextureManager;
+        }
+    }
 
     public BlockState getDefaultState() {
         return new BlockState(this);

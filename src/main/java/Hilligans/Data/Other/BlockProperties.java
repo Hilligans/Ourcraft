@@ -4,11 +4,15 @@ import Hilligans.Client.Rendering.NewRenderer.BlockModel;
 import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
 import Hilligans.Data.Other.BlockShapes.BlockShape;
 import Hilligans.WorldSave.WorldLoader;
+import io.netty.util.internal.logging.InternalLogger;
+import io.netty.util.internal.logging.Log4JLoggerFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class BlockProperties {
+import java.util.logging.LogManager;
 
+public class BlockProperties {
+    
     public static BlockShape defaultShape = new BlockShape();
 
 
@@ -26,6 +30,10 @@ public class BlockProperties {
     public String texture = "";
     public BlockTextureManager blockTextureManager = new BlockTextureManager();
     public BlockShape blockShape = defaultShape;
+
+    public String path;
+    public JSONObject overrides;
+    public boolean fromFile = false;
 
     public BlockProperties serverSide() {
         serverSide = true;
@@ -176,7 +184,7 @@ public class BlockProperties {
                 for (String string : blockStates.keySet()) {
                     try {
                         if(string.equals("default")) {
-                            return;
+                            continue;
                         }
                         int block = Integer.parseInt(string);
                         JSONObject jsonObject1 = blockStates.getJSONObject(string);
@@ -203,8 +211,15 @@ public class BlockProperties {
                         recursivelyOverride(jsonObject, overrides);
                     } catch (Exception ignored) {} //tried to override something that doesnt exist
                 }
-                return loadProperties(jsonObject);
-            } catch (Exception ignored) {}
+                blockProperties = loadProperties(jsonObject);
+                blockProperties.path = path;
+                blockProperties.overrides = overrides;
+                blockProperties.fromFile = true;
+            } catch (Exception ignored) {
+                ignored.printStackTrace();
+            }
+        } else {
+            System.err.println("failed to read file " + path);
         }
         return blockProperties;
     }

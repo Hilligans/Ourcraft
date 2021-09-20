@@ -46,7 +46,9 @@ public class ModContent {
     public ModDependency[] dependencies = new ModDependency[0];
     public int version = -1;
     public String description = "";
+    public boolean isJar = true;
     public String[] authors = new String[0];
+    public String path = "";
 
     public ArrayList<Block> blocks = new ArrayList<>();
     public ArrayList<Item> items = new ArrayList<>();

@@ -135,7 +135,10 @@ public class Blocks {
    */
     }
 
-
+    public static void reload() {
+        for(Block block : BLOCKS)
+            block.reload();
+    }
 
     public static Block getBlockWithID(int id) {
         return BLOCKS.get(id);
