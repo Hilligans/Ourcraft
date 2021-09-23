@@ -22,11 +22,18 @@ public class BlockModel implements IModel {
 
     float[][] vertices = new float[6][];
     int[][] indices = new int[6][];
+    float[][] color = new float[6][3];
+
 
     public String jsonString;
     public String path;
 
     public BlockModel(String jsonString) {
+        for(int x = 0; x < 6; x++) {
+            color[x][0] = 1.0f;
+            color[x][1] = 1.0f;
+            color[x][2] = 1.0f;
+        }
         this.jsonString = jsonString;
         JSONObject jsonObject = new JSONObject(jsonString);
         for(int x = 0; x < 6; x++) {
@@ -65,9 +72,6 @@ public class BlockModel implements IModel {
                 modifyAll(vertices,0,true,false,false,1.0f);
                 break;
             case 3:
-               // modifyAll(vertices,1,);
-
-
         }
     }
 
@@ -139,9 +143,9 @@ public class BlockModel implements IModel {
                     vals[x + 2] = vertices[x + 2] * size;
                     vals[x + 7] = vertices[x + 3] * offsetX + startX;
                     vals[x + 8] = vertices[x + 4] * offsetY + startY;
-                    vals[x + 3] = color;
-                    vals[x + 4] = color;
-                    vals[x + 5] = color;
+                    vals[x + 3] = color * getRed(side);
+                    vals[x + 4] = color * getGreen(side);
+                    vals[x + 5] = color * getBlue(side);
                     vals[x + 6] = 1.0f;
                 }
                 int[] indices = getIndices(side,rotX,rotY);
@@ -151,6 +155,18 @@ public class BlockModel implements IModel {
                 primitiveBuilder.add(vals, ints);
             }
         }
+    }
+
+    public float getRed(int side) {
+        return color[side][0];
+    }
+
+    public float getGreen(int side) {
+        return color[side][1];
+    }
+
+    public float getBlue(int side) {
+        return color[side][2];
     }
 
     @Override
@@ -366,6 +382,17 @@ public class BlockModel implements IModel {
             return newIndices;
         }
         return indices[side];
+    }
+
+    public BlockModel withColor(JSONArray color) {
+        if(color != null) {
+            for (int x = 0; x < 6; x++) {
+                this.color[x][0] = color.getNumber(x * 3).floatValue();
+                this.color[x][1] = color.getNumber(x * 3 + 1).floatValue();
+                this.color[x][2] = color.getNumber(x * 3 + 2).floatValue();
+            }
+        }
+        return this;
     }
 
     public static BlockModel create(String path) {

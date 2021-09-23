@@ -143,6 +143,7 @@ public class BlockProperties {
         }
         if (jsonObject.has("model")) {
             JSONObject model = jsonObject.getJSONObject("model");
+            JSONArray colors = model.optJSONArray("colors");
             if (model.has("modelName")) {
                 if(model.getString("modelName").endsWith(".obj")) {
                     blockShape = new BlockShape();
@@ -154,6 +155,7 @@ public class BlockProperties {
                 } else {
                     blockShape = new BlockShape(model.getString("modelName"));
                 }
+                blockShape.data.withColor(colors);
             }
             BoundingBox boundingBox;
             if (model.has("boundingBox")) {
@@ -192,6 +194,10 @@ public class BlockProperties {
                         int rotY = jsonObject1.getInt("rotY");
                         blockShape.putRotation(block, rotX, rotY);
                         blockShape.putModel(block,jsonObject1.optString("modelName"));
+                        BlockModel blockModel = blockShape.models.get(block);
+                        if(blockModel != null) {
+                            blockModel.withColor(colors);
+                        }
                     } catch (Exception ignored) {
                         ignored.printStackTrace();
                     }

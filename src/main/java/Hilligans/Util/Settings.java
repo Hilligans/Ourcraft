@@ -14,7 +14,7 @@ public class Settings {
 
     public static final int maxFps = 1000;
 
-    public static final boolean renderSameTransparent = true;
+    public static final boolean renderSameTransparent = false;
     public static boolean renderTransparency = true;
 
     public static final int playerInventorySize = 45;

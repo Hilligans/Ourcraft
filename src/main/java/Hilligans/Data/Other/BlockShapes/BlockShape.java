@@ -12,6 +12,7 @@ import Hilligans.World.World;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ShortOpenHashMap;
 import org.joml.Vector3f;
+import org.joml.Vector3i;
 
 public class BlockShape {
 

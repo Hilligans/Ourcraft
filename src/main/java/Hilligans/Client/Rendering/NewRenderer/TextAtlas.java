@@ -16,7 +16,7 @@ import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 public class TextAtlas {
 
     public Image image;
-    public int size = 4096;
+    public int size = 8192;
     public int minWidth = 16;
     public ExecutorService executorService;
 
@@ -105,6 +105,7 @@ public class TextAtlas {
     }
 
     public void assemble() {
+        long start = System.currentTimeMillis();
         executorService = Executors.newFixedThreadPool(3);
         for(ImageLocation imageLocation : images) {
             executorService.submit(new Runnable() {
@@ -123,6 +124,10 @@ public class TextAtlas {
         try {
             executorService.awaitTermination(1000, TimeUnit.MILLISECONDS);
         } catch (Exception ignored) {}
+
+
+
+        System.out.println(System.currentTimeMillis() - start);
     }
 
     public int upload() {
