@@ -13,6 +13,7 @@ import Hilligans.Network.Packet.Server.SRemoveEntityPacket;
 import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.Server.IServer;
 import Hilligans.ServerMain;
+import Hilligans.Util.NamedThreadFactory;
 import Hilligans.Util.Settings;
 import Hilligans.WorldSave.ChunkLoader;
 
@@ -69,7 +70,7 @@ public class ServerWorld extends World {
         super.unloadChunk(x,z);
     }
 
-    public static ExecutorService executorService = Executors.newFixedThreadPool(4);
+    public static ExecutorService executorService = Executors.newFixedThreadPool(4, new NamedThreadFactory("chunk_saver"));
 
     @Override
     public void tick() {

@@ -13,6 +13,7 @@ import Hilligans.Network.ServerNetworkHandler;
 import Hilligans.Network.ServerNetworkInit;
 import Hilligans.Ourcraft;
 import Hilligans.Util.ConsoleReader;
+import Hilligans.Util.NamedThreadFactory;
 import Hilligans.Util.Settings;
 import Hilligans.World.ServerWorld;
 import Hilligans.World.World;
@@ -37,9 +38,9 @@ public class MultiPlayerServer implements IServer {
     public void startServer(String port) {
         Ourcraft.EVENT_BUS.postEvent(new MultiPlayerServerStartEvent(this,port));
         Server server = new Server(this);
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1, new NamedThreadFactory("server_tick"));
         executorService.scheduleAtFixedRate(server, 0, 40, TimeUnit.MILLISECONDS);
-        ScheduledExecutorService executorService1 = Executors.newScheduledThreadPool(1);
+        ScheduledExecutorService executorService1 = Executors.newScheduledThreadPool(1, new NamedThreadFactory("server_player_handler"));
         executorService1.scheduleAtFixedRate(new PlayerHandler(this), 0, 10, TimeUnit.MILLISECONDS);
         ConsoleReader consoleReader = new ConsoleReader(this::executeCommand);
 

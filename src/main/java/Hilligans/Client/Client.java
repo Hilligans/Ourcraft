@@ -38,6 +38,7 @@ import Hilligans.Resource.ResourceManager;
 import Hilligans.Server.MultiPlayerServer;
 import Hilligans.Tag.CompoundTag;
 import Hilligans.Tag.Tag;
+import Hilligans.Util.NamedThreadFactory;
 import Hilligans.Util.Settings;
 import Hilligans.World.Chunk;
 import Hilligans.World.ClientWorld;
@@ -116,11 +117,14 @@ public class Client {
 
         CompoundTag tag = WorldLoader.loadTag("clientData.dat");
         if(tag != null) {
-            new Thread(() -> {
+            Thread thread = new Thread(() -> {
                 try {
                     authNetwork.joinServer("hilligans.dev", "25588", this);
                 } catch (Exception e) {}
-            }).start();
+            });
+            thread.setName("authenticate");
+            thread.start();
+
         }
         if(tag != null) {
             readUsernameAndPassword(tag);
@@ -216,7 +220,7 @@ public class Client {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
         PlayerMovementThread playerMovementThread = new PlayerMovementThread(window);
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1, new NamedThreadFactory("player_movement"));
         executorService.scheduleAtFixedRate(playerMovementThread, 0, 5, TimeUnit.MILLISECONDS);
     }
 

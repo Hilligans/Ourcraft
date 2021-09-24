@@ -5,6 +5,7 @@ import Hilligans.ModHandler.Content.ModContent;
 import Hilligans.ModHandler.EventBus;
 import Hilligans.ModHandler.ModLoader;
 import Hilligans.Resource.ResourceManager;
+import Hilligans.Util.NamedThreadFactory;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import java.io.File;
@@ -21,7 +22,7 @@ public class Ourcraft {
     public static final EventBus EVENT_BUS = new EventBus();
     public static final ModLoader MOD_LOADER = new ModLoader();
     public static final Logger LOGGER = Logger.getGlobal();
-    public static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
+    public static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor(new NamedThreadFactory("random_executor"));
     public static final ResourceManager RESOURCE_MANAGER = new ResourceManager();
     public static final ModContent OURCRAFT = new ModContent("ourcraft").addClassLoader(new URLClassLoader(new URL[]{Ourcraft.class.getProtectionDomain().getCodeSource().getLocation()})).addMainClass(Ourcraft.class);
     public static final ContentPack CONTENT_PACK = new ContentPack();

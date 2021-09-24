@@ -1,5 +1,6 @@
 package Hilligans.Client.Rendering.NewRenderer;
 
+import Hilligans.Util.NamedThreadFactory;
 import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
 
@@ -106,7 +107,7 @@ public class TextAtlas {
 
     public void assemble() {
         long start = System.currentTimeMillis();
-        executorService = Executors.newFixedThreadPool(3);
+        executorService = Executors.newFixedThreadPool(3,new NamedThreadFactory("texture_atlas_builder"));
         for(ImageLocation imageLocation : images) {
             executorService.submit(new Runnable() {
                 @Override

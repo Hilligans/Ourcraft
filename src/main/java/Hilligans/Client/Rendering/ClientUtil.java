@@ -1,5 +1,6 @@
 package Hilligans.Client.Rendering;
 
+import Hilligans.Util.NamedThreadFactory;
 import Hilligans.Util.Settings;
 
 import java.util.concurrent.ExecutorService;
@@ -12,8 +13,8 @@ public class ClientUtil {
     public static ExecutorService randomExecutor;
 
     public static void register() {
-        chunkBuilder = Executors.newSingleThreadExecutor();
-        randomExecutor = Executors.newFixedThreadPool(3);
+        chunkBuilder = Executors.newSingleThreadExecutor(new NamedThreadFactory("chunk_builder"));
+        randomExecutor = Executors.newFixedThreadPool(3, new NamedThreadFactory("random_executor"));
     }
 
 

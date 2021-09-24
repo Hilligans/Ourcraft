@@ -9,6 +9,7 @@ public class PlayerMovementThread implements Runnable {
 
     public PlayerMovementThread(long window) {
         this.window = window;
+
     }
 
     @Override

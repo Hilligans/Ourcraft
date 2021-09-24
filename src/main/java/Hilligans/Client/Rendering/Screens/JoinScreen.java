@@ -55,6 +55,7 @@ public class JoinScreen extends ScreenBase {
             }
             String portString = port + "";
             Thread thread = new Thread(() -> client.multiPlayerServer.startServer(portString));
+            thread.setName("client_networking");
             thread.start();
            this.portString = portString;
         }));

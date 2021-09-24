@@ -2,6 +2,7 @@ package Hilligans.Client.Rendering.NewRenderer;
 
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.Data.Primitives.Triplet;
+import Hilligans.Util.NamedThreadFactory;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.lwjgl.opengl.GL30;
 
@@ -80,7 +81,7 @@ public class TextureAtlas {
         return id;
     }
 
-    public int addImage(BufferedImage img) {
+    public synchronized int addImage(BufferedImage img) {
         int id;
         for(TextureAtlas.ImageHolder imageHolder : imageHolders) {
             if(imageHolder.imageSize == img.getWidth() && imageHolder.canAddImage()) {
@@ -99,7 +100,7 @@ public class TextureAtlas {
         return id;
     }
 
-    public int addImage(BufferedImage img, int width) {
+    public synchronized int addImage(BufferedImage img, int width) {
         int id;
         for(TextureAtlas.ImageHolder imageHolder : imageHolders) {
             if(imageHolder.imageSize == width && imageHolder.canAddImage()) {
@@ -218,7 +219,7 @@ public class TextureAtlas {
         }
     }
 
-    public final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
+    public static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(1,new NamedThreadFactory("opengl_character_builder"));
 
     public static class ImageHolder {
 
@@ -248,7 +249,7 @@ public class TextureAtlas {
             count = textureAtlas.maxTextureSize / imageSize;
         }
 
-        public void addTexture(BufferedImage img) {
+        public synchronized void addTexture(BufferedImage img) {
             for(int y = 0; y < Math.min(img.getHeight(),imageSize); y++) {
                 for(int x = 0; x < Math.min(img.getWidth(),64); x++) {
                     bufferedImage.setRGB(x + width * (int)imageSize, y + height * (int)imageSize, img.getRGB(x,y));
