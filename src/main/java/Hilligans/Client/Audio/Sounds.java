@@ -14,7 +14,7 @@ public class Sounds {
     public static final SoundBuffer MUSIC = new SoundBuffer("Sounds/Music/New_Recording_45.ogg").setCategory(SoundCategory.MUSIC);
 
 
-    public static void registerSound(String name, SoundBuffer soundBuffer) {
+    public static synchronized void registerSound(String name, SoundBuffer soundBuffer) {
         MAPPED_SOUND.put(name,soundBuffer);
         SOUNDS.add(soundBuffer);
     }

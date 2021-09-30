@@ -58,7 +58,11 @@ public class  VAOManager {
     }
 
     public static int createVAO(PrimitiveBuilder primitiveBuilder) {
-        int[] vals = primitiveBuilder.createMesh();
+        return createVAO(primitiveBuilder,GL_STREAM_DRAW);
+    }
+
+    public static int createVAO(PrimitiveBuilder primitiveBuilder, int mode) {
+        int[] vals = primitiveBuilder.createMesh(mode);
         buffers.put(vals[0],new DoubleTypeWrapper<>(vals[1],vals[2]));
         return vals[0];
     }

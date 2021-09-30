@@ -24,6 +24,7 @@ public class SoundBuffer {
     int channelType;
     public ShortBuffer pcm;
     public ByteBuffer data;
+    public byte[] bytes;
 
     public SoundBuffer(String file)  {
         this.file = file;

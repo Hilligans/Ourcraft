@@ -320,6 +320,7 @@ public class Chunk {
     }
 
     int id = -1;
+    int translucentId = -1;
     int sizeVal = -1;
 
     public void buildMesh1() {

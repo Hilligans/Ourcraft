@@ -9,6 +9,7 @@ import Hilligans.Client.Rendering.Texture;
 import Hilligans.Client.Rendering.Textures;
 import Hilligans.ClientMain;
 import Hilligans.Data.Primitives.Triplet;
+import Hilligans.GameInstance;
 import Hilligans.Item.Item;
 import Hilligans.Item.Items;
 import Hilligans.ModHandler.Events.Client.RenderEndEvent;
@@ -20,8 +21,11 @@ import Hilligans.WorldSave.WorldLoader;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ContentPack {
+
+    public GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
 
     public HashMap<String, ModContent> mods = new HashMap<>();
     public HashMap<String, Boolean> loadedMods = new HashMap<>();
@@ -65,8 +69,7 @@ public class ContentPack {
         if(!Settings.isServer) {
             ClientMain.getClient().refreshTexture = true;
         }
-        Blocks.BLOCKS.clear();
-        Blocks.MAPPED_BLOCKS.clear();
+        gameInstance.clear();
         Items.ITEMS.clear();
         Items.HASHED_ITEMS.clear();
         Sounds.SOUNDS.clear();
@@ -74,13 +77,13 @@ public class ContentPack {
         Ourcraft.RESOURCE_MANAGER.clearData();
         Protocols.clear();
 
-        //Textures.TEXTURES.clear();
-        //Textures.MAPPED_TEXTURES.clear();
-
-
         for(String string : mods.keySet()) {
             if(shouldLoad.get(string)) {
                 ModContent mod = mods.get(string);
+                for(SoundBuffer soundBuffer : mod.sounds) {
+                   // soundBuffer.load();
+                    Sounds.registerSound(soundBuffer.file,soundBuffer);
+                }
                 for (Texture texture : mod.textures) {
                     Textures.registerTexture(texture);
                 }
@@ -88,13 +91,10 @@ public class ContentPack {
                     Ourcraft.RESOURCE_MANAGER.putImage("Blocks/" + string1,mod.blockTextures.get(string1));
                 }
                 for (Block block : mod.blocks) {
-                    Blocks.registerBlock(block);
+                    Ourcraft.GAME_INSTANCE.registerBlock(block);
                 }
                 for (Item item : mod.items) {
                     Items.registerItem(item);
-                }
-                for(SoundBuffer soundBuffer : mod.sounds) {
-                    Sounds.registerSound(soundBuffer.file,soundBuffer);
                 }
                 for(IModel model : mod.models) {
                     Ourcraft.RESOURCE_MANAGER.putModel(model.getPath(),model);
@@ -158,7 +158,7 @@ public class ContentPack {
     }
 
     public void loadCachedMod(String name) {
-        ModContent modContent = ModContent.readLocal(name);
+        ModContent modContent = ModContent.readLocal(name,gameInstance);
         if(modContent != null) {
             putMod(modContent);
         }

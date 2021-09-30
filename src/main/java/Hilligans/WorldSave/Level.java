@@ -3,13 +3,14 @@ package Hilligans.WorldSave;
 import Hilligans.Block.Block;
 import Hilligans.Block.Blocks;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
+import Hilligans.Ourcraft;
 import Hilligans.Tag.CompoundTag;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import java.util.HashMap;
 import java.util.Objects;
 
-public class  Level {
+public class Level {
 
     public HashMap<String, DoubleTypeWrapper<Integer,Integer>> blocks = new HashMap<>();
     public Int2ObjectOpenHashMap<String> idToNames = new Int2ObjectOpenHashMap<>();
@@ -35,7 +36,7 @@ public class  Level {
     }
 
     public Block getBlock(int id) {
-        return Blocks.MAPPED_BLOCKS.getOrDefault(idToNames.get(id),Blocks.AIR);
+        return Ourcraft.GAME_INSTANCE.MAPPED_BLOCKS.getOrDefault(idToNames.get(id),Blocks.AIR);
     }
 
     public int ensureHasBlock(Block block) {

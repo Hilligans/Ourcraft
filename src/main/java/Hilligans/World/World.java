@@ -17,6 +17,8 @@ import Hilligans.Util.*;
 import Hilligans.Util.Noises.*;
 import Hilligans.World.Builders.WorldBuilder;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
@@ -30,10 +32,11 @@ public abstract class World {
     public Int2ObjectOpenHashMap<Entity> entities = new Int2ObjectOpenHashMap<>();
     public ConcurrentLinkedQueue<BlockChange> blockChanges = new ConcurrentLinkedQueue<>();
     public int dimensionId = 1;
-    public Long2ObjectOpenHashMap<Chunk> chunks = new Long2ObjectOpenHashMap<>();
+    //public Long2ObjectOpenHashMap<Long2ObjectOpenHashMap<Chunk>> chunks = new Long2ObjectOpenHashMap<>();
 
     long seed = 1342;
 
+    public int chunkCount = 0;
     Noise noise = new Noise(seed);
     Noise biomes = new Noise(new Random(seed).nextInt());
 
@@ -43,6 +46,7 @@ public abstract class World {
     SimplexNoise simplexNoise;
 
     public Random random;
+    public IChunkContainer chunkContainer = new ChunkContainer();
 
 
     public ArrayList<WorldBuilder> worldBuilders = new ArrayList<>();
@@ -57,11 +61,15 @@ public abstract class World {
     public abstract boolean isServer();
 
     public Chunk getChunk(long chunkPos) {
-        try {
-            return chunks.get(chunkPos);
-        } catch (ArrayIndexOutOfBoundsException ignored) {
+      //  try {
+          //  return chunks.get(chunkPos);
+      //  } catch (ArrayIndexOutOfBoundsException ignored) {
             return null;
-        }
+       // }
+    }
+
+    public Chunk getChunk(int x, int z) {
+        return chunkContainer.getChunk(x,z);
     }
 
     public void scheduleTick(BlockPos pos, int time) {
@@ -73,16 +81,12 @@ public abstract class World {
         }
     }
 
-    public Chunk getChunk(int x, int z) {
-        return getChunk((long)x & 4294967295L | ((long)z & 4294967295L) << 32);
-    }
+   // public Chunk getChunk(int x, int z) {
+   //     return getChunk((long)x & 4294967295L | ((long)z & 4294967295L) << 32);
+    //}
 
     public void removeChunk(int x, int z) {
-        removeChunk((long)x & 4294967295L | ((long)z & 4294967295L) << 32);
-    }
-
-    public void removeChunk(long chunkPos) {
-        chunks.remove(chunkPos);
+        chunkContainer.removeChunk(x,z);
     }
 
     public Chunk getOrGenerateChunk(int x, int z) {
@@ -97,9 +101,13 @@ public abstract class World {
     public void generateChunk(int x, int z) {
         if(getChunk(x,z) == null) {
             Chunk chunk = new Chunk(x,z,this);
-            chunks.put(x & 4294967295L | ((long)z & 4294967295L) << 32,chunk);
+            putChunk(x,z,chunk);
             chunk.generate();
         }
+    }
+
+    public void putChunk(int x, int z, Chunk chunk) {
+        chunkCount += chunkContainer.setChunk(x,z,chunk) == null ? 1 : 0;
     }
 
     public boolean isInBounds(int playerX, int playerZ, long pos, int distance) {
@@ -197,7 +205,7 @@ public abstract class World {
         for(ClientWorld.XZHolder xzHolder : requestedChunks) {
             if(xzHolder.x == chunk.x && xzHolder.z == chunk.z) {
                 requestedChunks.remove(xzHolder);
-                chunks.put(chunk.x & 4294967295L | ((long)chunk.z & 4294967295L) << 32,chunk);
+                putChunk(chunk.x,chunk.z,chunk);
                 return;
             }
         }
@@ -207,10 +215,10 @@ public abstract class World {
         chunk.setWorld(this);
         chunk.x = x;
         chunk.z = z;
-        chunks.put(x & 4294967295L | ((long)z & 4294967295L) << 32,chunk);
+        putChunk(x,z,chunk);
     }
 
-    public static final double stepCount = 0.0001;
+    public static final double stepCount = 0.01;
     public static final int distance = 5;
 
     static final float offSet = -0.5f;
@@ -231,9 +239,6 @@ public abstract class World {
 
 
         for(int a = 0; a < distance / stepCount; a++) {
-            //final double Z = z - Math.sin(yaw) * Math.cos(pitch) * a * 0.1 + offSet;
-            //final double Y = y - Math.sin(pitch) * 0.1 * a + offSet;
-           // final double X = (x - Math.cos(yaw) * Math.cos(pitch) * a * 0.1) + offSet;
             Z -= addZ;
             Y -= addY;
             X -= addX;

@@ -15,13 +15,13 @@ public class ClientMain {
     public static Client getClient() {
         return client;
     }
-
+    public static GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
 
 
     public static void main(String[] args) {
 
 
-        client = new Client();
+        client = new Client(gameInstance);
         client.startClient();
 
     }

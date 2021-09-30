@@ -28,6 +28,7 @@ import org.lwjgl.opengl.GL31;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -44,6 +45,8 @@ public class ClientWorld extends World {
 
     public ConcurrentLinkedQueue<DoubleTypeWrapper<PrimitiveBuilder, SubChunk>> asyncChunkQueue = new ConcurrentLinkedQueue<>();
 
+
+    public int chunkCount = 0;
     public MiniMap miniMap = new MiniMap(this);
 
     public Client client;
@@ -74,7 +77,9 @@ public class ClientWorld extends World {
         skippedBlockChanges.clear();
         if(purgeTime > 100) {
             purgeTime = 0;
-            purgeChunks(Settings.renderDistance + 2);
+            if(Settings.destroyChunkDistance != -1) {
+                purgeChunks(Settings.destroyChunkDistance + 2);
+            }
         } else {
             if(Settings.asyncChunkBuilding) {
                 while(!queuedChunks.isEmpty()) {
@@ -118,20 +123,16 @@ public class ClientWorld extends World {
         int cameraX = (int)Camera.pos.x >> 4;
         int cameraZ = (int)Camera.pos.z >> 4;
         ArrayList<Long> removedChunks = new ArrayList<>();
-        for(Long longVal : chunks.keySet()) {
-              int x = (int)((long)longVal);
-              int z = (int)(longVal >> 32);
-
-              if(Math.abs(cameraX - x) > distance || Math.abs(cameraZ - z) > distance) {
-                  Chunk chunk = chunks.get(longVal);
-                  chunk.destroy();
-                  removedChunks.add(longVal);
-              }
-        }
+        chunkContainer.forEach(chunk -> {
+            if(Math.abs(cameraX - chunk.x) > distance || Math.abs(cameraZ - chunk.z) > distance) {
+                chunk.destroy();
+                removedChunks.add((long)chunk.x & 4294967295L | ((long)chunk.z & 4294967295L) << 32);
+            }
+        });
 
         //TODO: sometimes tries to remove -1 and causes crash
         for(Long longVal : removedChunks) {
-            chunks.remove(longVal);
+            chunkContainer.removeChunk(longVal);
         }
     }
 
@@ -184,7 +185,7 @@ public class ClientWorld extends World {
             if(!ClientMain.getClient().joinServer) {
                 generateChunk(x * 16 + (int) pos.x >> 4, z * 16 + (int) pos.z >> 4);
             } else {
-                if (ClientMain.getClient().valid) {
+                if (ClientMain.getClient().valid && Settings.requestChunks) {
                     requestChunk(x * 16 + (int) pos.x >> 4, z * 16 + (int) pos.z >> 4);
                 }
             }

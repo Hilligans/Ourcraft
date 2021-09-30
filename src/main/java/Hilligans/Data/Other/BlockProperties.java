@@ -18,6 +18,7 @@ public class BlockProperties {
 
     public boolean serverSide = false;
     public boolean transparent = false;
+    public boolean translucent = false;
     public boolean alwaysRender = false;
     public boolean canWalkThrough = false;
     public boolean airBlock = false;
@@ -116,6 +117,7 @@ public class BlockProperties {
         properties.put("canWalkThrough",canWalkThrough);
         properties.put("airBlock",airBlock);
         properties.put("transparent",transparent);
+        properties.put("translucent",translucent);
         properties.put("placementMode",placementMode);
         properties.put("blockStateByteCount",blockStateSize);
         properties.put("mapColor",mapColor);
@@ -134,6 +136,7 @@ public class BlockProperties {
             canWalkThrough(getBoolean(properties, "canWalkThrough", false));
             airBlock(getBoolean(properties, "airBlock", false));
             transparent(getBoolean(properties, "transparent", false));
+            translucent = properties.optBoolean("translucent");
             flammable = getBoolean(properties,"flammable",false);
             placementMode = properties.has("placementMode") ? properties.getString("placementMode") : "default";
             blockStateSize = properties.has("blockStateByteCount") ? properties.getInt("blockStateByteCount") : 0;

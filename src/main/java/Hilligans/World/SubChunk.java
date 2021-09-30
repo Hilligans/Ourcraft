@@ -30,7 +30,6 @@ public class SubChunk {
 
     public boolean empty = true;
 
-   // BlockState[][][] blocks = new BlockState[16][16][16];
 
     int[][][] vals;
 
@@ -128,8 +127,6 @@ public class SubChunk {
                vals[x & 15][y & 15][z & 15] = blockState.blockId << 16 | 65535;
            }
        }
-        // blocks[x & 15][y & 15][z & 15].getBlock().onBreak(world,new BlockPos(x,y,z));
-       // blocks[x & 15][y & 15][z & 15] = blockState;
     }
 
     public void updateBlock(BlockPos pos) {

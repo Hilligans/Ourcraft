@@ -118,6 +118,10 @@ public class PrimitiveBuilder {
     }
 
     public int[] createMesh() {
+        return createMesh(GL_STATIC_DRAW);
+    }
+
+    public int[] createMesh(int mode) {
         float[] vertices = this.vertices.getElementData();
         int[] indices = this.indices.getElementData();
 
@@ -126,10 +130,10 @@ public class PrimitiveBuilder {
         int EBO = glGenBuffers();
         glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, vertices, mode);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, mode);
         int x = 0;
         int pointer = 0;
         for(Shader.ShaderElement shaderElement : shader.shaderElements) {
@@ -143,7 +147,7 @@ public class PrimitiveBuilder {
     }
 
     public void draw(MatrixStack matrixStack) {
-        int id = VAOManager.createVAO(this);
+        id = VAOManager.createVAO(this, GL_STATIC_DRAW);
         GL30.glBindVertexArray(id);
         matrixStack.push();
         matrixStack.applyTransformation(shader.shader);
@@ -152,6 +156,24 @@ public class PrimitiveBuilder {
         VAOManager.destroyBuffer(id);
     }
 
+    public void draw1(MatrixStack matrixStack) {
+        if(id == -1) {
+            createMesh(GL_DYNAMIC_DRAW);
+        } else {
+            glBindBuffer(GL_ARRAY_BUFFER, VAOManager.buffers.get(id).typeA);
+            glBufferData(GL_ARRAY_BUFFER,this.vertices.getElementData(),GL_STREAM_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, VAOManager.buffers.get(id).typeB);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER,this.indices.getElementData(),GL_STREAM_DRAW);
+        }
+        GL30.glBindVertexArray(id);
+        matrixStack.push();
+        matrixStack.applyTransformation(shader.shader);
+        glDrawElements(type, indices.size(), GL_UNSIGNED_INT, 0);
+        matrixStack.pop();
+    }
+
+    public static int id = -1;
+
     public void draw(MatrixStack matrixStack, int drawMode) {
         float[] vals = new float[count];
         System.arraycopy(vertices.elementData,0,vals,0,count);
@@ -159,16 +181,12 @@ public class PrimitiveBuilder {
         //System.out.println(glGetError());
         int VAO = glGenVertexArrays();
         int VBO = glGenBuffers();
-        //int EBO = glGenBuffers();
 
         glBindVertexArray(VAO);
 
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, vals, GL_STATIC_DRAW);
-
-        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        //glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.elementData, GL_STATIC_DRAW);
 
         int x = 0;
         int pointer = 0;
@@ -187,16 +205,6 @@ public class PrimitiveBuilder {
         matrixStack.push();
         //System.out.println(glGetError());
         glUseProgram(shader.shader);
-        //System.out.println(glGetError());
-
-        //System.out.println(glGetError());
-        //matrixStack.applyTransformation(shader.shader);
-
-        //int trans = glGetUniformLocation(shader.shader, "pos");
-        //glUniformMatrix4fv(trans,false,matrix4f.get(floats));
-        //glUniform3fv(trans, new float[]{Camera.pos.x,Camera.pos.y,Camera.pos.z});
-
-
 
         GL30.glBindVertexArray(VAO);
         //System.out.println(glGetError());

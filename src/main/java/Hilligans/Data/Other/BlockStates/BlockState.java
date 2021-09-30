@@ -7,8 +7,6 @@ import java.util.Objects;
 
 public class BlockState {
 
-    //public Block block;
-
     public short blockId;
 
     public BlockState(Block block) {

@@ -27,6 +27,8 @@ public class StringRenderer {
 
     public static StringRenderer instance = new StringRenderer();
 
+    public static HashMap<String, Integer> cached = new HashMap<>();
+
     public HashMap<String, DoubleTypeWrapper<Integer,Integer>> characterOffset = new HashMap<>();
     public HashMap<String, Triplet<Integer,Integer, Integer>> characterOffset1 = new HashMap<>();
 
@@ -240,7 +242,7 @@ public class StringRenderer {
             textureAtlas.bindTexture();
             PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
             primitiveBuilder.translate(ClientMain.getWindowX() / 2f - finalWidth / 2f,0,0);
-            primitiveBuilder.draw(matrixStack);
+            primitiveBuilder.draw1(matrixStack);
         });
         } catch (Exception ignored) {}
         matrixStack.pop();
@@ -271,7 +273,7 @@ public class StringRenderer {
             textureAtlas.bindTexture();
             PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
             primitiveBuilder.translate(x - finalWidth / 2f,0,0);
-            primitiveBuilder.draw(matrixStack);
+            primitiveBuilder.draw1(matrixStack);
         });
         } catch (Exception ignored) {}
         matrixStack.pop();
@@ -304,7 +306,7 @@ public class StringRenderer {
             textureAtlas.bindTexture();
             PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
             primitiveBuilder.translate(1.0f,0,1.0f);
-            primitiveBuilder.draw(matrixStack);
+            primitiveBuilder.draw1(matrixStack);
         });
         glDisable(GL_MULTISAMPLE);
     }

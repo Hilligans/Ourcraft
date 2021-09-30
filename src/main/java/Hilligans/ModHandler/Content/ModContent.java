@@ -8,6 +8,7 @@ import Hilligans.Client.Rendering.Texture;
 import Hilligans.ClientMain;
 import Hilligans.Data.Other.BlockProperties;
 import Hilligans.Data.Other.ItemProperties;
+import Hilligans.GameInstance;
 import Hilligans.Item.BlockItem;
 import Hilligans.Item.Item;
 import Hilligans.ModHandler.Mod;
@@ -39,6 +40,7 @@ import java.util.function.Supplier;
 public class ModContent {
 
     public String modID;
+    public GameInstance gameInstance;
 
     public Mod mod;
     public Class<?> mainClass;
@@ -72,11 +74,13 @@ public class ModContent {
     public boolean loaded = false;
     public boolean shouldLoad = true;
 
-    public ModContent(String modID) {
+    public ModContent(String modID, GameInstance gameInstance) {
         this.modID = modID;
+        this.gameInstance = gameInstance;
     }
 
-    public ModContent(ByteArray packetData) {
+    public ModContent(ByteArray packetData, GameInstance gameInstance) {
+        this.gameInstance = gameInstance;
         readData(packetData);
         if(Settings.cacheDownloadedMods) {
             if(Settings.storeServerModsIndividually) {
@@ -101,10 +105,10 @@ public class ModContent {
         return this;
     }
 
-    public static ModContent readLocal(String name) {
+    public static ModContent readLocal(String name,GameInstance gameInstance) {
         ByteBuffer buffer = WorldLoader.readBuffer("mod_cache/" + (Settings.storeServerModsIndividually ? "servers/" + ClientMain.getClient().serverIP.replace(':','_') + "/" : "mods/") + name + ".dat");
         if(buffer != null) {
-            ModContent modContent = new ModContent("");
+            ModContent modContent = new ModContent("", gameInstance);
             modContent.readData(new PacketData(buffer,2));
             return modContent;
         }

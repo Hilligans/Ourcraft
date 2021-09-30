@@ -1,5 +1,6 @@
 package Hilligans.ModHandler;
 
+import Hilligans.GameInstance;
 import Hilligans.ModHandler.Content.ModContent;
 import Hilligans.Data.Primitives.Triplet;
 import Hilligans.Ourcraft;
@@ -20,6 +21,7 @@ import java.util.zip.ZipInputStream;
 public class ModLoader {
 
     public String mod = "ourcraft";
+    GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
 
     public HashMap<String, Triplet<Class<?>,String,Boolean>> mainClasses = new HashMap<>();
 
@@ -53,7 +55,7 @@ public class ModLoader {
                         String modID = getModID(testClass);
                         if(modID != null) {
                             this.mod = modID;
-                            ModContent modContent = new ModContent(modID);
+                            ModContent modContent = new ModContent(modID,gameInstance);
                             modContent.isJar = false;
                             modContent.path = folder.getPath();
                             if(jsonObject != null) {
@@ -80,7 +82,7 @@ public class ModLoader {
                 Class<?> testClass = Class.forName(name,false,child);
                 String modID = getModID(testClass);
                 if(modID != null) {
-                    ModContent modContent = new ModContent(modID);
+                    ModContent modContent = new ModContent(modID,gameInstance);
                     modContent.path = name;
                     if(jsonObject != null) {
                         modContent.readData(jsonObject);

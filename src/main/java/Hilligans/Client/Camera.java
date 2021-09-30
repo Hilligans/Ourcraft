@@ -296,6 +296,15 @@ public class Camera {
 
     public static MatrixStack getWorldStack() {
         Matrix4d matrix4d = getPerspective();
+        return applyWorldStack(matrix4d);
+    }
+
+    public static MatrixStack getWorldStack(int W, int H, int x, int y) {
+        Matrix4d matrix4d = getPerspective(W,H,x,y);
+        return applyWorldStack(matrix4d);
+    }
+
+    private static MatrixStack applyWorldStack(Matrix4d matrix4d) {
         Matrix4d view = getViewStack();
         matrix4d.mul(view);
         if(thirdPerson && thirdPersonMode == 1) {
@@ -341,6 +350,10 @@ public class Camera {
 
     public static Matrix4d getPerspective() {
         return new Matrix4d().perspective((float) Math.toRadians(fov), (float) ClientMain.getWindowX() / ClientMain.getWindowY(),0.1f,10000.0f);
+    }
+
+    public static Matrix4d getPerspective(int W, int H, int x, int y) {
+        return new Matrix4d() .translate(W - 1 - 2*x, H - 1 - 2*y, 0).scale(W, H, 1).perspective((float) Math.toRadians(fov), (float) ClientMain.getWindowX() / ClientMain.getWindowY(),0.1f,10000.0f);
     }
 
     public static MatrixStack getScreenStack() {

@@ -18,7 +18,7 @@ public class SettingsScreen extends ScreenBase {
         super(client);
         addWidget(new SliderWidget("settings.sensitivity",50, 50, 200, 40, 50, 300, (int)Camera.sensitivity, value -> Camera.sensitivity = value));
         addWidget(new SliderWidget("settings.fov",50, 150, 200, 40, 10, 110, Camera.fov, value -> Camera.fov = value));
-        addWidget(new SliderWidget("settings.render_distance", 50, 250, 200, 40, 2, 64, Settings.renderDistance, value -> Settings.renderDistance = value));
+        addWidget(new SliderWidget("settings.render_distance", 50, 250, 400, 40, 2, 512, Settings.renderDistance, value -> Settings.renderDistance = value));
         addWidget(new ToggleWidget(50, 350, 200, 40, "settings.transparent_textures", Settings.renderTransparency, value -> {
             Settings.renderTransparency = value;
             if(value) {

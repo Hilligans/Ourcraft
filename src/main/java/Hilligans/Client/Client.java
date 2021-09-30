@@ -26,6 +26,7 @@ import Hilligans.Data.Other.BlockStates.BlockState;
 import Hilligans.Data.Other.PlayerList;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
+import Hilligans.GameInstance;
 import Hilligans.Item.ItemStack;
 import Hilligans.Item.Items;
 import Hilligans.ModHandler.Events.Client.*;
@@ -54,6 +55,7 @@ import java.nio.DoubleBuffer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -104,8 +106,11 @@ public class Client {
     public ClientNetwork network;
     public ClientNetwork authNetwork;
 
+    public GameInstance gameInstance;
 
-    public Client() {}
+    public Client(GameInstance gameInstance) {
+        this.gameInstance = gameInstance;
+    }
 
     public void startClient() {
         network = new ClientNetwork(Protocols.PLAY);
@@ -142,7 +147,19 @@ public class Client {
 
         while(!glfwWindowShouldClose(window)) {
             mouseLocked = screen == null;
+
+
+            Ourcraft.EVENT_BUS.postEvent(new RenderPreEvent());
             render();
+            Ourcraft.EVENT_BUS.postEvent(new RenderPostEvent(this));
+            glfwSwapBuffers(window);
+            rendering = false;
+            soundEngine.tick();
+            if(screenShot) {
+                screenShot = false;
+                ScreenShot.takeScreenShot();
+            }
+
             glfwPollEvents();
             Camera.updateMouse();
         }
@@ -195,7 +212,6 @@ public class Client {
         Blocks.generateTextures();
         PlayerEntity.imageId = WorldTextureManager.loadAndRegisterTexture("player.png");
         StringRenderer.instance.buildChars();
-        //StringRenderer.instance.loadCharacters2();
 
         for(Texture texture : Textures.TEXTURES) {
             texture.register();
@@ -206,7 +222,6 @@ public class Client {
         clientWorld = new ClientWorld(client);
 
        // glEnable(GL_DEPTH);
-
         glfwWindowHint(GLFW_SAMPLES, 4);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -233,6 +248,7 @@ public class Client {
         }
         countFPS();
         timeSinceLastDraw = currentTime;
+
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -253,47 +269,16 @@ public class Client {
         screenStack.applyColor();
         screenStack.applyTransformation();
 
-        Ourcraft.EVENT_BUS.postEvent(new RenderStartEvent(matrixStack,screenStack,this));
+        draw(matrixStack,screenStack);
+    }
 
+    public void draw(MatrixStack matrixStack, MatrixStack screenStack) {
+        Ourcraft.EVENT_BUS.postEvent(new RenderStartEvent(matrixStack,screenStack,this));
         if(renderWorld && !Ourcraft.REBUILDING.get()) {
             Ourcraft.EVENT_BUS.postEvent(new RenderWorldEvent(matrixStack,screenStack,this));
             rendering = true;
-          //  if(screen == null || screen.renderWorld()) {
-                clientWorld.tick();
-                clientWorld.render(matrixStack);
-         //   }
-
-/*
-            PrimitiveBuilder builder = new PrimitiveBuilder(GL_POINTS,ShaderManager.particleShader);
-            glBindTexture(GL_TEXTURE_2D,Textures.LIST_ICON.textureId);
-            glPointSize(100f);
-            builder.add(0.0f,100.0f,0.0f,0.0f,1.0f);
-            builder.add(0f,1f,0f,0f,0f);
-            builder.draw(matrixStack,0);
-
-
- */
-            //System.out.println(new Vector4f(0f,1f,0f,1f).mul(matrixStack.matrix4f).y);
-            //PrimitiveBuilder builder = new PrimitiveBuilder(GL_POINTS,ShaderManager.particleShader2);
-
-            //glBindTexture(GL_TEXTURE_2D,Textures.LIST_ICON.textureId);
-            //glUseProgram(ShaderManager.particleShader2.shader);
-
-            //builder.applyTransformation(Camera.getPerspective(),ShaderManager.particleShader2.shader,"projection");
-            //builder.applyTransformation(Camera.getViewStack(),ShaderManager.particleShader2.shader,"modelview");
-            //builder.applyTransformation(windowX,windowY,ShaderManager.particleShader2.shader,"screenSize");
-            //glPointSize(100f);
-            //builder.add(0.0f,100.0f,0.0f,0.0f,0.0f,1.0f,1.0f, (float) (Math.random() * 10));
-
-            //builder.add(0.0f,100.0f,0.0f,0.0f,100.0f);
-            //builder.add(0f,100f,10f,0f,0f);
-            //builder.add(0f,110f,10f,0f,1f);
-            //builder.add(10f,100f,10f,1f,0f);
-            //builder.add(1,100,1,1,1,0,0,0);
-
-            //builder.draw(matrixStack,0);
-
-
+            clientWorld.tick();
+            clientWorld.render(matrixStack);
 
             BlockPos pos = clientWorld.traceBlockToBreak(Camera.pos.x, Camera.pos.y + Camera.playerBoundingBox.eyeHeight, Camera.pos.z, Camera.pitch, Camera.yaw);
             BlockState blockState = null;
@@ -325,6 +310,10 @@ public class Client {
                 StringRenderer.drawString(screenStack, "Render Calls:" + GLRenderer.drawCalls, windowX/2,242,0.5f);
                 StringRenderer.drawString(screenStack, "Vertices:" + GLRenderer.count, windowX/2,271,0.5f);
                 StringRenderer.drawString(screenStack, "Block:" + (blockState == null ? "null" : blockState.getBlock().getName() + ":" + blockState.readData()),windowX/2,300,0.5f);
+                if(renderTime % 100 == 0) {
+                    chunks = clientWorld.chunkContainer.getSize();
+                }
+                StringRenderer.drawString(screenStack, "Chunks:" + chunks,windowX/2,329,0.5f);
             }
             ItemStack stack = playerData.inventory.getItem(playerData.handSlot);
             if(stack != null && stack.item != null) {
@@ -350,18 +339,12 @@ public class Client {
             int s = 200;
             BlockPos blockPos = new BlockPos(Camera.renderPos);
 
-           // clientWorld.miniMap.draw(screenStack,(int)blockPos.getChunkX(), (int) blockPos.getChunkZ(),windowX - s,0,s,s);
-        }
-        Ourcraft.EVENT_BUS.postEvent(new RenderEndEvent(matrixStack,screenStack,this));
 
-        glfwSwapBuffers(window);
-        rendering = false;
-        soundEngine.tick();
-        if(screenShot) {
-            screenShot = false;
-            ScreenShot.takeScreenShot();
-        }
+       }
+        Ourcraft.EVENT_BUS.postEvent(new RenderEndEvent(matrixStack,screenStack,this));
     }
+
+    int chunks = 0;
 
     public void closeScreen() {
         if(!playerData.heldStack.isEmpty()) {
@@ -446,12 +429,12 @@ public class Client {
         KeyHandler.register(new KeyPress() {
             @Override
             public void onPress() {
-                for (Chunk chunk : clientWorld.chunks.values()) {
+                clientWorld.chunkContainer.forEach(chunk -> {
                     for (SubChunk subChunk : chunk.chunks) {
                         subChunk.destroy();
                         subChunk.id = -2;
                     }
-                }
+                });
             }
         },KeyHandler.GLFW_KEY_F9);
 
@@ -460,12 +443,12 @@ public class Client {
             public void onPress() {
                 ResourceManager.reload();
                 Blocks.reload();
-                for(Chunk chunk : clientWorld.chunks.values()) {
-                    for(SubChunk subChunk : chunk.chunks) {
+                clientWorld.chunkContainer.forEach(chunk -> {
+                    for (SubChunk subChunk : chunk.chunks) {
                         subChunk.destroy();
                         subChunk.id = -2;
                     }
-                }
+                });
             }
         },KeyHandler.GLFW_KEY_F8);
 

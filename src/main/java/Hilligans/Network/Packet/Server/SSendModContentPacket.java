@@ -27,7 +27,7 @@ public class SSendModContentPacket extends PacketBase {
 
     @Override
     public void decode(PacketData packetData) {
-        modContent = new ModContent(packetData);
+        modContent = new ModContent(packetData,Ourcraft.GAME_INSTANCE);
     }
 
     @Override

@@ -7,6 +7,7 @@ import Hilligans.Client.Rendering.World.Managers.ItemTextureManager;
 import Hilligans.Item.BlockItem;
 import Hilligans.Item.Item;
 import Hilligans.ModHandler.Content.ModContent;
+import Hilligans.Ourcraft;
 import org.json.JSONObject;
 
 public class ItemProperties {
@@ -63,7 +64,7 @@ public class ItemProperties {
 
     public Item getItem(String name) {
         if(block != null) {
-            return new BlockItem(name, Blocks.MAPPED_BLOCKS.get(block),"ourcraft");
+            return new BlockItem(name, Ourcraft.GAME_INSTANCE.MAPPED_BLOCKS.get(block),"ourcraft");
         } else {
             return new Item(name,this);
         }

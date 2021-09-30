@@ -12,11 +12,21 @@ public class Image {
     public ByteBuffer buffer;
     public int width;
     public int height;
+    public int format;
 
     public Image(int width, int height) {
+        this(width,height,4);
+    }
+
+    public Image(int width, int height, int format) {
+        this(width,height,format,ByteBuffer.allocateDirect(width * height * format));
+    }
+
+    public Image(int width, int height, int format, ByteBuffer byteBuffer) {
         this.width = width;
         this.height = height;
-        this.buffer = ByteBuffer.allocateDirect(width * height * 4);
+        this.format = format;
+        this.buffer = byteBuffer;
     }
 
     public Image(String path, String modId) {
@@ -66,10 +76,7 @@ public class Image {
 
     public void putImage(Image image, int x, int y) {
          for(int yy = 0; yy < image.height; yy++) {
-        //  for(int xx = 0; yy < image.width; yy++) {
-        //      putPixel(x + xx, y + yy,image.getPixel(xx,yy));
-        //}
-          buffer.put((yy + y) * 4 * width + x * 4,image.buffer,yy * 4 * image.width,image.width * 4);
+          buffer.put((yy + y) * format * width + x * format,image.buffer,yy * format * image.width,image.width * format);
         }
     }
 

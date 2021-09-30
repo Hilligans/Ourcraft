@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 public class ServerWorld extends World {
 
@@ -84,9 +85,7 @@ public class ServerWorld extends World {
             }
             x++;
         }
-        for(Chunk chunk : chunks.values()) {
-            chunk.tick();
-        }
+        chunkContainer.forEach(chunk -> chunk.tick());
         if(Settings.autoSave) {
             if (autoSave == -1) {
                 autoSave = System.currentTimeMillis();
@@ -103,29 +102,8 @@ public class ServerWorld extends World {
 
                    if(Settings.asyncWorldSave) {
                        AtomicInteger chunkList = new AtomicInteger(0);
-                       final int size = chunks.size();
-                       for (Chunk chunk : chunks.values()) {
-                           executorService.submit(() -> {
-                               ChunkLoader.writeChunk(chunk);
-                               boolean inBounds = false;
-                               for (Long longVal : players) {
-                                   if (isInBounds(chunk.x, chunk.z, longVal, Settings.renderDistance)) {
-                                       inBounds = true;
-                                       break;
-                                   }
-                               }
-                               chunk.needsSaving = false;
-                               if (!inBounds) {
-                                   removeChunk(chunk.x, chunk.z);
-                               }
-                               if (chunkList.addAndGet(1) == size) {
-                                   System.out.println("SAVE FINISH:" + (System.currentTimeMillis() - start) + "MS");
-                                   ChunkLoader.finishSave();
-                               }
-                           });
-                       }
-                   } else {
-                       for (Chunk chunk : chunks.values()) {
+                       final int size = chunkContainer.getSize();
+                       chunkContainer.forEach(chunk -> executorService.submit(() -> {
                            ChunkLoader.writeChunk(chunk);
                            boolean inBounds = false;
                            for (Long longVal : players) {
@@ -138,14 +116,29 @@ public class ServerWorld extends World {
                            if (!inBounds) {
                                removeChunk(chunk.x, chunk.z);
                            }
-                       }
+                           if (chunkList.addAndGet(1) == size) {
+                               System.out.println("SAVE FINISH:" + (System.currentTimeMillis() - start) + "MS");
+                               ChunkLoader.finishSave();
+                           }
+                       }));
+                   } else {
+                       chunkContainer.forEach(chunk -> {
+                           ChunkLoader.writeChunk(chunk);
+                           boolean inBounds = false;
+                           for (Long longVal : players) {
+                               if (isInBounds(chunk.x, chunk.z, longVal, Settings.renderDistance)) {
+                                   inBounds = true;
+                                   break;
+                               }
+                           }
+                           chunk.needsSaving = false;
+                           if (!inBounds) {
+                               removeChunk(chunk.x, chunk.z);
+                           }
+                       });
                        System.out.println("SAVE FINISH:" + (System.currentTimeMillis() - start) + "MS");
                        ChunkLoader.finishSave();
                    }
-
-
-
-
 
                    // System.out.println("SAVE FINISH:" + (System.currentTimeMillis() - start) + "MS");
                 } catch (Exception e) {
