@@ -130,6 +130,17 @@ public class Chunk {
         dataProviders.clear();
     }
 
+    public void destroyMap(int newId) {
+        if(id != -1 && id != -2 && id != -3) {
+            VAOManager.destroyBuffer(id);
+        }
+        this.id = newId;
+    }
+
+    public void reload() {
+
+    }
+
     public void generate() {
         for(int x = 0; x < 16; x++) {
             for(int z = 0; z < 16; z++) {
@@ -358,6 +369,9 @@ public class Chunk {
             primitiveBuilder.add(indices);
             primitiveBuilder.sizeVal += sizeVal / 4 / primitiveBuilder.shader.shaderElementCount;
             pointer += sizeVal;
+
+            subChunk.id = -1;
+            VAOManager.destroyBuffer(subChunk.id);
         }
 
         int VAO = glGenVertexArrays();

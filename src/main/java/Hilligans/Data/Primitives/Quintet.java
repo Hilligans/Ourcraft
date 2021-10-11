@@ -1,6 +1,6 @@
 package Hilligans.Data.Primitives;
 
-public class Quintet<A,B,C,D,E,F> {
+public class Quintet<A,B,C,D,E> {
 
     public A a;
     public B b;

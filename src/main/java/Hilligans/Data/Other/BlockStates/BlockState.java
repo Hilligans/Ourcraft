@@ -33,9 +33,13 @@ public class BlockState {
         return -1;
     }
 
+    public int get() {
+        return blockId << 16 | readData();
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(blockId);
+        return Objects.hash(get());
     }
 
     public BlockState duplicate() {

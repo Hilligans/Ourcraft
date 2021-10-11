@@ -11,8 +11,11 @@ import Hilligans.World.Chunk;
 import Hilligans.World.DataProvider;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static org.lwjgl.opengl.GL30C.glFramebufferTexture2D;
 
 public class ChunkLoader {
 
@@ -183,7 +186,6 @@ public class ChunkLoader {
             while(offset < blocks.tags.size()) {
                 short val = blocks.tags.get(offset).val;
                 Block block = level.getBlock(val);
-                //Block block = Blocks.getBlockWithID(blocks.tags.get(offset).val);
                 offset++;
                 BlockState blockState;
                 if(level.getBlockStateSize(val) != 0) {
@@ -197,8 +199,6 @@ public class ChunkLoader {
             }
 
             chunk.setFromChainedList(blockList);
-
-
 
             setDataProviders(compoundTag.getCompoundTag("data"), chunk);
         } catch (Exception e) {
@@ -232,6 +232,7 @@ public class ChunkLoader {
     }
 
     public static void finishSave() {
+        new File(pathToWorld + "chunks/").mkdir();
         for(String string : loadedGroups.keySet()) {
             CompoundTag compoundTag = loadedGroups.get(string);
             CompoundTag levelTag = new CompoundTag();
@@ -243,6 +244,21 @@ public class ChunkLoader {
         loadedGroups.clear();
         levels.clear();
     }
+
+    public static void finishSave1() {
+        new File(pathToWorld + "chunks/").mkdir();
+        for(String string : loadedGroups.keySet()) {
+            CompoundTag compoundTag = loadedGroups.get(string);
+            CompoundTag levelTag = new CompoundTag();
+            Level level = levels.get(string);
+            level.write(levelTag);
+            compoundTag.putTag("level",levelTag);
+            WorldLoader.save(compoundTag, pathToWorld + "chunks/" + string + ".dat");
+        }
+        loadedGroups.clear();
+    }
+
+
 
     public static CompoundTag fetchChunk(int x, int z) {
         int X = x >> 3;
@@ -297,12 +313,19 @@ public class ChunkLoader {
         return WorldLoader.loadTag(getPathToChunk(x,z));
     }
 
-    public static Chunk readChunk(int x, int z) {
+    public static synchronized Chunk readChunk(int x, int z) {
         CompoundTag compoundTag = fetchChunk(x,z);
         if(compoundTag != null) {
             return ChunkLoader.createChunk3(x, z, compoundTag,fetchLevel(x,z));
         }
         return null;
+    }
+
+    public static synchronized void readWriteChunk(Chunk chunk) {
+        readChunk(chunk.x,chunk.z);
+        CompoundTag compoundTag = ChunkLoader.createTag3(chunk,fetchLevel(chunk.x,chunk.z));
+        putTag(chunk.x,chunk.z,compoundTag);
+        finishSave1();
     }
 
     public static void writeChunk(Chunk chunk) {

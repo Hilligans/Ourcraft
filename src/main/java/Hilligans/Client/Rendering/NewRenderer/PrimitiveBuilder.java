@@ -158,7 +158,7 @@ public class PrimitiveBuilder {
 
     public void draw1(MatrixStack matrixStack) {
         if(id == -1) {
-            createMesh(GL_DYNAMIC_DRAW);
+            id = VAOManager.createVAO(this,GL_DYNAMIC_DRAW);
         } else {
             glBindBuffer(GL_ARRAY_BUFFER, VAOManager.buffers.get(id).typeA);
             glBufferData(GL_ARRAY_BUFFER,this.vertices.getElementData(),GL_STREAM_DRAW);
@@ -169,6 +169,8 @@ public class PrimitiveBuilder {
         matrixStack.push();
         matrixStack.applyTransformation(shader.shader);
         glDrawElements(type, indices.size(), GL_UNSIGNED_INT, 0);
+        VAOManager.destroyBuffer(id);
+        id = -1;
         matrixStack.pop();
     }
 

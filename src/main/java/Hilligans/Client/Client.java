@@ -52,6 +52,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL30;
 
 import java.nio.DoubleBuffer;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -70,6 +71,7 @@ public class Client {
     public boolean mouseLocked = false;
 
     public int playerId;
+    public ConcurrentLinkedQueue<Integer> unloadQueue = new ConcurrentLinkedQueue<>();
 
     public int  windowX = 1600;
     public int windowY = 800;
@@ -248,6 +250,9 @@ public class Client {
         }
         countFPS();
         timeSinceLastDraw = currentTime;
+
+        unloadQueue.forEach(VAOManager::destroyBuffer);
+        unloadQueue.clear();
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -429,12 +434,7 @@ public class Client {
         KeyHandler.register(new KeyPress() {
             @Override
             public void onPress() {
-                clientWorld.chunkContainer.forEach(chunk -> {
-                    for (SubChunk subChunk : chunk.chunks) {
-                        subChunk.destroy();
-                        subChunk.id = -2;
-                    }
-                });
+                clientWorld.reloadChunks();
             }
         },KeyHandler.GLFW_KEY_F9);
 
@@ -443,12 +443,7 @@ public class Client {
             public void onPress() {
                 ResourceManager.reload();
                 Blocks.reload();
-                clientWorld.chunkContainer.forEach(chunk -> {
-                    for (SubChunk subChunk : chunk.chunks) {
-                        subChunk.destroy();
-                        subChunk.id = -2;
-                    }
-                });
+                clientWorld.reloadChunks();
             }
         },KeyHandler.GLFW_KEY_F8);
 
@@ -509,13 +504,6 @@ public class Client {
                 screenShot = true;
             }
         }, GLFW_KEY_F2);
-
-    //    KeyHandler.register(new KeyPress() {
-     //       @Override
-  //          public void onPress() {
-     //           openScreen(new MiniMapScreen(client,clientWorld.miniMap));
-  //          }
-       // }, GLFW_KEY_K);
     }
 
     public void createCallbacks() {
@@ -654,5 +642,6 @@ public class Client {
     public long getRenderTime() {
          return renderTime;
     }
+
 
 }

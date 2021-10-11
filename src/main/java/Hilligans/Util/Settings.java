@@ -13,7 +13,7 @@ public class Settings {
 
     public static final int gameVersion = 3;
 
-    public static final int maxFps = 1000;
+    public static final int maxFps = 2000;
 
     public static final boolean renderSameTransparent = false;
     public static boolean renderTransparency = true;
@@ -24,7 +24,7 @@ public class Settings {
 
     public static BoundingBox playerBoundingBox = new BoundingBox(-0.35f,-1.9f,-0.35f,0.35f,0.0f,0.35f);
 
-    public static final String worldName = "world1";
+    public static String worldName = "world1";
 
     public static boolean isServer = false;
     public static boolean isOnlineServer = false;

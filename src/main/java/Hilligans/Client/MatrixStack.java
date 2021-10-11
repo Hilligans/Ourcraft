@@ -44,7 +44,6 @@ public class MatrixStack {
     public void pop() {
         matrix4f = matrix4fStack.pop();
         color = colorStack.pop();
-        // glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
         applyColor();
     }
 

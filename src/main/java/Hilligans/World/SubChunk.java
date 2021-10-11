@@ -82,9 +82,9 @@ public class SubChunk {
     public void destroy() {
         if(id != -1 && id != -2 && id != -3) {
             VAOManager.destroyBuffer(id);
-            world.getChunk((int)x >> 4,(int)z >> 4).id = -1;
             id = -1;
         }
+        world.getChunk((int)x >> 4,(int)z >> 4).destroyMap(-1);
     }
 
     public BlockState getBlock(BlockPos pos) {

@@ -10,6 +10,7 @@ import Hilligans.Block.Blocks;
 import Hilligans.Network.PacketBase;
 import Hilligans.Network.PacketData;
 import Hilligans.Data.Other.BlockStates.BlockState;
+import Hilligans.WorldSave.WorldCompressor;
 import it.unimi.dsi.fastutil.shorts.Short2ByteOpenHashMap;
 
 import java.util.ArrayList;
@@ -146,6 +147,7 @@ public class SSendChunkPacket extends PacketBase {
                 }
                 chunk.setFromChainedList(blockList);
             }
+           // WorldCompressor.asCompressedStream(chunk);
         } catch (Exception ignored) {}
     }
 

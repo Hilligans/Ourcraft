@@ -3,6 +3,7 @@ package Hilligans;
 import Hilligans.Client.*;
 import Hilligans.Client.Rendering.NewRenderer.ImageLocation;
 import Hilligans.Client.Rendering.NewRenderer.TextAtlas;
+import Hilligans.Util.BitArray;
 
 import java.util.Arrays;
 import java.util.PriorityQueue;

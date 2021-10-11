@@ -178,6 +178,17 @@ public class ClientWorld extends World {
     public int vertices = 0;
     public int count = 0;
 
+    public void reloadChunks() {
+        chunkContainer.forEach(chunk -> {
+           if(chunk.id != -1 && chunk.id != -2 && chunk.id != -3) {
+               VAOManager.destroyBuffer(chunk.id);
+           }
+           for (SubChunk subChunk : chunk.chunks) {
+               subChunk.destroy();
+           }
+        });
+    }
+
     private void drawChunk(MatrixStack matrixStack, Vector3d pos, int x, int z) {
         Vector3i playerChunkPos = new Vector3i((int)pos.x >> 4, 0, (int)pos.z >> 4);
         Chunk chunk = getChunk(x * 16 + (int)pos.x >> 4,z * 16 + (int)pos.z >> 4);
