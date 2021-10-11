@@ -8,6 +8,7 @@ import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.Log4JLoggerFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.lwjgl.system.CallbackI;
 
 import java.util.logging.LogManager;
 
@@ -35,6 +36,10 @@ public class BlockProperties {
     public String path;
     public JSONObject overrides;
     public boolean fromFile = false;
+
+    public BlockProperties() {
+
+    }
 
     public BlockProperties serverSide() {
         serverSide = true;

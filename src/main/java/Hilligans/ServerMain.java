@@ -31,12 +31,8 @@ public class ServerMain {
     public static void main(String[] args) {
 
         Settings.isServer = true;
-        Tag.register();
-        Blocks.generateTextures();
-        Widget.register();
-        Items.register();
-        Ourcraft.MOD_LOADER.loadDefaultMods();
-        //System.out.println(Items.ITEMS);
+        GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
+
         ServerWorld world = new ServerWorld();
         world.worldBuilders.add(new OreBuilder(Blocks.GRASS,Blocks.STONE).setFrequency(20));
 

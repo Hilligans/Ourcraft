@@ -396,11 +396,11 @@ public class BlockModel implements IModel {
     }
 
     public static BlockModel create(String path) {
-        IModel model = Ourcraft.RESOURCE_MANAGER.getModel(path);
+        IModel model = Ourcraft.GAME_INSTANCE.RESOURCE_MANAGER.getModel(path);
         if(model instanceof BlockModel) {
             return (BlockModel) model;
         }
-        String val = WorldLoader.readString(Ourcraft.RESOURCE_MANAGER.getResource(path));
+        String val = WorldLoader.readString(Ourcraft.GAME_INSTANCE.RESOURCE_MANAGER.getResource(path));
         try {
             BlockModel blockModel = new BlockModel(val);
             blockModel.path = path;

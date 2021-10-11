@@ -32,7 +32,7 @@ public class SSendModContentPacket extends PacketBase {
 
     @Override
     public void handle() {
-        Ourcraft.CONTENT_PACK.putMod(modContent);
-        Ourcraft.CONTENT_PACK.generateData();
+        Ourcraft.GAME_INSTANCE.CONTENT_PACK.putMod(modContent);
+        Ourcraft.GAME_INSTANCE.CONTENT_PACK.generateData();
     }
 }

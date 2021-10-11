@@ -20,7 +20,7 @@ public class Sounds {
     }
 
     static {
-        Ourcraft.OURCRAFT.registerSounds(BLOCK_BREAK,MUSIC);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerSounds(BLOCK_BREAK,MUSIC);
     }
 
 }

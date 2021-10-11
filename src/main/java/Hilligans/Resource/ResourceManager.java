@@ -7,6 +7,7 @@ import Hilligans.Client.Rendering.NewRenderer.IModel;
 import Hilligans.Client.Rendering.World.Managers.WorldTextureManager;
 import Hilligans.ClientMain;
 import Hilligans.Data.Primitives.Triplet;
+import Hilligans.GameInstance;
 import Hilligans.ModHandler.Content.ContentPack;
 import Hilligans.ModHandler.Content.ModContent;
 import Hilligans.ModHandler.ModLoader;
@@ -44,6 +45,7 @@ public class ResourceManager {
     public HashMap<String, ArrayList<IModel>> models = new HashMap<>();
 
     public ArrayList<URLClassLoader> classLoaders = new ArrayList<>();
+    public GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
 
     public void setLanguageFile(String languageFile) {
         Languages.switchingLanguage.set(true);
@@ -115,8 +117,8 @@ public class ResourceManager {
     }
 
     public static void reload() {
-        for(String string : Ourcraft.CONTENT_PACK.mods.keySet()) {
-            if(!Ourcraft.CONTENT_PACK.mods.get(string).isJar) {
+        for(String string : Ourcraft.GAME_INSTANCE.CONTENT_PACK.mods.keySet()) {
+            if(!Ourcraft.GAME_INSTANCE.CONTENT_PACK.mods.get(string).isJar) {
                 try {
                     FileUtils.copyDirectory(new File("src/main/resources/" + string + "/Data/"), new File("target/classes/" + string + "/Data/"),false);
                     FileUtils.copyDirectory(new File("src/main/resources/Models"), new File("target/classes/Models"),false);
@@ -130,7 +132,7 @@ public class ResourceManager {
     public synchronized InputStream getResource(String path, String mod) {
 
         try {
-            Triplet<Class<?>, String, Boolean> type = Ourcraft.MOD_LOADER.mainClasses.get(mod);
+            Triplet<Class<?>, String, Boolean> type = gameInstance.MOD_LOADER.mainClasses.get(mod);
             String filePath = type.getTypeB();
             if (type.getTypeC()) {
                 if (filePath != null) {
@@ -153,7 +155,7 @@ public class ResourceManager {
                 }
             }
 
-            ModContent modContent = Ourcraft.CONTENT_PACK.mods.get(mod);
+            ModContent modContent = gameInstance.CONTENT_PACK.mods.get(mod);
             try {
                 if (modContent != null) {
                     String jarPath = modContent.classLoader.getURLs()[0].getPath();
@@ -270,7 +272,7 @@ public class ResourceManager {
         if(source.equals("")) {
             return loadImage(path);
         }
-        Triplet<Class<?>,String,Boolean> type = Ourcraft.MOD_LOADER.mainClasses.get(source);
+        Triplet<Class<?>,String,Boolean> type = Ourcraft.GAME_INSTANCE.MOD_LOADER.mainClasses.get(source);
         String filePath = type.getTypeB();
         if(type.getTypeC()) {
             if (filePath != null) {

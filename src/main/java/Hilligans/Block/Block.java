@@ -9,6 +9,7 @@ import Hilligans.Data.Other.BlockStates.BlockState;
 import Hilligans.Data.Other.BlockStates.DataBlockState;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
 import Hilligans.Item.ItemStack;
+import Hilligans.ModHandler.Content.ModContent;
 import Hilligans.Ourcraft;
 import Hilligans.World.DataProvider;
 import Hilligans.World.DataProviders.ShortBlockState;
@@ -24,10 +25,10 @@ public class Block {
     public short id;
     public BlockProperties blockProperties;
     private Block droppedBlock;
+    public ModContent modContent;
 
     public Block(String name, BlockProperties blockProperties) {
         this.name = name;
-        this.modId = Ourcraft.MOD_LOADER.mod;
         id = Blocks.getNextId();
         this.blockProperties = blockProperties;
         droppedBlock = this;
@@ -45,6 +46,10 @@ public class Block {
     public Block setBlockDrop(Block blockDrop) {
         this.droppedBlock = blockDrop;
         return this;
+    }
+
+    public void setModContent(ModContent modContent) {
+        this.modId = modContent.modID;
     }
 
     public String getName() {

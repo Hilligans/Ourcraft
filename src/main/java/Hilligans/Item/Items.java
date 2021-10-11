@@ -37,7 +37,6 @@ public class Items {
     public static void register() {}
 
     static {
-        ModContent ourcraft = Ourcraft.OURCRAFT;
      //   ourcraft.registerItem(TEST_ITEM);
     }
 

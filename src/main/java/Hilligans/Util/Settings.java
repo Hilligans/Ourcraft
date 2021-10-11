@@ -19,6 +19,7 @@ public class Settings {
     public static boolean renderTransparency = true;
 
     public static final int playerInventorySize = 45;
+    public static final int hotBarWidth = 9;
 
     public static float guiSize = 4.0f;
 

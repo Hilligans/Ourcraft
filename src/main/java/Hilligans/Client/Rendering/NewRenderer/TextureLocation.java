@@ -79,7 +79,7 @@ public class TextureLocation {
         if(source.equals("")) {
             return loadImage(path);
         }
-        Triplet<Class<?>,String,Boolean> type = Ourcraft.MOD_LOADER.mainClasses.get(source);
+        Triplet<Class<?>,String,Boolean> type = Ourcraft.GAME_INSTANCE.MOD_LOADER.mainClasses.get(source);
         String filePath = type.getTypeB();
         if(type.getTypeC()) {
             if (filePath != null) {

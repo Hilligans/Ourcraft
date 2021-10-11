@@ -4,6 +4,7 @@ import Hilligans.Command.CommandExecutors.ConsoleExecutor;
 import Hilligans.Command.Commands;
 import Hilligans.Data.Primitives.DoubleTypeWrapper;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
+import Hilligans.GameInstance;
 import Hilligans.ModHandler.Events.Server.MultiPlayerServerStartEvent;
 import Hilligans.ModHandler.Events.Server.ServerTickEvent;
 import Hilligans.Network.Packet.Client.CHandshakePacket;
@@ -34,9 +35,10 @@ public class MultiPlayerServer implements IServer {
     public Int2ObjectOpenHashMap<World> worlds = new Int2ObjectOpenHashMap<>();
     public HashMap<ChannelHandlerContext, CHandshakePacket> waitingPlayers = new HashMap<>();
     public HashMap<String,DoubleTypeWrapper<ChannelHandlerContext,Long>> playerQueue = new HashMap<>();
+    public GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
 
     public void startServer(String port) {
-        Ourcraft.EVENT_BUS.postEvent(new MultiPlayerServerStartEvent(this,port));
+        gameInstance.EVENT_BUS.postEvent(new MultiPlayerServerStartEvent(this,port));
         Server server = new Server(this);
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1, new NamedThreadFactory("server_tick"));
         executorService.scheduleAtFixedRate(server, 0, 40, TimeUnit.MILLISECONDS);

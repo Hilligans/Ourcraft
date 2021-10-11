@@ -21,15 +21,19 @@ import java.util.zip.ZipInputStream;
 public class ModLoader {
 
     public String mod = "ourcraft";
-    GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
+    public GameInstance gameInstance;
 
     public HashMap<String, Triplet<Class<?>,String,Boolean>> mainClasses = new HashMap<>();
+
+    public ModLoader(GameInstance gameInstance) {
+        this.gameInstance = gameInstance;
+    }
 
     public void loadDefaultMods() {
         loadAllMods(new File("mods/"));
         loadClasses(new File("target/classes/"), "");
-        Ourcraft.CONTENT_PACK.load();
-        Ourcraft.CONTENT_PACK.generateData();
+        gameInstance.CONTENT_PACK.load();
+        gameInstance.CONTENT_PACK.generateData();
     }
 
     public void loadAllMods(File folder) {
@@ -64,7 +68,7 @@ public class ModLoader {
                             modContent.mainClass = testClass;
                             modContent.addClassLoader(child);
                             mainClasses.put(modID,new Triplet<>(testClass,mod.getAbsolutePath(),false));
-                            Ourcraft.CONTENT_PACK.registerModContent(modContent);
+                            gameInstance.CONTENT_PACK.registerModContent(modContent);
                         }
                     } catch (Exception ignored) {}
                 }
@@ -92,7 +96,7 @@ public class ModLoader {
                     mainClasses.put(modID,new Triplet<>(testClass,file.getAbsolutePath(),true));
                     modContent.mainClass = testClass;
                     modContent.addClassLoader(child);
-                    Ourcraft.CONTENT_PACK.registerModContent(modContent);
+                    gameInstance.CONTENT_PACK.registerModContent(modContent);
                     return true;
                 }
             }

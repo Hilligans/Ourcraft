@@ -1,5 +1,6 @@
 package Hilligans.Network;
 
+import Hilligans.GameInstance;
 import Hilligans.Network.Packet.Client.CActivateBlock;
 import Hilligans.Network.Packet.Client.CActivateButton;
 import Hilligans.Network.Packet.Client.CSendBlockChanges;
@@ -24,6 +25,7 @@ public class Protocol {
     public HashMap<Class<PacketBase>, Integer> packetMap = new HashMap<>();
     public Int2BooleanOpenHashMap requiredIds = new Int2BooleanOpenHashMap();
     public boolean compressed;
+    public GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
 
     public void register(Supplier<PacketBase> packet) {
         register(new PacketFetcher(packets.size(),packet));
@@ -61,7 +63,7 @@ public class Protocol {
                 register(oldPacket);
             }
         } else {
-            Ourcraft.LOGGER.log(Level.WARNING,"Two packets were registered with the same id, " + packetFetcher.packetClass.toString().substring(6) + " tried to override packet " + packets.get(id).packetClass.toString().substring(6) + " with id " + id);
+            gameInstance.LOGGER.log(Level.WARNING,"Two packets were registered with the same id, " + packetFetcher.packetClass.toString().substring(6) + " tried to override packet " + packets.get(id).packetClass.toString().substring(6) + " with id " + id);
             register(packetFetcher);
         }
     }

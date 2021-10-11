@@ -47,7 +47,7 @@ public class CRequestContent extends PacketBase {
     @Override
     public void handle() {
         for(String string : mods) {
-            ModContent modContent = Ourcraft.CONTENT_PACK.mods.get(string.split(":::")[0]);
+            ModContent modContent = Ourcraft.GAME_INSTANCE.CONTENT_PACK.mods.get(string.split(":::")[0]);
             ServerNetworkHandler.sendPacket(new SSendModContentPacket(modContent), ctx);
         }
 

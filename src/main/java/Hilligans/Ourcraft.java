@@ -20,17 +20,19 @@ import java.util.logging.Logger;
 public class Ourcraft {
 
     public static final GameInstance GAME_INSTANCE = new GameInstance();
+    public static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(2,new NamedThreadFactory("random_executor"));
 
-
-    public static final EventBus EVENT_BUS = new EventBus();
+ /*   public static final EventBus EVENT_BUS = new EventBus();
     public static final ModLoader MOD_LOADER = new ModLoader();
     public static final Logger LOGGER = Logger.getGlobal();
-    public static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(2,new NamedThreadFactory("random_executor"));
+
     public static final ResourceManager RESOURCE_MANAGER = new ResourceManager();
     public static final ModContent OURCRAFT = new ModContent("ourcraft",GAME_INSTANCE).addClassLoader(new URLClassLoader(new URL[]{Ourcraft.class.getProtectionDomain().getCodeSource().getLocation()})).addMainClass(Ourcraft.class);
     public static final ContentPack CONTENT_PACK = new ContentPack();
     public static final AtomicBoolean REBUILDING = new AtomicBoolean(false);
 
+
+  */
     public static String path = System.getProperty("user.dir");
 
     public static String hashString(String password, String salt) {
@@ -38,17 +40,14 @@ public class Ourcraft {
     }
 
     public static synchronized ResourceManager getResourceManager() {
-        return RESOURCE_MANAGER;
+        return GAME_INSTANCE.RESOURCE_MANAGER;
     }
 
     public static File getFile(String path) {
         return new File(path + "/" + path);
     }
 
-
     static {
-        CONTENT_PACK.mods.put("ourcraft",OURCRAFT);
+        GAME_INSTANCE.loadContent();
     }
-
-    public static void register() { }
 }

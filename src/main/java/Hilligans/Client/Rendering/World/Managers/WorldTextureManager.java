@@ -63,11 +63,11 @@ public class WorldTextureManager {
         if(img != null) {
             return img;
         }
-        img = Ourcraft.RESOURCE_MANAGER.getImage(path);
+        img = Ourcraft.getResourceManager().getImage(path);
         if(img != null) {
             return img;
         }
-        InputStream url = Ourcraft.RESOURCE_MANAGER.getResource("Images/" + path);
+        InputStream url = Ourcraft.getResourceManager().getResource("Images/" + path);
         if(url != null) {
             try {
                 return ImageIO.read(url);
@@ -80,7 +80,7 @@ public class WorldTextureManager {
         if(source.equals("")) {
             return loadImage(path);
         }
-        Triplet<Class<?>,String,Boolean> type = Ourcraft.MOD_LOADER.mainClasses.get(source);
+        Triplet<Class<?>,String,Boolean> type = Ourcraft.GAME_INSTANCE.MOD_LOADER.mainClasses.get(source);
         String filePath = type.getTypeB();
         if(type.getTypeC()) {
             if (filePath != null) {

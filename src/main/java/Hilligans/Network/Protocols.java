@@ -37,43 +37,43 @@ public class Protocols {
         register(PLAY);
         register(AUTH);
 
-        Ourcraft.OURCRAFT.registerPacket(CRequestChunkPacket::new);
-        Ourcraft.OURCRAFT.registerPacket(SSendChunkPacket::new);
-        Ourcraft.OURCRAFT.registerPacket(CSendBlockChanges::new);
-        Ourcraft.OURCRAFT.registerPacket(SSendBlockChanges::new);
-        Ourcraft.OURCRAFT.registerPacket(CHandshakePacket::new);
-        Ourcraft.OURCRAFT.registerPacket(SHandshakePacket::new);
-        Ourcraft.OURCRAFT.registerPacket(CUpdatePlayerPacket::new);
-        Ourcraft.OURCRAFT.registerPacket(SUpdateEntityPacket::new);
-        Ourcraft.OURCRAFT.registerPacket(SCreateEntityPacket::new);
-        Ourcraft.OURCRAFT.registerPacket(SRemoveEntityPacket::new);
-        Ourcraft.OURCRAFT.registerPacket(CSendMessage::new);
-        Ourcraft.OURCRAFT.registerPacket(SChatMessage::new);
-        Ourcraft.OURCRAFT.registerPacket(CModifyStack::new);
-        Ourcraft.OURCRAFT.registerPacket(SUpdateContainer::new);
-        Ourcraft.OURCRAFT.registerPacket(CActivateBlock::new);
-        Ourcraft.OURCRAFT.registerPacket(SOpenContainer::new);
-        Ourcraft.OURCRAFT.registerPacket(SUpdateInventory::new);
-        Ourcraft.OURCRAFT.registerPacket(CDropItem::new);
-        Ourcraft.OURCRAFT.registerPacket(CUseItem::new);
-        Ourcraft.OURCRAFT.registerPacket(CCloseScreen::new);
-        Ourcraft.OURCRAFT.registerPacket(SUpdatePlayer::new);
-        Ourcraft.OURCRAFT.registerPacket(SDisconnectPacket::new);
-        Ourcraft.OURCRAFT.registerPacket(COpenScreen::new);
-        Ourcraft.OURCRAFT.registerPacket(SSendPlayerList::new);
-        Ourcraft.OURCRAFT.registerPacket(SSetGameMode::new);
-        Ourcraft.OURCRAFT.registerPacket(SSendModContentPacket::new);
-        Ourcraft.OURCRAFT.registerPacket(CRequestContent::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(CRequestChunkPacket::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(SSendChunkPacket::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(CSendBlockChanges::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(SSendBlockChanges::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(CHandshakePacket::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(SHandshakePacket::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(CUpdatePlayerPacket::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(SUpdateEntityPacket::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(SCreateEntityPacket::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(SRemoveEntityPacket::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(CSendMessage::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(SChatMessage::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(CModifyStack::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(SUpdateContainer::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(CActivateBlock::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(SOpenContainer::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(SUpdateInventory::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(CDropItem::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(CUseItem::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(CCloseScreen::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(SUpdatePlayer::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(SDisconnectPacket::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(COpenScreen::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(SSendPlayerList::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(SSetGameMode::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(SSendModContentPacket::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket(CRequestContent::new);
 
-        Ourcraft.OURCRAFT.registerPacket("Auth", SAccountPacket::new);
-        Ourcraft.OURCRAFT.registerPacket("Auth", SSendToken::new);
-        Ourcraft.OURCRAFT.registerPacket("Auth", STokenValid::new);
-        Ourcraft.OURCRAFT.registerPacket("Auth", SSendLoginToken::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket("Auth", SAccountPacket::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket("Auth", SSendToken::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket("Auth", STokenValid::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket("Auth", SSendLoginToken::new);
 
-        Ourcraft.OURCRAFT.registerPacket("Auth", CCreateAccount::new);
-        Ourcraft.OURCRAFT.registerPacket("Auth", CGetToken::new);
-        Ourcraft.OURCRAFT.registerPacket("Auth", CTokenValid::new);
-        Ourcraft.OURCRAFT.registerPacket("Auth", CLogin::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket("Auth", CCreateAccount::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket("Auth", CGetToken::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket("Auth", CTokenValid::new);
+        Ourcraft.GAME_INSTANCE.OURCRAFT.registerPacket("Auth", CLogin::new);
     }
 
 }

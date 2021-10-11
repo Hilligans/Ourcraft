@@ -23,6 +23,7 @@ import Hilligans.Container.Container;
 import Hilligans.Container.Slot;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BlockStates.BlockState;
+import Hilligans.Data.Other.Inventory;
 import Hilligans.Data.Other.PlayerList;
 import Hilligans.Entity.Entity;
 import Hilligans.Entity.LivingEntities.PlayerEntity;
@@ -86,11 +87,8 @@ public class Client {
     Client client = this;
 
     public MouseHandler mouseHandler;
-
     public Screen screen;
-
     public ShaderManager shaderManager;
-
     public SoundEngine soundEngine = new SoundEngine();
 
     public int texture;
@@ -98,8 +96,6 @@ public class Client {
     public boolean refreshTexture = true;
 
     public ClientPlayerData playerData = new ClientPlayerData();
-
-
     public ClientWorld clientWorld;
 
     public MultiPlayerServer multiPlayerServer;
@@ -107,7 +103,6 @@ public class Client {
 
     public ClientNetwork network;
     public ClientNetwork authNetwork;
-
     public GameInstance gameInstance;
 
     public Client(GameInstance gameInstance) {
@@ -117,10 +112,6 @@ public class Client {
     public void startClient() {
         network = new ClientNetwork(Protocols.PLAY);
         authNetwork = new ClientNetwork(Protocols.AUTH);
-
-
-        register();
-        Ourcraft.MOD_LOADER.loadDefaultMods();
 
         CompoundTag tag = WorldLoader.loadTag("clientData.dat");
         if(tag != null) {
@@ -145,15 +136,14 @@ public class Client {
         registerKeyHandlers();
         createCallbacks();
 
-        Ourcraft.EVENT_BUS.postEvent(new ClientStartRenderingEvent());
+        gameInstance.EVENT_BUS.postEvent(new ClientStartRenderingEvent());
 
         while(!glfwWindowShouldClose(window)) {
             mouseLocked = screen == null;
 
-
-            Ourcraft.EVENT_BUS.postEvent(new RenderPreEvent());
+            gameInstance.EVENT_BUS.postEvent(new RenderPreEvent());
             render();
-            Ourcraft.EVENT_BUS.postEvent(new RenderPostEvent(this));
+            gameInstance.EVENT_BUS.postEvent(new RenderPostEvent(this));
             glfwSwapBuffers(window);
             rendering = false;
             soundEngine.tick();
@@ -177,18 +167,6 @@ public class Client {
         }
     }
 
-    public static void register() {
-        PacketBase.register();
-        ClientUtil.register();
-        Container.register();
-        Tag.register();
-        Widget.register();
-        Entity.register();
-        Blocks.register();
-        Sounds.SOUNDS.size();
-        Items.register();
-        Ourcraft.register();
-    }
 
     public void createGL() {
         System.setProperty("java.awt.headless", "true");
@@ -207,7 +185,7 @@ public class Client {
         GL.createCapabilities();
 
         glStarted = true;
-        Ourcraft.EVENT_BUS.postEvent(new GLInitEvent(window));
+        gameInstance.EVENT_BUS.postEvent(new GLInitEvent(window));
 
         shaderManager = new ShaderManager();
 
@@ -278,9 +256,9 @@ public class Client {
     }
 
     public void draw(MatrixStack matrixStack, MatrixStack screenStack) {
-        Ourcraft.EVENT_BUS.postEvent(new RenderStartEvent(matrixStack,screenStack,this));
-        if(renderWorld && !Ourcraft.REBUILDING.get()) {
-            Ourcraft.EVENT_BUS.postEvent(new RenderWorldEvent(matrixStack,screenStack,this));
+        gameInstance.EVENT_BUS.postEvent(new RenderStartEvent(matrixStack,screenStack,this));
+        if(renderWorld && !gameInstance.REBUILDING.get()) {
+            gameInstance.EVENT_BUS.postEvent(new RenderWorldEvent(matrixStack,screenStack,this));
             rendering = true;
             clientWorld.tick();
             clientWorld.render(matrixStack);
@@ -346,7 +324,7 @@ public class Client {
 
 
        }
-        Ourcraft.EVENT_BUS.postEvent(new RenderEndEvent(matrixStack,screenStack,this));
+        gameInstance.EVENT_BUS.postEvent(new RenderEndEvent(matrixStack,screenStack,this));
     }
 
     int chunks = 0;
@@ -370,7 +348,7 @@ public class Client {
     }
 
     public void openScreen(Screen screen1) {
-        Ourcraft.EVENT_BUS.postEvent(new OpenScreenEvent(screen1,screen));
+        gameInstance.EVENT_BUS.postEvent(new OpenScreenEvent(screen1,screen));
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         if(screen != null) {
             screen.close(true);
@@ -394,7 +372,7 @@ public class Client {
     public void openScreen(Container container) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         ContainerScreen<?> containerScreen = container.getContainerScreen(this);
-        Ourcraft.EVENT_BUS.postEvent(new OpenScreenEvent(containerScreen,screen));
+        gameInstance.EVENT_BUS.postEvent(new OpenScreenEvent(containerScreen,screen));
         if(screen != null) {
             screen.close(true);
         }

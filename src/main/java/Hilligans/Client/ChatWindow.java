@@ -172,7 +172,7 @@ public class ChatWindow implements Screen {
                     messageIndex = -1;
                     if(!getString().equals("")) {
                         ClientMain.getClient().sendPacket(new CSendMessage(string));
-                        Ourcraft.EVENT_BUS.postEvent(new ClientSendMessageEvent(string));
+                        Ourcraft.GAME_INSTANCE.EVENT_BUS.postEvent(new ClientSendMessageEvent(string));
                         string = "";
                         typing = false;
                         ClientMain.getClient().closeScreen();

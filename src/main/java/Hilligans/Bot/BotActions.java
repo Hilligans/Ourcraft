@@ -1,6 +1,9 @@
 package Hilligans.Bot;
 
 import Hilligans.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
+import Hilligans.Item.ItemDescriptor;
+import Hilligans.Schematic.Schematic;
+import Hilligans.Util.Settings;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 
@@ -33,8 +36,18 @@ public class BotActions {
         return BotActionResult.SUCCESS;
     }
 
-    public int findItem(BotInstance botInstance) {
+    public BotActionResult selectItem(BotInstance botInstance, int pos) {
+        if(pos >= Settings.hotBarWidth) {
+            return BotActionResult.FAILURE;
+        }
+        botInstance.client.playerData.handSlot = pos;
+        return BotActionResult.SUCCESS;
+    }
 
+    public int findItem(BotInstance botInstance, ItemDescriptor itemDescriptor) {
+        for(int x = 0; x < botInstance.client.playerData.inventory.getSize(); x++) {
+
+        }
         return -1;
     }
 

@@ -146,7 +146,7 @@ public class KeyHandler {
         if(ClientMain.getClient().glStarted) {
             setCallback(ClientMain.getClient().window);
         } else {
-            Ourcraft.EVENT_BUS.register(GLInitEvent.class,KeyHandler::setCallback);
+            Ourcraft.GAME_INSTANCE.EVENT_BUS.register(GLInitEvent.class,KeyHandler::setCallback);
         }
 
         mappedKeys.put(32,' ');

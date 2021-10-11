@@ -74,7 +74,7 @@ public class WorldLoader {
            // File file = new File(path);
             //if(file.exists()) {
            // ScheduledExecutorService
-            InputStream inputStream = Ourcraft.RESOURCE_MANAGER.getResource(path);
+            InputStream inputStream = Ourcraft.getResourceManager().getResource(path);
             byte[] vals = inputStream.readAllBytes();
             ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vals.length);
             byteBuffer.put(vals);
@@ -105,7 +105,7 @@ public class WorldLoader {
 
     public static ByteBuffer readResource(String path) {
         try {
-            InputStream inputStream = Ourcraft.RESOURCE_MANAGER.getResource(path);
+            InputStream inputStream = Ourcraft.getResourceManager().getResource(path);
             byte[] vals = inputStream.readAllBytes();
             ByteBuffer byteBuffer = ByteBuffer.allocate(vals.length);
             byteBuffer.put(vals);

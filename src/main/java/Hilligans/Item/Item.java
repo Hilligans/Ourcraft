@@ -31,7 +31,7 @@ public class Item {
     public Item(String name, ItemProperties itemProperties) {
         this.name = name;
         this.itemProperties = itemProperties;
-        this.modID = Ourcraft.MOD_LOADER.mod;
+        this.modID = Ourcraft.GAME_INSTANCE.MOD_LOADER.mod;
         id = Items.getNextId();
     }
 

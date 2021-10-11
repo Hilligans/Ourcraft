@@ -25,13 +25,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ContentPack {
 
-    public GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
+    public GameInstance gameInstance;
 
     public HashMap<String, ModContent> mods = new HashMap<>();
     public HashMap<String, Boolean> loadedMods = new HashMap<>();
     public HashMap<String, Boolean> shouldLoad = new HashMap<>();
-    public ContentPack() {
-        Ourcraft.EVENT_BUS.register(t -> {
+    public ContentPack(GameInstance gameInstance) {
+        this.gameInstance = gameInstance;
+        gameInstance.EVENT_BUS.register(t -> {
             if(waiting) {
                 waiting = false;
                 rebuild();
@@ -49,9 +50,9 @@ public class ContentPack {
     private boolean waiting = false;
 
     public void generateData() {
-        Ourcraft.REBUILDING.set(true);
+        gameInstance.REBUILDING.set(true);
         ///TODO Could potentially rebuild when rendering but very unlikely
-       if(!Settings.isServer && ClientMain.getClient().rendering) {
+       if(!Settings.isServer && !(ClientMain.getClient() == null || ClientMain.getClient().rendering)) {
            waiting = true;
        } else {
            rebuild();
@@ -60,21 +61,23 @@ public class ContentPack {
 
     public void registerModContent(ModContent modContent) {
         mods.put(modContent.modID,modContent);
-        Ourcraft.RESOURCE_MANAGER.classLoaders.add(modContent.classLoader);
-        Ourcraft.MOD_LOADER.mainClasses.computeIfAbsent(modContent.modID,a -> new Triplet<>(modContent.mainClass, modContent.mainClass.getProtectionDomain().getCodeSource().getLocation().getPath(), false));
+        gameInstance.RESOURCE_MANAGER.classLoaders.add(modContent.classLoader);
+        gameInstance.MOD_LOADER.mainClasses.computeIfAbsent(modContent.modID,a -> new Triplet<>(modContent.mainClass, modContent.mainClass.getProtectionDomain().getCodeSource().getLocation().getPath(), false));
     }
 
     ///TODO use Blocks, Items, Entity Instances so the game can still render while its being reupdated.
     private void rebuild() {
         if(!Settings.isServer) {
-            ClientMain.getClient().refreshTexture = true;
+            if(ClientMain.getClient() != null) {
+                ClientMain.getClient().refreshTexture = true;
+            }
         }
         gameInstance.clear();
         Items.ITEMS.clear();
         Items.HASHED_ITEMS.clear();
         Sounds.SOUNDS.clear();
         Sounds.MAPPED_SOUND.clear();
-        Ourcraft.RESOURCE_MANAGER.clearData();
+        gameInstance.RESOURCE_MANAGER.clearData();
         Protocols.clear();
 
         for(String string : mods.keySet()) {
@@ -88,23 +91,23 @@ public class ContentPack {
                     Textures.registerTexture(texture);
                 }
                 for(String string1 : mod.blockTextures.keySet()) {
-                    Ourcraft.RESOURCE_MANAGER.putImage("Blocks/" + string1,mod.blockTextures.get(string1));
+                    gameInstance.RESOURCE_MANAGER.putImage("Blocks/" + string1,mod.blockTextures.get(string1));
                 }
                 for (Block block : mod.blocks) {
-                    Ourcraft.GAME_INSTANCE.registerBlock(block);
+                    gameInstance.registerBlock(block);
                 }
                 for (Item item : mod.items) {
                     Items.registerItem(item);
                 }
                 for(IModel model : mod.models) {
-                    Ourcraft.RESOURCE_MANAGER.putModel(model.getPath(),model);
+                    gameInstance.RESOURCE_MANAGER.putModel(model.getPath(),model);
                 }
                 for(Protocol protocol : mod.protocols.values()) {
                     Protocols.register(protocol);
                 }
             }
         }
-        Ourcraft.REBUILDING.set(false);
+        gameInstance.REBUILDING.set(false);
     }
 
     public void recursivelyLoad(String modID) {
@@ -149,7 +152,7 @@ public class ContentPack {
 
     public void releaseMod(String mod) {
         ModContent modContent = mods.remove(mod);
-        Ourcraft.RESOURCE_MANAGER.classLoaders.remove(modContent.classLoader);
+        gameInstance.RESOURCE_MANAGER.classLoaders.remove(modContent.classLoader);
         try {
             modContent.classLoader.close();
         } catch (Exception e) {

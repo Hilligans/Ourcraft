@@ -8,6 +8,7 @@ import Hilligans.Client.Rendering.World.Managers.BlockTextureManager;
 import Hilligans.Client.Rendering.World.Managers.VAOManager;
 import Hilligans.Data.Other.BlockPos;
 import Hilligans.Data.Other.BoundingBox;
+import Hilligans.GameInstance;
 import Hilligans.World.World;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ShortOpenHashMap;
@@ -17,6 +18,7 @@ import org.joml.Vector3i;
 public class BlockShape {
 
     public BlockModel data;
+    public GameInstance gameInstance;
 
     public Int2ShortOpenHashMap rotations = new Int2ShortOpenHashMap();
     public Int2ObjectOpenHashMap<BoundingBox> boundingBoxes = new Int2ObjectOpenHashMap<>();

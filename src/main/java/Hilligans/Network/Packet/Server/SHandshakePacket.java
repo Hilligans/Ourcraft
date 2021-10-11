@@ -30,7 +30,7 @@ public class SHandshakePacket extends PacketBase {
     @Override
     public void encode(PacketData packetData) {
         packetData.writeInt(playerId);
-        String[] mods = Ourcraft.CONTENT_PACK.getModList();
+        String[] mods = Ourcraft.GAME_INSTANCE.CONTENT_PACK.getModList();
         packetData.writeInt(mods.length);
         for(String string : mods) {
             packetData.writeString(string);
@@ -52,21 +52,21 @@ public class SHandshakePacket extends PacketBase {
         ClientMain.getClient().playerId = playerId;
         ClientMain.getClient().valid = true;
 
-        ArrayList<String> localMods = new ArrayList<>(Arrays.asList(Ourcraft.CONTENT_PACK.getModList()));
+        ArrayList<String> localMods = new ArrayList<>(Arrays.asList(Ourcraft.GAME_INSTANCE.CONTENT_PACK.getModList()));
         ArrayList<String> neededMods = new ArrayList<>();
         for(String string : mods) {
             if(!localMods.contains(string)) {
                 if(!new File("mod_cache/" + (Settings.storeServerModsIndividually ? "servers/" + ClientMain.getClient().serverIP.replace(':','_') + "/" : "mods/") + string.replace(":::","-") + ".dat").exists()) {
                     neededMods.add(string);
                 } else {
-                    Ourcraft.CONTENT_PACK.loadCachedMod(string.replace(":::","-"));
+                    Ourcraft.GAME_INSTANCE.CONTENT_PACK.loadCachedMod(string.replace(":::","-"));
                 }
             }
         }
         if(neededMods.size() != 0) {
             ctx.channel().writeAndFlush(new PacketData(new CRequestContent(neededMods)));
         } else if(mods.length != 0) {
-            Ourcraft.CONTENT_PACK.generateData();
+            Ourcraft.GAME_INSTANCE.CONTENT_PACK.generateData();
         }
     }
 }

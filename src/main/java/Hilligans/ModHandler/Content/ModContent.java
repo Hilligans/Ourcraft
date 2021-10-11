@@ -124,7 +124,7 @@ public class ModContent {
     }
 
     public void registerBlock(Block block) {
-        block.modId = modID;
+        block.setModContent(this);
         blocks.add(block);
         blockTextures.putAll(block.blockProperties.blockTextureManager.getAllTextures());
         items.add(new BlockItem(block.name,block,modID));
@@ -214,7 +214,7 @@ public class ModContent {
 
     public void readInitializers() {
         try {
-            JSONObject blocks = new JSONObject(WorldLoader.readString(Ourcraft.RESOURCE_MANAGER.getResource("Data/Blocks.json", modID)));
+            JSONObject blocks = new JSONObject(WorldLoader.readString(gameInstance.RESOURCE_MANAGER.getResource("Data/Blocks.json", modID)));
             for(String string : blocks.keySet()) {
                 JSONObject blockData = blocks.getJSONObject(string);
                 Block block = blockParser.apply(blockData,string);
