@@ -181,7 +181,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        dev.Hilligans.ClientMain
+                                        dev.Hilligans.Ourcraft.ClientMain
                                     </mainClass>
                                 </manifest>
                             </archive>
