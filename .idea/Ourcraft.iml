@@ -20,6 +20,8 @@
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-opencl:3.2.3" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-opengl:3.2.3" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-stb:3.2.3" level="project" />
+    <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-shaderc:3.2.3" level="project" />
+    <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-vulkan:3.2.3" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl:natives-windows:3.2.3" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-glfw:natives-windows:3.2.3" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-lz4:natives-windows:3.2.3" level="project" />
@@ -27,6 +29,7 @@
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-openal:natives-windows:3.2.3" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-opengl:natives-windows:3.2.3" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-stb:natives-windows:3.2.3" level="project" />
+    <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-shaderc:natives-windows:3.2.3" level="project" />
     <orderEntry type="library" name="Maven: org.joml:joml:1.10.0" level="project" />
     <orderEntry type="library" name="Maven: it.unimi.dsi:fastutil:8.4.4" level="project" />
     <orderEntry type="library" name="Maven: at.favre.lib:bcrypt:0.9.0" level="project" />
