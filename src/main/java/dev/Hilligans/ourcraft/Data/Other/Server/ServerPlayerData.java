@@ -10,7 +10,7 @@ import dev.Hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.Hilligans.ourcraft.Item.ItemStack;
 import dev.Hilligans.ourcraft.Item.Items;
 import dev.Hilligans.ourcraft.ServerMain;
-import dev.Hilligans.ourcraft.Tag.CompoundTag;
+import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 
@@ -39,7 +39,7 @@ public class ServerPlayerData {
 
     }
 
-    public ServerPlayerData(PlayerEntity playerEntity, String id, CompoundTag tag) {
+    public ServerPlayerData(PlayerEntity playerEntity, String id, CompoundNBTTag tag) {
         this.playerEntity = playerEntity;
         this.id = id;
         playerInventory = playerEntity.inventory;
@@ -48,7 +48,7 @@ public class ServerPlayerData {
     }
 
     public static ServerPlayerData loadOrCreatePlayer(PlayerEntity playerEntity, String id) {
-        CompoundTag tag = WorldLoader.loadTag(path + id + ".dat");
+        CompoundNBTTag tag = WorldLoader.loadTag(path + id + ".dat");
         if(tag == null) {
             return new ServerPlayerData(playerEntity,id);
         } else {
@@ -59,9 +59,9 @@ public class ServerPlayerData {
 
     public static String path = "world/" + Settings.worldName + "/player-data/";
 
-    public void read(CompoundTag tag) {
+    public void read(CompoundNBTTag tag) {
         try {
-            CompoundTag inventory = tag.getCompoundTag("inventory");
+            CompoundNBTTag inventory = tag.getCompoundTag("inventory");
             if (inventory != null) {
                 for (int x = 0; x < 27; x++) {
                     playerInventory.setItem(x, inventory.readStack(x));
@@ -78,8 +78,8 @@ public class ServerPlayerData {
         } catch (Exception ignored) {}
     }
 
-    public void write(CompoundTag tag) {
-        CompoundTag inventory = new CompoundTag();
+    public void write(CompoundNBTTag tag) {
+        CompoundNBTTag inventory = new CompoundNBTTag();
         for(int x = 0; x < 27; x++) {
             inventory.writeStack(x,playerInventory.getItem(x));
         }
@@ -94,7 +94,7 @@ public class ServerPlayerData {
     }
 
     public void save() {
-        CompoundTag compoundTag = new CompoundTag();
+        CompoundNBTTag compoundTag = new CompoundNBTTag();
         write(compoundTag);
         WorldLoader.save(compoundTag,ServerPlayerData.path + id + ".dat");
     }

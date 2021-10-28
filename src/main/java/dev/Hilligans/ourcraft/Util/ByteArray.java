@@ -1,10 +1,11 @@
 package dev.Hilligans.ourcraft.Util;
 
 import dev.Hilligans.ourcraft.Data.Other.ColoredString;
-import dev.Hilligans.ourcraft.Item.Item;
+import dev.Hilligans.ourcraft.Data.Other.EightBytePosition;
 import dev.Hilligans.ourcraft.Item.ItemStack;
 import dev.Hilligans.ourcraft.Item.Items;
-import dev.Hilligans.ourcraft.Tag.CompoundTag;
+import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
+import dev.Hilligans.ourcraft.Tag.NBTTag;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -115,12 +116,12 @@ public class ByteArray {
     }
 
     public ItemStack readItemStack() {
-        short item = readShort();
-        int count = readInt();
-        if(item != -1) {
-            return new ItemStack(Items.getItem(item), count);
+        if(readBoolean()) {
+            int id = readVarInt();
+            int count = readByte();
+            return new ItemStack(Items.getItem(id),count,readCompoundTag());
         } else {
-            return new ItemStack(null,count);
+            return new ItemStack(null,0);
         }
     }
 
@@ -183,19 +184,24 @@ public class ByteArray {
         return result;
     }
 
-    public CompoundTag readCompoundTag() {
+    public CompoundNBTTag readCompoundTag() {
         byteBuf.markReaderIndex();
         int x = byteBuf.readerIndex();
         if(byteBuf.readByte() == 0) {
             return null;
         }
         byteBuf.resetReaderIndex();
-        CompoundTag compoundTag = new CompoundTag();
+        CompoundNBTTag compoundTag = new CompoundNBTTag();
         ByteBuffer buffer = byteBuf.nioBuffer();
         compoundTag.readFrom(buffer);
         size = x + buffer.position();
         byteBuf.readerIndex(x + buffer.position());
         return compoundTag;
+    }
+
+    public short readUnsignedByte() {
+        size -= 1;
+        return byteBuf.readUnsignedByte();
     }
 
     public int[] readInts() {
@@ -266,6 +272,58 @@ public class ByteArray {
             longs[x] = readLong();
         }
         return longs;
+    }
+
+    public int[] readInts(int count) {
+        int[] values = new int[count];
+        for(int x = 0; x < count; x++) {
+            values[x] = readInt();
+        }
+        return values;
+    }
+
+    public float[] readFloats(int count) {
+        float[] values = new float[count];
+        for(int x = 0; x < count; x++) {
+            values[x] = readFloat();
+        }
+        return values;
+    }
+
+    public short[] readShorts(int count) {
+        short[] values = new short[count];
+        for(int x = 0; x < count; x++) {
+            values[x] = readShort();
+        }
+        return values;
+    }
+
+    public double[] readDoubles(int count) {
+        double[] values = new double[count];
+        for(int x = 0; x < count; x++) {
+            values[x] = readDouble();
+        }
+        return values;
+    }
+
+    public int[] readVarInts(int count) {
+        int[] ints = new int[count];
+        for(int x = 0; x < count; x++) {
+            ints[x] = readVarInt();
+        }
+        return ints;
+    }
+
+    public long[] readVarLongs(int count) {
+        long[] longs = new long[count];
+        for(int x = 0; x < count; x++) {
+            longs[x] = readVarLong();
+        }
+        return longs;
+    }
+
+    public EightBytePosition readEightBytePosition() {
+        return new EightBytePosition(readLong());
     }
 
     public void writeInt(int val) {
@@ -346,16 +404,6 @@ public class ByteArray {
         }
     }
 
-    public void writeItemStack(ItemStack itemStack) {
-        Item item = itemStack.item;
-        if(item != null) {
-            writeShort((short) itemStack.item.id);
-        } else {
-            writeShort((short)-1);
-        }
-        writeInt(itemStack.count);
-    }
-
     public void writeTexture(BufferedImage bufferedImage) {
         writeInt(bufferedImage.getWidth());
         writeInt(bufferedImage.getHeight());
@@ -392,13 +440,34 @@ public class ByteArray {
         }
     }
 
-    public void writeCompoundTag(CompoundTag compoundTag) {
+    public void writeCompoundTag(CompoundNBTTag compoundTag) {
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(WorldLoader.maxSize);
         byteBuffer.mark();
         compoundTag.writeTo(byteBuffer);
         byteBuffer.limit(byteBuffer.position());
         byteBuffer.reset();
         byteBuf.writeBytes(byteBuffer);
+    }
+
+    public void writeTag(NBTTag NBTTag) {
+        if(NBTTag instanceof CompoundNBTTag) {
+            writeCompoundTag((CompoundNBTTag) NBTTag);
+        } else {
+            writeByte(0);
+        }
+    }
+
+    public void writeUnsignedByte(short val) {
+        writeByte((byte)(val & 0xFF));
+    }
+
+    public void writeItemStack(ItemStack itemStack) {
+        writeBoolean(!itemStack.isEmpty());
+        if(!itemStack.isEmpty()) {
+            writeVarInt(itemStack.item.id);
+            writeByte(itemStack.count);
+            writeTag(itemStack.NBTTag);
+        }
     }
 
     public void writeStrings(String[] strings) {
@@ -448,6 +517,10 @@ public class ByteArray {
         for(double val : vals) {
             writeDouble(val);
         }
+    }
+
+    public void writeEightBytePosition(EightBytePosition eightBytePosition) {
+        writeLong(eightBytePosition.encode());
     }
 
 

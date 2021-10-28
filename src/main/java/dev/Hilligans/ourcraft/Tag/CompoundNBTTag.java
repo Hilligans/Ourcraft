@@ -7,9 +7,9 @@ import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class CompoundTag extends Tag {
+public class CompoundNBTTag extends NBTTag {
 
-    public HashMap<String, Tag> tags = new HashMap<>();
+    public HashMap<String, NBTTag> tags = new HashMap<>();
 
     @Override
     int getSize() {
@@ -17,9 +17,9 @@ public class CompoundTag extends Tag {
     }
 
 
-    public CompoundTag putTag(String id, Tag tag) {
-        tags.put(id,tag);
-        if(tag == this) {
+    public CompoundNBTTag putTag(String id, NBTTag NBTTag) {
+        tags.put(id, NBTTag);
+        if(NBTTag == this) {
             System.err.println("Attempting to put compound tag inside the same compound tag, this will cause an error when saving");
             try {
                 throw new Exception();
@@ -30,99 +30,99 @@ public class CompoundTag extends Tag {
         return this;
     }
 
-    public CompoundTag putByte(String id, byte val) {
-        putTag(id,new ByteTag(val));
+    public CompoundNBTTag putByte(String id, byte val) {
+        putTag(id,new ByteNBTTag(val));
         return this;
     }
 
-    public CompoundTag putShort(String id, short val) {
-        putTag(id,new ShortTag(val));
+    public CompoundNBTTag putShort(String id, short val) {
+        putTag(id,new ShortNBTTag(val));
         return this;
     }
 
-    public CompoundTag putInt(String id, int val) {
-        putTag(id,new IntegerTag(val));
+    public CompoundNBTTag putInt(String id, int val) {
+        putTag(id,new IntegerNBTTag(val));
         return this;
     }
 
-    public CompoundTag putString(String id, String string) {
-        putTag(id,new StringTag(string));
+    public CompoundNBTTag putString(String id, String string) {
+        putTag(id,new StringNBTTag(string));
         return this;
     }
 
-    public CompoundTag putFullString(String id, String string) {
-        putTag(id,new FullStringTag(string));
+    public CompoundNBTTag putFullString(String id, String string) {
+        putTag(id,new FullStringNBTTag(string));
         return this;
     }
 
-    public CompoundTag putDouble(String id, double val) {
-        putTag(id, new DoubleTag(val));
+    public CompoundNBTTag putDouble(String id, double val) {
+        putTag(id, new DoubleNBTTag(val));
         return this;
     }
 
-    public CompoundTag putFloat(String id, float val) {
-        putTag(id, new FloatTag(val));
+    public CompoundNBTTag putFloat(String id, float val) {
+        putTag(id, new FloatNBTTag(val));
         return this;
     }
 
-    public CompoundTag putLong(String id, long val) {
-        putTag(id, new LongTag(val));
+    public CompoundNBTTag putLong(String id, long val) {
+        putTag(id, new LongNBTTag(val));
         return this;
     }
 
-    public CompoundTag putBoolean(String id, boolean val) {
-        putTag(id, new ByteTag((byte) (val ? 1 : 0)));
+    public CompoundNBTTag putBoolean(String id, boolean val) {
+        putTag(id, new ByteNBTTag((byte) (val ? 1 : 0)));
         return this;
     }
 
-    public Tag getTag(String name) {
+    public NBTTag getTag(String name) {
         return tags.get(name);
     }
 
-    public IntegerTag getInt(String name) {
-        return (IntegerTag)getTag(name);
+    public IntegerNBTTag getInt(String name) {
+        return (IntegerNBTTag)getTag(name);
     }
 
-    public StringTag getString(String id) {
-        return (StringTag)getTag(id);
+    public StringNBTTag getString(String id) {
+        return (StringNBTTag)getTag(id);
     }
 
-    public DoubleTag getDouble(String id) {
-        return (DoubleTag)getTag(id);
+    public DoubleNBTTag getDouble(String id) {
+        return (DoubleNBTTag)getTag(id);
     }
 
-    public FloatTag getFloat(String id) {
-        return (FloatTag)getTag(id);
+    public FloatNBTTag getFloat(String id) {
+        return (FloatNBTTag)getTag(id);
     }
 
-    public LongTag getLong(String id) {
-        return (LongTag)getTag(id);
+    public LongNBTTag getLong(String id) {
+        return (LongNBTTag)getTag(id);
     }
 
     public boolean getBoolean(String id) {
-        return ((ByteTag)getTag(id)).val == 1;
+        return ((ByteNBTTag)getTag(id)).val == 1;
     }
 
-    public FullStringTag getFullString(String id) {
-        return (FullStringTag)getTag(id);
+    public FullStringNBTTag getFullString(String id) {
+        return (FullStringNBTTag)getTag(id);
     }
 
-    public CompoundTag getCompoundTag(String name) {
-        return (CompoundTag) tags.get(name);
+    public CompoundNBTTag getCompoundTag(String name) {
+        return (CompoundNBTTag) tags.get(name);
     }
 
     public ItemStack readStack(int slot) {
-        CompoundTag compoundTag = (CompoundTag) getTag("slot" + slot);
-        int count = ((IntegerTag)compoundTag.getTag("count")).val;
-        short item = ((ShortTag)compoundTag.getTag("item")).val;
+        CompoundNBTTag compoundTag = (CompoundNBTTag) getTag("slot" + slot);
+        int count = ((IntegerNBTTag)compoundTag.getTag("count")).val;
+        short item = ((ShortNBTTag)compoundTag.getTag("item")).val;
         if(item == -1) {
             return ItemStack.emptyStack();
         }
         return new ItemStack(Items.ITEMS.get(item),count);
     }
 
-    public CompoundTag writeStack(int slot, ItemStack itemStack) {
-        CompoundTag compoundTag = new CompoundTag();
+    public CompoundNBTTag writeStack(int slot, ItemStack itemStack) {
+        CompoundNBTTag compoundTag = new CompoundNBTTag();
         compoundTag.putInt("count",itemStack.count);
         if(itemStack.isEmpty()) {
             compoundTag.putShort("item",(short)-1);
@@ -143,9 +143,9 @@ public class CompoundTag extends Tag {
         byte tagId;
         while((tagId = byteBuf.get()) != 0) {
             String string = readString(byteBuf);
-            Tag tag = Tag.tags.get(tagId).get();
-            tag.read(byteBuf);
-            tags.put(string,tag);
+            NBTTag NBTTag = NBTTag.tags.get(tagId).get();
+            NBTTag.read(byteBuf);
+            tags.put(string, NBTTag);
         }
     }
 

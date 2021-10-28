@@ -3,7 +3,7 @@ package dev.Hilligans.ourcraft.Tag;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-public class LongArrayTag extends Tag {
+public class LongArrayNBTTag extends NBTTag {
 
     public long[] val;
 

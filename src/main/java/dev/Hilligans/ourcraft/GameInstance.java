@@ -7,6 +7,7 @@ import dev.Hilligans.ourcraft.Client.Audio.Sounds;
 import dev.Hilligans.ourcraft.Client.Rendering.ClientUtil;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Widget;
 import dev.Hilligans.ourcraft.Container.Container;
+import dev.Hilligans.ourcraft.Data.Descriptors.Tag;
 import dev.Hilligans.ourcraft.Entity.Entity;
 import dev.Hilligans.ourcraft.Item.Item;
 import dev.Hilligans.ourcraft.Item.Items;
@@ -16,7 +17,7 @@ import dev.Hilligans.ourcraft.ModHandler.EventBus;
 import dev.Hilligans.ourcraft.ModHandler.ModLoader;
 import dev.Hilligans.ourcraft.Network.PacketBase;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
-import dev.Hilligans.ourcraft.Tag.Tag;
+import dev.Hilligans.ourcraft.Tag.NBTTag;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 
 import java.net.URL;
@@ -58,6 +59,8 @@ public class GameInstance {
     public final HashMap<String, Item> MAPPED_ITEMS = new HashMap<>();
     public final ArrayList<Biome> BIOMES = new ArrayList<>();
     public final HashMap<String, Biome> MAPPED_BIOMES = new HashMap<>();
+    public final ArrayList<Tag> TAGS = new ArrayList<>();
+    public final HashMap<String, Tag> MAPPED_TAGS = new HashMap<>();
 
 
     public void clear() {
@@ -65,6 +68,8 @@ public class GameInstance {
         MAPPED_BLOCKS.clear();
         ITEMS.clear();
         MAPPED_ITEMS.clear();
+        TAGS.clear();
+        MAPPED_TAGS.clear();
     }
 
     public Item getItem(int id) {
@@ -100,6 +105,11 @@ public class GameInstance {
         MAPPED_BIOMES.put(biome.name, biome);
     }
 
+    public void registerTag(Tag tag) {
+        TAGS.add(tag);
+        MAPPED_TAGS.put(tag.type + ":" + tag.tagName,tag);
+    }
+
 
     static short itemId = 0;
     public short blockId = 0;
@@ -119,7 +129,7 @@ public class GameInstance {
         PacketBase.register();
         ClientUtil.register();
         Container.register();
-        Tag.register();
+        NBTTag.register();
         Widget.register();
         Entity.register();
         Blocks.register();

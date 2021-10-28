@@ -1,7 +1,7 @@
 package dev.Hilligans.ourcraft.WorldSave;
 
 import dev.Hilligans.ourcraft.Ourcraft;
-import dev.Hilligans.ourcraft.Tag.CompoundTag;
+import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -29,11 +29,11 @@ public class WorldLoader {
 
 
 
-    public static CompoundTag loadTag(String path) {
+    public static CompoundNBTTag loadTag(String path) {
         try {
             ByteBuffer byteBuffer = readBuffer(path);
             if(byteBuffer != null) {
-                CompoundTag compoundTag = new CompoundTag();
+                CompoundNBTTag compoundTag = new CompoundNBTTag();
                 compoundTag.readFrom(byteBuffer);
                 return compoundTag;
             }
@@ -139,7 +139,7 @@ public class WorldLoader {
         return stringBuilder.toString();
     }
 
-    public static void save(CompoundTag compoundTag, String path) {
+    public static void save(CompoundNBTTag compoundTag, String path) {
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(maxSize);
         byteBuffer.mark();
         compoundTag.writeTo(byteBuffer);

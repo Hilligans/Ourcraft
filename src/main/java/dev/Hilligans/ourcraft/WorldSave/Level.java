@@ -4,7 +4,7 @@ import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Block.Blocks;
 import dev.Hilligans.ourcraft.Data.Primitives.Tuplet;
 import dev.Hilligans.ourcraft.Ourcraft;
-import dev.Hilligans.ourcraft.Tag.CompoundTag;
+import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import java.util.HashMap;
@@ -19,7 +19,7 @@ public class Level {
     public Level() {
     }
 
-    public Level(CompoundTag compoundTag) {
+    public Level(CompoundNBTTag compoundTag) {
         read(compoundTag);
     }
 
@@ -47,8 +47,8 @@ public class Level {
         return getBlockID(block.getName());
     }
 
-    public void read(CompoundTag compoundTag) {
-        CompoundTag blocks = compoundTag.getCompoundTag("blocks");
+    public void read(CompoundNBTTag compoundTag) {
+        CompoundNBTTag blocks = compoundTag.getCompoundTag("blocks");
         for(String string : blocks.tags.keySet()) {
             long val = blocks.getLong(string).val;
             this.blocks.put(string,new Tuplet<>((int)(val >> 32),(int)val));
@@ -56,8 +56,8 @@ public class Level {
         }
     }
 
-    public void write(CompoundTag compoundTag) {
-        CompoundTag blocks = new CompoundTag();
+    public void write(CompoundNBTTag compoundTag) {
+        CompoundNBTTag blocks = new CompoundNBTTag();
         compoundTag.putTag("blocks",blocks);
         for(String string : this.blocks.keySet()) {
             blocks.putLong(string, (long) this.blocks.get(string).getTypeA() << 32 | this.blocks.get(string).getTypeB());

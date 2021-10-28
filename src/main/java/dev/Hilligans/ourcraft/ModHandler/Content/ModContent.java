@@ -6,6 +6,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.BlockModel;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.IModel;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
 import dev.Hilligans.ourcraft.ClientMain;
+import dev.Hilligans.ourcraft.Data.Descriptors.Tag;
 import dev.Hilligans.ourcraft.Data.Other.BlockProperties;
 import dev.Hilligans.ourcraft.Data.Other.ItemProperties;
 import dev.Hilligans.ourcraft.GameInstance;
@@ -52,6 +53,7 @@ public class ModContent {
     public HashMap<String,BufferedImage> blockTextures = new HashMap<>();
     public ArrayList<SoundBuffer> sounds = new ArrayList<>();
     public ArrayList<IModel> models = new ArrayList<>();
+    public ArrayList<Tag> tags = new ArrayList<>();
 
     public BiFunction<JSONObject,String,Block> blockParser = (blockData, string) -> {
         Block block = new Block(string, "/Data/" + blockData.getString("data"),modID,blockData.optJSONObject("overrides"));

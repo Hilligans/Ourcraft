@@ -3,13 +3,13 @@ package dev.Hilligans.ourcraft.Tag;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-public class ShortArrayTag extends Tag {
+public class IntegerArrayNBTTag extends NBTTag {
 
-    public short[] val;
+    public int[] val;
 
-    public ShortArrayTag() {}
+    public IntegerArrayNBTTag() {}
 
-    public ShortArrayTag(short[] val) {
+    public IntegerArrayNBTTag(int[] val) {
         this.val = val;
     }
 
@@ -20,29 +20,29 @@ public class ShortArrayTag extends Tag {
 
     @Override
     public byte getId() {
-        return 13;
+        return 11;
     }
 
     @Override
     public void read(ByteBuffer byteBuf) {
         int length = byteBuf.getInt();
-        val = new short[length];
+        val = new int[length];
         for(int x = 0; x < length; x++) {
-            val[x] = byteBuf.getShort();
+            val[x] = byteBuf.getInt();
         }
     }
 
     @Override
     public void write(ByteBuffer byteBuf) {
         byteBuf.putInt(val.length);
-        for (short b : val) {
-            byteBuf.putShort(b);
+        for (int b : val) {
+            byteBuf.putInt(b);
         }
     }
 
     @Override
     public String toString() {
-        return "ShortArrayTag{" +
+        return "IntegerArrayTag{" +
                 "val=" + Arrays.toString(val) +
                 '}';
     }

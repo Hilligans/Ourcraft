@@ -1,7 +1,7 @@
 package dev.Hilligans.ourcraft.Bot;
 
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
-import dev.Hilligans.ourcraft.Item.ItemDescriptor;
+import dev.Hilligans.ourcraft.Data.Descriptors.ItemDescriptor;
 import dev.Hilligans.ourcraft.Util.Settings;
 import org.joml.Vector3d;
 import org.joml.Vector3i;

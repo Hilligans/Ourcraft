@@ -6,7 +6,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.ScreenBase;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Button;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.FolderWidget;
 import dev.Hilligans.ourcraft.Data.Primitives.IntegerWrapper;
-import dev.Hilligans.ourcraft.Tag.CompoundTag;
+import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 import dev.Hilligans.ourcraft.WorldSave.FileLoader;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 import org.lwjgl.PointerBuffer;
@@ -15,7 +15,7 @@ public class TagEditorScreen extends ScreenBase {
 
     static final int size = 29;
 
-    CompoundTag compoundTag;
+    CompoundNBTTag compoundTag;
     public String filePath;
     public FolderWidget folderWidget;
     public IntegerWrapper yOffset;

@@ -3,6 +3,7 @@ package dev.Hilligans.ourcraft.Data.Other;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.ItemModel;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.IModel;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.ItemTextureManager;
+import dev.Hilligans.ourcraft.Data.Descriptors.TagCollection;
 import dev.Hilligans.ourcraft.Item.BlockItem;
 import dev.Hilligans.ourcraft.Item.Item;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
@@ -16,6 +17,7 @@ public class ItemProperties {
     public String block;
     public IModel itemModel;
     public ItemTextureManager itemTextureManager;
+    public TagCollection tags;
 
     public ItemProperties serverSide(boolean val) {
         serverSide = val;

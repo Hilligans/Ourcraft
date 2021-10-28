@@ -2,13 +2,13 @@ package dev.Hilligans.ourcraft.Tag;
 
 import java.nio.ByteBuffer;
 
-public class FullStringTag extends Tag {
+public class FullStringNBTTag extends NBTTag {
 
     public String val;
 
-    public FullStringTag() {}
+    public FullStringNBTTag() {}
 
-    public FullStringTag(String val) {
+    public FullStringNBTTag(String val) {
         this.val = val;
     }
 

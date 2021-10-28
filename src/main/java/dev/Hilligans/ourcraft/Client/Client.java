@@ -36,7 +36,7 @@ import dev.Hilligans.ourcraft.Client.Audio.Sounds;
 import dev.Hilligans.ourcraft.Client.Rendering.*;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.*;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
-import dev.Hilligans.ourcraft.Tag.CompoundTag;
+import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 import dev.Hilligans.ourcraft.Server.MultiPlayerServer;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
@@ -108,7 +108,7 @@ public class Client {
         network = new ClientNetwork(Protocols.PLAY);
         authNetwork = new ClientNetwork(Protocols.AUTH);
 
-        CompoundTag tag = WorldLoader.loadTag("clientData.dat");
+        CompoundNBTTag tag = WorldLoader.loadTag("clientData.dat");
         if(tag != null) {
             Thread thread = new Thread(() -> {
                 try {
@@ -592,14 +592,14 @@ public class Client {
         return BufferUtils.createDoubleBuffer(2).put(x.get()).put(y.get());
     }
 
-    public CompoundTag readUsernameAndPassword(CompoundTag tag) {
+    public CompoundNBTTag readUsernameAndPassword(CompoundNBTTag tag) {
          playerData.userName = tag.getFullString("username").val;
          playerData.login_token = tag.getFullString("loginToken").val;
          playerData.email = tag.getFullString("email").val;
          return tag;
     }
 
-    public CompoundTag writeUsernameAndPassword(CompoundTag tag) {
+    public CompoundNBTTag writeUsernameAndPassword(CompoundNBTTag tag) {
          tag.putFullString("username",playerData.userName);
          tag.putFullString("loginToken",playerData.login_token);
          tag.putFullString("email",playerData.email);
@@ -607,7 +607,7 @@ public class Client {
     }
 
     public void saveUsernameAndPassword() {
-         CompoundTag tag = new CompoundTag();
+         CompoundNBTTag tag = new CompoundNBTTag();
          writeUsernameAndPassword(tag);
          WorldLoader.save(tag,"clientData.dat");
     }

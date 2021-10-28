@@ -2,45 +2,45 @@ package dev.Hilligans.ourcraft.Tag;
 
 import java.nio.ByteBuffer;
 
-public class StringTag extends Tag {
+public class ByteNBTTag extends NBTTag {
 
-    public String val;
+    public byte val;
 
-    public StringTag() {}
+    public ByteNBTTag() {}
 
-    public StringTag(String val) {
+    public ByteNBTTag(byte val) {
         this.val = val;
     }
 
     @Override
     int getSize() {
-        return val.length();
+        return 1;
     }
 
     @Override
     public byte getId() {
-        return 8;
+        return 1;
     }
 
     @Override
     public void read(ByteBuffer byteBuf) {
-        val = readString(byteBuf);
+        val = byteBuf.get();
     }
 
     @Override
     public void write(ByteBuffer byteBuf) {
-        writeString(byteBuf,val);
+        byteBuf.put(val);
     }
 
     @Override
     public String getVal() {
-        return val;
+        return val + "";
     }
 
     @Override
     public String toString() {
-        return "StringTag{" +
-                "val='" + val + '\'' +
+        return "ByteTag{" +
+                "val=" + val +
                 '}';
     }
 }

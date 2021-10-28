@@ -1,6 +1,6 @@
 package dev.Hilligans.ourcraft.Data.Other.Settings;
 
-import dev.Hilligans.ourcraft.Tag.CompoundTag;
+import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 
 public class BooleanSetting implements Setting {
 
@@ -18,12 +18,12 @@ public class BooleanSetting implements Setting {
 
 
     @Override
-    public void read(CompoundTag compoundTag) {
+    public void read(CompoundNBTTag compoundTag) {
         value = compoundTag.getBoolean(name);
     }
 
     @Override
-    public void write(CompoundTag compoundTag) {
+    public void write(CompoundNBTTag compoundTag) {
         compoundTag.putBoolean(name,value);
     }
 }

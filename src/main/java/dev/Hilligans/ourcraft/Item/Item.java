@@ -9,6 +9,7 @@ import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Data.Other.ItemProperties;
 import dev.Hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.Hilligans.ourcraft.Ourcraft;
+import dev.Hilligans.ourcraft.Util.Recipe.IRecipeComponent;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.World.World;
 import org.joml.Vector3f;
@@ -17,7 +18,7 @@ import org.lwjgl.opengl.GL30;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 
-public class Item {
+public class Item implements IRecipeComponent {
 
     public String name;
     public ItemProperties itemProperties;
@@ -139,5 +140,10 @@ public class Item {
         return "Item{" +
                 "name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public String getComponentName() {
+        return "item";
     }
 }

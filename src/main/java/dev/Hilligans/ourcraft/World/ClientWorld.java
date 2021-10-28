@@ -174,7 +174,9 @@ public class ClientWorld extends World {
            }
            for (SubChunk subChunk : chunk.chunks) {
                subChunk.destroy();
+               subChunk.id = -2;
            }
+           chunk.id = -1;
         });
     }
 

@@ -3,7 +3,7 @@ package dev.Hilligans.ourcraft.Tag;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-public class ListTag<T extends Tag> extends Tag {
+public class ListNBTTag<T extends NBTTag> extends NBTTag {
 
     public ArrayList<T> tags = new ArrayList<>();
 
@@ -22,9 +22,9 @@ public class ListTag<T extends Tag> extends Tag {
         byte type = byteBuf.get();
         int size = byteBuf.getInt();
         for(int x = 0; x < size; x++) {
-            Tag tag = Tag.tags.get(type).get();
-            tag.read(byteBuf);
-            tags.add((T)tag);
+            NBTTag NBTTag = NBTTag.tags.get(type).get();
+            NBTTag.read(byteBuf);
+            tags.add((T) NBTTag);
         }
     }
 

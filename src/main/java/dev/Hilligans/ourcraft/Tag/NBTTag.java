@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-public abstract class Tag {
+public abstract class NBTTag {
 
     public static ArrayList<TagFetcher> tags = new ArrayList<>();
 
@@ -75,23 +75,23 @@ public abstract class Tag {
     }
 
     public static void register() {
-        tags.add(CompoundTag::new);
-        tags.add(ByteTag::new);
-        tags.add(ShortTag::new);
-        tags.add(IntegerTag::new);
-        tags.add(LongTag::new);
-        tags.add(FloatTag::new);
-        tags.add(DoubleTag::new);
-        tags.add(ByteArrayTag::new);
-        tags.add(StringTag::new);
-        tags.add(ListTag::new);
-        tags.add(CompoundTag::new);
-        tags.add(IntegerArrayTag::new);
-        tags.add(LongArrayTag::new);
+        tags.add(EndNBTTag::new);
+        tags.add(ByteNBTTag::new);
+        tags.add(ShortNBTTag::new);
+        tags.add(IntegerNBTTag::new);
+        tags.add(LongNBTTag::new);
+        tags.add(FloatNBTTag::new);
+        tags.add(DoubleNBTTag::new);
+        tags.add(ByteArrayNBTTag::new);
+        tags.add(StringNBTTag::new);
+        tags.add(ListNBTTag::new);
+        tags.add(CompoundNBTTag::new);
+        tags.add(IntegerArrayNBTTag::new);
+        tags.add(LongArrayNBTTag::new);
     }
 
     public interface TagFetcher {
-        Tag get();
+        NBTTag get();
     }
 
 }

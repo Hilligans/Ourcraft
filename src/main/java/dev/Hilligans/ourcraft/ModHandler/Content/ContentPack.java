@@ -79,7 +79,6 @@ public class ContentPack {
             if(shouldLoad.get(string)) {
                 ModContent mod = mods.get(string);
                 for(SoundBuffer soundBuffer : mod.sounds) {
-                   // soundBuffer.load();
                     Sounds.registerSound(soundBuffer.file,soundBuffer);
                 }
                 for (Texture texture : mod.textures) {

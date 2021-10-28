@@ -5,9 +5,9 @@ import dev.Hilligans.ourcraft.Client.Rendering.Textures;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Data.Primitives.IntegerWrapper;
-import dev.Hilligans.ourcraft.Tag.CompoundTag;
-import dev.Hilligans.ourcraft.Tag.ListTag;
-import dev.Hilligans.ourcraft.Tag.Tag;
+import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
+import dev.Hilligans.ourcraft.Tag.ListNBTTag;
+import dev.Hilligans.ourcraft.Tag.NBTTag;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -141,34 +141,34 @@ public class FolderWidget extends Widget {
         }
     }
 
-    public void addAll(CompoundTag compoundTag) {
-        TreeMap<String, Tag> tags = new TreeMap<>(compoundTag.tags);
+    public void addAll(CompoundNBTTag compoundTag) {
+        TreeMap<String, NBTTag> tags = new TreeMap<>(compoundTag.tags);
         for(String string : tags.keySet()) {
-            Tag tag = compoundTag.getTag(string);
-            if(tag.getId() == 10) {
+            NBTTag NBTTag = compoundTag.getTag(string);
+            if(NBTTag.getId() == 10) {
                 FolderWidget folderWidget = new FolderWidget(string);
                 addWidget(folderWidget);
-                folderWidget.addAll((CompoundTag) tag);
-            } else if(tag.getId() == 9) {
+                folderWidget.addAll((CompoundNBTTag) NBTTag);
+            } else if(NBTTag.getId() == 9) {
                 FolderWidget folderWidget = new FolderWidget(string);
                 folderWidget.isList = true;
                 addWidget(folderWidget);
-                folderWidget.addAll((ListTag<?>)tag);
+                folderWidget.addAll((ListNBTTag<?>) NBTTag);
             } else {
-                addWidget(new DataWidget(100,FolderWidget.spacing,tag.getId() - 1, tag.getVal(),string));
+                addWidget(new DataWidget(100,FolderWidget.spacing, NBTTag.getId() - 1, NBTTag.getVal(),string));
             }
         }
     }
 
-    public void addAll(ListTag<?> listTag) {
+    public void addAll(ListNBTTag<?> listTag) {
         int x = 0;
-        for(Tag tag : listTag.tags) {
-            if(tag.getId() == 0) {
+        for(NBTTag NBTTag : listTag.tags) {
+            if(NBTTag.getId() == 0) {
                 FolderWidget folderWidget = new FolderWidget(x + "");
-                folderWidget.addAll((CompoundTag)tag);
+                folderWidget.addAll((CompoundNBTTag) NBTTag);
                 addWidget(folderWidget);
             } else {
-                addWidget(new DataWidget(100,FolderWidget.spacing,tag.getId() - 1, tag.getVal(),""));
+                addWidget(new DataWidget(100,FolderWidget.spacing, NBTTag.getId() - 1, NBTTag.getVal(),""));
             }
             x++;
         }

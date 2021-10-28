@@ -2,34 +2,34 @@ package dev.Hilligans.ourcraft.Tag;
 
 import java.nio.ByteBuffer;
 
-public class FloatTag extends Tag {
+public class DoubleNBTTag extends NBTTag {
 
-    public float val;
+    public double val;
 
-    public FloatTag() {}
+    public DoubleNBTTag() {}
 
-    public FloatTag(float val) {
+    public DoubleNBTTag(double val) {
         this.val = val;
     }
 
     @Override
     int getSize() {
-        return 4;
+        return 8;
     }
 
     @Override
     public byte getId() {
-        return 5;
+        return 6;
     }
 
     @Override
     public void read(ByteBuffer byteBuf) {
-        byteBuf.putFloat(val);
+        val = byteBuf.getDouble();
     }
 
     @Override
     public void write(ByteBuffer byteBuf) {
-        val = byteBuf.getFloat();
+        byteBuf.putDouble(val);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class FloatTag extends Tag {
 
     @Override
     public String toString() {
-        return "FloatTag{" +
+        return "DoubleTag{" +
                 "val=" + val +
                 '}';
     }

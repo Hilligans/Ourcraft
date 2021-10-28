@@ -4,10 +4,10 @@ import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Block.Blocks;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.DataBlockState;
-import dev.Hilligans.ourcraft.Tag.CompoundTag;
-import dev.Hilligans.ourcraft.Tag.IntegerTag;
-import dev.Hilligans.ourcraft.Tag.ListTag;
-import dev.Hilligans.ourcraft.Tag.ShortTag;
+import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
+import dev.Hilligans.ourcraft.Tag.IntegerNBTTag;
+import dev.Hilligans.ourcraft.Tag.ListNBTTag;
+import dev.Hilligans.ourcraft.Tag.ShortNBTTag;
 import dev.Hilligans.ourcraft.World.World;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 
@@ -31,21 +31,21 @@ public class Structure {
     }
 
 
-    public CompoundTag toTag() {
-        CompoundTag compoundTag = new CompoundTag();
-        compoundTag.putTag("width", new IntegerTag(width));
-        compoundTag.putTag("height", new IntegerTag(height));
-        compoundTag.putTag("length", new IntegerTag(length));
-        ListTag<ShortTag> blocks = new ListTag<>();
+    public CompoundNBTTag toTag() {
+        CompoundNBTTag compoundTag = new CompoundNBTTag();
+        compoundTag.putTag("width", new IntegerNBTTag(width));
+        compoundTag.putTag("height", new IntegerNBTTag(height));
+        compoundTag.putTag("length", new IntegerNBTTag(length));
+        ListNBTTag<ShortNBTTag> blocks = new ListNBTTag<>();
         for(int x = 0; x < width; x++) {
             for(int y = 0; y < height; y++) {
                 for(int z = 0; z < length; z++) {
                     BlockState blockState = this.blocks[x][y][z];
                     if(blockState.getBlock().hasBlockState()) {
-                        blocks.tags.add(new ShortTag(blockState.getBlock().id));
-                        blocks.tags.add(new ShortTag(((DataBlockState)blockState).readData()));
+                        blocks.tags.add(new ShortNBTTag(blockState.getBlock().id));
+                        blocks.tags.add(new ShortNBTTag(((DataBlockState)blockState).readData()));
                     } else {
-                        blocks.tags.add(new ShortTag(blockState.getBlock().id));
+                        blocks.tags.add(new ShortNBTTag(blockState.getBlock().id));
                     }
                 }
             }
@@ -54,9 +54,9 @@ public class Structure {
     }
 
     public static Structure fromPath(String path) {
-        CompoundTag compoundTag = WorldLoader.loadTag(path);
+        CompoundNBTTag compoundTag = WorldLoader.loadTag(path);
         Structure structure = new Structure(compoundTag.getInt("width").val,compoundTag.getInt("height").val,compoundTag.getInt("length").val);
-        ListTag<ShortTag> blocks = (ListTag<ShortTag>) compoundTag.getTag("blocks");
+        ListNBTTag<ShortNBTTag> blocks = (ListNBTTag<ShortNBTTag>) compoundTag.getTag("blocks");
         int listSpot = 0;
         for(int x = 0; x < structure.width; x++) {
             for(int y = 0; y < structure.height; y++) {

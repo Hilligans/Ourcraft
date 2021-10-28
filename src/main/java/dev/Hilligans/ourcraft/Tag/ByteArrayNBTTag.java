@@ -3,46 +3,46 @@ package dev.Hilligans.ourcraft.Tag;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-public class IntegerArrayTag extends Tag {
+public class ByteArrayNBTTag extends NBTTag {
 
-    public int[] val;
+    public byte[] val;
 
-    public IntegerArrayTag() {}
+    public ByteArrayNBTTag() {}
 
-    public IntegerArrayTag(int[] val) {
+    public ByteArrayNBTTag(byte[] val) {
         this.val = val;
     }
 
     @Override
     int getSize() {
-        return val.length * 2;
+        return val.length;
     }
 
     @Override
     public byte getId() {
-        return 11;
+        return 7;
     }
 
     @Override
     public void read(ByteBuffer byteBuf) {
         int length = byteBuf.getInt();
-        val = new int[length];
+        val = new byte[length];
         for(int x = 0; x < length; x++) {
-            val[x] = byteBuf.getInt();
+            val[x] = byteBuf.get();
         }
     }
 
     @Override
     public void write(ByteBuffer byteBuf) {
         byteBuf.putInt(val.length);
-        for (int b : val) {
-            byteBuf.putInt(b);
+        for (byte b : val) {
+            byteBuf.put(b);
         }
     }
 
     @Override
     public String toString() {
-        return "IntegerArrayTag{" +
+        return "ByteArrayTag{" +
                 "val=" + Arrays.toString(val) +
                 '}';
     }

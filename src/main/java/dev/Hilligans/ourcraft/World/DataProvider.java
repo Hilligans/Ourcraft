@@ -1,11 +1,11 @@
 package dev.Hilligans.ourcraft.World;
 
-import dev.Hilligans.ourcraft.Tag.CompoundTag;
+import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 
 public class DataProvider {
 
-    public void read(CompoundTag tag) {}
-    public void write(CompoundTag tag) {}
+    public void read(CompoundNBTTag tag) {}
+    public void write(CompoundNBTTag tag) {}
 
 
 

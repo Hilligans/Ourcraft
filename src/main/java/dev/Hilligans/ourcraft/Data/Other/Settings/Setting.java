@@ -1,12 +1,12 @@
 package dev.Hilligans.ourcraft.Data.Other.Settings;
 
-import dev.Hilligans.ourcraft.Tag.CompoundTag;
+import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 
 public interface Setting {
 
-    void read(CompoundTag compoundTag);
+    void read(CompoundNBTTag compoundTag);
 
-    void write(CompoundTag compoundTag);
+    void write(CompoundNBTTag compoundTag);
 
 
 }

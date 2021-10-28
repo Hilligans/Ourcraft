@@ -20,6 +20,7 @@ public class BlockProperties {
     public boolean airBlock = false;
     public boolean flammable = false;
     public boolean dynamicItemModel = false;
+
     public int mapColor = 0;
     public String placementMode = "default";
     public String textureFolder = "Blocks/";

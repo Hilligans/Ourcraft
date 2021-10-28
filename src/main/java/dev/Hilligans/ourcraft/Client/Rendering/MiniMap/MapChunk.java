@@ -2,8 +2,8 @@ package dev.Hilligans.ourcraft.Client.Rendering.MiniMap;
 
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
-import dev.Hilligans.ourcraft.Tag.CompoundTag;
-import dev.Hilligans.ourcraft.Tag.IntegerArrayTag;
+import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
+import dev.Hilligans.ourcraft.Tag.IntegerArrayNBTTag;
 import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 
@@ -35,8 +35,8 @@ public class MapChunk {
     public MapChunk(int x, int z) {
         this.x = x;
         this.z = z;
-        CompoundTag compoundTag = WorldLoader.loadTag("map_data/chunks/x" + x + "_z" + z + ".dat");
-        IntegerArrayTag tag = (IntegerArrayTag) compoundTag.getTag("colors");
+        CompoundNBTTag compoundTag = WorldLoader.loadTag("map_data/chunks/x" + x + "_z" + z + ".dat");
+        IntegerArrayNBTTag tag = (IntegerArrayNBTTag) compoundTag.getTag("colors");
         colors = tag.val;
     }
 
@@ -128,8 +128,8 @@ public class MapChunk {
     }
 
     public void save() {
-        CompoundTag compoundTag = new CompoundTag();
-        IntegerArrayTag tag = new IntegerArrayTag(colors);
+        CompoundNBTTag compoundTag = new CompoundNBTTag();
+        IntegerArrayNBTTag tag = new IntegerArrayNBTTag(colors);
         compoundTag.putTag("colors",tag);
         WorldLoader.save(compoundTag,"map_data/chunks/x" + x + "_z" + z + ".dat");
     }

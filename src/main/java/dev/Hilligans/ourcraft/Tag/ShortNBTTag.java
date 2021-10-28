@@ -2,34 +2,34 @@ package dev.Hilligans.ourcraft.Tag;
 
 import java.nio.ByteBuffer;
 
-public class LongTag extends Tag {
+public class ShortNBTTag extends NBTTag {
 
-    public long val;
+    public short val;
 
-    public LongTag() {}
+    public ShortNBTTag() {}
 
-    public LongTag(long val) {
+    public ShortNBTTag(short val) {
         this.val = val;
     }
 
     @Override
     int getSize() {
-        return 8;
+        return 2;
     }
 
     @Override
     public byte getId() {
-        return 4;
+        return 2;
     }
 
     @Override
     public void read(ByteBuffer byteBuf) {
-        val = byteBuf.getLong();
+        val = byteBuf.getShort();
     }
 
     @Override
     public void write(ByteBuffer byteBuf) {
-        byteBuf.putLong(val);
+        byteBuf.putShort(val);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class LongTag extends Tag {
 
     @Override
     public String toString() {
-        return "LongTag{" +
+        return "ShortTag{" +
                 "val=" + val +
                 '}';
     }

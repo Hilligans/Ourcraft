@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft;
 
 import dev.Hilligans.ourcraft.Client.Client;
+import dev.Hilligans.ourcraft.Data.Other.EightBytePosition;
 
 public class ClientMain {
 
@@ -14,9 +15,9 @@ public class ClientMain {
 
     public static void main(String[] args) {
 
+
         client = new Client(gameInstance);
         client.startClient();
-
     }
 
     public static void handleArgs(String[] args) {
