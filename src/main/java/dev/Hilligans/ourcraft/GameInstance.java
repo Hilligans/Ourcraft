@@ -14,11 +14,14 @@ import dev.Hilligans.ourcraft.Item.Items;
 import dev.Hilligans.ourcraft.ModHandler.Content.ContentPack;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.ModHandler.EventBus;
+import dev.Hilligans.ourcraft.ModHandler.Events.Common.RegistryClearEvent;
 import dev.Hilligans.ourcraft.ModHandler.ModLoader;
 import dev.Hilligans.ourcraft.Network.PacketBase;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
 import dev.Hilligans.ourcraft.Tag.NBTTag;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
+import dev.Hilligans.ourcraft.Util.Recipe.IRecipe;
+import dev.Hilligans.ourcraft.Util.Registry.Registry;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -55,25 +58,28 @@ public class GameInstance {
 
     public final ArrayList<Block> BLOCKS = new ArrayList<>();
     public final HashMap<String, Block> MAPPED_BLOCKS = new HashMap<>();
-    public final ArrayList<Item> ITEMS = new ArrayList<>();
-    public final HashMap<String, Item> MAPPED_ITEMS = new HashMap<>();
-    public final ArrayList<Biome> BIOMES = new ArrayList<>();
-    public final HashMap<String, Biome> MAPPED_BIOMES = new HashMap<>();
-    public final ArrayList<Tag> TAGS = new ArrayList<>();
-    public final HashMap<String, Tag> MAPPED_TAGS = new HashMap<>();
+   // public final ArrayList<Item> ITEMS = new ArrayList<>();
+   // public final HashMap<String, Item> MAPPED_ITEMS = new HashMap<>();
+
+    public final Registry<Item> ITEMS = new Registry<>();
+    public final Registry<Biome> BIOMES = new Registry<>();
+    public final Registry<Tag> TAGS = new Registry<>();
+    public final Registry<IRecipe<?>> RECIPES = new Registry<>();
 
 
     public void clear() {
         BLOCKS.clear();
         MAPPED_BLOCKS.clear();
+
         ITEMS.clear();
-        MAPPED_ITEMS.clear();
+        // BIOMES.clear();
         TAGS.clear();
-        MAPPED_TAGS.clear();
+        RECIPES.clear();
+        EVENT_BUS.postEvent(new RegistryClearEvent(this));
     }
 
     public Item getItem(int id) {
-        if(ITEMS.size() > id) {
+        if(ITEMS.ELEMENTS.size() > id) {
             return ITEMS.get(id);
         }
         return null;
@@ -97,19 +103,15 @@ public class GameInstance {
         }
     }
     public void registerItem(Item item) {
-        ITEMS.add(item);
-        MAPPED_ITEMS.put(item.name, item);
+        ITEMS.put(item.name,item);
     }
     public void registerBiome(Biome biome) {
-        BIOMES.add(biome);
-        MAPPED_BIOMES.put(biome.name, biome);
+        BIOMES.put(biome.name, biome);
     }
 
     public void registerTag(Tag tag) {
-        TAGS.add(tag);
-        MAPPED_TAGS.put(tag.type + ":" + tag.tagName,tag);
+        TAGS.put(tag.type + ":" + tag.tagName,tag);
     }
-
 
     static short itemId = 0;
     public short blockId = 0;

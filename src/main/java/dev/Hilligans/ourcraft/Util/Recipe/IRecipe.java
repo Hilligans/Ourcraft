@@ -1,14 +1,18 @@
 package dev.Hilligans.ourcraft.Util.Recipe;
 
-public class Recipe {
+import dev.Hilligans.ourcraft.Container.Container;
+import dev.Hilligans.ourcraft.Data.Other.IInventory;
+
+import java.util.ArrayList;
+
+public interface IRecipe<T extends Container> {
 
 
 
 
 
 
-
-    public static class RecipeElement {
+    class RecipeElement {
         public IRecipeComponent component;
         public int slot;
         public int count;

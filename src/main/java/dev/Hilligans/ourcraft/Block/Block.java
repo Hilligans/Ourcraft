@@ -25,7 +25,7 @@ public class Block {
     public String modId;
     public short id;
     public BlockProperties blockProperties;
-    private Block droppedBlock;
+    public Block droppedBlock;
     public ModContent modContent;
 
     public Block(String name, BlockProperties blockProperties) {

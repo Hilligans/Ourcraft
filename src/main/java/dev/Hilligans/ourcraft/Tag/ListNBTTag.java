@@ -22,9 +22,9 @@ public class ListNBTTag<T extends NBTTag> extends NBTTag {
         byte type = byteBuf.get();
         int size = byteBuf.getInt();
         for(int x = 0; x < size; x++) {
-            NBTTag NBTTag = NBTTag.tags.get(type).get();
-            NBTTag.read(byteBuf);
-            tags.add((T) NBTTag);
+            NBTTag nbtTag = NBTTag.tags.get(type).get();
+            nbtTag.read(byteBuf);
+            tags.add((T) nbtTag);
         }
     }
 

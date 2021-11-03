@@ -143,9 +143,9 @@ public class CompoundNBTTag extends NBTTag {
         byte tagId;
         while((tagId = byteBuf.get()) != 0) {
             String string = readString(byteBuf);
-            NBTTag NBTTag = NBTTag.tags.get(tagId).get();
-            NBTTag.read(byteBuf);
-            tags.put(string, NBTTag);
+            NBTTag nbtTag = NBTTag.tags.get(tagId).get();
+            nbtTag.read(byteBuf);
+            tags.put(string, nbtTag);
         }
     }
 
