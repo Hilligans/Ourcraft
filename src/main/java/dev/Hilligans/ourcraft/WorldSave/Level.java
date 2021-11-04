@@ -36,7 +36,7 @@ public class Level {
     }
 
     public Block getBlock(int id) {
-        return Ourcraft.GAME_INSTANCE.MAPPED_BLOCKS.getOrDefault(idToNames.get(id),Blocks.AIR);
+        return Ourcraft.GAME_INSTANCE.BLOCKS.MAPPED_ELEMENTS.getOrDefault(idToNames.get(id),Blocks.AIR);
     }
 
     public int ensureHasBlock(Block block) {

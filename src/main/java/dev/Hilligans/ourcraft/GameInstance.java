@@ -56,21 +56,17 @@ public class GameInstance {
 
     public String path = System.getProperty("user.dir");
 
-    public final ArrayList<Block> BLOCKS = new ArrayList<>();
-    public final HashMap<String, Block> MAPPED_BLOCKS = new HashMap<>();
-   // public final ArrayList<Item> ITEMS = new ArrayList<>();
-   // public final HashMap<String, Item> MAPPED_ITEMS = new HashMap<>();
 
-    public final Registry<Item> ITEMS = new Registry<>();
-    public final Registry<Biome> BIOMES = new Registry<>();
-    public final Registry<Tag> TAGS = new Registry<>();
-    public final Registry<IRecipe<?>> RECIPES = new Registry<>();
+    public final Registry<Block> BLOCKS = new Registry<>(this);
+    public final Registry<Item> ITEMS = new Registry<>(this);
+    public final Registry<Biome> BIOMES = new Registry<>(this);
+    public final Registry<Tag> TAGS = new Registry<>(this);
+    public final Registry<IRecipe<?>> RECIPES = new Registry<>(this);
 
 
     public void clear() {
+      //  MAPPED_BLOCKS.clear();
         BLOCKS.clear();
-        MAPPED_BLOCKS.clear();
-
         ITEMS.clear();
         // BIOMES.clear();
         TAGS.clear();
@@ -89,13 +85,16 @@ public class GameInstance {
     }
 
     public Block getBlock(String id) {
-        return MAPPED_BLOCKS.get(id);
+        return BLOCKS.MAPPED_ELEMENTS.get(id);
+    }
+
+    public ArrayList<Block> getBlocks() {
+        return BLOCKS.ELEMENTS;
     }
 
 
     public void registerBlock(Block block) {
-        MAPPED_BLOCKS.put(block.getName(),block);
-        BLOCKS.add(block);
+        BLOCKS.put(block.getName(),block);
     }
     public void registerBlock(Block... blocks) {
         for(Block block : blocks) {

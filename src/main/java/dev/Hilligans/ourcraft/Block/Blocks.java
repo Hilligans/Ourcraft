@@ -100,7 +100,7 @@ public class Blocks {
     }
 
     public static void reload() {
-        for(Block block : Ourcraft.GAME_INSTANCE.BLOCKS) {
+        for(Block block : Ourcraft.GAME_INSTANCE.getBlocks()) {
             block.reload();
         }
     }
@@ -112,7 +112,7 @@ public class Blocks {
     public static void generateTextures() {
         TextAtlas.instance.clear();
         if(!Settings.isServer) {
-            for (Block block : Ourcraft.GAME_INSTANCE.BLOCKS) {
+            for (Block block : Ourcraft.GAME_INSTANCE.getBlocks()) {
                 block.generateTextures();
             }
             for(Item item : Items.ITEMS) {

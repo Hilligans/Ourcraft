@@ -38,12 +38,13 @@ public class EventBus {
         }
     }
 
-    public void postEvent(Event event) {
+    public Event postEvent(Event event) {
         ArrayList<IEventListener> list = events.get(event.getClass());
         if(list != null) {
             for(IEventListener eventListener : list) {
                 eventListener.run(event);
             }
         }
+        return event;
     }
 }
