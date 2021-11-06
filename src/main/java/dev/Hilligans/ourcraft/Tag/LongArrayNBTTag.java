@@ -7,6 +7,14 @@ public class LongArrayNBTTag extends NBTTag {
 
     public long[] val;
 
+    public LongArrayNBTTag() {
+
+    }
+
+    public LongArrayNBTTag(long[] val) {
+        this.val = val;
+    }
+
     @Override
     int getSize() {
         return 0;
@@ -32,6 +40,13 @@ public class LongArrayNBTTag extends NBTTag {
         for (long b : val) {
             byteBuf.putLong(b);
         }
+    }
+
+    @Override
+    public NBTTag duplicate() {
+        long[] newLongs = new long[val.length];
+        System.arraycopy(val,0,newLongs,0,newLongs.length);
+        return new LongArrayNBTTag(newLongs);
     }
 
     @Override

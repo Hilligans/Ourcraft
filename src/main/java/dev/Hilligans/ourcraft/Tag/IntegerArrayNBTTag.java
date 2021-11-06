@@ -41,6 +41,13 @@ public class IntegerArrayNBTTag extends NBTTag {
     }
 
     @Override
+    public NBTTag duplicate() {
+        int[] newInts = new int[val.length];
+        System.arraycopy(val,0,newInts,0,newInts.length);
+        return new IntegerArrayNBTTag(newInts);
+    }
+
+    @Override
     public String toString() {
         return "IntegerArrayTag{" +
                 "val=" + Arrays.toString(val) +

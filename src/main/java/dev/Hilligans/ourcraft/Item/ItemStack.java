@@ -24,6 +24,12 @@ public class ItemStack {
         this.NBTTag = compoundTag;
     }
 
+    public ItemStack(Item item, int count, NBTTag compoundTag) {
+        this.item = item;
+        this.count = count;
+        this.NBTTag = compoundTag;
+    }
+
     /**
      *
      * @param itemStack the itemStack which we are taking items from
@@ -117,7 +123,7 @@ public class ItemStack {
     }
 
     public ItemStack copy() {
-        return new ItemStack(item,count);
+        return new ItemStack(item,count,NBTTag.duplicate());
     }
 
     public static ItemStack emptyStack() {

@@ -8,6 +8,10 @@ import dev.Hilligans.ourcraft.World.Builders.OreBuilder;
 import dev.Hilligans.ourcraft.World.ServerWorld;
 import dev.Hilligans.ourcraft.World.World;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class ServerMain {
 
 
@@ -38,6 +42,14 @@ public class ServerMain {
 
     public static MultiPlayerServer getServer() {
         return server;
+    }
+
+    public static void printResults(Process process) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line = "";
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
+        }
     }
 
 }

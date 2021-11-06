@@ -34,6 +34,11 @@ public class IntegerNBTTag extends NBTTag {
     }
 
     @Override
+    public NBTTag duplicate() {
+        return new IntegerNBTTag(val);
+    }
+
+    @Override
     public String getVal() {
         return val + "";
     }

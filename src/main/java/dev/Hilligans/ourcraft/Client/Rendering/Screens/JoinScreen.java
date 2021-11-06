@@ -35,8 +35,8 @@ public class JoinScreen extends ScreenBase {
     public JoinScreen(Client client) {
         super(client);
         addWidget(play);
-        addWidget(new ServerSelectorWidget(100,200,200,80,"72.172.99.188","25586",this));
         addWidget(new ServerSelectorWidget(100,300,200,80,"localhost","25586",this));
+        addWidget(new ServerSelectorWidget(100,400,200,80,"198.100.150.46","25586",this));
         addWidget(new Button(500, 200, 200, 50, "menu.create_account", () -> client.openScreen(new AccountCreationScreen(client))));
         addWidget(new Button(500, 300, 200, 50, "menu.log_in", () -> client.openScreen(new LoginScreen(client))));
         addWidget(new Button(500,400,200,50,"menu.singleplayer", () -> {

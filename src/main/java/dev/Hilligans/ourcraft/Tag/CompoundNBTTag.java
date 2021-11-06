@@ -160,6 +160,15 @@ public class CompoundNBTTag extends NBTTag {
         byteBuf.put((byte)0);
     }
 
+    @Override
+    public NBTTag duplicate() {
+        CompoundNBTTag compoundNBTTag = new CompoundNBTTag();
+        for(String tag : tags.keySet()) {
+            compoundNBTTag.putTag(tag,tags.get(tag));
+        }
+        return compoundNBTTag;
+    }
+
     public void writeTo(ByteBuffer buffer) {
         buffer.put(getId());
         writeString(buffer,"");

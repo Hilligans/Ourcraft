@@ -41,6 +41,11 @@ public class ShortArrayNBTTag extends NBTTag {
     }
 
     @Override
+    public NBTTag duplicate() {
+        return null;
+    }
+
+    @Override
     public String toString() {
         return "ShortArrayTag{" +
                 "val=" + Arrays.toString(val) +

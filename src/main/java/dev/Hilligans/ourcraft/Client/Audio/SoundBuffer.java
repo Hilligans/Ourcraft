@@ -1,5 +1,6 @@
 package dev.Hilligans.ourcraft.Client.Audio;
 
+import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 import org.lwjgl.stb.STBVorbisInfo;
 import org.lwjgl.system.MemoryStack;
@@ -27,15 +28,18 @@ public class SoundBuffer {
     public byte[] bytes;
 
     public SoundBuffer(String file)  {
-        this.file = file;
-        this.data = WorldLoader.readResource(file);
-        try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
-            try {
-                pcm = readVorbis(file, info);
-                sampleRate = info.sample_rate();
-                length = samples / (float) sampleRate;
-                channelType = info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
-            } catch (Exception ignored) {}
+        if(!Settings.isServer) {
+            this.file = file;
+            this.data = WorldLoader.readResource(file);
+            try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
+                try {
+                    pcm = readVorbis(file, info);
+                    sampleRate = info.sample_rate();
+                    length = samples / (float) sampleRate;
+                    channelType = info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
+                } catch (Exception ignored) {
+                }
+            }
         }
     }
 

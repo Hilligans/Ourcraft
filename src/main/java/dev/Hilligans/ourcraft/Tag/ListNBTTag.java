@@ -42,6 +42,13 @@ public class ListNBTTag<T extends NBTTag> extends NBTTag {
     }
 
     @Override
+    public NBTTag duplicate() {
+        ListNBTTag<T> listNBTTag = new ListNBTTag<>();
+        listNBTTag.tags.addAll(tags);
+        return listNBTTag;
+    }
+
+    @Override
     public String toString() {
         return "ListTag{" +
                 "tags=" + tags +

@@ -65,7 +65,6 @@ public class GameInstance {
 
 
     public void clear() {
-      //  MAPPED_BLOCKS.clear();
         BLOCKS.clear();
         ITEMS.clear();
         // BIOMES.clear();
@@ -96,14 +95,17 @@ public class GameInstance {
     public void registerBlock(Block block) {
         BLOCKS.put(block.getName(),block);
     }
+
     public void registerBlock(Block... blocks) {
         for(Block block : blocks) {
             registerBlock(block);
         }
     }
+
     public void registerItem(Item item) {
         ITEMS.put(item.name,item);
     }
+
     public void registerBiome(Biome biome) {
         BIOMES.put(biome.name, biome);
     }

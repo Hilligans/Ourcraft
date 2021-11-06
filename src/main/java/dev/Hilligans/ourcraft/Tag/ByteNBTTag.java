@@ -33,6 +33,11 @@ public class ByteNBTTag extends NBTTag {
     }
 
     @Override
+    public NBTTag duplicate() {
+        return new ByteNBTTag(val);
+    }
+
+    @Override
     public String getVal() {
         return val + "";
     }

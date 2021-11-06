@@ -22,4 +22,9 @@ public class EndNBTTag extends NBTTag {
     public void write(ByteBuffer byteBuf) {
 
     }
+
+    @Override
+    public NBTTag duplicate() {
+        return new EndNBTTag();
+    }
 }

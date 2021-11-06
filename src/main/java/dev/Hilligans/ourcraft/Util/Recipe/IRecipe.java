@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 public interface IRecipe<T extends Container> {
 
-
-
+    RecipeElement[] getOutput();
+    RecipeElement[] getInput();
 
 
 

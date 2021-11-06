@@ -41,6 +41,13 @@ public class ByteArrayNBTTag extends NBTTag {
     }
 
     @Override
+    public NBTTag duplicate() {
+        byte[] newBytes = new byte[val.length];
+        System.arraycopy(val,0,newBytes,0,newBytes.length);
+        return new ByteArrayNBTTag(newBytes);
+    }
+
+    @Override
     public String toString() {
         return "ByteArrayTag{" +
                 "val=" + Arrays.toString(val) +

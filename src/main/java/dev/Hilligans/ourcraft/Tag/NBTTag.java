@@ -8,12 +8,11 @@ public abstract class NBTTag {
 
     public static ArrayList<TagFetcher> tags = new ArrayList<>();
 
-
-
     abstract int getSize();
     public abstract byte getId();
     public abstract void read(ByteBuffer byteBuf);
     public abstract void write(ByteBuffer byteBuf);
+    public abstract NBTTag duplicate();
 
     public static String readString(ByteBuffer byteBuffer) {
 
@@ -23,13 +22,6 @@ public abstract class NBTTag {
             vals[x] = byteBuffer.get();
         }
         return new String(vals,StandardCharsets.UTF_8);
-
-        //byte length = byteBuffer.get();
-       // StringBuilder string = new StringBuilder();
-        //for(int x = 0; x < length; x++) {
-        //    string.append(readChar(byteBuffer));
-        //}
-        //return string.toString();
     }
 
     public String readFullString(ByteBuffer byteBuffer) {
@@ -48,11 +40,6 @@ public abstract class NBTTag {
         for(byte val : vals) {
             byteBuffer.put(val);
         }
-        //byteBuffer.put((byte) string.length());
-       // for(int x = 0; x < string.length(); x++) {
-       //     byteBuffer.put((byte) string.charAt(x));
-       // }
-       // //DataOutput a;
     }
 
     public void writeFullString(ByteBuffer byteBuffer, String string) {
@@ -73,6 +60,7 @@ public abstract class NBTTag {
     public String getVal() {
         return "";
     }
+
 
     public static void register() {
         tags.add(EndNBTTag::new);

@@ -33,6 +33,11 @@ public class ShortNBTTag extends NBTTag {
     }
 
     @Override
+    public NBTTag duplicate() {
+        return new ShortNBTTag(val);
+    }
+
+    @Override
     public String getVal() {
         return val + "";
     }
