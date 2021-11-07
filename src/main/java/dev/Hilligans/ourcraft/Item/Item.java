@@ -9,7 +9,7 @@ import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Data.Other.ItemProperties;
 import dev.Hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.Hilligans.ourcraft.Ourcraft;
-import dev.Hilligans.ourcraft.Util.Recipe.IRecipeComponent;
+import dev.Hilligans.ourcraft.Recipe.IRecipeComponent;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.World.World;
 import org.joml.Vector3f;

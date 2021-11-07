@@ -4,6 +4,7 @@ import dev.Hilligans.ourcraft.Data.Other.ColoredString;
 import dev.Hilligans.ourcraft.Data.Other.EightBytePosition;
 import dev.Hilligans.ourcraft.Item.ItemStack;
 import dev.Hilligans.ourcraft.Item.Items;
+import dev.Hilligans.ourcraft.Ourcraft;
 import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 import dev.Hilligans.ourcraft.Tag.NBTTag;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
@@ -119,7 +120,7 @@ public class ByteArray {
         if(readBoolean()) {
             int id = readVarInt();
             int count = readByte();
-            return new ItemStack(Items.getItem(id),count,readCompoundTag());
+            return new ItemStack(Ourcraft.GAME_INSTANCE.getItem(id), count,readCompoundTag());
         } else {
             return new ItemStack(null,0);
         }

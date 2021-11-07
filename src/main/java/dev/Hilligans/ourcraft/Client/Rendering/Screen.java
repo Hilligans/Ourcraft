@@ -19,4 +19,7 @@ public interface Screen {
 
     default boolean renderWorld() {return true;}
 
+    default int getWidth() {return 0;}
+
+    default int getHeight() {return 0;}
 }

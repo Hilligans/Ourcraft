@@ -17,7 +17,7 @@ public class ItemProperties {
     public String block;
     public IModel itemModel;
     public ItemTextureManager itemTextureManager;
-    public TagCollection tags;
+    public TagCollection tags = new TagCollection();
 
     public ItemProperties serverSide(boolean val) {
         serverSide = val;

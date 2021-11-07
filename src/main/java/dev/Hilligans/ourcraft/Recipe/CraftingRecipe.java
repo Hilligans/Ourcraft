@@ -1,4 +1,4 @@
-package dev.Hilligans.ourcraft.Util.Recipe;
+package dev.Hilligans.ourcraft.Recipe;
 
 import dev.Hilligans.ourcraft.Container.Container;
 import dev.Hilligans.ourcraft.Container.CraftingContainer;

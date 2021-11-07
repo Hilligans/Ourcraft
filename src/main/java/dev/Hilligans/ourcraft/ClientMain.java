@@ -1,7 +1,10 @@
 package dev.Hilligans.ourcraft;
 
 import dev.Hilligans.ourcraft.Client.Client;
-import dev.Hilligans.ourcraft.Data.Other.EightBytePosition;
+import dev.Hilligans.ourcraft.Item.Item;
+import dev.Hilligans.ourcraft.Recipe.RecipeHelper.RecipeHelper;
+
+import java.util.ArrayList;
 
 public class ClientMain {
 
@@ -15,6 +18,14 @@ public class ClientMain {
 
     public static void main(String[] args) {
 
+
+        RecipeHelper recipeHelper = new RecipeHelper(gameInstance);
+
+        ArrayList<Item> items = recipeHelper.getItems("@ou s uce|");
+
+        for(Item item : items) {
+            System.out.println(item.getName());
+        }
 
         client = new Client(gameInstance);
         client.startClient();

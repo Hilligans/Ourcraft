@@ -1,9 +1,6 @@
-package dev.Hilligans.ourcraft.Util.Recipe;
+package dev.Hilligans.ourcraft.Recipe;
 
 import dev.Hilligans.ourcraft.Container.Container;
-import dev.Hilligans.ourcraft.Data.Other.IInventory;
-
-import java.util.ArrayList;
 
 public interface IRecipe<T extends Container> {
 

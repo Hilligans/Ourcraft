@@ -29,4 +29,16 @@ public class TagCollection {
         }
         return true;
     }
+
+    public boolean compare(TagCollection tagCollection) {
+        for(String tag : tagCollection.tags.keySet()) {
+            if(!tags.containsKey(tag)) {
+                return false;
+            }
+            if(!tags.get(tag).tagName.contains(tagCollection.tags.get(tag).tagName)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

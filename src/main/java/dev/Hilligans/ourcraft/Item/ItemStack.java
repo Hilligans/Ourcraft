@@ -123,7 +123,7 @@ public class ItemStack {
     }
 
     public ItemStack copy() {
-        return new ItemStack(item,count,NBTTag.duplicate());
+        return new ItemStack(item,count,NBTTag == null ? null : NBTTag.duplicate());
     }
 
     public static ItemStack emptyStack() {

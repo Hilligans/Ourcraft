@@ -115,7 +115,7 @@ public class Blocks {
             for (Block block : Ourcraft.GAME_INSTANCE.getBlocks()) {
                 block.generateTextures();
             }
-            for(Item item : Items.ITEMS) {
+            for(Item item : Ourcraft.GAME_INSTANCE.ITEMS.ELEMENTS) {
                 item.generateTextures();
             }
         }

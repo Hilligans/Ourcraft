@@ -20,13 +20,12 @@ import dev.Hilligans.ourcraft.Network.PacketBase;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
 import dev.Hilligans.ourcraft.Tag.NBTTag;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
-import dev.Hilligans.ourcraft.Util.Recipe.IRecipe;
+import dev.Hilligans.ourcraft.Recipe.IRecipe;
 import dev.Hilligans.ourcraft.Util.Registry.Registry;
 
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -79,6 +78,11 @@ public class GameInstance {
         }
         return null;
     }
+
+    public Item getItem(String name) {
+        return ITEMS.MAPPED_ELEMENTS.get(name);
+    }
+
     public Block getBlockWithID(int id) {
         return BLOCKS.get(id);
     }

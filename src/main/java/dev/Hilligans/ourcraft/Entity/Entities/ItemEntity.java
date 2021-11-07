@@ -35,7 +35,7 @@ public class ItemEntity extends Entity {
         this.block = block;
         type = 1;
         velY = 0.30f;
-        itemStack = new ItemStack(Items.HASHED_ITEMS.get(block.name),(byte)1);
+        itemStack = new ItemStack(Ourcraft.GAME_INSTANCE.ITEMS.MAPPED_ELEMENTS.get(block.name),(byte)1);
         boundingBox = new BoundingBox(-0.25f,-0.25f,-0.25f,0.25f,0.25f,0.25f);
         pickupDelay = 10;
     }
@@ -54,7 +54,7 @@ public class ItemEntity extends Entity {
     public ItemEntity(PacketData packetData) {
         super(packetData);
         type = 1;
-        Item item = Items.getItem(packetData.readInt());
+        Item item = Ourcraft.GAME_INSTANCE.getItem(packetData.readInt());
         if(item instanceof BlockItem) {
             this.block = Ourcraft.GAME_INSTANCE.getBlock(item.name);
         }

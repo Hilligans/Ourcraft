@@ -37,6 +37,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.*;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.*;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
 import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
+import dev.Hilligans.ourcraft.Recipe.RecipeHelper.RecipeHelper;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 import dev.Hilligans.ourcraft.Server.MultiPlayerServer;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;

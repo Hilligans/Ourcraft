@@ -11,6 +11,10 @@ public class ItemDescriptor extends Descriptor<Item> {
 
     }
 
+    public ItemDescriptor(boolean matchesExactly) {
+        this.matchesExactly = matchesExactly;
+    }
+
     @Override
     public long compare(Item item, BitPriority bitPriority) {
         long score = 0;

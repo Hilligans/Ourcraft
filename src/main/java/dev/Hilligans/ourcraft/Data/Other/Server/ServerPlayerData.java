@@ -9,6 +9,7 @@ import dev.Hilligans.ourcraft.Entity.Entity;
 import dev.Hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.Hilligans.ourcraft.Item.ItemStack;
 import dev.Hilligans.ourcraft.Item.Items;
+import dev.Hilligans.ourcraft.Ourcraft;
 import dev.Hilligans.ourcraft.ServerMain;
 import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 import dev.Hilligans.ourcraft.Util.Settings;
@@ -30,12 +31,12 @@ public class ServerPlayerData {
         this.id = id;
         playerInventory = playerEntity.inventory;
         openContainer = new InventoryContainer(playerInventory).setPlayerId(playerEntity.id);
-        playerInventory.setItem(0,new ItemStack(Items.HASHED_ITEMS.get("chest"), (byte)2));
-        playerInventory.setItem(1,new ItemStack(Items.HASHED_ITEMS.get("slab"), (byte)10));
-        playerInventory.setItem(2,new ItemStack(Items.HASHED_ITEMS.get("weeping_vine"), (byte)64));
-        playerInventory.setItem(3,new ItemStack(Items.HASHED_ITEMS.get("stair"), (byte)63));
-        playerInventory.setItem(4,new ItemStack(Items.HASHED_ITEMS.get("grass_plant"), (byte)63));
-        playerInventory.setItem(5,new ItemStack(Items.HASHED_ITEMS.get("blue"),(byte)63));
+        playerInventory.setItem(0,new ItemStack(Ourcraft.GAME_INSTANCE.getItem("chest"), (byte)2));
+        playerInventory.setItem(1,new ItemStack(Ourcraft.GAME_INSTANCE.getItem("slab"), (byte)10));
+        playerInventory.setItem(2,new ItemStack(Ourcraft.GAME_INSTANCE.getItem("weeping_vine"), (byte)64));
+        playerInventory.setItem(3,new ItemStack(Ourcraft.GAME_INSTANCE.getItem("stair"), (byte)63));
+        playerInventory.setItem(4,new ItemStack(Ourcraft.GAME_INSTANCE.getItem("grass_plant"), (byte)63));
+        playerInventory.setItem(5,new ItemStack(Ourcraft.GAME_INSTANCE.getItem("blue"),(byte)63));
 
     }
 

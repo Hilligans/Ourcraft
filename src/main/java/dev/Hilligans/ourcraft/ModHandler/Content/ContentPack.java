@@ -68,8 +68,6 @@ public class ContentPack {
             }
         }
         gameInstance.clear();
-        Items.ITEMS.clear();
-        Items.HASHED_ITEMS.clear();
         Sounds.SOUNDS.clear();
         Sounds.MAPPED_SOUND.clear();
         gameInstance.RESOURCE_MANAGER.clearData();
@@ -91,7 +89,7 @@ public class ContentPack {
                     gameInstance.registerBlock(block);
                 }
                 for (Item item : mod.items) {
-                    Items.registerItem(item);
+                    gameInstance.registerItem(item);
                 }
                 for(IModel model : mod.models) {
                     gameInstance.RESOURCE_MANAGER.putModel(model.getPath(),model);

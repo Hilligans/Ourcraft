@@ -13,11 +13,12 @@ import dev.Hilligans.ourcraft.Item.BlockItem;
 import dev.Hilligans.ourcraft.Item.Item;
 import dev.Hilligans.ourcraft.Item.ItemStack;
 import dev.Hilligans.ourcraft.Item.Items;
+import dev.Hilligans.ourcraft.Ourcraft;
 
 public class CreativeContainer extends Container {
 
     public CreativeContainer() {
-        this(ClientMain.getClient().playerData.inventory,new Inventory(Math.max(Items.ITEMS.size(),54)));
+        this(ClientMain.getClient().playerData.inventory,new Inventory(Math.max(Ourcraft.GAME_INSTANCE.ITEMS.ELEMENTS.size(),54)));
     }
 
     public CreativeContainer(IInventory playerInventory, IInventory creativeInventory) {
@@ -62,9 +63,9 @@ public class CreativeContainer extends Container {
     }
 
     public static IInventory createInventory() {
-        Inventory inventory = new Inventory(Math.max(Items.ITEMS.size() ,54));
+        Inventory inventory = new Inventory(Math.max(Ourcraft.GAME_INSTANCE.ITEMS.ELEMENTS.size() ,54));
         int x = 0;
-        for(Item item : Items.ITEMS) {
+        for(Item item : Ourcraft.GAME_INSTANCE.ITEMS.ELEMENTS) {
             if(!(item instanceof BlockItem) || !((BlockItem) item).block.blockProperties.airBlock) {
                 inventory.setItem(x, new ItemStack(item, (byte) 1));
                 x++;

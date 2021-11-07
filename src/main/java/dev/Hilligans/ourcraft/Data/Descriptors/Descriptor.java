@@ -6,7 +6,8 @@ public abstract class Descriptor<T> {
 
     public String name;
     public String modID;
-    public TagCollection tagCollection;
+    public TagCollection tagCollection = new TagCollection();
+    public boolean matchesExactly = true;
 
     public boolean matches(T object) {
         return compare(object) == 0;

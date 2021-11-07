@@ -11,7 +11,10 @@ import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBase;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Button;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.ButtonAction;
+import dev.Hilligans.ourcraft.Item.Item;
+import dev.Hilligans.ourcraft.Item.ItemStack;
 import dev.Hilligans.ourcraft.Network.ServerNetworkInit;
+import dev.Hilligans.ourcraft.Ourcraft;
 import dev.Hilligans.ourcraft.Server.MultiPlayerServer;
 import dev.Hilligans.ourcraft.ServerMain;
 import dev.Hilligans.ourcraft.Util.Settings;
@@ -95,7 +98,5 @@ public class JoinScreen extends ScreenBase {
         } else {
             Textures.X_MARK.drawTexture(matrixStack,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
         }
-
-
     }
 }
