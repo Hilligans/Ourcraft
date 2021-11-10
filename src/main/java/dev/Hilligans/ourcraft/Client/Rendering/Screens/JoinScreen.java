@@ -4,6 +4,7 @@ import dev.Hilligans.ourcraft.Block.Blocks;
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.Key.KeyPress;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Texture;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.ServerSelectorWidget;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
@@ -99,4 +100,5 @@ public class JoinScreen extends ScreenBase {
             Textures.X_MARK.drawTexture(matrixStack,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
         }
     }
+
 }

@@ -6,6 +6,8 @@ import dev.Hilligans.ourcraft.Container.Container;
 import dev.Hilligans.ourcraft.Container.Slot;
 import dev.Hilligans.ourcraft.Item.ItemStack;
 import dev.Hilligans.ourcraft.Network.Packet.Client.CModifyStack;
+import dev.Hilligans.ourcraft.Ourcraft;
+import dev.Hilligans.ourcraft.Recipe.RecipeHelper.RecipeHelper;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -22,6 +24,8 @@ public abstract class ContainerScreen<T extends Container> extends ScreenBase {
     public ContainerScreen(Client client) {
         super(client);
     }
+
+    public RecipeHelper recipeHelper = new RecipeHelper(Ourcraft.GAME_INSTANCE);
 
     @Override
     public void render(MatrixStack matrixStack) {
@@ -61,5 +65,13 @@ public abstract class ContainerScreen<T extends Container> extends ScreenBase {
                 }
             }
         }
+    }
+
+    public int getWidth() {
+        return 0;
+    }
+
+    public int getHeight() {
+        return 0;
     }
 }

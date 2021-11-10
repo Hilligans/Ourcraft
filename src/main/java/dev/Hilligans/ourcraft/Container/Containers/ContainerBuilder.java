@@ -47,6 +47,16 @@ public class ContainerBuilder implements ContainerFetcher {
                             texture1.drawCenteredTexture(matrixStack, 0, 0, width, height, Settings.guiSize);
                         }
                     }
+
+                    @Override
+                    public int getWidth() {
+                        return width;
+                    }
+
+                    @Override
+                    public int getHeight() {
+                        return height;
+                    }
                 };
             }
         };

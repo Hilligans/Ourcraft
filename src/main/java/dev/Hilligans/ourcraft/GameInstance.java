@@ -17,6 +17,7 @@ import dev.Hilligans.ourcraft.ModHandler.EventBus;
 import dev.Hilligans.ourcraft.ModHandler.Events.Common.RegistryClearEvent;
 import dev.Hilligans.ourcraft.ModHandler.ModLoader;
 import dev.Hilligans.ourcraft.Network.PacketBase;
+import dev.Hilligans.ourcraft.Recipe.RecipeHelper.RecipeView;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
 import dev.Hilligans.ourcraft.Tag.NBTTag;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
@@ -50,7 +51,6 @@ public class GameInstance {
         registerDefaultContent();
         CONTENT_PACK.mods.put("ourcraft",OURCRAFT);
         MOD_LOADER.loadDefaultMods();
-
     }
 
     public String path = System.getProperty("user.dir");
@@ -61,7 +61,7 @@ public class GameInstance {
     public final Registry<Biome> BIOMES = new Registry<>(this);
     public final Registry<Tag> TAGS = new Registry<>(this);
     public final Registry<IRecipe<?>> RECIPES = new Registry<>(this);
-
+    public final Registry<RecipeView<?>> RECIPE_VIEWS = new Registry<>(this);
 
     public void clear() {
         BLOCKS.clear();

@@ -20,6 +20,7 @@ public class Textures {
     public static final Texture CURSOR = new Texture("cursor.png");
     public static final Texture EMPTY_CHUNK = new Texture("GUI/empty_chunk.png");
 
+    public static final Texture SEARCH_BAR = new ResizingTexture("GUI/search_bar.png").startSegment(0,0,1,16).middleSegment(1,0,14,16).endSegment(15,0,1,16);
 
     public static final Texture FOLDER = new Texture("GUI/folder.png");
     public static final Texture LIST_ICON = new Texture("GUI/list_icon.png");
@@ -33,7 +34,7 @@ public class Textures {
     public static final Texture DOUBLE_ICON = new Texture("GUI/double_icon.png");
 
     public static final Texture BACKGROUND = new Texture("GUI/background.png");
-    public static final Texture BUTTON = new Texture("GUI/button.png");
+    public static final Texture BUTTON = new ResizingTexture("GUI/button.png").startSegment(0,0,1,16).middleSegment(1,0,14,16).endSegment(15,0,1,16);
     public static final Texture SLIDER = new Texture("GUI/slider.png");
     public static final Texture SLIDER_BACKGROUND = new Texture("GUI/slider_background.png");
     public static final Texture BUTTON_DARK = new Texture("GUI/button_dark.png");

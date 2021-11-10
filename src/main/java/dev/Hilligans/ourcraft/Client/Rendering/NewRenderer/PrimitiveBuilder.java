@@ -76,6 +76,13 @@ public class PrimitiveBuilder {
         size+= 4;
     }
 
+    public void buildQuad(float minX, float minY, float z, float minTexX, float minTexY, float maxX, float maxY, float maxTexX, float maxTexY) {
+        addQuad(minX,minY,z,minTexX,minTexY,
+                minX,maxY,z,minTexX,maxTexY,
+                maxX,minY,z,maxTexX,minTexY,
+                maxX,maxY,z,maxTexX,maxTexY);
+    }
+
     public void addQuadIndices() {
         int count = getVerticesCount();
         this.indices.add(count,count + 1, count + 2,count + 3, count + 2, count + 1);
