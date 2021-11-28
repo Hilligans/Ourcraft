@@ -7,6 +7,7 @@ import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Data.Primitives.Triplet;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.stb.STBImage;
 
 import javax.imageio.ImageIO;
 import java.awt.Color;
@@ -50,6 +51,7 @@ public class ScreenShot {
                 bufferedImage.setRGB(x,y,new Color(image.buffer.get() & 255,image.buffer.get() & 255,image.buffer.get() & 255).getRGB());
             }
         }
+
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(0,0,1920,1080);
         client.windowX = 1920;

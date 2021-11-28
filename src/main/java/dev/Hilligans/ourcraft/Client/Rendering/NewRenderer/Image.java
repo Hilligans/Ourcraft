@@ -56,6 +56,33 @@ public class Image {
         }
     }
 
+    public Image(byte[] rawImageData) {
+        try {
+            ByteBuffer rawData = ByteBuffer.allocateDirect(rawImageData.length);
+            rawData.put(rawImageData).flip();
+
+            int[] width = new int[1];
+            int[] height = new int[1];
+            int[] components = new int[1];
+            ByteBuffer temp = STBImage.stbi_load_from_memory(rawData, width, height, components, 4);
+            this.buffer = ByteBuffer.allocateDirect(temp.capacity());
+            int length = temp.capacity();
+            for(int x = 0; x < length / 4; x++) {
+                buffer.put(x * 4 + 3,temp.get(length - x * 4 - 1));
+                buffer.put(x * 4 + 2,temp.get(length - x * 4 - 2));
+                buffer.put(x * 4 + 1,temp.get(length - x * 4 - 3));
+                buffer.put(x * 4 + 0,temp.get(length - x * 4 - 4));
+            }
+
+
+            this.width = width[0];
+            this.height = height[0];
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
+            System.err.println("Failed to create image");
+        }
+    }
+
     public static synchronized Image createImage(String path, String modID) {
         return new Image(path,modID);
     }

@@ -39,6 +39,12 @@ public class Widget {
         this.height = height;
     }
 
+    public Widget(float percentX, float percentY, int width, int height) {
+        setPercentages(percentX,percentY);
+        this.width = width;
+        this.height = height;
+    }
+
     public Widget addOffset(IntegerWrapper integerWrapper) {
         this.yOffset = integerWrapper;
         return this;

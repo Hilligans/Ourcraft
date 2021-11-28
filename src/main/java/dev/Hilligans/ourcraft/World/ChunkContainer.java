@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.World;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import org.lwjgl.opengl.GL30;
 
 import java.util.function.Consumer;
 
@@ -23,16 +24,16 @@ public class ChunkContainer implements IChunkContainer {
 
     @Override
     public Chunk getChunk(int x, int z) {
-        Chunk chunk = getCache(x,z);
-        if(chunk != null) {
+        Chunk chunk = getCache(x, z);
+        if (chunk != null) {
             return chunk;
         }
-        Int2ObjectOpenHashMap<Chunk> zMap = chunks.getOrDefault(x,null);
-        if(zMap != null) {
-            try {
+        try {
+            Int2ObjectOpenHashMap<Chunk> zMap = chunks.getOrDefault(x, null);
+            if (zMap != null) {
                 chunk = zMap.getOrDefault(z, null);
-            } catch (Exception e) {}
-        }
+            }
+        } catch(Exception e){}
         return chunk;
     }
 

@@ -125,45 +125,6 @@ public class ClientWorld extends World {
         }
     }
 
-
-    public void render(MatrixStack matrixStack) {
-        vertices = 0;
-        count = 0;
-        if(!Settings.renderTransparency) {
-            glDisable(GL_BLEND);
-        }
-        glUseProgram(ClientMain.getClient().shaderManager.colorShader);
-
-        Vector3d pos = Camera.renderPos;
-        for(int x = 0; x < Settings.renderDistance; x++) {
-            for(int z = 0; z < Settings.renderDistance; z++) {
-                drawChunk(matrixStack,pos,x,z);
-                if(x != 0) {
-                    drawChunk(matrixStack, pos, -x, z);
-                    if(z != 0) {
-                        drawChunk(matrixStack,pos,-x,-z);
-                    }
-                }
-                if(z != 0) {
-                    drawChunk(matrixStack,pos,x,-z);
-                }
-            }
-        }
-        glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
-        // TODO: 2021-02-06 server removes entities at a bad time
-        try {
-            for (Entity entity : entities.values()) {
-                if (entity.id != ClientMain.getClient().playerId || Camera.thirdPerson) {
-                    matrixStack.push();
-                    entity.render(matrixStack);
-                    matrixStack.pop();
-                }
-            }
-        } catch (NullPointerException | ArrayIndexOutOfBoundsException ignored) {}
-
-        glEnable(GL_BLEND);
-    }
-
     public int vertices = 0;
     public int count = 0;
 
@@ -178,31 +139,6 @@ public class ClientWorld extends World {
            }
            chunk.id = -1;
         });
-    }
-
-    private void drawChunk(MatrixStack matrixStack, Vector3d pos, int x, int z) {
-        Vector3i playerChunkPos = new Vector3i((int)pos.x >> 4, 0, (int)pos.z >> 4);
-        Chunk chunk = getChunk(x * 16 + (int)pos.x >> 4,z * 16 + (int)pos.z >> 4);
-        if(chunk == null) {
-            if(!ClientMain.getClient().joinServer) {
-                generateChunk(x * 16 + (int) pos.x >> 4, z * 16 + (int) pos.z >> 4);
-            } else {
-                if (ClientMain.getClient().valid && Settings.requestChunks) {
-                    requestChunk(x * 16 + (int) pos.x >> 4, z * 16 + (int) pos.z >> 4);
-                }
-            }
-        } else {
-            vertices += chunk.getTotalVertices();
-            count++;
-            if(Camera.shouldRenderChunk(x * 16 + (int) pos.x >> 4, z * 16 + (int) pos.z >> 4,matrixStack)) {
-                if(matrixStack.frustumIntersection.testAab(new Vector3f((chunk.x - playerChunkPos.x) * 16, 0, (chunk.z - playerChunkPos.z) * 16),new Vector3f((chunk.x + 1 - playerChunkPos.x) * 16, 256f, (chunk.z + 1 - playerChunkPos.z) * 16))) {
-                    matrixStack.push();
-                    matrixStack.translate((chunk.x - playerChunkPos.x) * 16, 0, (chunk.z - playerChunkPos.z) * 16);
-                    chunk.render(matrixStack);
-                    matrixStack.pop();
-                }
-            }
-        }
     }
 
     public void requestChunk(int x, int z) {

@@ -5,6 +5,10 @@ import dev.Hilligans.ourcraft.Client.Key.KeyHandler;
 import dev.Hilligans.ourcraft.Client.Key.KeyPress;
 import dev.Hilligans.ourcraft.Client.Lang.Languages;
 import dev.Hilligans.ourcraft.Client.Mouse.MouseHandler;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLGraphicsContainer;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.GLRenderer;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.TextAtlas;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.ContainerScreens.CreativeInventoryScreen;
@@ -36,30 +40,23 @@ import dev.Hilligans.ourcraft.Client.Audio.Sounds;
 import dev.Hilligans.ourcraft.Client.Rendering.*;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.*;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
+import dev.Hilligans.ourcraft.Resource.ResourceProvider;
 import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
-import dev.Hilligans.ourcraft.Recipe.RecipeHelper.RecipeHelper;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 import dev.Hilligans.ourcraft.Server.MultiPlayerServer;
-import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.World.ClientWorld;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.openal.AL11;
-import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL30;
 
 import java.nio.DoubleBuffer;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.glUseProgram;
-import static org.lwjgl.opengl.GL32.GL_PROGRAM_POINT_SIZE;
-import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Client {
 
@@ -70,7 +67,7 @@ public class Client {
     public int playerId;
     public ConcurrentLinkedQueue<Integer> unloadQueue = new ConcurrentLinkedQueue<>();
 
-    public int  windowX = 1600;
+    public int windowX = 1600;
     public int windowY = 800;
     public boolean joinServer = true;
     public boolean valid = false;
@@ -101,6 +98,9 @@ public class Client {
     public ClientNetwork authNetwork;
     public GameInstance gameInstance;
 
+    public IGraphicsEngine<?> graphicsEngine = new OpenGLEngine(this);
+    public ResourceProvider resourceProvider = graphicsEngine.createResourceProvider();
+
     public Client(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
     }
@@ -125,7 +125,7 @@ public class Client {
         }
         authNetwork.sendPacket(new CGetToken(playerData.userName, playerData.login_token));
 
-        createGL();
+        graphicsEngine.setup();
 
         soundEngine.init();
         soundEngine.setAttenuationModel(AL11.AL_LINEAR_DISTANCE_CLAMPED);
@@ -161,58 +161,6 @@ public class Client {
         for(SoundBuffer soundBuffer : Sounds.SOUNDS) {
             soundBuffer.cleanup();
         }
-    }
-
-
-    public void createGL() {
-        System.setProperty("java.awt.headless", "true");
-
-        glfwInit();
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        window = glfwCreateWindow(windowX,windowY,"Ourcraft",NULL,NULL);
-        if(window == NULL) {
-            System.out.println("Failed to create window");
-            glfwTerminate();
-            return;
-        }
-        glfwMakeContextCurrent(window);
-        GL.createCapabilities();
-
-        glStarted = true;
-        gameInstance.EVENT_BUS.postEvent(new GLInitEvent(window));
-
-        shaderManager = new ShaderManager();
-
-        Blocks.generateTextures();
-        PlayerEntity.imageId = WorldTextureManager.loadAndRegisterTexture("player.png");
-        StringRenderer.instance.buildChars();
-
-        for(Texture texture : Textures.TEXTURES) {
-            texture.register();
-        }
-        screen = new JoinScreen(this);
-        texture = -1;
-        Renderer.create(texture);
-        clientWorld = new ClientWorld(client);
-
-       // glEnable(GL_DEPTH);
-        glfwWindowHint(GLFW_SAMPLES, 4);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_FRONT);
-        glFrontFace(GL_CW);
-        glEnable(GL_PROGRAM_POINT_SIZE);
-        // glEnable(GL_MULTISAMPLE);
-        //glSampleCoverage();
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-
-        PlayerMovementThread playerMovementThread = new PlayerMovementThread(window);
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1, new NamedThreadFactory("player_movement"));
-        executorService.scheduleAtFixedRate(playerMovementThread, 0, 5, TimeUnit.MILLISECONDS);
     }
 
     public void render() {
@@ -257,7 +205,7 @@ public class Client {
             gameInstance.EVENT_BUS.postEvent(new RenderWorldEvent(matrixStack,screenStack,this));
             rendering = true;
             clientWorld.tick();
-            clientWorld.render(matrixStack);
+            graphicsEngine.renderWorld(matrixStack,clientWorld);
 
             BlockPos pos = clientWorld.traceBlockToBreak(Camera.pos.x, Camera.pos.y + Camera.playerBoundingBox.eyeHeight, Camera.pos.z, Camera.pitch, Camera.yaw);
             BlockState blockState = null;

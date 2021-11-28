@@ -12,7 +12,7 @@ import dev.Hilligans.ourcraft.Tag.NBTTag;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-public class FolderWidget extends Widget {
+public class  FolderWidget extends Widget {
 
     public static final int size = 29;
     public static final int spacing = 32;

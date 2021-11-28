@@ -217,7 +217,7 @@ public class ModContent {
                 registerBlock(block);
             }
         } catch (Exception ignored) {
-           // ignored.printStackTrace();
+            ignored.printStackTrace();
         }
     }
 

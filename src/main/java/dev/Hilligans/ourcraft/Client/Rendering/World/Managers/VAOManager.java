@@ -41,6 +41,8 @@ public class  VAOManager {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
 
+
+
         glVertexAttribPointer(0,3,GL_FLOAT,false,5 * 4,0);
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(1, 2, GL_FLOAT, false, 5 * 4, 3 * 4);

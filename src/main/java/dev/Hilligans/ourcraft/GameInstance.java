@@ -5,6 +5,7 @@ import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Block.Blocks;
 import dev.Hilligans.ourcraft.Client.Audio.Sounds;
 import dev.Hilligans.ourcraft.Client.Rendering.ClientUtil;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Widget;
 import dev.Hilligans.ourcraft.Container.Container;
 import dev.Hilligans.ourcraft.Data.Descriptors.Tag;
@@ -23,6 +24,7 @@ import dev.Hilligans.ourcraft.Tag.NBTTag;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import dev.Hilligans.ourcraft.Recipe.IRecipe;
 import dev.Hilligans.ourcraft.Util.Registry.Registry;
+import org.lwjgl.stb.STBImage;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -45,6 +47,13 @@ public class GameInstance {
 
 
     public GameInstance() {
+        REGISTRIES.put("ouracrft:blocks", BLOCKS);
+        REGISTRIES.put("ourcraft:items", ITEMS);
+        REGISTRIES.put("ourcraft:biomes", BIOMES);
+        REGISTRIES.put("ourcraft:tags", TAGS);
+        REGISTRIES.put("ourcraft:recipes", RECIPES);
+        REGISTRIES.put("ourcraft:recipe_views", RECIPE_VIEWS);
+
     }
 
     public void loadContent() {
@@ -55,6 +64,7 @@ public class GameInstance {
 
     public String path = System.getProperty("user.dir");
 
+    public final Registry<Registry<?>> REGISTRIES = new Registry<>(this);
 
     public final Registry<Block> BLOCKS = new Registry<>(this);
     public final Registry<Item> ITEMS = new Registry<>(this);
@@ -62,6 +72,7 @@ public class GameInstance {
     public final Registry<Tag> TAGS = new Registry<>(this);
     public final Registry<IRecipe<?>> RECIPES = new Registry<>(this);
     public final Registry<RecipeView<?>> RECIPE_VIEWS = new Registry<>(this);
+    public final Registry<IGraphicsEngine> GRAPHICS_ENGINES = new Registry<>(this);
 
     public void clear() {
         BLOCKS.clear();

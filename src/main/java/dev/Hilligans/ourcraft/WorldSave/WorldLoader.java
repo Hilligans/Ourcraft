@@ -7,9 +7,6 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
-import static org.lwjgl.stb.STBImage.stbi_load;
-import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
-
 public class WorldLoader {
 
     public static int maxSize = 10000000;

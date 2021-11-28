@@ -75,7 +75,7 @@ public class Biomes {
         }
 
         Biome biome = PLAINS;
-        double val = 10000;
+        double val = 1000000;
         for(int x = 0; x < biomes.size(); x++) {
             if(val > doubles.get(x)) {
                 biome = biomes.get(x);
