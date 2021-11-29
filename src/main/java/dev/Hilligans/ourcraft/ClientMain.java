@@ -2,6 +2,8 @@ package dev.Hilligans.ourcraft;
 
 import dev.Hilligans.ourcraft.Client.Client;
 
+import java.util.Arrays;
+
 public class ClientMain {
 
     public static Client client;
@@ -13,7 +15,7 @@ public class ClientMain {
 
 
     public static void main(String[] args) {
-
+        gameInstance.handleArgs(args);
         client = new Client(gameInstance);
         client.startClient();
     }

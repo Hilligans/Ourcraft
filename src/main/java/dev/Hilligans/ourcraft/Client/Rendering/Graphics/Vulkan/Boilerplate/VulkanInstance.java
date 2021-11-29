@@ -93,16 +93,6 @@ public class VulkanInstance {
     }
 
     public void run() {
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-               // Window window = logicalDevice.createNewWindow();
-               // window.selectFamily();
-               // window.graphicsFamily.getQueue(0);
-               // window.addData().startDrawing();
-            }
-        }.start();
         vulkanWindow.startDrawing();
         cleanup();
     }

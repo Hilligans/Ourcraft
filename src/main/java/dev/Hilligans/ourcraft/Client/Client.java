@@ -134,23 +134,8 @@ public class Client {
 
         gameInstance.EVENT_BUS.postEvent(new ClientStartRenderingEvent());
 
-        while(!glfwWindowShouldClose(window)) {
-            mouseLocked = screen == null;
+        graphicsEngine.createRenderLoop(gameInstance,graphicsEngine.createWindow()).run();
 
-            gameInstance.EVENT_BUS.postEvent(new RenderPreEvent());
-            render();
-            gameInstance.EVENT_BUS.postEvent(new RenderPostEvent(this));
-            glfwSwapBuffers(window);
-            rendering = false;
-            soundEngine.tick();
-            if(screenShot) {
-                screenShot = false;
-                ScreenShot.takeScreenShot();
-            }
-
-            glfwPollEvents();
-            Camera.updateMouse();
-        }
         cleanUp();
         System.exit(1);
     }
@@ -161,42 +146,6 @@ public class Client {
         for(SoundBuffer soundBuffer : Sounds.SOUNDS) {
             soundBuffer.cleanup();
         }
-    }
-
-    public void render() {
-        glGetError();
-        GLRenderer.resetFrame();
-        long currentTime = System.currentTimeMillis();
-        if(currentTime - timeSinceLastDraw < drawTime) {
-            return;
-        }
-        countFPS();
-        timeSinceLastDraw = currentTime;
-
-        unloadQueue.forEach(VAOManager::destroyBuffer);
-        unloadQueue.clear();
-
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        if(refreshTexture) {
-            Blocks.generateTextures();
-            texture = TextAtlas.instance.upload();
-            refreshTexture = false;
-        }
-
-        glUseProgram(shaderManager.shaderProgram);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        MatrixStack matrixStack = Camera.getWorldStack();
-        matrixStack.applyColor();
-        matrixStack.applyTransformation();
-
-
-        MatrixStack screenStack = Camera.getScreenStack();
-        screenStack.applyColor();
-        screenStack.applyTransformation();
-
-        draw(matrixStack,screenStack);
     }
 
     public void draw(MatrixStack matrixStack, MatrixStack screenStack) {
@@ -493,15 +442,15 @@ public class Client {
 
     }
 
-    static long timeSinceLastDraw = 0;
-    static float drawTime = 1000f / Settings.maxFps;
+    public static long timeSinceLastDraw = 0;
+    public static float drawTime = 1000f / Settings.maxFps;
 
-    double lastTime;
-    int nbFrames = 0;
+    public double lastTime;
+    public int nbFrames = 0;
 
-    int fps;
+    public int fps;
 
-     void countFPS() {
+    public void countFPS() {
 
         double currentTime = glfwGetTime();
         nbFrames++;

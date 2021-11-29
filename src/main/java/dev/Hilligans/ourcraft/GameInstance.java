@@ -15,6 +15,7 @@ import dev.Hilligans.ourcraft.Item.Items;
 import dev.Hilligans.ourcraft.ModHandler.Content.ContentPack;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.ModHandler.EventBus;
+import dev.Hilligans.ourcraft.ModHandler.Events.Common.ProgramArgumentEvent;
 import dev.Hilligans.ourcraft.ModHandler.Events.Common.RegistryClearEvent;
 import dev.Hilligans.ourcraft.ModHandler.ModLoader;
 import dev.Hilligans.ourcraft.Network.PacketBase;
@@ -153,6 +154,12 @@ public class GameInstance {
         Blocks.register();
         Sounds.SOUNDS.size();
         Items.register();
+    }
+
+    public void handleArgs(String[] args) {
+        for(String string : args) {
+            EVENT_BUS.postEvent(new ProgramArgumentEvent(string));
+        }
     }
 
 }

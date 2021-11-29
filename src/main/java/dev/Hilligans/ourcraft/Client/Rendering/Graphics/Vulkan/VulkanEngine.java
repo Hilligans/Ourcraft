@@ -4,7 +4,8 @@ import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanInstance;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanProperties;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IWindow;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
+import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.Resource.LWJGLResourceProvider;
 import dev.Hilligans.ourcraft.Resource.ResourceProvider;
 import dev.Hilligans.ourcraft.World.Chunk;
@@ -15,7 +16,7 @@ public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer> {
     VulkanInstance vulkanInstance;
 
     @Override
-    public IWindow createWindow() {
+    public RenderWindow createWindow() {
         return null;
     }
 
@@ -31,6 +32,11 @@ public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer> {
 
     @Override
     public void putChunkGraphicsContainer(Chunk chunk, VulkanGraphicsContainer container) {
+
+    }
+
+    @Override
+    public void render(RenderWindow window) {
 
     }
 
@@ -55,5 +61,15 @@ public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer> {
         vulkanProperties.warningValidation().errorValidation().addValidationLayers("VK_LAYER_KHRONOS_validation", "VK_LAYER_KHRONOS_validation").enableValidationLayers();
         vulkanInstance = new VulkanInstance(vulkanProperties);
         vulkanInstance.run();
+    }
+
+    @Override
+    public void close() {
+
+    }
+
+    @Override
+    public GameInstance getGameInstance() {
+        return null;
     }
 }

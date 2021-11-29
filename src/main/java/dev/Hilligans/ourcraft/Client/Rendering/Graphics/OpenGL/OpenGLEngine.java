@@ -6,17 +6,21 @@ import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.PlayerMovementThread;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IWindow;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
+import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.GLRenderer;
+import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.TextAtlas;
 import dev.Hilligans.ourcraft.Client.Rendering.Renderer;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.JoinScreen;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.ShaderManager;
+import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.VAOManager;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.WorldTextureManager;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Entity.Entity;
 import dev.Hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
+import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.GLInitEvent;
 import dev.Hilligans.ourcraft.Resource.LWJGLResourceProvider;
 import dev.Hilligans.ourcraft.Resource.ResourceProvider;
@@ -56,8 +60,8 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer> {
     }
 
     @Override
-    public IWindow createWindow() {
-        return null;
+    public RenderWindow createWindow() {
+        return new OpenGLWindow(window,client);
     }
 
     @Override
@@ -73,6 +77,44 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer> {
     @Override
     public void putChunkGraphicsContainer(Chunk chunk, OpenGLGraphicsContainer container) {
         chunks.put(chunk.x, chunk.z, container);
+    }
+
+    @Override
+    public void render(RenderWindow window) {
+        client.mouseLocked = client.screen == null;
+        glGetError();
+        GLRenderer.resetFrame();
+        long currentTime = System.currentTimeMillis();
+        if(currentTime - Client.timeSinceLastDraw < Client.drawTime) {
+            return;
+        }
+        client.countFPS();
+        Client.timeSinceLastDraw = currentTime;
+
+        client.unloadQueue.forEach(VAOManager::destroyBuffer);
+        client.unloadQueue.clear();
+
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        if(client.refreshTexture) {
+            Blocks.generateTextures();
+            texture = TextAtlas.instance.upload();
+            client.refreshTexture = false;
+        }
+
+        glUseProgram(client.shaderManager.shaderProgram);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        MatrixStack matrixStack = Camera.getWorldStack();
+        matrixStack.applyColor();
+        matrixStack.applyTransformation();
+
+
+        MatrixStack screenStack = Camera.getScreenStack();
+        screenStack.applyColor();
+        screenStack.applyTransformation();
+
+        client.draw(matrixStack,screenStack);
     }
 
     @Override
@@ -134,6 +176,16 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer> {
         PlayerMovementThread playerMovementThread = new PlayerMovementThread(window);
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1, new NamedThreadFactory("player_movement"));
         executorService.scheduleAtFixedRate(playerMovementThread, 0, 5, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public void close() {
+
+    }
+
+    @Override
+    public GameInstance getGameInstance() {
+        return null;
     }
 
     @Override
