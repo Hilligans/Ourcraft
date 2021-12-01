@@ -1,5 +1,6 @@
 package dev.Hilligans.ourcraft.Util;
 
+import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Data.Other.ColoredString;
 import dev.Hilligans.ourcraft.Data.Other.EightBytePosition;
 import dev.Hilligans.ourcraft.Item.ItemStack;
@@ -137,6 +138,16 @@ public class ByteArray {
             }
         }
         return bufferedImage;
+    }
+
+    public Image readImage() {
+        int width = readVarInt();
+        int height = readVarInt();
+        Image image = new Image(width,height);
+        for(int x = 0; x < image.getSize(); x++) {
+            image.buffer.put(x,readByte());
+        }
+        return image;
     }
 
     public String[] readStrings() {
@@ -412,6 +423,14 @@ public class ByteArray {
             for(int y = 0; y < bufferedImage.getHeight(); y++) {
                 writeInt(bufferedImage.getRGB(x,y));
             }
+        }
+    }
+
+    public void writeImage(Image image) {
+        writeVarInt(image.height);
+        writeVarInt(image.width);
+        for (int x = 0; x < image.getSize(); x++) {
+            writeByte(image.buffer.get(x));
         }
     }
 

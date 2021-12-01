@@ -11,6 +11,8 @@ import dev.Hilligans.ourcraft.Resource.ResourceProvider;
 import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.World.ClientWorld;
 
+import java.awt.image.BufferedImage;
+
 public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer> {
 
     VulkanInstance vulkanInstance;

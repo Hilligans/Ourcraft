@@ -8,6 +8,10 @@ import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Widget;
 import dev.Hilligans.ourcraft.Network.Packet.Client.CCloseScreen;
 
+import javax.imageio.ImageIO;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
@@ -44,6 +48,7 @@ public abstract class ScreenBase implements Screen {
     public void registerKeyPress(KeyPress keyPress, int id) {
         keyPresses.add(keyPress);
         KeyHandler.register(keyPress,id);
+
     }
 
     @Override

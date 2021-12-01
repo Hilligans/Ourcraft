@@ -157,8 +157,6 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer> {
         Renderer.create(texture);
         client.clientWorld = new ClientWorld(client);
 
-        // glEnable(GL_DEPTH);
-
         client.texture = texture;
 
         glfwWindowHint(GLFW_SAMPLES, 4);
@@ -169,8 +167,6 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer> {
         glCullFace(GL_FRONT);
         glFrontFace(GL_CW);
         glEnable(GL_PROGRAM_POINT_SIZE);
-        // glEnable(GL_MULTISAMPLE);
-        //glSampleCoverage();
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
         PlayerMovementThread playerMovementThread = new PlayerMovementThread(window);

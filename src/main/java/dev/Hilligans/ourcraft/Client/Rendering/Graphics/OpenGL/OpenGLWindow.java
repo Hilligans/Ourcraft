@@ -49,7 +49,9 @@ public class OpenGLWindow extends RenderWindow {
     }
 
     @Override
-    public IInputProvider createKeyProvider() {
+    public IInputProvider getInputProvider() {
         return null;
     }
+
+
 }

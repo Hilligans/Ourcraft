@@ -236,7 +236,7 @@ public class ModContent {
         byteArray.writeInt(textures.size());
         for(Texture texture : textures) {
             byteArray.writeString(texture.path);
-            byteArray.writeTexture(texture.texture);
+            byteArray.writeImage(texture.texture);
         }
         byteArray.writeInt(blockTextures.size());
         for(String string : blockTextures.keySet()) {
@@ -279,7 +279,7 @@ public class ModContent {
         }
         size = byteArray.readInt();
         for(int x = 0; x < size; x++) {
-            textures.add(new Texture(byteArray.readString(), byteArray.readTexture()));
+            textures.add(new Texture(byteArray.readString(), byteArray.readImage()));
         }
         size = byteArray.readInt();
         for(int x = 0; x < size; x++) {

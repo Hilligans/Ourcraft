@@ -14,6 +14,6 @@ public abstract class RenderWindow {
 
     public abstract Client getClient();
 
-    public abstract IInputProvider createKeyProvider();
+    public abstract IInputProvider getInputProvider ();
 
 }

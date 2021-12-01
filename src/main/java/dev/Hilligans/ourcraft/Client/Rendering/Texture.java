@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.Client.Rendering;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.VAOManager;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.WorldTextureManager;
 import dev.Hilligans.ourcraft.ClientMain;
@@ -23,7 +24,7 @@ public class Texture {
 
     public int textureId;
 
-    public BufferedImage texture;
+    public Image texture;
 
     public Texture(String path) {
         this(path,"");
@@ -35,13 +36,7 @@ public class Texture {
         Textures.TEXTURES.add(this);
     }
 
-    public Texture(BufferedImage texture) {
-        width = texture.getWidth();
-        height = texture.getHeight();
-        this.texture = texture;
-    }
-
-    public Texture(String path, BufferedImage texture) {
+    public Texture(String path, Image texture) {
         this.path = path;
         width = texture.getWidth();
         height = texture.getHeight();
@@ -49,10 +44,11 @@ public class Texture {
     }
 
     public void register() {
-        BufferedImage bufferedImage = WorldTextureManager.loadImage(path);
-        width = bufferedImage.getWidth();
-        height = bufferedImage.getHeight();
-        textureId = WorldTextureManager.registerTexture(bufferedImage);
+        Image image = WorldTextureManager.loadImage1(path);
+
+        width = image.getWidth();
+        height = image.getHeight();
+        textureId = WorldTextureManager.registerTexture(image);
     }
 
     public void register1() {

@@ -20,11 +20,9 @@ import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 public class TextureAtlas {
 
     int width = 0;
-    int height = 1;
 
     public static final int MAX_TEXTURE_SIZE = 256;
     public static final int MIN_TEXTURE_SIZE = 16;
-    public static final int RATIO = MAX_TEXTURE_SIZE /  MIN_TEXTURE_SIZE;
 
     public int maxTextureSize;
     public int minTextureSize;
@@ -39,65 +37,18 @@ public class TextureAtlas {
 
     public int glTextureId = -1;
 
-    public int textureId = 0;
-
     public TextureAtlas(int maxTextureSize, int minTextureSize) {
         this.maxTextureSize = maxTextureSize;
         this.minTextureSize = minTextureSize;
         this.ratio = MAX_TEXTURE_SIZE / MIN_TEXTURE_SIZE;
     }
 
-    public TextureAtlas() {
-        this(MAX_TEXTURE_SIZE,MIN_TEXTURE_SIZE);
-    }
-
     public TextureAtlas(int maxTextureSize) {
         this(maxTextureSize,MIN_TEXTURE_SIZE);
     }
 
-    public TextureSource registerTexture(String location) {
-        return registerTexture(new TextureLocation(location,""));
-    }
-
-    public TextureSource registerTexture(String location, String source) {
-        return registerTexture(new TextureLocation(location,source));
-    }
-
-    public TextureSource registerTexture(TextureLocation textureLocation) {
-        BufferedImage img = textureLocation.getImage();
-        int id = addImage(img);
-        TextureSource textureSource = new TextureSource(this,getNextSourceId());
-        textures.add(new Triplet<>(id,textureSource,textureLocation));
-        return textureSource;
-    }
-
     public void bindTexture() {
         GL30.glBindTexture(GL_TEXTURE_2D,glTextureId);
-    }
-
-    public int getNextSourceId() {
-        int id = textureId;
-        textureId++;
-        return id;
-    }
-
-    public synchronized int addImage(BufferedImage img) {
-        int id;
-        for(TextureAtlas.ImageHolder imageHolder : imageHolders) {
-            if(imageHolder.imageSize == img.getWidth() && imageHolder.canAddImage()) {
-                EXECUTOR.submit(() -> imageHolder.addTexture(img));
-                id = imageHolder.getNextID();
-                imageMap.put(id,imageHolder);
-                return id;
-            }
-        }
-        TextureAtlas.ImageHolder imageHolder = new TextureAtlas.ImageHolder(img.getWidth(),imageHolders.size(), this);
-        EXECUTOR.submit(() -> imageHolder.addTexture(img));
-        imageHolders.add(imageHolder);
-        id = imageHolder.getNextID();
-        imageMap.put(id,imageHolder);
-        width++;
-        return id;
     }
 
     public synchronized int addImage(BufferedImage img, int width) {
@@ -140,18 +91,6 @@ public class TextureAtlas {
             return texture;
         }
         return -1;
-    }
-
-    public void reload() {
-        width = 0;
-        height = 1;
-        imageHolders.clear();
-        imageMap.clear();
-        for(Triplet<Integer,TextureSource,TextureLocation> texture : textures) {
-            BufferedImage img = texture.getTypeC().reloadGetImage();
-            texture.typeA = addImage(img);
-        }
-        buildAtlas();
     }
 
     public float minX(TextureSource textureSource) {
@@ -294,14 +233,5 @@ public class TextureAtlas {
             int y = (int)(id / count);
             return ((float)1 / count) * (y + 1);
         }
-
-        public float imageSize() {
-            return (float) (imageSize / textureAtlas.maxTextureSize);
-        }
-
     }
-
-
-
-
 }

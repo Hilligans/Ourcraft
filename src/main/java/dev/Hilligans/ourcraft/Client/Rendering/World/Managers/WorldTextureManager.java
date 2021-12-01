@@ -1,7 +1,10 @@
 package dev.Hilligans.ourcraft.Client.Rendering.World.Managers;
 
+import dev.Hilligans.ourcraft.Client.Client;
+import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Data.Primitives.Triplet;
+import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.Ourcraft;
 
 import javax.imageio.ImageIO;
@@ -54,6 +57,18 @@ public class WorldTextureManager {
 
     }
 
+    public static int registerTexture(Image image) {
+        int texture;
+        texture = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.buffer);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        return texture;
+
+    }
+
     static HashMap<String, BufferedImage> cachedImages = new HashMap<>();
 
     public static BufferedImage loadImage(String path) {
@@ -72,6 +87,10 @@ public class WorldTextureManager {
             } catch (IOException ignored) {}
         }
         return DefaultImage();
+    }
+
+    public static Image loadImage1(String path) {
+        return ClientMain.getClient().resourceProvider.getTexture("Images/" + path,"", Ourcraft.getResourceManager());
     }
 
     public static BufferedImage loadImage(String path, String source) {

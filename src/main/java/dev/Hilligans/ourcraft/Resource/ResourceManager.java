@@ -105,8 +105,10 @@ public class ResourceManager {
                     break;
                 }
             }
+        } else {
+            return stream;
         }
-        return stream;
+        return ResourceManager.class.getResourceAsStream(path);
     }
 
     public static void reload() {
@@ -165,7 +167,8 @@ public class ResourceManager {
             } catch (Exception ignored) {
             }
         } catch (Exception ignored) {}
-        return ResourceManager.class.getResourceAsStream("/" + path);
+
+        return getResource(path);
     }
 
     public void clearData() {
