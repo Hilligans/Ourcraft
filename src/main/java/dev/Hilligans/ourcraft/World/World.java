@@ -21,6 +21,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -197,15 +198,11 @@ public abstract class World {
 
 
     ConcurrentLinkedQueue<ClientWorld.XZHolder> requestedChunks = new ConcurrentLinkedQueue<>();
+    public HashSet<Long> set = new HashSet<>();
 
     public void setChunk(Chunk chunk) {
-        for(ClientWorld.XZHolder xzHolder : requestedChunks) {
-            if(xzHolder.x == chunk.x && xzHolder.z == chunk.z) {
-                requestedChunks.remove(xzHolder);
-                putChunk(chunk.x,chunk.z,chunk);
-                return;
-            }
-        }
+        set.remove((long) chunk.x | (long) chunk.z << 32);
+        putChunk(chunk.x, chunk.z, chunk);
     }
 
     public void setChunk(Chunk chunk, int x, int z) {

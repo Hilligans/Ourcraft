@@ -1,12 +1,17 @@
 package dev.Hilligans.ourcraft.Biome;
 
+import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Block.Blocks;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
 import dev.Hilligans.ourcraft.Data.Other.BlockTemplate;
+import dev.Hilligans.ourcraft.Util.CurvedRay;
+import dev.Hilligans.ourcraft.Util.CurvedRayEngine;
+import dev.Hilligans.ourcraft.Util.TriConsumer;
 import dev.Hilligans.ourcraft.World.Builders.Foliage.CactusBuilder;
 import dev.Hilligans.ourcraft.World.Builders.Foliage.CustomTreeBuilder;
 import dev.Hilligans.ourcraft.World.Builders.Foliage.TreeBuilder;
 import org.joml.Vector2d;
+import org.joml.Vector3d;
 
 import java.util.ArrayList;
 
@@ -50,9 +55,41 @@ public class Biomes {
             BlockTemplate leaveTemplate = getTemplate(50 / height);
             leaveTemplate.placeTemplateOnAirChanced(world, startPos.copy().add(0, height, 0), Blocks.LEAVES, random, 2,1);
         }
-    }.setChance(8)).setParams(0,0.2f,0,0,0);
-    public static final Biome DESERT = new Biome("desert", new CactusBuilder().setFrequency(7)).setSurfaceBlock(Blocks.SAND).setUnderBlock(Blocks.SAND).setParams(0.5f,-0.5f,0,0,0);
-    public static final Biome FOREST = new Biome("forest", new TreeBuilder().setFrequency(2)).setParams(0,0.7f,0,0.5f,0);
+    }.setChance(8), new CustomTreeBuilder(Blocks.WILLOW_LOG) {
+        @Override
+        public void build(BlockPos startPos) {
+            if(!isPlacedOn(startPos,Blocks.DIRT) && !isPlacedOn(startPos, Blocks.GRASS)) {
+                return;
+            }
+            int height = (int) (Math.random() * 80 + 100);
+            for(int x = 0; x < height; x++) {
+                getTemplate((int) Math.ceil((height - x) / 7f)).placeTemplateOnAir(world,new BlockPos(startPos.x, x + startPos.y, startPos.z), Blocks.WILLOW_LOG);
+            }
+        }
+    }.setChance(100), new CustomTreeBuilder(Blocks.WILLOW_LOG) {
+        @Override
+        public void build(BlockPos startPos) {
+            if (!isPlacedOn(startPos, Blocks.DIRT) && !isPlacedOn(startPos, Blocks.GRASS)) {
+                return;
+            }
+            double rot = Math.PI * 2 / 4f;
+            for(int x = 0; x < 4; x++) {
+                BlockTemplate template = STEM_5;
+                double c = Math.cos(rot * x);
+                double s = Math.sin(rot * x);
+                CurvedRayEngine curvedRayEngine = new CurvedRayEngine((rotation, integer, pos) -> {
+                    pos.add(5, 0, 0);
+                    rotation = rotation;
+                    template.placeTemplateOnAir(world, pos.copy(),startPos, Blocks.LOG, rotation,c,s);
+                }, 40, 20, 20, new CurvedRay(), 0);
+                curvedRayEngine.run();
+            }
+        }
+    }.setChance(100)).setParams(0,0.3f,0,0,0);
+
+
+    public static final Biome DESERT = new Biome("desert", new CactusBuilder().setFrequency(7)).setSurfaceBlock(Blocks.SAND).setUnderBlock(Blocks.SAND).setParams(0,-0.5f,0,0,0);
+    public static final Biome FOREST = new Biome("forest", new TreeBuilder().setFrequency(2)).setParams(0.2f,0.0f,0,0.2f,0);
     public static final Biome SANDY_HILLS = new Biome("sandy_hills");
  //   public static final Biome MOUNTAIN = new Biome("mountain").setParams(-0.2f,-0.2f,0.5f,0,0.6f).setHeight(new Vector3i(0,-5,50));
  //   public static final Biome MOUNTAIN_EDGE = new Biome("mountain_edge").setParams(-0.2f,-0.2f,0.5f,0,0.3f).setHeight(new Vector3i(0,-5,25));
@@ -61,8 +98,8 @@ public class Biomes {
 
 
     private static final float noiseFactor = 1;
-    private static final float tempFactor = 2;
-    private static final float humidityFactor = 2;
+    private static final float tempFactor = 1;
+    private static final float humidityFactor = 1;
     private static final float randFactor = 1;
     private static final float variationFactor = 1;
 
@@ -77,11 +114,13 @@ public class Biomes {
         Biome biome = PLAINS;
         double val = 1000000;
         for(int x = 0; x < biomes.size(); x++) {
+          //  System.out.println(biomes.get(x).name + " " + doubles.get(x));
             if(val > doubles.get(x)) {
                 biome = biomes.get(x);
                 val = doubles.get(x);
             }
         }
+        //System.out.println(biome.name);
         return biome;
     }
 

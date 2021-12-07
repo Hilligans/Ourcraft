@@ -43,7 +43,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_NORMAL;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL20.glUseProgram;
-import static org.lwjgl.opengl.GL32.GL_PROGRAM_POINT_SIZE;
+import static org.lwjgl.opengl.GL32.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer> {
@@ -219,13 +219,11 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer> {
                 }
             }
         } catch (NullPointerException | ArrayIndexOutOfBoundsException ignored) {}
-
         glEnable(GL_BLEND);
     }
 
     @Override
     public void renderScreen(MatrixStack screenStack) {
-
     }
 
     public void drawChunk(MatrixStack matrixStack, Vector3d pos, int x, int z, ClientWorld world) {

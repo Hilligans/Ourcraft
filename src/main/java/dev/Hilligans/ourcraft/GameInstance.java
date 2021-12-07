@@ -21,11 +21,11 @@ import dev.Hilligans.ourcraft.ModHandler.ModLoader;
 import dev.Hilligans.ourcraft.Network.PacketBase;
 import dev.Hilligans.ourcraft.Recipe.RecipeHelper.RecipeView;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
+import dev.Hilligans.ourcraft.Settings.Setting;
 import dev.Hilligans.ourcraft.Tag.NBTTag;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import dev.Hilligans.ourcraft.Recipe.IRecipe;
 import dev.Hilligans.ourcraft.Util.Registry.Registry;
-import org.lwjgl.stb.STBImage;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -54,6 +54,8 @@ public class GameInstance {
         REGISTRIES.put("ourcraft:tags", TAGS);
         REGISTRIES.put("ourcraft:recipes", RECIPES);
         REGISTRIES.put("ourcraft:recipe_views", RECIPE_VIEWS);
+        REGISTRIES.put("ourcraft:graphics_engines", GRAPHICS_ENGINES);
+        REGISTRIES.put("ourcraft:settings", SETTINGS);
 
     }
 
@@ -73,7 +75,8 @@ public class GameInstance {
     public final Registry<Tag> TAGS = new Registry<>(this);
     public final Registry<IRecipe<?>> RECIPES = new Registry<>(this);
     public final Registry<RecipeView<?>> RECIPE_VIEWS = new Registry<>(this);
-    public final Registry<IGraphicsEngine> GRAPHICS_ENGINES = new Registry<>(this);
+    public final Registry<IGraphicsEngine<?>> GRAPHICS_ENGINES = new Registry<>(this);
+    public final Registry<Setting> SETTINGS = new Registry<>(this);
 
     public void clear() {
         BLOCKS.clear();
@@ -128,6 +131,15 @@ public class GameInstance {
 
     public void registerTag(Tag tag) {
         TAGS.put(tag.type + ":" + tag.tagName,tag);
+    }
+
+    public void register(String name, Object o) {
+        for(Registry<?> registry : REGISTRIES.ELEMENTS) {
+            if(registry.putDangerous(name,o)) {
+                return;
+            }
+        }
+        throw new RuntimeException("failed to put");
     }
 
     static short itemId = 0;

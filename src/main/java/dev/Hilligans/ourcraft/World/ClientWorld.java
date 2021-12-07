@@ -22,6 +22,7 @@ import org.joml.Vector3f;
 import org.joml.Vector3i;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -141,14 +142,12 @@ public class ClientWorld extends World {
         });
     }
 
+
     public void requestChunk(int x, int z) {
-        for (ClientWorld.XZHolder requestedChunk : requestedChunks) {
-            if (requestedChunk.x == x && requestedChunk.z == z) {
-                return;
-            }
+        if(!set.contains((long)x | (long) z << 32)) {
+            set.add((long)x | (long) z << 32);
+            client.sendPacket(new CRequestChunkPacket(x, z));
         }
-        requestedChunks.add(new ClientWorld.XZHolder(x,z));
-        client.sendPacket(new CRequestChunkPacket(x, z));
     }
 
     public void playSound(SoundBuffer soundBuffer, Vector3d pos) {

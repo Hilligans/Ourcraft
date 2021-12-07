@@ -57,19 +57,19 @@ public class BiomeNoise {
     }
 
     public Biome getBiome(int xx, int zz) {
-        double x = xx / 400f;
-        double z = zz / 400f;
-     //   double noise = perlinNoise.getHeight(x,z) + 0.5;
-     //   double temp = tempNoise.getHeight(x,z) + 0.5;
-     //   double humidity = tempNoise.getHeight(x,z) + 0.5;
-     //   double rand = randomNoise.getHeight(x,z) + 0.5;
-     //   double variation = randomNoise.getHeight(x,z) + 0.5;
+        double x = xx / 4f + 0xFFFFFF;
+        double z = zz / 4f + 0xFFFFFF;
+        double noise = perlinNoise.getHeight(x,z) + 0.5;
+        double temp = tempNoise.getHeight(x,z) + 0.5;
+        double humidity = tempNoise.getHeight(x,z) + 0.5;
+        double rand = randomNoise.getHeight(x,z) + 0.5;
+        double variation = randomNoise.getHeight(x,z) + 0.5;
 
-        double noise = SimplexNoise.noise(x,z,this.noise);
-        double temp = SimplexNoise.noise(x,z,this.temp);
-        double humidity = SimplexNoise.noise(x,z,this.humidity);
-        double rand = SimplexNoise.noise(x,z,this.rand);
-        double variation = SimplexNoise.noise(x,z,this.variation);
+        //double noise = SimplexNoise.noise(x,z,this.noise);
+     //   double temp = SimplexNoise.noise(x,z,this.temp);
+      //  double humidity = SimplexNoise.noise(x,z,this.humidity);
+       // double rand = SimplexNoise.noise(x,z,this.rand);
+       // double variation = SimplexNoise.noise(x,z,this.variation);
 
 
         return Biomes.getBiome(noise,temp,humidity,rand,variation);

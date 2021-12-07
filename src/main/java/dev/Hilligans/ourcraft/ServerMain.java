@@ -1,6 +1,8 @@
 package dev.Hilligans.ourcraft;
 
+import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Block.Blocks;
+import dev.Hilligans.ourcraft.Data.Other.BlockProperties;
 import dev.Hilligans.ourcraft.Server.MultiPlayerServer;
 import dev.Hilligans.ourcraft.Util.Profiler;
 import dev.Hilligans.ourcraft.Util.Settings;
@@ -25,6 +27,7 @@ public class ServerMain {
         Settings.isServer = true;
         GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
         gameInstance.handleArgs(args);
+        gameInstance.register("testt",gameInstance);
 
         ServerWorld world = new ServerWorld();
         world.worldBuilders.add(new OreBuilder(Blocks.GRASS,Blocks.STONE).setFrequency(20));

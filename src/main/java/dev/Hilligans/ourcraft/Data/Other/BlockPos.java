@@ -61,6 +61,52 @@ public class BlockPos {
         return this;
     }
 
+    public BlockPos multiply(Vector3d vector3d) {
+        this.x *= vector3d.x;
+        this.y *= vector3d.y;
+        this.z *= vector3d.z;
+        return this;
+    }
+
+    public BlockPos rotateZ(double cos, double sin) {
+        x = (int) (this.x * cos - this.y * sin);
+        y = (int) (this.x * sin + this.y * cos);
+        return this;
+    }
+
+    public BlockPos rotateY(double cos, double sin) {
+        x = (int) (this.x * cos + this.z * sin);
+        z = (int) (-this.x * sin + this.z * cos);
+        return this;
+    }
+
+    public BlockPos rotateX(double cos, double sin) {
+        y = (int) (this.y * cos - this.z * sin);
+        z = (int) (this.y * sin + this.z * cos);
+        return this;
+    }
+
+    public BlockPos rotate(double x, double y, double z, double ang) {
+        return new BlockPos(new Vector3d(this.x,this.y,this.z).rotateAxis(ang,x,y,z));
+    }
+
+    public BlockPos swapXAndZ() {
+        int zz = this.z;
+        this.z = this.x;
+        this.x = zz;
+        return this;
+    }
+
+    public BlockPos negateX() {
+        this.x = -this.x;
+        return this;
+    }
+
+    public BlockPos negateZ() {
+        this.z = -this.z;
+        return this;
+    }
+
     public Vector3f get3f() {
         return new Vector3f(x,y,z);
     }

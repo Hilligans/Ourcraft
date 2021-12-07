@@ -25,7 +25,7 @@ public class Settings {
 
     public static BoundingBox playerBoundingBox = new BoundingBox(-0.35f,-1.9f,-0.35f,0.35f,0.0f,0.35f);
 
-    public static String worldName = "world1";
+    public static String worldName = "world2";
 
     public static boolean isServer = false;
     public static boolean isOnlineServer = false;
@@ -35,7 +35,7 @@ public class Settings {
 
     public static int tickingDistance = 5;
 
-    public static boolean autoSave = true;
+    public static boolean autoSave = false;
 
     public static boolean optimizeMesh = true;
     public static int destroyChunkDistance = renderDistance;
