@@ -22,12 +22,11 @@ public class ServerMain {
 
     public static MultiPlayerServer server;
 
-
     public static void main(String[] args) {
         Settings.isServer = true;
         GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
         gameInstance.handleArgs(args);
-        gameInstance.register("testt",gameInstance);
+       // gameInstance.register("testt",gameInstance);
 
         ServerWorld world = new ServerWorld();
         world.worldBuilders.add(new OreBuilder(Blocks.GRASS,Blocks.STONE).setFrequency(20));

@@ -134,11 +134,6 @@ public class GameInstance {
     }
 
     public void register(String name, Object o) {
-        for(Registry<?> registry : REGISTRIES.ELEMENTS) {
-            if(registry.putDangerous(name,o)) {
-                return;
-            }
-        }
         throw new RuntimeException("failed to put");
     }
 

@@ -31,7 +31,7 @@ public class SubChunk {
     public boolean empty = true;
 
 
-    int[][][] vals;
+    public int[][][] vals;
 
     public SubChunk(World world, long X, long Y, long Z) {
         this.world = world;
@@ -96,6 +96,10 @@ public class SubChunk {
         pos.z += z;
 
         return world.getBlockState(pos);
+    }
+
+    public BlockState getBlock(int pos) {
+        return getBlock(pos & 0xF,pos & 0x0F,pos & 0x00F);
     }
 
     public BlockState getBlock(int x, int y, int z) {

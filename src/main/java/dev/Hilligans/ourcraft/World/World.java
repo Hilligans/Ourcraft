@@ -30,7 +30,6 @@ public abstract class World {
     public Int2ObjectOpenHashMap<Entity> entities = new Int2ObjectOpenHashMap<>();
     public ConcurrentLinkedQueue<BlockChange> blockChanges = new ConcurrentLinkedQueue<>();
     public int dimensionId = 1;
-    //public Long2ObjectOpenHashMap<Long2ObjectOpenHashMap<Chunk>> chunks = new Long2ObjectOpenHashMap<>();
 
     long seed = 1342;
 
@@ -58,13 +57,6 @@ public abstract class World {
 
     public abstract boolean isServer();
 
-    public Chunk getChunk(long chunkPos) {
-      //  try {
-          //  return chunks.get(chunkPos);
-      //  } catch (ArrayIndexOutOfBoundsException ignored) {
-            return null;
-       // }
-    }
 
     public Chunk getChunk(int x, int z) {
         return chunkContainer.getChunk(x,z);
@@ -72,16 +64,12 @@ public abstract class World {
 
     public void scheduleTick(BlockPos pos, int time) {
         if(isServer()) {
-            Chunk chunk = getChunk(pos.getChunkPos());
-            if(chunk != null) {
-                chunk.scheduleTick(pos, time);
-            }
+           // Chunk chunk = getChunk(pos.getChunkPos());
+        //   if(chunk != null) {
+         //       chunk.scheduleTick(pos, time);
+         //   }
         }
     }
-
-   // public Chunk getChunk(int x, int z) {
-   //     return getChunk((long)x & 4294967295L | ((long)z & 4294967295L) << 32);
-    //}
 
     public void removeChunk(int x, int z) {
         chunkContainer.removeChunk(x,z);

@@ -40,6 +40,10 @@ public class BlockPos {
         this.z = (int)Math.round(z);
     }
 
+    public static BlockPos fromSubChunkPos(int pos) {
+        return new BlockPos(pos & 0xF, (pos & 0xF0) >> 4, (pos & 0xF00) >> 8);
+    }
+
     public BlockPos add(BlockPos pos) {
         x += pos.x;
         y += pos.y;
