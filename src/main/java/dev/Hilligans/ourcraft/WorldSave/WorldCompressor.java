@@ -1,7 +1,7 @@
 package dev.Hilligans.ourcraft.WorldSave;
 
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
-import dev.Hilligans.ourcraft.Data.Primitives.Tuplet;
+import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.Util.BitArray;
 
@@ -16,13 +16,13 @@ public class WorldCompressor {
     public static ArrayList<Long> asCompressedStream(Chunk chunk) {
         ArrayList<Long> vals = new ArrayList<>();
         try {
-            ArrayList<Tuplet<BlockState, Integer>> list = chunk.getBlockChainedList();
+            ArrayList<Tuple<BlockState, Integer>> list = chunk.getBlockChainedList();
             HashMap<BlockState, Boolean> uniqueBlocks = new HashMap<>();
             int maxChain = 0;
-            for (Tuplet<BlockState, Integer> tuplet : list) {
-                uniqueBlocks.putIfAbsent(tuplet.typeA, true);
-                if (tuplet.typeB > maxChain) {
-                    maxChain = tuplet.typeB;
+            for (Tuple<BlockState, Integer> tuple : list) {
+                uniqueBlocks.putIfAbsent(tuple.typeA, true);
+                if (tuple.typeB > maxChain) {
+                    maxChain = tuple.typeB;
                 }
             }
             int paletteSize = getBitCount(uniqueBlocks.size());
@@ -44,16 +44,16 @@ public class WorldCompressor {
                 blocks.put(blockState.getBlock().name, x);
                 x++;
             }
-            for (Tuplet<BlockState, Integer> tuplet : list) {
+            for (Tuple<BlockState, Integer> tuple : list) {
               //  bitArray.write(blocks.get(doubleTypeWrapper.typeA.getBlock().name),paletteSize);
-                stringBuilder.append(ensureSize(Integer.toBinaryString(blocks.get(tuplet.typeA.getBlock().name)), paletteSize));
-                int size = tuplet.typeB;
+                stringBuilder.append(ensureSize(Integer.toBinaryString(blocks.get(tuple.typeA.getBlock().name)), paletteSize));
+                int size = tuple.typeB;
                 while (size > 255) {
                     stringBuilder.append("11111111");
                    // bitArray.write(0b11111111,8);
                     size -= 255;
                 }
-                stringBuilder.append(ensureSize(Integer.toBinaryString(blocks.get(tuplet.typeA.getBlock().name)), maxChain));
+                stringBuilder.append(ensureSize(Integer.toBinaryString(blocks.get(tuple.typeA.getBlock().name)), maxChain));
             }
             // createChunkFromCompressedStream(bitArray);
             //System.out.println(stringBuilder);

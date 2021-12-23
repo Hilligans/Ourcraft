@@ -111,6 +111,36 @@ public class BlockPos {
         return this;
     }
 
+    public int minX(BlockPos pos) {
+        return Math.min(x,pos.x);
+    }
+
+    public int minY(BlockPos pos) {
+        return Math.min(y,pos.y);
+    }
+
+    public int minZ(BlockPos pos) {
+        return Math.min(z,pos.z);
+    }
+
+    public int maxX(BlockPos pos) {
+        return Math.max(x,pos.x);
+    }
+
+    public int maxY(BlockPos pos) {
+        return Math.max(y,pos.y);
+    }
+
+    public int maxZ(BlockPos pos) {
+        return Math.max(z,pos.z);
+    }
+
+    public BoundingBox createBoundingBox(BlockPos secondPos) {
+        return new BoundingBox(minX(secondPos),minY(secondPos),minZ(secondPos),maxX(secondPos),maxY(secondPos),maxZ(secondPos));
+    }
+
+
+
     public Vector3f get3f() {
         return new Vector3f(x,y,z);
     }

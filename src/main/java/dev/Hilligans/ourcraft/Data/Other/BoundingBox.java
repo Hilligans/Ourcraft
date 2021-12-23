@@ -120,6 +120,10 @@ public class BoundingBox {
         return new BoundingBox(minX,minY,minZ,maxX,maxY,maxZ);
     }
 
+    public float getVolume() {
+        return (maxX - minX) * (maxY - minY) * (maxZ - minZ);
+    }
+
     @Override
     public String toString() {
         return "BoundingBox{" +

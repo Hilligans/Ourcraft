@@ -3,7 +3,7 @@ package dev.Hilligans.ourcraft.Network.Packet.Server;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.DataBlockState;
-import dev.Hilligans.ourcraft.Data.Primitives.Tuplet;
+import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.Block.Blocks;
@@ -84,9 +84,9 @@ public class SSendChunkPacket extends PacketBase {
             }
 
         } else if(mode == 2) {
-            ArrayList<Tuplet<BlockState,Integer>> blockList = chunk.getBlockChainedList();
+            ArrayList<Tuple<BlockState,Integer>> blockList = chunk.getBlockChainedList();
             packetData.writeInt(blockList.size());
-            for(Tuplet<BlockState,Integer> block : blockList) {
+            for(Tuple<BlockState,Integer> block : blockList) {
                 packetData.writeShort(block.getTypeA().blockId);
                 if(block.getTypeA().getBlock().hasBlockState()) {
                     if(block.getTypeA() instanceof DataBlockState) {
@@ -133,15 +133,15 @@ public class SSendChunkPacket extends PacketBase {
                     }
                 }
             } else if(mode == 2) {
-                ArrayList<Tuplet<BlockState, Integer>> blockList = new ArrayList<>();
+                ArrayList<Tuple<BlockState, Integer>> blockList = new ArrayList<>();
                 int length = packetData.readInt();
                 for(int x = 0; x < length; x++) {
                     short blockID = packetData.readShort();
                     Block block = Blocks.getBlockWithID(blockID);
                     if(block.hasBlockState()) {
-                        blockList.add(new Tuplet<>(block.getStateWithData(packetData.readShort()),packetData.readInt()));
+                        blockList.add(new Tuple<>(block.getStateWithData(packetData.readShort()),packetData.readInt()));
                     } else {
-                        blockList.add(new Tuplet<>(block.getDefaultState(),packetData.readInt()));
+                        blockList.add(new Tuple<>(block.getDefaultState(),packetData.readInt()));
                     }
                 }
                 chunk.setFromChainedList(blockList);

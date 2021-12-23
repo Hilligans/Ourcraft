@@ -11,29 +11,23 @@ import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.VAOManager;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
 import dev.Hilligans.ourcraft.Client.Camera;
-import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.ClientMain;
-import dev.Hilligans.ourcraft.Data.Primitives.Tuplet;
+import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.Hilligans.ourcraft.Entity.Entity;
 import dev.Hilligans.ourcraft.Network.Packet.Client.CRequestChunkPacket;
 import dev.Hilligans.ourcraft.Util.Settings;
 import org.joml.Vector3d;
-import org.joml.Vector3f;
-import org.joml.Vector3i;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class ClientWorld extends World {
 
     public ConcurrentLinkedQueue<SubChunk> queuedChunks = new ConcurrentLinkedQueue<>();
 
-    public ConcurrentLinkedQueue<Tuplet<PrimitiveBuilder, SubChunk>> asyncChunkQueue = new ConcurrentLinkedQueue<>();
+    public ConcurrentLinkedQueue<Tuple<PrimitiveBuilder, SubChunk>> asyncChunkQueue = new ConcurrentLinkedQueue<>();
 
 
     public int chunkCount = 0;
@@ -76,12 +70,12 @@ public class ClientWorld extends World {
                     SubChunk subChunk = queuedChunks.poll();
                     ClientUtil.chunkBuilder.submit(() -> {
                         PrimitiveBuilder primitiveBuilder = subChunk.getMeshBuilder();
-                        asyncChunkQueue.add(new Tuplet<>(primitiveBuilder,subChunk));
+                        asyncChunkQueue.add(new Tuple<>(primitiveBuilder,subChunk));
                     });
                 }
 
                 while(!asyncChunkQueue.isEmpty()) {
-                    Tuplet<PrimitiveBuilder,SubChunk> type = asyncChunkQueue.poll();
+                    Tuple<PrimitiveBuilder,SubChunk> type = asyncChunkQueue.poll();
                     type.getTypeB().verticesCount = type.getTypeA().indices.size();
                     type.getTypeB().id = VAOManager.createVAO(type.getTypeA());
                 }

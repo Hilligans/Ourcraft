@@ -1,7 +1,7 @@
 package dev.Hilligans.ourcraft.Client.Key;
 
 import dev.Hilligans.ourcraft.ClientMain;
-import dev.Hilligans.ourcraft.Data.Primitives.Tuplet;
+import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.GLInitEvent;
 import dev.Hilligans.ourcraft.Ourcraft;
 import it.unimi.dsi.fastutil.ints.Int2CharOpenHashMap;
@@ -22,15 +22,15 @@ public class KeyHandler {
     public static boolean[] keyPressed = new boolean[350];
 
     public static ConcurrentLinkedQueue<CharPress> charPresses = new ConcurrentLinkedQueue<>();
-    public static ConcurrentLinkedQueue<Tuplet<KeyPress, Integer>> keyPresses = new ConcurrentLinkedQueue<>();
+    public static ConcurrentLinkedQueue<Tuple<KeyPress, Integer>> keyPresses = new ConcurrentLinkedQueue<>();
 
     public static void register(KeyPress keyPress, int id) {
-        keyPresses.add(new Tuplet<>(keyPress,id));
+        keyPresses.add(new Tuple<>(keyPress,id));
     }
 
     public static void register(KeyPress keyPress, int... id) {
         for(int id1 : id) {
-            keyPresses.add(new Tuplet<>(keyPress, id1));
+            keyPresses.add(new Tuple<>(keyPress, id1));
         }
     }
 
@@ -39,7 +39,7 @@ public class KeyHandler {
     }
 
     public static void remove(KeyPress keyPress) {
-        for(Tuplet<KeyPress, Integer> wrapper : keyPresses) {
+        for(Tuple<KeyPress, Integer> wrapper : keyPresses) {
             if(keyPress == wrapper.getTypeA()) {
                 keyPresses.remove(wrapper);
                 break;
@@ -59,7 +59,7 @@ public class KeyHandler {
             }
         }
 
-        for(Tuplet<KeyPress, Integer> keyPress : keyPresses) {
+        for(Tuple<KeyPress, Integer> keyPress : keyPresses) {
             if(keyPress.getTypeB() == id) {
                 keyPress.getTypeA().onPress();
             }
@@ -74,7 +74,7 @@ public class KeyHandler {
             }
         }
 
-        for(Tuplet<KeyPress, Integer> keyPress : keyPresses) {
+        for(Tuple<KeyPress, Integer> keyPress : keyPresses) {
             if(keyPress.getTypeB() == id) {
                 keyPress.getTypeA().onUnPress();
             }
@@ -89,7 +89,7 @@ public class KeyHandler {
             }
         }
 
-        for(Tuplet<KeyPress, Integer> keyPress : keyPresses) {
+        for(Tuple<KeyPress, Integer> keyPress : keyPresses) {
             if(keyPress.getTypeB() == id) {
                 keyPress.getTypeA().onRepeat();
             }

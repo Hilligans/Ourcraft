@@ -2,7 +2,7 @@ package dev.Hilligans.ourcraft.Server;
 
 import dev.Hilligans.ourcraft.Command.CommandExecutors.ConsoleExecutor;
 import dev.Hilligans.ourcraft.Command.Commands;
-import dev.Hilligans.ourcraft.Data.Primitives.Tuplet;
+import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.Hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Events.Server.MultiPlayerServerStartEvent;
@@ -32,7 +32,7 @@ public class MultiPlayerServer implements IServer {
 
     public Int2ObjectOpenHashMap<World> worlds = new Int2ObjectOpenHashMap<>();
     public HashMap<ChannelHandlerContext, CHandshakePacket> waitingPlayers = new HashMap<>();
-    public HashMap<String, Tuplet<ChannelHandlerContext,Long>> playerQueue = new HashMap<>();
+    public HashMap<String, Tuple<ChannelHandlerContext,Long>> playerQueue = new HashMap<>();
     public GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
 
     public void startServer(String port) {
@@ -113,7 +113,7 @@ public class MultiPlayerServer implements IServer {
         public void run() {
             long time = System.currentTimeMillis();
             for(String key : server.playerQueue.keySet()) {
-                Tuplet<ChannelHandlerContext,Long> player = server.playerQueue.get(key);
+                Tuple<ChannelHandlerContext,Long> player = server.playerQueue.get(key);
                 if(player.getTypeB() < time) {
                     server.waitingPlayers.remove(player.typeA);
                     server.playerQueue.remove(key);

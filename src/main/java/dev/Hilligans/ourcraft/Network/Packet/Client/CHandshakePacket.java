@@ -2,7 +2,7 @@ package dev.Hilligans.ourcraft.Network.Packet.Client;
 
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
-import dev.Hilligans.ourcraft.Data.Primitives.Tuplet;
+import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.Hilligans.ourcraft.Entity.Entity;
 import dev.Hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.Hilligans.ourcraft.Network.Packet.AuthServerPackets.CTokenValid;
@@ -55,7 +55,7 @@ public class CHandshakePacket extends PacketBase {
                 if (Settings.isOnlineServer) {
                     String token = getToken(16);
                     ServerMain.getServer().waitingPlayers.put(ctx, this);
-                    ServerMain.getServer().playerQueue.put(token, new Tuplet<>(ctx, System.currentTimeMillis() + 5000));
+                    ServerMain.getServer().playerQueue.put(token, new Tuple<>(ctx, System.currentTimeMillis() + 5000));
                     ClientMain.getClient().authNetwork.sendPacket(new CTokenValid(name, authToken, ((InetSocketAddress) ctx.channel().remoteAddress()).getAddress().getHostAddress(), token));
                 } else {
                     handlePlayer(name, version, ctx, name);

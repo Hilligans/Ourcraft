@@ -1,13 +1,17 @@
 package dev.Hilligans.ourcraft.Data.Primitives;
 
-public class Tuplet<T,Q> {
+public class Tuple<T,Q> {
 
     public T typeA;
     public Q typeB;
 
-    public Tuplet(T typeA, Q typeB) {
+    public Tuple(T typeA, Q typeB) {
         this.typeA = typeA;
         this.typeB = typeB;
+    }
+
+    public Tuple() {
+
     }
 
     public T getTypeA() {
@@ -18,5 +22,8 @@ public class Tuplet<T,Q> {
         return typeB;
     }
 
+    public boolean has() {
+        return typeA != null && typeB != null;
+    }
 
 }

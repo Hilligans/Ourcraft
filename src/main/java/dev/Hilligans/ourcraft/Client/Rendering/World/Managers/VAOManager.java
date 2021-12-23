@@ -1,7 +1,7 @@
 package dev.Hilligans.ourcraft.Client.Rendering.World.Managers;
 
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.PrimitiveBuilder;
-import dev.Hilligans.ourcraft.Data.Primitives.Tuplet;
+import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.Hilligans.ourcraft.Util.Vector5f;
 
 import java.util.ArrayList;
@@ -15,14 +15,14 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class  VAOManager {
 
-    public static HashMap<Integer, Tuplet<Integer,Integer>> buffers = new HashMap<>();
+    public static HashMap<Integer, Tuple<Integer,Integer>> buffers = new HashMap<>();
 
     public static void destroyBuffer(int id) {
-        Tuplet<Integer,Integer> tuplet = buffers.get(id);
+        Tuple<Integer,Integer> tuple = buffers.get(id);
         buffers.remove(id);
-        if(tuplet != null) {
-            glDeleteBuffers(tuplet.getTypeA());
-            glDeleteBuffers(tuplet.getTypeB());
+        if(tuple != null) {
+            glDeleteBuffers(tuple.getTypeA());
+            glDeleteBuffers(tuple.getTypeB());
         }
         glDeleteVertexArrays(id);
     }
@@ -51,7 +51,7 @@ public class  VAOManager {
 
         //glDeleteBuffers(VBO);
         // glDeleteBuffers(EBO);
-        buffers.put(VAO,new Tuplet<>(VBO,EBO));
+        buffers.put(VAO,new Tuple<>(VBO,EBO));
 
         return VAO;
     }
@@ -62,7 +62,7 @@ public class  VAOManager {
 
     public static int createVAO(PrimitiveBuilder primitiveBuilder, int mode) {
         int[] vals = primitiveBuilder.createMesh(mode);
-        buffers.put(vals[0],new Tuplet<>(vals[1],vals[2]));
+        buffers.put(vals[0],new Tuple<>(vals[1],vals[2]));
         return vals[0];
     }
 
@@ -84,7 +84,7 @@ public class  VAOManager {
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        buffers.put(VAO,new Tuplet<>(VBO,EBO));
+        buffers.put(VAO,new Tuple<>(VBO,EBO));
 
         return VAO;
     }

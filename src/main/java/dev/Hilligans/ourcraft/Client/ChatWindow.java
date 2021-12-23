@@ -3,7 +3,7 @@ package dev.Hilligans.ourcraft.Client;
 import dev.Hilligans.ourcraft.Client.Rendering.World.RenderableString;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.ClientMain;
-import dev.Hilligans.ourcraft.Data.Primitives.Tuplet;
+import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.ClientSendMessageEvent;
 import dev.Hilligans.ourcraft.Network.Packet.Client.CSendMessage;
 import dev.Hilligans.ourcraft.Client.Key.CharPress;
@@ -21,7 +21,7 @@ public class ChatWindow implements Screen {
     private static final int MESSAGE_LENGTH = 5000;
 
 
-    public static ArrayList<Tuplet<String,Long>> messages = new ArrayList<>();
+    public static ArrayList<Tuple<String,Long>> messages = new ArrayList<>();
 
     public static final int maxMessageCount = 20;
 
@@ -42,8 +42,8 @@ public class ChatWindow implements Screen {
     }
 
     public static void addMessage(String message) {
-        Tuplet<String,Long> tuplet = new Tuplet<>(message,System.currentTimeMillis() + MESSAGE_LENGTH);
-        messages.add(tuplet);
+        Tuple<String,Long> tuple = new Tuple<>(message,System.currentTimeMillis() + MESSAGE_LENGTH);
+        messages.add(tuple);
         if(messages.size() > maxMessageCount) {
             messages.remove(0);
         }

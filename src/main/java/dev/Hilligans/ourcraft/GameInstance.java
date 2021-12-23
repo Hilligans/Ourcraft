@@ -7,6 +7,7 @@ import dev.Hilligans.ourcraft.Client.Audio.Sounds;
 import dev.Hilligans.ourcraft.Client.Rendering.ClientUtil;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Widget;
+import dev.Hilligans.ourcraft.Command.CommandHandler;
 import dev.Hilligans.ourcraft.Container.Container;
 import dev.Hilligans.ourcraft.Data.Descriptors.Tag;
 import dev.Hilligans.ourcraft.Entity.Entity;
@@ -19,6 +20,7 @@ import dev.Hilligans.ourcraft.ModHandler.Events.Common.ProgramArgumentEvent;
 import dev.Hilligans.ourcraft.ModHandler.Events.Common.RegistryClearEvent;
 import dev.Hilligans.ourcraft.ModHandler.ModLoader;
 import dev.Hilligans.ourcraft.Network.PacketBase;
+import dev.Hilligans.ourcraft.Network.Protocol;
 import dev.Hilligans.ourcraft.Recipe.RecipeHelper.RecipeView;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
 import dev.Hilligans.ourcraft.Settings.Setting;
@@ -30,10 +32,13 @@ import dev.Hilligans.ourcraft.Util.Registry.Registry;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 public class GameInstance {
 
@@ -56,6 +61,8 @@ public class GameInstance {
         REGISTRIES.put("ourcraft:recipe_views", RECIPE_VIEWS);
         REGISTRIES.put("ourcraft:graphics_engines", GRAPHICS_ENGINES);
         REGISTRIES.put("ourcraft:settings", SETTINGS);
+        REGISTRIES.put("ourcraft:protocols", PROTOCOLS);
+        REGISTRIES.put("ourcraft:commands", COMMANDS);
 
     }
 
@@ -69,19 +76,20 @@ public class GameInstance {
 
     public final Registry<Registry<?>> REGISTRIES = new Registry<>(this);
 
-    public final Registry<Block> BLOCKS = new Registry<>(this);
-    public final Registry<Item> ITEMS = new Registry<>(this);
-    public final Registry<Biome> BIOMES = new Registry<>(this);
-    public final Registry<Tag> TAGS = new Registry<>(this);
-    public final Registry<IRecipe<?>> RECIPES = new Registry<>(this);
-    public final Registry<RecipeView<?>> RECIPE_VIEWS = new Registry<>(this);
-    public final Registry<IGraphicsEngine<?>> GRAPHICS_ENGINES = new Registry<>(this);
-    public final Registry<Setting> SETTINGS = new Registry<>(this);
+    public final Registry<Block> BLOCKS = new Registry<>(this, Block.class);
+    public final Registry<Item> ITEMS = new Registry<>(this, Item.class);
+    public final Registry<Biome> BIOMES = new Registry<>(this, Biome.class);
+    public final Registry<Tag> TAGS = new Registry<>(this, Tag.class);
+    public final Registry<IRecipe<?>> RECIPES = new Registry<>(this, IRecipe.class);
+    public final Registry<RecipeView<?>> RECIPE_VIEWS = new Registry<>(this, RecipeView.class);
+    public final Registry<IGraphicsEngine<?>> GRAPHICS_ENGINES = new Registry<>(this, IGraphicsEngine.class);
+    public final Registry<CommandHandler> COMMANDS = new Registry<>(this, CommandHandler.class);
+    public final Registry<Protocol> PROTOCOLS = new Registry<>(this, Protocol.class);
+    public final Registry<Setting> SETTINGS = new Registry<>(this, Setting.class);
 
     public void clear() {
         BLOCKS.clear();
         ITEMS.clear();
-        // BIOMES.clear();
         TAGS.clear();
         RECIPES.clear();
         EVENT_BUS.postEvent(new RegistryClearEvent(this));
@@ -125,16 +133,69 @@ public class GameInstance {
         ITEMS.put(item.name,item);
     }
 
+    public void registerItems(Item... items) {
+        for(Item item : items) {
+            registerItem(item);
+        }
+    }
+
     public void registerBiome(Biome biome) {
         BIOMES.put(biome.name, biome);
+    }
+
+    public void registerBiomes(Biome... biomes) {
+        for(Biome biome : biomes) {
+            registerBiome(biome);
+        }
     }
 
     public void registerTag(Tag tag) {
         TAGS.put(tag.type + ":" + tag.tagName,tag);
     }
 
+    public void registerRags(Tag... tags) {
+        for(Tag tag : tags) {
+            registerTag(tag);
+        }
+    }
+
+    public void registerCommand(CommandHandler commandHandler) {
+        COMMANDS.put(commandHandler.getRegistryName(),commandHandler);
+    }
+
+    public void registerCommands(CommandHandler... commands) {
+        for(CommandHandler commandHandler : commands) {
+            registerCommand(commandHandler);
+        }
+    }
+
     public void register(String name, Object o) {
-        throw new RuntimeException("failed to put");
+        boolean put = false;
+        for(Registry<?> registry : REGISTRIES.ELEMENTS) {
+            if(registry.canPut(o)) {
+                registry.putUnchecked(name,o);
+                put = true;
+            }
+        }
+        if(!put) {
+            throw new RuntimeException("failed to put");
+        }
+    }
+
+    public void register(List<String> names, List<Object> objects) {
+        for(int x = 0; x < names.size(); x++) {
+            register(names.get(x), objects.get(x));
+        }
+    }
+
+    public void register(Collection<String> names, Collection<Object> objects) {
+        register(names.stream().toList(), objects.stream().toList());
+    }
+
+    public void register(String[] names, Object[] objects) {
+        for(int x = 0; x < names.length; x++) {
+            register(names[x], objects[x]);
+        }
     }
 
     static short itemId = 0;

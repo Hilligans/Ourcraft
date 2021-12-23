@@ -4,7 +4,7 @@ import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Block.Blocks;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.DataBlockState;
-import dev.Hilligans.ourcraft.Data.Primitives.Tuplet;
+import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.Hilligans.ourcraft.Tag.*;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.World.Chunk;
@@ -79,9 +79,9 @@ public class ChunkLoader {
 
         ListNBTTag<ShortNBTTag> blocks = new ListNBTTag<>();
 
-        ArrayList<Tuplet<BlockState,Integer>> blockList = chunk.getBlockChainedList();
+        ArrayList<Tuple<BlockState,Integer>> blockList = chunk.getBlockChainedList();
 
-        for(Tuplet<BlockState,Integer> block : blockList) {
+        for(Tuple<BlockState,Integer> block : blockList) {
             int id = level.ensureHasBlock(block.typeA.getBlock());
             blocks.tags.add(new ShortNBTTag((short) id));
             if(block.getTypeA().getBlock().hasBlockState()) {
@@ -177,7 +177,7 @@ public class ChunkLoader {
         Chunk chunk = new Chunk(X, Z, null);
         try {
             ListNBTTag<ShortNBTTag> blocks = (ListNBTTag<ShortNBTTag>) compoundTag.getTag("blocks");
-            ArrayList<Tuplet<BlockState,Integer>> blockList = new ArrayList<>();
+            ArrayList<Tuple<BlockState,Integer>> blockList = new ArrayList<>();
 
             int offset = 0;
 
@@ -192,7 +192,7 @@ public class ChunkLoader {
                 } else {
                     blockState = block.getDefaultState();
                 }
-                blockList.add(new Tuplet<>(blockState,blocks.tags.get(offset).val & 0xFFFF));
+                blockList.add(new Tuple<>(blockState,blocks.tags.get(offset).val & 0xFFFF));
                 offset++;
             }
 

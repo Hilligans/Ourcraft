@@ -1,7 +1,7 @@
 package dev.Hilligans.ourcraft.Util;
 
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.WorldTextureManager;
-import dev.Hilligans.ourcraft.Data.Primitives.Tuplet;
+import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 
 import java.awt.image.BufferedImage;
 
@@ -185,7 +185,7 @@ public class Util {
         int val = 0;
 
         BufferedImage bufferedImage = WorldTextureManager.loadImage("characters/quote.png");
-        Tuplet<Integer, Integer> data = new Tuplet<>(bufferedImage.getWidth(),val);
+        Tuple<Integer, Integer> data = new Tuple<>(bufferedImage.getWidth(),val);
        // characterOffset.put("\"",data);
         for(int z = 0; z < bufferedImage.getWidth(); z++) {
             for(int y = 0; y < bufferedImage.getHeight(); y++) {
@@ -200,7 +200,7 @@ public class Util {
             String s = "" + vals.charAt(x);
             //System.out.println(s);
             bufferedImage = WorldTextureManager.loadImage("characters/" + s + ".png");
-            data = new Tuplet<>(bufferedImage.getWidth(),val);
+            data = new Tuple<>(bufferedImage.getWidth(),val);
         //    characterOffset.put(s,data);
             for(int z = 0; z < bufferedImage.getWidth(); z++) {
                 for(int y = 0; y < bufferedImage.getHeight(); y++) {
@@ -214,7 +214,7 @@ public class Util {
         for(int x = 0; x < vals1.length(); x++) {
             String s = "" + vals1.charAt(x) + vals1.charAt(x);
             bufferedImage = WorldTextureManager.loadImage("characters/" + s + ".png");
-            data = new Tuplet<>(bufferedImage.getWidth(),val);
+            data = new Tuple<>(bufferedImage.getWidth(),val);
         //    characterOffset.put("" + vals1.charAt(x),data);
             for(int z = 0; z < bufferedImage.getWidth(); z++) {
                 for(int y = 0; y < bufferedImage.getHeight(); y++) {

@@ -2,7 +2,7 @@ package dev.Hilligans.ourcraft.WorldSave;
 
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Block.Blocks;
-import dev.Hilligans.ourcraft.Data.Primitives.Tuplet;
+import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.Hilligans.ourcraft.Ourcraft;
 import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public class Level {
 
-    public HashMap<String, Tuplet<Integer,Integer>> blocks = new HashMap<>();
+    public HashMap<String, Tuple<Integer,Integer>> blocks = new HashMap<>();
     public Int2ObjectOpenHashMap<String> idToNames = new Int2ObjectOpenHashMap<>();
     public int version = 0;
 
@@ -41,7 +41,7 @@ public class Level {
 
     public int ensureHasBlock(Block block) {
         if(blocks.get(block.getName()) == null) {
-            blocks.put(block.getName(),new Tuplet<>(blocks.size(),block.blockProperties.blockStateSize));
+            blocks.put(block.getName(),new Tuple<>(blocks.size(),block.blockProperties.blockStateSize));
             idToNames.put(blocks.size() - 1,block.getName());
         }
         return getBlockID(block.getName());
@@ -51,7 +51,7 @@ public class Level {
         CompoundNBTTag blocks = compoundTag.getCompoundTag("blocks");
         for(String string : blocks.tags.keySet()) {
             long val = blocks.getLong(string).val;
-            this.blocks.put(string,new Tuplet<>((int)(val >> 32),(int)val));
+            this.blocks.put(string,new Tuple<>((int)(val >> 32),(int)val));
             this.idToNames.put((int) (val >> 32),string);
         }
     }

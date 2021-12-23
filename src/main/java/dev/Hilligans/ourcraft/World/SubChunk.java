@@ -31,7 +31,7 @@ public class SubChunk {
     public boolean empty = true;
 
 
-    public int[][][] vals;
+    public int[] vals;
 
     public SubChunk(World world, long X, long Y, long Z) {
         this.world = world;
@@ -41,7 +41,7 @@ public class SubChunk {
     }
 
     public void fill() {
-        vals = new int[16][16][16];
+        vals = new int[16*16*16];
         for(int x = 0; x < 16; x++) {
             for(int i = 0; i < 16; i++) {
                 for(int z = 0; z < 16; z++) {
@@ -106,10 +106,10 @@ public class SubChunk {
         if(empty) {
             return Blocks.AIR.getDefaultState();
         }
-        if((vals[x][y][z] & 65535) == 65535) {
-            return new BlockState((short) (vals[x][y][z] >> 16));
+        if((vals[x | y << 4 | z << 8] & 65535) == 65535) {
+            return new BlockState((short) (vals[x | y << 4 | z << 8] >> 16));
         } else {
-            return new DataBlockState((short) (vals[x][y][z] >> 16),new ShortBlockState((short) (vals[x][y][z] & 65535)));
+            return new DataBlockState((short) (vals[x | y << 4 | z << 8] >> 16),new ShortBlockState((short) (vals[x | y << 4 | z << 8] & 65535)));
         }
 
        // return blocks[x][y][z];
@@ -125,10 +125,11 @@ public class SubChunk {
            }
        }
        if(!empty) {
+           int i = (x & 15) | (y & 15) << 4 | (z & 15) << 8;
            if (blockState instanceof DataBlockState) {
-               vals[x & 15][y & 15][z & 15] = blockState.blockId << 16 | ((DataBlockState) blockState).blockData.write();
+               vals[i] = blockState.blockId << 16 | ((DataBlockState) blockState).blockData.write();
            } else {
-               vals[x & 15][y & 15][z & 15] = blockState.blockId << 16 | 65535;
+               vals[i] = blockState.blockId << 16 | 65535;
            }
        }
     }
@@ -157,6 +158,12 @@ public class SubChunk {
             matrixStack.applyTransformation(ShaderManager.worldShader.shader);
             GLRenderer.glDrawElements(GL_TRIANGLES, verticesCount, GL_UNSIGNED_INT, 0);
             matrixStack.pop();
+        }
+    }
+
+    public void set(int block) {
+        for(int x = 0; x < 4096; x++) {
+            vals[x] = block;
         }
     }
 }

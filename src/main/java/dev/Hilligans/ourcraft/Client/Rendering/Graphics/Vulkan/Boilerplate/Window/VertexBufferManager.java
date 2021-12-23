@@ -2,7 +2,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Wind
 
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.LogicalDevice;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline.VertexBuffer;
-import dev.Hilligans.ourcraft.Data.Primitives.Tuplet;
+import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -14,7 +14,7 @@ public class VertexBufferManager {
 
     public LogicalDevice device;
     public ArrayList<VertexBuffer> buffers = new ArrayList<>();
-    public ConcurrentLinkedQueue<Tuplet<Long,Long>> toDestroy = new ConcurrentLinkedQueue<>();
+    public ConcurrentLinkedQueue<Tuple<Long,Long>> toDestroy = new ConcurrentLinkedQueue<>();
 
     public VertexBufferManager(LogicalDevice device) {
         this.device = device;
@@ -26,14 +26,14 @@ public class VertexBufferManager {
     }
 
     public void cleanup() {
-        for(Tuplet<Long,Long> buffer : toDestroy) {
+        for(Tuple<Long,Long> buffer : toDestroy) {
             vkDestroyBuffer(device.device,buffer.typeA,null);
             vkFreeMemory(device.device, buffer.typeB, null);
         }
     }
 
     public void tick() {
-        for(Tuplet<Long,Long> buffer : toDestroy) {
+        for(Tuple<Long,Long> buffer : toDestroy) {
             vkDestroyBuffer(device.device,buffer.typeA,null);
             vkFreeMemory(device.device, buffer.typeB, null);
         }

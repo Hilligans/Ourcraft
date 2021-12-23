@@ -10,7 +10,7 @@ import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
 import dev.Hilligans.ourcraft.Block.Blocks;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
-import dev.Hilligans.ourcraft.Data.Primitives.Tuplet;
+import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.Hilligans.ourcraft.Entity.Entity;
 import dev.Hilligans.ourcraft.World.Builders.WorldBuilder;
 import dev.Hilligans.ourcraft.Util.Settings;
@@ -293,9 +293,9 @@ public class Chunk {
         chunks.get(pos1).updateBlock(pos);
     }
 
-    public ArrayList<Tuplet<BlockState,Integer>> getBlockChainedList() {
+    public ArrayList<Tuple<BlockState,Integer>> getBlockChainedList() {
         BlockState currentState = null;
-        ArrayList<Tuplet<BlockState,Integer>> values = new ArrayList<>();
+        ArrayList<Tuple<BlockState,Integer>> values = new ArrayList<>();
         int count = 0;
         for(int i = 0; i < 16 * 16 * Settings.chunkHeight * 16; i++) {
             int x = i & 15;
@@ -304,7 +304,7 @@ public class Chunk {
             BlockState newState = getBlockState(x, y, z);
             if (!newState.equals(currentState)) {
                 if (currentState != null) {
-                    values.add(new Tuplet<>(currentState, count));
+                    values.add(new Tuple<>(currentState, count));
                     count = 0;
                 }
                 currentState = newState;
@@ -314,10 +314,10 @@ public class Chunk {
         return values;
     }
 
-    public void setFromChainedList(ArrayList<Tuplet<BlockState,Integer>> values) {
+    public void setFromChainedList(ArrayList<Tuple<BlockState,Integer>> values) {
         populated = true;
         int offset = 0;
-        for(Tuplet<BlockState, Integer> block : values) {
+        for(Tuple<BlockState, Integer> block : values) {
             for(int i = 0; i < block.getTypeB(); i++) {
                 int x = offset & 15;
                 int y = offset >> 4 & 255;
@@ -387,11 +387,23 @@ public class Chunk {
             pointer += shaderElement.count;
         }
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        VAOManager.buffers.put((VAO),new Tuplet<>(VBO,EBO));
+        VAOManager.buffers.put((VAO),new Tuple<>(VBO,EBO));
         sizeVal = primitiveBuilder.indices.size();
         id = VAO;
     }
 
+    public void fastSet(int[] vals) {
+        for(int x = 0; x < 16; x++) {
+            if(chunks.get(x).vals == null) {
+                chunks.get(x).vals = new int[16 * 16 * 16];
+            }
+            System.arraycopy(vals,0,chunks.get(x).vals,0,4096);
+        }
+    }
+
+    public SubChunk getSubChunk(int pos) {
+        return chunks.get(pos);
+    }
 }
 
 

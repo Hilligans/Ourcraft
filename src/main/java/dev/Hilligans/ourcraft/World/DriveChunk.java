@@ -5,7 +5,7 @@ import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
-import dev.Hilligans.ourcraft.Data.Primitives.Tuplet;
+import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.Hilligans.ourcraft.WorldSave.ChunkLoader;
 
 import java.util.ArrayList;
@@ -194,7 +194,7 @@ public class DriveChunk extends Chunk {
         super.updateBlock(pos);
     }
 
-    public synchronized ArrayList<Tuplet<BlockState,Integer>> getBlockChainedList() {
+    public synchronized ArrayList<Tuple<BlockState,Integer>> getBlockChainedList() {
         if(!loaded.get()) {
             load();
         }
@@ -202,7 +202,7 @@ public class DriveChunk extends Chunk {
         return super.getBlockChainedList();
     }
 
-    public synchronized void setFromChainedList(ArrayList<Tuplet<BlockState,Integer>> values) {
+    public synchronized void setFromChainedList(ArrayList<Tuple<BlockState,Integer>> values) {
         if(!loaded.get()) {
             load();
         }

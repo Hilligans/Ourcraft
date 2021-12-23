@@ -11,9 +11,15 @@ public class Registry<T> {
     public HashMap<String,T> MAPPED_ELEMENTS = new HashMap<>();
     public ArrayList<T> ELEMENTS = new ArrayList<>();
     public GameInstance gameInstance;
+    public Class<?> classType;
 
     public Registry(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
+    }
+
+    public Registry(GameInstance gameInstance, Class<?> classType) {
+        this.gameInstance = gameInstance;
+        this.classType = classType;
     }
 
 
@@ -37,6 +43,10 @@ public class Registry<T> {
         }
     }
 
+    public void putUnchecked(String name, Object element) {
+        put(name,(T)element);
+    }
+
     public T remove(String name) {
         T element = MAPPED_ELEMENTS.remove(name);
         for(int x = 0; x < ELEMENTS.size(); x++) {
@@ -47,6 +57,22 @@ public class Registry<T> {
             }
         }
         return element;
+    }
+
+    public void recursivelyClear() {
+        for(T element : ELEMENTS) {
+            if(element instanceof Registry registry) {
+                registry.recursivelyClear();
+            }
+        }
+        clear();
+    }
+
+    public boolean canPut(Object o) {
+        if(classType == null) {
+            return false;
+        }
+        return classType.isAssignableFrom(o.getClass());
     }
 
 }

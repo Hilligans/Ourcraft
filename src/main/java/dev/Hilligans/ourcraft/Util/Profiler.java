@@ -1,24 +1,24 @@
 package dev.Hilligans.ourcraft.Util;
 
-import dev.Hilligans.ourcraft.Data.Primitives.Tuplet;
+import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 
 import java.util.HashMap;
 
 public class Profiler {
 
-    public HashMap<String, Tuplet<Long,String>> profiles = new HashMap<>();
+    public HashMap<String, Tuple<Long,String>> profiles = new HashMap<>();
     public String parent = "";
 
     public void startProfiling(String name) {
-        profiles.put(name, new Tuplet<>(System.currentTimeMillis(), parent));
+        profiles.put(name, new Tuple<>(System.currentTimeMillis(), parent));
     }
 
     public void profile(String name) {
-        profiles.put(name, new Tuplet<>(System.currentTimeMillis(), parent));
+        profiles.put(name, new Tuple<>(System.currentTimeMillis(), parent));
     }
 
     public void stopProfiling(String name) {
-        Tuplet<Long,String> data = profiles.get(name);
+        Tuple<Long,String> data = profiles.get(name);
         if(data != null) {
             data.typeA = System.currentTimeMillis() - data.getTypeA();
             profiles.put(name,data);

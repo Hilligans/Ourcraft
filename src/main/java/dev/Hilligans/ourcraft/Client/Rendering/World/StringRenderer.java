@@ -8,7 +8,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.Textures;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.ShaderManager;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.WorldTextureManager;
 import dev.Hilligans.ourcraft.ClientMain;
-import dev.Hilligans.ourcraft.Data.Primitives.Tuplet;
+import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.Hilligans.ourcraft.Data.Primitives.IntList;
 import dev.Hilligans.ourcraft.Data.Primitives.Triplet;
 import dev.Hilligans.ourcraft.Ourcraft;
@@ -29,7 +29,7 @@ public class StringRenderer {
 
     public static HashMap<String, Integer> cached = new HashMap<>();
 
-    public HashMap<String, Tuplet<Integer,Integer>> characterOffset = new HashMap<>();
+    public HashMap<String, Tuple<Integer,Integer>> characterOffset = new HashMap<>();
     public HashMap<String, Triplet<Integer,Integer, Integer>> characterOffset1 = new HashMap<>();
 
     public int width;
