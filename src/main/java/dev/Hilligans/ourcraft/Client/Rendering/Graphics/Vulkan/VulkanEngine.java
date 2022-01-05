@@ -15,11 +15,16 @@ import java.awt.image.BufferedImage;
 
 public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer> {
 
-    VulkanInstance vulkanInstance;
+    public VulkanInstance vulkanInstance;
+    public GameInstance gameInstance;
+
+    public VulkanEngine(GameInstance gameInstance) {
+        this.gameInstance = gameInstance;
+    }
 
     @Override
     public RenderWindow createWindow() {
-        return null;
+        return vulkanInstance.logicalDevice.getWindow();
     }
 
     @Override
@@ -59,19 +64,30 @@ public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer> {
 
     @Override
     public void setup() {
-        VulkanProperties vulkanProperties = new VulkanProperties();
-        vulkanProperties.warningValidation().errorValidation().addValidationLayers("VK_LAYER_KHRONOS_validation", "VK_LAYER_KHRONOS_validation").enableValidationLayers();
-        vulkanInstance = new VulkanInstance(vulkanProperties);
+        vulkanInstance = getVulkanInstance();
         vulkanInstance.run();
     }
 
     @Override
     public void close() {
-
+        vulkanInstance.exit("closing");
     }
 
     @Override
     public GameInstance getGameInstance() {
-        return null;
+        return gameInstance;
     }
+
+    public static VulkanInstance getVulkanInstance() {
+        return getVulkanInstance(new VulkanProperties().warningValidation().errorValidation().addValidationLayers("VK_LAYER_KHRONOS_validation", "VK_LAYER_KHRONOS_validation").enableValidationLayers());
+    }
+
+    public static VulkanInstance getVulkanInstance(VulkanProperties vulkanProperties) {
+        if(sInstance == null) {
+            sInstance = new VulkanInstance(vulkanProperties);
+        }
+        return sInstance;
+    }
+
+    public static VulkanInstance sInstance;
 }

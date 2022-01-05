@@ -22,6 +22,8 @@ public class LogicalDevice {
     public VulkanWindow defaultVulkanWindow;
     public VertexBufferManager bufferManager = new VertexBufferManager(this);
 
+    public boolean acquiredDefaultWindow = false;
+
     public LogicalDevice(PhysicalDevice physicalDevice) {
         this.vulkanInstance = physicalDevice.vulkanInstance;
         this.physicalDevice = physicalDevice;
@@ -57,6 +59,15 @@ public class LogicalDevice {
 
     public VulkanWindow createNewWindow() {
         return new VulkanWindow(physicalDevice.vulkanInstance,500,500).addDevice(this);
+    }
+
+    public VulkanWindow getWindow() {
+        System.out.println("poo");
+        if(!acquiredDefaultWindow) {
+            acquiredDefaultWindow = true;
+            return getDefaultWindow();
+        }
+        return createNewWindow();
     }
 
     public void destroy() {

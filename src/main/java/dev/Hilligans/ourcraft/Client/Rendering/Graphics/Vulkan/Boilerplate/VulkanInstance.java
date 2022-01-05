@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate;
 
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.*;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngineException;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFWVulkan;
 import org.lwjgl.system.MemoryStack;
@@ -26,7 +27,6 @@ public class VulkanInstance {
     public VulkanWindow vulkanWindow;
     public VulkanProperties vulkanProperties;
 
-
     public PointerBuffer extensions = memCallocPointer(64);
     public PointerBuffer instance = memAllocPointer(1);
 
@@ -41,8 +41,6 @@ public class VulkanInstance {
             vulkanWindow.graphicsFamily.getQueue(0);
             vulkanWindow.addData();
 
-            //frameManager = new FrameManager(logicalDevice);
-
     }
 
     public void createInstance() {
@@ -52,6 +50,7 @@ public class VulkanInstance {
                 PointerBuffer glfwExtensions = GLFWVulkan.glfwGetRequiredInstanceExtensions();
                 if (glfwExtensions == null) {
                     exit("Unable to initialize vulkan");
+                    return;
                 }
                 for (int x = 0; x < glfwExtensions.capacity(); x++) {
                     extensions.put(glfwExtensions.get(x));
@@ -112,6 +111,8 @@ public class VulkanInstance {
             }
 
             physicalDevice = devices.get(0);
+
+            //TODO fix
             physicalDevice.supportsSwapChain();
         }
     }
@@ -127,7 +128,7 @@ public class VulkanInstance {
 
 
     public void exit(String reason) {
-        new Exception(reason).printStackTrace();
+        new VulkanEngineException(reason).printStackTrace();
         System.exit(0);
     }
 

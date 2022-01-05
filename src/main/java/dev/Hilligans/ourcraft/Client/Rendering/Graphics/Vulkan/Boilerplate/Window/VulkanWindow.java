@@ -1,5 +1,8 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window;
 
+import dev.Hilligans.ourcraft.Client.Client;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IInputProvider;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.LogicalDevice;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline.*;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.QueueFamily;
@@ -19,7 +22,7 @@ import static org.lwjgl.vulkan.KHRSurface.*;
 import static org.lwjgl.vulkan.VK10.VK_SHADER_STAGE_FRAGMENT_BIT;
 import static org.lwjgl.vulkan.VK10.VK_SHADER_STAGE_VERTEX_BIT;
 
-public class VulkanWindow {
+public class VulkanWindow extends RenderWindow {
 
     public LogicalDevice device;
     public long window;
@@ -45,6 +48,8 @@ public class VulkanWindow {
     public int glfwWidth;
     public int glfwHeight;
     public WindowRenderer windowRenderer;
+
+    public Client client;
 
     public VkExtent2D extent2D = VkExtent2D.calloc();
 
@@ -106,6 +111,7 @@ public class VulkanWindow {
     }
 
     public void startDrawing() {
+        System.out.println("pee");
         frameManager = new FrameManager(this);
         while (!glfwWindowShouldClose(window)) {
             glfwPollEvents();
@@ -161,4 +167,28 @@ public class VulkanWindow {
                 outColor = vec4(fragColor, 1.0);
             }""";
 
+    @Override
+    public void close() {
+        cleanup();
+    }
+
+    @Override
+    public boolean shouldClose() {
+        return false;
+    }
+
+    @Override
+    public void swapBuffers() {
+        startDrawing();
+    }
+
+    @Override
+    public Client getClient() {
+        return client;
+    }
+
+    @Override
+    public IInputProvider getInputProvider() {
+        return null;
+    }
 }

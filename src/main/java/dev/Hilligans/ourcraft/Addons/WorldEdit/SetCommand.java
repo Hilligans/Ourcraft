@@ -11,6 +11,8 @@ import dev.Hilligans.ourcraft.World.SubChunk;
 import dev.Hilligans.ourcraft.World.World;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +33,7 @@ public class SetCommand extends WorldEditCommand {
             if(pos == null || !pos.has()) {
                 return "No Position Set";
             }
+
             if(args.length == 0) {
                 return "No Block Provided";
             }
@@ -59,16 +62,13 @@ public class SetCommand extends WorldEditCommand {
                     }
                 }
                 stop.set(true);
-                System.out.println("Finish " + (System.currentTimeMillis() - time));
                 future.get();
-                System.out.println("Future done " + future.isDone());
                 return "Placed " + f.createBoundingBox(s).getVolume() + " Blocks in " + (System.currentTimeMillis() - time) + " Milliseconds";
 
             } catch (Exception e) {
                 e.printStackTrace();
                 return "Block is string";
             }
-
         }
         return "Not an entity";
     }
