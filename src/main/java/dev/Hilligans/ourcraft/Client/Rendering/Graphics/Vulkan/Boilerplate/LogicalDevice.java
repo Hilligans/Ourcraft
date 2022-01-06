@@ -58,7 +58,7 @@ public class LogicalDevice {
     }
 
     public VulkanWindow createNewWindow() {
-        return new VulkanWindow(physicalDevice.vulkanInstance,500,500).addDevice(this);
+        return new VulkanWindow(physicalDevice.vulkanInstance,500,500).addDevice(this).addData();
     }
 
     public VulkanWindow getWindow() {

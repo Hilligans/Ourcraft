@@ -5,6 +5,8 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanInstance;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanProperties;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.VulkanWindow;
+import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.Resource.LWJGLResourceProvider;
 import dev.Hilligans.ourcraft.Resource.ResourceProvider;
@@ -13,7 +15,7 @@ import dev.Hilligans.ourcraft.World.ClientWorld;
 
 import java.awt.image.BufferedImage;
 
-public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer> {
+public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer, VulkanWindow> {
 
     public VulkanInstance vulkanInstance;
     public GameInstance gameInstance;
@@ -23,7 +25,7 @@ public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer> {
     }
 
     @Override
-    public RenderWindow createWindow() {
+    public VulkanWindow createWindow() {
         return vulkanInstance.logicalDevice.getWindow();
     }
 
@@ -43,7 +45,7 @@ public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer> {
     }
 
     @Override
-    public void render(RenderWindow window) {
+    public void render(VulkanWindow window) {
 
     }
 
@@ -79,7 +81,7 @@ public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer> {
     }
 
     public static VulkanInstance getVulkanInstance() {
-        return getVulkanInstance(new VulkanProperties().warningValidation().errorValidation().addValidationLayers("VK_LAYER_KHRONOS_validation", "VK_LAYER_KHRONOS_validation").enableValidationLayers());
+        return getVulkanInstance(new VulkanProperties(ClientMain.argumentContainer).warningValidation().errorValidation().addValidationLayers("VK_LAYER_KHRONOS_validation", "VK_LAYER_KHRONOS_validation").enableValidationLayers());
     }
 
     public static VulkanInstance getVulkanInstance(VulkanProperties vulkanProperties) {

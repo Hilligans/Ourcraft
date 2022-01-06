@@ -23,14 +23,15 @@ public class PhysicalDevice {
     public IntBuffer presentModes;
     public VkSurfaceFormatKHR.Buffer surfaceFormats;
     public LogicalDevice defaultDevice;
+    public String deviceName;
 
     public PhysicalDevice(VkPhysicalDevice physicalDevice, VulkanInstance vulkanInstance) {
         this.physicalDevice = physicalDevice;
         this.vulkanInstance = vulkanInstance;
         getQueueFamilies();
-        this.defaultDevice = new LogicalDevice(this);
+        this.defaultDevice = createDevice();
         getSurfaceCapabilities();
-        //this.defaultDevice.defaultWindow.addData();
+
         for(QueueFamily queueFamily : queueFamilies) {
             queueFamily.testPresent();
         }

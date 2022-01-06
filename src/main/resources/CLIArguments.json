@@ -1,0 +1,7 @@
+{
+  "Vulkan": {
+    "description": "The main list for vulkan arguments",
+    "--vkDevice": "The index into the device list to use as the default.",
+    "--vkDeviceName": "The device name to use as the default."
+  }
+}

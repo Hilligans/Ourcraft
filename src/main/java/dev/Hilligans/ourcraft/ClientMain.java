@@ -4,13 +4,16 @@ import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Block.BlockTypes.ChestBlock;
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.VulkanWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngine;
 import dev.Hilligans.ourcraft.Command.Commands;
 import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 import dev.Hilligans.ourcraft.Tag.ListNBTTag;
 import dev.Hilligans.ourcraft.Tag.NBTTag;
+import dev.Hilligans.ourcraft.Util.ArgumentContainer;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ClientMain {
@@ -22,11 +25,28 @@ public class ClientMain {
     }
     public static GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
 
+    public static ArgumentContainer argumentContainer;
 
     public static void main(String[] args) {
+        argumentContainer = new ArgumentContainer(args);
         gameInstance.handleArgs(args);
         client = new Client(gameInstance);
-        client.startClient();
+        VulkanEngine vulkanEngine = new VulkanEngine(gameInstance);
+        vulkanEngine.setup();
+        RenderWindow window = vulkanEngine.createWindow();
+       // RenderWindow window1 = vulkanEngine.createWindow();
+       // if(window1 instanceof VulkanWindow window2) {
+            //window2.selectFamily().graphicsFamily.getQueue(0);
+       // }
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+             //   window.swapBuffers();
+            }
+        }.start();
+        window.swapBuffers();
+        //client.startClient();
     }
 
     public static void handleArgs(String[] args) {

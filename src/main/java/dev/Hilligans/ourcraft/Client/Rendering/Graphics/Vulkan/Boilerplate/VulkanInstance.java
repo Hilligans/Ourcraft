@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate;
 
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.*;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngineException;
+import dev.Hilligans.ourcraft.Util.ArgumentContainer;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFWVulkan;
 import org.lwjgl.system.MemoryStack;
@@ -20,6 +21,7 @@ import static org.lwjgl.vulkan.VK11.*;
 public class VulkanInstance {
 
     public PhysicalDevice physicalDevice;
+    public PhysicalDeviceManager devices;
     public LogicalDevice logicalDevice;
     public VkInstance vkInstance;
     public VkApplicationInfo applicationInfo;
@@ -33,10 +35,10 @@ public class VulkanInstance {
     public VulkanInstance(VulkanProperties vulkanProperties) {
         this.vulkanProperties = vulkanProperties;
             createInstance();
-            selectPhysicalDevice();
+            devices = new PhysicalDeviceManager(this);
+            physicalDevice = devices.selectPhysicalDevice();
             logicalDevice = physicalDevice.defaultDevice;
             vulkanWindow = physicalDevice.defaultDevice.getDefaultWindow();
-            vulkanWindow.device = logicalDevice;
             vulkanWindow.selectFamily();
             vulkanWindow.graphicsFamily.getQueue(0);
             vulkanWindow.addData();
@@ -92,8 +94,8 @@ public class VulkanInstance {
     }
 
     public void run() {
-        vulkanWindow.startDrawing();
-        cleanup();
+        //vulkanWindow.startDrawing();
+        //cleanup();
     }
 
     public static final int MAX_FRAMES_IN_FLIGHT = 2;
@@ -126,6 +128,9 @@ public class VulkanInstance {
         }
     }
 
+    public ArgumentContainer getArgumentContainer() {
+        return vulkanProperties.argumentContainer;
+    }
 
     public void exit(String reason) {
         new VulkanEngineException(reason).printStackTrace();

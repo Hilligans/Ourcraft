@@ -46,7 +46,7 @@ import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL32.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer> {
+public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, OpenGLWindow> {
 
     public TwoInt2ObjectMap<OpenGLGraphicsContainer> chunks = new TwoInt2ObjectMap<>();
 
@@ -60,7 +60,7 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer> {
     }
 
     @Override
-    public RenderWindow createWindow() {
+    public OpenGLWindow createWindow() {
         return new OpenGLWindow(window,client);
     }
 
@@ -80,7 +80,7 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer> {
     }
 
     @Override
-    public void render(RenderWindow window) {
+    public void render(OpenGLWindow window) {
         client.mouseLocked = client.screen == null;
         glGetError();
         GLRenderer.resetFrame();

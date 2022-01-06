@@ -1,5 +1,6 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate;
 
+import dev.Hilligans.ourcraft.Util.ArgumentContainer;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.*;
@@ -20,6 +21,16 @@ public class VulkanProperties {
     public int colorFormat = VK_FORMAT_B8G8R8_SRGB;
     public int colorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
     public int presentMode = VK_PRESENT_MODE_IMMEDIATE_KHR;
+
+    public ArgumentContainer argumentContainer;
+
+    public VulkanProperties() {
+        this(new ArgumentContainer());
+    }
+
+    public VulkanProperties(ArgumentContainer argumentContainer) {
+        this.argumentContainer = argumentContainer;
+    }
 
     public VulkanProperties addValidationLayers(String... layers) {
         validationLayers = layers;

@@ -82,7 +82,7 @@ public class GameInstance {
     public final Registry<Tag> TAGS = new Registry<>(this, Tag.class);
     public final Registry<IRecipe<?>> RECIPES = new Registry<>(this, IRecipe.class);
     public final Registry<RecipeView<?>> RECIPE_VIEWS = new Registry<>(this, RecipeView.class);
-    public final Registry<IGraphicsEngine<?>> GRAPHICS_ENGINES = new Registry<>(this, IGraphicsEngine.class);
+    public final Registry<IGraphicsEngine<?,?>> GRAPHICS_ENGINES = new Registry<>(this, IGraphicsEngine.class);
     public final Registry<CommandHandler> COMMANDS = new Registry<>(this, CommandHandler.class);
     public final Registry<Protocol> PROTOCOLS = new Registry<>(this, Protocol.class);
     public final Registry<Setting> SETTINGS = new Registry<>(this, Setting.class);

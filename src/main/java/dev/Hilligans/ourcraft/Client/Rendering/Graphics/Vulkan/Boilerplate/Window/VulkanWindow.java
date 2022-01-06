@@ -88,7 +88,7 @@ public class VulkanWindow extends RenderWindow {
         return this;
     }
 
-    public void selectFamily() {
+    public VulkanWindow selectFamily() {
         graphicsFamily = device.queueGroup.findSupported(true,false,false,true);
         if(graphicsFamily == null) {
             device.vulkanInstance.exit("No queue family found");
@@ -96,6 +96,7 @@ public class VulkanWindow extends RenderWindow {
         vulkanWidth = clamp(vulkanWidth,device.physicalDevice.surfaceCapabilities.minImageExtent().width(),device.physicalDevice.surfaceCapabilities.maxImageExtent().width());
         vulkanHeight = clamp(vulkanHeight,device.physicalDevice.surfaceCapabilities.minImageExtent().height(),device.physicalDevice.surfaceCapabilities.maxImageExtent().height());
         resize(window, 500,500);
+        return this;
     }
 
     public void resize(long window, int width, int height) {

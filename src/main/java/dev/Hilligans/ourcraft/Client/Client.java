@@ -98,7 +98,7 @@ public class Client {
     public ClientNetwork authNetwork;
     public GameInstance gameInstance;
 
-    public IGraphicsEngine<?> graphicsEngine = new OpenGLEngine(this);
+    public IGraphicsEngine<?,?> graphicsEngine = new OpenGLEngine(this);
     public ResourceProvider resourceProvider = graphicsEngine.createResourceProvider();
 
     public Client(GameInstance gameInstance) {

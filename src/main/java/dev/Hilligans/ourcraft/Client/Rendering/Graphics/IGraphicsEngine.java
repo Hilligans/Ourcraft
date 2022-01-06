@@ -8,9 +8,9 @@ import dev.Hilligans.ourcraft.Resource.ResourceProvider;
 import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.World.ClientWorld;
 
-public interface IGraphicsEngine<T> {
+public interface IGraphicsEngine<T, Q extends RenderWindow> {
 
-    RenderWindow createWindow();
+    Q createWindow();
 
     T getChunkGraphicsContainer(Chunk chunk);
 
@@ -18,7 +18,7 @@ public interface IGraphicsEngine<T> {
 
     void putChunkGraphicsContainer(Chunk chunk, T container);
 
-    void render(RenderWindow window);
+    void render(Q window);
 
     void renderWorld(MatrixStack matrixStack, ClientWorld world);
 
@@ -38,7 +38,7 @@ public interface IGraphicsEngine<T> {
             public void run() {
                 while (!window.shouldClose()) {
                     gameInstance.EVENT_BUS.postEvent(new RenderPreEvent());
-                    render(window);
+                    render((Q) window);
                     gameInstance.EVENT_BUS.postEvent(new RenderPostEvent(window.getClient()));
                     window.swapBuffers();
                 }
