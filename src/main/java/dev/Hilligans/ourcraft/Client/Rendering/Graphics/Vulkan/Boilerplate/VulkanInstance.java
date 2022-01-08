@@ -37,8 +37,8 @@ public class VulkanInstance {
             createInstance();
             devices = new PhysicalDeviceManager(this);
             physicalDevice = devices.selectPhysicalDevice();
-            logicalDevice = physicalDevice.defaultDevice;
-            vulkanWindow = physicalDevice.defaultDevice.getDefaultWindow();
+            logicalDevice = physicalDevice.logicalDevice;
+            vulkanWindow = physicalDevice.logicalDevice.getDefaultWindow();
             vulkanWindow.selectFamily();
             vulkanWindow.graphicsFamily.getQueue(0);
             vulkanWindow.addData();
@@ -117,6 +117,10 @@ public class VulkanInstance {
             //TODO fix
             physicalDevice.supportsSwapChain();
         }
+    }
+
+    public PhysicalDevice getDefaultDevice() {
+        return devices.getDefaultDevice();
     }
 
     public void cleanup() {

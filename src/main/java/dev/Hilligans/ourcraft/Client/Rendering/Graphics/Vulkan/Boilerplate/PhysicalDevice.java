@@ -22,14 +22,14 @@ public class PhysicalDevice {
     public VkSurfaceCapabilitiesKHR surfaceCapabilities;
     public IntBuffer presentModes;
     public VkSurfaceFormatKHR.Buffer surfaceFormats;
-    public LogicalDevice defaultDevice;
+    public LogicalDevice logicalDevice;
     public String deviceName;
 
     public PhysicalDevice(VkPhysicalDevice physicalDevice, VulkanInstance vulkanInstance) {
         this.physicalDevice = physicalDevice;
         this.vulkanInstance = vulkanInstance;
         getQueueFamilies();
-        this.defaultDevice = createDevice();
+        this.logicalDevice = createDevice();
         getSurfaceCapabilities();
 
         for(QueueFamily queueFamily : queueFamilies) {
@@ -83,16 +83,16 @@ public class PhysicalDevice {
     private void getSurfaceCapabilities() {
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             surfaceCapabilities = VkSurfaceCapabilitiesKHR.calloc();
-            vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, defaultDevice.defaultVulkanWindow.surface, surfaceCapabilities);
+            vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, logicalDevice.defaultVulkanWindow.surface, surfaceCapabilities);
 
             IntBuffer size = memoryStack.mallocInt(1);
-            vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, defaultDevice.getDefaultWindow().surface, size, null);
+            vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, logicalDevice.getDefaultWindow().surface, size, null);
             surfaceFormats = VkSurfaceFormatKHR.calloc(size.get(0));
-            vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, defaultDevice.getDefaultWindow().surface, size, surfaceFormats);
+            vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, logicalDevice.getDefaultWindow().surface, size, surfaceFormats);
 
-            vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, defaultDevice.getDefaultWindow().surface, size, null);
+            vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, logicalDevice.getDefaultWindow().surface, size, null);
             presentModes = memoryStack.callocInt(size.get(0));
-            vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, defaultDevice.getDefaultWindow().surface, size, presentModes);
+            vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, logicalDevice.getDefaultWindow().surface, size, presentModes);
         }
     }
 

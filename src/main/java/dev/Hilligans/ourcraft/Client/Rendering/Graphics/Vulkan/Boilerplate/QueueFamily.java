@@ -34,7 +34,7 @@ public class QueueFamily {
     }
 
     public void testPresent() {
-        supportsPresent = VkInterface.vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice.physicalDevice,index,physicalDevice.defaultDevice.getDefaultWindow().surface);
+        supportsPresent = VkInterface.vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice.physicalDevice,index,physicalDevice.logicalDevice.getDefaultWindow().surface);
     }
 
     public boolean hasCompute() {

@@ -9,7 +9,7 @@ public class Queue {
 
     public Queue(VulkanInstance vulkanInstance, long handle) {
         this.vulkanInstance = vulkanInstance;
-        vkQueue = new VkQueue(handle,vulkanInstance.logicalDevice.device);
+        vkQueue = new VkQueue(handle,vulkanInstance.getDefaultDevice().logicalDevice.device);
     }
 
     public void cleanup() {

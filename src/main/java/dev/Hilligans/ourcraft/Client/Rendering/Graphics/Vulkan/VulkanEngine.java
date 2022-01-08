@@ -26,7 +26,7 @@ public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer, Vu
 
     @Override
     public VulkanWindow createWindow() {
-        return vulkanInstance.logicalDevice.getWindow();
+        return vulkanInstance.getDefaultDevice().logicalDevice.getWindow();
     }
 
     @Override
