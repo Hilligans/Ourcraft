@@ -3,6 +3,7 @@ package dev.Hilligans.ourcraft.Resource;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -22,11 +23,11 @@ public abstract class ResourceLoader<T> {
         return this;
     }
 
-    public T getResource(String path) {
-        return getResource(WorldLoader.readResource(path));
+    public T read(String path) {
+        return read(WorldLoader.readResource(path));
     }
 
-    public abstract T getResource(ByteBuffer buffer);
+    public abstract T read(ByteBuffer buffer);
 
     public void write(String path, T t) {
         WorldLoader.write(path, write(t));
@@ -38,4 +39,12 @@ public abstract class ResourceLoader<T> {
         return new String(buffer.array());
     }
 
+    public String[] toStrings(ByteBuffer buffer) {
+        String s = new String(buffer.array());
+        return s.split("\\n");
+    }
+
+    public ByteBuffer toByteBuffer(String string) {
+        return ByteBuffer.wrap(string.getBytes(StandardCharsets.UTF_8));
+    }
 }

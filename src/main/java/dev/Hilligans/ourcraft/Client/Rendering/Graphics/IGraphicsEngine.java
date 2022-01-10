@@ -4,7 +4,6 @@ import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.RenderPostEvent;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.RenderPreEvent;
-import dev.Hilligans.ourcraft.Resource.ResourceProvider;
 import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.World.ClientWorld;
 
@@ -23,8 +22,6 @@ public interface IGraphicsEngine<T, Q extends RenderWindow> {
     void renderWorld(MatrixStack matrixStack, ClientWorld world);
 
     void renderScreen(MatrixStack screenStack);
-
-    ResourceProvider createResourceProvider();
 
     void setup();
 

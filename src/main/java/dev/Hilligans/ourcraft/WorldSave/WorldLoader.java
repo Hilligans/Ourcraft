@@ -110,6 +110,20 @@ public class WorldLoader {
         }
     }
 
+    public static ByteBuffer readResource(String path, boolean direct) {
+        try {
+            InputStream inputStream = Ourcraft.getResourceManager().getResource(path);
+            byte[] vals = inputStream.readAllBytes();
+            ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vals.length);
+            byteBuffer.put(vals);
+            byteBuffer.flip();
+            return byteBuffer;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
 
     public static String readString(String path) {

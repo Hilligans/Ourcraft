@@ -1,5 +1,9 @@
 package dev.Hilligans.ourcraft;
 
+import dev.Hilligans.ourcraft.ModHandler.Content.ContentPack;
+import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
+import dev.Hilligans.ourcraft.Resource.Loaders.ImageLoader;
+import dev.Hilligans.ourcraft.Resource.Loaders.JsonLoader;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import at.favre.lib.crypto.bcrypt.BCrypt;
@@ -31,5 +35,9 @@ public class Ourcraft {
 
     static {
         GAME_INSTANCE.loadContent();
+    }
+
+    public static void registerDefaultContent(ModContent modContent) {
+        modContent.registerResourceLoaders(new JsonLoader(), new ImageLoader());
     }
 }

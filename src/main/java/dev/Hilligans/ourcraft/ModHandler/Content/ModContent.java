@@ -16,6 +16,7 @@ import dev.Hilligans.ourcraft.ModHandler.Mod;
 import dev.Hilligans.ourcraft.Network.PacketBase;
 import dev.Hilligans.ourcraft.Network.PacketData;
 import dev.Hilligans.ourcraft.Network.Protocol;
+import dev.Hilligans.ourcraft.Resource.ResourceLoader;
 import dev.Hilligans.ourcraft.Util.ByteArray;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.Util.Util;
@@ -54,6 +55,8 @@ public class ModContent {
     public ArrayList<SoundBuffer> sounds = new ArrayList<>();
     public ArrayList<IModel> models = new ArrayList<>();
     public ArrayList<Tag> tags = new ArrayList<>();
+    public ArrayList<ResourceLoader<?>> resourceLoaders = new ArrayList<>();
+   // public ArrayList<>
 
     public BiFunction<JSONObject,String,Block> blockParser = (blockData, string) -> {
         Block block = new Block(string, "/Data/" + blockData.getString("data"),modID,blockData.optJSONObject("overrides"));
@@ -205,6 +208,16 @@ public class ModContent {
     public final void registerPackets(String protocolName, int id, Supplier<PacketBase>... packets) {
         for(Supplier<PacketBase> packet : packets) {
             registerPacket(protocolName,id,packet);
+        }
+    }
+
+    public void registerResourceLoader(ResourceLoader<?> resourceLoader) {
+        resourceLoaders.add(resourceLoader);
+    }
+
+    public void registerResourceLoaders(ResourceLoader<?>... resourceLoaders) {
+        for(ResourceLoader<?> resourceLoader : resourceLoaders) {
+            registerResourceLoader(resourceLoader);
         }
     }
 

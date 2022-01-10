@@ -90,7 +90,7 @@ public class WorldTextureManager {
     }
 
     public static Image loadImage1(String path) {
-        return ClientMain.getClient().resourceProvider.getTexture("Images/" + path,"", Ourcraft.getResourceManager());
+        return (Image) ClientMain.getClient().gameInstance.RESOURCE_LOADER.getResource("Images/" + path);
     }
 
     public static BufferedImage loadImage(String path, String source) {

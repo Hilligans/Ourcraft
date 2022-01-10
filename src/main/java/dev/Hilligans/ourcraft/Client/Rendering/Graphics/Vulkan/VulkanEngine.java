@@ -4,16 +4,11 @@ import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanInstance;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanProperties;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.VulkanWindow;
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.GameInstance;
-import dev.Hilligans.ourcraft.Resource.LWJGLResourceProvider;
-import dev.Hilligans.ourcraft.Resource.ResourceProvider;
 import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.World.ClientWorld;
-
-import java.awt.image.BufferedImage;
 
 public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer, VulkanWindow> {
 
@@ -57,11 +52,6 @@ public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer, Vu
     @Override
     public void renderScreen(MatrixStack screenStack) {
 
-    }
-
-    @Override
-    public ResourceProvider createResourceProvider() {
-        return new LWJGLResourceProvider();
     }
 
     @Override

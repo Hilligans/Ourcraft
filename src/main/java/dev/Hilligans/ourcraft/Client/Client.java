@@ -7,24 +7,19 @@ import dev.Hilligans.ourcraft.Client.Lang.Languages;
 import dev.Hilligans.ourcraft.Client.Mouse.MouseHandler;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLGraphicsContainer;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.GLRenderer;
-import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.TextAtlas;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.ContainerScreens.CreativeInventoryScreen;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.EscapeScreen;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.JoinScreen;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.ShaderManager;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.VAOManager;
-import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.WorldTextureManager;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.Container.Container;
 import dev.Hilligans.ourcraft.Container.Slot;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
 import dev.Hilligans.ourcraft.Data.Other.PlayerList;
-import dev.Hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.Item.ItemStack;
 import dev.Hilligans.ourcraft.Network.ClientNetwork;
@@ -40,7 +35,6 @@ import dev.Hilligans.ourcraft.Client.Audio.Sounds;
 import dev.Hilligans.ourcraft.Client.Rendering.*;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.*;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
-import dev.Hilligans.ourcraft.Resource.ResourceProvider;
 import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 import dev.Hilligans.ourcraft.Server.MultiPlayerServer;
@@ -99,7 +93,6 @@ public class Client {
     public GameInstance gameInstance;
 
     public IGraphicsEngine<?,?> graphicsEngine = new OpenGLEngine(this);
-    public ResourceProvider resourceProvider = graphicsEngine.createResourceProvider();
 
     public Client(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
@@ -443,7 +436,7 @@ public class Client {
     }
 
     public static long timeSinceLastDraw = 0;
-    public static float drawTime = 1000f / Settings.maxFps;
+    public static float drawTime = 1000f * 1000000 / Settings.maxFps;
 
     public double lastTime;
     public int nbFrames = 0;
@@ -455,7 +448,6 @@ public class Client {
         double currentTime = glfwGetTime();
         nbFrames++;
         if ( currentTime - lastTime >= 1.0 ){
-
             fps = nbFrames;
             nbFrames = 0;
             lastTime += 1.0;

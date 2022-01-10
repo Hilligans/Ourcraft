@@ -1,9 +1,11 @@
 package dev.Hilligans.ourcraft.Resource.Loaders;
 
 import dev.Hilligans.ourcraft.Resource.ResourceLoader;
+import groovy.toml.TomlBuilder;
 import org.json.JSONObject;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 public class JsonLoader extends ResourceLoader<JSONObject> {
 
@@ -13,12 +15,12 @@ public class JsonLoader extends ResourceLoader<JSONObject> {
     }
 
     @Override
-    public JSONObject getResource(ByteBuffer buffer) {
+    public JSONObject read(ByteBuffer buffer) {
         return new JSONObject(toString(buffer));
     }
 
     @Override
     public ByteBuffer write(JSONObject jsonObject) {
-        return null;
+        return toByteBuffer(jsonObject.toString());
     }
 }

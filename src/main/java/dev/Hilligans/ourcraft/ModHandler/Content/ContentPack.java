@@ -14,6 +14,7 @@ import dev.Hilligans.ourcraft.Item.Items;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.RenderEndEvent;
 import dev.Hilligans.ourcraft.Network.Protocol;
 import dev.Hilligans.ourcraft.Network.Protocols;
+import dev.Hilligans.ourcraft.Resource.ResourceLoader;
 import dev.Hilligans.ourcraft.Util.Settings;
 
 import java.util.HashMap;
@@ -96,6 +97,9 @@ public class ContentPack {
                 }
                 for(Protocol protocol : mod.protocols.values()) {
                     Protocols.register(protocol);
+                }
+                for(ResourceLoader<?> resourceLoader : mod.resourceLoaders) {
+                    gameInstance.RESOURCE_LOADER.add(resourceLoader);
                 }
             }
         }

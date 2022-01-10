@@ -6,7 +6,6 @@ import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.PlayerMovementThread;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.GLRenderer;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.TextAtlas;
 import dev.Hilligans.ourcraft.Client.Rendering.Renderer;
@@ -22,8 +21,6 @@ import dev.Hilligans.ourcraft.Entity.Entity;
 import dev.Hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.GLInitEvent;
-import dev.Hilligans.ourcraft.Resource.LWJGLResourceProvider;
-import dev.Hilligans.ourcraft.Resource.ResourceProvider;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.Util.TwoInt2ObjectMap;
@@ -84,7 +81,7 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
         client.mouseLocked = client.screen == null;
         glGetError();
         GLRenderer.resetFrame();
-        long currentTime = System.currentTimeMillis();
+        long currentTime = System.nanoTime();
         if(currentTime - Client.timeSinceLastDraw < Client.drawTime) {
             return;
         }
@@ -115,11 +112,6 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
         screenStack.applyTransformation();
 
         client.draw(matrixStack,screenStack);
-    }
-
-    @Override
-    public ResourceProvider createResourceProvider() {
-        return new LWJGLResourceProvider();
     }
 
     @Override

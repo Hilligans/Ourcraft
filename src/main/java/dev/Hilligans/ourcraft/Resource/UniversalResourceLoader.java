@@ -26,10 +26,22 @@ public class UniversalResourceLoader {
     }
 
     public Object getResource(String path) {
-        return getResource(path, "");
+        String extension = getExtension(path);
+        if(extension == null) {
+            return null;
+        }
+        ResourceLoader<?> resourceLoader = extensionLoaders.get(extension);
+        if(resourceLoader == null) {
+            throw new RuntimeException("No Resource Loader found for extension: " + extension);
+        }
+        return resourceLoader.read(path);
     }
 
-    public Object getResource(String path, String category) {
+    public Object getUnknownResource(String path) {
+        return getUnknownResource(path, "");
+    }
+
+    public Object getUnknownResource(String path, String category) {
         HashMap<String, ResourceLoader<?>> loaders = category.equals("") ? extensionLoaders : extensionCategories.get(category);
         if(loaders == null) {
             throw new RuntimeException("Unknown resource category: " + category);
@@ -45,5 +57,15 @@ public class UniversalResourceLoader {
 
     public HashMap<String, ResourceLoader<?>> getExtensionCategory(String category) {
         return extensionCategories.computeIfAbsent(category, a -> new HashMap<>());
+    }
+
+    public static String getExtension(String path) {
+        int pos;
+        for(pos = path.length() - 1; pos > 0; pos--) {
+            if(path.charAt(pos) == '.') {
+                return path.substring(pos + 1);
+            }
+        }
+        return null;
     }
 }

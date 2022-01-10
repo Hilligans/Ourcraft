@@ -22,7 +22,9 @@ import dev.Hilligans.ourcraft.ModHandler.ModLoader;
 import dev.Hilligans.ourcraft.Network.PacketBase;
 import dev.Hilligans.ourcraft.Network.Protocol;
 import dev.Hilligans.ourcraft.Recipe.RecipeHelper.RecipeView;
+import dev.Hilligans.ourcraft.Resource.ResourceLoader;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
+import dev.Hilligans.ourcraft.Resource.UniversalResourceLoader;
 import dev.Hilligans.ourcraft.Settings.Setting;
 import dev.Hilligans.ourcraft.Tag.NBTTag;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
@@ -50,6 +52,7 @@ public class GameInstance {
     public final ModContent OURCRAFT = new ModContent("ourcraft",this).addClassLoader(new URLClassLoader(new URL[]{Ourcraft.class.getProtectionDomain().getCodeSource().getLocation()})).addMainClass(Ourcraft.class);
     public final ContentPack CONTENT_PACK = new ContentPack(this);
     public final AtomicBoolean REBUILDING = new AtomicBoolean(false);
+    public final UniversalResourceLoader RESOURCE_LOADER = new UniversalResourceLoader();
 
 
     public GameInstance() {
@@ -63,6 +66,7 @@ public class GameInstance {
         REGISTRIES.put("ourcraft:settings", SETTINGS);
         REGISTRIES.put("ourcraft:protocols", PROTOCOLS);
         REGISTRIES.put("ourcraft:commands", COMMANDS);
+        REGISTRIES.put("ourcraft:resource_loaders", RESOURCE_LOADERS);
 
     }
 
@@ -86,6 +90,7 @@ public class GameInstance {
     public final Registry<CommandHandler> COMMANDS = new Registry<>(this, CommandHandler.class);
     public final Registry<Protocol> PROTOCOLS = new Registry<>(this, Protocol.class);
     public final Registry<Setting> SETTINGS = new Registry<>(this, Setting.class);
+    public final Registry<ResourceLoader<?>> RESOURCE_LOADERS = new Registry<>(this, ResourceLoader.class);
 
     public void clear() {
         BLOCKS.clear();
@@ -213,6 +218,7 @@ public class GameInstance {
     }
 
     public void registerDefaultContent() {
+        Ourcraft.registerDefaultContent(OURCRAFT);
         PacketBase.register();
         ClientUtil.register();
         Container.register();
