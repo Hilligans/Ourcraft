@@ -85,11 +85,11 @@ public class Biomes {
                 curvedRayEngine.run();
             }
         }
-    }.setChance(100)).setParams(0,0.3f,0,0,0);
+    }.setChance(100)).setParams(0,0.3f,0,1,0);
 
 
     public static final Biome DESERT = new Biome("desert", new CactusBuilder().setFrequency(7)).setSurfaceBlock(Blocks.SAND).setUnderBlock(Blocks.SAND).setParams(0,-0.5f,0,0,0);
-    public static final Biome FOREST = new Biome("forest", new TreeBuilder().setFrequency(2)).setParams(0.2f,0.0f,0,0.2f,0);
+    public static final Biome FOREST = new Biome("forest", new TreeBuilder().setFrequency(2)).setParams(0.2f,0.0f,0,1.2f,0);
     public static final Biome SANDY_HILLS = new Biome("sandy_hills");
  //   public static final Biome MOUNTAIN = new Biome("mountain").setParams(-0.2f,-0.2f,0.5f,0,0.6f).setHeight(new Vector3i(0,-5,50));
  //   public static final Biome MOUNTAIN_EDGE = new Biome("mountain_edge").setParams(-0.2f,-0.2f,0.5f,0,0.3f).setHeight(new Vector3i(0,-5,25));

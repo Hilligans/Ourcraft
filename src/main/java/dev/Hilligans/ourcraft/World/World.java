@@ -92,6 +92,11 @@ public abstract class World {
         }
     }
 
+    public Chunk ensureLoaded(int x, int z) {
+        generateChunk(x,z);
+        return getChunk(x,z);
+    }
+
     public void putChunk(int x, int z, Chunk chunk) {
         chunkCount += chunkContainer.setChunk(x,z,chunk) == null ? 1 : 0;
     }

@@ -76,7 +76,7 @@ public class Client {
     public MouseHandler mouseHandler;
     public Screen screen;
     public ShaderManager shaderManager;
-    public SoundEngine soundEngine = new SoundEngine();
+    public SoundEngine soundEngine;
 
     public int texture;
 
@@ -96,6 +96,7 @@ public class Client {
 
     public Client(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
+        soundEngine = new SoundEngine(gameInstance);
     }
 
     public void startClient() {
@@ -136,7 +137,7 @@ public class Client {
     public void cleanUp() {
         glfwTerminate();
         soundEngine.cleanup();
-        for(SoundBuffer soundBuffer : Sounds.SOUNDS) {
+        for(SoundBuffer soundBuffer : gameInstance.SOUNDS.ELEMENTS) {
             soundBuffer.cleanup();
         }
     }

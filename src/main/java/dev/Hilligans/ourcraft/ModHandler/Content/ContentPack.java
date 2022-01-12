@@ -69,8 +69,6 @@ public class ContentPack {
             }
         }
         gameInstance.clear();
-        Sounds.SOUNDS.clear();
-        Sounds.MAPPED_SOUND.clear();
         gameInstance.RESOURCE_MANAGER.clearData();
         Protocols.clear();
 
@@ -78,7 +76,7 @@ public class ContentPack {
             if(shouldLoad.get(string)) {
                 ModContent mod = mods.get(string);
                 for(SoundBuffer soundBuffer : mod.sounds) {
-                    Sounds.registerSound(soundBuffer.file,soundBuffer);
+                    gameInstance.registerSound(soundBuffer);
                 }
                 for (Texture texture : mod.textures) {
                     Textures.registerTexture(texture);

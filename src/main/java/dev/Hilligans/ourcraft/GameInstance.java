@@ -3,6 +3,8 @@ package dev.Hilligans.ourcraft;
 import dev.Hilligans.ourcraft.Biome.Biome;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Block.Blocks;
+import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
+import dev.Hilligans.ourcraft.Client.Audio.SoundSource;
 import dev.Hilligans.ourcraft.Client.Audio.Sounds;
 import dev.Hilligans.ourcraft.Client.Rendering.ClientUtil;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
@@ -11,6 +13,7 @@ import dev.Hilligans.ourcraft.Command.CommandHandler;
 import dev.Hilligans.ourcraft.Container.Container;
 import dev.Hilligans.ourcraft.Data.Descriptors.Tag;
 import dev.Hilligans.ourcraft.Entity.Entity;
+import dev.Hilligans.ourcraft.Entity.EntityFetcher;
 import dev.Hilligans.ourcraft.Item.Item;
 import dev.Hilligans.ourcraft.Item.Items;
 import dev.Hilligans.ourcraft.ModHandler.Content.ContentPack;
@@ -27,6 +30,7 @@ import dev.Hilligans.ourcraft.Resource.ResourceManager;
 import dev.Hilligans.ourcraft.Resource.UniversalResourceLoader;
 import dev.Hilligans.ourcraft.Settings.Setting;
 import dev.Hilligans.ourcraft.Tag.NBTTag;
+import dev.Hilligans.ourcraft.Util.ArgumentContainer;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import dev.Hilligans.ourcraft.Recipe.IRecipe;
 import dev.Hilligans.ourcraft.Util.Registry.Registry;
@@ -53,7 +57,7 @@ public class GameInstance {
     public final ContentPack CONTENT_PACK = new ContentPack(this);
     public final AtomicBoolean REBUILDING = new AtomicBoolean(false);
     public final UniversalResourceLoader RESOURCE_LOADER = new UniversalResourceLoader();
-
+    public final ArgumentContainer ARGUMENTS = new ArgumentContainer();
 
     public GameInstance() {
         REGISTRIES.put("ouracrft:blocks", BLOCKS);
@@ -67,7 +71,8 @@ public class GameInstance {
         REGISTRIES.put("ourcraft:protocols", PROTOCOLS);
         REGISTRIES.put("ourcraft:commands", COMMANDS);
         REGISTRIES.put("ourcraft:resource_loaders", RESOURCE_LOADERS);
-
+        REGISTRIES.put("ourcraft:sounds", SOUNDS);
+        REGISTRIES.put("ourcraft:entities", ENTITIES);
     }
 
     public void loadContent() {
@@ -91,6 +96,8 @@ public class GameInstance {
     public final Registry<Protocol> PROTOCOLS = new Registry<>(this, Protocol.class);
     public final Registry<Setting> SETTINGS = new Registry<>(this, Setting.class);
     public final Registry<ResourceLoader<?>> RESOURCE_LOADERS = new Registry<>(this, ResourceLoader.class);
+    public final Registry<SoundBuffer> SOUNDS = new Registry<>(this, SoundBuffer.class);
+    public final Registry<EntityFetcher> ENTITIES = new Registry<>(this, EntityFetcher.class);
 
     public void clear() {
         BLOCKS.clear();
@@ -174,6 +181,20 @@ public class GameInstance {
         }
     }
 
+    public void registerSound(SoundBuffer soundBuffer) {
+        SOUNDS.put(soundBuffer.file, soundBuffer);
+    }
+
+    public void registerSounds(SoundBuffer... soundBuffers) {
+        for(SoundBuffer soundBuffer : soundBuffers) {
+            registerSound(soundBuffer);
+        }
+    }
+
+    public void registerEntity(EntityFetcher entityFetcher) {
+        //ENTITIES.put(entityFetcher.);
+    }
+
     public void register(String name, Object o) {
         boolean put = false;
         for(Registry<?> registry : REGISTRIES.ELEMENTS) {
@@ -225,15 +246,9 @@ public class GameInstance {
         NBTTag.register();
         Widget.register();
         Entity.register();
-        Blocks.register();
-        Sounds.SOUNDS.size();
-        Items.register();
     }
 
     public void handleArgs(String[] args) {
-        for(String string : args) {
-            EVENT_BUS.postEvent(new ProgramArgumentEvent(string));
-        }
+        ARGUMENTS.handle(args);
     }
-
 }

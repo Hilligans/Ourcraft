@@ -41,7 +41,7 @@ public abstract class ResourceLoader<T> {
 
     public String[] toStrings(ByteBuffer buffer) {
         String s = new String(buffer.array());
-        return s.split("\\n");
+        return s.split("\n");
     }
 
     public ByteBuffer toByteBuffer(String string) {

@@ -1,5 +1,6 @@
 package dev.Hilligans.ourcraft.Command;
 
+import dev.Hilligans.ourcraft.Addons.WorldEdit.LoadCommand;
 import dev.Hilligans.ourcraft.Addons.WorldEdit.PosCommand;
 import dev.Hilligans.ourcraft.Addons.WorldEdit.SetCommand;
 import dev.Hilligans.ourcraft.Addons.WorldEdit.WorldEditData;
@@ -23,6 +24,7 @@ public class Commands {
     public static final CommandHandler SET = new SetCommand(worldEditData);
     public static final CommandHandler POS1 = new PosCommand(1,worldEditData);
     public static final CommandHandler POS2 = new PosCommand(2,worldEditData);
+    public static final CommandHandler LOAD = new LoadCommand(worldEditData);
 
 
     public static Object executeCommand(String command, CommandExecutor commandExecutor) {

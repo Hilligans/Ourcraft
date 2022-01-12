@@ -1,5 +1,6 @@
 package dev.Hilligans.ourcraft.ModHandler.Content;
 
+import dev.Hilligans.ourcraft.Biome.Biome;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.BlockModel;
@@ -56,6 +57,7 @@ public class ModContent {
     public ArrayList<IModel> models = new ArrayList<>();
     public ArrayList<Tag> tags = new ArrayList<>();
     public ArrayList<ResourceLoader<?>> resourceLoaders = new ArrayList<>();
+    public ArrayList<Biome> biomes = new ArrayList<>();
    // public ArrayList<>
 
     public BiFunction<JSONObject,String,Block> blockParser = (blockData, string) -> {
@@ -218,6 +220,16 @@ public class ModContent {
     public void registerResourceLoaders(ResourceLoader<?>... resourceLoaders) {
         for(ResourceLoader<?> resourceLoader : resourceLoaders) {
             registerResourceLoader(resourceLoader);
+        }
+    }
+
+    public void registerBiome(Biome biome) {
+        biomes.add(biome);
+    }
+
+    public void registerBiomes(Biome... biomes) {
+        for(Biome biome : biomes) {
+            registerBiome(biome);
         }
     }
 

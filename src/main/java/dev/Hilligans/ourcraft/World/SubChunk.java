@@ -24,9 +24,9 @@ public class SubChunk {
     public int id = -2;
     int verticesCount = -1;
     World world;
-    long y;
-    long x;
-    long z;
+    public long y;
+    public long x;
+    public long z;
 
     public boolean empty = true;
 

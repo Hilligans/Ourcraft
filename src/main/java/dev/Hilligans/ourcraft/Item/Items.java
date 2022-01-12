@@ -17,12 +17,4 @@ public class Items {
         id++;
         return val;
     }
-
-    public static void register() {}
-
-    static {
-     //   ourcraft.registerItem(TEST_ITEM);
-    }
-
-
 }

@@ -9,6 +9,10 @@ public class ArgumentContainer {
     public HashSet<String> tasks = new HashSet<>();
 
     public ArgumentContainer(String... args) {
+        handle(args);
+    }
+
+    public void handle(String... args) {
         for(String string : args) {
             String[] parts = string.split(":",2);
             if(parts.length != 1) {

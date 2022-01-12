@@ -41,7 +41,11 @@ public class ChunkContainer implements IChunkContainer {
     public Chunk setChunk(int x, int z, Chunk chunk) {
         cache(chunk);
         Int2ObjectOpenHashMap<Chunk> zMap = chunks.computeIfAbsent(x,a -> new Int2ObjectOpenHashMap<>());
-        return zMap.put(z,chunk);
+        try {
+            return zMap.put(z,chunk);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override

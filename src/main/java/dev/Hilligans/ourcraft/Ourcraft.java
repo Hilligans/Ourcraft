@@ -1,5 +1,7 @@
 package dev.Hilligans.ourcraft;
 
+import dev.Hilligans.ourcraft.Biome.Biomes;
+import dev.Hilligans.ourcraft.Client.Audio.Sounds;
 import dev.Hilligans.ourcraft.ModHandler.Content.ContentPack;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.Resource.Loaders.ImageLoader;
@@ -12,6 +14,8 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static dev.Hilligans.ourcraft.Block.Blocks.*;
 
 public class Ourcraft {
 
@@ -39,5 +43,9 @@ public class Ourcraft {
 
     public static void registerDefaultContent(ModContent modContent) {
         modContent.registerResourceLoaders(new JsonLoader(), new ImageLoader());
+
+        modContent.registerBlocks(AIR,STONE,DIRT,GRASS,BEDROCK,IRON_ORE,LEAVES,LOG,SAND,CACTUS,CHEST,COLOR_BLOCK,STAIR_BLOCK,GRASS_PLANT,WEEPING_VINE,MAPLE_LOG,MAPLE_PLANKS,PINE_LOG,PINE_PLANKS,SPRUCE_LOG,SPRUCE_PLANKS,BIRCH_LOG,BIRCH_PLANKS,OAK_LOG,OAK_PLANKS,WILLOW_LOG,WILLOW_PLANKS,ACACIA_LOG,ACACIA_PLANKS,POPLAR_LOG,POPLAR_PLANKS,ELM_LOG,ELM_WOOD,PALM_LOG,PALM_WOOD,REDWOOD_LOG,REDWOOD_WOOD,SAPLING);
+        modContent.registerBiomes(Biomes.PLAINS,Biomes.SANDY_HILLS,Biomes.DESERT,Biomes.FOREST);
+        modContent.registerSounds(Sounds.BLOCK_BREAK, Sounds.MUSIC);
     }
 }

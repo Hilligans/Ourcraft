@@ -7,6 +7,7 @@ import dev.Hilligans.ourcraft.Command.CommandExecutors.EntityExecutor;
 import dev.Hilligans.ourcraft.Command.CommandHandler;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
 import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
+import dev.Hilligans.ourcraft.Util.DaisyChain;
 import dev.Hilligans.ourcraft.World.SubChunk;
 import dev.Hilligans.ourcraft.World.World;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
@@ -37,15 +38,15 @@ public class SetCommand extends WorldEditCommand {
             if(args.length == 0) {
                 return "No Block Provided";
             }
-            ConcurrentLinkedQueue<SubChunk> queue = new ConcurrentLinkedQueue<>();
-            AtomicBoolean stop = new AtomicBoolean();
+            DaisyChain<SubChunk> daisyChain = new DaisyChain<>();
 
             try {
                 int val = Integer.parseInt(args[0]);
                 Block b = Blocks.getBlockWithID(val);
                 long time = System.currentTimeMillis();
                 int blockNum = b.id << 16 | 65535;
-                CompletableFuture<Object> future =  runThread(queue,stop,blockNum);
+                CompletableFuture<Object> future =  runThread(daisyChain,blockNum);
+                CompletableFuture<Object> future1 = runThread(daisyChain,blockNum);
 
                 BlockPos f = pos.getTypeA();
                 BlockPos s = pos.typeB;
@@ -54,15 +55,17 @@ public class SetCommand extends WorldEditCommand {
                     for(int y = f.minY(s); y < f.maxY(s); y += 16) {
                         for(int z = f.minZ(s); z < f.maxZ(s); z += 16) {
                             try {
-                                queue.add(world.getChunk(x >> 4, z >> 4).getSubChunk(y >> 4));
+                                daisyChain.add(world.ensureLoaded(x >> 4, z >> 4).getSubChunk(y >> 4));
                             } catch (Exception e) {
+                                e.printStackTrace();
                                 System.out.println(new BlockPos(x,y,z));
                             }
                         }
                     }
                 }
-                stop.set(true);
+                daisyChain.complete = true;
                 future.get();
+                future1.get();
                 return "Placed " + f.createBoundingBox(s).getVolume() + " Blocks in " + (System.currentTimeMillis() - time) + " Milliseconds";
 
             } catch (Exception e) {
@@ -73,26 +76,34 @@ public class SetCommand extends WorldEditCommand {
         return "Not an entity";
     }
 
-    public CompletableFuture<Object> runThread(ConcurrentLinkedQueue<SubChunk> queue, AtomicBoolean stop, int block) {
+    public CompletableFuture<Object> runThread(DaisyChain<SubChunk> daisyChain, int block) {
         return new CompletableFuture<>().completeAsync(() -> {
-            while (queue.peek() == null && !stop.get()) {
-            }
-            SubChunk copyChunk = queue.poll();
-            for (int x = 0; x < 4096; x++) {
-                copyChunk.vals[x] = block;
-            }
-            while (!queue.isEmpty() || !stop.get()) {
-                if (!queue.isEmpty()) {
-                    SubChunk subChunk = queue.poll();
-                    if (subChunk.vals == null) {
-                        subChunk.vals = new int[4096];
-                        subChunk.empty = false;
-                    }
-                    System.arraycopy(copyChunk.vals, 0, subChunk.vals, 0, 4096);
+            try {
+                SubChunk copyChunk = get(daisyChain);
+                for (int x = 0; x < 4096; x++) {
+                    copyChunk.vals[x] = block;
                 }
+                while (!daisyChain.isEmpty() || !daisyChain.isComplete()) {
+                    SubChunk subChunk = daisyChain.get();
+                    if (subChunk != null) {
+                        if (subChunk.vals == null) {
+                            subChunk.vals = new int[4096];
+                            subChunk.empty = false;
+                        }
+                        System.arraycopy(copyChunk.vals, 0, subChunk.vals, 0, 4096);
+                    }
+                }
+                System.out.println("Done");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            System.out.println("Done");
             return false;
         });
+    }
+
+    private static SubChunk get(DaisyChain<SubChunk> daisyChain) {
+        while (daisyChain.isEmpty()) {}
+        SubChunk copyChunk = daisyChain.get();
+        return copyChunk == null ? get(daisyChain) : copyChunk;
     }
 }

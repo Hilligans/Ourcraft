@@ -1,4 +1,4 @@
-package dev.Hilligans.ourcraft.Bot;
+package dev.Hilligans.ourcraft.Addons.Bot;
 
 public class BotScriptAction {
 

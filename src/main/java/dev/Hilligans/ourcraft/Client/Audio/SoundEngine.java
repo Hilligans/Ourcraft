@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.Client.Audio;
 
 import dev.Hilligans.ourcraft.Client.Camera;
+import dev.Hilligans.ourcraft.GameInstance;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.lwjgl.openal.AL;
@@ -28,6 +29,11 @@ public class SoundEngine {
     private SoundListener listener;
 
     public final ArrayList<SoundSource> sounds = new ArrayList<>();
+    public GameInstance gameInstance;
+
+    public SoundEngine(GameInstance gameInstance) {
+        this.gameInstance = gameInstance;
+    }
 
     public void init() {
         this.device = alcOpenDevice((ByteBuffer) null);
@@ -44,7 +50,7 @@ public class SoundEngine {
 
         listener = new SoundListener(Camera.pos.get(new Vector3f()));
 
-        for(SoundBuffer soundBuffer : Sounds.SOUNDS) {
+        for(SoundBuffer soundBuffer : gameInstance.SOUNDS.ELEMENTS) {
             soundBuffer.soundCategory.sounds.add(soundBuffer);
         }
 

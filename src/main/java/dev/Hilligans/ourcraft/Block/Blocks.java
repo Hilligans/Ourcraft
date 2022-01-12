@@ -88,14 +88,8 @@ public class Blocks {
 
     public static final Block SAPLING = new OakSapling("oak_sapling",new BlockProperties());
 
-    public static void register() {
-
-    }
-
 
     static {
-        ModContent ourcraft = Ourcraft.GAME_INSTANCE.OURCRAFT;
-        ourcraft.registerBlocks(AIR,STONE,DIRT,GRASS,BEDROCK,IRON_ORE,LEAVES,LOG,SAND,CACTUS,CHEST,COLOR_BLOCK,STAIR_BLOCK,GRASS_PLANT,WEEPING_VINE,MAPLE_LOG,MAPLE_PLANKS,PINE_LOG,PINE_PLANKS,SPRUCE_LOG,SPRUCE_PLANKS,BIRCH_LOG,BIRCH_PLANKS,OAK_LOG,OAK_PLANKS,WILLOW_LOG,WILLOW_PLANKS,ACACIA_LOG,ACACIA_PLANKS,POPLAR_LOG,POPLAR_PLANKS,ELM_LOG,ELM_WOOD,PALM_LOG,PALM_WOOD,REDWOOD_LOG,REDWOOD_WOOD,SAPLING);
         JSONObject jsonObject = new JSONObject(WorldLoader.readString("/Data/Blocks.json"));
     }
 

@@ -1,4 +1,4 @@
-package dev.Hilligans.ourcraft.Bot;
+package dev.Hilligans.ourcraft.Addons.Bot;
 
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
 import dev.Hilligans.ourcraft.Data.Descriptors.ItemDescriptor;

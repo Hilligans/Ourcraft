@@ -1,5 +1,7 @@
 package dev.Hilligans.ourcraft.Resource;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -59,6 +61,7 @@ public class UniversalResourceLoader {
         return extensionCategories.computeIfAbsent(category, a -> new HashMap<>());
     }
 
+    @Nullable
     public static String getExtension(String path) {
         int pos;
         for(pos = path.length() - 1; pos > 0; pos--) {
