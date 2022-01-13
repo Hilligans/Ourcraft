@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.WorldSave;
 
 import dev.Hilligans.ourcraft.Ourcraft;
+import dev.Hilligans.ourcraft.Resource.ResourceLocation;
 import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 
 import java.io.*;
@@ -60,40 +61,23 @@ public class WorldLoader {
 
     public static ByteBuffer readResourceDirect(String path) {
         try {
-
-            //WorldLoader.class.getResourceAsStream(path).
-            //File file = new File(WorldLoader.class.getResource(path).toURI());
-            //System.out.println("file exist?" + file.exists());
-           // File file = new File(path);
-            //if(file.exists()) {
-           // ScheduledExecutorService
             InputStream inputStream = Ourcraft.getResourceManager().getResource(path);
             byte[] vals = inputStream.readAllBytes();
             ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vals.length);
             byteBuffer.put(vals);
             byteBuffer.flip();
 
-
-            //stbi_load_from_memory()
-
-           // ImageIO.read()
-              /*  RandomAccessFile aFile = new RandomAccessFile(path, "rw");
-                length = (int) aFile.length();
-                ByteBuffer buf = ByteBuffer.allocate(length);
-                buf.mark();
-                aFile.getChannel().read(buf);
-                buf.reset();]
-
-               */
-                return byteBuffer;
-            //}
-            //System.err.println("Failed to find file " + path);
-           // return null;
+            return byteBuffer;
         } catch (Exception e) {
             System.err.println("Failed to find file " + path);
             e.printStackTrace();
             return null;
         }
+    }
+
+    //TODO handle this properly
+    public static ByteBuffer readResourceDirect(ResourceLocation resourceLocation) {
+        return readResourceDirect(resourceLocation.path);
     }
 
     public static ByteBuffer readResource(String path) {
@@ -110,21 +94,10 @@ public class WorldLoader {
         }
     }
 
-    public static ByteBuffer readResource(String path, boolean direct) {
-        try {
-            InputStream inputStream = Ourcraft.getResourceManager().getResource(path);
-            byte[] vals = inputStream.readAllBytes();
-            ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vals.length);
-            byteBuffer.put(vals);
-            byteBuffer.flip();
-            return byteBuffer;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+    //TODO handle this properly
+    public static ByteBuffer readResource(ResourceLocation resourceLocation) {
+        return readResource(resourceLocation.path);
     }
-
-
 
     public static String readString(String path) {
         StringBuilder stringBuilder = new StringBuilder();

@@ -12,11 +12,13 @@ import dev.Hilligans.ourcraft.Data.Other.BlockProperties;
 import dev.Hilligans.ourcraft.Data.Other.ItemProperties;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.Item.BlockItem;
+import dev.Hilligans.ourcraft.Item.Data.ToolLevel;
 import dev.Hilligans.ourcraft.Item.Item;
 import dev.Hilligans.ourcraft.ModHandler.Mod;
 import dev.Hilligans.ourcraft.Network.PacketBase;
 import dev.Hilligans.ourcraft.Network.PacketData;
 import dev.Hilligans.ourcraft.Network.Protocol;
+import dev.Hilligans.ourcraft.Resource.RegistryLoader;
 import dev.Hilligans.ourcraft.Resource.ResourceLoader;
 import dev.Hilligans.ourcraft.Util.ByteArray;
 import dev.Hilligans.ourcraft.Util.Settings;
@@ -31,7 +33,9 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ModContent {
@@ -58,6 +62,10 @@ public class ModContent {
     public ArrayList<Tag> tags = new ArrayList<>();
     public ArrayList<ResourceLoader<?>> resourceLoaders = new ArrayList<>();
     public ArrayList<Biome> biomes = new ArrayList<>();
+    public ArrayList<ToolLevel> toolLevels = new ArrayList<>();
+    public ArrayList<RegistryLoader> registryLoaders = new ArrayList<>();
+
+    public Consumer<ModContent> toolRegister;
    // public ArrayList<>
 
     public BiFunction<JSONObject,String,Block> blockParser = (blockData, string) -> {
@@ -122,6 +130,12 @@ public class ModContent {
         }
         loaded = true;
         readInitializers();
+    }
+
+    public void invokeRegistryLoaders() {
+        for(RegistryLoader registryLoader : registryLoaders) {
+            registryLoader.run();
+        }
     }
 
     public void registerBlock(Block block) {
@@ -230,6 +244,17 @@ public class ModContent {
     public void registerBiomes(Biome... biomes) {
         for(Biome biome : biomes) {
             registerBiome(biome);
+        }
+    }
+
+    public void registerToolLevel(ToolLevel... toolLevels) {
+        this.toolLevels.addAll(List.of(toolLevels));
+    }
+
+    public void registerRegistryLoader(RegistryLoader... registryLoaders) {
+        for(RegistryLoader registryLoader : registryLoaders) {
+            registryLoader.gameInstance = gameInstance;
+            this.registryLoaders.add(registryLoader);
         }
     }
 

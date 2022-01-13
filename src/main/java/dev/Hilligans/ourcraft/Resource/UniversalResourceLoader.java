@@ -28,7 +28,11 @@ public class UniversalResourceLoader {
     }
 
     public Object getResource(String path) {
-        String extension = getExtension(path);
+        return getResource(new ResourceLocation(path));
+    }
+
+    public Object getResource(ResourceLocation resourceLocation) {
+        String extension = getExtension(resourceLocation.path);
         if(extension == null) {
             return null;
         }
@@ -36,7 +40,7 @@ public class UniversalResourceLoader {
         if(resourceLoader == null) {
             throw new RuntimeException("No Resource Loader found for extension: " + extension);
         }
-        return resourceLoader.read(path);
+        return resourceLoader.read(resourceLocation);
     }
 
     public Object getUnknownResource(String path) {

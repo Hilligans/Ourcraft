@@ -14,6 +14,7 @@ import dev.Hilligans.ourcraft.Item.Items;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.RenderEndEvent;
 import dev.Hilligans.ourcraft.Network.Protocol;
 import dev.Hilligans.ourcraft.Network.Protocols;
+import dev.Hilligans.ourcraft.Resource.RegistryLoader;
 import dev.Hilligans.ourcraft.Resource.ResourceLoader;
 import dev.Hilligans.ourcraft.Util.Settings;
 
@@ -75,6 +76,9 @@ public class ContentPack {
         for(String string : mods.keySet()) {
             if(shouldLoad.get(string)) {
                 ModContent mod = mods.get(string);
+                for(RegistryLoader registryLoader : mod.registryLoaders) {
+                    gameInstance.registerRegistryLoaders(registryLoader);
+                }
                 for(SoundBuffer soundBuffer : mod.sounds) {
                     gameInstance.registerSound(soundBuffer);
                 }

@@ -112,19 +112,23 @@ public class StringRenderer {
 
     public TextureAtlas buildTextureAtlas(int startPos) {
         TextureAtlas textureAtlas = new TextureAtlas(1024);
-        for(int x = 0; x < 16; x++) {
-            for(int y = 0; y < 16; y++) {
+        for (int x = 0; x < 16; x++) {
+            for (int y = 0; y < 16; y++) {
                 if (Character.isDefined(startPos * 256 + x * 16 + y)) {
                     char character = Character.toChars(startPos * 256 + x * 16 + y)[0];
                     BufferedImage bufferedImage = WorldTextureManager.stringToBufferedImage(character + "");
                     if (bufferedImage != null) {
-                        charMap.put(character,bufferedImage.getWidth());
-                        idMap.put(character,textureAtlas.addImage(bufferedImage,64));
+                        put(character, bufferedImage.getWidth(), textureAtlas.addImage(bufferedImage, 64));
                     }
                 }
             }
         }
         return textureAtlas;
+    }
+
+    public synchronized void put(char character, int width, int image) {
+        charMap.put(character, width);
+        idMap.put(character, image);
     }
 
     public void ensureTexturesBuilt(IntList intList) {

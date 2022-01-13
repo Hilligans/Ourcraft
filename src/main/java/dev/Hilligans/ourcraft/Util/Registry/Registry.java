@@ -2,9 +2,11 @@ package dev.Hilligans.ourcraft.Util.Registry;
 
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Events.Common.RegisterEvent;
+import dev.Hilligans.ourcraft.ModHandler.Identifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 public class Registry<T> {
 
@@ -43,6 +45,10 @@ public class Registry<T> {
         }
     }
 
+    public void put(Identifier identifier, T element) {
+        put(identifier.getName(),element);
+    }
+
     public void putUnchecked(String name, Object element) {
         put(name,(T)element);
     }
@@ -73,6 +79,12 @@ public class Registry<T> {
             return false;
         }
         return classType.isAssignableFrom(o.getClass());
+    }
+
+    public void forEach(Consumer<T> consumer) {
+        for(T element : ELEMENTS) {
+            consumer.accept(element);
+        }
     }
 
 }

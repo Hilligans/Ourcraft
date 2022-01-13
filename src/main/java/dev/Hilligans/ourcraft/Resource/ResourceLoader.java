@@ -23,7 +23,7 @@ public abstract class ResourceLoader<T> {
         return this;
     }
 
-    public T read(String path) {
+    public T read(ResourceLocation path) {
         return read(WorldLoader.readResource(path));
     }
 

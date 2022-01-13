@@ -3,6 +3,7 @@ package dev.Hilligans.ourcraft.Resource.Loaders;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Ourcraft;
 import dev.Hilligans.ourcraft.Resource.ResourceLoader;
+import dev.Hilligans.ourcraft.Resource.ResourceLocation;
 import dev.Hilligans.ourcraft.Resource.UniversalResourceLoader;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 import org.lwjgl.stb.STBIWriteCallbackI;
@@ -38,8 +39,8 @@ public class ImageLoader extends ResourceLoader<Image> {
     }
 
     @Override
-    public Image read(String path) {
-        return read(WorldLoader.readResource(path, true));
+    public Image read(ResourceLocation path) {
+        return read(WorldLoader.readResourceDirect(path));
     }
 
     @Override

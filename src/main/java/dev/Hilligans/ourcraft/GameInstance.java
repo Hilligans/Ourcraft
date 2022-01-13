@@ -2,10 +2,7 @@ package dev.Hilligans.ourcraft;
 
 import dev.Hilligans.ourcraft.Biome.Biome;
 import dev.Hilligans.ourcraft.Block.Block;
-import dev.Hilligans.ourcraft.Block.Blocks;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
-import dev.Hilligans.ourcraft.Client.Audio.SoundSource;
-import dev.Hilligans.ourcraft.Client.Audio.Sounds;
 import dev.Hilligans.ourcraft.Client.Rendering.ClientUtil;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Widget;
@@ -14,17 +11,18 @@ import dev.Hilligans.ourcraft.Container.Container;
 import dev.Hilligans.ourcraft.Data.Descriptors.Tag;
 import dev.Hilligans.ourcraft.Entity.Entity;
 import dev.Hilligans.ourcraft.Entity.EntityFetcher;
+import dev.Hilligans.ourcraft.Item.Data.ToolLevel;
+import dev.Hilligans.ourcraft.Item.Data.ToolLevelList;
 import dev.Hilligans.ourcraft.Item.Item;
-import dev.Hilligans.ourcraft.Item.Items;
 import dev.Hilligans.ourcraft.ModHandler.Content.ContentPack;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.ModHandler.EventBus;
-import dev.Hilligans.ourcraft.ModHandler.Events.Common.ProgramArgumentEvent;
 import dev.Hilligans.ourcraft.ModHandler.Events.Common.RegistryClearEvent;
 import dev.Hilligans.ourcraft.ModHandler.ModLoader;
 import dev.Hilligans.ourcraft.Network.PacketBase;
 import dev.Hilligans.ourcraft.Network.Protocol;
 import dev.Hilligans.ourcraft.Recipe.RecipeHelper.RecipeView;
+import dev.Hilligans.ourcraft.Resource.RegistryLoader;
 import dev.Hilligans.ourcraft.Resource.ResourceLoader;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
 import dev.Hilligans.ourcraft.Resource.UniversalResourceLoader;
@@ -43,8 +41,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiConsumer;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 public class GameInstance {
 
@@ -58,6 +56,8 @@ public class GameInstance {
     public final AtomicBoolean REBUILDING = new AtomicBoolean(false);
     public final UniversalResourceLoader RESOURCE_LOADER = new UniversalResourceLoader();
     public final ArgumentContainer ARGUMENTS = new ArgumentContainer();
+
+    public final ToolLevelList MATERIAL_LIST = new ToolLevelList();
 
     public GameInstance() {
         REGISTRIES.put("ouracrft:blocks", BLOCKS);
@@ -73,12 +73,14 @@ public class GameInstance {
         REGISTRIES.put("ourcraft:resource_loaders", RESOURCE_LOADERS);
         REGISTRIES.put("ourcraft:sounds", SOUNDS);
         REGISTRIES.put("ourcraft:entities", ENTITIES);
+        REGISTRIES.put("ourcraft:tool_materials", TOOL_MATERIALS);
     }
 
     public void loadContent() {
         registerDefaultContent();
         CONTENT_PACK.mods.put("ourcraft",OURCRAFT);
         MOD_LOADER.loadDefaultMods();
+        CONTENT_PACK.mods.forEach((s, modContent) -> modContent.invokeRegistryLoaders());
     }
 
     public String path = System.getProperty("user.dir");
@@ -98,6 +100,8 @@ public class GameInstance {
     public final Registry<ResourceLoader<?>> RESOURCE_LOADERS = new Registry<>(this, ResourceLoader.class);
     public final Registry<SoundBuffer> SOUNDS = new Registry<>(this, SoundBuffer.class);
     public final Registry<EntityFetcher> ENTITIES = new Registry<>(this, EntityFetcher.class);
+    public final Registry<ToolLevel> TOOL_MATERIALS = new Registry<>(this, ToolLevel.class);
+    public final Registry<RegistryLoader> DATA_LOADERS = new Registry<>(this, RegistryLoader.class);
 
     public void clear() {
         BLOCKS.clear();
@@ -193,6 +197,28 @@ public class GameInstance {
 
     public void registerEntity(EntityFetcher entityFetcher) {
         //ENTITIES.put(entityFetcher.);
+    }
+
+    public void registerEntities(EntityFetcher... entityFetchers) {
+        for(EntityFetcher entityFetcher : entityFetchers) {
+            registerEntity(entityFetcher);
+        }
+    }
+
+    public void registerToolLevel(ToolLevel toolLevel) {
+        TOOL_MATERIALS.put(toolLevel.name.getName(), toolLevel);
+    }
+
+    public void registerToolLevels(ToolLevel... toolLevels) {
+        for(ToolLevel toolLevel : toolLevels) {
+            registerToolLevel(toolLevel);
+        }
+    }
+
+    public void registerRegistryLoaders(RegistryLoader... loaders) {
+        for(RegistryLoader loader : loaders) {
+            DATA_LOADERS.put(loader.name.getName(),loader);
+        }
     }
 
     public void register(String name, Object o) {
