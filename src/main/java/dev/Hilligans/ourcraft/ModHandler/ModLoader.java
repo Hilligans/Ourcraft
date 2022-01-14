@@ -32,7 +32,6 @@ public class ModLoader {
         loadAllMods(new File("mods/"));
         loadClasses(new File("target/classes/"), "");
         gameInstance.CONTENT_PACK.load();
-        gameInstance.CONTENT_PACK.generateData();
     }
 
     public void loadAllMods(File folder) {

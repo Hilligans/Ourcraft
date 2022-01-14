@@ -19,4 +19,10 @@ public abstract class RegistryLoader {
     }
 
     public abstract void run();
+
+    public void runInit() {
+        if(!rerunOnInstanceClear) {
+            run();
+        }
+    }
 }

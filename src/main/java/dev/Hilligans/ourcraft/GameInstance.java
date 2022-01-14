@@ -79,7 +79,9 @@ public class GameInstance {
         registerDefaultContent();
         CONTENT_PACK.mods.put("ourcraft",OURCRAFT);
         MOD_LOADER.loadDefaultMods();
+        CONTENT_PACK.buildVital();
         CONTENT_PACK.mods.forEach((s, modContent) -> modContent.invokeRegistryLoaders());
+        CONTENT_PACK.generateData();
     }
 
     public String path = System.getProperty("user.dir");

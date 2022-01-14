@@ -78,7 +78,6 @@ public class Ourcraft {
                 block.blockProperties.addTexture(textures.getString(x), x, textures.length());
             }
             modContent12.registerBlock(block);
-            System.out.println(block.getName());
         }));
     }
 }

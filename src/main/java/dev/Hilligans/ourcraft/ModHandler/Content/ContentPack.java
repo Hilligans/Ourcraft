@@ -17,6 +17,7 @@ import dev.Hilligans.ourcraft.Resource.Loaders.ResourceLoader;
 import dev.Hilligans.ourcraft.Util.Settings;
 
 import java.util.HashMap;
+import java.util.function.BiConsumer;
 
 public class ContentPack {
 
@@ -61,6 +62,21 @@ public class ContentPack {
     }
 
     ///TODO use Blocks, Items, Entity Instances so the game can still render while its being reupdated.
+
+    public void buildVital() {
+        built = true;
+        for(String string : mods.keySet()) {
+            if(shouldLoad.get(string)) {
+                ModContent mod = mods.get(string);
+                for (ResourceLoader<?> resourceLoader : mod.resourceLoaders) {
+                    gameInstance.RESOURCE_LOADER.add(resourceLoader);
+                }
+            }
+        }
+    }
+
+    public boolean built = false;
+
     private void rebuild() {
         if(!Settings.isServer) {
             if(ClientMain.getClient() != null) {
@@ -71,12 +87,25 @@ public class ContentPack {
         gameInstance.RESOURCE_MANAGER.clearData();
         Protocols.clear();
 
+        if(!built) {
+            buildVital();
+        }
+
         for(String string : mods.keySet()) {
             if(shouldLoad.get(string)) {
                 ModContent mod = mods.get(string);
                 for(RegistryLoader registryLoader : mod.registryLoaders) {
+                    if(registryLoader.rerunOnInstanceClear) {
+                        registryLoader.run();
+                    }
                     gameInstance.registerRegistryLoaders(registryLoader);
                 }
+            }
+        }
+
+        for(String string : mods.keySet()) {
+            if(shouldLoad.get(string)) {
+                ModContent mod = mods.get(string);
                 for(SoundBuffer soundBuffer : mod.sounds) {
                     gameInstance.registerSound(soundBuffer);
                 }
@@ -98,11 +127,9 @@ public class ContentPack {
                 for(Protocol protocol : mod.protocols.values()) {
                     Protocols.register(protocol);
                 }
-                for(ResourceLoader<?> resourceLoader : mod.resourceLoaders) {
-                    gameInstance.RESOURCE_LOADER.add(resourceLoader);
-                }
             }
         }
+        built = false;
         gameInstance.REBUILDING.set(false);
     }
 

@@ -65,19 +65,6 @@ public class ModContent {
     public ArrayList<ToolLevel> toolLevels = new ArrayList<>();
     public ArrayList<RegistryLoader> registryLoaders = new ArrayList<>();
 
-    public Consumer<ModContent> toolRegister;
-   // public ArrayList<>
-
-    public BiFunction<JSONObject,String,Block> blockParser = (blockData, string) -> {
-        Block block = new Block(string, "/Data/" + blockData.getString("data"),blockData.optJSONObject("overrides"));
-        JSONArray textures = blockData.getJSONArray("textures");
-        for(int x = 0; x < textures.length(); x++) {
-            block.blockProperties.addTexture(textures.getString(x),x,textures.length());
-        }
-        return block;
-    };
-
-
     public HashMap<String,Protocol> protocols = new HashMap<>();
 
     public boolean loaded = false;
@@ -129,12 +116,11 @@ public class ModContent {
             mainClass.getConstructor(ModContent.class).newInstance(this);
         }
         loaded = true;
-        readInitializers();
     }
 
     public void invokeRegistryLoaders() {
         for(RegistryLoader registryLoader : registryLoaders) {
-            registryLoader.run();
+            registryLoader.runInit();
         }
     }
 
@@ -257,20 +243,6 @@ public class ModContent {
             this.registryLoaders.add(registryLoader);
         }
     }
-
-    public void readInitializers() {
-        try {
-            JSONObject blocks = new JSONObject(WorldLoader.readString(gameInstance.RESOURCE_MANAGER.getResource("Data/Blocks.json", modID)));
-            for(String string : blocks.keySet()) {
-                JSONObject blockData = blocks.getJSONObject(string);
-                //Block block = blockParser.apply(blockData,string);
-               // registerBlock(block);
-            }
-        } catch (Exception ignored) {
-            ignored.printStackTrace();
-        }
-    }
-
 
     public void putData(ByteArray byteArray) {
         byteArray.writeInt(version);
