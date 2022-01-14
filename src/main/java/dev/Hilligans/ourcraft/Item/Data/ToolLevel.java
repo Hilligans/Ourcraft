@@ -9,4 +9,11 @@ public class ToolLevel {
     public ToolLevel(Identifier name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "ToolLevel{" +
+                "name=" + name +
+                '}';
+    }
 }

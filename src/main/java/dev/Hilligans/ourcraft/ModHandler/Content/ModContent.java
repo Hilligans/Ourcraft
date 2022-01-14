@@ -18,8 +18,8 @@ import dev.Hilligans.ourcraft.ModHandler.Mod;
 import dev.Hilligans.ourcraft.Network.PacketBase;
 import dev.Hilligans.ourcraft.Network.PacketData;
 import dev.Hilligans.ourcraft.Network.Protocol;
-import dev.Hilligans.ourcraft.Resource.RegistryLoader;
-import dev.Hilligans.ourcraft.Resource.ResourceLoader;
+import dev.Hilligans.ourcraft.Resource.RegistryLoaders.RegistryLoader;
+import dev.Hilligans.ourcraft.Resource.Loaders.ResourceLoader;
 import dev.Hilligans.ourcraft.Util.ByteArray;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.Util.Util;
@@ -69,7 +69,7 @@ public class ModContent {
    // public ArrayList<>
 
     public BiFunction<JSONObject,String,Block> blockParser = (blockData, string) -> {
-        Block block = new Block(string, "/Data/" + blockData.getString("data"),modID,blockData.optJSONObject("overrides"));
+        Block block = new Block(string, "/Data/" + blockData.getString("data"),blockData.optJSONObject("overrides"));
         JSONArray textures = blockData.getJSONArray("textures");
         for(int x = 0; x < textures.length(); x++) {
             block.blockProperties.addTexture(textures.getString(x),x,textures.length());
@@ -263,8 +263,8 @@ public class ModContent {
             JSONObject blocks = new JSONObject(WorldLoader.readString(gameInstance.RESOURCE_MANAGER.getResource("Data/Blocks.json", modID)));
             for(String string : blocks.keySet()) {
                 JSONObject blockData = blocks.getJSONObject(string);
-                Block block = blockParser.apply(blockData,string);
-                registerBlock(block);
+                //Block block = blockParser.apply(blockData,string);
+               // registerBlock(block);
             }
         } catch (Exception ignored) {
             ignored.printStackTrace();

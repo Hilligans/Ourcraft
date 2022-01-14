@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class ToolLevelList {
 
-    public ArrayList<ToolLevel> levelList;
-    public Object2IntOpenHashMap<String> id;
+    public ArrayList<ToolLevel> levelList = new ArrayList<>();
+    public Object2IntOpenHashMap<String> id = new Object2IntOpenHashMap<>();
 
     public synchronized ToolLevelList insert(int index, ToolLevel... materials) {
         for(int x = materials.length - 1; x > 0; x--) {

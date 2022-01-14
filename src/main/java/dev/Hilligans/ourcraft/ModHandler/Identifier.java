@@ -27,4 +27,11 @@ public class Identifier {
     public String getName() {
         return name + ":" + getModID();
     }
+
+    @Override
+    public String toString() {
+        return "Identifier{" +
+                "name='" + getName() +
+                '}';
+    }
 }

@@ -1,5 +1,6 @@
-package dev.Hilligans.ourcraft.Resource;
+package dev.Hilligans.ourcraft.Resource.Loaders;
 
+import dev.Hilligans.ourcraft.Resource.ResourceLocation;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 
 import java.nio.ByteBuffer;

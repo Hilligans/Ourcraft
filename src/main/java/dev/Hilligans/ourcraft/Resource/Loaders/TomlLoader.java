@@ -1,6 +1,5 @@
 package dev.Hilligans.ourcraft.Resource.Loaders;
 
-import dev.Hilligans.ourcraft.Resource.ResourceLoader;
 import org.json.JSONObject;
 
 import java.nio.ByteBuffer;

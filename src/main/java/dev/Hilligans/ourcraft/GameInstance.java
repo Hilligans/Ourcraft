@@ -22,8 +22,8 @@ import dev.Hilligans.ourcraft.ModHandler.ModLoader;
 import dev.Hilligans.ourcraft.Network.PacketBase;
 import dev.Hilligans.ourcraft.Network.Protocol;
 import dev.Hilligans.ourcraft.Recipe.RecipeHelper.RecipeView;
-import dev.Hilligans.ourcraft.Resource.RegistryLoader;
-import dev.Hilligans.ourcraft.Resource.ResourceLoader;
+import dev.Hilligans.ourcraft.Resource.RegistryLoaders.RegistryLoader;
+import dev.Hilligans.ourcraft.Resource.Loaders.ResourceLoader;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
 import dev.Hilligans.ourcraft.Resource.UniversalResourceLoader;
 import dev.Hilligans.ourcraft.Settings.Setting;
@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.BiConsumer;
 import java.util.logging.Logger;
 
 public class GameInstance {

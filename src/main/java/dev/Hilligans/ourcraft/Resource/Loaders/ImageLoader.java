@@ -1,23 +1,14 @@
 package dev.Hilligans.ourcraft.Resource.Loaders;
 
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
-import dev.Hilligans.ourcraft.Ourcraft;
-import dev.Hilligans.ourcraft.Resource.ResourceLoader;
 import dev.Hilligans.ourcraft.Resource.ResourceLocation;
 import dev.Hilligans.ourcraft.Resource.UniversalResourceLoader;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 import org.lwjgl.stb.STBIWriteCallbackI;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.stb.STBImageWrite;
-import org.lwjgl.system.MemoryUtil;
-import sun.misc.Unsafe;
 
-import javax.imageio.ImageIO;
-import java.io.FileInputStream;
-import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.lwjgl.system.MemoryUtil.memByteBuffer;
 

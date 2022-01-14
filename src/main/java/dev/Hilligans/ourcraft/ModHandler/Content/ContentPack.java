@@ -2,7 +2,6 @@ package dev.Hilligans.ourcraft.ModHandler.Content;
 
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
-import dev.Hilligans.ourcraft.Client.Audio.Sounds;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.IModel;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
@@ -10,12 +9,11 @@ import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Data.Primitives.Triplet;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.Item.Item;
-import dev.Hilligans.ourcraft.Item.Items;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.RenderEndEvent;
 import dev.Hilligans.ourcraft.Network.Protocol;
 import dev.Hilligans.ourcraft.Network.Protocols;
-import dev.Hilligans.ourcraft.Resource.RegistryLoader;
-import dev.Hilligans.ourcraft.Resource.ResourceLoader;
+import dev.Hilligans.ourcraft.Resource.RegistryLoaders.RegistryLoader;
+import dev.Hilligans.ourcraft.Resource.Loaders.ResourceLoader;
 import dev.Hilligans.ourcraft.Util.Settings;
 
 import java.util.HashMap;

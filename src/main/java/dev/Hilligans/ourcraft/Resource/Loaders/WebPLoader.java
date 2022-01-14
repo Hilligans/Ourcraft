@@ -2,7 +2,6 @@ package dev.Hilligans.ourcraft.Resource.Loaders;
 
 import dev.Hilligans.ourcraft.Client.Rendering.Misc.WebPHelper;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
-import dev.Hilligans.ourcraft.Resource.ResourceLoader;
 
 import java.nio.ByteBuffer;
 

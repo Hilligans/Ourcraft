@@ -1,7 +1,6 @@
 package dev.Hilligans.ourcraft.Resource.Loaders;
 
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.IModel;
-import dev.Hilligans.ourcraft.Resource.ResourceLoader;
 
 import java.nio.ByteBuffer;
 

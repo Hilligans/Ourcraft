@@ -40,7 +40,7 @@ public class Block {
         this.modId = modId;
     }
 
-    public Block(String name, String path, String modId, JSONObject overrides) {
+    public Block(String name, String path, JSONObject overrides) {
         this(name,BlockProperties.loadProperties(path,overrides));
     }
 
