@@ -22,6 +22,7 @@ import dev.Hilligans.ourcraft.ModHandler.ModLoader;
 import dev.Hilligans.ourcraft.Network.PacketBase;
 import dev.Hilligans.ourcraft.Network.Protocol;
 import dev.Hilligans.ourcraft.Recipe.RecipeHelper.RecipeView;
+import dev.Hilligans.ourcraft.Resource.DataLoader.DataLoader;
 import dev.Hilligans.ourcraft.Resource.RegistryLoaders.RegistryLoader;
 import dev.Hilligans.ourcraft.Resource.Loaders.ResourceLoader;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
@@ -55,6 +56,7 @@ public class GameInstance {
     public final AtomicBoolean REBUILDING = new AtomicBoolean(false);
     public final UniversalResourceLoader RESOURCE_LOADER = new UniversalResourceLoader();
     public final ArgumentContainer ARGUMENTS = new ArgumentContainer();
+    public final DataLoader DATA_LOADER = new DataLoader();
 
     public final ToolLevelList MATERIAL_LIST = new ToolLevelList();
 

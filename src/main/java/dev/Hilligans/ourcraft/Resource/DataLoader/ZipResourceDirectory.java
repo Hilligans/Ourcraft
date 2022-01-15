@@ -20,6 +20,14 @@ public class ZipResourceDirectory implements ResourceDirectory {
     }
 
     @Override
+    public ByteBuffer getDirect(String path) throws IOException {
+        byte[] vals = zipFile.getInputStream(zipFile.getEntry(path)).readAllBytes();
+        ByteBuffer buf = ByteBuffer.allocateDirect(vals.length);
+        buf.put(vals);
+        return buf;
+    }
+
+    @Override
     public ArrayList<String> getFiles(String path) {
         ArrayList<String> files = new ArrayList<>();
         for(ZipEntry zipEntry : zipFile.stream().toList()) {

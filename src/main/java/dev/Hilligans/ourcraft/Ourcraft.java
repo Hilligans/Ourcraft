@@ -69,6 +69,7 @@ public class Ourcraft {
                 case "before" -> modContent1.gameInstance.MATERIAL_LIST.insertBefore(parts[1], levels);
                 case "after" -> modContent1.gameInstance.MATERIAL_LIST.insertAfter(parts[1], levels);
             }
+            modContent.gameInstance.registerToolLevels(levels);
         }).rerunOnInstanceClear());
 
         modContent.registerRegistryLoader(new JsonRegistryLoader(new Identifier("blocks", "ourcraft"), "Data/Blocks.json", (modContent12, jsonObject, key) -> {

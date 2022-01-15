@@ -31,6 +31,7 @@ public class ModLoader {
     public void loadDefaultMods() {
         loadAllMods(new File("mods/"));
         loadClasses(new File("target/classes/"), "");
+        gameInstance.DATA_LOADER.addFolder("target/classes/", "ourcraft");
         gameInstance.CONTENT_PACK.load();
     }
 
@@ -66,6 +67,7 @@ public class ModLoader {
                             modContent.mainClass = testClass;
                             modContent.addClassLoader(child);
                             mainClasses.put(modID,new Triplet<>(testClass,mod.getAbsolutePath(),false));
+                            gameInstance.DATA_LOADER.addFolder("target/classes/",modID);
                             gameInstance.CONTENT_PACK.registerModContent(modContent);
                         }
                     } catch (Exception ignored) {}
@@ -94,6 +96,7 @@ public class ModLoader {
                     mainClasses.put(modID,new Triplet<>(testClass,file.getAbsolutePath(),true));
                     modContent.mainClass = testClass;
                     modContent.addClassLoader(child);
+                    gameInstance.DATA_LOADER.addJar(file.getPath(),modID);
                     gameInstance.CONTENT_PACK.registerModContent(modContent);
                     return true;
                 }

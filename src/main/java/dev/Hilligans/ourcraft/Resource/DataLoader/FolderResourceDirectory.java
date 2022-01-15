@@ -24,6 +24,11 @@ public class FolderResourceDirectory implements ResourceDirectory {
     }
 
     @Override
+    public ByteBuffer getDirect(String path) throws IOException {
+        return null;
+    }
+
+    @Override
     public ArrayList<String> getFiles(String path) {
         ArrayList<String> files = new ArrayList<>();
         recursivelyAdd(path,folder,files);

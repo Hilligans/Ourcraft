@@ -7,6 +7,9 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.VulkanWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngine;
 import dev.Hilligans.ourcraft.Command.Commands;
+import dev.Hilligans.ourcraft.Resource.DataLoader.ResourceDirectory;
+import dev.Hilligans.ourcraft.Resource.DataLoader.ZipResourceDirectory;
+import dev.Hilligans.ourcraft.Resource.ResourceLocation;
 import dev.Hilligans.ourcraft.Resource.UniversalResourceLoader;
 import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 import dev.Hilligans.ourcraft.Tag.ListNBTTag;
@@ -14,8 +17,11 @@ import dev.Hilligans.ourcraft.Tag.NBTTag;
 import dev.Hilligans.ourcraft.Util.ArgumentContainer;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.BiConsumer;
+import java.util.zip.ZipFile;
 
 public class ClientMain {
 
@@ -28,10 +34,10 @@ public class ClientMain {
 
     public static ArgumentContainer argumentContainer;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         argumentContainer = new ArgumentContainer(args);
         gameInstance.handleArgs(args);
-        System.out.println(gameInstance.RESOURCE_LOADER.getResource("Images/cursor.png"));
+
         client = new Client(gameInstance);
 
       //  VulkanEngine vulkanEngine = new VulkanEngine(gameInstance);

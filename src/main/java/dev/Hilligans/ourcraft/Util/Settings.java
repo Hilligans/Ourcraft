@@ -43,7 +43,7 @@ public class Settings {
 
 
     public static boolean pullResourcesFromUnloadedMods = true;
-    public static boolean loadModsWithoutInfo = false;
+    public static boolean loadModsWithoutInfo = true;
     public static boolean asyncModLoading = true;
     public static boolean cacheDownloadedMods = true;
     public static boolean storeServerModsIndividually = false;

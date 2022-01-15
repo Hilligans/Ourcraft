@@ -8,6 +8,8 @@ public interface ResourceDirectory {
 
     ByteBuffer get(String path) throws IOException;
 
+    ByteBuffer getDirect(String path) throws IOException;
+
     ArrayList<String> getFiles(String path);
 
     ArrayList<String> getValidEnding(String path, ArrayList<String> fileEndings);
