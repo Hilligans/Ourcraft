@@ -34,8 +34,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ModContent {
@@ -127,8 +125,8 @@ public class ModContent {
     public void registerBlock(Block block) {
         block.setModContent(this);
         blocks.add(block);
-        blockTextures.putAll(block.blockProperties.blockTextureManager.getAllTextures());
-        items.add(new BlockItem(block.name,block,modID));
+       // blockTextures.putAll(block.blockProperties.blockTextureManager.getAllTextures());
+        items.add(new BlockItem(block.name,block,modID).setModContent(this));
     }
 
     public void registerBlocks(Block... blocks) {
@@ -139,6 +137,7 @@ public class ModContent {
 
     public void registerItem(Item item) {
         items.add(item);
+        item.source = this;
     }
 
     public void registerItems(Item... items) {
@@ -149,6 +148,7 @@ public class ModContent {
 
     public void registerSound(SoundBuffer soundBuffer) {
         sounds.add(soundBuffer);
+        soundBuffer.source = this;
     }
 
     public void registerSounds(SoundBuffer... soundBuffers) {
@@ -157,79 +157,54 @@ public class ModContent {
         }
     }
 
-    public void registerTexture(Texture texture) {
-        textures.add(texture);
-    }
-
-    public void registerTextures(Texture... textures) {
+    public void registerTexture(Texture... textures) {
         for(Texture texture : textures) {
-            registerTexture(texture);
+            this.textures.add(texture);
+            texture.source = this;
         }
     }
 
-    public void registerModel(IModel model) {
-        models.add(model);
-    }
-
-    public void registerModels(IModel... models) {
+    public void registerModel(IModel... models) {
         for(IModel iModel : models) {
-            registerModel(iModel);
+            this.models.add(iModel);
         }
-    }
-
-    public void registerPacket(Supplier<PacketBase> packet) {
-        Protocol protocol = protocols.computeIfAbsent("Play", Protocol::new);
-        protocol.register(packet);
     }
 
     @SafeVarargs
-    public final void registerPackets(Supplier<PacketBase>... packets) {
+    public final void registerPacket(Supplier<PacketBase>... packets) {
         for(Supplier<PacketBase> packet : packets) {
-            registerPacket(packet);
+            Protocol protocol = protocols.computeIfAbsent("Play", Protocol::new);
+            protocol.register(packet);
         }
-    }
-
-    public void registerPacket(String protocolName, Supplier<PacketBase> packet) {
-        Protocol protocol = protocols.computeIfAbsent(protocolName, Protocol::new);
-        protocol.register(packet);
     }
 
     @SafeVarargs
-    public final void registerPackets(String protocolName, Supplier<PacketBase>... packets) {
+    public final void registerPacket(String protocolName, Supplier<PacketBase>... packets) {
         for(Supplier<PacketBase> packet : packets) {
-            registerPacket(protocolName,packet);
+            Protocol protocol = protocols.computeIfAbsent(protocolName, Protocol::new);
+            protocol.register(packet);
         }
-    }
-
-    public void registerPacket(String protocolName, int id, Supplier<PacketBase> packet) {
-        Protocol protocol = protocols.computeIfAbsent(protocolName, Protocol::new);
-        protocol.register(packet,id);
     }
 
     @SafeVarargs
-    public final void registerPackets(String protocolName, int id, Supplier<PacketBase>... packets) {
+    public final void registerPacket(String protocolName, int id, Supplier<PacketBase>... packets) {
         for(Supplier<PacketBase> packet : packets) {
-            registerPacket(protocolName,id,packet);
+            Protocol protocol = protocols.computeIfAbsent(protocolName, Protocol::new);
+            protocol.register(packet,id);
         }
     }
 
-    public void registerResourceLoader(ResourceLoader<?> resourceLoader) {
-        resourceLoaders.add(resourceLoader);
-    }
-
-    public void registerResourceLoaders(ResourceLoader<?>... resourceLoaders) {
+    public void registerResourceLoader(ResourceLoader<?>... resourceLoaders) {
         for(ResourceLoader<?> resourceLoader : resourceLoaders) {
-            registerResourceLoader(resourceLoader);
+            this.resourceLoaders.add(resourceLoader);
+            resourceLoader.gameInstance = gameInstance;
         }
     }
 
-    public void registerBiome(Biome biome) {
-        biomes.add(biome);
-    }
-
-    public void registerBiomes(Biome... biomes) {
+    public void registerBiome(Biome... biomes) {
         for(Biome biome : biomes) {
-            registerBiome(biome);
+            biome.source = this;
+            this.biomes.add(biome);
         }
     }
 

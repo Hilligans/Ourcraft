@@ -14,10 +14,11 @@ import dev.Hilligans.ourcraft.Network.Protocol;
 import dev.Hilligans.ourcraft.Network.Protocols;
 import dev.Hilligans.ourcraft.Resource.RegistryLoaders.RegistryLoader;
 import dev.Hilligans.ourcraft.Resource.Loaders.ResourceLoader;
+import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
+import dev.Hilligans.ourcraft.Util.Registry.Registry;
 import dev.Hilligans.ourcraft.Util.Settings;
 
 import java.util.HashMap;
-import java.util.function.BiConsumer;
 
 public class ContentPack {
 
@@ -85,7 +86,6 @@ public class ContentPack {
         }
         gameInstance.clear();
         gameInstance.RESOURCE_MANAGER.clearData();
-        Protocols.clear();
 
         if(!built) {
             buildVital();
@@ -98,7 +98,7 @@ public class ContentPack {
                     if(registryLoader.rerunOnInstanceClear) {
                         registryLoader.run();
                     }
-                    gameInstance.registerRegistryLoaders(registryLoader);
+                    gameInstance.registerRegistryLoader(registryLoader);
                 }
             }
         }
@@ -125,7 +125,14 @@ public class ContentPack {
                     gameInstance.RESOURCE_MANAGER.putModel(model.getPath(),model);
                 }
                 for(Protocol protocol : mod.protocols.values()) {
-                    Protocols.register(protocol);
+                    gameInstance.PROTOCOLS.put(protocol.protocolName,protocol);
+                }
+            }
+        }
+        for(Registry<?> registry : gameInstance.REGISTRIES.ELEMENTS) {
+            for(Object o : registry.ELEMENTS) {
+                if(o instanceof IRegistryElement) {
+                    ((IRegistryElement) o).load();
                 }
             }
         }

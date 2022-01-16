@@ -1,5 +1,6 @@
 package dev.Hilligans.ourcraft.Resource.Loaders;
 
+import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.Resource.ResourceLocation;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 
@@ -12,6 +13,7 @@ public abstract class ResourceLoader<T> {
 
     public String name;
     public String category;
+    public GameInstance gameInstance;
     public ArrayList<String> fileTypes = new ArrayList<>();
 
     public ResourceLoader(String name, String category) {
@@ -25,7 +27,11 @@ public abstract class ResourceLoader<T> {
     }
 
     public T read(ResourceLocation path) {
-        return read(WorldLoader.readResource(path));
+        ByteBuffer buffer = gameInstance.getResourceDirect(path);
+        if(buffer == null) {
+            return null;
+        }
+        return read(buffer);
     }
 
     public abstract T read(ByteBuffer buffer);
@@ -36,11 +42,14 @@ public abstract class ResourceLoader<T> {
 
     public abstract ByteBuffer write(T t);
 
-    public String toString(ByteBuffer buffer) {
+    public static String toString(ByteBuffer buffer) {
+        if(buffer == null) {
+            return null;
+        }
         return new String(buffer.array());
     }
 
-    public String[] toStrings(ByteBuffer buffer) {
+    public static String[] toStrings(ByteBuffer buffer) {
         String s = new String(buffer.array());
         return s.split("\n");
     }

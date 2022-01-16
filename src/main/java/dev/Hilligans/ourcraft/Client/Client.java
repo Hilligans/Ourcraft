@@ -100,8 +100,8 @@ public class Client {
     }
 
     public void startClient() {
-        network = new ClientNetwork(Protocols.PLAY);
-        authNetwork = new ClientNetwork(Protocols.AUTH);
+        network = new ClientNetwork(gameInstance.PROTOCOLS.get("Play"));
+        authNetwork = new ClientNetwork(gameInstance.PROTOCOLS.get("Auth"));
 
         CompoundNBTTag tag = WorldLoader.loadTag("clientData.dat");
         if(tag != null) {

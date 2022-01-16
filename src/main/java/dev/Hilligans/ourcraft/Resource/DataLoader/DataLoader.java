@@ -6,8 +6,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.zip.ZipFile;
 
@@ -37,7 +35,7 @@ public class DataLoader {
 
     @Nullable
     public ByteBuffer get(ResourceLocation resourceLocation) {
-        ResourceDirectory resourceDirectory = resourceDirectoryHashMap.get(resourceLocation.source.modID);
+        ResourceDirectory resourceDirectory = resourceDirectoryHashMap.get(resourceLocation.getSource());
         if(resourceDirectory == null) {
             return null;
         }
@@ -50,7 +48,7 @@ public class DataLoader {
 
     @Nullable
     public ByteBuffer getDirect(ResourceLocation resourceLocation) {
-        ResourceDirectory resourceDirectory = resourceDirectoryHashMap.get(resourceLocation.source.modID);
+        ResourceDirectory resourceDirectory = resourceDirectoryHashMap.get(resourceLocation.getSource());
         if(resourceDirectory == null) {
             return null;
         }

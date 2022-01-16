@@ -36,6 +36,7 @@ public class ClientWorld extends World {
     public Client client;
 
     public ClientWorld(Client client) {
+        super(client.gameInstance);
         getChunk(0,0);
         this.client = client;
     }

@@ -8,9 +8,12 @@ import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Data.Other.ItemProperties;
 import dev.Hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
+import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.Ourcraft;
 import dev.Hilligans.ourcraft.Recipe.IRecipeComponent;
+import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
 import dev.Hilligans.ourcraft.Util.Settings;
+import dev.Hilligans.ourcraft.Util.Side;
 import dev.Hilligans.ourcraft.World.World;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL30;
@@ -18,9 +21,10 @@ import org.lwjgl.opengl.GL30;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 
-public class Item implements IRecipeComponent {
+public class Item implements IRecipeComponent, IRegistryElement {
 
     public String name;
+    public ModContent source;
     public ItemProperties itemProperties;
     public int id;
     public String modID;
@@ -38,6 +42,11 @@ public class Item implements IRecipeComponent {
     public Item(String name, ItemProperties itemProperties, String modID) {
         this(name,itemProperties);
         this.modID = modID;
+    }
+
+    public Item setModContent(ModContent modContent) {
+        this.source = modContent;
+        return this;
     }
 
     public void generateTextures() {
@@ -145,5 +154,17 @@ public class Item implements IRecipeComponent {
     @Override
     public String getComponentName() {
         return "item";
+    }
+
+    @Override
+    public void load() {
+        if(source.gameInstance.side == Side.CLIENT) {
+            generateTextures();
+        }
+    }
+
+    @Override
+    public String getResourceName() {
+        return name;
     }
 }

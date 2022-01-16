@@ -8,6 +8,7 @@ import dev.Hilligans.ourcraft.Data.Other.ChunkPos;
 import dev.Hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
 import dev.Hilligans.ourcraft.Entity.Entities.ItemEntity;
 import dev.Hilligans.ourcraft.Entity.Entity;
+import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.Network.Packet.Server.SCreateEntityPacket;
 import dev.Hilligans.ourcraft.Network.Packet.Server.SRemoveEntityPacket;
 import dev.Hilligans.ourcraft.Network.ServerNetworkHandler;
@@ -28,6 +29,10 @@ public class ServerWorld extends World {
     long autoSaveAfter = 30 * 1000;
     long autoSave = -1;
     public IServer server;
+
+    public ServerWorld(GameInstance gameInstance) {
+        super(gameInstance);
+    }
 
     @Override
     public void addEntity(Entity entity) {

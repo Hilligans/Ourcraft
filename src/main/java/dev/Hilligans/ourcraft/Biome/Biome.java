@@ -2,16 +2,19 @@ package dev.Hilligans.ourcraft.Biome;
 
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Block.Blocks;
+import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
+import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
 import dev.Hilligans.ourcraft.World.Builders.WorldBuilder;
 import org.joml.Vector3i;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Biome {
+public class Biome implements IRegistryElement {
 
     public String name;
     public int terrainHeight = 10;
+    public ModContent source;
 
     public Vector3i terrainHeights = new Vector3i(0,5,5);
 
@@ -25,7 +28,6 @@ public class Biome {
 
     public Biome(String name) {
         this.name = name;
-        Biomes.biomes.add(this);
     }
 
     public Biome(String name, WorldBuilder... worldBuilders) {
@@ -61,6 +63,12 @@ public class Biome {
     public Block underBlock = Blocks.DIRT;
 
 
+    @Override
+    public void load() {
+    }
 
-
+    @Override
+    public String getResourceName() {
+        return name;
+    }
 }

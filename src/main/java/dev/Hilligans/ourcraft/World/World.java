@@ -8,6 +8,7 @@ import dev.Hilligans.ourcraft.Data.Other.BoundingBox;
 import dev.Hilligans.ourcraft.Data.Other.RayResult;
 import dev.Hilligans.ourcraft.Entity.Entities.ItemEntity;
 import dev.Hilligans.ourcraft.Entity.Entity;
+import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.Item.ItemStack;
 import dev.Hilligans.ourcraft.Network.Packet.Server.SSendBlockChanges;
 import dev.Hilligans.ourcraft.ServerMain;
@@ -31,6 +32,8 @@ public abstract class World {
     public ConcurrentLinkedQueue<BlockChange> blockChanges = new ConcurrentLinkedQueue<>();
     public int dimensionId = 1;
 
+    public GameInstance gameInstance;
+
     long seed = 1342;
 
     public int chunkCount = 0;
@@ -48,9 +51,10 @@ public abstract class World {
 
     public ArrayList<WorldBuilder> worldBuilders = new ArrayList<>();
 
-    public World() {
+    public World(GameInstance gameInstance) {
+        this.gameInstance = gameInstance;
         random = new Random(seed);
-        biomeMap = new BiomeNoise(random);
+        biomeMap = new BiomeNoise(gameInstance,random);
         simplexNoise = new SimplexNoise(random);
 
     }

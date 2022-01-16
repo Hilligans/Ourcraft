@@ -15,6 +15,7 @@ import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 import dev.Hilligans.ourcraft.Tag.ListNBTTag;
 import dev.Hilligans.ourcraft.Tag.NBTTag;
 import dev.Hilligans.ourcraft.Util.ArgumentContainer;
+import dev.Hilligans.ourcraft.Util.Side;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 
 import java.io.IOException;
@@ -37,6 +38,8 @@ public class ClientMain {
     public static void main(String[] args) throws IOException {
         argumentContainer = new ArgumentContainer(args);
         gameInstance.handleArgs(args);
+        gameInstance.side = Side.CLIENT;
+        gameInstance.loadContent();
 
         client = new Client(gameInstance);
 

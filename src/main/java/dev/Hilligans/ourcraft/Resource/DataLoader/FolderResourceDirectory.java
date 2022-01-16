@@ -20,12 +20,12 @@ public class FolderResourceDirectory implements ResourceDirectory {
 
     @Override
     public ByteBuffer get(String path) throws IOException {
-        return WorldLoader.readBuffer(path);
+        return WorldLoader.readBuffer(folder.getPath() + "/" + path);
     }
 
     @Override
-    public ByteBuffer getDirect(String path) throws IOException {
-        return null;
+    public ByteBuffer getDirect(String path) {
+        return WorldLoader.readBufferDirect(folder.getPath() + "/" + path);
     }
 
     @Override

@@ -26,6 +26,7 @@ public class CRequestChunkPacket extends PacketBase {
     public void encode(PacketData packetData) {
         packetData.writeInt(ChunkX);
         packetData.writeInt(ChunkZ);
+
     }
 
     @Override

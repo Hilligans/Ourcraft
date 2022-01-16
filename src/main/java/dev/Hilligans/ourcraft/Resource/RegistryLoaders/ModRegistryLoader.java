@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.Resource.RegistryLoaders;
 
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.ModHandler.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.function.BiConsumer;
@@ -29,9 +30,13 @@ public abstract class ModRegistryLoader<T> extends RegistryLoader {
     public void run() {
         gameInstance.CONTENT_PACK.mods.forEach((string, modContent) -> {
             BiConsumer<ModContent,T> consumer = loaderMap.getOrDefault(string, defaultConsumer);
-            consumer.accept(modContent,provideResource(modContent));
+            T resource = provideResource(modContent);
+            if(resource != null) {
+                consumer.accept(modContent, resource);
+            }
         });
     }
 
+    @Nullable
     public abstract T provideResource(ModContent modContent);
 }

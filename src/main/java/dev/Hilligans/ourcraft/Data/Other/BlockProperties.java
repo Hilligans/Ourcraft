@@ -3,6 +3,7 @@ package dev.Hilligans.ourcraft.Data.Other;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.BlockModel;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.BlockTextureManager;
 import dev.Hilligans.ourcraft.Data.Other.BlockShapes.BlockShape;
+import dev.Hilligans.ourcraft.Item.Data.ToolLevel;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,13 +29,14 @@ public class BlockProperties {
     public String texture = "";
     public BlockTextureManager blockTextureManager = new BlockTextureManager();
     public BlockShape blockShape = defaultShape;
+    public String toolLevel;
+    public String source;
 
     public String path;
     public JSONObject overrides;
     public boolean fromFile = false;
 
     public BlockProperties() {
-
     }
 
     public BlockProperties serverSide() {
@@ -125,6 +127,7 @@ public class BlockProperties {
         properties.put("flammable",flammable);
         properties.put("dynamicItemModel",dynamicItemModel);
         properties.put("alwaysRender",alwaysRender);
+        properties.put("toolLevel", toolLevel);
 
         model.put("modelName",blockShape.path);
 
@@ -144,6 +147,7 @@ public class BlockProperties {
             mapColor = properties.has("mapColor") ? properties.getInt("mapColor") : 0;
             dynamicItemModel = getBoolean(properties,"dynamicItemModel",false);
             alwaysRender = properties.optBoolean("alwaysRender");
+            toolLevel = properties.optString("toolLevel");
         }
         if (jsonObject.has("model")) {
             JSONObject model = jsonObject.getJSONObject("model");

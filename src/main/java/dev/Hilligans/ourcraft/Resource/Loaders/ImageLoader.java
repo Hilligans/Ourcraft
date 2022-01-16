@@ -31,7 +31,11 @@ public class ImageLoader extends ResourceLoader<Image> {
 
     @Override
     public Image read(ResourceLocation path) {
-        return read(WorldLoader.readResourceDirect(path));
+        ByteBuffer buffer = gameInstance.getResourceDirect(path);
+        if(buffer == null) {
+            return null;
+        }
+        return read(buffer);
     }
 
     @Override

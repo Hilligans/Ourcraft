@@ -3,6 +3,8 @@ package dev.Hilligans.ourcraft.Client.Rendering.NewRenderer;
 import dev.Hilligans.ourcraft.Ourcraft;
 import org.lwjgl.stb.STBImage;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -133,6 +135,14 @@ public class Image {
         return width * height * 4;
     }
 
-
+    public BufferedImage toBufferedImage() {
+        BufferedImage bufferedImage = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
+        for(int x = 0; x < width; x++) {
+            for(int y = 0; y < height; y++) {
+                bufferedImage.setRGB(x,y,getPixel(x,y));
+            }
+        }
+        return bufferedImage;
+    }
 
 }

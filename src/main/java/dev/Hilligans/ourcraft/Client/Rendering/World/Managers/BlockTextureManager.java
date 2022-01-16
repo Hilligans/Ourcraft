@@ -16,6 +16,7 @@ public class BlockTextureManager implements TextureManager {
 
     public String[] textureNames;
     public String location;
+    public String source;
 
     public String textureSource = "";
 
@@ -72,13 +73,13 @@ public class BlockTextureManager implements TextureManager {
         if(textureNames != null) {
             for (String string : textureNames) {
                 if (!map.containsKey(string)) {
-                    map.put(string, WorldTextureManager.loadImage("blocks/" + string));
+                    map.put(string, WorldTextureManager.loadImage("blocks/" + string, source));
                 }
             }
         }
         if(location != null) {
             if(!map.containsKey(location)) {
-                map.put(location, WorldTextureManager.loadImage("blocks/" + location));
+                map.put(location, WorldTextureManager.loadImage("blocks/" + location, source));
             }
         }
 

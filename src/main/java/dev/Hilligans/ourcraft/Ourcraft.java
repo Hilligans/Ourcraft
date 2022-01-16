@@ -3,9 +3,12 @@ package dev.Hilligans.ourcraft;
 import dev.Hilligans.ourcraft.Biome.Biomes;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.Sounds;
+import dev.Hilligans.ourcraft.Client.Rendering.Texture;
+import dev.Hilligans.ourcraft.Client.Rendering.Textures;
 import dev.Hilligans.ourcraft.Item.Data.ToolLevel;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.ModHandler.Identifier;
+import dev.Hilligans.ourcraft.Network.Protocols;
 import dev.Hilligans.ourcraft.Resource.RegistryLoaders.JsonRegistryLoader;
 import dev.Hilligans.ourcraft.Resource.Loaders.ImageLoader;
 import dev.Hilligans.ourcraft.Resource.Loaders.JsonLoader;
@@ -45,16 +48,15 @@ public class Ourcraft {
         return new File(path + "/" + path);
     }
 
-    static {
-        GAME_INSTANCE.loadContent();
-    }
-
     public static void registerDefaultContent(ModContent modContent) {
-        modContent.registerResourceLoaders(new JsonLoader(), new ImageLoader());
+        modContent.registerResourceLoader(new JsonLoader(), new ImageLoader());
 
         modContent.registerBlocks(AIR,STONE,DIRT,GRASS,BEDROCK,IRON_ORE,LEAVES,LOG,SAND,CACTUS,CHEST,COLOR_BLOCK,STAIR_BLOCK,GRASS_PLANT,WEEPING_VINE,MAPLE_LOG,MAPLE_PLANKS,PINE_LOG,PINE_PLANKS,SPRUCE_LOG,SPRUCE_PLANKS,BIRCH_LOG,BIRCH_PLANKS,OAK_LOG,OAK_PLANKS,WILLOW_LOG,WILLOW_PLANKS,ACACIA_LOG,ACACIA_PLANKS,POPLAR_LOG,POPLAR_PLANKS,ELM_LOG,ELM_WOOD,PALM_LOG,PALM_WOOD,REDWOOD_LOG,REDWOOD_WOOD,SAPLING);
-        modContent.registerBiomes(Biomes.PLAINS,Biomes.SANDY_HILLS,Biomes.DESERT,Biomes.FOREST);
+        modContent.registerBiome(Biomes.PLAINS,Biomes.SANDY_HILLS,Biomes.DESERT,Biomes.FOREST);
+        Sounds.reg();
         modContent.registerSounds(Sounds.BLOCK_BREAK, Sounds.MUSIC);
+        modContent.registerTexture(Textures.TEXTURES.toArray(new Texture[0]));
+        Protocols.register(modContent);
 
         modContent.registerRegistryLoader(new JsonRegistryLoader(new Identifier("tool_tiers", "ourcraft"), "Data/ToolTiers.json", (modContent1, jsonObject, string) -> {
             JSONArray elements = jsonObject.getJSONArray("material");

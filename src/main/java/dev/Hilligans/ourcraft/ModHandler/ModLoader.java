@@ -3,6 +3,11 @@ package dev.Hilligans.ourcraft.ModHandler;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.Data.Primitives.Triplet;
+import dev.Hilligans.ourcraft.Resource.DataLoader.FolderResourceDirectory;
+import dev.Hilligans.ourcraft.Resource.DataLoader.ResourceDirectory;
+import dev.Hilligans.ourcraft.Resource.DataLoader.ZipResourceDirectory;
+import dev.Hilligans.ourcraft.Resource.Loaders.JsonLoader;
+import dev.Hilligans.ourcraft.Resource.Loaders.ResourceLoader;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 import org.json.JSONObject;
@@ -15,6 +20,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 public class ModLoader {
@@ -54,20 +60,21 @@ public class ModLoader {
                     try {
                         URLClassLoader child = new URLClassLoader(new URL[]{mod.toURI().toURL()}, this.getClass().getClassLoader());
                         Class<?> testClass = Class.forName(topName + mod.getName().substring(0,mod.getName().length() - 6),false,child);
-                        JSONObject jsonObject = getContent(child);
                         String modID = getModID(testClass);
                         if(modID != null) {
                             this.mod = modID;
                             ModContent modContent = new ModContent(modID,gameInstance);
                             modContent.isJar = false;
                             modContent.path = folder.getPath();
+                            FolderResourceDirectory resourceDirectory = new FolderResourceDirectory(new File("target/classes/"));
+                            JSONObject jsonObject = getContent(resourceDirectory);
                             if(jsonObject != null) {
                                 modContent.readData(jsonObject);
                             }
                             modContent.mainClass = testClass;
                             modContent.addClassLoader(child);
                             mainClasses.put(modID,new Triplet<>(testClass,mod.getAbsolutePath(),false));
-                            gameInstance.DATA_LOADER.addFolder("target/classes/",modID);
+                            gameInstance.DATA_LOADER.add(modID, resourceDirectory);
                             gameInstance.CONTENT_PACK.registerModContent(modContent);
                         }
                     } catch (Exception ignored) {}
@@ -81,13 +88,14 @@ public class ModLoader {
         try {
             URLClassLoader child = new URLClassLoader(new URL[]{file.toURI().toURL()}, this.getClass().getClassLoader());
             ArrayList<String> classNames = getClassNames(file);
-            JSONObject jsonObject = getContent(child);
             for(String name : classNames) {
                 Class<?> testClass = Class.forName(name,false,child);
                 String modID = getModID(testClass);
                 if(modID != null) {
                     ModContent modContent = new ModContent(modID,gameInstance);
                     modContent.path = name;
+                    ZipResourceDirectory zipResourceDirectory = new ZipResourceDirectory(new ZipFile(file.getPath()));
+                    JSONObject jsonObject = getContent(zipResourceDirectory);
                     if(jsonObject != null) {
                         modContent.readData(jsonObject);
                     }
@@ -96,7 +104,7 @@ public class ModLoader {
                     mainClasses.put(modID,new Triplet<>(testClass,file.getAbsolutePath(),true));
                     modContent.mainClass = testClass;
                     modContent.addClassLoader(child);
-                    gameInstance.DATA_LOADER.addJar(file.getPath(),modID);
+                    gameInstance.DATA_LOADER.add(modID, zipResourceDirectory);
                     gameInstance.CONTENT_PACK.registerModContent(modContent);
                     return true;
                 }
@@ -109,9 +117,10 @@ public class ModLoader {
         return true;
     }
 
-    public JSONObject getContent(URLClassLoader classLoader) throws Exception {
+    public JSONObject getContent(ResourceDirectory resourceDirectory) throws Exception {
         try {
-            return new JSONObject(WorldLoader.readString(classLoader.getResource("mod.json").openStream()));
+            return new JSONObject(ResourceLoader.toString(resourceDirectory.get("mod.json")));
+            //return new JSONObject(WorldLoader.readString(classLoader.getResource("mod.json").openStream()));
         } catch (Exception e) {
             if(!Settings.loadModsWithoutInfo) {
                 mod = "";

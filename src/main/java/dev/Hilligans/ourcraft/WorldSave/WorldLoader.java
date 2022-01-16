@@ -59,25 +59,22 @@ public class WorldLoader {
         }
     }
 
-    public static ByteBuffer readResourceDirect(String path) {
+    public static ByteBuffer readBufferDirect(String path) {
         try {
-            InputStream inputStream = Ourcraft.getResourceManager().getResource(path);
-            byte[] vals = inputStream.readAllBytes();
-            ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vals.length);
-            byteBuffer.put(vals);
-            byteBuffer.flip();
-
-            return byteBuffer;
-        } catch (Exception e) {
-            System.err.println("Failed to find file " + path);
-            e.printStackTrace();
+            File file = new File(path);
+            if(file.exists()) {
+                RandomAccessFile aFile = new RandomAccessFile(path, "rw");
+                int length = (int) aFile.length();
+                ByteBuffer buf = ByteBuffer.allocateDirect(length);
+                buf.mark();
+                aFile.getChannel().read(buf);
+                buf.reset();
+                return buf;
+            }
+            return null;
+        } catch (Exception ignored) {
             return null;
         }
-    }
-
-    //TODO handle this properly
-    public static ByteBuffer readResourceDirect(ResourceLocation resourceLocation) {
-        return readResourceDirect(resourceLocation.path);
     }
 
     public static ByteBuffer readResource(String path) {

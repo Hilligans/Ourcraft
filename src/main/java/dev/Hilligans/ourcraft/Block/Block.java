@@ -13,13 +13,15 @@ import dev.Hilligans.ourcraft.Data.Other.BlockPos;
 import dev.Hilligans.ourcraft.Data.Other.BlockProperties;
 import dev.Hilligans.ourcraft.Data.Other.BoundingBox;
 import dev.Hilligans.ourcraft.Data.Other.RayResult;
+import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
+import dev.Hilligans.ourcraft.Util.Side;
 import dev.Hilligans.ourcraft.World.DataProvider;
 import dev.Hilligans.ourcraft.World.DataProviders.ShortBlockState;
 import dev.Hilligans.ourcraft.World.World;
 import org.joml.Vector3d;
 import org.json.JSONObject;
 
-public class Block {
+public class Block implements IRegistryElement {
 
     public String name;
     public String modId;
@@ -51,6 +53,9 @@ public class Block {
 
     public void setModContent(ModContent modContent) {
         this.modId = modContent.modID;
+        this.modContent = modContent;
+        this.blockProperties.source = modId;
+        this.blockProperties.blockTextureManager.source = modId;
     }
 
     public String getName() {
@@ -213,5 +218,17 @@ public class Block {
     public static int getSide(int side, int rotX, int rotY) {
         int value = side | rotX << 3 | rotY << 5;
         return Block.rotationSides[value];
+    }
+
+    @Override
+    public void load() {
+        if(modContent.gameInstance.side == Side.CLIENT) {
+            generateTextures();
+        }
+    }
+
+    @Override
+    public String getResourceName() {
+        return name;
     }
 }

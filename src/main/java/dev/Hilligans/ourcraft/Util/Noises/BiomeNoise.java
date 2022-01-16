@@ -2,12 +2,14 @@ package dev.Hilligans.ourcraft.Util.Noises;
 
 import dev.Hilligans.ourcraft.Biome.Biome;
 import dev.Hilligans.ourcraft.Biome.Biomes;
+import dev.Hilligans.ourcraft.GameInstance;
 
 import java.util.Random;
 
 public class BiomeNoise {
 
     double size = 200;
+    public GameInstance gameInstance;
 
     KenPerlinNoise biome;
     //KenPerlinNoise humidity;
@@ -25,7 +27,8 @@ public class BiomeNoise {
     long variation;
 
 
-    public BiomeNoise(Random random) {
+    public BiomeNoise(GameInstance gameInstance, Random random) {
+        this.gameInstance = gameInstance;
         perlinNoise = new PerlinNoise(random.nextInt(),2,0.01,0.707,1);
         tempNoise = new PerlinNoise(random.nextInt(),2,0.01,0.707,1);
         humidityNoise = new PerlinNoise(random.nextInt(),2,0.01,0.707,1);
@@ -72,7 +75,7 @@ public class BiomeNoise {
        // double variation = SimplexNoise.noise(x,z,this.variation);
 
 
-        return Biomes.getBiome(noise,temp,humidity,rand,variation);
+        return Biomes.getBiome(gameInstance, noise,temp,humidity,rand,variation);
     }
 
 

@@ -25,6 +25,7 @@ import dev.Hilligans.ourcraft.Recipe.RecipeHelper.RecipeView;
 import dev.Hilligans.ourcraft.Resource.DataLoader.DataLoader;
 import dev.Hilligans.ourcraft.Resource.RegistryLoaders.RegistryLoader;
 import dev.Hilligans.ourcraft.Resource.Loaders.ResourceLoader;
+import dev.Hilligans.ourcraft.Resource.ResourceLocation;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
 import dev.Hilligans.ourcraft.Resource.UniversalResourceLoader;
 import dev.Hilligans.ourcraft.Settings.Setting;
@@ -33,9 +34,11 @@ import dev.Hilligans.ourcraft.Util.ArgumentContainer;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import dev.Hilligans.ourcraft.Recipe.IRecipe;
 import dev.Hilligans.ourcraft.Util.Registry.Registry;
+import dev.Hilligans.ourcraft.Util.Side;
 
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -57,6 +60,7 @@ public class GameInstance {
     public final UniversalResourceLoader RESOURCE_LOADER = new UniversalResourceLoader();
     public final ArgumentContainer ARGUMENTS = new ArgumentContainer();
     public final DataLoader DATA_LOADER = new DataLoader();
+    public Side side;
 
     public final ToolLevelList MATERIAL_LIST = new ToolLevelList();
 
@@ -111,6 +115,8 @@ public class GameInstance {
         ITEMS.clear();
         TAGS.clear();
         RECIPES.clear();
+        //TODO fix
+        PROTOCOLS.clear();
         EVENT_BUS.postEvent(new RegistryClearEvent(this));
     }
 
@@ -137,64 +143,39 @@ public class GameInstance {
         return BLOCKS.ELEMENTS;
     }
 
-
-    public void registerBlock(Block block) {
-        BLOCKS.put(block.getName(),block);
-    }
-
     public void registerBlock(Block... blocks) {
         for(Block block : blocks) {
-            registerBlock(block);
+            BLOCKS.put(block.getName(),block);
         }
     }
 
-    public void registerItem(Item item) {
-        ITEMS.put(item.name,item);
-    }
-
-    public void registerItems(Item... items) {
+    public void registerItem(Item... items) {
         for(Item item : items) {
-            registerItem(item);
+            ITEMS.put(item.name,item);
         }
     }
 
-    public void registerBiome(Biome biome) {
-        BIOMES.put(biome.name, biome);
-    }
-
-    public void registerBiomes(Biome... biomes) {
+    public void registerBiome(Biome... biomes) {
         for(Biome biome : biomes) {
-            registerBiome(biome);
+            BIOMES.put(biome.name, biome);
         }
     }
 
-    public void registerTag(Tag tag) {
-        TAGS.put(tag.type + ":" + tag.tagName,tag);
-    }
-
-    public void registerRags(Tag... tags) {
+    public void registerTag(Tag... tags) {
         for(Tag tag : tags) {
-            registerTag(tag);
+            TAGS.put(tag.type + ":" + tag.tagName,tag);
         }
     }
 
-    public void registerCommand(CommandHandler commandHandler) {
-        COMMANDS.put(commandHandler.getRegistryName(),commandHandler);
-    }
-
-    public void registerCommands(CommandHandler... commands) {
+    public void registerCommand(CommandHandler... commands) {
         for(CommandHandler commandHandler : commands) {
-            registerCommand(commandHandler);
+            COMMANDS.put(commandHandler.getRegistryName(),commandHandler);
         }
     }
 
-    public void registerSound(SoundBuffer soundBuffer) {
-        SOUNDS.put(soundBuffer.file, soundBuffer);
-    }
-
-    public void registerSounds(SoundBuffer... soundBuffers) {
+    public void registerSound(SoundBuffer... soundBuffers) {
         for(SoundBuffer soundBuffer : soundBuffers) {
-            registerSound(soundBuffer);
+            SOUNDS.put(soundBuffer.file, soundBuffer);
         }
     }
 
@@ -208,19 +189,27 @@ public class GameInstance {
         }
     }
 
-    public void registerToolLevel(ToolLevel toolLevel) {
-        TOOL_MATERIALS.put(toolLevel.name.getName(), toolLevel);
-    }
-
     public void registerToolLevels(ToolLevel... toolLevels) {
         for(ToolLevel toolLevel : toolLevels) {
-            registerToolLevel(toolLevel);
+            TOOL_MATERIALS.put(toolLevel.name.getName(), toolLevel);
         }
     }
 
-    public void registerRegistryLoaders(RegistryLoader... loaders) {
+    public void registerRegistryLoader(RegistryLoader... loaders) {
         for(RegistryLoader loader : loaders) {
             DATA_LOADERS.put(loader.name.getName(),loader);
+        }
+    }
+
+    public void registerResourceLoader(ResourceLoader<?>... resourceLoaders) {
+        for(ResourceLoader<?> resourceLoader : resourceLoaders) {
+            RESOURCE_LOADERS.put(resourceLoader.name,resourceLoader);
+        }
+    }
+
+    public void registerProtocol(Protocol... protocols) {
+        for(Protocol protocol : protocols) {
+            PROTOCOLS.put(protocol.protocolName,protocol);
         }
     }
 
@@ -251,6 +240,14 @@ public class GameInstance {
         for(int x = 0; x < names.length; x++) {
             register(names[x], objects[x]);
         }
+    }
+
+    public ByteBuffer getResource(ResourceLocation resourceLocation) {
+        return DATA_LOADER.get(resourceLocation);
+    }
+
+    public ByteBuffer getResourceDirect(ResourceLocation resourceLocation) {
+        return DATA_LOADER.getDirect(resourceLocation);
     }
 
     static short itemId = 0;

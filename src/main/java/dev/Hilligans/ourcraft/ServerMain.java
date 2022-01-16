@@ -4,6 +4,7 @@ import dev.Hilligans.ourcraft.Block.Blocks;
 import dev.Hilligans.ourcraft.Server.MultiPlayerServer;
 import dev.Hilligans.ourcraft.Util.Profiler;
 import dev.Hilligans.ourcraft.Util.Settings;
+import dev.Hilligans.ourcraft.Util.Side;
 import dev.Hilligans.ourcraft.World.Builders.OreBuilder;
 import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.World.ServerWorld;
@@ -26,9 +27,11 @@ public class ServerMain {
         Settings.isServer = true;
         GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
         gameInstance.handleArgs(args);
+        gameInstance.side = Side.SERVER;
+        gameInstance.loadContent();
        // gameInstance.register("testt",gameInstance);
 
-        ServerWorld world = new ServerWorld();
+        ServerWorld world = new ServerWorld(gameInstance);
         world.worldBuilders.add(new OreBuilder(Blocks.GRASS,Blocks.STONE).setFrequency(20));
 
        // Ourcraft.CONTENT_PACK.releaseMod("test_mod");

@@ -30,6 +30,10 @@ public class JsonRegistryLoader extends ModRegistryLoader<JSONObject> {
 
     @Override
     public JSONObject provideResource(ModContent modContent) {
-        return (JSONObject) gameInstance.RESOURCE_LOADER.getResource(new ResourceLocation(path,modContent));
+        try {
+            return (JSONObject) gameInstance.RESOURCE_LOADER.getResource(new ResourceLocation(path, modContent));
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

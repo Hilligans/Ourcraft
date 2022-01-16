@@ -5,6 +5,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.VAOManager;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.WorldTextureManager;
 import dev.Hilligans.ourcraft.ClientMain;
+import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.Util.Settings;
 import org.lwjgl.opengl.GL30;
 
@@ -17,7 +18,7 @@ import static org.lwjgl.opengl.GL20.glUseProgram;
 public class Texture {
 
     public String path;
-    public String source;
+    public ModContent source;
 
     public int width;
     public int height;
@@ -27,12 +28,7 @@ public class Texture {
     public Image texture;
 
     public Texture(String path) {
-        this(path,"");
-    }
-
-    public Texture(String path, String source) {
         this.path = path;
-        this.source = source;
         Textures.TEXTURES.add(this);
     }
 
@@ -44,7 +40,11 @@ public class Texture {
     }
 
     public void register() {
-        Image image = WorldTextureManager.loadImage1(path);
+        Image image = WorldTextureManager.loadImage1(path, source.modID);
+
+        if(image == null) {
+            System.out.println(source + ":" + path);
+        }
 
         width = image.getWidth();
         height = image.getHeight();

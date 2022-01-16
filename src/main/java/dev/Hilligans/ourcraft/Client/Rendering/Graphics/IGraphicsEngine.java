@@ -33,6 +33,12 @@ public interface IGraphicsEngine<T, Q extends RenderWindow> {
         return new Runnable() {
             @Override
             public void run() {
+                try {
+                    //Thread.sleep(2000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //System.exit(0);
                 while (!window.shouldClose()) {
                     gameInstance.EVENT_BUS.postEvent(new RenderPreEvent());
                     render((Q) window);

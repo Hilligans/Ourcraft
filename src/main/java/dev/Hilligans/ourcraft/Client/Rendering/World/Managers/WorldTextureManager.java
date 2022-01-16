@@ -6,6 +6,7 @@ import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Data.Primitives.Triplet;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.Ourcraft;
+import dev.Hilligans.ourcraft.Resource.ResourceLocation;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -32,29 +33,10 @@ public class WorldTextureManager {
 
     public HashMap<String, Integer> idHashMap = new HashMap<>();
 
-
-   // public static WorldTextureManager instance = new WorldTextureManager();
-
-
     public void clear() {
         width = 0;
         height = 1;
         idHashMap.clear();
-    }
-
-
-    public static int registerTexture(BufferedImage bufferedImage) {
-        int texture;
-        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(bufferedImage.getWidth() * bufferedImage.getHeight() * 4);
-        allocatePixels(byteBuffer, bufferedImage);
-        texture = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bufferedImage.getWidth(), bufferedImage.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, byteBuffer);
-        glGenerateMipmap(GL_TEXTURE_2D);
-        return texture;
-
     }
 
     public static int registerTexture(Image image) {
@@ -71,55 +53,22 @@ public class WorldTextureManager {
 
     static HashMap<String, BufferedImage> cachedImages = new HashMap<>();
 
-    public static BufferedImage loadImage(String path) {
+    public static BufferedImage loadImage(String path, String source) {
         BufferedImage img = cachedImages.get(path);
         if(img != null) {
             return img;
         }
-        img = Ourcraft.getResourceManager().getImage(path);
-        if(img != null) {
-            return img;
+        Image image = ((Image)ClientMain.gameInstance.RESOURCE_LOADER.getResource(new ResourceLocation(path, source)));
+        if(image != null) {
+            return image.toBufferedImage();
         }
-        InputStream url = Ourcraft.getResourceManager().getResource("Images/" + path);
-        if(url != null) {
-            try {
-                return ImageIO.read(url);
-            } catch (IOException ignored) {}
-        }
+        System.out.println(path + ":" + source);
         return DefaultImage();
     }
 
-    public static Image loadImage1(String path) {
-        return (Image) ClientMain.getClient().gameInstance.RESOURCE_LOADER.getResource("Images/" + path);
+    public static Image loadImage1(String path, String source) {
+        return (Image) ClientMain.getClient().gameInstance.RESOURCE_LOADER.getResource(new ResourceLocation("Images/" + path, source));
     }
-
-    public static BufferedImage loadImage(String path, String source) {
-        if(source.equals("")) {
-            return loadImage(path);
-        }
-        Triplet<Class<?>,String,Boolean> type = Ourcraft.GAME_INSTANCE.MOD_LOADER.mainClasses.get(source);
-        String filePath = type.getTypeB();
-        if(type.getTypeC()) {
-            if (filePath != null) {
-                try {
-                    ZipFile zipFile = new ZipFile(filePath);
-                    ZipEntry zipEntry = zipFile.getEntry("Images/" + path);
-                    if (zipEntry != null) {
-                        return ImageIO.read(zipFile.getInputStream(zipEntry));
-                    }
-                } catch (Exception ignored) {}
-            }
-        } else {
-            File file = new File("target/classes/Images/" + path);
-            if(file.exists()) {
-                try {
-                    return ImageIO.read(file);
-                } catch (Exception ignored) {}
-            }
-        }
-        return loadImage(path);
-    }
-
 
     public static void allocatePixels(ByteBuffer byteBuffer, BufferedImage img) {
         for(int x = 0; x < img.getWidth(); x++) {
@@ -146,12 +95,6 @@ public class WorldTextureManager {
         AffineTransform at = new AffineTransform();
         at.concatenate(AffineTransform.getScaleInstance(1, -1));
         at.concatenate(AffineTransform.getTranslateInstance(0, -image.getHeight()));
-        return createTransformed(image, at);
-    }
-
-    private static BufferedImage createRotated(BufferedImage image) {
-        AffineTransform at = AffineTransform.getRotateInstance(
-                Math.PI, image.getWidth()/2, image.getHeight()/2.0);
         return createTransformed(image, at);
     }
 
@@ -184,7 +127,7 @@ public class WorldTextureManager {
     }
 
     public static int loadAndRegisterTexture(String path) {
-        BufferedImage bufferedImage = createFlipped(loadImage(path));
+        BufferedImage bufferedImage = createFlipped(loadImage(path, "ourcraft"));
         return registerTexture1(bufferedImage);
     }
     private static int registerTexture1(BufferedImage bufferedImage) {
@@ -241,15 +184,6 @@ public class WorldTextureManager {
         return img;
     }
 
-    public static Font getFont(String name) {
-        try {
-            return Font.createFont(Font.TRUETYPE_FONT, ClientMain.class.getResourceAsStream(name));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     public static void saveImage(BufferedImage bufferedImage, String name) {
         try {
             File outputfile = new File("characters/" + name + ".png");
@@ -259,6 +193,4 @@ public class WorldTextureManager {
             e.printStackTrace();
         }
     }
-
-
 }

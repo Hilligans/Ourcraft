@@ -4,6 +4,7 @@ import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Block.Blocks;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
 import dev.Hilligans.ourcraft.Data.Other.BlockTemplate;
+import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.Util.CurvedRay;
 import dev.Hilligans.ourcraft.Util.CurvedRayEngine;
 import dev.Hilligans.ourcraft.Util.TriConsumer;
@@ -16,8 +17,6 @@ import org.joml.Vector3d;
 import java.util.ArrayList;
 
 public class Biomes {
-
-    public static ArrayList<Biome> biomes = new ArrayList<>();
 
     public static final Biome PLAINS = new Biome("plains", new TreeBuilder().setChance(5), new CustomTreeBuilder(Blocks.SAND).setChance(10).setFrequency(1), new CustomTreeBuilder(Blocks.WILLOW_LOG){
         @Override
@@ -103,20 +102,20 @@ public class Biomes {
     private static final float randFactor = 1;
     private static final float variationFactor = 1;
 
-    public static Biome getBiome(double noise, double temp, double humidity, double rand, double variation) {
-        ArrayList<Double> doubles = new ArrayList<>(biomes.size());
+    public static Biome getBiome(GameInstance gameInstance, double noise, double temp, double humidity, double rand, double variation) {
+        ArrayList<Double> doubles = new ArrayList<>(gameInstance.BIOMES.ELEMENTS.size());
 
 
-        for(Biome biome : biomes) {
+        for(Biome biome : gameInstance.BIOMES.ELEMENTS) {
             doubles.add(Math.abs(noise - biome.noise) * noiseFactor + Math.abs(temp - biome.temp) * tempFactor + Math.abs(humidity - biome.humidity) * humidityFactor + Math.abs(rand - biome.rand) * randFactor + Math.abs(variation - biome.variation) * variationFactor);
         }
 
         Biome biome = PLAINS;
         double val = 1000000;
-        for(int x = 0; x < biomes.size(); x++) {
+        for(int x = 0; x < gameInstance.BIOMES.ELEMENTS.size(); x++) {
           //  System.out.println(biomes.get(x).name + " " + doubles.get(x));
             if(val > doubles.get(x)) {
-                biome = biomes.get(x);
+                biome = gameInstance.BIOMES.get(x);
                 val = doubles.get(x);
             }
         }
