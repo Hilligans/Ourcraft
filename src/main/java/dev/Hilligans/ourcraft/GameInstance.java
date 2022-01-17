@@ -5,6 +5,7 @@ import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
 import dev.Hilligans.ourcraft.Client.Rendering.ClientUtil;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Screens.ScreenBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Widget;
 import dev.Hilligans.ourcraft.Command.CommandHandler;
 import dev.Hilligans.ourcraft.Container.Container;
@@ -109,6 +110,7 @@ public class GameInstance {
     public final Registry<EntityFetcher> ENTITIES = new Registry<>(this, EntityFetcher.class);
     public final Registry<ToolLevel> TOOL_MATERIALS = new Registry<>(this, ToolLevel.class);
     public final Registry<RegistryLoader> DATA_LOADERS = new Registry<>(this, RegistryLoader.class);
+    public final Registry<ScreenBuilder> SCREEN_BUILDERS = new Registry<>(this, ScreenBuilder.class);
 
     public void clear() {
         BLOCKS.clear();
@@ -213,6 +215,12 @@ public class GameInstance {
         }
     }
 
+    public void registerScreenBuilder(ScreenBuilder... screenBuilders) {
+        for(ScreenBuilder screenBuilder : screenBuilders) {
+            SCREEN_BUILDERS.put(screenBuilder.getResourceLocation(screenBuilder.modContent).toIdentifier(),screenBuilder);
+        }
+    }
+
     public void register(String name, Object o) {
         boolean put = false;
         for(Registry<?> registry : REGISTRIES.ELEMENTS) {
@@ -267,9 +275,8 @@ public class GameInstance {
     public void registerDefaultContent() {
         Ourcraft.registerDefaultContent(OURCRAFT);
         PacketBase.register();
-        ClientUtil.register();
         Container.register();
-        NBTTag.register();
+        //NBTTag.register();
         Widget.register();
         Entity.register();
     }

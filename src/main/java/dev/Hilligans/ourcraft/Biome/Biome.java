@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.Biome;
 
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Block.Blocks;
+import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
 import dev.Hilligans.ourcraft.World.Builders.WorldBuilder;
@@ -64,7 +65,7 @@ public class Biome implements IRegistryElement {
 
 
     @Override
-    public void load() {
+    public void load(GameInstance gameInstance) {
     }
 
     @Override

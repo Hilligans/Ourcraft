@@ -24,7 +24,6 @@ public class Registry<T> {
         this.classType = classType;
     }
 
-
     public void clear() {
         MAPPED_ELEMENTS.clear();
         ELEMENTS.clear();

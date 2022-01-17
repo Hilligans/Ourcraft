@@ -43,7 +43,7 @@ public class Texture {
         Image image = WorldTextureManager.loadImage1(path, source.modID);
 
         if(image == null) {
-            System.out.println(source + ":" + path);
+            System.out.println(source.modID + ":" + path);
         }
 
         width = image.getWidth();

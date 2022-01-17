@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.Resource;
 
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
+import dev.Hilligans.ourcraft.ModHandler.Identifier;
 import dev.Hilligans.ourcraft.ModHandler.Mod;
 
 public class ResourceLocation {
@@ -36,5 +37,9 @@ public class ResourceLocation {
                 "path='" + path + '\'' +
                 ", source=" + source.modID +
                 '}';
+    }
+
+    public Identifier toIdentifier() {
+        return new Identifier(path, getSource());
     }
 }

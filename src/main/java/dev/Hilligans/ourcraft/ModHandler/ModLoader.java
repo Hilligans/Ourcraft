@@ -36,7 +36,9 @@ public class ModLoader {
 
     public void loadDefaultMods() {
         loadAllMods(new File("mods/"));
-        loadClasses(new File("target/classes/"), "");
+        if(true) {
+            loadClasses(new File("target/classes/"), "");
+        }
         gameInstance.DATA_LOADER.addFolder("target/classes/", "ourcraft");
         gameInstance.CONTENT_PACK.load();
     }
@@ -59,9 +61,11 @@ public class ModLoader {
                 } else if(mod.getName().endsWith(".class")) {
                     try {
                         URLClassLoader child = new URLClassLoader(new URL[]{mod.toURI().toURL()}, this.getClass().getClassLoader());
-                        Class<?> testClass = Class.forName(topName + mod.getName().substring(0,mod.getName().length() - 6),false,child);
+                        Class<?> testClass = child.loadClass(topName + mod.getName().substring(0,mod.getName().length() - 6));
+                       // Class<?> testClass = Class.forName(topName + mod.getName().substring(0,mod.getName().length() - 6),false,child);
                         String modID = getModID(testClass);
                         if(modID != null) {
+                            System.out.println("yes");
                             this.mod = modID;
                             ModContent modContent = new ModContent(modID,gameInstance);
                             modContent.isJar = false;

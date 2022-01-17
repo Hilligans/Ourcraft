@@ -8,6 +8,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Data.Other.ItemProperties;
 import dev.Hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
+import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.Ourcraft;
 import dev.Hilligans.ourcraft.Recipe.IRecipeComponent;
@@ -157,7 +158,7 @@ public class Item implements IRecipeComponent, IRegistryElement {
     }
 
     @Override
-    public void load() {
+    public void load(GameInstance gameInstance) {
         if(source.gameInstance.side == Side.CLIENT) {
             generateTextures();
         }

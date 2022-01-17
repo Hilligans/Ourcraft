@@ -34,6 +34,7 @@ import dev.Hilligans.ourcraft.Client.Audio.SoundEngine;
 import dev.Hilligans.ourcraft.Client.Audio.Sounds;
 import dev.Hilligans.ourcraft.Client.Rendering.*;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.*;
+import dev.Hilligans.ourcraft.Ourcraft;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
 import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
@@ -127,7 +128,7 @@ public class Client {
         createCallbacks();
 
         gameInstance.EVENT_BUS.postEvent(new ClientStartRenderingEvent());
-
+        openScreen(Ourcraft.screenBuilder.get());
         graphicsEngine.createRenderLoop(gameInstance,graphicsEngine.createWindow()).run();
 
         cleanUp();
@@ -253,6 +254,7 @@ public class Client {
             }
             playerData.openContainer = container;
         }
+        screen1.resize(windowX,windowY);
         sendPacket(new COpenScreen(screen1));
     }
 

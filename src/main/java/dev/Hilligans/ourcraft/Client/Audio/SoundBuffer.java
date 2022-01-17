@@ -1,5 +1,6 @@
 package dev.Hilligans.ourcraft.Client.Audio;
 
+import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.Resource.ResourceLocation;
 import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
@@ -98,7 +99,7 @@ public class SoundBuffer implements IRegistryElement {
 
 
     @Override
-    public void load() {
+    public void load(GameInstance gameInstance) {
         if(bytes == null && source.gameInstance.side == Side.CLIENT) {
             this.data = source.gameInstance.getResource(new ResourceLocation(file, source));
             try (STBVorbisInfo info = STBVorbisInfo.malloc()) {

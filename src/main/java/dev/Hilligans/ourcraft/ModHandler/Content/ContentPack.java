@@ -132,7 +132,7 @@ public class ContentPack {
         for(Registry<?> registry : gameInstance.REGISTRIES.ELEMENTS) {
             for(Object o : registry.ELEMENTS) {
                 if(o instanceof IRegistryElement) {
-                    ((IRegistryElement) o).load();
+                    ((IRegistryElement) o).load(gameInstance);
                 }
             }
         }

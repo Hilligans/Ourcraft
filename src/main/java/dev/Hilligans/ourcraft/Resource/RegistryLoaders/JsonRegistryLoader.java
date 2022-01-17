@@ -33,6 +33,7 @@ public class JsonRegistryLoader extends ModRegistryLoader<JSONObject> {
         try {
             return (JSONObject) gameInstance.RESOURCE_LOADER.getResource(new ResourceLocation(path, modContent));
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

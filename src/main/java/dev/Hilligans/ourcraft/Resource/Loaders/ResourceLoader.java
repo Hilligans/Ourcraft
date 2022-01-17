@@ -27,7 +27,7 @@ public abstract class ResourceLoader<T> {
     }
 
     public T read(ResourceLocation path) {
-        ByteBuffer buffer = gameInstance.getResourceDirect(path);
+        ByteBuffer buffer = gameInstance.getResource(path);
         if(buffer == null) {
             return null;
         }

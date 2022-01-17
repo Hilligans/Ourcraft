@@ -7,6 +7,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.BlockTextureManage
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.DataBlockState;
 import dev.Hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
+import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.Item.ItemStack;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
@@ -221,7 +222,7 @@ public class Block implements IRegistryElement {
     }
 
     @Override
-    public void load() {
+    public void load(GameInstance gameInstance) {
         if(modContent.gameInstance.side == Side.CLIENT) {
             generateTextures();
         }

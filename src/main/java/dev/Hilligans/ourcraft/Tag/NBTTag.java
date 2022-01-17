@@ -62,7 +62,7 @@ public abstract class NBTTag {
     }
 
 
-    public static void register() {
+    static {
         tags.add(EndNBTTag::new);
         tags.add(ByteNBTTag::new);
         tags.add(ShortNBTTag::new);

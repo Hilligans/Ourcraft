@@ -27,10 +27,7 @@ public class StringRenderer {
 
     public static StringRenderer instance = new StringRenderer();
 
-    public static HashMap<String, Integer> cached = new HashMap<>();
-
     public HashMap<String, Tuple<Integer,Integer>> characterOffset = new HashMap<>();
-    public HashMap<String, Triplet<Integer,Integer, Integer>> characterOffset1 = new HashMap<>();
 
     public int width;
     public int height;

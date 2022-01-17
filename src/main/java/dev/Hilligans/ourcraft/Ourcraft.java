@@ -3,6 +3,7 @@ package dev.Hilligans.ourcraft;
 import dev.Hilligans.ourcraft.Biome.Biomes;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.Sounds;
+import dev.Hilligans.ourcraft.Client.Rendering.Screens.ScreenBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
 import dev.Hilligans.ourcraft.Item.Data.ToolLevel;
@@ -82,5 +83,12 @@ public class Ourcraft {
             }
             modContent12.registerBlock(block);
         }));
+
+
+        modContent.registerRegistryLoader(new JsonRegistryLoader(new Identifier("screens", "ourcraft"), "Data/Screens.json", (modContent12, jsonObject, key) -> {
+            modContent12.registerScreenBuilder(new ScreenBuilder(key, jsonObject));
+        }).rerunOnInstanceClear());
     }
+
+
 }

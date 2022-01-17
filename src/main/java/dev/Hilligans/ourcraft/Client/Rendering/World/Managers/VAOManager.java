@@ -89,28 +89,6 @@ public class  VAOManager {
         return VAO;
     }
 
-    public static int createDynamicVAO(float[] vertices, int[] indices) {
-        int VAO = glGenVertexArrays();
-        int VBO = glGenBuffers();
-        int EBO = glGenBuffers();
-
-        glBindVertexArray(VAO);
-
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, vertices, GL_DYNAMIC_DRAW);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_DYNAMIC_DRAW);
-
-        glVertexAttribPointer(0,3,GL_FLOAT,false,5 * 4,0);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, 2, GL_FLOAT, false, 5 * 4, 3 * 4);
-        glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        return VAO;
-    }
-
     public static float[] convertVertices(ArrayList<Vector5f> vector5fs, boolean coloured) {
         float[] floats;
         if(coloured) {
