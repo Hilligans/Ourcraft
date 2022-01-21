@@ -1,5 +1,7 @@
 package dev.Hilligans.ourcraft.Client.Rendering.NewRenderer;
 
+import dev.Hilligans.ourcraft.Ourcraft;
+import dev.Hilligans.ourcraft.Resource.ResourceLocation;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
@@ -17,7 +19,7 @@ import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 public class TextAtlas {
 
     public Image image;
-    public int size = 8192;
+    public int size = 8192 * 1;
     public int minWidth = 16;
     public ExecutorService executorService;
 
@@ -26,8 +28,52 @@ public class TextAtlas {
     public Int2LongOpenHashMap ids = new Int2LongOpenHashMap();
     public HashMap<String, Integer> cache = new HashMap<>();
 
+    long[][] openSpots;
+    int arrSize;
+
     public int texture;
     int id = 0;
+
+    public void start() {
+        arrSize = (int) (Math.log((float)size / minWidth) / Math.log(2)) + 1;
+        openSpots = new long[arrSize][3];
+        for(int x = 0; x < arrSize; x++) {
+            openSpots[x][0] = -1;
+            openSpots[x][1] = -1;
+            openSpots[x][2] = -1;
+        }
+        openSpots[arrSize - 1][0] = 0;
+    }
+
+    public synchronized long findSpot(int size, int index) {
+        int loc = (int) (Math.log((float)size / minWidth) / Math.log(2));
+        int ogLoc = loc - 1;
+        long spot = -1;
+        while(loc != arrSize) {
+            loc++;
+            for(int z = 2; z >= 0; z--) {
+                spot = openSpots[loc][z];
+                if(spot != -1) {
+                    openSpots[loc][z] = -1;
+                    while(loc != ogLoc + 1) {
+                        loc--;
+                        int x = (int)(spot >> 32);
+                        int y = (int)spot;
+                        int width = minWidth << (loc);
+                        openSpots[loc][0] = spot;
+                        openSpots[loc][1] = ((long) x << 32) | (y + width);
+                        openSpots[loc][2] = ((long) (x + width) << 32) | y;
+                        spot = ((long) (x + width) << 32) | (y + width);
+                    }
+                    int x = (int)(spot >> 32);
+                    int y = (int)spot;
+                    ids.put(index,getLong(size, x, y));
+                    return spot;
+                }
+            }
+        }
+        return spot;
+    }
 
     public TextAtlas() {
         image = new Image(size, size);
@@ -41,6 +87,9 @@ public class TextAtlas {
         images.add(imageLocation);
         imageLocation.textAtlas = this;
         imageLocation.index = id;
+        if(id == -1) {
+            System.out.println("ran out of space");
+        }
         cache.put(key,imageLocation.index);
         id++;
         return imageLocation.index;
@@ -50,55 +99,7 @@ public class TextAtlas {
         id = 0;
         map.clear();
         ids.clear();
-        generate();
-
-    }
-
-    public void generate() {
-        recursivelyAdd(size,0,0);
-    }
-
-    public synchronized void add(int tempSize, Image tempImage, int index) {
-        for(int x = 0; x < size / tempSize; x++) {
-            for(int y = 0; y < size / tempSize; y++) {
-                if(map.containsKey(getLong(tempSize,  x * tempSize,  y * tempSize))) {
-                    recursivelyRemove(tempSize,x * tempSize, y * tempSize);
-                    removeUp(tempSize,x * tempSize, y * tempSize);
-                    image.putImage(tempImage, x * tempSize, y * tempSize);
-                    ids.put(index,getLong(tempSize,  x * tempSize,  y * tempSize));
-                    return;
-                }
-            }
-        }
-        System.err.println("Texture atlas ran out of locations");
-    }
-
-    private void recursivelyAdd(int tempSize, int x, int y) {
-        if(tempSize >= minWidth) {
-            map.put(getLong(tempSize, x, y), true);
-            recursivelyAdd(tempSize/2,x,y);
-            recursivelyAdd(tempSize/2,x + tempSize/2,y);
-            recursivelyAdd(tempSize/2,x,y + tempSize/2);
-            recursivelyAdd(tempSize/2,x + tempSize/2,y + tempSize/2);
-        }
-    }
-
-    private void recursivelyRemove(int tempSize, int x, int y) {
-        if(tempSize >= minWidth) {
-            map.remove(getLong(tempSize, x, y));
-            recursivelyRemove(tempSize/2,x,y);
-            recursivelyRemove(tempSize/2,x + tempSize/2,y);
-            recursivelyRemove(tempSize/2,x,y + tempSize/2);
-            recursivelyRemove(tempSize/2,x + tempSize/2,y + tempSize/2);
-        }
-    }
-
-    private void removeUp(int tempSize, int x, int y) {
-        if(tempSize <= size) {
-            map.remove(getLong(tempSize, x, y));
-            int newSize = tempSize * 2;
-            removeUp(newSize, x % newSize == 0 ? x : Math.floorDiv(x,newSize) * newSize, y % newSize == 0 ? y : Math.floorDiv(y,newSize) * newSize);
-        }
+        start();
     }
 
     private long getLong(long size, int x, int y) {
@@ -107,14 +108,23 @@ public class TextAtlas {
 
     public void assemble() {
         long start = System.currentTimeMillis();
-        executorService = Executors.newFixedThreadPool(3,new NamedThreadFactory("texture_atlas_builder"));
+        executorService = Executors.newFixedThreadPool(1,new NamedThreadFactory("texture_atlas_builder"));
         for(ImageLocation imageLocation : images) {
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
+                    Image tempImage;
                     try {
-                        Image tempImage = new Image(imageLocation.path, imageLocation.modId);
-                        add(tempImage.width, tempImage, imageLocation.index);
+                        tempImage = (Image)Ourcraft.GAME_INSTANCE.RESOURCE_LOADER.getResource(new ResourceLocation(imageLocation.path, imageLocation.modId));
+                        if(tempImage == null) {
+                            System.out.println(new ResourceLocation(imageLocation.path, imageLocation.modId).toIdentifier());
+                            return;
+                        }
+                        tempImage.flip(false);
+
+                        long spot = findSpot(tempImage.width, imageLocation.index);
+                        image.putImage(tempImage, (int)(spot >> 32), (int)(spot));
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -123,7 +133,7 @@ public class TextAtlas {
         }
         executorService.shutdown();
         try {
-            executorService.awaitTermination(1000, TimeUnit.MILLISECONDS);
+            executorService.awaitTermination(10000, TimeUnit.MILLISECONDS);
         } catch (Exception ignored) {}
 
 
@@ -132,6 +142,8 @@ public class TextAtlas {
     }
 
     public int upload() {
+        start();
+
         assemble();
         texture = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texture);

@@ -98,7 +98,7 @@ public class ModLoader {
                 if(modID != null) {
                     ModContent modContent = new ModContent(modID,gameInstance);
                     modContent.path = name;
-                    ZipResourceDirectory zipResourceDirectory = new ZipResourceDirectory(new ZipFile(file.getPath()));
+                    ZipResourceDirectory zipResourceDirectory = new ZipResourceDirectory(new ZipFile(file.getPath()), file.getPath());
                     JSONObject jsonObject = getContent(zipResourceDirectory);
                     if(jsonObject != null) {
                         modContent.readData(jsonObject);

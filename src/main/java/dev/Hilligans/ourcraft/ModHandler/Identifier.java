@@ -25,7 +25,7 @@ public class Identifier {
     }
 
     public String getName() {
-        return name + ":" + getModID();
+        return getModID() + ":" + name;
     }
 
     @Override

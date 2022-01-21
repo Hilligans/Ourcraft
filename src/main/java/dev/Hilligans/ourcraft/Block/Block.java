@@ -57,6 +57,7 @@ public class Block implements IRegistryElement {
         this.modContent = modContent;
         this.blockProperties.source = modId;
         this.blockProperties.blockTextureManager.source = modId;
+        this.blockProperties.blockTextureManager.textureSource = modId;
     }
 
     public String getName() {

@@ -30,34 +30,6 @@ public class Image {
         this.buffer = byteBuffer;
     }
 
-    public Image(String path, String modId) {
-        try {
-            byte[] rawImageData = Ourcraft.getResourceManager().getResource(path, modId).readAllBytes();
-            ByteBuffer rawData = ByteBuffer.allocateDirect(rawImageData.length);
-            rawData.put(rawImageData).flip();
-
-            int[] width = new int[1];
-            int[] height = new int[1];
-            int[] components = new int[1];
-            ByteBuffer temp = STBImage.stbi_load_from_memory(rawData, width, height, components, 4);
-            this.buffer = ByteBuffer.allocateDirect(temp.capacity());
-            int length = temp.capacity();
-            for(int x = 0; x < length / 4; x++) {
-                buffer.put(x * 4 + 3,temp.get(length - x * 4 - 1));
-                buffer.put(x * 4 + 2,temp.get(length - x * 4 - 2));
-                buffer.put(x * 4 + 1,temp.get(length - x * 4 - 3));
-                buffer.put(x * 4 + 0,temp.get(length - x * 4 - 4));
-            }
-
-
-            this.width = width[0];
-            this.height = height[0];
-        } catch (Exception ignored) {
-            ignored.printStackTrace();
-            System.err.println("Failed to load image " + path + " from mod " + modId);
-        }
-    }
-
     public Image(byte[] rawImageData) {
         try {
             ByteBuffer rawData = ByteBuffer.allocateDirect(rawImageData.length);
@@ -77,24 +49,44 @@ public class Image {
         }
     }
 
-    public static synchronized Image createImage(String path, String modID) {
-        return new Image(path,modID);
+    public int getPixel(int x, int y) {
+        int pos = x * format + y * format * width;
+        return buffer.getInt(pos);
     }
 
-    public int getPixel(int x, int y) {
-        int pos = x * y * 4;
-        return buffer.get(pos) | (buffer.get(pos + 1) << 8) | (buffer.get(pos + 2) << 16) | (buffer.get(pos + 3) << 24);
+    public int getSmallPixel(int x, int y) {
+        int pos = x * format + y * format * width;
+        return buffer.get(pos) | (buffer.get(pos + 1) << 8) | (buffer.get(pos + 2) << 16);
     }
 
     public void putPixel(int x, int y, int val) {
-        int pos = x * y * 4;
+        int pos = x * format + y * format * width;
         buffer.put(pos, (byte) val);
         buffer.put(pos + 1, (byte) (val >> 8));
         buffer.put(pos + 2, (byte) (val >> 16));
         buffer.put(pos + 3, (byte) (val >> 24));
     }
 
+    public void putSmallPixel(int x, int y, int val) {
+        int pos = getPos(x, y);
+        buffer.put(pos, (byte) val);
+        buffer.put(pos + 1, (byte) (val >> 8));
+        buffer.put(pos + 2, (byte) (val >> 16));
+    }
+
+    public int getPos(int x, int y) {
+        return x * format + y * format * width;
+    }
+
     public void putImage(Image image, int x, int y) {
+        if(format != image.format) {
+            for(int xx = 0; xx < image.getWidth(); xx++) {
+                for(int yy = 0; yy < image.getHeight(); yy++) {
+                    putPixel(x + xx, y + yy, image.getSmallPixel(xx, yy));
+                }
+            }
+            return;
+        }
          for(int yy = 0; yy < image.height; yy++) {
           buffer.put((yy + y) * format * width + x * format,image.buffer,yy * format * image.width,image.width * format);
         }
@@ -145,4 +137,45 @@ public class Image {
         return bufferedImage;
     }
 
+    public Image flip(boolean horizontal) {
+        Image tempImage = new Image(getWidth(), getHeight(), format);
+
+        int width = getWidth();
+        int height = getHeight();
+
+        if(format == 3) {
+            /*for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    if (horizontal) {
+                        tempImage.putSmallPixel(width - x - 1, height - y - 1, getSmallPixel(x, y));
+                    } else {
+                        tempImage.putSmallPixel(width - x - 1, y, getSmallPixel(x, y));
+                    }
+                }
+            }
+
+             */
+        } else {
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    if (horizontal) {
+                        tempImage.putPixel(x, height - y - 1, getPixel(x, y));
+                    } else {
+                        tempImage.putPixel(width - x - 1, height - y - 1, getPixel(x, y));
+                    }
+                }
+            }
+        }
+        buffer = tempImage.buffer;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Image{" +
+                "width=" + width +
+                ", height=" + height +
+                ", format=" + format +
+                '}';
+    }
 }

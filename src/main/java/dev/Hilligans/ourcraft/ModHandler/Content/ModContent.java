@@ -5,7 +5,7 @@ import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.BlockModel;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.IModel;
-import dev.Hilligans.ourcraft.Client.Rendering.Screens.ScreenBuilder;
+import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Data.Descriptors.Tag;
@@ -223,7 +223,7 @@ public class ModContent {
 
     public void registerScreenBuilder(ScreenBuilder... screenBuilders) {
         for(ScreenBuilder screenBuilder : screenBuilders) {
-            screenBuilder.modContent = this;
+            screenBuilder.assignModContent(this);
             this.screenBuilders.add(screenBuilder);
         }
     }

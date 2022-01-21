@@ -27,7 +27,7 @@ public class DataLoader {
 
     public void addJar(String path, String modID) {
         try {
-            add(modID, new ZipResourceDirectory(new ZipFile(path)));
+            add(modID, new ZipResourceDirectory(new ZipFile(path), path));
         } catch (Exception e) {
             throw new RuntimeException("Failed to find jar file: " + path);
         }

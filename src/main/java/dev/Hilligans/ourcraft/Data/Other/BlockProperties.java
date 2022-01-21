@@ -216,6 +216,9 @@ public class BlockProperties {
 
     public static BlockProperties loadProperties(String path, JSONObject overrides) {
         BlockProperties blockProperties = new BlockProperties();
+        if(path.equals("/Data/null")) {
+            return blockProperties;
+        }
         String val = WorldLoader.readString(path);
         if(!val.equals("")) {
             try {

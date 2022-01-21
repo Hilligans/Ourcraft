@@ -3,9 +3,8 @@ package dev.Hilligans.ourcraft;
 import dev.Hilligans.ourcraft.Biome.Biome;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
-import dev.Hilligans.ourcraft.Client.Rendering.ClientUtil;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
-import dev.Hilligans.ourcraft.Client.Rendering.Screens.ScreenBuilder;
+import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Widget;
 import dev.Hilligans.ourcraft.Command.CommandHandler;
 import dev.Hilligans.ourcraft.Container.Container;
@@ -30,7 +29,6 @@ import dev.Hilligans.ourcraft.Resource.ResourceLocation;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
 import dev.Hilligans.ourcraft.Resource.UniversalResourceLoader;
 import dev.Hilligans.ourcraft.Settings.Setting;
-import dev.Hilligans.ourcraft.Tag.NBTTag;
 import dev.Hilligans.ourcraft.Util.ArgumentContainer;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import dev.Hilligans.ourcraft.Recipe.IRecipe;
@@ -89,6 +87,7 @@ public class GameInstance {
         CONTENT_PACK.buildVital();
         CONTENT_PACK.mods.forEach((s, modContent) -> modContent.invokeRegistryLoaders());
         CONTENT_PACK.generateData();
+        System.out.println("Registered " + BLOCKS.ELEMENTS.size() + " Blocks");
     }
 
     public String path = System.getProperty("user.dir");

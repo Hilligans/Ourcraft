@@ -3,6 +3,7 @@ package dev.Hilligans.ourcraft.ModHandler.Content;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.IModel;
+import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
 import dev.Hilligans.ourcraft.ClientMain;
@@ -126,6 +127,9 @@ public class ContentPack {
                 }
                 for(Protocol protocol : mod.protocols.values()) {
                     gameInstance.PROTOCOLS.put(protocol.protocolName,protocol);
+                }
+                for(ScreenBuilder screenBuilder : mod.screenBuilders) {
+                    gameInstance.registerScreenBuilder(screenBuilder);
                 }
             }
         }

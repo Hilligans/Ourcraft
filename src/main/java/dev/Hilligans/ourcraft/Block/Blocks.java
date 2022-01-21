@@ -107,7 +107,7 @@ public class Blocks {
         TextAtlas.instance.clear();
         if(!Settings.isServer) {
             for (Block block : Ourcraft.GAME_INSTANCE.getBlocks()) {
-                block.generateTextures();
+               // block.generateTextures();
             }
             for(Item item : Ourcraft.GAME_INSTANCE.ITEMS.ELEMENTS) {
                 item.generateTextures();

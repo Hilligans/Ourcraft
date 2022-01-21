@@ -124,53 +124,6 @@ public class ResourceManager {
         }
     }
 
-    public synchronized InputStream getResource(String path, String mod) {
-
-        try {
-            Triplet<Class<?>, String, Boolean> type = gameInstance.MOD_LOADER.mainClasses.get(mod);
-            String filePath = type.getTypeB();
-            if (type.getTypeC()) {
-                if (filePath != null) {
-                    try {
-                        ZipFile zipFile = new ZipFile(filePath);
-                        ZipEntry zipEntry = zipFile.getEntry(path);
-                        if (zipEntry != null) {
-                            return zipFile.getInputStream(zipEntry);
-                        }
-                    } catch (Exception ignored) {
-                    }
-                }
-            } else {
-                File file = new File("target/classes/" + path);
-                if (file.exists()) {
-                    try {
-                        return file.toURI().toURL().openStream();
-                    } catch (Exception ignored) {
-                    }
-                }
-            }
-
-            ModContent modContent = gameInstance.CONTENT_PACK.mods.get(mod);
-            try {
-                if (modContent != null) {
-                    String jarPath = modContent.classLoader.getURLs()[0].getPath();
-                    for (Iterator<URL> it = ResourceManager.class.getClassLoader().getResources(path).asIterator(); it.hasNext(); ) {
-                        URL url = it.next();
-                        String urlPath = url.getPath();
-                        if ((urlPath.startsWith(jarPath)) || (urlPath.startsWith("file:") && urlPath.substring(5).startsWith(jarPath)) || (jarPath.startsWith(urlPath.substring(0, urlPath.length() - path.length())))) {
-                            return url.openStream();
-                        }
-                    }
-                } else {
-                    System.err.println("no mod found with id " + mod);
-                }
-            } catch (Exception ignored) {
-            }
-        } catch (Exception ignored) {}
-
-        return getResource(path);
-    }
-
     public void clearData() {
         textures.clear();
         models.clear();

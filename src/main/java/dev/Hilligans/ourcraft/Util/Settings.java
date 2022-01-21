@@ -13,7 +13,7 @@ public class Settings {
 
     public static final int gameVersion = 3;
 
-    public static final int maxFps = 20000;
+    public static final int maxFps = 500;
 
     public static final boolean renderSameTransparent = false;
     public static boolean renderTransparency = true;

@@ -128,7 +128,7 @@ public class Client {
         createCallbacks();
 
         gameInstance.EVENT_BUS.postEvent(new ClientStartRenderingEvent());
-        openScreen(Ourcraft.screenBuilder.get());
+        openScreen("ourcraft:test_screen");
         graphicsEngine.createRenderLoop(gameInstance,graphicsEngine.createWindow()).run();
 
         cleanUp();
@@ -271,6 +271,14 @@ public class Client {
             playerData.openContainer.closeContainer();
         }
         playerData.openContainer = container;
+    }
+
+    public void openScreen(String screenName) {
+        ScreenBuilder screenBuilder = gameInstance.SCREEN_BUILDERS.get(screenName);
+        if(screenBuilder == null) {
+            throw new RuntimeException("Failed to find screen: " + screenName);
+        }
+        openScreen(screenBuilder.get(this));
     }
 
     public void registerKeyHandlers() {

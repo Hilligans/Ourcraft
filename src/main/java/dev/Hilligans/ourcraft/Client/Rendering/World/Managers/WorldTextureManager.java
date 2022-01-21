@@ -183,14 +183,4 @@ public class WorldTextureManager {
         //Return the image
         return img;
     }
-
-    public static void saveImage(BufferedImage bufferedImage, String name) {
-        try {
-            File outputfile = new File("characters/" + name + ".png");
-
-            ImageIO.write(bufferedImage, "png", outputfile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

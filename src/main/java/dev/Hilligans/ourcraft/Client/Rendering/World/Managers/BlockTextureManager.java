@@ -47,6 +47,7 @@ public class BlockTextureManager implements TextureManager {
     }
 
     public void generate() {
+        //System.out.println(textureSource);
         if(location != null) {
             int id = TextAtlas.instance.loadTextureId("Blocks/" + location, location.substring(0,location.length() - 4),textureSource);
             for (int x = 0; x < 6; x++) {
@@ -66,24 +67,6 @@ public class BlockTextureManager implements TextureManager {
                 }
             }
         }
-    }
-
-    public HashMap<String, BufferedImage> getAllTextures() {
-        HashMap<String, BufferedImage> map = new HashMap<>();
-        if(textureNames != null) {
-            for (String string : textureNames) {
-                if (!map.containsKey(string)) {
-                    map.put(string, WorldTextureManager.loadImage("blocks/" + string, source));
-                }
-            }
-        }
-        if(location != null) {
-            if(!map.containsKey(location)) {
-                map.put(location, WorldTextureManager.loadImage("blocks/" + location, source));
-            }
-        }
-
-        return map;
     }
 
     public String[] getTextures() {

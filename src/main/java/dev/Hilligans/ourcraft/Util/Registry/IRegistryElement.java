@@ -13,4 +13,6 @@ public interface IRegistryElement {
     default ResourceLocation getResourceLocation(ModContent modContent) {
         return new ResourceLocation(getResourceName(),modContent);
     }
+
+    default void assignModContent(ModContent modContent) {}
 }

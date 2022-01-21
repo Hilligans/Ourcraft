@@ -25,8 +25,11 @@ public class ImageLoader extends ResourceLoader<Image> {
         int[] height = new int[1];
         int[] components = new int[1];
         ByteBuffer temp = STBImage.stbi_load_from_memory(buffer, width, height, components, 4);
-        return new Image(width[0],height[0],components[0],temp);
 
+        if(width[0] == 0) {
+            throw new RuntimeException("Failed to load image: " + STBImage.stbi_failure_reason());
+        }
+        return new Image(width[0],height[0],4,temp);
     }
 
     @Override

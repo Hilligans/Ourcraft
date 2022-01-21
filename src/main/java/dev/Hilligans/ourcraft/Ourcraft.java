@@ -3,7 +3,7 @@ package dev.Hilligans.ourcraft;
 import dev.Hilligans.ourcraft.Biome.Biomes;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.Sounds;
-import dev.Hilligans.ourcraft.Client.Rendering.Screens.ScreenBuilder;
+import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
 import dev.Hilligans.ourcraft.Item.Data.ToolLevel;
@@ -16,16 +16,12 @@ import dev.Hilligans.ourcraft.Resource.Loaders.JsonLoader;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import dev.Hilligans.ourcraft.Util.TriConsumer;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.BiConsumer;
 
 import static dev.Hilligans.ourcraft.Block.Blocks.*;
 
@@ -76,18 +72,24 @@ public class Ourcraft {
         }).rerunOnInstanceClear());
 
         modContent.registerRegistryLoader(new JsonRegistryLoader(new Identifier("blocks", "ourcraft"), "Data/Blocks.json", (modContent12, jsonObject, key) -> {
-            Block block = new Block(key, "/Data/" + jsonObject.getString("data"), jsonObject.optJSONObject("overrides"));
-            JSONArray textures = jsonObject.getJSONArray("textures");
-            for (int x = 0; x < textures.length(); x++) {
-                block.blockProperties.addTexture(textures.getString(x), x, textures.length());
+            try {
+                Block block = new Block(key, "/Data/" + jsonObject.optJSONObject("data"), jsonObject.optJSONObject("overrides"));
+                JSONArray textures = jsonObject.getJSONArray("textures");
+                for (int x = 0; x < textures.length(); x++) {
+                    block.blockProperties.addTexture(textures.getString(x), x, textures.length());
+                }
+                modContent12.registerBlock(block);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println(modContent12.modID);
             }
-            modContent12.registerBlock(block);
         }));
 
 
         modContent.registerRegistryLoader(new JsonRegistryLoader(new Identifier("screens", "ourcraft"), "Data/Screens.json", (modContent12, jsonObject, key) -> {
             modContent12.registerScreenBuilder(new ScreenBuilder(key, jsonObject));
         }).rerunOnInstanceClear());
+        Ourcraft.getResourceManager().gameInstance = modContent.gameInstance;
     }
 
 
