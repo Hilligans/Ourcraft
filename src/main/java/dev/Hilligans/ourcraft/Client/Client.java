@@ -15,6 +15,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.Screens.JoinScreen;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.ShaderManager;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.VAOManager;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
+import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Container.Container;
 import dev.Hilligans.ourcraft.Container.Slot;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
@@ -128,7 +129,7 @@ public class Client {
         createCallbacks();
 
         gameInstance.EVENT_BUS.postEvent(new ClientStartRenderingEvent());
-        openScreen("ourcraft:test_screen");
+        //openScreen("ourcraft:test_screen");
         graphicsEngine.createRenderLoop(gameInstance,graphicsEngine.createWindow()).run();
 
         cleanUp();

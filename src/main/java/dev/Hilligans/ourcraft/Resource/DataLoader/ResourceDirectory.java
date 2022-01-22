@@ -1,5 +1,7 @@
 package dev.Hilligans.ourcraft.Resource.DataLoader;
 
+import dev.Hilligans.ourcraft.Util.PipelineStage;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;

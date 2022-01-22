@@ -35,6 +35,8 @@ public class ClientMain {
 
     public static ArgumentContainer argumentContainer;
 
+    public static long start = System.currentTimeMillis();
+
     public static void main(String[] args) throws IOException {
         argumentContainer = new ArgumentContainer(args);
         gameInstance.handleArgs(args);

@@ -1,5 +1,8 @@
 package dev.Hilligans.ourcraft.Resource.DataLoader;
 
+import dev.Hilligans.ourcraft.Util.DaisyChain;
+import dev.Hilligans.ourcraft.Util.PipelineStage;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
@@ -28,17 +31,18 @@ public class ZipResourceDirectory implements ResourceDirectory {
 
     @Override
     public ByteBuffer get(String path) throws IOException {
-        ZipEntry zipEntry = zipFile.getEntry(path);
-        if(zipEntry == null) {
-            return null;
-        }
-        return ByteBuffer.wrap(zipFile.getInputStream(zipEntry).readAllBytes());
+        Path someFileInJarPath = jarFS.getPath("/" + path);
+        SeekableByteChannel rbc = Files.newByteChannel(someFileInJarPath, EnumSet.of(StandardOpenOption.READ));
+
+        ByteBuffer byteBuffer = ByteBuffer.allocate((int) rbc.size());
+        rbc.read(byteBuffer);
+        byteBuffer.rewind();
+        rbc.close();
+        return byteBuffer;
     }
 
     @Override
     public ByteBuffer getDirect(String path) throws IOException {
-
-
         Path someFileInJarPath = jarFS.getPath("/" + path);
         SeekableByteChannel rbc = Files.newByteChannel(someFileInJarPath, EnumSet.of(StandardOpenOption.READ));
 
@@ -47,21 +51,6 @@ public class ZipResourceDirectory implements ResourceDirectory {
         byteBuffer.rewind();
         rbc.close();
         return byteBuffer;
-
-        // return null;
-
-        /*
-        ZipEntry zipEntry = zipFile.getEntry(path);
-        if(zipEntry == null) {
-            return null;
-        }
-        byte[] vals = zipFile.getInputStream(zipEntry).readAllBytes();
-        ByteBuffer buf = ByteBuffer.allocateDirect(vals.length);
-        buf.put(vals);
-        buf.rewind();
-        return buf;
-
-         */
     }
 
     @Override

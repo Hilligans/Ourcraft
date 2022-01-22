@@ -24,7 +24,7 @@ public class DaisyChain<T> {
         return null;
     }
 
-    public void add(T element) {
+    public synchronized void add(T element) {
         Node<T> nextNode = new Node<>(element);
         headNode.next = nextNode;
         headNode = nextNode;
