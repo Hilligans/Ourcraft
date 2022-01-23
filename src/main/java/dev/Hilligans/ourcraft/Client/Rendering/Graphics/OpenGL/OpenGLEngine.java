@@ -101,7 +101,7 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
             texture = TextAtlas.instance.upload();
             client.refreshTexture = false;
            // getGameInstance().RESOURCE_LOADER.saveResource((Image)getGameInstance().RESOURCE_LOADER.getResource(new ResourceLocation("Images/player.png", "ourcraft")), "out.jpg");
-           // getGameInstance().RESOURCE_LOADER.saveResource(TextAtlas.instance.image, "out.png");
+            getGameInstance().RESOURCE_LOADER.saveResource(TextAtlas.instance.image, "out.png");
         }
 
         glUseProgram(client.shaderManager.shaderProgram);

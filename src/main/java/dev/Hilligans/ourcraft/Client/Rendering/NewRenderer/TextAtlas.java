@@ -28,7 +28,7 @@ import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 public class TextAtlas {
 
     public Image image;
-    public int size = 512;
+    public int size = 32;
     public int minWidth = 16;
     public ExecutorService executorService;
 
@@ -75,7 +75,7 @@ public class TextAtlas {
     public void assemble() {
         long start = System.currentTimeMillis();
 
-        executorService = Executors.newFixedThreadPool(1,new NamedThreadFactory("texture_atlas_builder"));
+        executorService = Executors.newFixedThreadPool(2,new NamedThreadFactory("texture_atlas_builder"));
         for(ImageLocation imageLocation : images) {
             executorService.submit(() -> {
                 Image tempImage;
@@ -86,7 +86,7 @@ public class TextAtlas {
                         System.out.println(new ResourceLocation(imageLocation.path, imageLocation.modId).toIdentifier());
                         return;
                     }
-                    tempImage.flip(false);
+                    tempImage.flip(false).ensureSquare();
 
                     spot = findSpot(tempImage.width, imageLocation.index);
                     image.putImage(tempImage, (int)(spot >> 32), (int)(spot));
@@ -159,6 +159,7 @@ public class TextAtlas {
     }
 
     public synchronized void resize() {
+        System.out.println("resize");
         arrSize++;
         long[][] newVals = new long[arrSize][3];
         System.arraycopy(openSpots, 0, newVals, 0, arrSize - 1);

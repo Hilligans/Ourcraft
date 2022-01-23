@@ -14,6 +14,8 @@ import dev.Hilligans.ourcraft.Data.Other.BlockPos;
 import dev.Hilligans.ourcraft.Data.Other.BlockProperties;
 import dev.Hilligans.ourcraft.Data.Other.BoundingBox;
 import dev.Hilligans.ourcraft.Data.Other.RayResult;
+import dev.Hilligans.ourcraft.Ourcraft;
+import dev.Hilligans.ourcraft.Resource.ResourceLocation;
 import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
 import dev.Hilligans.ourcraft.Util.Side;
 import dev.Hilligans.ourcraft.World.DataProvider;
@@ -31,6 +33,9 @@ public class Block implements IRegistryElement {
     public Block droppedBlock;
     public ModContent modContent;
 
+    public String path;
+    public JSONObject overrides;
+
     public Block(String name, BlockProperties blockProperties) {
         this.name = name;
         id = Blocks.getNextId();
@@ -44,7 +49,7 @@ public class Block implements IRegistryElement {
     }
 
     public Block(String name, String path, JSONObject overrides) {
-        this(name,BlockProperties.loadProperties(path,overrides));
+        this(name, BlockProperties.loadProperties(path,overrides));
     }
 
     public Block setBlockDrop(Block blockDrop) {
@@ -224,6 +229,16 @@ public class Block implements IRegistryElement {
 
     @Override
     public void load(GameInstance gameInstance) {
+        if(path != null && blockProperties == null) {
+            JSONObject jsonObject = (JSONObject) Ourcraft.GAME_INSTANCE.RESOURCE_LOADER.getResource(new ResourceLocation(path, modId));
+            if(jsonObject != null) {
+                if (overrides != null) {
+                    BlockProperties.recursivelyOverride(jsonObject, overrides);
+                }
+                blockProperties.read(jsonObject);
+            }
+        }
+
         if(modContent.gameInstance.side == Side.CLIENT) {
             generateTextures();
         }

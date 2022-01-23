@@ -143,6 +143,11 @@ public class Image {
         return bufferedImage;
     }
 
+    public Image ensureSquare() {
+        this.height = this.width;
+        return this;
+    }
+
     public Image flip(boolean horizontal) {
         Image tempImage = new Image(getWidth(), getHeight(), format);
 
@@ -150,17 +155,6 @@ public class Image {
         int height = getHeight();
 
         if(format == 3) {
-            /*for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    if (horizontal) {
-                        tempImage.putSmallPixel(width - x - 1, height - y - 1, getSmallPixel(x, y));
-                    } else {
-                        tempImage.putSmallPixel(width - x - 1, y, getSmallPixel(x, y));
-                    }
-                }
-            }
-
-             */
         } else {
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {

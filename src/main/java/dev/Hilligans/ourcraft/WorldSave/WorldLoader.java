@@ -7,6 +7,7 @@ import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class WorldLoader {
@@ -29,6 +30,7 @@ public class WorldLoader {
         } catch (IOException ingored) {
             ingored.printStackTrace();
         }
+        ArrayList<String> list = new ArrayList<>();
     }
 
     public static CompoundNBTTag loadTag(String path) {

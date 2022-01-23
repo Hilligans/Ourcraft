@@ -73,7 +73,7 @@ public class Ourcraft {
 
         modContent.registerRegistryLoader(new JsonRegistryLoader(new Identifier("blocks", "ourcraft"), "Data/Blocks.json", (modContent12, jsonObject, key) -> {
             try {
-                Block block = new Block(key, "/Data/" + jsonObject.optJSONObject("data"), jsonObject.optJSONObject("overrides"));
+                Block block = new Block(key, "Data/" + jsonObject.optJSONObject("data"), jsonObject.optJSONObject("overrides"));
                 JSONArray textures = jsonObject.getJSONArray("textures");
                 for (int x = 0; x < textures.length(); x++) {
                     block.blockProperties.addTexture(textures.getString(x), x, textures.length());

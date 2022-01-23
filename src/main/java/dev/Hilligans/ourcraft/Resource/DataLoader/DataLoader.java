@@ -42,6 +42,7 @@ public class DataLoader {
         try {
             return resourceDirectory.get(resourceLocation.path);
         } catch (IOException e) {
+            e.printStackTrace();
             return null;
         }
     }

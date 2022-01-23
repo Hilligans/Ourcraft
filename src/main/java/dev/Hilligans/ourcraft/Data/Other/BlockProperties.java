@@ -4,6 +4,8 @@ import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.BlockModel;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.BlockTextureManager;
 import dev.Hilligans.ourcraft.Data.Other.BlockShapes.BlockShape;
 import dev.Hilligans.ourcraft.Item.Data.ToolLevel;
+import dev.Hilligans.ourcraft.Ourcraft;
+import dev.Hilligans.ourcraft.Resource.ResourceLocation;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -216,32 +218,20 @@ public class BlockProperties {
 
     public static BlockProperties loadProperties(String path, JSONObject overrides) {
         BlockProperties blockProperties = new BlockProperties();
-        if(path.equals("/Data/null")) {
+        if (path.equals("Data/null")) {
             return blockProperties;
         }
-        String val = WorldLoader.readString(path);
-        if(!val.equals("")) {
-            try {
-                JSONObject jsonObject = new JSONObject(val);
-                if(overrides != null) {
-                    try {
-                        recursivelyOverride(jsonObject, overrides);
-                    } catch (Exception ignored) {} //tried to override something that doesnt exist
-                }
-                blockProperties = loadProperties(jsonObject);
-                blockProperties.path = path;
-                blockProperties.overrides = overrides;
-                blockProperties.fromFile = true;
-            } catch (Exception ignored) {
-                ignored.printStackTrace();
-            }
-        } else {
-            System.err.println("failed to read file " + path);
+        try {
+            blockProperties.path = path;
+            blockProperties.overrides = overrides;
+            blockProperties.fromFile = true;
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
         }
         return blockProperties;
     }
 
-    private static void recursivelyOverride(JSONObject jsonObject, JSONObject override) {
+    public static void recursivelyOverride(JSONObject jsonObject, JSONObject override) {
         for (String string : override.keySet()) {
             Object object = override.get(string);
             if(object instanceof JSONObject) {
