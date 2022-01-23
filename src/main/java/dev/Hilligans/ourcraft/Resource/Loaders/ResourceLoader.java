@@ -42,6 +42,10 @@ public abstract class ResourceLoader<T> {
 
     public abstract ByteBuffer write(T t);
 
+    public void write(Object o, String path) {
+        write(path,(T)o);
+    }
+
     public static String toString(ByteBuffer buffer) {
         if(buffer == null) {
             return null;

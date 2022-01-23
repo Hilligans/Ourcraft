@@ -16,7 +16,12 @@ public class WorldLoader {
     public static void write(String fileName, ByteBuffer byteBuffer) {
         try {
             File file = new File(fileName);
-            file.getParentFile().mkdirs();
+            if(file.getParentFile() != null) {
+                file.getParentFile().mkdirs();
+            }
+            if(byteBuffer == null) {
+                throw new RuntimeException("Writing nothing");
+            }
             RandomAccessFile aFile = new RandomAccessFile(fileName, "rw");
             FileChannel inChannel = aFile.getChannel();
             inChannel.write(byteBuffer);

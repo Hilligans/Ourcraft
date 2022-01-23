@@ -39,7 +39,11 @@ public class ModLoader {
         if(true) {
             loadClasses(new File("target/classes/"), "");
         }
-        gameInstance.DATA_LOADER.addFolder("target/classes/", "ourcraft");
+        if(new File("ourcraft-1.0.3-jar-with-dependencies.jar").exists()) {
+            gameInstance.DATA_LOADER.addJar("ourcraft-1.0.3-jar-with-dependencies.jar", "ourcraft");
+        } else {
+            gameInstance.DATA_LOADER.addFolder("target/classes/", "ourcraft");
+        }
         gameInstance.CONTENT_PACK.load();
     }
 

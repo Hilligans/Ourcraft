@@ -58,6 +58,18 @@ public class UniversalResourceLoader {
         return null;
     }
 
+    public void saveResource(Object resource, String path) {
+        String extension = getExtension(path);
+        if(extension == null) {
+            throw new RuntimeException("The provided path does not have an extension");
+        }
+        ResourceLoader<?> resourceLoader = extensionLoaders.get(extension);
+        if(resourceLoader == null) {
+            throw new RuntimeException("No Resource Loader found for extension: " + extension);
+        }
+        resourceLoader.write(resource, path);
+    }
+
     public ArrayList<ResourceLoader<?>> getCategory(String category) {
         return categories.computeIfAbsent(category, a -> new ArrayList<>());
     }

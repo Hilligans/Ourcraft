@@ -92,6 +92,12 @@ public class Image {
         }
     }
 
+    public void fill(int rgba) {
+        for(int x = 0; x < width * height; x++) {
+            buffer.putInt(x,rgba);
+        }
+    }
+
     public void print() {
         byte[] vals = new byte[width * height * 4];
         buffer.get(vals);

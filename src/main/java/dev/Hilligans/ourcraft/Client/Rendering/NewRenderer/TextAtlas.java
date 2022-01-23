@@ -10,9 +10,11 @@ import dev.Hilligans.ourcraft.Util.PipelineStage;
 import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -26,7 +28,7 @@ import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 public class TextAtlas {
 
     public Image image;
-    public int size = 4096;
+    public int size = 512;
     public int minWidth = 16;
     public ExecutorService executorService;
 
@@ -73,7 +75,7 @@ public class TextAtlas {
     public void assemble() {
         long start = System.currentTimeMillis();
 
-        executorService = Executors.newFixedThreadPool(2,new NamedThreadFactory("texture_atlas_builder"));
+        executorService = Executors.newFixedThreadPool(1,new NamedThreadFactory("texture_atlas_builder"));
         for(ImageLocation imageLocation : images) {
             executorService.submit(() -> {
                 Image tempImage;
@@ -115,7 +117,7 @@ public class TextAtlas {
     }
 
     public void start() {
-        arrSize = (int) (Math.log((float)size / minWidth) / Math.log(2)) + 1;
+        arrSize = (int) (Math.log((float)size / minWidth) / Math.log(2));
         openSpots = new long[arrSize][3];
         for(int x = 0; x < arrSize; x++) {
             openSpots[x][0] = -1;
@@ -127,15 +129,14 @@ public class TextAtlas {
 
     public synchronized long findSpot(int size, int index) {
         int loc = (int) (Math.log((float) size / minWidth) / Math.log(2));
-        int ogLoc = loc - 1;
-        long spot = -1;
-        while (loc != arrSize - 1) {
-            loc++;
+        int ogLoc = loc;
+        long spot;
+        while (loc < arrSize) {
             for (int z = 2; z >= 0; z--) {
                 spot = openSpots[loc][z];
                 if (spot != -1) {
                     openSpots[loc][z] = -1;
-                    while (loc != ogLoc + 1) {
+                    while (loc != ogLoc) {
                         loc--;
                         int x = (int) (spot >> 32);
                         int y = (int) spot;
@@ -151,13 +152,13 @@ public class TextAtlas {
                     return spot;
                 }
             }
+            loc++;
         }
         resize();
         return findSpot(size, index);
     }
 
-    //TODO fix, doesnt entirely resize properly idk works for the most part
-    public void resize() {
+    public synchronized void resize() {
         arrSize++;
         long[][] newVals = new long[arrSize][3];
         System.arraycopy(openSpots, 0, newVals, 0, arrSize - 1);
@@ -165,12 +166,9 @@ public class TextAtlas {
         newImage.putImage(image,0,0);
         image = newImage;
         openSpots = newVals;
-        openSpots[arrSize - 2][0] = ((long) (size / 2) << 32) | (size / 2);
-        openSpots[arrSize - 2][1] = (size / 2);
-        openSpots[arrSize - 2][2] = (long) (size / 2) << 32;
-        openSpots[arrSize - 1][0] = -1;
-        openSpots[arrSize - 1][1] = -1;
-        openSpots[arrSize - 1][2] = -1;
+        openSpots[arrSize - 1][0] = ((long) (size) << 32) | (size);
+        openSpots[arrSize - 1][1] = (size);
+        openSpots[arrSize - 1][2] = (long) (size) << 32;
         size *= 2;
     }
 

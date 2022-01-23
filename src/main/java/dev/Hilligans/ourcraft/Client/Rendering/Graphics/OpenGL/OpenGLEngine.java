@@ -7,6 +7,7 @@ import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.PlayerMovementThread;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.GLRenderer;
+import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.TextAtlas;
 import dev.Hilligans.ourcraft.Client.Rendering.Renderer;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.JoinScreen;
@@ -21,6 +22,7 @@ import dev.Hilligans.ourcraft.Entity.Entity;
 import dev.Hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.GLInitEvent;
+import dev.Hilligans.ourcraft.Resource.ResourceLocation;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.Util.TwoInt2ObjectMap;
@@ -98,6 +100,8 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
             Blocks.generateTextures();
             texture = TextAtlas.instance.upload();
             client.refreshTexture = false;
+           // getGameInstance().RESOURCE_LOADER.saveResource((Image)getGameInstance().RESOURCE_LOADER.getResource(new ResourceLocation("Images/player.png", "ourcraft")), "out.jpg");
+           // getGameInstance().RESOURCE_LOADER.saveResource(TextAtlas.instance.image, "out.png");
         }
 
         glUseProgram(client.shaderManager.shaderProgram);
@@ -173,7 +177,7 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
 
     @Override
     public GameInstance getGameInstance() {
-        return null;
+        return client.gameInstance;
     }
 
     @Override

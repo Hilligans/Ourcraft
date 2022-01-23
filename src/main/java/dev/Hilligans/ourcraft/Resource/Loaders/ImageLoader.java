@@ -43,7 +43,6 @@ public class ImageLoader extends ResourceLoader<Image> {
 
     @Override
     public void write(String path, Image image) {
-        super.write(path, image);
         String extension = UniversalResourceLoader.getExtension(path);
         final ByteBuffer[] buf = new ByteBuffer[1];
         STBIWriteCallbackI callbackI = (context, data, size) -> buf[0] = memByteBuffer(data, size);
@@ -59,9 +58,9 @@ public class ImageLoader extends ResourceLoader<Image> {
     public static void write(String type, Image image, STBIWriteCallbackI writeCallbackI) {
         switch (type) {
             case "png" -> STBImageWrite.stbi_write_png_to_func(writeCallbackI,0,image.width,image.height,image.format,image.buffer,image.format * image.width);
-            case "jpg" -> STBImageWrite.stbi_write_jpg_to_func(writeCallbackI,0,image.width,image.height,image.format,image.buffer,image.format * image.width);
-            case "bmp" -> STBImageWrite.stbi_write_bmp_to_func(writeCallbackI,0,image.width,image.height,image.format,image.buffer);
-            case "tga" -> STBImageWrite.stbi_write_tga_to_func(writeCallbackI,0,image.width,image.height,image.format,image.buffer);
+            case "jpg" -> STBImageWrite.stbi_write_jpg_to_func(writeCallbackI,1,image.width,image.height,image.format,image.buffer,image.format * image.width);
+            case "bmp" -> STBImageWrite.stbi_write_bmp_to_func(writeCallbackI,2,image.width,image.height,image.format,image.buffer);
+            case "tga" -> STBImageWrite.stbi_write_tga_to_func(writeCallbackI,3,image.width,image.height,image.format,image.buffer);
         }
     }
 }
