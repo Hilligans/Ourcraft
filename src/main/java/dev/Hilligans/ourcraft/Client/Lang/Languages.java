@@ -38,6 +38,7 @@ public class Languages {
         addLanguage("French","Francais");
         addLanguage("Vietnamese","Tiếng Việt");
         addLanguage("Japanese","日本語");
+        addLanguage("Swedish","Svenska");
         Collections.sort(languages);
     }
 
