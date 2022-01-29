@@ -1,0 +1,28 @@
+#GUI
+settings.sensitivity::Känslighet
+settings.languages::Språk
+settings.fov::FOV
+settings.render_distance::Renderings avstånd
+settings.transparent_textures::Transparenta texturer
+settings.sound_options::Ljud val
+menu.main_menu::Huvudmeny
+menu.log_in::Logga in
+menu.create_account::Skapa konto
+menu.join::Gå med i spel
+menu.account_name::Konto namn
+menu.password::Lösenord
+menu.email::Email
+menu.disconnect::Koppla ifrån
+menu.settings::Inställningar
+menu.done::Klar
+menu.mod_list::Mod Lista
+
+
+
+#Items
+item.ourcraft.stone::Sten
+item.ourcraft.dirt::Jord
+item.ourcraft.sand::Sand
+item.ourcraft.weeping_vine::Weeping Vin
+item.ourcraft.bedrock::Berggrund
+item.ourcraft.chest::Kista
