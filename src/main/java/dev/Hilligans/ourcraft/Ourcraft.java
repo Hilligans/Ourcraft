@@ -3,6 +3,8 @@ package dev.Hilligans.ourcraft;
 import dev.Hilligans.ourcraft.Biome.Biomes;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.Sounds;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
@@ -16,6 +18,7 @@ import dev.Hilligans.ourcraft.Resource.Loaders.JsonLoader;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import dev.Hilligans.ourcraft.Util.Side;
 import org.json.JSONArray;
 
 import java.io.File;
@@ -73,7 +76,7 @@ public class Ourcraft {
 
         modContent.registerRegistryLoader(new JsonRegistryLoader(new Identifier("blocks", "ourcraft"), "Data/Blocks.json", (modContent12, jsonObject, key) -> {
             try {
-                Block block = new Block(key, "Data/" + jsonObject.optJSONObject("data"), jsonObject.optJSONObject("overrides"));
+                Block block = new Block(key, "Data/" + jsonObject.optString("data"), jsonObject.optJSONObject("overrides"));
                 JSONArray textures = jsonObject.getJSONArray("textures");
                 for (int x = 0; x < textures.length(); x++) {
                     block.blockProperties.addTexture(textures.getString(x), x, textures.length());
@@ -81,7 +84,6 @@ public class Ourcraft {
                 modContent12.registerBlock(block);
             } catch (Exception e) {
                 e.printStackTrace();
-                System.out.println(modContent12.modID);
             }
         }));
 
@@ -89,6 +91,12 @@ public class Ourcraft {
         modContent.registerRegistryLoader(new JsonRegistryLoader(new Identifier("screens", "ourcraft"), "Data/Screens.json", (modContent12, jsonObject, key) -> {
             modContent12.registerScreenBuilder(new ScreenBuilder(key, jsonObject));
         }).rerunOnInstanceClear());
+
+        if(modContent.gameInstance.side.equals(Side.CLIENT)) {
+            modContent.registerGraphicsEngine(new VulkanEngine());
+            System.out.println(modContent.graphicsEngines.get(0).getUniqueName());
+        }
+
         Ourcraft.getResourceManager().gameInstance = modContent.gameInstance;
     }
 

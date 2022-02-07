@@ -4,10 +4,12 @@ import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.Renderer;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.BlockTextureManager;
+import dev.Hilligans.ourcraft.Data.Descriptors.TagCollection;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.DataBlockState;
 import dev.Hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.Hilligans.ourcraft.GameInstance;
+import dev.Hilligans.ourcraft.Item.Item;
 import dev.Hilligans.ourcraft.Item.ItemStack;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
@@ -40,6 +42,7 @@ public class Block implements IRegistryElement {
         this.name = name;
         id = Blocks.getNextId();
         this.blockProperties = blockProperties;
+        blockProperties.setName(name);
         droppedBlock = this;
     }
 
@@ -135,8 +138,8 @@ public class Block implements IRegistryElement {
         }
     }
 
-    public Block getDroppedBlock() {
-        return droppedBlock;
+    public Item getBlockItem() {
+        return modContent.gameInstance.getItem(getName());
     }
 
     public boolean getAllowedMovement(Vector3d motion, Vector3d pos, BlockPos blockPos, BoundingBox boundingBox, World world) {
@@ -229,8 +232,8 @@ public class Block implements IRegistryElement {
 
     @Override
     public void load(GameInstance gameInstance) {
-        if(path != null && blockProperties == null) {
-            JSONObject jsonObject = (JSONObject) Ourcraft.GAME_INSTANCE.RESOURCE_LOADER.getResource(new ResourceLocation(path, modId));
+        if(blockProperties.path != null && blockProperties.fromFile) {
+            JSONObject jsonObject = (JSONObject) Ourcraft.GAME_INSTANCE.RESOURCE_LOADER.getResource(new ResourceLocation(blockProperties.path, modId));
             if(jsonObject != null) {
                 if (overrides != null) {
                     BlockProperties.recursivelyOverride(jsonObject, overrides);
@@ -247,5 +250,20 @@ public class Block implements IRegistryElement {
     @Override
     public String getResourceName() {
         return name;
+    }
+
+    @Override
+    public String getIdentifierName() {
+        return modId + ":" + name;
+    }
+
+    @Override
+    public String getUniqueName() {
+        return "block." + modId + "." + name;
+    }
+
+    @Override
+    public TagCollection getTagCollection() {
+        return blockProperties.tags;
     }
 }

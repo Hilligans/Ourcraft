@@ -10,5 +10,16 @@ public enum Side {
         this.name = name;
     }
 
-    public String name;
+    public final String name;
+
+
+    public boolean equals(Side s) {
+        if(s == null) {
+            return false;
+        }
+        if(this.name.equals("common")) {
+            return true;
+        }
+        return this == s;
+    }
 }

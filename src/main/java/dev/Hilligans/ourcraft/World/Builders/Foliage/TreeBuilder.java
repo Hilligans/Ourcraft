@@ -8,6 +8,10 @@ import dev.Hilligans.ourcraft.World.Builders.SurfaceBuilder;
 
 public class TreeBuilder extends SurfaceBuilder {
 
+    public TreeBuilder(String featureName) {
+        super(featureName);
+    }
+
     @Override
     public void build(BlockPos startPos) {
         if(world.getBlockState(startPos.copy().add(0,-1,0)).getBlock() == Blocks.GRASS) {

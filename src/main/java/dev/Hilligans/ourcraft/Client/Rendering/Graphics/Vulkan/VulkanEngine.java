@@ -7,17 +7,16 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Vulka
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.VulkanWindow;
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.GameInstance;
+import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.World.ClientWorld;
+
+import java.util.ArrayList;
 
 public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer, VulkanWindow> {
 
     public VulkanInstance vulkanInstance;
     public GameInstance gameInstance;
-
-    public VulkanEngine(GameInstance gameInstance) {
-        this.gameInstance = gameInstance;
-    }
 
     @Override
     public VulkanWindow createWindow() {
@@ -66,8 +65,18 @@ public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer, Vu
     }
 
     @Override
+    public ArrayList<VulkanWindow> getWindows() {
+        return null;
+    }
+
+    @Override
     public GameInstance getGameInstance() {
         return gameInstance;
+    }
+
+    @Override
+    public boolean isCompatible() {
+        return true;
     }
 
     public static VulkanInstance getVulkanInstance() {
@@ -82,4 +91,28 @@ public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer, Vu
     }
 
     public static VulkanInstance sInstance;
+
+    @Override
+    public void assignModContent(ModContent modContent) {
+        this.gameInstance = modContent.gameInstance;
+    }
+
+    @Override
+    public void load(GameInstance gameInstance) {
+    }
+
+    @Override
+    public String getResourceName() {
+        return "vulkanEngine";
+    }
+
+    @Override
+    public String getIdentifierName() {
+        return "ourcraft:vulkanEngine";
+    }
+
+    @Override
+    public String getUniqueName() {
+        return "graphicsEngine.ourcraft.vulkanEngine";
+    }
 }

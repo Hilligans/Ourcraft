@@ -41,4 +41,8 @@ public class TagCollection {
         }
         return true;
     }
+
+    public boolean contains(Tag tag) {
+        return tags.containsKey(tag.tagName);
+    }
 }

@@ -30,6 +30,4 @@ public class CommandPool {
         vkDestroyCommandPool(device.device,commandPool,null);
     }
 
-
-
 }

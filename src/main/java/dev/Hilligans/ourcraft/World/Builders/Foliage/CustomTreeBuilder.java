@@ -17,6 +17,7 @@ public class CustomTreeBuilder extends SurfaceBuilder {
     Block leaves;
 
     public CustomTreeBuilder(Block block) {
+        super("cum");
         this.wood = block;
         this.leaves = Blocks.LEAVES;
     }

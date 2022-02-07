@@ -55,7 +55,7 @@ public class RecipeHelper  {
                         case '#':
                             break;
                         case '$':
-                            descriptor.tagCollection.put(new Tag("item",part.substring(1)));
+                            descriptor.tagCollection.put(new Tag("item",part.substring(1), "ourcraft"));
                             break;
                         default:
                             descriptor.names.add(part);

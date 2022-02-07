@@ -1,28 +1,20 @@
 package dev.Hilligans.ourcraft;
 
-import dev.Hilligans.ourcraft.Block.Block;
-import dev.Hilligans.ourcraft.Block.BlockTypes.ChestBlock;
 import dev.Hilligans.ourcraft.Client.Client;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.VulkanWindow;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanInstance;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngine;
-import dev.Hilligans.ourcraft.Command.Commands;
-import dev.Hilligans.ourcraft.Resource.DataLoader.ResourceDirectory;
-import dev.Hilligans.ourcraft.Resource.DataLoader.ZipResourceDirectory;
-import dev.Hilligans.ourcraft.Resource.ResourceLocation;
-import dev.Hilligans.ourcraft.Resource.UniversalResourceLoader;
-import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
-import dev.Hilligans.ourcraft.Tag.ListNBTTag;
-import dev.Hilligans.ourcraft.Tag.NBTTag;
 import dev.Hilligans.ourcraft.Util.ArgumentContainer;
+import dev.Hilligans.ourcraft.Util.GameResource.GameResourceTable;
 import dev.Hilligans.ourcraft.Util.Side;
-import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jooq.lambda.tuple.Tuple1;
+import org.jooq.lambda.tuple.Tuple2;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.function.BiConsumer;
-import java.util.zip.ZipFile;
+import java.util.Random;
 
 public class ClientMain {
 
@@ -36,6 +28,7 @@ public class ClientMain {
     public static ArgumentContainer argumentContainer;
 
     public static long start = System.currentTimeMillis();
+    public static IGraphicsEngine<?, ?> graphicsEngine = null;
 
     public static void main(String[] args) throws IOException {
         argumentContainer = new ArgumentContainer(args);
@@ -43,7 +36,16 @@ public class ClientMain {
         gameInstance.side = Side.CLIENT;
         gameInstance.loadContent();
 
+
+        new GameResourceTable().createMap(gameInstance);
+
         client = new Client(gameInstance);
+        String graphicsEngine = argumentContainer.getString("--graphicsEngine", null);
+        if(graphicsEngine != null) {
+            System.out.println(graphicsEngine);
+            client.setGraphicsEngine(gameInstance.GRAPHICS_ENGINES.get(graphicsEngine));
+        }
+
 
       //  VulkanEngine vulkanEngine = new VulkanEngine(gameInstance);
       //  vulkanEngine.setup();

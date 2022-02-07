@@ -14,7 +14,19 @@
       "data": "Blocks/stairSmall.json",
       "overrides": {
          "properties":{
-            "transparent":true
+            "transparent":true,
+            "toolLevel": "diamond"
+         }
+      }
+   },
+
+   "diamond_ore": {
+      "textures": ["diamond_ore.png"],
+      "data": "Blocks/block.json",
+      "overrides": {
+         "properties": {
+            "toolLevel": "iron",
+            "drops": "ourcraft:diamond"
          }
       }
    }

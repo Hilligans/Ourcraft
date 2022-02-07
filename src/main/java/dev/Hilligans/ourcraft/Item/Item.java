@@ -6,6 +6,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.ShaderManager;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.VAOManager;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.ClientMain;
+import dev.Hilligans.ourcraft.Data.Descriptors.TagCollection;
 import dev.Hilligans.ourcraft.Data.Other.ItemProperties;
 import dev.Hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.Hilligans.ourcraft.GameInstance;
@@ -140,10 +141,6 @@ public class Item implements IRecipeComponent, IRegistryElement {
     public String getName() {
         return "item." + modID + "." + name;
     }
-    public String getBlockName() {
-        return "block." + modID + "." + name;
-    }
-
 
     @Override
     public String toString() {
@@ -167,5 +164,20 @@ public class Item implements IRecipeComponent, IRegistryElement {
     @Override
     public String getResourceName() {
         return name;
+    }
+
+    @Override
+    public String getIdentifierName() {
+        return modID + ":" + name;
+    }
+
+    @Override
+    public String getUniqueName() {
+        return "item." + modID + "." + name;
+    }
+
+    @Override
+    public TagCollection getTagCollection() {
+        return itemProperties.tags;
     }
 }

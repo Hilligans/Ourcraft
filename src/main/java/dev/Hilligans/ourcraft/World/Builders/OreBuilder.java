@@ -4,14 +4,16 @@ import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
 import it.unimi.dsi.fastutil.ints.Int2BooleanOpenHashMap;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class OreBuilder extends RandomBuilder {
 
-    Int2BooleanOpenHashMap allowedBlocks = new Int2BooleanOpenHashMap();
-    Block ore;
+    public Int2BooleanOpenHashMap allowedBlocks = new Int2BooleanOpenHashMap();
+    public Block ore;
 
-    int size = 3;
-
-    public OreBuilder(Block ore, Block... blocks) {
+    public OreBuilder(String name, Block ore, Block... blocks) {
+        super(name);
         this.ore = ore;
         for(Block block : blocks) {
             allowedBlocks.put(block.id,true);
@@ -30,5 +32,12 @@ public class OreBuilder extends RandomBuilder {
         if(allowedBlocks.get(world.getBlockState(pos).getBlock().id)) {
             world.setBlockState(pos,ore.getDefaultState());
         }
+    }
+
+    @Override
+    public ArrayList<Block> getBlockList() {
+        ArrayList<Block> arrayList = new ArrayList<>(1);
+        arrayList.add(ore);
+        return arrayList;
     }
 }

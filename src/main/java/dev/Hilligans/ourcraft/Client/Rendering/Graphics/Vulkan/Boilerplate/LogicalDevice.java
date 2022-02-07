@@ -62,7 +62,6 @@ public class LogicalDevice {
     }
 
     public VulkanWindow getWindow() {
-        System.out.println("poo");
         if(!acquiredDefaultWindow) {
             acquiredDefaultWindow = true;
             return getDefaultWindow();

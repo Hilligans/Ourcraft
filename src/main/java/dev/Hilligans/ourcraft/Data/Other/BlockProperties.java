@@ -2,8 +2,11 @@ package dev.Hilligans.ourcraft.Data.Other;
 
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.BlockModel;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.BlockTextureManager;
+import dev.Hilligans.ourcraft.Data.Descriptors.Tag;
+import dev.Hilligans.ourcraft.Data.Descriptors.TagCollection;
 import dev.Hilligans.ourcraft.Data.Other.BlockShapes.BlockShape;
 import dev.Hilligans.ourcraft.Item.Data.ToolLevel;
+import dev.Hilligans.ourcraft.Item.Item;
 import dev.Hilligans.ourcraft.Ourcraft;
 import dev.Hilligans.ourcraft.Resource.ResourceLocation;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
@@ -33,12 +36,21 @@ public class BlockProperties {
     public BlockShape blockShape = defaultShape;
     public String toolLevel;
     public String source;
+    public String drops;
+    public String name;
 
     public String path;
     public JSONObject overrides;
     public boolean fromFile = false;
+    public TagCollection tags = new TagCollection();
 
     public BlockProperties() {
+    }
+
+    public BlockProperties setName(String name) {
+        this.drops = name;
+        this.name = name;
+        return this;
     }
 
     public BlockProperties serverSide() {
@@ -150,6 +162,7 @@ public class BlockProperties {
             dynamicItemModel = getBoolean(properties,"dynamicItemModel",false);
             alwaysRender = properties.optBoolean("alwaysRender");
             toolLevel = properties.optString("toolLevel");
+            drops = properties.optString("drops", drops);
         }
         if (jsonObject.has("model")) {
             JSONObject model = jsonObject.getJSONObject("model");
@@ -213,6 +226,9 @@ public class BlockProperties {
                     }
                 }
             }
+        }
+        if(toolLevel != null && !toolLevel.equals("")) {
+            tags.put(new Tag("mine_level", toolLevel, "ourcraft"));
         }
     }
 

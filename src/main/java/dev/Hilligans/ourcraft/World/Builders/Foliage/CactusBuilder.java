@@ -7,6 +7,10 @@ import dev.Hilligans.ourcraft.World.Builders.SurfaceBuilder;
 
 public class CactusBuilder extends SurfaceBuilder {
 
+    public CactusBuilder(String featureName) {
+        super(featureName);
+    }
+
     @Override
     public void build(BlockPos startPos) {
         int height = random.nextInt(4);

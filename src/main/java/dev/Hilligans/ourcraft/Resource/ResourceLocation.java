@@ -42,4 +42,8 @@ public class ResourceLocation {
     public Identifier toIdentifier() {
         return new Identifier(path, getSource());
     }
+
+    public String identifier() {
+        return getSource() + ":" + path;
+    }
 }

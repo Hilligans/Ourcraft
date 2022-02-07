@@ -85,6 +85,11 @@ public class ScreenBuilder implements IRegistryElement {
         return name;
     }
 
+    @Override
+    public String getUniqueName() {
+        return "screen." + modContent.modID + "." + name;
+    }
+
     static class TextureElement {
         public Texture texture;
         public int[] region;

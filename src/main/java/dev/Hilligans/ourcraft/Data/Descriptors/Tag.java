@@ -6,10 +6,15 @@ public class Tag {
 
     public String type;
     public String tagName;
+    public String source;
 
-    public Tag(String type, String tagName) {
+    public Tag(String type, String tagName, String source) {
         this.type = type;
         this.tagName = tagName;
+    }
+
+    public String asString() {
+        return "#" + source + ":" + type + "." + tagName;
     }
 
     @Override

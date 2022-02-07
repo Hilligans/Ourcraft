@@ -34,6 +34,7 @@ import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import dev.Hilligans.ourcraft.Recipe.IRecipe;
 import dev.Hilligans.ourcraft.Util.Registry.Registry;
 import dev.Hilligans.ourcraft.Util.Side;
+import dev.Hilligans.ourcraft.World.Feature;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -59,6 +60,7 @@ public class GameInstance {
     public final UniversalResourceLoader RESOURCE_LOADER = new UniversalResourceLoader();
     public final ArgumentContainer ARGUMENTS = new ArgumentContainer();
     public final DataLoader DATA_LOADER = new DataLoader();
+    //public final
     public Side side;
 
     public final ToolLevelList MATERIAL_LIST = new ToolLevelList();
@@ -78,6 +80,7 @@ public class GameInstance {
         REGISTRIES.put("ourcraft:sounds", SOUNDS);
         REGISTRIES.put("ourcraft:entities", ENTITIES);
         REGISTRIES.put("ourcraft:tool_materials", TOOL_MATERIALS);
+        REGISTRIES.put("ourcraft:features", FEATURES);
     }
 
     public void loadContent() {
@@ -110,6 +113,7 @@ public class GameInstance {
     public final Registry<ToolLevel> TOOL_MATERIALS = new Registry<>(this, ToolLevel.class);
     public final Registry<RegistryLoader> DATA_LOADERS = new Registry<>(this, RegistryLoader.class);
     public final Registry<ScreenBuilder> SCREEN_BUILDERS = new Registry<>(this, ScreenBuilder.class);
+    public final Registry<Feature> FEATURES = new Registry<>(this, Feature.class);
 
     public void clear() {
         BLOCKS.clear();
@@ -217,6 +221,18 @@ public class GameInstance {
     public void registerScreenBuilder(ScreenBuilder... screenBuilders) {
         for(ScreenBuilder screenBuilder : screenBuilders) {
             SCREEN_BUILDERS.put(screenBuilder.getResourceLocation(screenBuilder.modContent).toIdentifier(),screenBuilder);
+        }
+    }
+
+    public void registerFeature(Feature... features) {
+        for(Feature feature : features) {
+            FEATURES.put(feature.getIdentifierName(), feature);
+        }
+    }
+
+    public void registerGraphicsEngine(IGraphicsEngine<?,?>... graphicsEngines) {
+        for(IGraphicsEngine<?,?> graphicsEngine : graphicsEngines) {
+            GRAPHICS_ENGINES.put(graphicsEngine.getIdentifierName(), graphicsEngine);
         }
     }
 

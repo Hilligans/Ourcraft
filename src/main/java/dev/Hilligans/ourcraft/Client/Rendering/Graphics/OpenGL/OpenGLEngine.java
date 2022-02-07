@@ -6,6 +6,7 @@ import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.PlayerMovementThread;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.GLRenderer;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.TextAtlas;
@@ -33,6 +34,7 @@ import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.lwjgl.opengl.GL;
 
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -60,7 +62,8 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
 
     @Override
     public OpenGLWindow createWindow() {
-        return new OpenGLWindow(window,client);
+        renderWindow = new OpenGLWindow(window,client);
+        return renderWindow;
     }
 
     @Override
@@ -78,6 +81,8 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
         chunks.put(chunk.x, chunk.z, container);
     }
 
+    public static OpenGLWindow renderWindow;
+
     @Override
     public void render(OpenGLWindow window) {
         client.mouseLocked = client.screen == null;
@@ -87,7 +92,7 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
         if(currentTime - Client.timeSinceLastDraw < Client.drawTime) {
             return;
         }
-        client.countFPS();
+        window.frameTracker.count();
         Client.timeSinceLastDraw = currentTime;
 
         client.unloadQueue.forEach(VAOManager::destroyBuffer);
@@ -96,12 +101,14 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
         if(client.refreshTexture) {
             Blocks.generateTextures();
             texture = TextAtlas.instance.upload();
             client.refreshTexture = false;
+            System.out.println("Time: " + (System.currentTimeMillis() - ClientMain.start));
            // getGameInstance().RESOURCE_LOADER.saveResource((Image)getGameInstance().RESOURCE_LOADER.getResource(new ResourceLocation("Images/player.png", "ourcraft")), "out.jpg");
-            getGameInstance().RESOURCE_LOADER.saveResource(TextAtlas.instance.image, "out.png");
+           // getGameInstance().RESOURCE_LOADER.saveResource(TextAtlas.instance.image, "out.png");
         }
 
         glUseProgram(client.shaderManager.shaderProgram);
@@ -176,8 +183,18 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
     }
 
     @Override
+    public ArrayList<OpenGLWindow> getWindows() {
+        return null;
+    }
+
+    @Override
     public GameInstance getGameInstance() {
         return client.gameInstance;
+    }
+
+    @Override
+    public boolean isCompatible() {
+        return true;
     }
 
     @Override
@@ -245,5 +262,25 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
                 }
             }
         }
+    }
+
+    @Override
+    public void load(GameInstance gameInstance) {
+
+    }
+
+    @Override
+    public String getResourceName() {
+        return "openglEngine";
+    }
+
+    @Override
+    public String getIdentifierName() {
+        return "ourcraft:openglEngine";
+    }
+
+    @Override
+    public String getUniqueName() {
+        return "graphicsEngine.ourcraft.openglEngine";
     }
 }

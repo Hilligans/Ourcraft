@@ -72,4 +72,9 @@ public class Biome implements IRegistryElement {
     public String getResourceName() {
         return name;
     }
+
+    @Override
+    public String getUniqueName() {
+        return "biome." + source.modID + "." + name;
+    }
 }

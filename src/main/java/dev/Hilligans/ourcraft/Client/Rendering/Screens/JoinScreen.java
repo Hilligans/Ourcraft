@@ -45,7 +45,7 @@ public class JoinScreen extends ScreenBase {
         addWidget(new Button(500, 300, 200, 50, "menu.log_in", () -> client.openScreen(new LoginScreen(client))));
         addWidget(new Button(500,400,200,50,"menu.singleplayer", () -> {
             ServerWorld world = new ServerWorld(ClientMain.gameInstance);
-            world.worldBuilders.add(new OreBuilder(Blocks.GRASS,Blocks.STONE).setFrequency(20));
+            world.worldBuilders.add( new OreBuilder("stone", Blocks.GRASS,Blocks.STONE).setFrequency(20));
 
             client.multiPlayerServer = new MultiPlayerServer();
             client.multiPlayerServer.addWorld(0,world);

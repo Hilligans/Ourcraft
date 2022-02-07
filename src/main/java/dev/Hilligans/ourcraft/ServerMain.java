@@ -32,7 +32,7 @@ public class ServerMain {
        // gameInstance.register("testt",gameInstance);
 
         ServerWorld world = new ServerWorld(gameInstance);
-        world.worldBuilders.add(new OreBuilder(Blocks.GRASS,Blocks.STONE).setFrequency(20));
+        world.worldBuilders.add(new OreBuilder("ore", Blocks.GRASS,Blocks.STONE).setFrequency(20));
 
        // Ourcraft.CONTENT_PACK.releaseMod("test_mod");
         new Thread() {

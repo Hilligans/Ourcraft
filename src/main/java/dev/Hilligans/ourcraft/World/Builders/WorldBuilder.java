@@ -2,17 +2,22 @@ package dev.Hilligans.ourcraft.World.Builders;
 
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
 import dev.Hilligans.ourcraft.World.Chunk;
+import dev.Hilligans.ourcraft.World.Feature;
 import dev.Hilligans.ourcraft.World.World;
 
 import java.util.Random;
 
-public abstract class WorldBuilder {
+public abstract class WorldBuilder extends Feature {
 
     public World world;
     public int frequency = 1;
     public int chance = 1;
 
     public Random random;
+
+    public WorldBuilder(String featureName) {
+        super(featureName);
+    }
 
 
     public WorldBuilder setWorld(World world) {

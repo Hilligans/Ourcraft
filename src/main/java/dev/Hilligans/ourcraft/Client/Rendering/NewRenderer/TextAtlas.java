@@ -75,7 +75,7 @@ public class TextAtlas {
     public void assemble() {
         long start = System.currentTimeMillis();
 
-        executorService = Executors.newFixedThreadPool(2,new NamedThreadFactory("texture_atlas_builder"));
+        executorService = Executors.newFixedThreadPool(4,new NamedThreadFactory("texture_atlas_builder"));
         for(ImageLocation imageLocation : images) {
             executorService.submit(() -> {
                 Image tempImage;

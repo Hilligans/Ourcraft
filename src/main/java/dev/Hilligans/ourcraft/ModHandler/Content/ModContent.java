@@ -3,6 +3,7 @@ package dev.Hilligans.ourcraft.ModHandler.Content;
 import dev.Hilligans.ourcraft.Biome.Biome;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.BlockModel;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.IModel;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
@@ -24,6 +25,7 @@ import dev.Hilligans.ourcraft.Resource.Loaders.ResourceLoader;
 import dev.Hilligans.ourcraft.Util.ByteArray;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.Util.Util;
+import dev.Hilligans.ourcraft.World.Feature;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -64,6 +66,8 @@ public class ModContent {
     public ArrayList<ToolLevel> toolLevels = new ArrayList<>();
     public ArrayList<RegistryLoader> registryLoaders = new ArrayList<>();
     public ArrayList<ScreenBuilder> screenBuilders = new ArrayList<>();
+    public ArrayList<Feature> features = new ArrayList<>();
+    public ArrayList<IGraphicsEngine<?,?>> graphicsEngines = new ArrayList<>();
 
     public HashMap<String,Protocol> protocols = new HashMap<>();
 
@@ -210,6 +214,13 @@ public class ModContent {
         }
     }
 
+    public void registerFeature(Feature... features) {
+        for(Feature feature : features) {
+            feature.setModContent(this);
+            this.features.add(feature);
+        }
+    }
+
     public void registerToolLevel(ToolLevel... toolLevels) {
         this.toolLevels.addAll(List.of(toolLevels));
     }
@@ -225,6 +236,12 @@ public class ModContent {
         for(ScreenBuilder screenBuilder : screenBuilders) {
             screenBuilder.assignModContent(this);
             this.screenBuilders.add(screenBuilder);
+        }
+    }
+
+    public void registerGraphicsEngine(IGraphicsEngine<?,?>... graphicsEngines) {
+        for(IGraphicsEngine<?,?> graphicsEngine : graphicsEngines) {
+            this.graphicsEngines.add(graphicsEngine);
         }
     }
 

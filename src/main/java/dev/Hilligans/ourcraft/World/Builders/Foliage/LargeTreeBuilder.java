@@ -9,6 +9,9 @@ import dev.Hilligans.ourcraft.World.Builders.SurfaceBuilder;
 public class LargeTreeBuilder extends SurfaceBuilder {
 
 
+    public LargeTreeBuilder(String featureName) {
+        super(featureName);
+    }
 
     @Override
     public void build(BlockPos startPos) {

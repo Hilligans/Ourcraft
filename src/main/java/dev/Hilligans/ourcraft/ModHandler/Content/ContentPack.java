@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.ModHandler.Content;
 
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.IModel;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
@@ -18,6 +19,7 @@ import dev.Hilligans.ourcraft.Resource.Loaders.ResourceLoader;
 import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
 import dev.Hilligans.ourcraft.Util.Registry.Registry;
 import dev.Hilligans.ourcraft.Util.Settings;
+import dev.Hilligans.ourcraft.World.Feature;
 
 import java.util.HashMap;
 
@@ -130,6 +132,12 @@ public class ContentPack {
                 }
                 for(ScreenBuilder screenBuilder : mod.screenBuilders) {
                     gameInstance.registerScreenBuilder(screenBuilder);
+                }
+                for(Feature feature : mod.features) {
+                    gameInstance.registerFeature(feature);
+                }
+                for(IGraphicsEngine<?,?> graphicsEngine : mod.graphicsEngines) {
+                    gameInstance.registerGraphicsEngine(graphicsEngine);
                 }
             }
         }

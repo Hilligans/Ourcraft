@@ -101,6 +101,13 @@ public class Client {
         soundEngine = new SoundEngine(gameInstance);
     }
 
+    public Client setGraphicsEngine(IGraphicsEngine<?,?> graphicsEngine) {
+        if(graphicsEngine != null) {
+            this.graphicsEngine = graphicsEngine;
+        }
+        return this;
+    }
+
     public void startClient() {
         network = new ClientNetwork(gameInstance.PROTOCOLS.get("Play"));
         authNetwork = new ClientNetwork(gameInstance.PROTOCOLS.get("Auth"));
@@ -130,6 +137,7 @@ public class Client {
 
         gameInstance.EVENT_BUS.postEvent(new ClientStartRenderingEvent());
         //openScreen("ourcraft:test_screen");
+
         graphicsEngine.createRenderLoop(gameInstance,graphicsEngine.createWindow()).run();
 
         cleanUp();
@@ -170,7 +178,7 @@ public class Client {
             glUseProgram(shaderManager.shaderProgram);
             if (playerData.f3) {
                 StringRenderer.drawString(screenStack, Camera.getString(), windowX / 2, 0, 0.5f);
-                StringRenderer.drawString(screenStack, "FPS:" + fps, windowX / 2, 29, 0.5f);
+                StringRenderer.drawString(screenStack, "FPS:" + OpenGLEngine.renderWindow.frameTracker.getFPS(), windowX / 2, 29, 0.5f);
                 StringRenderer.drawString(screenStack, "Biome:" + clientWorld.biomeMap.getBiome((int) Camera.pos.x, (int) Camera.pos.z).name, windowX / 2, 58, 0.5f);
                 StringRenderer.drawString(screenStack, "VelY:" + Camera.velY, windowX / 2, 87, 0.5f);
                 Runtime runtime = Runtime.getRuntime();
@@ -449,22 +457,6 @@ public class Client {
 
     public static long timeSinceLastDraw = 0;
     public static float drawTime = 1000f * 1000000 / Settings.maxFps;
-
-    public double lastTime;
-    public int nbFrames = 0;
-
-    public int fps;
-
-    public void countFPS() {
-
-        double currentTime = glfwGetTime();
-        nbFrames++;
-        if ( currentTime - lastTime >= 1.0 ){
-            fps = nbFrames;
-            nbFrames = 0;
-            lastTime += 1.0;
-        }
-    }
 
     public void processInput(long window) {
         if(screen == null) {

@@ -6,6 +6,10 @@ import dev.Hilligans.ourcraft.Data.Other.BlockPos;
 import dev.Hilligans.ourcraft.Util.Settings;
 
 public abstract class SurfaceBuilder extends WorldBuilder {
+    public SurfaceBuilder(String featureName) {
+        super(featureName);
+    }
+
     @Override
     public void build(int x, int z) {
         int y = Settings.chunkHeight * 16;

@@ -4,10 +4,13 @@ import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.RenderPostEvent;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.RenderPreEvent;
+import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
 import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.World.ClientWorld;
 
-public interface IGraphicsEngine<T, Q extends RenderWindow> {
+import java.util.ArrayList;
+
+public interface IGraphicsEngine<T, Q extends RenderWindow> extends IRegistryElement {
 
     Q createWindow();
 
@@ -26,6 +29,8 @@ public interface IGraphicsEngine<T, Q extends RenderWindow> {
     void setup();
 
     void close();
+
+    ArrayList<Q> getWindows();
 
     GameInstance getGameInstance();
 
@@ -49,4 +54,11 @@ public interface IGraphicsEngine<T, Q extends RenderWindow> {
         };
     }
 
+    boolean isCompatible();
+
+    default void setWindowsFrameRate(int frameRate) {
+        for(Q window : getWindows()) {
+            window.frameTracker.setMaxFrameRate(frameRate);
+        }
+    }
 }
