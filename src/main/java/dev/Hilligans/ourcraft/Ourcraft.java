@@ -4,6 +4,7 @@ import dev.Hilligans.ourcraft.Biome.Biomes;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.Sounds;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTarget;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
@@ -94,7 +95,11 @@ public class Ourcraft {
 
         if(modContent.gameInstance.side.equals(Side.CLIENT)) {
             modContent.registerGraphicsEngine(new VulkanEngine());
-            System.out.println(modContent.graphicsEngines.get(0).getUniqueName());
+            modContent.registerRenderTarget(new RenderTarget("solid_world_renderer"));
+            modContent.registerRenderTarget(new RenderTarget("entity_renderer").afterTarget("solid_world_renderer","ourcraft"));
+            modContent.registerRenderTarget(new RenderTarget("particle_renderer").afterTarget("entity_renderer", "ourcraft"));
+            modContent.registerRenderTarget(new RenderTarget("translucent_world_renderer").afterTarget("particle_renderer", "ourcraft"));
+            modContent.registerRenderTarget(new RenderTarget("gui_renderer").afterTarget("translucent_world_renderer", "ourcraft"));
         }
 
         Ourcraft.getResourceManager().gameInstance = modContent.gameInstance;

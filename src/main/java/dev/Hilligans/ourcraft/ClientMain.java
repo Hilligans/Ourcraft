@@ -1,20 +1,12 @@
 package dev.Hilligans.ourcraft;
 
 import dev.Hilligans.ourcraft.Client.Client;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanInstance;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Util.ArgumentContainer;
 import dev.Hilligans.ourcraft.Util.GameResource.GameResourceTable;
 import dev.Hilligans.ourcraft.Util.Side;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jooq.lambda.tuple.Tuple1;
-import org.jooq.lambda.tuple.Tuple2;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Random;
 
 public class ClientMain {
 

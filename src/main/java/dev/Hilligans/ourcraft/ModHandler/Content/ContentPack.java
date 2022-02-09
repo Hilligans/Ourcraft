@@ -2,7 +2,7 @@ package dev.Hilligans.ourcraft.ModHandler.Content;
 
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.IModel;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
@@ -13,7 +13,6 @@ import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.Item.Item;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.RenderEndEvent;
 import dev.Hilligans.ourcraft.Network.Protocol;
-import dev.Hilligans.ourcraft.Network.Protocols;
 import dev.Hilligans.ourcraft.Resource.RegistryLoaders.RegistryLoader;
 import dev.Hilligans.ourcraft.Resource.Loaders.ResourceLoader;
 import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
@@ -21,6 +20,7 @@ import dev.Hilligans.ourcraft.Util.Registry.Registry;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.World.Feature;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ContentPack {
@@ -28,6 +28,7 @@ public class ContentPack {
     public GameInstance gameInstance;
 
     public HashMap<String, ModContent> mods = new HashMap<>();
+    public ArrayList<ModContent> modList = new ArrayList<>();
     public HashMap<String, Boolean> loadedMods = new HashMap<>();
     public HashMap<String, Boolean> shouldLoad = new HashMap<>();
     public ContentPack(GameInstance gameInstance) {
@@ -61,6 +62,8 @@ public class ContentPack {
 
     public void registerModContent(ModContent modContent) {
         mods.put(modContent.modID,modContent);
+        modList.add(modContent);
+
         gameInstance.RESOURCE_MANAGER.classLoaders.add(modContent.classLoader);
         gameInstance.MOD_LOADER.mainClasses.computeIfAbsent(modContent.modID,a -> new Triplet<>(modContent.mainClass, modContent.mainClass.getProtectionDomain().getCodeSource().getLocation().getPath(), false));
     }
@@ -106,6 +109,7 @@ public class ContentPack {
             }
         }
 
+        //TODO Mods must be registered in order of dependencies
         for(String string : mods.keySet()) {
             if(shouldLoad.get(string)) {
                 ModContent mod = mods.get(string);

@@ -1,6 +1,7 @@
-package dev.Hilligans.ourcraft.Client.Rendering.Graphics;
+package dev.Hilligans.ourcraft.Client.Rendering.Graphics.API;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.RenderPostEvent;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.RenderPreEvent;

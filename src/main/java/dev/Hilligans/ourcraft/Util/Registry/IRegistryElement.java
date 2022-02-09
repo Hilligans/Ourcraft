@@ -7,7 +7,7 @@ import dev.Hilligans.ourcraft.Resource.ResourceLocation;
 
 public interface IRegistryElement {
 
-    void load(GameInstance gameInstance);
+    default void load(GameInstance gameInstance) {}
 
     String getResourceName();
 

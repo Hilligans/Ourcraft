@@ -2,7 +2,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL;
 
 import dev.Hilligans.ourcraft.Client.Camera;
 import dev.Hilligans.ourcraft.Client.Client;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IInputProvider;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.ScreenShot;
 

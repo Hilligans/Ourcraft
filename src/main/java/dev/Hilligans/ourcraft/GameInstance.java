@@ -3,7 +3,8 @@ package dev.Hilligans.ourcraft;
 import dev.Hilligans.ourcraft.Biome.Biome;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTarget;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Widget;
 import dev.Hilligans.ourcraft.Command.CommandHandler;
@@ -80,17 +81,19 @@ public class GameInstance {
         REGISTRIES.put("ourcraft:sounds", SOUNDS);
         REGISTRIES.put("ourcraft:entities", ENTITIES);
         REGISTRIES.put("ourcraft:tool_materials", TOOL_MATERIALS);
+        REGISTRIES.put("ourcraft:screen_builders", SCREEN_BUILDERS);
         REGISTRIES.put("ourcraft:features", FEATURES);
+        REGISTRIES.put("ourcraft:render_targets", RENDER_TARGETS);
     }
 
     public void loadContent() {
         registerDefaultContent();
-        CONTENT_PACK.mods.put("ourcraft",OURCRAFT);
+        CONTENT_PACK.registerModContent(OURCRAFT);
+        //CONTENT_PACK.mods.put("ourcraft",OURCRAFT);
         MOD_LOADER.loadDefaultMods();
         CONTENT_PACK.buildVital();
         CONTENT_PACK.mods.forEach((s, modContent) -> modContent.invokeRegistryLoaders());
         CONTENT_PACK.generateData();
-        System.out.println("Registered " + BLOCKS.ELEMENTS.size() + " Blocks");
     }
 
     public String path = System.getProperty("user.dir");
@@ -114,6 +117,7 @@ public class GameInstance {
     public final Registry<RegistryLoader> DATA_LOADERS = new Registry<>(this, RegistryLoader.class);
     public final Registry<ScreenBuilder> SCREEN_BUILDERS = new Registry<>(this, ScreenBuilder.class);
     public final Registry<Feature> FEATURES = new Registry<>(this, Feature.class);
+    public final Registry<RenderTarget> RENDER_TARGETS = new Registry<>(this, RenderTarget.class);
 
     public void clear() {
         BLOCKS.clear();

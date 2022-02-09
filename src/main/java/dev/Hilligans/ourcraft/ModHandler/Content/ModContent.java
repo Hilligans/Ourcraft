@@ -3,7 +3,8 @@ package dev.Hilligans.ourcraft.ModHandler.Content;
 import dev.Hilligans.ourcraft.Biome.Biome;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.IGraphicsEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTarget;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.BlockModel;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.IModel;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
@@ -68,6 +69,7 @@ public class ModContent {
     public ArrayList<ScreenBuilder> screenBuilders = new ArrayList<>();
     public ArrayList<Feature> features = new ArrayList<>();
     public ArrayList<IGraphicsEngine<?,?>> graphicsEngines = new ArrayList<>();
+    public ArrayList<RenderTarget> renderTargets = new ArrayList<>();
 
     public HashMap<String,Protocol> protocols = new HashMap<>();
 
@@ -242,6 +244,13 @@ public class ModContent {
     public void registerGraphicsEngine(IGraphicsEngine<?,?>... graphicsEngines) {
         for(IGraphicsEngine<?,?> graphicsEngine : graphicsEngines) {
             this.graphicsEngines.add(graphicsEngine);
+        }
+    }
+
+    public void registerRenderTarget(RenderTarget... renderTargets) {
+        for(RenderTarget renderTarget : renderTargets) {
+
+            this.renderTargets.add(renderTarget);
         }
     }
 
