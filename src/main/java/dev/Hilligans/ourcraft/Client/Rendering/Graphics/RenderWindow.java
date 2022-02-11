@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics;
 
 import dev.Hilligans.ourcraft.Client.Client;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.ICamera;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public abstract class RenderWindow {
     public ArrayList<RenderTarget> renderTargets = new ArrayList<>();
 
     public IInputProvider inputProvider;
+    public ICamera camera;
 
     public abstract void close();
 

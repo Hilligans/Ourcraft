@@ -250,14 +250,12 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
         } else {
             world.vertices += chunk.getTotalVertices();
             world.count++;
-            if(Camera.shouldRenderChunk(x * 16 + (int) pos.x >> 4, z * 16 + (int) pos.z >> 4,matrixStack)) {
                 if(matrixStack.frustumIntersection.testAab(new Vector3f((chunk.x - playerChunkPos.x) * 16, 0, (chunk.z - playerChunkPos.z) * 16),new Vector3f((chunk.x + 1 - playerChunkPos.x) * 16, 256f, (chunk.z + 1 - playerChunkPos.z) * 16))) {
                     matrixStack.push();
                     matrixStack.translate((chunk.x - playerChunkPos.x) * 16, 0, (chunk.z - playerChunkPos.z) * 16);
                     chunk.render(matrixStack);
                     matrixStack.pop();
                 }
-            }
         }
     }
 

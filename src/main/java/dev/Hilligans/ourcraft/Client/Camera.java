@@ -352,7 +352,7 @@ public class Camera {
     }
 
     public static Matrix4d getPerspective(int W, int H, int x, int y) {
-        return new Matrix4d() .translate(W - 1 - 2*x, H - 1 - 2*y, 0).scale(W, H, 1).perspective((float) Math.toRadians(fov), (float) ClientMain.getWindowX() / ClientMain.getWindowY(),0.1f,10000.0f);
+        return new Matrix4d().translate(W - 1 - 2*x, H - 1 - 2*y, 0).scale(W, H, 1).perspective((float) Math.toRadians(fov), (float) ClientMain.getWindowX() / ClientMain.getWindowY(),0.1f,10000.0f);
     }
 
     public static MatrixStack getScreenStack() {
@@ -403,25 +403,6 @@ public class Camera {
         return "x:" + pos.x + " y:" + pos.y + " z:" + pos.z;
     }
 
-    public static boolean shouldRenderChunk(int chunkX, int chunkZ, MatrixStack matrixStack) {
-
-        return true;
-
-       /* chunkX -= (float)Math.cos(yaw) * 2;
-        chunkZ -= (float)Math.sin(yaw) * 2;
-
-        double dX = pos.x - chunkX * 16;
-        double dZ = pos.z - chunkZ * 16;
-
-        double yaw = Math.atan2(dZ, dX);
-
-        double anglediff = (Math.toDegrees(Camera.yaw) - Math.toDegrees(yaw) + 180 + 360) % 360 - 180;
-
-
-        return anglediff <= fov && anglediff>=-fov;
-
-        */
-    }
 
     public static double velX;
     public static double velY;
@@ -516,10 +497,8 @@ public class Camera {
             case 5:
                 return new Vector3d(0,velY,0);
             case 6:
-                //System.out.println("yes");
                 return new Vector3d(0,0,velZ);
             default:
-                //System.out.println("else");
                 return new Vector3d();
         }
     }
@@ -553,14 +532,10 @@ public class Camera {
             if(isOnGround) {
                 Vector3d newPos = new Vector3d(pos.x,pos.y,pos.z).add(motion);
                 return !getAllowedMovement(new Vector3d(0,fallSpeed * 2,0), newPos, ClientMain.getClient().clientWorld);
-                //System.out.println("yes");
-                //return ClientMain.clientWorld.getBlockState((int)newPos.x,(int)newPos.y,(int)newPos.z).block != Blocks.AIR;
             } else {
-                //System.out.println("ASD");
                 return true;
             }
         } else {
-           // System.out.println("else");
             return true;
         }
     }
