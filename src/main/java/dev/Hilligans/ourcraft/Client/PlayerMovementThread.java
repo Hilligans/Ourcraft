@@ -1,6 +1,6 @@
 package dev.Hilligans.ourcraft.Client;
 
-import dev.Hilligans.ourcraft.Client.Key.KeyHandler;
+import dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler;
 import dev.Hilligans.ourcraft.ClientMain;
 
 public class PlayerMovementThread implements Runnable {

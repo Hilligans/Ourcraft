@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.Resource.Loaders;
 
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.Resource.ResourceLocation;
+import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 
 import java.nio.ByteBuffer;
@@ -53,12 +54,30 @@ public abstract class ResourceLoader<T> {
         return new String(buffer.array());
     }
 
+    public static CompoundNBTTag toCompoundTag(ByteBuffer buffer) {
+        if(buffer == null) {
+            return null;
+        }
+        CompoundNBTTag compoundTag = new CompoundNBTTag();
+        compoundTag.readFrom(buffer);
+        return compoundTag;
+    }
+
     public static String[] toStrings(ByteBuffer buffer) {
         String s = new String(buffer.array());
         return s.split("\n");
     }
 
-    public ByteBuffer toByteBuffer(String string) {
+    public static ByteBuffer toByteBuffer(String string) {
         return ByteBuffer.wrap(string.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public static ByteBuffer toByteBuffer(CompoundNBTTag compoundNBTTag) {
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(10000000);
+        byteBuffer.mark();
+        compoundNBTTag.writeTo(byteBuffer);
+        byteBuffer.limit(byteBuffer.position());
+        byteBuffer.reset();
+        return byteBuffer;
     }
 }

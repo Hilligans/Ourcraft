@@ -2,8 +2,8 @@ package dev.Hilligans.ourcraft.Client;
 
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Block.Blocks;
-import dev.Hilligans.ourcraft.Client.Key.KeyHandler;
-import dev.Hilligans.ourcraft.Client.Key.KeyPress;
+import dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler;
+import dev.Hilligans.ourcraft.Client.Input.Key.KeyPress;
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
 import dev.Hilligans.ourcraft.Data.Other.BoundingBox;
@@ -237,32 +237,6 @@ public class Camera {
         }
     }
 
-    public static void addPitch(double amount) {
-        pitch += amount;
-        if(pitch > 3.1415 / 2) {
-            pitch = 3.1415 / 2;
-        }
-
-        if(pitch < - 3.1415 / 2) {
-            pitch = -3.1415 / 2;
-        }
-
-
-        if(yaw > 6.283) {
-            yaw = - 6.283;
-        } else if(yaw < -6.283) {
-            yaw = 6.283;
-        }
-
-        ClientMain.getClient().sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.getClient().playerId));
-
-    }
-
-    public static void addYaw(double amount) {
-        yaw += amount;
-        ClientMain.getClient().sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,(float)pitch,(float)yaw,ClientMain.getClient().playerId));
-    }
-
     public static Vector3d duplicate() {
         return new Vector3d(Camera.pos.x,Camera.pos.y,Camera.pos.z);
     }
@@ -280,18 +254,6 @@ public class Camera {
     }
 
     static Vector3d cameraUp = new Vector3d(0.0f, 1.0f, 0.0f);
-
-    public static void applyTransformations(Matrix4d matrix4d) {
-        Matrix4d projection = new Matrix4d();
-        Matrix4d view = new Matrix4d();
-        view.translate(0,0,1);
-        if(thirdPerson) {
-              view.translate(0,0,-thirdPersonScroll);
-        }
-        projection.perspective((float) Math.toRadians(fov), (float) ClientMain.getWindowX() / ClientMain.getWindowY(),0.1f,1000000.0f);
-        matrix4d.mul(projection).mul(view);
-        matrix4d.lookAt(Camera.duplicate().add((float)(Math.cos(Camera.yaw) * Math.cos(Camera.pitch)),(float)(Math.sin(Camera.pitch)),(float)(Math.sin(Camera.yaw) * Math.cos(Camera.pitch))),Camera.duplicate(), cameraUp);
-    }
 
     public static MatrixStack getWorldStack() {
         Matrix4d matrix4d = getPerspective();
@@ -363,33 +325,6 @@ public class Camera {
 
     public static double newX = (float)ClientMain.getWindowX() / 2;
     public static double newY = (float)ClientMain.getWindowY() / 2;
-
-
-    public static void updateMouse() {
-        DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
-        DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
-
-        glfwGetCursorPos(ClientMain.getClient().window, x, y);
-
-        newX = x.get();
-        newY = y.get();
-
-        if(ClientMain.getClient().mouseLocked) {
-            double halfWindowX = (double) ClientMain.getWindowX() / 2;
-            double halfWindowY = (double) ClientMain.getWindowY() / 2;
-
-            double deltaX = newX - halfWindowX;
-            double deltaY = newY - halfWindowY;
-
-            Camera.addPitch(deltaY / sensitivity);
-            Camera.addYaw(deltaX / sensitivity);
-
-
-            glfwSetCursorPos(ClientMain.getClient().window, halfWindowX, halfWindowY);
-        } else {
-
-        }
-    }
 
     public static void renderPlayer(MatrixStack matrixStack) {
         if(thirdPerson) {
@@ -539,6 +474,4 @@ public class Camera {
             return true;
         }
     }
-
-
 }

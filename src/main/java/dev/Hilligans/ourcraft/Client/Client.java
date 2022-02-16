@@ -1,10 +1,9 @@
 package dev.Hilligans.ourcraft.Client;
 
 import dev.Hilligans.ourcraft.Block.Blocks;
-import dev.Hilligans.ourcraft.Client.Key.KeyHandler;
-import dev.Hilligans.ourcraft.Client.Key.KeyPress;
-import dev.Hilligans.ourcraft.Client.Lang.Languages;
-import dev.Hilligans.ourcraft.Client.Mouse.MouseHandler;
+import dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler;
+import dev.Hilligans.ourcraft.Client.Input.Key.KeyPress;
+import dev.Hilligans.ourcraft.Client.Input.MouseHandler;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.GLRenderer;
@@ -34,6 +33,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.*;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.*;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
 import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
+import dev.Hilligans.ourcraft.Util.Logger;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 import dev.Hilligans.ourcraft.Server.MultiPlayerServer;
 import dev.Hilligans.ourcraft.Util.Settings;
@@ -70,6 +70,7 @@ public class Client {
     public long renderTime = 0;
     public String serverIP = "";
     Client client = this;
+    public Logger logger;
 
     public MouseHandler mouseHandler;
     public Screen screen;
@@ -90,10 +91,12 @@ public class Client {
     public ClientNetwork authNetwork;
     public GameInstance gameInstance;
 
-    public IGraphicsEngine<?,?> graphicsEngine = new OpenGLEngine(this);
+    public IGraphicsEngine<?,?> graphicsEngine;
 
     public Client(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
+        logger = gameInstance.LOGGER.withKey("client");
+        graphicsEngine = new OpenGLEngine(this);
         soundEngine = new SoundEngine(gameInstance);
     }
 
@@ -287,13 +290,6 @@ public class Client {
     }
 
     public void registerKeyHandlers() {
-
-        KeyHandler.register(new KeyPress() {
-            @Override
-            public void onPress() {
-                Languages.setCurrentLanguage("test");
-            }
-        },KeyHandler.GLFW_KEY_F6);
 
 
         KeyHandler.register(new KeyPress() {

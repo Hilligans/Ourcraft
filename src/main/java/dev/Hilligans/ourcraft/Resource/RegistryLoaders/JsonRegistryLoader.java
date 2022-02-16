@@ -19,15 +19,16 @@ public class JsonRegistryLoader extends ModRegistryLoader<JSONObject> {
     public JsonRegistryLoader(Identifier name, String path, TriConsumer<ModContent, JSONObject, String> defaultFunction) {
         super(name);
         registerLoader((modContent, jsonObject) -> {
-            TriConsumer<ModContent, JSONObject, String> function = elementFunction.getOrDefault(modContent.modID,defaultFunction);
-            for(String s : jsonObject.keySet()) {
-                function.accept(modContent,jsonObject.getJSONObject(s), s);
+            TriConsumer<ModContent, JSONObject, String> function = elementFunction.getOrDefault(modContent.modID, defaultFunction);
+            for (String s : jsonObject.keySet()) {
+                function.accept(modContent, jsonObject.getJSONObject(s), s);
             }
         });
         this.path = path;
         this.defaultFunction = defaultFunction;
     }
 
+    //TODO maybe check if the resource exists before trying to load it to avoid an exception
     @Override
     public JSONObject provideResource(ModContent modContent) {
         try {

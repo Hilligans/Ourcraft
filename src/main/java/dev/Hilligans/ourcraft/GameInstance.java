@@ -31,6 +31,7 @@ import dev.Hilligans.ourcraft.Resource.ResourceManager;
 import dev.Hilligans.ourcraft.Resource.UniversalResourceLoader;
 import dev.Hilligans.ourcraft.Settings.Setting;
 import dev.Hilligans.ourcraft.Util.ArgumentContainer;
+import dev.Hilligans.ourcraft.Util.Logger;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import dev.Hilligans.ourcraft.Recipe.IRecipe;
 import dev.Hilligans.ourcraft.Util.Registry.Registry;
@@ -46,13 +47,12 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Logger;
 
 public class GameInstance {
 
     public final EventBus EVENT_BUS = new EventBus();
     public final ModLoader MOD_LOADER = new ModLoader(this);
-    public final Logger LOGGER = Logger.getGlobal();
+    public final Logger LOGGER = new Logger("", "");
     public final ExecutorService EXECUTOR = Executors.newFixedThreadPool(2,new NamedThreadFactory("random_executor"));
     public final ResourceManager RESOURCE_MANAGER = new ResourceManager();
     public final ModContent OURCRAFT = new ModContent("ourcraft",this).addClassLoader(new URLClassLoader(new URL[]{Ourcraft.class.getProtectionDomain().getCodeSource().getLocation()})).addMainClass(Ourcraft.class);

@@ -1,6 +1,8 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window;
 
 import dev.Hilligans.ourcraft.Client.Client;
+import dev.Hilligans.ourcraft.Client.Input.Input;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.LogicalDevice;
@@ -53,7 +55,8 @@ public class VulkanWindow extends RenderWindow {
 
     public VkExtent2D extent2D = VkExtent2D.calloc();
 
-    public VulkanWindow(VulkanInstance vulkanInstance, int width, int height) {
+    public VulkanWindow(VulkanInstance vulkanInstance, int width, int height, IGraphicsEngine<?, ?> graphicsEngine) {
+        super(graphicsEngine);
         windowRenderer = new WindowRenderer(this);
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
@@ -189,7 +192,22 @@ public class VulkanWindow extends RenderWindow {
     }
 
     @Override
-    public IInputProvider getInputProvider() {
+    public Input getInputProvider() {
         return null;
+    }
+
+    @Override
+    public float getWindowWidth() {
+        return glfwWidth;
+    }
+
+    @Override
+    public float getWindowHeight() {
+        return glfwHeight;
+    }
+
+    @Override
+    public boolean isWindowFocused() {
+        return false;
     }
 }

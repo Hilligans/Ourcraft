@@ -1,12 +1,11 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Widgets;
 
-import dev.Hilligans.ourcraft.Client.Key.CharPress;
-import dev.Hilligans.ourcraft.Client.Key.KeyHandler;
-import dev.Hilligans.ourcraft.Client.Key.KeyPress;
+import dev.Hilligans.ourcraft.Client.Input.Key.CharPress;
+import dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler;
+import dev.Hilligans.ourcraft.Client.Input.Key.KeyPress;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
-import dev.Hilligans.ourcraft.ClientMain;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
@@ -52,8 +51,8 @@ public class InputField extends Widget {
                 if(key == 'v' && KeyHandler.keyPressed[GLFW.GLFW_KEY_LEFT_CONTROL]) {
                     try {
                         //System.out.println("adding clipboard");
-                        string += GLFW.glfwGetClipboardString(ClientMain.getClient().window);
-                        //string += Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+                        //TODO fix
+                        //string += GLFW.glfwGetClipboardString(ClientMain.getClient().window);
                     } catch (Exception ignored) {
                         ignored.printStackTrace();
                     }

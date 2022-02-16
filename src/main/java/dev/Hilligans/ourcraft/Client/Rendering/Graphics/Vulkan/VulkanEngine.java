@@ -8,6 +8,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Windo
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
+import dev.Hilligans.ourcraft.Util.Logger;
 import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.World.ClientWorld;
 
@@ -54,9 +55,10 @@ public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer, Vu
     }
 
     @Override
-    public void setup() {
+    public VulkanWindow setup() {
         vulkanInstance = getVulkanInstance();
         vulkanInstance.run();
+        return vulkanInstance.vulkanWindow;
     }
 
     @Override
@@ -72,6 +74,11 @@ public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer, Vu
     @Override
     public GameInstance getGameInstance() {
         return gameInstance;
+    }
+
+    @Override
+    public Logger getLogger() {
+        return null;
     }
 
     @Override

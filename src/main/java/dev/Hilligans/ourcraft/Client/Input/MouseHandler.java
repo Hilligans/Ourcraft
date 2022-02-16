@@ -1,8 +1,9 @@
-package dev.Hilligans.ourcraft.Client.Mouse;
+package dev.Hilligans.ourcraft.Client.Input;
 
 import dev.Hilligans.ourcraft.Block.Blocks;
 import dev.Hilligans.ourcraft.Client.Camera;
 import dev.Hilligans.ourcraft.Client.Client;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
 import dev.Hilligans.ourcraft.Item.ItemStack;
@@ -13,7 +14,7 @@ import java.nio.DoubleBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class MouseHandler {
+public class MouseHandler implements IInputProvider {
 
     public static MouseHandler instance;
 
@@ -23,7 +24,7 @@ public class MouseHandler {
     public int button;
     public Client client;
 
-    public  MouseHandler(Client client) {
+    public MouseHandler(Client client) {
         this.window = client.window;
         this.client = client;
         instance = this;

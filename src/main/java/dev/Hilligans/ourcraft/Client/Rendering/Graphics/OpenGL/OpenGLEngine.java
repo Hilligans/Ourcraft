@@ -21,6 +21,7 @@ import dev.Hilligans.ourcraft.Entity.Entity;
 import dev.Hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.GLInitEvent;
+import dev.Hilligans.ourcraft.Util.Logger;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.Util.TwoInt2ObjectMap;
@@ -47,6 +48,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, OpenGLWindow> {
 
     public TwoInt2ObjectMap<OpenGLGraphicsContainer> chunks = new TwoInt2ObjectMap<>();
+    public Logger logger;
 
     public long window;
     public int texture;
@@ -55,11 +57,11 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
 
     public OpenGLEngine(Client client) {
         this.client = client;
+        logger = client.logger.withKey("openGLEngine");
     }
 
     @Override
     public OpenGLWindow createWindow() {
-        renderWindow = new OpenGLWindow(window,client);
         return renderWindow;
     }
 
@@ -103,9 +105,6 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
             Blocks.generateTextures();
             texture = TextAtlas.instance.upload();
             client.refreshTexture = false;
-            System.out.println("Time: " + (System.currentTimeMillis() - ClientMain.start));
-           // getGameInstance().RESOURCE_LOADER.saveResource((Image)getGameInstance().RESOURCE_LOADER.getResource(new ResourceLocation("Images/player.png", "ourcraft")), "out.jpg");
-           // getGameInstance().RESOURCE_LOADER.saveResource(TextAtlas.instance.image, "out.png");
         }
 
         glUseProgram(client.shaderManager.shaderProgram);
@@ -123,21 +122,14 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
     }
 
     @Override
-    public void setup() {
+    public OpenGLWindow setup() {
         System.setProperty("java.awt.headless", "true");
 
         glfwInit();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        window = glfwCreateWindow(client.windowX,client.windowY,"Ourcraft",NULL,NULL);
-        client.window = window;
-        if(window == NULL) {
-            System.out.println("Failed to create window");
-            glfwTerminate();
-            return;
-        }
-        glfwMakeContextCurrent(window);
+        renderWindow = new OpenGLWindow(client, this);
         GL.createCapabilities();
 
         client.glStarted = true;
@@ -172,6 +164,8 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
         PlayerMovementThread playerMovementThread = new PlayerMovementThread(window);
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1, new NamedThreadFactory("player_movement"));
         executorService.scheduleAtFixedRate(playerMovementThread, 0, 5, TimeUnit.MILLISECONDS);
+
+        return renderWindow;
     }
 
     @Override
@@ -187,6 +181,11 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
     @Override
     public GameInstance getGameInstance() {
         return client.gameInstance;
+    }
+
+    @Override
+    public Logger getLogger() {
+        return logger;
     }
 
     @Override

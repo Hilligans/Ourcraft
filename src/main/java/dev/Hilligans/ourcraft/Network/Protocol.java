@@ -56,7 +56,7 @@ public class Protocol {
                 register(oldPacket);
             }
         } else {
-            gameInstance.LOGGER.log(Level.WARNING,"Two packets were registered with the same id, " + packetFetcher.packetClass.toString().substring(6) + " tried to override packet " + packets.get(id).packetClass.toString().substring(6) + " with id " + id);
+            gameInstance.LOGGER.warn("Two packets were registered with the same id, " + packetFetcher.packetClass.toString().substring(6) + " tried to override packet " + packets.get(id).packetClass.toString().substring(6) + " with id " + id);
             register(packetFetcher);
         }
     }

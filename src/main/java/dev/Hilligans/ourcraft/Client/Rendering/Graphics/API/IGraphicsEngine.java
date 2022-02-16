@@ -5,6 +5,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.RenderPostEvent;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.RenderPreEvent;
+import dev.Hilligans.ourcraft.Util.Logger;
 import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
 import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.World.ClientWorld;
@@ -27,13 +28,19 @@ public interface IGraphicsEngine<T, Q extends RenderWindow> extends IRegistryEle
 
     void renderScreen(MatrixStack screenStack);
 
-    void setup();
+    /**
+     * @return Returns the default window for the graphics engine, this will always be a valid window.
+     * Most of the time these windows were required to create the engine in the first place.
+     */
+    Q setup();
 
     void close();
 
     ArrayList<Q> getWindows();
 
     GameInstance getGameInstance();
+
+    Logger getLogger();
 
     default Runnable createRenderLoop(GameInstance gameInstance, RenderWindow window) {
         return new Runnable() {

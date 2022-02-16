@@ -27,7 +27,7 @@ public class LogicalDevice {
     public LogicalDevice(PhysicalDevice physicalDevice) {
         this.vulkanInstance = physicalDevice.vulkanInstance;
         this.physicalDevice = physicalDevice;
-        this.defaultVulkanWindow = new VulkanWindow(physicalDevice.vulkanInstance,500,500).addDevice(this);
+        this.defaultVulkanWindow = new VulkanWindow(physicalDevice.vulkanInstance,500,500,null).addDevice(this);
         try (MemoryStack memoryStack = MemoryStack.stackPush()) {
 
             PointerBuffer requiredExtensions = memoryStack.mallocPointer(1);
@@ -58,14 +58,10 @@ public class LogicalDevice {
     }
 
     public VulkanWindow createNewWindow() {
-        return new VulkanWindow(physicalDevice.vulkanInstance,500,500).addDevice(this).addData();
+        return new VulkanWindow(physicalDevice.vulkanInstance,500,500, null).addDevice(this).addData();
     }
 
     public VulkanWindow getWindow() {
-        if(!acquiredDefaultWindow) {
-            acquiredDefaultWindow = true;
-            return getDefaultWindow();
-        }
         return createNewWindow();
     }
 

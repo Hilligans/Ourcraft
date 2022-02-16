@@ -4,6 +4,7 @@ import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Util.ArgumentContainer;
 import dev.Hilligans.ourcraft.Util.GameResource.GameResourceTable;
+import dev.Hilligans.ourcraft.Util.Logger;
 import dev.Hilligans.ourcraft.Util.Side;
 
 import java.io.IOException;
@@ -27,7 +28,6 @@ public class ClientMain {
         gameInstance.handleArgs(args);
         gameInstance.side = Side.CLIENT;
         gameInstance.loadContent();
-
 
         new GameResourceTable().createMap(gameInstance);
 

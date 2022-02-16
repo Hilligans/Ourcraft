@@ -17,6 +17,7 @@ import dev.Hilligans.ourcraft.Resource.RegistryLoaders.JsonRegistryLoader;
 import dev.Hilligans.ourcraft.Resource.Loaders.ImageLoader;
 import dev.Hilligans.ourcraft.Resource.Loaders.JsonLoader;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
+import dev.Hilligans.ourcraft.Schematic.LitematicaSchematicLoader;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import dev.Hilligans.ourcraft.Util.Side;
@@ -51,6 +52,7 @@ public class Ourcraft {
 
     public static void registerDefaultContent(ModContent modContent) {
         modContent.registerResourceLoader(new JsonLoader(), new ImageLoader());
+        modContent.registerResourceLoader(new LitematicaSchematicLoader());
 
         modContent.registerBlocks(AIR,STONE,DIRT,GRASS,BEDROCK,IRON_ORE,LEAVES,LOG,SAND,CACTUS,CHEST,COLOR_BLOCK,STAIR_BLOCK,GRASS_PLANT,WEEPING_VINE,MAPLE_LOG,MAPLE_PLANKS,PINE_LOG,PINE_PLANKS,SPRUCE_LOG,SPRUCE_PLANKS,BIRCH_LOG,BIRCH_PLANKS,OAK_LOG,OAK_PLANKS,WILLOW_LOG,WILLOW_PLANKS,ACACIA_LOG,ACACIA_PLANKS,POPLAR_LOG,POPLAR_PLANKS,ELM_LOG,ELM_WOOD,PALM_LOG,PALM_WOOD,REDWOOD_LOG,REDWOOD_WOOD,SAPLING);
         modContent.registerBiome(Biomes.PLAINS,Biomes.SANDY_HILLS,Biomes.DESERT,Biomes.FOREST);

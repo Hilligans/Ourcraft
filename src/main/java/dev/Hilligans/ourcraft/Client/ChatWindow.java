@@ -6,9 +6,9 @@ import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.ClientSendMessageEvent;
 import dev.Hilligans.ourcraft.Network.Packet.Client.CSendMessage;
-import dev.Hilligans.ourcraft.Client.Key.CharPress;
-import dev.Hilligans.ourcraft.Client.Key.KeyHandler;
-import dev.Hilligans.ourcraft.Client.Key.KeyPress;
+import dev.Hilligans.ourcraft.Client.Input.Key.CharPress;
+import dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler;
+import dev.Hilligans.ourcraft.Client.Input.Key.KeyPress;
 import dev.Hilligans.ourcraft.Client.Rendering.Screen;
 import dev.Hilligans.ourcraft.Ourcraft;
 

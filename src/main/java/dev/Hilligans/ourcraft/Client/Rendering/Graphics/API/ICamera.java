@@ -1,11 +1,17 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics.API;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
+import dev.Hilligans.ourcraft.ClientMain;
+import org.jetbrains.annotations.NotNull;
 import org.joml.*;
 
 import java.lang.Math;
 
 public interface ICamera {
+
+    @NotNull
+    RenderWindow getWindow();
 
     void setPosition(double x, double y, double z);
 
@@ -26,6 +32,10 @@ public interface ICamera {
     default void setRotation(Vector2f rotation) {
         setRotation(rotation.x,rotation.y);
     }
+
+    void addRotation(float pitch, float yaw);
+
+    float getSensitivity();
 
     Vector2f getRotation();
 
@@ -53,16 +63,20 @@ public interface ICamera {
         addMotion((float) (Math.cos(getYaw()) * amount), 0, (float) (Math.sin(getYaw()) * amount));
     }
 
-    default void moveForeLeft(float amount) {
+    default void moveLeft(float amount) {
         addMotion((float) (Math.sin(getYaw()) * amount), 0, (float) (Math.cos(getYaw()) * amount));
     }
 
-    default void moveForeRight(float amount) {
+    default void moveRight(float amount) {
         addMotion((float) (Math.sin(getYaw()) * amount), 0, (float) -(Math.cos(getYaw()) * amount));
     }
 
     default MatrixStack getMatrix() {
         return getMatrixStack(1,1,0,0);
+    }
+
+    default MatrixStack getScreenStack() {
+        return getScreenStack(1,1,0,0);
     }
 
     default Vector3d getCameraPos() {
@@ -76,7 +90,13 @@ public interface ICamera {
 
     MatrixStack getMatrixStack(int W, int H, int x, int y);
 
-    Matrix4d getPerspective(int W, int H, int x, int y);
+    default MatrixStack getScreenStack(int W, int H, int x, int y) {
+        return new MatrixStack(new Matrix4d().translate(W - 1 - 2*x, H - 1 - 2*y, 0).scale(W, H, 1).ortho(0, ClientMain.getWindowX(),ClientMain.getWindowY(),0,-1,20000));
+    }
+
+    default Matrix4d getPerspective(int W, int H, int x, int y, float fov, float aspectRatio, float zNear, float zFar) {
+        return new Matrix4d().translate(W - 1 - 2*x, H - 1 - 2*y, 0).scale(W, H, 1).perspective((float) Math.toRadians(fov), aspectRatio,zNear,zFar);
+    }
 
     Matrix4d getView();
 
@@ -85,4 +105,8 @@ public interface ICamera {
     default Vector3d cameraUp() {
         return new Vector3d(0.0f, 1.0f, 0.0f);
     }
+
+    void savePosition(Vector3d vector3d);
+
+    Vector3d getSavedPosition();
 }

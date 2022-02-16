@@ -1,4 +1,4 @@
-package dev.Hilligans.ourcraft.Client.Key;
+package dev.Hilligans.ourcraft.Client.Input.Key;
 
 import java.util.ArrayList;
 

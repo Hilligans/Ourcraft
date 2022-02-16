@@ -1,5 +1,6 @@
-package dev.Hilligans.ourcraft.Client.Key;
+package dev.Hilligans.ourcraft.Client.Input.Key;
 
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.GLInitEvent;
@@ -7,14 +8,13 @@ import dev.Hilligans.ourcraft.Ourcraft;
 import it.unimi.dsi.fastutil.ints.Int2CharOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWCharCallbackI;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class KeyHandler {
+public class KeyHandler implements IInputProvider {
 
     public static Int2CharOpenHashMap mappedKeys = new Int2CharOpenHashMap();
     public static Int2ObjectOpenHashMap<String> namedKeys = new Int2ObjectOpenHashMap<>();
@@ -117,13 +117,6 @@ public class KeyHandler {
                 } else {
                     onRepeat(key);
                 }
-            }
-        });
-
-        glfwSetCharCallback(window, new GLFWCharCallbackI() {
-            @Override
-            public void invoke(long window, int codepoint) {
-                //System.out.println((char)codepoint);
             }
         });
     }
@@ -302,5 +295,4 @@ public class KeyHandler {
 
             GLFW_KEY_WORLD_1       = 161,
             GLFW_KEY_WORLD_2       = 162;
-
 }

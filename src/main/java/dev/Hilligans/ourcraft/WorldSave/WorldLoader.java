@@ -112,9 +112,8 @@ public class WorldLoader {
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         reader.lines().forEach(string -> stringBuilder.append(string).append("\n"));
-        return stringBuilder.toString() + "\n\0";
+        return stringBuilder.toString();
     }
-
 
     public static String readString(InputStream stream) {
         if(stream == null) {

@@ -55,7 +55,7 @@ public class Structure {
 
     public static Structure fromPath(String path) {
         CompoundNBTTag compoundTag = WorldLoader.loadTag(path);
-        Structure structure = new Structure(compoundTag.getInt("width").val,compoundTag.getInt("height").val,compoundTag.getInt("length").val);
+        Structure structure = new Structure(compoundTag.getInt("width"),compoundTag.getInt("height"),compoundTag.getInt("length"));
         ListNBTTag<ShortNBTTag> blocks = (ListNBTTag<ShortNBTTag>) compoundTag.getTag("blocks");
         int listSpot = 0;
         for(int x = 0; x < structure.width; x++) {

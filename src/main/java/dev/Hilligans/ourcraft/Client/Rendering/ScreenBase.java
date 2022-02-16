@@ -1,17 +1,13 @@
 package dev.Hilligans.ourcraft.Client.Rendering;
 
 import dev.Hilligans.ourcraft.Client.Client;
-import dev.Hilligans.ourcraft.Client.Key.CharPress;
-import dev.Hilligans.ourcraft.Client.Key.KeyHandler;
-import dev.Hilligans.ourcraft.Client.Key.KeyPress;
+import dev.Hilligans.ourcraft.Client.Input.Key.CharPress;
+import dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler;
+import dev.Hilligans.ourcraft.Client.Input.Key.KeyPress;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Widget;
 import dev.Hilligans.ourcraft.Network.Packet.Client.CCloseScreen;
 
-import javax.imageio.ImageIO;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;

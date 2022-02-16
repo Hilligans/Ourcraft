@@ -1,7 +1,6 @@
 package dev.Hilligans.ourcraft.Tag;
 
 import dev.Hilligans.ourcraft.Item.ItemStack;
-import dev.Hilligans.ourcraft.Item.Items;
 import dev.Hilligans.ourcraft.Ourcraft;
 
 import java.nio.ByteBuffer;
@@ -80,7 +79,7 @@ public class CompoundNBTTag extends NBTTag {
         return tags.get(name);
     }
 
-    public IntegerNBTTag getInt(String name) {
+    public IntegerNBTTag getIntTag(String name) {
         return (IntegerNBTTag)getTag(name);
     }
 
@@ -108,6 +107,10 @@ public class CompoundNBTTag extends NBTTag {
         return (FullStringNBTTag)getTag(id);
     }
 
+    public int getInt(String name) {
+        return ((IntegerNBTTag)getTag(name)).val;
+    }
+
     public CompoundNBTTag getCompoundTag(String name) {
         return (CompoundNBTTag) tags.get(name);
     }
@@ -132,6 +135,16 @@ public class CompoundNBTTag extends NBTTag {
         }
         putTag("slot" + slot, compoundTag);
         return this;
+    }
+
+    public CompoundNBTTag getFirstCompoundTag() {
+        for(String s : tags.keySet()) {
+            NBTTag tag = tags.get(s);
+            if(tag instanceof CompoundNBTTag) {
+                return (CompoundNBTTag) tag;
+            }
+        }
+        return null;
     }
 
     @Override

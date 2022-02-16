@@ -1,8 +1,8 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Widgets;
 
-import dev.Hilligans.ourcraft.Client.Key.CharPress;
-import dev.Hilligans.ourcraft.Client.Key.KeyHandler;
-import dev.Hilligans.ourcraft.Client.Key.KeyPress;
+import dev.Hilligans.ourcraft.Client.Input.Key.CharPress;
+import dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler;
+import dev.Hilligans.ourcraft.Client.Input.Key.KeyPress;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
