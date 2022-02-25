@@ -295,4 +295,14 @@ public class KeyHandler implements IInputProvider {
 
             GLFW_KEY_WORLD_1       = 161,
             GLFW_KEY_WORLD_2       = 162;
+
+    @Override
+    public int getSize() {
+        return 0;
+    }
+
+    @Override
+    public void setOffset(int size) {
+
+    }
 }

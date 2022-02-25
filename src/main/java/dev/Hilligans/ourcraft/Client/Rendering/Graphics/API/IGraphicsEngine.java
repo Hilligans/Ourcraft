@@ -12,7 +12,7 @@ import dev.Hilligans.ourcraft.World.ClientWorld;
 
 import java.util.ArrayList;
 
-public interface IGraphicsEngine<T, Q extends RenderWindow> extends IRegistryElement {
+public interface IGraphicsEngine<T, Q extends RenderWindow, V extends IDefaultEngineImpl<Q>> extends IRegistryElement {
 
     Q createWindow();
 
@@ -63,4 +63,6 @@ public interface IGraphicsEngine<T, Q extends RenderWindow> extends IRegistryEle
             window.frameTracker.setMaxFrameRate(frameRate);
         }
     }
+
+    V getDefaultImpl();
 }

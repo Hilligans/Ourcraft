@@ -19,7 +19,7 @@ public class JsonRegistryLoader extends ModRegistryLoader<JSONObject> {
     public JsonRegistryLoader(Identifier name, String path, TriConsumer<ModContent, JSONObject, String> defaultFunction) {
         super(name);
         registerLoader((modContent, jsonObject) -> {
-            TriConsumer<ModContent, JSONObject, String> function = elementFunction.getOrDefault(modContent.modID, defaultFunction);
+            TriConsumer<ModContent, JSONObject, String> function = elementFunction.getOrDefault(modContent.getModID(), defaultFunction);
             for (String s : jsonObject.keySet()) {
                 function.accept(modContent, jsonObject.getJSONObject(s), s);
             }

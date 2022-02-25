@@ -5,6 +5,7 @@ import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.Sounds;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTarget;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
@@ -47,7 +48,7 @@ public class Ourcraft {
     }
 
     public static File getFile(String path) {
-        return new File(path + "/" + path);
+        return new File(Ourcraft.path + "/" + path);
     }
 
     public static void registerDefaultContent(ModContent modContent) {
@@ -65,7 +66,7 @@ public class Ourcraft {
             JSONArray elements = jsonObject.getJSONArray("material");
             ToolLevel[] levels = new ToolLevel[elements.length()];
             for(int x = 0; x < elements.length(); x++) {
-                levels[x] = new ToolLevel(new Identifier(elements.getString(x), modContent1.modID));
+                levels[x] = new ToolLevel(new Identifier(elements.getString(x), modContent1.getModID()));
             }
             String[] parts = jsonObject.getString("location").split(" ");
             switch (parts[0]) {
@@ -102,7 +103,20 @@ public class Ourcraft {
             modContent.registerRenderTarget(new RenderTarget("particle_renderer").afterTarget("entity_renderer", "ourcraft"));
             modContent.registerRenderTarget(new RenderTarget("translucent_world_renderer").afterTarget("particle_renderer", "ourcraft"));
             modContent.registerRenderTarget(new RenderTarget("gui_renderer").afterTarget("translucent_world_renderer", "ourcraft"));
+
+            modContent.registerVertexFormat(new VertexFormat("position_texture_color", VertexFormat.TRIANGLES)
+                    .addPart("position", VertexFormat.FLOAT,3)
+                    .addPart("texture", VertexFormat.FLOAT, 2)
+                    .addPart("color", VertexFormat.FLOAT, 4));
+
+            modContent.registerVertexFormat(new VertexFormat("position_texture_globalColor", VertexFormat.TRIANGLES)
+                    .addPart("position", VertexFormat.FLOAT, 3)
+                    .addPart("texture", VertexFormat.FLOAT, 2)
+                    .addPart("globalColor", VertexFormat.UNSIGNED_INT, 1));
+
+
         }
+
 
         Ourcraft.getResourceManager().gameInstance = modContent.gameInstance;
     }

@@ -75,6 +75,6 @@ public class Biome implements IRegistryElement {
 
     @Override
     public String getUniqueName() {
-        return "biome." + source.modID + "." + name;
+        return "biome." + source.getModID() + "." + name;
     }
 }

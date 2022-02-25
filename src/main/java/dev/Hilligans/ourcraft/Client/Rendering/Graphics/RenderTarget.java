@@ -46,6 +46,6 @@ public class RenderTarget implements IRegistryElement {
 
     @Override
     public String getUniqueName() {
-        return "renderTarget." + modContent.modID + "." + name;
+        return "render_target." + modContent.getModID() + "." + name;
     }
 }

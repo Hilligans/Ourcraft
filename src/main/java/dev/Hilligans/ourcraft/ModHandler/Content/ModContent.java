@@ -5,6 +5,7 @@ import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTarget;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.BlockModel;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.IModel;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
@@ -68,8 +69,9 @@ public class ModContent {
     public ArrayList<RegistryLoader> registryLoaders = new ArrayList<>();
     public ArrayList<ScreenBuilder> screenBuilders = new ArrayList<>();
     public ArrayList<Feature> features = new ArrayList<>();
-    public ArrayList<IGraphicsEngine<?,?>> graphicsEngines = new ArrayList<>();
+    public ArrayList<IGraphicsEngine<?,?,?>> graphicsEngines = new ArrayList<>();
     public ArrayList<RenderTarget> renderTargets = new ArrayList<>();
+    public ArrayList<VertexFormat> vertexFormats = new ArrayList<>();
 
     public HashMap<String,Protocol> protocols = new HashMap<>();
 
@@ -88,12 +90,16 @@ public class ModContent {
             if(Settings.storeServerModsIndividually) {
                 String ip = ClientMain.getClient().serverIP.replace(':','_');
                 if(!ip.equals("")) {
-                    WorldLoader.write("mod_cache/servers/" + ip + "/" + modID + "-" + version + ".dat",packetData.toByteBuffer());
+                    WorldLoader.write("mod_cache/servers/" + ip + "/" + getModID() + "-" + version + ".dat",packetData.toByteBuffer());
                 }
             } else {
-                WorldLoader.write("mod_cache/mods/" + modID + "-" + version + ".dat",packetData.toByteBuffer());
+                WorldLoader.write("mod_cache/mods/" + getModID() + "-" + version + ".dat",packetData.toByteBuffer());
             }
         }
+    }
+
+    public String getModID() {
+        return modID;
     }
 
     public ModContent addClassLoader(URLClassLoader classLoader) {
@@ -241,22 +247,23 @@ public class ModContent {
         }
     }
 
-    public void registerGraphicsEngine(IGraphicsEngine<?,?>... graphicsEngines) {
-        for(IGraphicsEngine<?,?> graphicsEngine : graphicsEngines) {
+    public void registerGraphicsEngine(IGraphicsEngine<?,?, ?>... graphicsEngines) {
+        for(IGraphicsEngine<?,?, ?> graphicsEngine : graphicsEngines) {
             this.graphicsEngines.add(graphicsEngine);
         }
     }
 
     public void registerRenderTarget(RenderTarget... renderTargets) {
-        for(RenderTarget renderTarget : renderTargets) {
+        this.renderTargets.addAll(Arrays.asList(renderTargets));
+    }
 
-            this.renderTargets.add(renderTarget);
-        }
+    public void registerVertexFormat(VertexFormat... vertexFormats) {
+        this.vertexFormats.addAll(Arrays.asList(vertexFormats));
     }
 
     public void putData(ByteArray byteArray) {
         byteArray.writeInt(version);
-        byteArray.writeString(modID);
+        byteArray.writeString(getModID());
         byteArray.writeString(description);
         byteArray.writeString(Util.toString(authors));
         byteArray.writeString(Util.toString(getDependencies()));

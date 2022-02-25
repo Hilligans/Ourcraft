@@ -3,6 +3,7 @@ package dev.Hilligans.ourcraft.ModHandler.Content;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.IModel;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
@@ -61,11 +62,11 @@ public class ContentPack {
     }
 
     public void registerModContent(ModContent modContent) {
-        mods.put(modContent.modID,modContent);
+        mods.put(modContent.getModID(),modContent);
         modList.add(modContent);
 
         gameInstance.RESOURCE_MANAGER.classLoaders.add(modContent.classLoader);
-        gameInstance.MOD_LOADER.mainClasses.computeIfAbsent(modContent.modID,a -> new Triplet<>(modContent.mainClass, modContent.mainClass.getProtectionDomain().getCodeSource().getLocation().getPath(), false));
+        gameInstance.MOD_LOADER.mainClasses.computeIfAbsent(modContent.getModID(),a -> new Triplet<>(modContent.mainClass, modContent.mainClass.getProtectionDomain().getCodeSource().getLocation().getPath(), false));
     }
 
     ///TODO use Blocks, Items, Entity Instances so the game can still render while its being reupdated.
@@ -140,8 +141,11 @@ public class ContentPack {
                 for(Feature feature : mod.features) {
                     gameInstance.registerFeature(feature);
                 }
-                for(IGraphicsEngine<?,?> graphicsEngine : mod.graphicsEngines) {
+                for(IGraphicsEngine<?,?,?> graphicsEngine : mod.graphicsEngines) {
                     gameInstance.registerGraphicsEngine(graphicsEngine);
+                }
+                for(VertexFormat vertexFormat : mod.vertexFormats) {
+                    gameInstance.registerVertexFormat(vertexFormat);
                 }
             }
         }
@@ -184,7 +188,7 @@ public class ContentPack {
         for(String string : mods.keySet()) {
             if(!string.equals("ourcraft")) {
                 ModContent modContent = mods.get(string);
-                modList[x] = modContent.modID + ":::" + modContent.version;
+                modList[x] = modContent.getModID() + ":::" + modContent.version;
                 x++;
             }
         }
@@ -192,8 +196,8 @@ public class ContentPack {
     }
 
     public void putMod(ModContent modContent) {
-        mods.put(modContent.modID,modContent);
-        shouldLoad.put(modContent.modID,true);
+        mods.put(modContent.getModID(),modContent);
+        shouldLoad.put(modContent.getModID(),true);
     }
 
     public void releaseMod(String mod) {

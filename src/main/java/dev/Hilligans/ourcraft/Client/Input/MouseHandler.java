@@ -14,7 +14,7 @@ import java.nio.DoubleBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class MouseHandler implements IInputProvider {
+public class MouseHandler {
 
     public static MouseHandler instance;
 

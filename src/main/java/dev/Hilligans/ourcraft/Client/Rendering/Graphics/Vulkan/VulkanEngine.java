@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanInstance;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanProperties;
@@ -14,7 +15,7 @@ import dev.Hilligans.ourcraft.World.ClientWorld;
 
 import java.util.ArrayList;
 
-public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer, VulkanWindow> {
+public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer, VulkanWindow, VulkanDefaultImpl> {
 
     public VulkanInstance vulkanInstance;
     public GameInstance gameInstance;
@@ -84,6 +85,11 @@ public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer, Vu
     @Override
     public boolean isCompatible() {
         return true;
+    }
+
+    @Override
+    public VulkanDefaultImpl getDefaultImpl() {
+        return null;
     }
 
     public static VulkanInstance getVulkanInstance() {

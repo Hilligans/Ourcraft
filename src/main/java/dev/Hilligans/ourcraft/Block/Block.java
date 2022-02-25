@@ -61,7 +61,7 @@ public class Block implements IRegistryElement {
     }
 
     public void setModContent(ModContent modContent) {
-        this.modId = modContent.modID;
+        this.modId = modContent.getModID();
         this.modContent = modContent;
         this.blockProperties.source = modId;
         this.blockProperties.blockTextureManager.source = modId;

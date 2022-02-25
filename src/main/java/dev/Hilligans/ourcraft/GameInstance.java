@@ -3,8 +3,10 @@ package dev.Hilligans.ourcraft;
 import dev.Hilligans.ourcraft.Biome.Biome;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
+import dev.Hilligans.ourcraft.Client.Input.Input;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTarget;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Widget;
 import dev.Hilligans.ourcraft.Command.CommandHandler;
@@ -84,6 +86,8 @@ public class GameInstance {
         REGISTRIES.put("ourcraft:screen_builders", SCREEN_BUILDERS);
         REGISTRIES.put("ourcraft:features", FEATURES);
         REGISTRIES.put("ourcraft:render_targets", RENDER_TARGETS);
+        REGISTRIES.put("ourcraft:key_binds", KEY_BINDS);
+        REGISTRIES.put("ourcraft:vertex_formats", VERTEX_FORMATS);
     }
 
     public void loadContent() {
@@ -106,7 +110,7 @@ public class GameInstance {
     public final Registry<Tag> TAGS = new Registry<>(this, Tag.class);
     public final Registry<IRecipe<?>> RECIPES = new Registry<>(this, IRecipe.class);
     public final Registry<RecipeView<?>> RECIPE_VIEWS = new Registry<>(this, RecipeView.class);
-    public final Registry<IGraphicsEngine<?,?>> GRAPHICS_ENGINES = new Registry<>(this, IGraphicsEngine.class);
+    public final Registry<IGraphicsEngine<?,?,?>> GRAPHICS_ENGINES = new Registry<>(this, IGraphicsEngine.class);
     public final Registry<CommandHandler> COMMANDS = new Registry<>(this, CommandHandler.class);
     public final Registry<Protocol> PROTOCOLS = new Registry<>(this, Protocol.class);
     public final Registry<Setting> SETTINGS = new Registry<>(this, Setting.class);
@@ -118,6 +122,8 @@ public class GameInstance {
     public final Registry<ScreenBuilder> SCREEN_BUILDERS = new Registry<>(this, ScreenBuilder.class);
     public final Registry<Feature> FEATURES = new Registry<>(this, Feature.class);
     public final Registry<RenderTarget> RENDER_TARGETS = new Registry<>(this, RenderTarget.class);
+    public final Registry<Input> KEY_BINDS = new Registry<>(this, Input.class);
+    public final Registry<VertexFormat> VERTEX_FORMATS = new Registry<>(this, VertexFormat.class);
 
     public void clear() {
         BLOCKS.clear();
@@ -234,10 +240,14 @@ public class GameInstance {
         }
     }
 
-    public void registerGraphicsEngine(IGraphicsEngine<?,?>... graphicsEngines) {
-        for(IGraphicsEngine<?,?> graphicsEngine : graphicsEngines) {
+    public void registerGraphicsEngine(IGraphicsEngine<?,?,?>... graphicsEngines) {
+        for(IGraphicsEngine<?,?,?> graphicsEngine : graphicsEngines) {
             GRAPHICS_ENGINES.put(graphicsEngine.getIdentifierName(), graphicsEngine);
         }
+    }
+
+    public void registerVertexFormat(VertexFormat... vertexFormats) {
+        VERTEX_FORMATS.putAll(vertexFormats);
     }
 
     public void register(String name, Object o) {

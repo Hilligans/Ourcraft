@@ -34,12 +34,12 @@ public class Feature implements IRegistryElement {
 
     @Override
     public String getIdentifierName() {
-        return modContent.modID + ':' + featureName;
+        return modContent.getModID() + ':' + featureName;
     }
 
     @Override
     public String getUniqueName() {
-        return "feature." + modContent.modID + "." + featureName;
+        return "feature." + modContent.getModID() + "." + featureName;
     }
 
     public ArrayList<Block> getBlockList() {

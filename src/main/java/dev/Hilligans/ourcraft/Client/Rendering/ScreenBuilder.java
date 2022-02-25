@@ -87,7 +87,7 @@ public class ScreenBuilder implements IRegistryElement {
 
     @Override
     public String getUniqueName() {
-        return "screen." + modContent.modID + "." + name;
+        return "screen." + modContent.getModID() + "." + name;
     }
 
     static class TextureElement {

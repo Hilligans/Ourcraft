@@ -28,14 +28,14 @@ public class ResourceLocation {
         if(source == null) {
             return sSource;
         }
-        return source.modID;
+        return source.getModID();
     }
 
     @Override
     public String toString() {
         return "ResourceLocation{" +
                 "path='" + path + '\'' +
-                ", source=" + source.modID +
+                ", source=" + source.getModID() +
                 '}';
     }
 

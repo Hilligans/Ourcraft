@@ -1,9 +1,11 @@
 package dev.Hilligans.ourcraft.Client.Rendering;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 
 public interface Screen {
 
+    void setWindow(RenderWindow renderWindow);
 
     default void render(MatrixStack matrixStack) {}
 

@@ -21,7 +21,7 @@ public class ClientMain {
     public static ArgumentContainer argumentContainer;
 
     public static long start = System.currentTimeMillis();
-    public static IGraphicsEngine<?, ?> graphicsEngine = null;
+    public static IGraphicsEngine<?, ?, ?> graphicsEngine = null;
 
     public static void main(String[] args) throws IOException {
         argumentContainer = new ArgumentContainer(args);

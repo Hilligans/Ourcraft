@@ -1,16 +1,13 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics;
 
-import dev.Hilligans.ourcraft.Client.Camera;
 import dev.Hilligans.ourcraft.Client.Client;
-import dev.Hilligans.ourcraft.Client.Input.Input;
+import dev.Hilligans.ourcraft.Client.Input.InputHandler;
 import dev.Hilligans.ourcraft.Client.Input.Key.KeyPress;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.ICamera;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
-import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Util.Logger;
-import org.lwjgl.BufferUtils;
 
 import java.util.ArrayList;
 
@@ -20,14 +17,14 @@ public abstract class RenderWindow {
     public ArrayList<RenderTarget> renderTargets = new ArrayList<>();
 
     public ICamera camera;
-    public IGraphicsEngine<?, ?> graphicsEngine;
+    public IGraphicsEngine<?, ?, ?> graphicsEngine;
     public Logger logger;
-    public Input input = new Input();
+    public InputHandler inputHandler = new InputHandler();
 
     public double mouseX;
     public double mouseY;
 
-    public RenderWindow(IGraphicsEngine<?, ?> graphicsEngine) {
+    public RenderWindow(IGraphicsEngine<?, ?, ?> graphicsEngine) {
         this.graphicsEngine = graphicsEngine;
         if(graphicsEngine != null) {
             Logger log = graphicsEngine.getLogger();
@@ -45,8 +42,8 @@ public abstract class RenderWindow {
 
     public abstract Client getClient();
 
-    public Input getInputProvider() {
-        return input;
+    public InputHandler getInputProvider() {
+        return inputHandler;
     }
 
     public abstract float getWindowWidth();
@@ -82,7 +79,7 @@ public abstract class RenderWindow {
             int x = 0;
             for(RenderTarget target : renderTargets) {
                 x++;
-                if(target.name.equals(renderTarget.after) && target.modContent.modID.equals(target.targetedMod)) {
+                if(target.name.equals(renderTarget.after) && target.modContent.getModID().equals(target.targetedMod)) {
                     renderTargets.add(x, renderTarget);
                     return;
                 }
@@ -93,7 +90,7 @@ public abstract class RenderWindow {
         if(renderTarget.before != null) {
             int x = 0;
             for(RenderTarget target : renderTargets) {
-                if(target.name.equals(renderTarget.before) && target.modContent.modID.equals(target.targetedMod)) {
+                if(target.name.equals(renderTarget.before) && target.modContent.getModID().equals(target.targetedMod)) {
                     renderTargets.add(x, renderTarget);
                     return;
                 }
@@ -103,5 +100,9 @@ public abstract class RenderWindow {
         }
 
         renderTargets.add(renderTarget);
+    }
+
+    public IDefaultEngineImpl<?> getEngineImpl() {
+        return graphicsEngine.getDefaultImpl();
     }
 }

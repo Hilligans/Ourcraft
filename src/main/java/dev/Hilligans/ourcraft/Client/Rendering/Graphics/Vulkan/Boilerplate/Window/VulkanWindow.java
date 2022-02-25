@@ -1,9 +1,8 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window;
 
 import dev.Hilligans.ourcraft.Client.Client;
-import dev.Hilligans.ourcraft.Client.Input.Input;
+import dev.Hilligans.ourcraft.Client.Input.InputHandler;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.LogicalDevice;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline.*;
@@ -192,7 +191,7 @@ public class VulkanWindow extends RenderWindow {
     }
 
     @Override
-    public Input getInputProvider() {
+    public InputHandler getInputProvider() {
         return null;
     }
 

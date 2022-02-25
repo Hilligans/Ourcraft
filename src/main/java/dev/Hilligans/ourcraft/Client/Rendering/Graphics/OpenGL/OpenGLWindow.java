@@ -1,19 +1,12 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL;
 
-import dev.Hilligans.ourcraft.Client.Camera;
 import dev.Hilligans.ourcraft.Client.Client;
-import dev.Hilligans.ourcraft.Client.Input.Input;
 import dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler;
 import dev.Hilligans.ourcraft.Client.Input.MouseHandler;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Implementations.FreeCamera;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.ScreenShot;
-import dev.Hilligans.ourcraft.ClientMain;
-import org.lwjgl.glfw.GLFWCursorPosCallback;
-import org.lwjgl.glfw.GLFWCursorPosCallbackI;
-import org.lwjgl.glfw.GLFWWindowFocusCallbackI;
-import org.lwjgl.glfw.GLFWWindowSizeCallbackI;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -62,7 +55,7 @@ public class OpenGLWindow extends RenderWindow {
         }
         glfwPollEvents();
 
-        input.add(new KeyHandler());
+        inputHandler.add(new KeyHandler());
     }
 
     @Override
@@ -111,6 +104,6 @@ public class OpenGLWindow extends RenderWindow {
         glfwSetWindowFocusCallback(window, (window, focused) -> windowFocused = focused);
         MouseHandler mouseHandler = new MouseHandler(client);
         glfwSetMouseButtonCallback(window, mouseHandler::invoke);
-        input.add(mouseHandler);
+        //inputHandler.add((IInputProvider) mouseHandler);
     }
 }

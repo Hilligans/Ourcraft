@@ -135,11 +135,14 @@ public abstract class WorldCamera implements ICamera {
     public MatrixStack getMatrixStack(int W, int H, int x, int y) {
         Matrix4d perspective = getPerspective(W, H, x, y, fov, getWindow().getAspectRatio(), 0.001f, 1000000000f);
         perspective.mul(getView());
+        Vector3d cameraPos = getLookVector();
+        savePosition(cameraPos);
         if(thirdPersonMode == 2) {
-            perspective.lookAt(getCameraPos().add(getLookVector().negate()), null, cameraUp());
+            perspective.lookAt(cameraPos.add(getLookVector().negate()), null, cameraUp());
         } else {
-            perspective.lookAt(getCameraPos().add(getLookVector()), null, cameraUp());
+            perspective.lookAt(cameraPos.add(getLookVector()), null, cameraUp());
         }
+        perspective.translate(0,0.15f,0);
         return new MatrixStack(perspective);
     }
 
@@ -149,7 +152,7 @@ public abstract class WorldCamera implements ICamera {
         if(thirdPersonMode != 0) {
             view.translate(0,0,1 + getViewLength() * -1);
         }
-        return null;
+        return view;
     }
 
     public float getViewLength() {

@@ -48,6 +48,17 @@ public class Registry<T> {
         put(identifier.getName(),element);
     }
 
+    public void putAll(T[] types) {
+        if(types.length != 0) {
+            if(!(types[0] instanceof IRegistryElement)) {
+                throw new RegistryException("Failed to add elements to registry, " + types[0].getClass() + " does not implement the IRegistryElement class.", this);
+            }
+            for(T t : types) {
+                put(((IRegistryElement)t).getIdentifierName(), t);
+            }
+        }
+    }
+
     public void putUnchecked(String name, Object element) {
         put(name,(T)element);
     }

@@ -5,8 +5,10 @@ import dev.Hilligans.ourcraft.Client.Input.Key.CharPress;
 import dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler;
 import dev.Hilligans.ourcraft.Client.Input.Key.KeyPress;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Widget;
 import dev.Hilligans.ourcraft.Network.Packet.Client.CCloseScreen;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 
@@ -26,6 +28,7 @@ public abstract class ScreenBase implements Screen {
         this.client = client;
     }
 
+    public RenderWindow window;
 
     public void drawScreen(MatrixStack matrixStack) {}
 
@@ -91,5 +94,10 @@ public abstract class ScreenBase implements Screen {
         widgets.add(widget);
         widget.screenBase = this;
         widget.onScreenResize(client.windowX,client.windowY);
+    }
+
+    @Override
+    public void setWindow(RenderWindow renderWindow) {
+        this.window = renderWindow;
     }
 }

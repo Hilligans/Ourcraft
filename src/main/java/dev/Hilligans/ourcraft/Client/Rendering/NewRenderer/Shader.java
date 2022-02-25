@@ -42,9 +42,4 @@ public class Shader {
             this.normalised = normalised;
         }
     }
-
-
-
-
-
 }

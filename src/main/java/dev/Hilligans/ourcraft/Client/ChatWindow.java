@@ -1,5 +1,6 @@
 package dev.Hilligans.ourcraft.Client;
 
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.World.RenderableString;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.ClientMain;
@@ -19,7 +20,6 @@ import static org.lwjgl.glfw.GLFW.*;
 public class ChatWindow implements Screen {
 
     private static final int MESSAGE_LENGTH = 5000;
-
 
     public static ArrayList<Tuple<String,Long>> messages = new ArrayList<>();
 
@@ -217,6 +217,11 @@ public class ChatWindow implements Screen {
 
     public static String getString() {
         return messageIndex == -1 ? string : sentMessages.size() > messageIndex ? sentMessages.get(sentMessages.size() - messageIndex - 1) : "";
+    }
+
+    @Override
+    public void setWindow(RenderWindow renderWindow) {
+
     }
 
     @Override

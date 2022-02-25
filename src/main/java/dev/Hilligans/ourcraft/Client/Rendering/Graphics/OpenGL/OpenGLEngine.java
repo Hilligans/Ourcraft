@@ -5,6 +5,7 @@ import dev.Hilligans.ourcraft.Client.Camera;
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.PlayerMovementThread;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.GLRenderer;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.TextAtlas;
@@ -31,6 +32,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
@@ -45,7 +47,7 @@ import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL32.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, OpenGLWindow> {
+public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, OpenGLWindow, OpenglDefaultImpl> {
 
     public TwoInt2ObjectMap<OpenGLGraphicsContainer> chunks = new TwoInt2ObjectMap<>();
     public Logger logger;
@@ -55,8 +57,11 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
 
     public Client client;
 
+    public OpenglDefaultImpl engineImpl;
+
     public OpenGLEngine(Client client) {
         this.client = client;
+        engineImpl = new OpenglDefaultImpl(this);
         logger = client.logger.withKey("openGLEngine");
     }
 
@@ -144,6 +149,12 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
         for(Texture texture : Textures.TEXTURES) {
             texture.register();
         }
+
+     //   int[] maxTextureSize = new int[1];
+       // GL11.glGetIntegerv(GL11.GL_MAX_TEXTURE_SIZE, maxTextureSize);
+
+       // System.out.println("Max texture size: " + maxTextureSize[0]);
+
         client.screen = new JoinScreen(client);
         texture = -1;
         Renderer.create(texture);
@@ -191,6 +202,11 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
     @Override
     public boolean isCompatible() {
         return true;
+    }
+
+    @Override
+    public OpenglDefaultImpl getDefaultImpl() {
+        return engineImpl;
     }
 
     @Override

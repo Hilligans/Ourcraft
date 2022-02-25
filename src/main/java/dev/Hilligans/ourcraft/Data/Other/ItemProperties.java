@@ -75,7 +75,7 @@ public class ItemProperties {
     public Item getItem(String name, ModContent modContent) {
         if(block != null) {
 
-            return new BlockItem(name, modContent.blocks.stream().findFirst().filter(block1 -> block1.name.equals(name)).get(),modContent.modID);
+            return new BlockItem(name, modContent.blocks.stream().findFirst().filter(block1 -> block1.name.equals(name)).get(),modContent.getModID());
         } else {
             return new Item(name,this);
         }

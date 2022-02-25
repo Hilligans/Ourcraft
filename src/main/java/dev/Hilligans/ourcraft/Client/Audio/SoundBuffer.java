@@ -134,6 +134,6 @@ public class SoundBuffer implements IRegistryElement {
 
     @Override
     public String getUniqueName() {
-        return "sound." + source.modID + "." + file;
+        return "sound." + source.getModID() + "." + file;
     }
 }
