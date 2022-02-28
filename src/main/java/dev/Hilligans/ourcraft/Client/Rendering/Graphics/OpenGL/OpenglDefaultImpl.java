@@ -25,16 +25,22 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
     public Int2LongOpenHashMap vertexArrayObjects = new Int2LongOpenHashMap();
 
     public int boundTexture = -1;
+    public int boundProgram = -1;
 
     public OpenglDefaultImpl(OpenGLEngine engine) {
         this.engine = engine;
     }
 
     @Override
-    public void drawMesh(OpenGLWindow window, MatrixStack matrixStack, int meshID, long indicesIndex, int length, int texture) {
+    public void drawMesh(OpenGLWindow window, MatrixStack matrixStack, int texture, int program, int meshID, long indicesIndex, int length) {
         Tuple<Integer, Integer> data = meshData.get(meshID);
         if(texture != boundTexture) {
             GL20.glBindTexture(textureTypes.get(texture), texture);
+            boundTexture = texture;
+        }
+        if(program != boundProgram){
+            GL20.glUseProgram(program);
+            boundProgram = program;
         }
 
         if(data == null) {
@@ -77,8 +83,9 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
     @Override
     public void destroyMesh(OpenGLWindow window, int mesh) {
         long array = vertexArrayObjects.get(mesh);
-        //TODO fix in case there isnt a EBO supplied;
-        glDeleteBuffers((int)array);
+        if((int)array != 0) {
+            glDeleteBuffers((int) array);
+        }
         glDeleteBuffers((int)(array >> 32));
         glDeleteBuffers(mesh);
     }
@@ -132,6 +139,6 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
             }
         }
 
-        throw new UnknownResourceException("Failed to find resource in the registry by name: " + name, engine.client.gameInstance.VERTEX_FORMATS, name);
+        throw new UnknownResourceException("Failed to find resource in the registry by name: " + name, engine.client.gameInstance.VERTEX_FORMATS, name, engine.getGameInstance().OURCRAFT);
     }
 }

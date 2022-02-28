@@ -1,9 +1,13 @@
 package dev.Hilligans.ourcraft.World;
 
 import dev.Hilligans.ourcraft.Biome.Biome;
+import dev.Hilligans.ourcraft.Client.Client;
+import dev.Hilligans.ourcraft.Client.Rendering.IMeshSource;
+import dev.Hilligans.ourcraft.Client.Rendering.MeshHolder;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.GLRenderer;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Shader;
+import dev.Hilligans.ourcraft.Client.Rendering.VertexMesh;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.ShaderManager;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.VAOManager;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
@@ -28,7 +32,7 @@ import static org.lwjgl.opengl.GL15.glGetBufferSubData;
 import static org.lwjgl.opengl.GL31C.GL_COPY_READ_BUFFER;
 import static org.lwjgl.opengl.GL31C.GL_COPY_WRITE_BUFFER;
 
-public class Chunk {
+public class Chunk implements IMeshSource {
 
     public ArrayList<SubChunk> chunks = new ArrayList<>();
 
@@ -40,6 +44,8 @@ public class Chunk {
     public Long2ObjectOpenHashMap<ArrayList<BlockPos>> blockTicks = new Long2ObjectOpenHashMap<>();
     public Short2IntOpenHashMap heightMap = new Short2IntOpenHashMap();
 
+    public MeshHolder solidMesh = new MeshHolder();
+    public MeshHolder translucentMesh = new MeshHolder();
 
     public boolean needsSaving = false;
 
@@ -328,9 +334,8 @@ public class Chunk {
         }
     }
 
-    int id = -1;
-    int translucentId = -1;
-    int sizeVal = -1;
+    public int id = -1;
+    public int sizeVal = -1;
 
     public void buildMesh1() {
         glGetError();
@@ -403,6 +408,22 @@ public class Chunk {
 
     public SubChunk getSubChunk(int pos) {
         return chunks.get(pos);
+    }
+
+    public MeshHolder getSolidMesh() {
+        return solidMesh;
+    }
+
+    public MeshHolder getTranslucentMesh() {
+        return translucentMesh;
+    }
+
+    @Override
+    public VertexMesh buildMesh(Client client) {
+
+        VertexMesh vertexMesh = new VertexMesh("position_texture_globalColor");
+
+        return null;
     }
 }
 

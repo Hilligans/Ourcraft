@@ -76,6 +76,8 @@ public class TextAtlas {
         long start = System.currentTimeMillis();
 
         executorService = Executors.newFixedThreadPool(4,new NamedThreadFactory("texture_atlas_builder"));
+        time = 0;
+        count = 0;
         for(ImageLocation imageLocation : images) {
             executorService.submit(() -> {
                 Image tempImage;
@@ -88,8 +90,11 @@ public class TextAtlas {
                     }
                     tempImage.flip(false).ensureSquare();
 
+                    count++;
+                    long starts = System.nanoTime();
                     spot = findSpot(tempImage.width, imageLocation.index);
                     image.putImage(tempImage, (int)(spot >> 32), (int)(spot));
+                    time += System.nanoTime() - starts;
 
                 } catch (Exception e) {
                     System.out.println("Failed to put image x:" + ((int)(spot >> 32)) + " y:" + (int)(spot));
@@ -97,6 +102,7 @@ public class TextAtlas {
                 }
             });
         }
+        System.out.println(time / count);
         executorService.shutdown();
         try {
             executorService.awaitTermination(100000, TimeUnit.MILLISECONDS);
@@ -104,6 +110,9 @@ public class TextAtlas {
 
         System.out.println(System.currentTimeMillis() - start);
     }
+
+    public long time = 0;
+    public double count  = 0;
 
     public int upload() {
         assemble();

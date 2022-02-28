@@ -9,7 +9,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.VertexMesh;
 
 public interface IDefaultEngineImpl<T extends RenderWindow> {
 
-    void drawMesh(T window, MatrixStack matrixStack, int meshID, long indicesIndex, int length, int texture);
+    void drawMesh(T window, MatrixStack matrixStack, int texture, int program, int meshID, long indicesIndex, int length);
 
     int createMesh(T window, VertexMesh mesh);
 
@@ -21,8 +21,8 @@ public interface IDefaultEngineImpl<T extends RenderWindow> {
 
     void drawAndDestroyMesh(T window, MatrixStack matrixStack, VertexMesh mesh);
 
-    default void drawMesh(Object window, MatrixStack matrixStack, int meshID, long indicesIndex, int length, int texture) {
-        drawMesh((T)window, matrixStack, meshID, indicesIndex, length, texture);
+    default void drawMesh(Object window, MatrixStack matrixStack, int texture, int program, int meshID, long indicesIndex, int length) {
+        drawMesh((T)window, matrixStack, texture, program, meshID, indicesIndex, length);
     }
 
     default int createMesh(Object window, VertexMesh mesh) {

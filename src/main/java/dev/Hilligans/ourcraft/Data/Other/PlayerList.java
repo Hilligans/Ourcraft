@@ -41,10 +41,10 @@ public class PlayerList {
 
     public void render(MatrixStack matrixStack) {
         int stringSize = (int) (StringRenderer.instance.stringHeight * 0.5f);
-        int x = Textures.TRANSPARENT_BACKGROUND.drawCenteredXTexture(matrixStack,0, Settings.guiSize * 64,players.size() * stringSize + 2);
+       // int x = Textures.TRANSPARENT_BACKGROUND.drawCenteredXTexture(matrixStack,0, Settings.guiSize * 64,players.size() * stringSize + 2);
         int y = 0;
         for(Tuple<String, Integer> player : players) {
-            StringRenderer.drawString(matrixStack,player.typeA,x,y,0.5f);
+        //    StringRenderer.drawString(matrixStack,player.typeA,x,y,0.5f);
             y += stringSize;
         }
     }
