@@ -1,5 +1,5 @@
 ## Ourcraft
-A minecraft inspired game engine
+A Minecraft inspired game engine written in Java.
 
 https://discord.gg/BUhTVnS5ua
 
