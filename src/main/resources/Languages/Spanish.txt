@@ -1,0 +1,28 @@
+#GUI
+settings.sensitivity::Sensibilidad
+settings.languages::Idiomas
+settings.fov::Campo de Visión
+settings.render_distance::Distancia de Renderizado
+settings.transparent_textures::Texturas Transparentes
+settings.sound_options::Opciones de Sonido
+menu.main_menu::Menú Principal
+menu.log_in::Inicia Sesión
+menu.create_account::Crear Cuenta
+menu.join::Juntar
+menu.account_name::Nombre de Cuenta
+menu.password::Contraseña
+menu.email::Correo Electrónico
+menu.disconnect::Desconectar
+menu.settings::Configuración
+menu.done::Hecho
+menu.mod_list::Lista de Mods
+
+
+
+#Items
+item.ourcraft.stone::Piedra
+item.ourcraft.dirt::Tierra
+item.ourcraft.sand::Arena
+item.ourcraft.weeping_vine::Enredadera
+item.ourcraft.bedrock::Irrompible Piedra
+item.ourcraft.chest::Caja

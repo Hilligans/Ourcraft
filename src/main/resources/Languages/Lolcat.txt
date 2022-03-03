@@ -15,3 +15,14 @@ menu.email::interwebz mailz
 menu.disconnect::me no play any moar
 menu.settings::chang stufs
 menu.done::yeh
+menu.mod_list::da modz
+
+
+
+#Items
+item.ourcraft.stone::stronk stuf
+item.ourcraft.dirt::siol
+item.ourcraft.sand::saaand
+item.ourcraft.weeping_vine::wiggel vine
+item.ourcraft.bedrock::stronker stuf
+item.ourcraft.chest::craet
