@@ -70,7 +70,7 @@ public class MiniMap {
 
         Vector3d pos = Camera.renderPos;
         BlockPos blockPos = new BlockPos(pos);
-        Textures.SHORT_ICON.drawTexture(matrixStack,getX((int) blockPos.getChunkX(),size,x,windowWidth), getZ((int) blockPos.getChunkZ(),size,y,windowHeight),10,10);
+        //Textures.SHORT_ICON.drawTexture(matrixStack,getX((int) blockPos.getChunkX(),size,x,windowWidth), getZ((int) blockPos.getChunkZ(),size,y,windowHeight),10,10);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 

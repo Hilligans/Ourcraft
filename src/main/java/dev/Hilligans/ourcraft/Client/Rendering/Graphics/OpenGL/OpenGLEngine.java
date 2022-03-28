@@ -150,10 +150,9 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
             texture.register();
         }
 
-     //   int[] maxTextureSize = new int[1];
-       // GL11.glGetIntegerv(GL11.GL_MAX_TEXTURE_SIZE, maxTextureSize);
-
-       // System.out.println("Max texture size: " + maxTextureSize[0]);
+        //int[] maxTextureSize = new int[1];
+        //GL11.glGetIntegerv(GL11.GL_MAX_TEXTURE_SIZE, maxTextureSize);
+        //System.out.println("Max texture size: " + maxTextureSize[0]);
 
         client.screen = new JoinScreen(client);
         texture = -1;

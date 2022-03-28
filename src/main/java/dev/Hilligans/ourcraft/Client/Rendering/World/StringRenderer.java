@@ -212,7 +212,7 @@ public class StringRenderer {
             glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
             matrixStack.applyColor();
             matrixStack.applyTransformation();
-            Textures.BACKGROUND.drawTexture(matrixStack, x, y, width, (int) (instance.stringHeight * scale));
+        //    Textures.BACKGROUND.drawTexture(matrixStack, x, y, width, (int) (instance.stringHeight * scale));
             draw(matrixStack, vals, primitiveBuilders);
         } catch (Exception ignored) {}
         matrixStack.pop();

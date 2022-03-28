@@ -18,9 +18,9 @@ public class SelectorWidget extends Widget {
     public void render(MatrixStack matrixStack, int xOffset, int yOffset) {
         super.render(matrixStack, xOffset, yOffset);
         if(enabled) {
-            Textures.BUTTON.drawTexture(matrixStack, x, y, width, height);
+           // Textures.BUTTON.drawTexture(matrixStack, x, y, width, height);
         } else {
-            Textures.BUTTON_DARK.drawTexture(matrixStack,x,y,width,height);
+           // Textures.BUTTON_DARK.drawTexture(matrixStack,x,y,width,height);
         }
         StringRenderer.drawCenteredString(matrixStack,name,x + width / 2,y,0.5f);
     }

@@ -59,7 +59,7 @@ public class ScreenBuilder implements IRegistryElement {
                     } else {
                         heightY = (int) (widthX * (1 / textureElement.scaleFactor));
                     }
-                    textureElement.texture.drawTexture(matrixStack, x,y,widthX,heightY, textureElement.region[0], textureElement.region[1], textureElement.region[2], textureElement.region[3]);
+                   // textureElement.texture.drawTexture(matrixStack, x,y,widthX,heightY, textureElement.region[0], textureElement.region[1], textureElement.region[2], textureElement.region[3]);
                 }
                 super.drawScreen(matrixStack);
             }

@@ -54,8 +54,8 @@ public class SliderWidget extends Widget {
         }
 
         GL11.glDisable(GL11.GL_DEPTH_TEST);
-        Textures.SLIDER_BACKGROUND.drawTexture(matrixStack,x - height / 4,y,width + height / 2,height);
-        Textures.SLIDER.drawTexture(matrixStack,getSliderX(height),y,height/2,height);
+       // Textures.SLIDER_BACKGROUND.drawTexture(matrixStack,x - height / 4,y,width + height / 2,height);
+       // Textures.SLIDER.drawTexture(matrixStack,getSliderX(height),y,height/2,height);
         StringRenderer.drawStringTranslated(matrixStack, Languages.getTranslated(name) + ": " + value,x,y,0.5f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }

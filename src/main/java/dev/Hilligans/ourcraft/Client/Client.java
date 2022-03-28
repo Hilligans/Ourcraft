@@ -91,7 +91,7 @@ public class Client {
     public ClientNetwork authNetwork;
     public GameInstance gameInstance;
 
-    public IGraphicsEngine<?,?> graphicsEngine;
+    public IGraphicsEngine<?,?,?> graphicsEngine;
 
     public Client(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
@@ -100,7 +100,7 @@ public class Client {
         soundEngine = new SoundEngine(gameInstance);
     }
 
-    public Client setGraphicsEngine(IGraphicsEngine<?,?> graphicsEngine) {
+    public Client setGraphicsEngine(IGraphicsEngine<?,?,?> graphicsEngine) {
         if(graphicsEngine != null) {
             this.graphicsEngine = graphicsEngine;
         }
@@ -209,7 +209,7 @@ public class Client {
             screen.render(screenStack);
             playerData.heldStack.renderStack(screenStack, (int) (Camera.newX - Settings.guiSize * 8), (int) (Camera.newY - Settings.guiSize * 8));
         } else {
-            Textures.CURSOR.drawCenteredTexture(screenStack,1.0f);
+            //Textures.CURSOR.drawCenteredTexture(screenStack,1.0f);
             if(KeyHandler.keyPressed[GLFW_KEY_TAB]) {
                 if(playerList != null) {
                     playerList.render(screenStack);
