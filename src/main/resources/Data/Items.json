@@ -4,3 +4,10 @@
     "data": "Items/item.json"
   }
 }
+
+{
+  "tomato": {
+    "texture": "tomato.png",
+    "data": "Items/item.json"
+  }
+}
