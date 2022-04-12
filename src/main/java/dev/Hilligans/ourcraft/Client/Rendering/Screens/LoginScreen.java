@@ -15,11 +15,11 @@ public class LoginScreen extends ScreenBase {
 
     public LoginScreen(Client client) {
         super(client);
-        widgets.add(username);
-        widgets.add(password);
-        widgets.add(email);
+        addWidget(username);
+        addWidget(password);
+        addWidget(email);
 
-        widgets.add(new Button(100, 550, 200, 50, "Log in", () -> {
+        addWidget(new Button(100, 550, 200, 50, "Log in", () -> {
             client.playerData.email = email.string;
             String passwordVal = Ourcraft.hashString(password.string, email.string);
             client.playerData.userName = username.string;

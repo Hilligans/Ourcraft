@@ -20,12 +20,12 @@ public class AccountCreationScreen extends ScreenBase {
 
     public AccountCreationScreen(Client client) {
         super(client);
-        widgets.add(username);
-        widgets.add(password);
-        widgets.add(email);
-        widgets.add(token);
+        addWidget(username);
+        addWidget(password);
+        addWidget(email);
+        addWidget(token);
 
-        widgets.add(new Button(500, 200, 200, 50, "Create Account", () -> {
+        addWidget(new Button(500, 200, 200, 50, "Create Account", () -> {
             client.playerData.email = email.string;
             String passwordVal = Ourcraft.hashString(password.string, email.string);
             client.playerData.userName = username.string;

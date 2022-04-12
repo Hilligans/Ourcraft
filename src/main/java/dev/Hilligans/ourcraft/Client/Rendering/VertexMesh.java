@@ -5,6 +5,7 @@ import org.joml.Matrix4f;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
@@ -19,7 +20,11 @@ public class VertexMesh {
     public ArrayList<VertexComponent> vertexComponents = new ArrayList<>();
     public ArrayList<UniformComponent> uniformComponents = new ArrayList<>();
 
-    public IntBuffer indices;
+    //public IntBuffer indices;
+    // public FloatBuffer vertices;
+
+    public int[] indices;
+    public float[] vertices;
 
 
     public VertexMesh(String vertexFormatName) {
@@ -28,6 +33,17 @@ public class VertexMesh {
 
     public VertexMesh(VertexFormat vertexFormat) {
         this.vertexFormat = vertexFormat;
+    }
+
+    /*    public void addData(IntBuffer indices, FloatBuffer vertices) {
+            this.indices = indices;
+            this.vertices = vertices;
+        }
+
+     */
+    public void addData(int[] indices, float[] vertices) {
+        this.indices = indices;
+        this.vertices = vertices;
     }
 
     public VertexMesh addUniform(Matrix4f matrix4f) {
@@ -58,6 +74,5 @@ public class VertexMesh {
         }
 
     }
-
 }
 

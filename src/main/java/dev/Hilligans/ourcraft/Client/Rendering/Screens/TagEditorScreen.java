@@ -24,8 +24,8 @@ public class TagEditorScreen extends ScreenBase {
         super(client);
         folderWidget = new FolderWidget(100,100,100,40,"Data");
         folderWidget.minY = 100 + FolderWidget.spacing;
-        widgets.add(folderWidget);
-        widgets.add(new Button(0, 0, 100, 40, "Open", () -> FileLoader.openFile("", null, new FileLoader.HandleFile() {
+        addWidget(folderWidget);
+        addWidget(new Button(0, 0, 100, 40, "Open", () -> FileLoader.openFile("", null, new FileLoader.HandleFile() {
             @Override
             public void success(PointerBuffer path) {
                 path.mark();
@@ -43,7 +43,7 @@ public class TagEditorScreen extends ScreenBase {
                 client.openScreen(new JoinScreen(client));
             }
         })));
-        widgets.add(new Button(100, 0, 100, 40, "Save", () -> WorldLoader.save(compoundTag,filePath)));
+        addWidget(new Button(100, 0, 100, 40, "Save", () -> WorldLoader.save(compoundTag,filePath)));
     }
 
     @Override

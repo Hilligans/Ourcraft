@@ -23,7 +23,4 @@ public class ClientPlayerData {
     public boolean valid_account = false;
 
 
-
-
-
 }

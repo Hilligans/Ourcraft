@@ -3,6 +3,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Widgets;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
+import dev.Hilligans.ourcraft.Ourcraft;
 import org.lwjgl.opengl.GL11;
 
 public class Button extends Widget {
@@ -28,14 +29,12 @@ public class Button extends Widget {
     @Override
     public void render(MatrixStack matrixStack, int xOffset, int yOffset) {
         super.render(matrixStack, xOffset, yOffset);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
         if(enabled) {
-         //   Textures.BUTTON.drawTexture(matrixStack, x, y, width, height);
+            Textures.BUTTON.drawTexture(window, matrixStack, x, y, width, height);
         } else {
-           // Textures.BUTTON_DARK.drawTexture(matrixStack,x,y,width,height);
+            Textures.BUTTON_DARK.drawTexture(window, matrixStack,x,y,width,height);
         }
         StringRenderer.drawCenteredString(matrixStack, name,x + width / 2,y + 5,0.5f);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 
     @Override

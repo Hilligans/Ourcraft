@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.PipelineState;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Client.Rendering.VertexMesh;
@@ -11,6 +12,10 @@ import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.lwjgl.opengl.GL20;
+
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.util.function.Consumer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -62,10 +67,10 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
         glBindVertexArray(VAO);
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        //glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, mesh.vertices, GL_STATIC_DRAW);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        //glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.indices, GL_STATIC_DRAW);
 
         int x = 0;
         int stride = mesh.vertexFormat.getStride();
@@ -114,11 +119,53 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
     }
 
     @Override
-    public void drawAndDestroyMesh(OpenGLWindow window, MatrixStack matrixStack, VertexMesh mesh) {
+    public void drawAndDestroyMesh(OpenGLWindow window, MatrixStack matrixStack, VertexMesh mesh, int texture, int program) {
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
+       // if(texture != boundTexture) {
+            GL20.glBindTexture(textureTypes.get(texture), texture);
+            boundTexture = texture;
+      //  }
+        if(program != boundProgram){
+            GL20.glUseProgram(program);
+            boundProgram = program;
+        }
+
+        int VAO = glGenVertexArrays();
+        int VBO = glGenBuffers();
+        int EBO = glGenBuffers();
+
+        glBindVertexArray(VAO);
+
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, mesh.vertices, GL_STATIC_DRAW);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.indices, GL_STATIC_DRAW);
+
+        int x = 0;
+        int stride = mesh.vertexFormat.getStride();
+        int pointer = 0;
+        for(VertexFormat.VertexPart part : mesh.vertexFormat.parts) {
+            glVertexAttribPointer(x,part.primitiveCount, getGLPrimitive(part.primitiveType),part.normalized,stride,pointer);
+            glEnableVertexAttribArray(x);
+            pointer += part.getSize();
+            x++;
+        }
+
+        glDrawElements(mesh.vertexFormat.primitiveType,mesh.indices.length,GL_UNSIGNED_INT,0);
+
+        glDeleteBuffers(VBO);
+        glDeleteBuffers(EBO);
+        glDeleteBuffers(VAO);
     }
+
+    @Override
+    public void setState(OpenGLWindow window, PipelineState state) {
+
+    }
+
 
     VertexFormat[] cache = new VertexFormat[2];
 

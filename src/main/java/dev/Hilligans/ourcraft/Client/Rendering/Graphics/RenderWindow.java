@@ -2,10 +2,12 @@ package dev.Hilligans.ourcraft.Client.Rendering.Graphics;
 
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.Input.InputHandler;
+import dev.Hilligans.ourcraft.Client.Input.InputHandlerProvider;
 import dev.Hilligans.ourcraft.Client.Input.Key.KeyPress;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.ICamera;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Util.Logger;
 
@@ -19,7 +21,7 @@ public abstract class RenderWindow {
     public ICamera camera;
     public IGraphicsEngine<?, ?, ?> graphicsEngine;
     public Logger logger;
-    public InputHandler inputHandler = new InputHandler();
+    public InputHandler inputHandler;
 
     public double mouseX;
     public double mouseY;
@@ -33,6 +35,8 @@ public abstract class RenderWindow {
             }
         }
     }
+
+    public abstract long getWindowID();
 
     public abstract void close();
 
@@ -51,6 +55,8 @@ public abstract class RenderWindow {
     public abstract float getWindowHeight();
 
     public abstract boolean isWindowFocused();
+
+    public abstract String getWindowingName();
 
     public Logger getLogger() {
         return logger;
@@ -72,6 +78,10 @@ public abstract class RenderWindow {
 
     public void registerInput(KeyPress keyPress) {
 
+    }
+
+    public void setup() {
+        setupInputs();
     }
 
     public void addRenderTarget(RenderTarget renderTarget) {
@@ -105,4 +115,23 @@ public abstract class RenderWindow {
     public IDefaultEngineImpl<?> getEngineImpl() {
         return graphicsEngine.getDefaultImpl();
     }
+
+    public void setupInputs() {
+        inputHandler = new InputHandler(graphicsEngine.getGameInstance(), getWindowID());
+        for(InputHandlerProvider provider : graphicsEngine.getGameInstance().INPUT_HANDLER_PROVIDERS.ELEMENTS) {
+            IInputProvider p = provider.getProvider(graphicsEngine.getIdentifierName(), getWindowingName());
+            if(p != null) {
+                p.setWindow(getWindowID(), inputHandler);
+                inputHandler.add(p);
+            }
+        }
+        inputHandler.completeSetup();
+    }
+
+    public void tick() {
+        for(IInputProvider provider : inputHandler.inputProviders) {
+            provider.tick();
+        }
+    }
+
 }

@@ -19,7 +19,7 @@ public class ModListScreen extends ScreenBase implements SelectorScreen {
 
     public ModListScreen(Client client) {
         super(client);
-        widgets.add(folder);
+        addWidget(folder);
         for(String string : client.gameInstance.CONTENT_PACK.mods.keySet()) {
             folder.addWidget(new SelectorWidget(0,0,200,50,string,this));
         }

@@ -31,8 +31,11 @@ import dev.Hilligans.ourcraft.World.ClientWorld;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
+import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GLDebugMessageCallback;
+import org.lwjgl.system.MemoryUtil;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
@@ -45,6 +48,8 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL32.*;
+import static org.lwjgl.opengl.GL43.GL_DEBUG_OUTPUT;
+import static org.lwjgl.opengl.GL43.glDebugMessageCallback;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, OpenGLWindow, OpenglDefaultImpl> {
@@ -135,6 +140,7 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         renderWindow = new OpenGLWindow(client, this);
+        renderWindow.setup();
         GL.createCapabilities();
 
         client.glStarted = true;
@@ -146,15 +152,22 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
         PlayerEntity.imageId = WorldTextureManager.loadAndRegisterTexture("player.png");
         StringRenderer.instance.buildChars();
 
-        for(Texture texture : Textures.TEXTURES) {
+        for(Texture texture : getGameInstance().TEXTURES.ELEMENTS) {
             texture.register();
         }
 
-        //int[] maxTextureSize = new int[1];
-        //GL11.glGetIntegerv(GL11.GL_MAX_TEXTURE_SIZE, maxTextureSize);
-        //System.out.println("Max texture size: " + maxTextureSize[0]);
+        glEnable(GL_DEBUG_OUTPUT);
+        glDebugMessageCallback(new GLDebugMessageCallback() {
+            @Override
+            public void invoke(int source, int type, int id, int severity, int length, long message, long userParam) {
+                System.out.println("OpenGL ERROR Callback ");
+                System.out.println(new String(MemoryUtil.memCharBuffer(message,length).reset().array()));
+            }
+        }, 0);
+
 
         client.screen = new JoinScreen(client);
+        client.screen.setWindow(renderWindow);
         texture = -1;
         Renderer.create(texture);
         client.clientWorld = new ClientWorld(client);
@@ -169,7 +182,6 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
         glCullFace(GL_FRONT);
         glFrontFace(GL_CW);
         glEnable(GL_PROGRAM_POINT_SIZE);
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
         PlayerMovementThread playerMovementThread = new PlayerMovementThread(window);
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1, new NamedThreadFactory("player_movement"));

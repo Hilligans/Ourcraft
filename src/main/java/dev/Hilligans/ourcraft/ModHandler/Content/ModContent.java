@@ -3,6 +3,7 @@ package dev.Hilligans.ourcraft.ModHandler.Content;
 import dev.Hilligans.ourcraft.Biome.Biome;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
+import dev.Hilligans.ourcraft.Client.Input.InputHandlerProvider;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTarget;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
@@ -72,6 +73,7 @@ public class ModContent {
     public ArrayList<IGraphicsEngine<?,?,?>> graphicsEngines = new ArrayList<>();
     public ArrayList<RenderTarget> renderTargets = new ArrayList<>();
     public ArrayList<VertexFormat> vertexFormats = new ArrayList<>();
+    public ArrayList<InputHandlerProvider> inputHandlerProviders = new ArrayList<>();
 
     public HashMap<String,Protocol> protocols = new HashMap<>();
 
@@ -173,8 +175,8 @@ public class ModContent {
 
     public void registerTexture(Texture... textures) {
         for(Texture texture : textures) {
+            texture.assignModContent(this);
             this.textures.add(texture);
-            texture.source = this;
         }
     }
 
@@ -254,11 +256,24 @@ public class ModContent {
     }
 
     public void registerRenderTarget(RenderTarget... renderTargets) {
+        for(RenderTarget renderTarget : renderTargets) {
+            renderTarget.assignModContent(this);
+        }
         this.renderTargets.addAll(Arrays.asList(renderTargets));
     }
 
     public void registerVertexFormat(VertexFormat... vertexFormats) {
+        for(VertexFormat vertexFormat : vertexFormats) {
+            vertexFormat.assignModContent(this);
+        }
         this.vertexFormats.addAll(Arrays.asList(vertexFormats));
+    }
+
+    public void registerInputHandlerProviders(InputHandlerProvider... providers) {
+        for(InputHandlerProvider provider : providers) {
+            provider.assignModContent(this);
+        }
+        this.inputHandlerProviders.addAll(Arrays.asList(providers));
     }
 
     public void putData(ByteArray byteArray) {

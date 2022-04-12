@@ -2,7 +2,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Screens;
 
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
-import dev.Hilligans.ourcraft.Client.Input.MouseHandler;
+import dev.Hilligans.ourcraft.Client.Input.Key.MouseHandler;
 import dev.Hilligans.ourcraft.Client.Rendering.MiniMap.MiniMap;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBase;
 import dev.Hilligans.ourcraft.ClientMain;

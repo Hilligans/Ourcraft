@@ -2,8 +2,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL;
 
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler;
-import dev.Hilligans.ourcraft.Client.Input.MouseHandler;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
+import dev.Hilligans.ourcraft.Client.Input.Key.MouseHandler;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Implementations.FreeCamera;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.ScreenShot;
@@ -34,6 +33,16 @@ public class OpenGLWindow extends RenderWindow {
         registerCallbacks();
     }
 
+    public void setup() {
+       super.setup();
+       glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+
+    @Override
+    public long getWindowID() {
+        return window;
+    }
+
     @Override
     public void close() {
         shouldClose = true;
@@ -54,8 +63,7 @@ public class OpenGLWindow extends RenderWindow {
             ScreenShot.takeScreenShot();
         }
         glfwPollEvents();
-
-        inputHandler.add(new KeyHandler());
+        tick();
     }
 
     @Override
@@ -76,6 +84,11 @@ public class OpenGLWindow extends RenderWindow {
     @Override
     public boolean isWindowFocused() {
         return windowFocused;
+    }
+
+    @Override
+    public String getWindowingName() {
+        return "glfw";
     }
 
     public void registerCallbacks() {

@@ -1,10 +1,12 @@
 package dev.Hilligans.ourcraft.Client;
 
 import dev.Hilligans.ourcraft.Block.Blocks;
+import dev.Hilligans.ourcraft.Client.Input.InputHandler;
 import dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler;
 import dev.Hilligans.ourcraft.Client.Input.Key.KeyPress;
-import dev.Hilligans.ourcraft.Client.Input.MouseHandler;
+import dev.Hilligans.ourcraft.Client.Input.Key.MouseHandler;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.GLRenderer;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.ContainerScreens.CreativeInventoryScreen;
@@ -92,6 +94,8 @@ public class Client {
     public GameInstance gameInstance;
 
     public IGraphicsEngine<?,?,?> graphicsEngine;
+    public InputHandler inputHandler;
+    public IInputProvider mouseBind;
 
     public Client(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
@@ -126,13 +130,11 @@ public class Client {
             readUsernameAndPassword(tag);
         }
         authNetwork.sendPacket(new CGetToken(playerData.userName, playerData.login_token));
-
         graphicsEngine.setup();
-
         soundEngine.init();
         soundEngine.setAttenuationModel(AL11.AL_LINEAR_DISTANCE_CLAMPED);
         registerKeyHandlers();
-        createCallbacks();
+       // createCallbacks();
 
         gameInstance.EVENT_BUS.postEvent(new ClientStartRenderingEvent());
         //openScreen("ourcraft:test_screen");
@@ -244,6 +246,7 @@ public class Client {
     }
 
     public void openScreen(Screen screen1) {
+        screen1.setWindow(graphicsEngine.getWindows().get(0));
         gameInstance.EVENT_BUS.postEvent(new OpenScreenEvent(screen1,screen));
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         if(screen != null) {
@@ -290,8 +293,6 @@ public class Client {
     }
 
     public void registerKeyHandlers() {
-
-
         KeyHandler.register(new KeyPress() {
             @Override
             public void onPress() {
@@ -474,8 +475,9 @@ public class Client {
     public DoubleBuffer getMousePos() {
         DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
         DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
-        glfwGetCursorPos(window, x, y);
-        return BufferUtils.createDoubleBuffer(2).put(x.get()).put(y.get());
+        //glfwGetCursorPos(window, x, y);
+        return BufferUtils.createDoubleBuffer(2);
+        //return BufferUtils.createDoubleBuffer(2).put(x.get()).put(y.get());
     }
 
     public CompoundNBTTag readUsernameAndPassword(CompoundNBTTag tag) {

@@ -25,7 +25,6 @@ public class ClientNetworkHandler extends NetworkHandler {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        Textures.clear();
         System.out.println("DISCONNECTED FROM SERVER");
         network.client.renderWorld = false;
         network.client.valid = false;

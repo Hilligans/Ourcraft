@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.PipelineState;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.VulkanWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
@@ -36,7 +37,12 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow> {
     }
 
     @Override
-    public void drawAndDestroyMesh(VulkanWindow window, MatrixStack matrixStack, VertexMesh mesh) {
+    public void drawAndDestroyMesh(VulkanWindow window, MatrixStack matrixStack, VertexMesh mesh, int texture, int program) {
+
+    }
+
+    @Override
+    public void setState(VulkanWindow window, PipelineState state) {
 
     }
 

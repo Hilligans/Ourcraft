@@ -99,7 +99,7 @@ public class VertexFormat implements IRegistryElement {
         }
 
         public int getSize() {
-            return primitiveSize + primitiveCount;
+            return primitiveSize * primitiveCount;
         }
     }
 

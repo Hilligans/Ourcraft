@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Widgets;
 
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBase;
 import dev.Hilligans.ourcraft.Data.Primitives.IntegerWrapper;
 
@@ -31,6 +32,8 @@ public class Widget {
     public IntegerWrapper yOffset = new IntegerWrapper(0);
 
     public ScreenBase screenBase;
+
+    public RenderWindow window;
 
     public Widget(int x, int y, int width, int height) {
         this.x = x;

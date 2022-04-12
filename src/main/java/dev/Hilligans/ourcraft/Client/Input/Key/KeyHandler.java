@@ -1,5 +1,6 @@
 package dev.Hilligans.ourcraft.Client.Input.Key;
 
+import dev.Hilligans.ourcraft.Client.Input.InputHandler;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
@@ -136,9 +137,9 @@ public class KeyHandler implements IInputProvider {
 
     static {
         if(ClientMain.getClient().glStarted) {
-            setCallback(ClientMain.getClient().window);
+            //setCallback(ClientMain.getClient().window);
         } else {
-            Ourcraft.GAME_INSTANCE.EVENT_BUS.register(GLInitEvent.class,KeyHandler::setCallback);
+           // Ourcraft.GAME_INSTANCE.EVENT_BUS.register(GLInitEvent.class,KeyHandler::setCallback);
         }
 
         mappedKeys.put(32,' ');
@@ -295,6 +296,10 @@ public class KeyHandler implements IInputProvider {
 
             GLFW_KEY_WORLD_1       = 161,
             GLFW_KEY_WORLD_2       = 162;
+    @Override
+    public void setWindow(long window, InputHandler handler) {
+
+    }
 
     @Override
     public int getSize() {
@@ -302,7 +307,27 @@ public class KeyHandler implements IInputProvider {
     }
 
     @Override
-    public void setOffset(int size) {
+    public void setOffset(int offset) {
 
+    }
+
+    @Override
+    public int getOffset() {
+        return 0;
+    }
+
+    @Override
+    public boolean requiresTicking() {
+        return false;
+    }
+
+    @Override
+    public void tick() {
+
+    }
+
+    @Override
+    public String getButtonName(int button, int extra) {
+        return null;
     }
 }

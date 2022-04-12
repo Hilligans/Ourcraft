@@ -68,29 +68,6 @@ public class StringRenderer {
         drawCenteredString(matrixStack, Languages.getTranslated(string),y,scale);
     }
 
-    public static void drawColoredString(MatrixStack matrixStack, String string, int x, int y, float scale) {
-      /*  matrixStack.push();
-        int width = 0;
-        ArrayList<Vector5f> vector5fs = new ArrayList<>();
-        ArrayList<Integer> indices = new ArrayList<>();
-        for(int z = 0; z < string.length(); z++) {
-            vector5fs.addAll(Arrays.asList(Vector5f.color(getVertices("" + string.charAt(z),x + width ,y,scale),1f / string.length() * z,1.0f,0.0f,1.0f)));
-            width += instance.characterOffset.get("" + string.charAt(z)).getTypeA() * scale;
-
-            indices.addAll(Arrays.asList(getIndices(z * 4)));
-        }
-        int id = VAOManager.createColorVAO(VAOManager.convertVertices(vector5fs,true),VAOManager.convertIndices(indices));
-        glUseProgram(ClientMain.getClient().shaderManager.colorShader);
-        matrixStack.applyColor(ClientMain.getClient().shaderManager.colorShader);
-        matrixStack.applyTransformation(ClientMain.getClient().shaderManager.colorShader);
-        //draw(id,vector5fs.size());
-        matrixStack.pop();
-
-       */
-
-       // ScriptEngineManager
-    }
-
     public Int2ObjectOpenHashMap<TextureAtlas> textureAtlases = new Int2ObjectOpenHashMap<>();
     public Char2IntOpenHashMap charMap = new Char2IntOpenHashMap();
     public Char2IntOpenHashMap idMap = new Char2IntOpenHashMap();

@@ -60,7 +60,7 @@ public class JoinScreen extends ScreenBase {
            this.portString = portString;
         }));
 
-        widgets.add(new Button(500,500,200,50,"menu.singleplayerjoin", () -> {
+        addWidget(new Button(500,500,200,50,"menu.singleplayerjoin", () -> {
             try {
                 client.network.joinServer("localhost",portString,client);
                 client.closeScreen();
@@ -69,7 +69,7 @@ public class JoinScreen extends ScreenBase {
             }
         }));
 
-        widgets.add(new Button(500,600,200,50,"menu.mod_list", () -> client.openScreen(new ModListScreen(client))));
+        addWidget(new Button(500,600,200,50,"menu.mod_list", () -> client.openScreen(new ModListScreen(client))));
 
         registerKeyPress(new KeyPress() {
             @Override

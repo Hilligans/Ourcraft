@@ -15,7 +15,7 @@ public class LanguageScreen extends ScreenBase implements SelectorScreen {
     public LanguageScreen(Client client) {
         super(client);
         FolderWidget folderWidget = new InvisibleFolder(100,50,0,0,"");
-        widgets.add(folderWidget);
+        addWidget(folderWidget);
         for(String string : Languages.languages) {
             folderWidget.addWidget(new SelectorWidget(0,0,200,40,string,this){
                 @Override
@@ -29,7 +29,7 @@ public class LanguageScreen extends ScreenBase implements SelectorScreen {
                 }
             });
         }
-        widgets.add(new Button(100, 0, 200, 40, "menu.done", () -> {
+        addWidget(new Button(100, 0, 200, 40, "menu.done", () -> {
             if(selectorWidget != null) {
                 Languages.setCurrentLanguage(selectorWidget.name);
             }

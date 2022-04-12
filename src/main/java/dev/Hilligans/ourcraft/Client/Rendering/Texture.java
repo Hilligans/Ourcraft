@@ -1,20 +1,28 @@
 package dev.Hilligans.ourcraft.Client.Rendering;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.VAOManager;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.WorldTextureManager;
 import dev.Hilligans.ourcraft.ClientMain;
+import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
+import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
 import dev.Hilligans.ourcraft.Util.Settings;
 import org.lwjgl.opengl.GL30;
+
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 
-public class Texture {
+public class Texture implements IRegistryElement {
 
     public String path;
     public ModContent source;
@@ -22,13 +30,13 @@ public class Texture {
     public int width;
     public int height;
 
-    public int textureId;
+    public int textureId = -1;
 
     public Image texture;
+    public VertexFormat format;
 
     public Texture(String path) {
         this.path = path;
-        Textures.TEXTURES.add(this);
     }
 
     public Texture(String path, Image texture) {
@@ -43,14 +51,20 @@ public class Texture {
 
         if(image == null) {
             System.out.println(source.getModID() + ":" + path);
+            return;
         }
 
         width = image.getWidth();
         height = image.getHeight();
-        textureId = WorldTextureManager.registerTexture(image);
+        this.texture = image;
+        //textureId = WorldTextureManager.registerTexture(image);
     }
 
     public void drawTexture(RenderWindow window, MatrixStack matrixStack, int x, int y, int width, int height, int startX, int startY, int endX, int endY) {
+        IDefaultEngineImpl<?> defaultEngineImpl = window.getEngineImpl();
+        if(textureId == -1) {
+            textureId = window.getEngineImpl().createTexture(window,texture);
+        }
 
         float minX = (float)startX / this.width;
         float minY = (float)startY / this.height;
@@ -59,16 +73,12 @@ public class Texture {
         float[] vertices = new float[] {x,y,0,minX,minY,x,y + height,0,minX,maxY,x + width,y,0,maxX,minY,x + width,y + height,0,maxX,maxY};
         int[] indices = new int[] {0,1,2,2,1,3};
 
-        //window.getEngineImpl().drawAndDestroyMesh(window, matrixStack, null);
+        VertexMesh mesh = new VertexMesh(format);
 
-        glDisable(GL_DEPTH_TEST);
-        glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
-        int vao = VAOManager.createVAO(vertices, indices);
-        GL30.glBindTexture(GL_TEXTURE_2D,textureId);
-        GL30.glBindVertexArray(vao);
-        glDrawElements(GL_TRIANGLES, 6,GL_UNSIGNED_INT,0);
-        VAOManager.destroyBuffer(vao);
-        glEnable(GL_DEPTH_TEST);
+        mesh.addData(indices, vertices);
+
+        defaultEngineImpl.drawAndDestroyMesh(window,matrixStack,mesh,textureId,ClientMain.getClient().shaderManager.shaderProgram);
+
     }
 
     public void drawTexture(RenderWindow window, MatrixStack matrixStack, int x, int y, int width, int height) {
@@ -123,4 +133,28 @@ public class Texture {
         return y;
     }
 
+    @Override
+    public String getResourceName() {
+        return path;
+    }
+
+    @Override
+    public String getIdentifierName() {
+        return source.getModID() + ":" + path;
+    }
+
+    @Override
+    public String getUniqueName() {
+        return "texture." + source.getModID() + "." + path;
+    }
+
+    @Override
+    public void assignModContent(ModContent modContent) {
+        this.source = modContent;
+    }
+
+    @Override
+    public void load(GameInstance gameInstance) {
+        format = gameInstance.VERTEX_FORMATS.get("ourcraft:position_texture");
+    }
 }

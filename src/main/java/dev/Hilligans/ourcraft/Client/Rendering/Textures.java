@@ -1,15 +1,12 @@
 package dev.Hilligans.ourcraft.Client.Rendering;
 
+import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import org.lwjgl.opengl.GL30;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Textures {
-
-    public static final ArrayList<Texture> TEXTURES = new ArrayList<>();
-
-    public static final HashMap<String, Texture> MAPPED_TEXTURES = new HashMap<>();
 
     public static final Texture ITEM_SLOT = new Texture("GUI/item_slot.png");
     public static final Texture INVENTORY = new Texture("GUI/inventory.png");
@@ -43,25 +40,10 @@ public class Textures {
     public static final Texture OUTLINE = new Texture("outline.png");
     public static final Texture TRANSPARENT_BACKGROUND = new Texture("GUI/transparent_background.png");
 
-    public static void clear() {
-        for(Texture texture : MAPPED_TEXTURES.values()) {
-            GL30.glDeleteTextures(texture.textureId);
-        }
-        MAPPED_TEXTURES.clear();
+    public static void addData(ModContent modContent) {
+        modContent.registerTexture(ITEM_SLOT,INVENTORY,HOTBAR,ITEM_OUTLINE,CHEST,CREATIVE_INVENTORY,CURSOR,EMPTY_CHUNK);
+        modContent.registerTexture(SEARCH_BAR);
+        modContent.registerTexture(FOLDER,LIST_ICON,PLUS_ICON,MINUS_ICON,BYTE_ICON,SHORT_ICON,INTEGER_ICON,FLOAT_ICON,LONG_ICON,DOUBLE_ICON);
+        modContent.registerTexture(BACKGROUND,BUTTON,SLIDER,SLIDER_BACKGROUND,BUTTON_DARK,CHECK_MARK,X_MARK,OUTLINE,TRANSPARENT_BACKGROUND);
     }
-
-    public static void registerTexture(Texture texture) {
-        TEXTURES.add(texture);
-    }
-
-    public static Texture getTexture(int id) {
-        return TEXTURES.get(id);
-    }
-
-    public static Texture getTexture(String name) {
-        Texture texture = MAPPED_TEXTURES.get(name);
-        return texture;
-    }
-
-
 }

@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.ModHandler.Content;
 
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
+import dev.Hilligans.ourcraft.Client.Input.InputHandlerProvider;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.IModel;
@@ -118,7 +119,7 @@ public class ContentPack {
                     gameInstance.registerSound(soundBuffer);
                 }
                 for (Texture texture : mod.textures) {
-                    Textures.registerTexture(texture);
+                    gameInstance.registerTextures(texture);
                 }
                 for(String string1 : mod.blockTextures.keySet()) {
                     gameInstance.RESOURCE_MANAGER.putImage("Blocks/" + string1,mod.blockTextures.get(string1));
@@ -146,6 +147,9 @@ public class ContentPack {
                 }
                 for(VertexFormat vertexFormat : mod.vertexFormats) {
                     gameInstance.registerVertexFormat(vertexFormat);
+                }
+                for(InputHandlerProvider provider : mod.inputHandlerProviders) {
+                    gameInstance.registerInputHandlerProviders(provider);
                 }
             }
         }

@@ -171,6 +171,11 @@ public class VulkanWindow extends RenderWindow {
             }""";
 
     @Override
+    public long getWindowID() {
+        return window;
+    }
+
+    @Override
     public void close() {
         cleanup();
     }
@@ -208,5 +213,10 @@ public class VulkanWindow extends RenderWindow {
     @Override
     public boolean isWindowFocused() {
         return false;
+    }
+
+    @Override
+    public String getWindowingName() {
+        return "glfw";
     }
 }

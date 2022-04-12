@@ -38,15 +38,6 @@ public class ClientMain {
             client.setGraphicsEngine(gameInstance.GRAPHICS_ENGINES.get(graphicsEngine));
         }
 
-
-      //  VulkanEngine vulkanEngine = new VulkanEngine(gameInstance);
-      //  vulkanEngine.setup();
-      //  RenderWindow window = vulkanEngine.createWindow();
-       // RenderWindow window1 = vulkanEngine.createWindow();
-       // if(window1 instanceof VulkanWindow window2) {
-            //window2.selectFamily().graphicsFamily.getQueue(0);
-       // }
-    //    window.swapBuffers();
         client.startClient();
     }
 

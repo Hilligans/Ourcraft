@@ -5,8 +5,6 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
 
-import java.nio.ByteBuffer;
-
 public abstract class Input implements IRegistryElement {
 
     public String key;
@@ -21,9 +19,10 @@ public abstract class Input implements IRegistryElement {
     }
 
     public Input() {
+
     }
 
-    abstract KeyPress getKeyPress(RenderWindow renderWindow);
+    abstract KeyPress invoke(RenderWindow renderWindow, float strength);
 
     public void bind(String key) {
         this.boundKey = key;

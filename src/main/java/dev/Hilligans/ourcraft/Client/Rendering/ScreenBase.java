@@ -99,5 +99,9 @@ public abstract class ScreenBase implements Screen {
     @Override
     public void setWindow(RenderWindow renderWindow) {
         this.window = renderWindow;
+        System.out.println(renderWindow);
+        for(Widget widget : widgets) {
+            widget.window = renderWindow;
+        }
     }
 }

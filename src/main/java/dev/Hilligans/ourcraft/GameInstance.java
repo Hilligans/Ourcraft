@@ -4,10 +4,12 @@ import dev.Hilligans.ourcraft.Biome.Biome;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
 import dev.Hilligans.ourcraft.Client.Input.Input;
+import dev.Hilligans.ourcraft.Client.Input.InputHandlerProvider;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTarget;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
+import dev.Hilligans.ourcraft.Client.Rendering.Texture;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Widget;
 import dev.Hilligans.ourcraft.Command.CommandHandler;
 import dev.Hilligans.ourcraft.Container.Container;
@@ -88,6 +90,8 @@ public class GameInstance {
         REGISTRIES.put("ourcraft:render_targets", RENDER_TARGETS);
         REGISTRIES.put("ourcraft:key_binds", KEY_BINDS);
         REGISTRIES.put("ourcraft:vertex_formats", VERTEX_FORMATS);
+        REGISTRIES.put("ourcraft:input_handler_providers", INPUT_HANDLER_PROVIDERS);
+        REGISTRIES.put("ourcraft:textures", TEXTURES);
     }
 
     public void loadContent() {
@@ -124,6 +128,8 @@ public class GameInstance {
     public final Registry<RenderTarget> RENDER_TARGETS = new Registry<>(this, RenderTarget.class);
     public final Registry<Input> KEY_BINDS = new Registry<>(this, Input.class);
     public final Registry<VertexFormat> VERTEX_FORMATS = new Registry<>(this, VertexFormat.class);
+    public final Registry<InputHandlerProvider> INPUT_HANDLER_PROVIDERS = new Registry<>(this, InputHandlerProvider.class);
+    public final Registry<Texture> TEXTURES = new Registry<>(this, Texture.class);
 
     public void clear() {
         BLOCKS.clear();
@@ -248,6 +254,14 @@ public class GameInstance {
 
     public void registerVertexFormat(VertexFormat... vertexFormats) {
         VERTEX_FORMATS.putAll(vertexFormats);
+    }
+
+    public void registerInputHandlerProviders(InputHandlerProvider... providers) {
+        INPUT_HANDLER_PROVIDERS.putAll(providers);
+    }
+
+    public void registerTextures(Texture... textures) {
+        TEXTURES.putAll(textures);
     }
 
     public void register(String name, Object o) {

@@ -3,6 +3,8 @@ package dev.Hilligans.ourcraft;
 import dev.Hilligans.ourcraft.Biome.Biomes;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.Sounds;
+import dev.Hilligans.ourcraft.Client.Input.HandlerProviders.ControllerHandlerProvider;
+import dev.Hilligans.ourcraft.Client.Input.HandlerProviders.KeyPressHandlerProvider;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTarget;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
@@ -59,7 +61,7 @@ public class Ourcraft {
         modContent.registerBiome(Biomes.PLAINS,Biomes.SANDY_HILLS,Biomes.DESERT,Biomes.FOREST);
         Sounds.reg();
         modContent.registerSounds(Sounds.BLOCK_BREAK, Sounds.MUSIC);
-        modContent.registerTexture(Textures.TEXTURES.toArray(new Texture[0]));
+        //modContent.registerTexture(Textures.TEXTURES.toArray(new Texture[0]));
         Protocols.register(modContent);
 
         modContent.registerRegistryLoader(new JsonRegistryLoader(new Identifier("tool_tiers", "ourcraft"), "Data/ToolTiers.json", (modContent1, jsonObject, string) -> {
@@ -97,6 +99,8 @@ public class Ourcraft {
         }).rerunOnInstanceClear());
 
         if(modContent.gameInstance.side.equals(Side.CLIENT)) {
+            Textures.addData(modContent);
+
             modContent.registerGraphicsEngine(new VulkanEngine());
             modContent.registerRenderTarget(new RenderTarget("solid_world_renderer"));
             modContent.registerRenderTarget(new RenderTarget("entity_renderer").afterTarget("solid_world_renderer","ourcraft"));
@@ -114,7 +118,11 @@ public class Ourcraft {
                     .addPart("texture", VertexFormat.FLOAT, 2)
                     .addPart("globalColor", VertexFormat.UNSIGNED_INT, 1));
 
+            modContent.registerVertexFormat(new VertexFormat("position_texture", VertexFormat.TRIANGLES)
+                    .addPart("position", VertexFormat.FLOAT,3)
+                    .addPart("texture", VertexFormat.FLOAT, 2));
 
+            modContent.registerInputHandlerProviders(new ControllerHandlerProvider(), new KeyPressHandlerProvider());
         }
 
 

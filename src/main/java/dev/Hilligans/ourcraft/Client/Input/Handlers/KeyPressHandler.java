@@ -12,13 +12,15 @@ public class KeyPressHandler implements IInputProvider {
     public InputHandler inputHandler;
     public int offset;
 
-    public KeyPressHandler(long window, InputHandler inputHandler) {
+    @Override
+    public void setWindow(long window, InputHandler inputHandler) {
         this.window = window;
         this.inputHandler = inputHandler;
+        KeyPressHandler handler = this;
         GLFW.glfwSetKeyCallback(window, new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
-
+                inputHandler.handleInput(key,action,window,action,scancode,mods,handler);
             }
         });
     }
@@ -31,5 +33,24 @@ public class KeyPressHandler implements IInputProvider {
     @Override
     public void setOffset(int offset) {
         this.offset = offset;
+    }
+
+    @Override
+    public int getOffset() {
+        return offset;
+    }
+
+    @Override
+    public boolean requiresTicking() {
+        return false;
+    }
+
+    @Override
+    public void tick() {
+    }
+
+    @Override
+    public String getButtonName(int button, int extra) {
+        return GLFW.glfwGetKeyName(button, extra);
     }
 }
