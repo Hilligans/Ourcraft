@@ -7,7 +7,7 @@ public interface Screen {
 
     void setWindow(RenderWindow renderWindow);
 
-    default void render(MatrixStack matrixStack) {}
+    default void render(RenderWindow window, MatrixStack matrixStack) {}
 
     default void close(boolean replaced) {}
 

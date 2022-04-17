@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Widgets;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import org.lwjgl.opengl.GL11;
@@ -15,11 +16,11 @@ public class TexturedButton extends Button {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int xOffset, int yOffset) {
-        super.render(matrixStack, xOffset, yOffset);
+    public void render(RenderWindow window, MatrixStack matrixStack, int xOffset, int yOffset) {
+        super.render(window, matrixStack, xOffset, yOffset);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
-       // texture.drawTexture(matrixStack,x,y,width,height);
-        StringRenderer.drawStringTranslated(matrixStack, name,x,y,0.5f);
+        texture.drawTexture(window, matrixStack,x,y,width,height);
+        window.getStringRenderer().drawStringTranslated(window, matrixStack, name,x,y,0.5f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 }

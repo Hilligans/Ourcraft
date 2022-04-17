@@ -190,7 +190,7 @@ public class GameInstance {
 
     public void registerCommand(CommandHandler... commands) {
         for(CommandHandler commandHandler : commands) {
-            COMMANDS.put(commandHandler.getRegistryName(),commandHandler);
+            COMMANDS.put(commandHandler.getIdentifierName(),commandHandler);
         }
     }
 
@@ -319,7 +319,6 @@ public class GameInstance {
         Ourcraft.registerDefaultContent(OURCRAFT);
         PacketBase.register();
         Container.register();
-        //NBTTag.register();
         Widget.register();
         Entity.register();
     }

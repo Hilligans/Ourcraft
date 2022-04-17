@@ -9,6 +9,8 @@ public interface IRegistryElement {
 
     default void load(GameInstance gameInstance) {}
 
+    default void cleanup() {}
+
     String getResourceName();
 
     default String getIdentifierName() {
@@ -22,6 +24,8 @@ public interface IRegistryElement {
     }
 
     default void assignModContent(ModContent modContent) {}
+
+    default void setUniqueID(int id) {}
 
     default TagCollection getTagCollection() {
         return new TagCollection();

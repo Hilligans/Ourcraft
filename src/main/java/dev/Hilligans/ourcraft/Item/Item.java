@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.Item;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.ShaderManager;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.VAOManager;
@@ -83,10 +84,11 @@ public class Item implements IRecipeComponent, IRegistryElement {
             VAOManager.destroyBuffer(vao);
         }
         glEnable(GL_DEPTH_TEST);
-        drawString(matrixStack,x - size / 2,y,size/2,itemStack.count);
+        //TODO fix
+        //drawString(matrixStack,x - size / 2,y,size/2,itemStack.count);
     }
 
-    public void renderHolding(MatrixStack matrixStack, int size, ItemStack itemStack) {
+    public void renderHolding(RenderWindow window, MatrixStack matrixStack, int size, ItemStack itemStack) {
         int x = ClientMain.getWindowX() / 16 * 12;
         int y = ClientMain.getWindowY() / 16 * 12;
 
@@ -117,7 +119,7 @@ public class Item implements IRecipeComponent, IRegistryElement {
             VAOManager.destroyBuffer(vao);
         }
         glEnable(GL_DEPTH_TEST);
-        drawString(matrixStack,x - size / 2,y,size/2,itemStack.count);
+        drawString(window, matrixStack,x - size / 2,y,size/2,itemStack.count);
     }
 
     public void addData(PrimitiveBuilder primitiveBuilder, float size) {
@@ -128,12 +130,12 @@ public class Item implements IRecipeComponent, IRegistryElement {
         return true;
     }
 
-    void drawString(MatrixStack matrixStack, int x, int y, int size, int count) {
+    void drawString(RenderWindow window, MatrixStack matrixStack, int x, int y, int size, int count) {
         if(count != 1) {
             if(count >= 10) {
-                StringRenderer.drawString(matrixStack, count + "", x + size + 14 , (int) (y + size * 1f), 0.5f);
+                window.getStringRenderer().drawStringInternal(window, matrixStack, count + "", x + size + 14 , (int) (y + size * 1f), 0.5f);
             } else {
-                StringRenderer.drawString(matrixStack, count + "", (int) (x + size) + 29, (int) (y + size * 1f), 0.5f);
+                window.getStringRenderer().drawStringInternal(window, matrixStack, count + "", (int) (x + size) + 29, (int) (y + size * 1f), 0.5f);
             }
         }
     }

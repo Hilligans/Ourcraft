@@ -4,6 +4,7 @@ import dev.Hilligans.ourcraft.Client.Input.Key.CharPress;
 import dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler;
 import dev.Hilligans.ourcraft.Client.Input.Key.KeyPress;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.ClientMain;
@@ -36,12 +37,12 @@ public class SearchField extends Widget {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int xOffset, int yOffset) {
-        super.render(matrixStack, xOffset, yOffset);
+    public void render(RenderWindow window, MatrixStack matrixStack, int xOffset, int yOffset) {
+        super.render(window, matrixStack, xOffset, yOffset);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
        // Textures.SEARCH_BAR.drawTexture(matrixStack,x,y,width,height);
-        StringRenderer.drawStringTranslated(matrixStack, name, x, y, 0.5f);
-        StringRenderer.drawString(matrixStack, string,x,y + height / 2,0.5f);
+        window.getStringRenderer().drawStringTranslated(window, matrixStack, name, x, y, 0.5f);
+        window.getStringRenderer().drawStringInternal(window, matrixStack, string,x,y + height / 2,0.5f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 

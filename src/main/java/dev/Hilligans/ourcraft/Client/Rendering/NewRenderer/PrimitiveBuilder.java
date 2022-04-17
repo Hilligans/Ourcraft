@@ -1,6 +1,8 @@
 package dev.Hilligans.ourcraft.Client.Rendering.NewRenderer;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
+import dev.Hilligans.ourcraft.Client.Rendering.VertexMesh;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.VAOManager;
 import dev.Hilligans.ourcraft.Data.Primitives.FloatList;
 import dev.Hilligans.ourcraft.Data.Primitives.IntList;
@@ -28,6 +30,18 @@ public class PrimitiveBuilder {
     public PrimitiveBuilder(int type, Shader shader) {
         this.type = type;
         this.shader = shader;
+    }
+
+    public VertexFormat vertexFormat;
+
+    public PrimitiveBuilder(VertexFormat vertexFormat) {
+        this.vertexFormat = vertexFormat;
+    }
+
+    public VertexMesh toVertexMesh() {
+        VertexMesh vertexMesh = new VertexMesh(vertexFormat);
+        vertexMesh.addData(indices.elementData,vertices.elementData);
+        return vertexMesh;
     }
 
     public void add(float... floats) {
@@ -101,7 +115,7 @@ public class PrimitiveBuilder {
     }
 
     protected void translate(int startX, float x, float y, float z) {
-        for(int i = startX; i < vertices.size(); i+= shader.shaderElementCount) {
+        for(int i = startX; i < vertices.size(); i+= getCount()) {
             vertices.elementData[i] += x;
             vertices.elementData[i + 1] += y;
             vertices.elementData[i + 2] += z;
@@ -113,7 +127,15 @@ public class PrimitiveBuilder {
     }
 
     public int getVerticesCount() {
-        return vertices.size() / shader.shaderElementCount;
+        return vertices.size() / getCount();
+    }
+
+    public int getCount() {
+        if(shader == null) {
+            return (vertexFormat.getStride() / 4);
+        } else {
+            return shader.shaderElementCount;
+        }
     }
 
     public int[] createMesh() {
@@ -156,18 +178,19 @@ public class PrimitiveBuilder {
     }
 
     public void draw1(MatrixStack matrixStack) {
+
         if(id == -1) {
-            id = VAOManager.createVAO(this,GL_DYNAMIC_DRAW);
+           // id = VAOManager.createVAO(this,GL_DYNAMIC_DRAW);
         } else {
-            glBindBuffer(GL_ARRAY_BUFFER, VAOManager.buffers.get(id).typeA);
-            glBufferData(GL_ARRAY_BUFFER,this.vertices.getElementData(),GL_STREAM_DRAW);
-            glBindBuffer(GL_ARRAY_BUFFER, VAOManager.buffers.get(id).typeB);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER,this.indices.getElementData(),GL_STREAM_DRAW);
+           // glBindBuffer(GL_ARRAY_BUFFER, VAOManager.buffers.get(id).typeA);
+          //  glBufferData(GL_ARRAY_BUFFER,this.vertices.getElementData(),GL_STREAM_DRAW);
+          //  glBindBuffer(GL_ARRAY_BUFFER, VAOManager.buffers.get(id).typeB);
+         //   glBufferData(GL_ELEMENT_ARRAY_BUFFER,this.indices.getElementData(),GL_STREAM_DRAW);
         }
-        GL30.glBindVertexArray(id);
+      //  GL30.glBindVertexArray(id);
         matrixStack.push();
         matrixStack.applyTransformation(shader.shader);
-        glDrawElements(type, indices.size(), GL_UNSIGNED_INT, 0);
+        //glDrawElements(type, indices.size(), GL_UNSIGNED_INT, 0);
         VAOManager.destroyBuffer(id);
         id = -1;
         matrixStack.pop();

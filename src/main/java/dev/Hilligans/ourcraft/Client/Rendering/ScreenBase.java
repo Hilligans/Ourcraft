@@ -30,12 +30,12 @@ public abstract class ScreenBase implements Screen {
 
     public RenderWindow window;
 
-    public void drawScreen(MatrixStack matrixStack) {}
+    public void drawScreen(RenderWindow window, MatrixStack matrixStack) {}
 
-    public void render(MatrixStack matrixStack) {
-        drawScreen(matrixStack);
+    public void render(RenderWindow window, MatrixStack matrixStack) {
+        drawScreen(window, matrixStack);
         for(Widget widget : widgets) {
-            widget.render(matrixStack,0,0);
+            widget.render(window, matrixStack,0,0);
         }
     }
 

@@ -47,7 +47,7 @@ public class Texture implements IRegistryElement {
     }
 
     public void register() {
-        Image image = WorldTextureManager.loadImage1(path, source.getModID());
+        Image image = WorldTextureManager.loadImage1(path, source.getModID(), source.gameInstance);
 
         if(image == null) {
             System.out.println(source.getModID() + ":" + path);
@@ -156,5 +156,6 @@ public class Texture implements IRegistryElement {
     @Override
     public void load(GameInstance gameInstance) {
         format = gameInstance.VERTEX_FORMATS.get("ourcraft:position_texture");
+        register();
     }
 }

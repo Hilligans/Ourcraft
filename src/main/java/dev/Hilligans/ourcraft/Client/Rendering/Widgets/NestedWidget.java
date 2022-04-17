@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Widgets;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 
 import java.util.ArrayList;
 
@@ -20,9 +21,9 @@ public class NestedWidget extends Widget {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int xOffset, int yOffset) {
+    public void render(RenderWindow window, MatrixStack matrixStack, int xOffset, int yOffset) {
         for(Widget widget : widgets) {
-            widget.render(matrixStack,getX() + xOffset, getY() + yOffset);
+            widget.render(window, matrixStack,getX() + xOffset, getY() + yOffset);
         }
     }
 }

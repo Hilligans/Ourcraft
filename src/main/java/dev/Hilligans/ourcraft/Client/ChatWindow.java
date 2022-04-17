@@ -49,7 +49,7 @@ public class ChatWindow implements Screen {
         }
     }
 
-    public static void render1(MatrixStack matrixStack) {
+    public static void render1(RenderWindow window, MatrixStack matrixStack) {
        // for(int x = 0; x < messages.size(); x++) {
         //    if(messages.get(x).getTypeB() < System.currentTimeMillis()) {
                // messages.remove(x);
@@ -59,20 +59,22 @@ public class ChatWindow implements Screen {
         ArrayList<RenderableString> renderableStrings = new ArrayList<>();
         int biggest = 0;
 
-        int y = (int) (ClientMain.getWindowY() - StringRenderer.instance.stringHeight * 1.5);
+        StringRenderer stringRenderer = window.getStringRenderer();
+
+        int y = (int) (ClientMain.getWindowY() - stringRenderer.stringHeight * 1.5);
         int size = messages.size();
         for(int x = 0; x < size; x++) {
             if(messages.get(size - x - 1).getTypeB() < System.currentTimeMillis() && !typing) {
                 break;
             }
-            StringRenderer.drawString(matrixStack, messages.get(size - x - 1).getTypeA(),0,y,0.5f);
+            stringRenderer.drawStringInternal(window, matrixStack, messages.get(size - x - 1).getTypeA(),0,y,0.5f);
            // RenderableString renderableString = new RenderableString(messages.get(size - x - 1).getTypeA(),0,y,0.5f);
             //renderableStrings.add(renderableString);
             //if(biggest < renderableString.length) {
               //  biggest = renderableString.length;
             //}
 
-            y -= StringRenderer.instance.stringHeight / 2;
+            y -= stringRenderer.stringHeight / 2;
             if(y <= 0 ) {
                 break;
             }
@@ -88,9 +90,10 @@ public class ChatWindow implements Screen {
 
 
 
+
         String val = getString();
         if(!val.equals("")) {
-            StringRenderer.drawString(matrixStack, val,0,ClientMain.getWindowY() - StringRenderer.instance.stringHeight / 2,0.5f);
+            stringRenderer.drawStringInternal(window, matrixStack, val,0,ClientMain.getWindowY() - stringRenderer.stringHeight / 2,0.5f);
         }
     }
 

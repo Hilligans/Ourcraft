@@ -123,8 +123,11 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
+        glDisable(GL_DEPTH_TEST);
+        matrixStack.applyTransformation(program);
        // if(texture != boundTexture) {
-            GL20.glBindTexture(textureTypes.get(texture), texture);
+           // GL20.glBindTexture(textureTypes.get(texture), texture);
+        GL20.glBindTexture(GL_TEXTURE_2D, texture);
             boundTexture = texture;
       //  }
         if(program != boundProgram){

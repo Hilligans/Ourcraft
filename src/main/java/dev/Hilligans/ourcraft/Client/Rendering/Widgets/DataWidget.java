@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Widgets;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.ClientMain;
@@ -27,31 +28,31 @@ public class DataWidget extends Widget {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int xOffset, int yOffset) {
-        super.render(matrixStack, xOffset, yOffset);
+    public void render(RenderWindow window, MatrixStack matrixStack, int xOffset, int yOffset) {
+        super.render(window, matrixStack, xOffset, yOffset);
         if (this.getY() > 0 && this.getY() < ClientMain.getWindowY() && this.isActive()) {
             if (shouldRender) {
                 switch (type) {
                     case 0:
-                      //  Textures.BYTE_ICON.drawTexture(matrixStack, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
+                        Textures.BYTE_ICON.drawTexture(window, matrixStack, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
                         break;
                     case 1:
-                       // Textures.SHORT_ICON.drawTexture(matrixStack, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
+                        Textures.SHORT_ICON.drawTexture(window, matrixStack, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
                         break;
                     case 2:
-                      //  Textures.INTEGER_ICON.drawTexture(matrixStack, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
+                        Textures.INTEGER_ICON.drawTexture(window, matrixStack, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
                         break;
                     case 3:
-                       // Textures.FLOAT_ICON.drawTexture(matrixStack, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
+                        Textures.FLOAT_ICON.drawTexture(window, matrixStack, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
                         break;
                     case 4:
-                       // Textures.LONG_ICON.drawTexture(matrixStack, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
+                        Textures.LONG_ICON.drawTexture(window, matrixStack, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
                         break;
                     case 5:
-                       // Textures.DOUBLE_ICON.drawTexture(matrixStack, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
+                        Textures.DOUBLE_ICON.drawTexture(window, matrixStack, getX() + xOffset + FolderWidget.size, getY() + yOffset, FolderWidget.size, FolderWidget.size);
                         break;
                 }
-                StringRenderer.drawString(matrixStack, val, getX() + xOffset + FolderWidget.size * 2, getY() + yOffset, 0.5f);
+                window.getStringRenderer().drawStringInternal(window, matrixStack, val, getX() + xOffset + FolderWidget.size * 2, getY() + yOffset, 0.5f);
             }
         }
     }

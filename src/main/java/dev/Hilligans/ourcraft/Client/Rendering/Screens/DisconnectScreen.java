@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Screens;
 
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBase;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Button;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.ButtonAction;
@@ -25,8 +26,8 @@ public class DisconnectScreen extends ScreenBase {
     }
 
     @Override
-    public void render(MatrixStack matrixStack) {
-        StringRenderer.drawCenteredStringTranslated(matrixStack,message == null ? "" : message, (ClientMain.getWindowY() + StringRenderer.instance.stringHeight) / 2,1.0f);
-        super.render(matrixStack);
+    public void render(RenderWindow window, MatrixStack matrixStack) {
+        window.getStringRenderer().drawCenteredStringTranslated(window, matrixStack,message == null ? "" : message, (ClientMain.getWindowY() + window.getStringRenderer().stringHeight) / 2,1.0f);
+        super.render(window, matrixStack);
     }
 }

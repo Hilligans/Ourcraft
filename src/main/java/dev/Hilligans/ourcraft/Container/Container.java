@@ -3,6 +3,7 @@ package dev.Hilligans.ourcraft.Container;
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.ContainerScreen;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Button;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Widget;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
@@ -94,14 +95,14 @@ public abstract class Container {
         slots.add(slot);
     }
 
-    public void render(MatrixStack matrixStack) {
+    public void render(RenderWindow window, MatrixStack matrixStack) {
         for(Slot slot : slots) {
             slot.render(matrixStack);
         }
         DoubleBuffer mousePos = ClientMain.getClient().getMousePos();
         Slot slot = getSlotAt((int)mousePos.get(0),(int)mousePos.get(1));
         if(slot != null && !slot.getContents().isEmpty()) {
-            StringRenderer.drawStringWithBackgroundTranslated(matrixStack,slot.getContents().item.getName(),(int)mousePos.get(0) + 16,(int)mousePos.get(1),0.5f);
+            window.getStringRenderer().drawStringWithBackgroundTranslated(window, matrixStack,slot.getContents().item.getName(),(int)mousePos.get(0) + 16,(int)mousePos.get(1),0.5f);
         }
     }
 

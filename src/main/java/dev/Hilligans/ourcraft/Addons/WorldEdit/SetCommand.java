@@ -42,7 +42,7 @@ public class SetCommand extends WorldEditCommand {
 
             try {
                 int val = Integer.parseInt(args[0]);
-                Block b = Blocks.getBlockWithID(val);
+                Block b = modContent.gameInstance.getBlockWithID(val);
                 long time = System.currentTimeMillis();
                 int blockNum = b.id << 16 | 65535;
                 CompletableFuture<Object> future =  runThread(daisyChain,blockNum);

@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Graphics.API;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
+import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.RenderPostEvent;
 import dev.Hilligans.ourcraft.ModHandler.Events.Client.RenderPreEvent;
@@ -9,6 +10,7 @@ import dev.Hilligans.ourcraft.Util.Logger;
 import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
 import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.World.ClientWorld;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
@@ -65,4 +67,8 @@ public interface IGraphicsEngine<T, Q extends RenderWindow, V extends IDefaultEn
     }
 
     V getDefaultImpl();
+
+    StringRenderer getStringRenderer();
+
+    void setupStringRenderer(String defaultLanguage);
 }

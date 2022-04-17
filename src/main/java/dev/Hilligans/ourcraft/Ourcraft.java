@@ -5,6 +5,7 @@ import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.Sounds;
 import dev.Hilligans.ourcraft.Client.Input.HandlerProviders.ControllerHandlerProvider;
 import dev.Hilligans.ourcraft.Client.Input.HandlerProviders.KeyPressHandlerProvider;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.FixedFunctionGL.FixedFunctionGLEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTarget;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
@@ -102,6 +103,8 @@ public class Ourcraft {
             Textures.addData(modContent);
 
             modContent.registerGraphicsEngine(new VulkanEngine());
+            modContent.registerGraphicsEngine(new FixedFunctionGLEngine());
+
             modContent.registerRenderTarget(new RenderTarget("solid_world_renderer"));
             modContent.registerRenderTarget(new RenderTarget("entity_renderer").afterTarget("solid_world_renderer","ourcraft"));
             modContent.registerRenderTarget(new RenderTarget("particle_renderer").afterTarget("entity_renderer", "ourcraft"));

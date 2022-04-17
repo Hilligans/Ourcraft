@@ -39,6 +39,9 @@ public class Registry<T> {
 
     public void put(String name, T element) {
         if(gameInstance.EVENT_BUS.postEvent(new RegisterEvent<>(this,name,element)).shouldRun()) {
+            if(element instanceof IRegistryElement) {
+                ((IRegistryElement) element).setUniqueID(getUniqueID());
+            }
             MAPPED_ELEMENTS.put(name, element);
             ELEMENTS.add(element);
         }
@@ -97,4 +100,7 @@ public class Registry<T> {
         }
     }
 
+    public int getUniqueID() {
+        return ELEMENTS.size();
+    }
 }

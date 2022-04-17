@@ -1,15 +1,22 @@
-package dev.Hilligans.ourcraft.Client.Rendering.Graphics;
+package dev.Hilligans.ourcraft.Client.Rendering.Graphics.Implementations.SplitWindows;
 
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 
-public class SplitWindow extends RenderWindow {
+import java.util.ArrayList;
 
-    public int windowCountX;
-    public int windowCountY;
+public class FloatingWindow extends RenderWindow {
 
-    public SplitWindow(IGraphicsEngine<?, ?, ?> graphicsEngine) {
+    public ArrayList<RenderWindow> windows = new ArrayList<>();
+
+
+    public FloatingWindow(IGraphicsEngine<?, ?, ?> graphicsEngine) {
         super(graphicsEngine);
+    }
+
+    public void addWindow(RenderWindow window) {
+        this.windows.add(window);
     }
 
     @Override

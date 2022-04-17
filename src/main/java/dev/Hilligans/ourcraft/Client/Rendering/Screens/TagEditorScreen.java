@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Screens;
 
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBase;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Button;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.FolderWidget;
@@ -44,12 +45,6 @@ public class TagEditorScreen extends ScreenBase {
             }
         })));
         addWidget(new Button(100, 0, 100, 40, "Save", () -> WorldLoader.save(compoundTag,filePath)));
-    }
-
-    @Override
-    public void drawScreen(MatrixStack matrixStack) {
-        super.drawScreen(matrixStack);
-
     }
 
     @Override

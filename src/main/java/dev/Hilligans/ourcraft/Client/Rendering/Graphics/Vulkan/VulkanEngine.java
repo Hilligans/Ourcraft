@@ -6,12 +6,14 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanInstance;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanProperties;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.VulkanWindow;
+import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.Util.Logger;
 import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.World.ClientWorld;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
@@ -19,6 +21,8 @@ public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer, Vu
 
     public VulkanInstance vulkanInstance;
     public GameInstance gameInstance;
+
+    public StringRenderer stringRenderer;
 
     @Override
     public VulkanWindow createWindow() {
@@ -90,6 +94,16 @@ public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer, Vu
     @Override
     public VulkanDefaultImpl getDefaultImpl() {
         return null;
+    }
+
+    @Override
+    public StringRenderer getStringRenderer() {
+        return stringRenderer;
+    }
+
+    @Override
+    public void setupStringRenderer(String defaultLanguage) {
+        stringRenderer = new StringRenderer(this);
     }
 
     public static VulkanInstance getVulkanInstance() {

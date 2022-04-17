@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.Network;
 
 import dev.Hilligans.ourcraft.Client.Client;
+import dev.Hilligans.ourcraft.GameInstance;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 public class ClientNetwork extends Network {
 
     public Client client;
+    public GameInstance gameInstance;
     public ArrayList<PacketBase> packets = new ArrayList<>();
 
     public ClientNetwork(Protocol protocol) {
@@ -25,6 +27,7 @@ public class ClientNetwork extends Network {
 
     public void joinServer(String ip, String port, Client client) throws Exception {
         this.client = client;
+        this.gameInstance = client.gameInstance;
 
         networkHandler = new ClientNetworkHandler(this);
         ClientNetworkHandler.clientNetworkHandler = (ClientNetworkHandler) networkHandler;

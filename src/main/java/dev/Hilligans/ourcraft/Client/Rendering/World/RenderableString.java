@@ -25,6 +25,7 @@ public class RenderableString {
         this.size = size;
         this.length = length;
     }
+    /*
 
     public RenderableString(int id, int size, int length, int height) {
         this(id,size,length);
@@ -56,6 +57,8 @@ public class RenderableString {
         id = VAOManager.createVAO(VAOManager.convertVertices(vector5fs,false),VAOManager.convertIndices(indices));
         vertexCount = vector5fs.size() * 5;
     }
+
+
 
     public void draw(MatrixStack matrixStack, int x, int y) {
         glDisable(GL_DEPTH_TEST);
@@ -91,6 +94,8 @@ public class RenderableString {
         //System.out.println(id);
         VAOManager.destroyBuffer(id);
     }
+
+    */
 
 
 

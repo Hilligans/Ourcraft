@@ -28,6 +28,7 @@ import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.Util.TwoInt2ObjectMap;
 import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.World.ClientWorld;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
@@ -63,6 +64,7 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
     public Client client;
 
     public OpenglDefaultImpl engineImpl;
+    public StringRenderer stringRenderer;
 
     public OpenGLEngine(Client client) {
         this.client = client;
@@ -112,7 +114,6 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
 
 
         if(client.refreshTexture) {
-            Blocks.generateTextures();
             texture = TextAtlas.instance.upload();
             client.refreshTexture = false;
         }
@@ -128,7 +129,7 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
         screenStack.applyColor();
         screenStack.applyTransformation();
 
-        client.draw(matrixStack,screenStack);
+        client.draw(window, matrixStack,screenStack);
     }
 
     @Override
@@ -148,13 +149,8 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
 
         client.shaderManager = new ShaderManager();
 
-        Blocks.generateTextures();
         PlayerEntity.imageId = WorldTextureManager.loadAndRegisterTexture("player.png");
-        StringRenderer.instance.buildChars();
-
-        for(Texture texture : getGameInstance().TEXTURES.ELEMENTS) {
-            texture.register();
-        }
+        setupStringRenderer("");
 
         glEnable(GL_DEBUG_OUTPUT);
         glDebugMessageCallback(new GLDebugMessageCallback() {
@@ -218,6 +214,16 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
     @Override
     public OpenglDefaultImpl getDefaultImpl() {
         return engineImpl;
+    }
+
+    @Override
+    public StringRenderer getStringRenderer() {
+        return stringRenderer;
+    }
+
+    @Override
+    public void setupStringRenderer(String defaultLanguage) {
+        stringRenderer = new StringRenderer(this);
     }
 
     @Override

@@ -66,8 +66,8 @@ public class WorldTextureManager {
         return DefaultImage();
     }
 
-    public static Image loadImage1(String path, String source) {
-        return (Image) ClientMain.getClient().gameInstance.RESOURCE_LOADER.getResource(new ResourceLocation("Images/" + path, source));
+    public static Image loadImage1(String path, String source, GameInstance gameInstance) {
+        return (Image) gameInstance.RESOURCE_LOADER.getResource(new ResourceLocation("Images/" + path, source));
     }
 
     public static void allocatePixels(ByteBuffer byteBuffer, BufferedImage img) {

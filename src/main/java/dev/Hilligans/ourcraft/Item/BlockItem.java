@@ -77,9 +77,9 @@ public class BlockItem extends Item {
     public void render(MatrixStack matrixStack, int x, int y, int size, ItemStack itemStack) {
         block.renderItem(matrixStack,x,y,size,itemStack);
 
+        //TODO fix
 
-
-        drawString(matrixStack,x - size / 2,y,size,itemStack.count);
+       // drawString(matrixStack,x - size / 2,y,size,itemStack.count);
     }
 
     @Override

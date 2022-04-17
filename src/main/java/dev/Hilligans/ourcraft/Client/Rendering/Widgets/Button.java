@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Widgets;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.Ourcraft;
@@ -27,14 +28,14 @@ public class Button extends Widget {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int xOffset, int yOffset) {
-        super.render(matrixStack, xOffset, yOffset);
+    public void render(RenderWindow window, MatrixStack matrixStack, int xOffset, int yOffset) {
+        super.render(window, matrixStack, xOffset, yOffset);
         if(enabled) {
             Textures.BUTTON.drawTexture(window, matrixStack, x, y, width, height);
         } else {
             Textures.BUTTON_DARK.drawTexture(window, matrixStack,x,y,width,height);
         }
-        StringRenderer.drawCenteredString(matrixStack, name,x + width / 2,y + 5,0.5f);
+        window.getStringRenderer().drawCenteredStringInternal(window, matrixStack, name,x + width / 2,y + 5,0.5f);
     }
 
     @Override

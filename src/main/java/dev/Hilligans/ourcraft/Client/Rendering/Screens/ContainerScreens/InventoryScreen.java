@@ -3,6 +3,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Screens.ContainerScreens;
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.ContainerScreen;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Container.Containers.InventoryContainer;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
@@ -21,8 +22,8 @@ public class InventoryScreen extends ContainerScreen<InventoryContainer> {
     }
 
     @Override
-    public void drawScreen(MatrixStack matrixStack) {
-        //Textures.INVENTORY.drawCenteredTexture(matrixStack,0,0,158,99,Settings.guiSize);
+    public void drawScreen(RenderWindow window, MatrixStack matrixStack) {
+        Textures.INVENTORY.drawCenteredTexture(window, matrixStack,0,0,158,99,Settings.guiSize);
     }
 
     public static void drawHotbar(MatrixStack matrixStack) {

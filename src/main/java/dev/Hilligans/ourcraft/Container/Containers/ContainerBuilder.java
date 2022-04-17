@@ -3,6 +3,7 @@ package dev.Hilligans.ourcraft.Container.Containers;
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.ContainerScreen;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.ContainerScreens.CustomContainerScreen;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
@@ -41,7 +42,7 @@ public class ContainerBuilder implements ContainerFetcher {
             public ContainerScreen<?> getContainerScreen(Client client) {
                 return new CustomContainerScreen(null) {
                     @Override
-                    public void drawScreen(MatrixStack matrixStack) {
+                    public void drawScreen(RenderWindow window, MatrixStack matrixStack) {
                        // Texture texture1 = Textures.getTexture(textureName);
                     //    if(texture1 != null) {
                            // texture1.drawCenteredTexture(matrixStack, 0, 0, width, height, Settings.guiSize);

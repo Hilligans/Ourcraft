@@ -4,6 +4,7 @@ import dev.Hilligans.ourcraft.Block.Blocks;
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.Input.Key.KeyPress;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.ServerSelectorWidget;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
@@ -87,13 +88,13 @@ public class JoinScreen extends ScreenBase {
     }
 
     @Override
-    public void drawScreen(MatrixStack matrixStack) {
-        super.drawScreen(matrixStack);
+    public void drawScreen(RenderWindow window, MatrixStack matrixStack) {
+        super.drawScreen(window, matrixStack);
         if(client.playerData.valid_account) {
-            StringRenderer.drawString(matrixStack,client.playerData.userName, (int) (Settings.guiSize * 8), (int) (1 * Settings.guiSize),0.5f);
-           // Textures.CHECK_MARK.drawTexture(matrixStack,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
+            window.getStringRenderer().drawStringInternal(window, matrixStack,client.playerData.userName, (int) (Settings.guiSize * 8), (int) (1 * Settings.guiSize),0.5f);
+            Textures.CHECK_MARK.drawTexture(window, matrixStack,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
         } else {
-          //  Textures.X_MARK.drawTexture(matrixStack,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
+            Textures.X_MARK.drawTexture(window, matrixStack,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
         }
     }
 

@@ -36,6 +36,17 @@ public class VertexFormat implements IRegistryElement {
         return stride;
     }
 
+    public int getOffset(String name) {
+        int offset = 0;
+        for(VertexPart vertexPart : parts) {
+            if(vertexPart.name.equals(name)) {
+                return offset;
+            }
+            offset += vertexPart.primitiveCount;
+        }
+        return -1;
+    }
+
     @Override
     public String getResourceName() {
         return formatName;

@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Screens;
 
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBase;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
@@ -36,11 +37,11 @@ public class ModListScreen extends ScreenBase implements SelectorScreen {
     }
 
     @Override
-    public void drawScreen(MatrixStack matrixStack) {
-        super.drawScreen(matrixStack);
+    public void drawScreen(RenderWindow window, MatrixStack matrixStack) {
+        super.drawScreen(window, matrixStack);
         if(selectorWidget != null) {
             ModContent modContent = client.gameInstance.CONTENT_PACK.mods.get(selectorWidget.name);
-            StringRenderer.drawString(matrixStack,new String[]{modContent.getModID() + "Version: " + modContent.version, "Dependencies: " + Util.toString(modContent.getDependencies()), " ", modContent.description},350,100,0.5f);
+            window.getStringRenderer().drawStringInternal(window, matrixStack,new String[]{modContent.getModID() + "Version: " + modContent.version, "Dependencies: " + Util.toString(modContent.getDependencies()), " ", modContent.description},350,100,0.5f);
         }
     }
 }

@@ -96,7 +96,7 @@ public class ScreenShot {
         screenStack.applyColor();
         screenStack.applyTransformation();
 
-        client.draw(matrixStack,screenStack);
+        client.draw(null, matrixStack,screenStack);
     }
 
     private static void writeImage(BufferedImage bufferedImage) {

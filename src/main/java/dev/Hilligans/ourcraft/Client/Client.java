@@ -8,6 +8,7 @@ import dev.Hilligans.ourcraft.Client.Input.Key.MouseHandler;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.GLRenderer;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.ContainerScreens.CreativeInventoryScreen;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
@@ -107,6 +108,7 @@ public class Client {
     public Client setGraphicsEngine(IGraphicsEngine<?,?,?> graphicsEngine) {
         if(graphicsEngine != null) {
             this.graphicsEngine = graphicsEngine;
+            System.out.println(graphicsEngine.getResourceName());
         }
         return this;
     }
@@ -124,22 +126,19 @@ public class Client {
             });
             thread.setName("authenticate");
             thread.start();
-
         }
         if(tag != null) {
             readUsernameAndPassword(tag);
         }
         authNetwork.sendPacket(new CGetToken(playerData.userName, playerData.login_token));
-        graphicsEngine.setup();
+        RenderWindow window = graphicsEngine.setup();
         soundEngine.init();
         soundEngine.setAttenuationModel(AL11.AL_LINEAR_DISTANCE_CLAMPED);
         registerKeyHandlers();
-       // createCallbacks();
 
         gameInstance.EVENT_BUS.postEvent(new ClientStartRenderingEvent());
-        //openScreen("ourcraft:test_screen");
 
-        graphicsEngine.createRenderLoop(gameInstance,graphicsEngine.createWindow()).run();
+        graphicsEngine.createRenderLoop(gameInstance,window).run();
 
         cleanUp();
         System.exit(1);
@@ -153,7 +152,7 @@ public class Client {
         }
     }
 
-    public void draw(MatrixStack matrixStack, MatrixStack screenStack) {
+    public void draw(RenderWindow window, MatrixStack matrixStack, MatrixStack screenStack) {
         gameInstance.EVENT_BUS.postEvent(new RenderStartEvent(matrixStack,screenStack,this));
         if(renderWorld && !gameInstance.REBUILDING.get()) {
             gameInstance.EVENT_BUS.postEvent(new RenderWorldEvent(matrixStack,screenStack,this));
@@ -177,38 +176,43 @@ public class Client {
             }
 
             glUseProgram(shaderManager.shaderProgram);
+
+            glDisable(GL_DEPTH_TEST);
+
+            StringRenderer stringRenderer = graphicsEngine.getStringRenderer();
+
             if (playerData.f3) {
-                StringRenderer.drawString(screenStack, Camera.getString(), windowX / 2, 0, 0.5f);
-                StringRenderer.drawString(screenStack, "FPS:" + OpenGLEngine.renderWindow.frameTracker.getFPS(), windowX / 2, 29, 0.5f);
-                StringRenderer.drawString(screenStack, "Biome:" + clientWorld.biomeMap.getBiome((int) Camera.pos.x, (int) Camera.pos.z).name, windowX / 2, 58, 0.5f);
-                StringRenderer.drawString(screenStack, "VelY:" + Camera.velY, windowX / 2, 87, 0.5f);
+                stringRenderer.drawStringInternal(window, screenStack, Camera.getString(), windowX / 2, 0, 0.5f);
+                stringRenderer.drawStringInternal(window, screenStack, "FPS:" + OpenGLEngine.renderWindow.frameTracker.getFPS(), windowX / 2, 29, 0.5f);
+                stringRenderer.drawStringInternal(window, screenStack, "Biome:" + clientWorld.biomeMap.getBiome((int) Camera.pos.x, (int) Camera.pos.z).name, windowX / 2, 58, 0.5f);
+                stringRenderer.drawStringInternal(window, screenStack, "VelY:" + Camera.velY, windowX / 2, 87, 0.5f);
                 Runtime runtime = Runtime.getRuntime();
                 long usedMB = (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024;
-                StringRenderer.drawString(screenStack, "Memory:" + usedMB + "MB",windowX / 2, 126, 0.5f);
-                StringRenderer.drawString(screenStack, "Pitch:" + Math.toDegrees(Camera.pitch),windowX/2,155,0.5f);
-                StringRenderer.drawString(screenStack, "Yaw:" + Math.toDegrees(Camera.yaw),windowX/2,184,0.5f);
-                StringRenderer.drawString(screenStack, "Sounds:" + soundEngine.sounds.size(),windowX/2,213,0.5f);
-                StringRenderer.drawString(screenStack, "Render Calls:" + GLRenderer.drawCalls, windowX/2,242,0.5f);
-                StringRenderer.drawString(screenStack, "Vertices:" + GLRenderer.count, windowX/2,271,0.5f);
-                StringRenderer.drawString(screenStack, "Block:" + (blockState == null ? "null" : blockState.getBlock().getName() + ":" + blockState.readData()),windowX/2,300,0.5f);
+                stringRenderer.drawStringInternal(window, screenStack, "Memory:" + usedMB + "MB",windowX / 2, 126, 0.5f);
+                stringRenderer.drawStringInternal(window, screenStack, "Pitch:" + Math.toDegrees(Camera.pitch),windowX/2,155,0.5f);
+                stringRenderer.drawStringInternal(window, screenStack, "Yaw:" + Math.toDegrees(Camera.yaw),windowX/2,184,0.5f);
+                stringRenderer.drawStringInternal(window, screenStack, "Sounds:" + soundEngine.sounds.size(),windowX/2,213,0.5f);
+                stringRenderer.drawStringInternal(window, screenStack, "Render Calls:" + GLRenderer.drawCalls, windowX/2,242,0.5f);
+                stringRenderer.drawStringInternal(window, screenStack, "Vertices:" + GLRenderer.count, windowX/2,271,0.5f);
+                stringRenderer.drawStringInternal(window, screenStack, "Block:" + (blockState == null ? "null" : blockState.getBlock().getName() + ":" + blockState.readData()),windowX/2,300,0.5f);
                 if(renderTime % 100 == 0) {
                     chunks = clientWorld.chunkContainer.getSize();
                 }
-                StringRenderer.drawString(screenStack, "Chunks:" + chunks,windowX/2,329,0.5f);
+                stringRenderer.drawStringInternal(window, screenStack, "Chunks:" + chunks,windowX/2,329,0.5f);
             }
             ItemStack stack = playerData.inventory.getItem(playerData.handSlot);
             if(stack != null && stack.item != null) {
                 int width = (int) (32 * Settings.guiSize);
-                stack.item.renderHolding(screenStack,width,stack);
+                stack.item.renderHolding(window, screenStack,width,stack);
             }
 
             InventoryScreen.drawHotbar(screenStack);
-            ChatWindow.render1(screenStack);
+            ChatWindow.render1(window, screenStack);
             Camera.renderPlayer(matrixStack);
         }
 
         if(screen != null) {
-            screen.render(screenStack);
+            screen.render(window, screenStack);
             playerData.heldStack.renderStack(screenStack, (int) (Camera.newX - Settings.guiSize * 8), (int) (Camera.newY - Settings.guiSize * 8));
         } else {
             //Textures.CURSOR.drawCenteredTexture(screenStack,1.0f);
@@ -319,7 +323,6 @@ public class Client {
             @Override
             public void onPress() {
                 ResourceManager.reload();
-                Blocks.reload();
                 clientWorld.reloadChunks();
             }
         },KeyHandler.GLFW_KEY_F8);

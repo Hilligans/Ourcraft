@@ -40,7 +40,6 @@ public class Block implements IRegistryElement {
 
     public Block(String name, BlockProperties blockProperties) {
         this.name = name;
-        id = Blocks.getNextId();
         this.blockProperties = blockProperties;
         blockProperties.setName(name);
         droppedBlock = this;
@@ -88,6 +87,8 @@ public class Block implements IRegistryElement {
 
     public void randomTick(World world, BlockPos pos) {}
 
+    //TODO fix
+    /*
     public void reload() {
         if(blockProperties.fromFile) {
             BlockTextureManager blockTextureManager = blockProperties.blockTextureManager;
@@ -95,6 +96,7 @@ public class Block implements IRegistryElement {
             blockProperties.blockTextureManager = blockTextureManager;
         }
     }
+     */
 
     public BlockState getDefaultState() {
         return new BlockState(this);
@@ -245,6 +247,11 @@ public class Block implements IRegistryElement {
         if(modContent.gameInstance.side == Side.CLIENT) {
             generateTextures();
         }
+    }
+
+    @Override
+    public void setUniqueID(int id) {
+        this.id = (short) id;
     }
 
     @Override

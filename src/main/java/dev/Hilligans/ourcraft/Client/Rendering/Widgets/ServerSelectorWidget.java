@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Widgets;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.JoinScreen;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.LoadingScreen;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
@@ -23,12 +24,12 @@ public class ServerSelectorWidget extends Widget {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int xOffset, int yOffset) {
-        super.render(matrixStack, xOffset, yOffset);
+    public void render(RenderWindow window, MatrixStack matrixStack, int xOffset, int yOffset) {
+        super.render(window, matrixStack, xOffset, yOffset);
         Textures.BUTTON.drawTexture(window, matrixStack,x,y,width,height);
         float sizeX = width / (float)Textures.BUTTON.width;
         float sizeY = height / (float)Textures.BUTTON.height;
-        StringRenderer.drawString(matrixStack,ip + ":" + port,x + (int)(sizeX * Settings.guiSize),y + (int)(sizeY * Settings.guiSize),0.5f);
+        window.getStringRenderer().drawStringInternal(window, matrixStack,ip + ":" + port,x + (int)(sizeX * Settings.guiSize),y + (int)(sizeY * Settings.guiSize),0.5f);
     }
 
     public void joinServer() {

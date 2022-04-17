@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Widgets;
 
 import dev.Hilligans.ourcraft.Client.Lang.Languages;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import org.lwjgl.opengl.GL11;
@@ -32,15 +33,15 @@ public class ToggleWidget extends Widget {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int xOffset, int yOffset) {
-        super.render(matrixStack, xOffset, yOffset);
+    public void render(RenderWindow window, MatrixStack matrixStack, int xOffset, int yOffset) {
+        super.render(window, matrixStack, xOffset, yOffset);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         if(enabled) {
-           // Textures.BUTTON.drawTexture(matrixStack, x, y, width, height);
+            Textures.BUTTON.drawTexture(window,matrixStack, x, y, width, height);
         } else {
-           // Textures.BUTTON_DARK.drawTexture(matrixStack,x,y,width,height);
+            Textures.BUTTON_DARK.drawTexture(window,matrixStack,x,y,width,height);
         }
-        StringRenderer.drawCenteredString(matrixStack, Languages.getTranslated(name) + (value ? ": ON" : ": OFF"),x + width / 2,y,0.5f);
+        window.getStringRenderer().drawCenteredStringInternal(window, matrixStack, Languages.getTranslated(name) + (value ? ": ON" : ": OFF"),x + width / 2,y,0.5f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 

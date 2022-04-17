@@ -3,6 +3,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Screens;
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.Lang.Languages;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBase;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
@@ -19,13 +20,13 @@ public class LanguageScreen extends ScreenBase implements SelectorScreen {
         for(String string : Languages.languages) {
             folderWidget.addWidget(new SelectorWidget(0,0,200,40,string,this){
                 @Override
-                public void render(MatrixStack matrixStack, int xOffset, int yOffset) {
+                public void render(RenderWindow window, MatrixStack matrixStack, int xOffset, int yOffset) {
                     if(enabled) {
                       //  Textures.BUTTON.drawTexture(matrixStack, x, y, width, height);
                     } else {
                       //  Textures.BUTTON_DARK.drawTexture(matrixStack,x,y,width,height);
                     }
-                    StringRenderer.drawString(matrixStack,Languages.mappedNames.get(name),x,y,0.5f);
+                    window.getStringRenderer().drawStringInternal(window, matrixStack,Languages.mappedNames.get(name),x,y,0.5f);
                 }
             });
         }

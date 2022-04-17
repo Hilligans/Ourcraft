@@ -1,5 +1,6 @@
 package dev.Hilligans.ourcraft.Network;
 
+import dev.Hilligans.ourcraft.GameInstance;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -10,6 +11,9 @@ import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
 
 public class ServerNetwork extends Network {
+
+    public GameInstance gameInstance;
+
     public ServerNetwork(Protocol protocol) {
         super(protocol);
     }

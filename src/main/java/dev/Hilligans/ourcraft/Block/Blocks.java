@@ -13,23 +13,6 @@ import org.json.JSONObject;
 
 public class Blocks {
 
-    public static short id = 0;
-
-    public static short getNextId() {
-        short val = id;
-        id++;
-        return val;
-    }
-
-
-
-
-
-
-
-
-
-
     public static final Block AIR = new Block("air", new BlockProperties().transparent().airBlock().canWalkThrough());
     public static final Block STONE = new Block("stone",new BlockProperties().withTexture("stone.png"));
 
@@ -88,31 +71,8 @@ public class Blocks {
 
     public static final Block SAPLING = new OakSapling("oak_sapling",new BlockProperties());
 
-
-    static {
-        JSONObject jsonObject = new JSONObject(WorldLoader.readString("/Data/Blocks.json"));
-    }
-
-    public static void reload() {
-        for(Block block : Ourcraft.GAME_INSTANCE.getBlocks()) {
-            block.reload();
-        }
-    }
-
     public static Block getBlockWithID(int id) {
         return Ourcraft.GAME_INSTANCE.BLOCKS.get(id);
-    }
-
-    public static void generateTextures() {
-        TextAtlas.instance.clear();
-        if(!Settings.isServer) {
-            for (Block block : Ourcraft.GAME_INSTANCE.getBlocks()) {
-               // block.generateTextures();
-            }
-            for(Item item : Ourcraft.GAME_INSTANCE.ITEMS.ELEMENTS) {
-                item.generateTextures();
-            }
-        }
     }
 
 }

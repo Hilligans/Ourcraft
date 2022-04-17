@@ -9,6 +9,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
+import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.Util.Logger;
 
 import java.util.ArrayList;
@@ -74,6 +75,10 @@ public abstract class RenderWindow {
 
     public Image renderToImage() {
         return null;
+    }
+
+    public StringRenderer getStringRenderer() {
+        return graphicsEngine.getStringRenderer();
     }
 
     public void registerInput(KeyPress keyPress) {

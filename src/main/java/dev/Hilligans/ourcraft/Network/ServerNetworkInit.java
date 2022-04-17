@@ -39,19 +39,6 @@ public class ServerNetworkInit extends ChannelInitializer<SocketChannel> {
                     .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(new ServerNetworkInit(sslCtx));
 
-/*
-            Ourcraft.EXECUTOR.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(1000);
-                        ServerMain.printResults(Runtime.getRuntime().exec("netstat -nap | grep 25586"));
-                    } catch (Exception e) {
-                    }
-                }
-            });
-
- */
             b.bind(PORT).sync().channel().closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();

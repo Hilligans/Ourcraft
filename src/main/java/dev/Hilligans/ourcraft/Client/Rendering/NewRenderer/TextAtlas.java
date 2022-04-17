@@ -115,6 +115,7 @@ public class TextAtlas {
     public double count  = 0;
 
     public int upload() {
+        clear();
         assemble();
         texture = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texture);
@@ -168,7 +169,6 @@ public class TextAtlas {
     }
 
     public synchronized void resize() {
-        System.out.println("resize");
         arrSize++;
         long[][] newVals = new long[arrSize][3];
         System.arraycopy(openSpots, 0, newVals, 0, arrSize - 1);

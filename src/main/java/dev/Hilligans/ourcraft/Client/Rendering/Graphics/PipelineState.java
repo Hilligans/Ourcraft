@@ -4,8 +4,4 @@ public class PipelineState {
 
     public boolean depthTest = false;
 
-
-
-
-
 }
