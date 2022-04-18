@@ -9,6 +9,8 @@ import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
 import dev.Hilligans.ourcraft.Client.Rendering.VertexMesh;
 
+import java.nio.ByteBuffer;
+
 public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow> {
 
     @Override
@@ -27,7 +29,7 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow> {
     }
 
     @Override
-    public int createTexture(VulkanWindow window, Image image) {
+    public int createTexture(VulkanWindow window, ByteBuffer buffer, int width, int height, int format) {
         return 0;
     }
 

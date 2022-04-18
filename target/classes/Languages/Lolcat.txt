@@ -1,0 +1,17 @@
+#GUI
+settings.sensitivity::iz 2 quik
+settings.languages::how we spek
+settings.fov::w i d e
+settings.render_distance::see far
+settings.transparent_textures::no see stuff
+settings.sound_options::muzik
+menu.main_menu::back 2 title
+menu.log_in::meow in
+menu.create_account::maek new akount
+menu.join::pley wit otur cats
+menu.account_name::me naim
+menu.password::me sekret
+menu.email::interwebz mailz
+menu.disconnect::me no play any moar
+menu.settings::chang stufs
+menu.done::yeh

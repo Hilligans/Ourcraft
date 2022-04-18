@@ -13,6 +13,12 @@ import dev.Hilligans.ourcraft.ModHandler.Content.UnknownResourceException;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+import org.lwjgl.opengl.GL20;
+
+import java.nio.ByteBuffer;
 
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.opengl.GL11.*;
@@ -43,7 +49,7 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     }
 
     @Override
-    public int createTexture(FixedFunctionGLWindow window, Image image) {
+    public int createTexture(FixedFunctionGLWindow window, ByteBuffer buffer, int width, int height, int format) {
         return 0;
     }
 
@@ -57,8 +63,10 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
+        Matrix4f matrix4f = matrixStack.get();
         // if(texture != boundTexture) {
-        glBindTexture(textureTypes.get(texture), texture);
+        //glBindTexture(textureTypes.get(texture), texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
         boundTexture = texture;
         //  }
         glBegin(mesh.vertexFormat.primitiveType);
@@ -75,13 +83,15 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
                 int pointer = val * stride;
                 glTexCoord2f(mesh.vertices[texturePos + pointer], mesh.vertices[texturePos + pointer + 1]);
                 glColor4f(mesh.vertices[colour + pointer],mesh.vertices[colour + pointer + 1],mesh.vertices[colour + pointer + 2],mesh.vertices[colour + pointer + 3]);
-                glVertex3f(mesh.vertices[pos + pointer], mesh.vertices[pos + pointer + 1], mesh.vertices[pos + pointer + 2]);
+                Vector4f vec = new Vector4f(mesh.vertices[pos + pointer], mesh.vertices[pos + pointer + 1], mesh.vertices[pos + pointer + 2],0).mul(matrix4f);
+                glVertex3f(vec.x - 1,vec.y + 1,vec.z);
             }
         } else {
             for (int val : mesh.indices) {
                 int pointer = val * stride;
                 glTexCoord2f(mesh.vertices[texturePos + pointer], mesh.vertices[texturePos + pointer + 1]);
-                glVertex3f(mesh.vertices[pos + pointer], mesh.vertices[pos + pointer + 1], mesh.vertices[pos + pointer + 2]);
+                Vector4f vec = new Vector4f(mesh.vertices[pos + pointer], mesh.vertices[pos + pointer + 1], mesh.vertices[pos + pointer + 2],0).mul(matrix4f);
+                glVertex3f(vec.x - 1,vec.y + 1,vec.z);
             }
         }
 

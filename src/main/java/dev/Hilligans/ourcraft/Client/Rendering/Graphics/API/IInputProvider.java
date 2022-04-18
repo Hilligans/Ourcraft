@@ -1,10 +1,11 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics.API;
 
 import dev.Hilligans.ourcraft.Client.Input.InputHandler;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 
 public interface IInputProvider {
 
-    void setWindow(long window, InputHandler handler);
+    void setWindow(RenderWindow window, InputHandler handler);
 
     int getSize();
 

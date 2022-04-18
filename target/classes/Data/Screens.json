@@ -1,0 +1,34 @@
+{
+  "test_screen": {
+    "textures": [
+      {
+        "texture": "GUI/inventory.png",
+        "texture_source": "ourcraft",
+        "region": [0, 0, 158, 99],
+        "position": [0, 0],
+        "area": [50, 50]
+      },
+      {
+        "texture": "GUI/inventory.png",
+        "texture_source": "ourcraft",
+        "region": [0, 0, 128, 128],
+        "position": [55, 55],
+        "area": [25, 25]
+      }
+    ],
+    "widgets": {
+      "button1": {
+        "type": "button",
+        "onPress": [
+          {
+            "set": "renderDistance",
+            "from": {
+              "get": "ClientMain.client.playerData"
+            },
+            "to": "10"
+          }
+        ]
+      }
+    }
+  }
+}

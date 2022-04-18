@@ -1,0 +1,6 @@
+{
+  "diamond": {
+    "texture": "diamond.png",
+    "data": "Items/item.json"
+  }
+}

@@ -5,9 +5,14 @@ import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.Sounds;
 import dev.Hilligans.ourcraft.Client.Input.HandlerProviders.ControllerHandlerProvider;
 import dev.Hilligans.ourcraft.Client.Input.HandlerProviders.KeyPressHandlerProvider;
+import dev.Hilligans.ourcraft.Client.Input.HandlerProviders.MouseHandlerProvider;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.FixedFunctionGL.FixedFunctionGLEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderPipeline;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTarget;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Tasks.GUIRenderTask;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Tasks.WorldRenderTask;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Tasks.WorldTransparentRenderTask;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
@@ -105,11 +110,17 @@ public class Ourcraft {
             modContent.registerGraphicsEngine(new VulkanEngine());
             modContent.registerGraphicsEngine(new FixedFunctionGLEngine());
 
-            modContent.registerRenderTarget(new RenderTarget("solid_world_renderer"));
-            modContent.registerRenderTarget(new RenderTarget("entity_renderer").afterTarget("solid_world_renderer","ourcraft"));
-            modContent.registerRenderTarget(new RenderTarget("particle_renderer").afterTarget("entity_renderer", "ourcraft"));
-            modContent.registerRenderTarget(new RenderTarget("translucent_world_renderer").afterTarget("particle_renderer", "ourcraft"));
-            modContent.registerRenderTarget(new RenderTarget("gui_renderer").afterTarget("translucent_world_renderer", "ourcraft"));
+            modContent.registerRenderPipelines(new RenderPipeline("world_pipeline"));
+
+            modContent.registerRenderTarget(new RenderTarget("solid_world_renderer", "ourcraft:world_pipeline"));
+            modContent.registerRenderTarget(new RenderTarget("entity_renderer", "ourcraft:world_pipeline").afterTarget("solid_world_renderer","ourcraft"));
+            modContent.registerRenderTarget(new RenderTarget("particle_renderer", "ourcraft:world_pipeline").afterTarget("entity_renderer", "ourcraft"));
+            modContent.registerRenderTarget(new RenderTarget("translucent_world_renderer", "ourcraft:world_pipeline").afterTarget("particle_renderer", "ourcraft"));
+            modContent.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:world_pipeline").afterTarget("translucent_world_renderer", "ourcraft"));
+
+            modContent.registerRenderTask(new GUIRenderTask());
+            modContent.registerRenderTask(new WorldRenderTask());
+            modContent.registerRenderTask(new WorldTransparentRenderTask());
 
             modContent.registerVertexFormat(new VertexFormat("position_texture_color", VertexFormat.TRIANGLES)
                     .addPart("position", VertexFormat.FLOAT,3)
@@ -125,7 +136,7 @@ public class Ourcraft {
                     .addPart("position", VertexFormat.FLOAT,3)
                     .addPart("texture", VertexFormat.FLOAT, 2));
 
-            modContent.registerInputHandlerProviders(new ControllerHandlerProvider(), new KeyPressHandlerProvider());
+            modContent.registerInputHandlerProviders(new ControllerHandlerProvider(), new KeyPressHandlerProvider(), new MouseHandlerProvider());
         }
 
 

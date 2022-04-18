@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public abstract class RenderWindow {
 
     public FrameTracker frameTracker = new FrameTracker();
-    public ArrayList<RenderTarget> renderTargets = new ArrayList<>();
+    public RenderPipeline renderPipeline;
 
     public ICamera camera;
     public IGraphicsEngine<?, ?, ?> graphicsEngine;
@@ -35,6 +35,15 @@ public abstract class RenderWindow {
                 logger = log.withKey("window");
             }
         }
+        setRenderPipeline("ourcraft:world_pipeline");
+    }
+
+    public void setRenderPipeline(RenderPipeline renderPipeline) {
+        this.renderPipeline = renderPipeline;
+    }
+
+    public void setRenderPipeline(String name) {
+        this.renderPipeline = graphicsEngine.getGameInstance().RENDER_PIPELINES.get(name);
     }
 
     public abstract long getWindowID();
@@ -87,38 +96,15 @@ public abstract class RenderWindow {
 
     public void setup() {
         setupInputs();
-    }
-
-    public void addRenderTarget(RenderTarget renderTarget) {
-        if(renderTarget.after != null) {
-            int x = 0;
-            for(RenderTarget target : renderTargets) {
-                x++;
-                if(target.name.equals(renderTarget.after) && target.modContent.getModID().equals(target.targetedMod)) {
-                    renderTargets.add(x, renderTarget);
-                    return;
-                }
-            }
-            throw new RuntimeException("Unknown render target: " + renderTarget.after + ":" + renderTarget.targetedMod);
-        }
-
-        if(renderTarget.before != null) {
-            int x = 0;
-            for(RenderTarget target : renderTargets) {
-                if(target.name.equals(renderTarget.before) && target.modContent.getModID().equals(target.targetedMod)) {
-                    renderTargets.add(x, renderTarget);
-                    return;
-                }
-                x++;
-            }
-            throw new RuntimeException("Unknown render target: " + renderTarget.before + ":" + renderTarget.targetedMod);
-        }
-
-        renderTargets.add(renderTarget);
+        renderPipeline.build(this);
     }
 
     public IDefaultEngineImpl<?> getEngineImpl() {
         return graphicsEngine.getDefaultImpl();
+    }
+
+    public IGraphicsEngine<?,?,?> getGraphicsEngine() {
+        return graphicsEngine;
     }
 
     public void setupInputs() {

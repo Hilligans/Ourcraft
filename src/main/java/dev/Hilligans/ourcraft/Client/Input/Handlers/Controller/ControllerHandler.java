@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.Client.Input.Handlers.Controller;
 
 import dev.Hilligans.ourcraft.Client.Input.InputHandler;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 
 public class ControllerHandler implements IInputProvider {
 
-    public long window;
+    public RenderWindow window;
     public ArrayList<InputHandler> inputHandlers = new ArrayList<>();
     public Long2ObjectOpenHashMap<InputHandler> windowMap = new Long2ObjectOpenHashMap<>();
 
@@ -39,7 +40,7 @@ public class ControllerHandler implements IInputProvider {
     public boolean initialized = false;
 
     @Override
-    public void setWindow(long window, InputHandler inputHandler) {
+    public void setWindow(RenderWindow window, InputHandler inputHandler) {
         this.window = window;
         inputHandlers.add(inputHandler);
         if(!initialized) {

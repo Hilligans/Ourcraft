@@ -129,6 +129,14 @@ public class Image {
         return height;
     }
 
+    public int getFormat() {
+        return format;
+    }
+
+    public ByteBuffer getBuffer() {
+        return buffer;
+    }
+
     public int getSize() {
         return width * height * 4;
     }

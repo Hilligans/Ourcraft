@@ -6,7 +6,9 @@ import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
 import dev.Hilligans.ourcraft.Client.Input.Input;
 import dev.Hilligans.ourcraft.Client.Input.InputHandlerProvider;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderPipeline;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTarget;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTaskSource;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
@@ -88,6 +90,8 @@ public class GameInstance {
         REGISTRIES.put("ourcraft:screen_builders", SCREEN_BUILDERS);
         REGISTRIES.put("ourcraft:features", FEATURES);
         REGISTRIES.put("ourcraft:render_targets", RENDER_TARGETS);
+        REGISTRIES.put("ourcraft:render_pipeline", RENDER_PIPELINES);
+        REGISTRIES.put("ourcraft:render_task", RENDER_TASK);
         REGISTRIES.put("ourcraft:key_binds", KEY_BINDS);
         REGISTRIES.put("ourcraft:vertex_formats", VERTEX_FORMATS);
         REGISTRIES.put("ourcraft:input_handler_providers", INPUT_HANDLER_PROVIDERS);
@@ -126,6 +130,8 @@ public class GameInstance {
     public final Registry<ScreenBuilder> SCREEN_BUILDERS = new Registry<>(this, ScreenBuilder.class);
     public final Registry<Feature> FEATURES = new Registry<>(this, Feature.class);
     public final Registry<RenderTarget> RENDER_TARGETS = new Registry<>(this, RenderTarget.class);
+    public final Registry<RenderPipeline> RENDER_PIPELINES = new Registry<>(this, RenderPipeline.class);
+    public final Registry<RenderTaskSource> RENDER_TASK = new Registry<>(this, RenderTaskSource.class);
     public final Registry<Input> KEY_BINDS = new Registry<>(this, Input.class);
     public final Registry<VertexFormat> VERTEX_FORMATS = new Registry<>(this, VertexFormat.class);
     public final Registry<InputHandlerProvider> INPUT_HANDLER_PROVIDERS = new Registry<>(this, InputHandlerProvider.class);
@@ -252,6 +258,18 @@ public class GameInstance {
         }
     }
 
+    public void registerRenderTarget(RenderTarget... renderTargets) {
+        RENDER_TARGETS.putAll(renderTargets);
+    }
+
+    public void registerRenderPipeline(RenderPipeline... renderPipelines) {
+        RENDER_PIPELINES.putAll(renderPipelines);
+    }
+
+    public void registerRenderTask(RenderTaskSource... renderTaskSources) {
+        RENDER_TASK.putAll(renderTaskSources);
+    }
+
     public void registerVertexFormat(VertexFormat... vertexFormats) {
         VERTEX_FORMATS.putAll(vertexFormats);
     }
@@ -299,20 +317,6 @@ public class GameInstance {
 
     public ByteBuffer getResourceDirect(ResourceLocation resourceLocation) {
         return DATA_LOADER.getDirect(resourceLocation);
-    }
-
-    static short itemId = 0;
-    public short blockId = 0;
-
-    public static short getNextItemId() {
-        short val = itemId;
-        itemId++;
-        return val;
-    }
-    public short getNextBlockID() {
-        short val = blockId;
-        blockId++;
-        return val;
     }
 
     public void registerDefaultContent() {

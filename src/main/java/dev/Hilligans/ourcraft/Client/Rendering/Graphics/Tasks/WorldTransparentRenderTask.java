@@ -19,14 +19,15 @@ import org.joml.Vector3i;
 public class WorldTransparentRenderTask extends RenderTaskSource {
 
     public WorldTransparentRenderTask() {
-        super("world_transparent_render_task", "translucent_world_renderer");
+        super("world_transparent_render_task", "ourcraft:translucent_world_renderer");
     }
 
     @Override
     public RenderTask getDefaultTask() {
         return new RenderTask() {
             @Override
-            public void draw(RenderWindow window, IDefaultEngineImpl<?> imp, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack) {
+            public void draw(RenderWindow window, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack) {
+                IDefaultEngineImpl<?> imp = engine.getDefaultImpl();
                 Vector3d pos = Camera.renderPos;
                 World world = client.clientWorld;
                 for(int x = 0; x < Settings.renderDistance; x++) {

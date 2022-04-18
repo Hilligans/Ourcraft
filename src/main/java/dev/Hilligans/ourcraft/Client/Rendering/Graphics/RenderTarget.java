@@ -7,6 +7,7 @@ import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
 
 public class RenderTarget implements IRegistryElement {
 
+    public String renderPipeline;
     public String name;
     public String after;
     public String before;
@@ -14,8 +15,9 @@ public class RenderTarget implements IRegistryElement {
     public MatrixStack matrixStack;
     public ModContent modContent;
 
-    public RenderTarget(String name) {
+    public RenderTarget(String name, String renderPipeline) {
         this.name = name;
+        this.renderPipeline = renderPipeline;
     }
 
     public RenderTarget afterTarget(String after, String modID) {

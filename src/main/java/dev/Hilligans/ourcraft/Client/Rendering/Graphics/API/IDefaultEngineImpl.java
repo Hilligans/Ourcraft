@@ -8,6 +8,8 @@ import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
 import dev.Hilligans.ourcraft.Client.Rendering.VertexMesh;
 
+import java.nio.ByteBuffer;
+
 public interface IDefaultEngineImpl<T extends RenderWindow> {
 
     void drawMesh(T window, MatrixStack matrixStack, int texture, int program, int meshID, long indicesIndex, int length);
@@ -16,7 +18,11 @@ public interface IDefaultEngineImpl<T extends RenderWindow> {
 
     void destroyMesh(T window, int mesh);
 
-    int createTexture(T window, Image image);
+    default int createTexture(T window, Image image) {
+        return createTexture(window, image.getBuffer(), image.getWidth(), image.getHeight(), image.format);
+    }
+
+    int createTexture(T window, ByteBuffer buffer, int width, int height, int format);
 
     void destroyTexture(T window, int texture);
 
@@ -34,6 +40,10 @@ public interface IDefaultEngineImpl<T extends RenderWindow> {
 
     default int createTexture(Object window, Image image) {
         return createTexture((T)window, image);
+    }
+
+    default int createTexture(Object window, ByteBuffer buffer, int width, int height, int format) {
+        return createTexture((T)window,buffer,width,height,format);
     }
 
     default void destroyTexture(Object window, int texture) {

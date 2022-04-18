@@ -6,12 +6,14 @@ import dev.Hilligans.ourcraft.Util.Logger;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class InputHandler {
 
     GameInstance gameInstance;
     Logger logger;
     public ArrayList<IInputProvider> inputProviders = new ArrayList<>();
+    public Int2ObjectOpenHashMap<Input> keyBinds = new Int2ObjectOpenHashMap<>();
     public float[] pressedInputs;
     public long window;
     public int size = 0;
@@ -39,7 +41,7 @@ public class InputHandler {
 
     public void handleInput(int input, float mode, long windowID, int action, int scancode, int extra, IInputProvider provider) {
         if(windowID == window || windowID == -1) {
-            System.out.println(provider.getButtonName(input, scancode));
+           // System.out.println(provider.getButtonName(input, scancode));
             input += provider.getOffset();
             pressedInputs[input] = mode;
         }

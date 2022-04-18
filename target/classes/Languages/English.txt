@@ -1,0 +1,29 @@
+
+#GUI
+settings.sensitivity::Sensitivity
+settings.languages::Languages
+settings.fov::FOV
+settings.render_distance::Render Distance
+settings.transparent_textures::Transparent Textures
+settings.sound_options::Sound Options
+menu.main_menu::Main menu
+menu.log_in::Log in
+menu.create_account::Create Account
+menu.join::Join Game
+menu.account_name::Account Name
+menu.password::Password
+menu.email::Email
+menu.disconnect::Disconnect
+menu.settings::Settings
+menu.done::Done
+menu.mod_list::Mod List
+
+
+
+#Items
+item.ourcraft.stone::Stone
+item.ourcraft.dirt::Dirt
+item.ourcraft.sand::Sand
+item.ourcraft.weeping_vine::Weeping Vine
+item.ourcraft.bedrock::Bedrock
+item.ourcraft.chest::Chest

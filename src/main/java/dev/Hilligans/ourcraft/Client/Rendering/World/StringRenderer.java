@@ -50,6 +50,18 @@ public class StringRenderer {
         buildChars();
     }
 
+    public void drawStringTranslated(RenderWindow window, MatrixStack matrixStack, String string, int x, int y, float scale) {
+        drawStringInternal(window, matrixStack, Languages.getTranslated(string),x,y,scale);
+    }
+
+    public void drawCenteredStringTranslated(RenderWindow window, MatrixStack matrixStack, String string, int y, float scale) {
+        drawCenteredStringInternal(window, matrixStack, Languages.getTranslated(string),y,scale);
+    }
+
+    public void drawStringWithBackgroundTranslated(RenderWindow window, MatrixStack matrixStack, String string, int x, int y, float scale) {
+        drawStringWithBackgroundInternal(window, matrixStack, Languages.getTranslated(string),x,y,scale);
+    }
+
     public void drawStringInternal(RenderWindow window, MatrixStack matrixStack, String string, int x, int y, float scale) {
 
         matrixStack.push();
@@ -70,7 +82,6 @@ public class StringRenderer {
     }
 
     public void drawCenteredStringInternal(RenderWindow window, MatrixStack matrixStack, String string, int y, float scale) {
-
         matrixStack.push();
         try {
             IntList vals = getAtlases(string);
@@ -160,20 +171,6 @@ public class StringRenderer {
             impl.drawAndDestroyMesh(window,matrixStack,primitiveBuilder.toVertexMesh(),textureAtlas.glTextureId,ShaderManager.guiShader.shader);
         });
     }
-
-    public void drawStringTranslated(RenderWindow window, MatrixStack matrixStack, String string, int x, int y, float scale) {
-        drawStringInternal(window, matrixStack, Languages.getTranslated(string),x,y,scale);
-    }
-
-    public void drawCenteredStringTranslated(RenderWindow window, MatrixStack matrixStack, String string, int y, float scale) {
-        drawCenteredStringInternal(window, matrixStack, Languages.getTranslated(string),y,scale);
-    }
-
-    public void drawStringWithBackgroundTranslated(RenderWindow window, MatrixStack matrixStack, String string, int x, int y, float scale) {
-        drawStringWithBackgroundInternal(window, matrixStack, Languages.getTranslated(string),x,y,scale);
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Int2ObjectOpenHashMap<TextureAtlas> textureAtlases = new Int2ObjectOpenHashMap<>();
     public Char2IntOpenHashMap charMap = new Char2IntOpenHashMap();

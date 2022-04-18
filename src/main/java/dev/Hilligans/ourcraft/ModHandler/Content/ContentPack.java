@@ -4,6 +4,9 @@ import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
 import dev.Hilligans.ourcraft.Client.Input.InputHandlerProvider;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderPipeline;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTarget;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTaskSource;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.IModel;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
@@ -144,6 +147,15 @@ public class ContentPack {
                 }
                 for(IGraphicsEngine<?,?,?> graphicsEngine : mod.graphicsEngines) {
                     gameInstance.registerGraphicsEngine(graphicsEngine);
+                }
+                for(RenderTarget renderTarget : mod.renderTargets) {
+                    gameInstance.registerRenderTarget(renderTarget);
+                }
+                for(RenderPipeline renderPipeline : mod.renderPipelines) {
+                    gameInstance.registerRenderPipeline(renderPipeline);
+                }
+                for(RenderTaskSource renderTask : mod.renderTasks) {
+                    gameInstance.registerRenderTask(renderTask);
                 }
                 for(VertexFormat vertexFormat : mod.vertexFormats) {
                     gameInstance.registerVertexFormat(vertexFormat);

@@ -1,0 +1,34 @@
+{
+   "blue":{
+      "textures":["blue.png"],
+      "data":"Blocks/slab.json"
+   },
+
+   "newStair": {
+      "textures":["blue.png"],
+      "data":"Blocks/stair.json"
+   },
+
+   "stairCorner": {
+      "textures": ["blue.png"],
+      "data": "Blocks/stairSmall.json",
+      "overrides": {
+         "properties":{
+            "transparent":true,
+            "toolLevel": "diamond"
+         }
+      }
+   },
+
+   "diamond_ore": {
+      "textures": ["diamond_ore.png"],
+      "data": "Blocks/block.json",
+      "overrides": {
+         "properties": {
+            "toolLevel": "iron",
+            "drops": "ourcraft:diamond"
+         }
+      }
+   }
+
+}

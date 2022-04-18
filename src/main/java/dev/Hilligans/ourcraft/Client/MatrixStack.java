@@ -46,6 +46,10 @@ public class MatrixStack {
         applyColor();
     }
 
+    public Matrix4f get() {
+        return matrix4f;
+    }
+
     public void applyTransformation(int shaderId) { ;
         int trans = glGetUniformLocation(shaderId, "transform");
         float[] floats = new float[16];;

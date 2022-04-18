@@ -31,14 +31,15 @@ import static org.lwjgl.opengl.GL11.glDisable;
 public class WorldRenderTask extends RenderTaskSource {
 
     public WorldRenderTask() {
-        super("world_render_task", "solid_world_renderer");
+        super("world_render_task", "ourcraft:solid_world_renderer");
     }
 
     @Override
     public RenderTask getDefaultTask() {
         return new RenderTask() {
             @Override
-            public void draw(RenderWindow window, IDefaultEngineImpl<?> imp, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack) {
+            public void draw(RenderWindow window, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack) {
+                IDefaultEngineImpl<?> imp = engine.getDefaultImpl();
                 Vector3d pos = Camera.renderPos;
                 World world = client.clientWorld;
                 for(int x = 0; x < Settings.renderDistance; x++) {

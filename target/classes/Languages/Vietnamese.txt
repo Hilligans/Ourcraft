@@ -1,0 +1,18 @@
+
+#GUI
+settings.sensitivity::Độ nhạy
+settings.languages::Ngôn ngữ
+settings.fov::Phạm vi quan sát
+settings.render_distance::Khoảng cách kết xuất
+settings.transparent_textures::Kết cấu trong suốt
+settings.sound_options::Tuỳ chọn âm thanh
+menu.main_menu::Màn hình chính
+menu.log_in::Đăng nhập
+menu.create_account::Tạo tài khoản
+menu.join::Tham gia
+menu.account_name::Tên tài khoản
+menu.password::Mật khẩu
+menu.email::Email
+menu.disconnect::Ngắt kết nối
+menu.settings::Cài đặt
+menu.done::Hoàn tất

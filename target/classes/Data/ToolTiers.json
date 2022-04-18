@@ -1,0 +1,6 @@
+{
+  "default" : {
+    "material": ["wood","stone","iron","diamond"],
+    "location": "start"
+  }
+}

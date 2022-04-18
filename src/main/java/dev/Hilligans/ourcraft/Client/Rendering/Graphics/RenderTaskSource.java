@@ -25,12 +25,21 @@ public abstract class RenderTaskSource implements IRegistryElement {
 
     public abstract RenderTask getDefaultTask();
 
+    public RenderTask getTask(String engineName) {
+        return getDefaultTask();
+    }
+
     @Override
     public void load(GameInstance gameInstance) {
         target = gameInstance.RENDER_TARGETS.get(renderTargetName);
         if(target == null) {
             throw new UnknownResourceException("Failed to find resource in the registry by name: " + renderTargetName, gameInstance.RENDER_TARGETS, renderTargetName, source);
         }
+    }
+
+    @Override
+    public void assignModContent(ModContent modContent) {
+        this.source = modContent;
     }
 
     @Override

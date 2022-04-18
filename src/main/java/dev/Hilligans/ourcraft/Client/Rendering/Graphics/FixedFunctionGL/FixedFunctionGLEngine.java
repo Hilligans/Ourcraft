@@ -101,7 +101,8 @@ public class FixedFunctionGLEngine implements IGraphicsEngine<OpenGLGraphicsCont
         screenStack.applyColor();
         screenStack.applyTransformation();
 
-        client.draw(window, matrixStack,screenStack);
+        //client.draw(window, matrixStack,screenStack);
+        window.renderPipeline.render(client,matrixStack,screenStack);
     }
 
     @Override

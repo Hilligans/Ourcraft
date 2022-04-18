@@ -8,16 +8,16 @@ import org.lwjgl.glfw.GLFWKeyCallback;
 
 public class KeyPressHandler implements IInputProvider {
 
-    public long window;
+    public RenderWindow window;
     public InputHandler inputHandler;
     public int offset;
 
     @Override
-    public void setWindow(long window, InputHandler inputHandler) {
+    public void setWindow(RenderWindow window, InputHandler inputHandler) {
         this.window = window;
         this.inputHandler = inputHandler;
         KeyPressHandler handler = this;
-        GLFW.glfwSetKeyCallback(window, new GLFWKeyCallback() {
+        GLFW.glfwSetKeyCallback(window.getWindowID(), new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
                 inputHandler.handleInput(key,action,window,action,scancode,mods,handler);

@@ -129,7 +129,8 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
         screenStack.applyColor();
         screenStack.applyTransformation();
 
-        client.draw(window, matrixStack,screenStack);
+        window.renderPipeline.render(client,matrixStack,screenStack);
+        //client.draw(window, matrixStack,screenStack);
     }
 
     @Override
@@ -178,6 +179,7 @@ public class OpenGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer, Op
         glCullFace(GL_FRONT);
         glFrontFace(GL_CW);
         glEnable(GL_PROGRAM_POINT_SIZE);
+
 
         PlayerMovementThread playerMovementThread = new PlayerMovementThread(window);
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1, new NamedThreadFactory("player_movement"));

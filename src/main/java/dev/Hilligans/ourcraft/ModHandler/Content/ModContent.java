@@ -4,9 +4,8 @@ import dev.Hilligans.ourcraft.Biome.Biome;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
 import dev.Hilligans.ourcraft.Client.Input.InputHandlerProvider;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.*;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTarget;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.BlockModel;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.IModel;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
@@ -72,6 +71,8 @@ public class ModContent {
     public ArrayList<Feature> features = new ArrayList<>();
     public ArrayList<IGraphicsEngine<?,?,?>> graphicsEngines = new ArrayList<>();
     public ArrayList<RenderTarget> renderTargets = new ArrayList<>();
+    public ArrayList<RenderPipeline> renderPipelines = new ArrayList<>();
+    public ArrayList<RenderTaskSource> renderTasks = new ArrayList<>();
     public ArrayList<VertexFormat> vertexFormats = new ArrayList<>();
     public ArrayList<InputHandlerProvider> inputHandlerProviders = new ArrayList<>();
 
@@ -262,6 +263,20 @@ public class ModContent {
         this.renderTargets.addAll(Arrays.asList(renderTargets));
     }
 
+    public void registerRenderPipelines(RenderPipeline... renderPipelines) {
+        for(RenderPipeline renderPipeline : renderPipelines) {
+            renderPipeline.assignModContent(this);
+        }
+        this.renderPipelines.addAll(Arrays.asList(renderPipelines));
+    }
+
+    public void registerRenderTask(RenderTaskSource... renderTasks) {
+        for(RenderTaskSource renderTask : renderTasks) {
+            renderTask.assignModContent(this);
+        }
+        this.renderTasks.addAll(Arrays.asList(renderTasks));
+    }
+
     public void registerVertexFormat(VertexFormat... vertexFormats) {
         for(VertexFormat vertexFormat : vertexFormats) {
             vertexFormat.assignModContent(this);
@@ -388,6 +403,10 @@ public class ModContent {
         version = jsonObject.has("version") ? jsonObject.getInt("version") : -1;
         description = jsonObject.has("description") ? jsonObject.getString("description") : "";
 
+    }
+
+    public GameInstance getGameInstance() {
+        return gameInstance;
     }
 
     @Override
