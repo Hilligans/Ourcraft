@@ -196,7 +196,6 @@ public class Ourcraft {
         DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
         DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
         GLFW.glfwGetCursorPos(window, x, y);
-        //return BufferUtils.createDoubleBuffer(2);
         return BufferUtils.createDoubleBuffer(2).put(x.get()).put(y.get());
     }
 

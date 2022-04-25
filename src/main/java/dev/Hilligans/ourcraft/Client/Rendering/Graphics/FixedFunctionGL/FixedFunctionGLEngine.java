@@ -1,50 +1,23 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics.FixedFunctionGL;
 
-import dev.Hilligans.ourcraft.Block.Blocks;
-import dev.Hilligans.ourcraft.Client.Camera;
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
-import dev.Hilligans.ourcraft.Client.PlayerMovementThread;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsEngineBase;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLGraphicsContainer;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLWindow;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenglDefaultImpl;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.GLRenderer;
-import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.TextAtlas;
-import dev.Hilligans.ourcraft.Client.Rendering.Renderer;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.JoinScreen;
-import dev.Hilligans.ourcraft.Client.Rendering.Texture;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.ShaderManager;
-import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.VAOManager;
-import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.WorldTextureManager;
-import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.ClientMain;
-import dev.Hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
-import dev.Hilligans.ourcraft.GameInstance;
-import dev.Hilligans.ourcraft.ModHandler.Events.Client.GLInitEvent;
 import dev.Hilligans.ourcraft.Util.Logger;
-import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
-import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.World.ClientWorld;
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GLDebugMessageCallback;
-import org.lwjgl.system.MemoryUtil;
 
 import java.util.ArrayList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_SAMPLES;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL20.glUseProgram;
 
 public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWindow, FixedFunctionGLDefaultImpl> {
 

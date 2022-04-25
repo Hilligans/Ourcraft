@@ -1,9 +1,6 @@
 package dev.Hilligans.ourcraft.Util;
 
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLGraphicsContainer;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-
-import java.util.HashMap;
 
 public class TwoInt2ObjectMap<O> {
 
