@@ -46,6 +46,11 @@ public class VertexMesh {
         this.vertices = vertices;
     }
 
+    public VertexMesh setVertexFormat(String format) {
+        this.vertexFormatName = format;
+        return this;
+    }
+
     public VertexMesh addUniform(Matrix4f matrix4f) {
 
         return this;

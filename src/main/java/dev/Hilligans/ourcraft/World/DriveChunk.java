@@ -95,7 +95,8 @@ public class DriveChunk extends Chunk {
             load();
         }
         time = System.currentTimeMillis();
-        super.destroy();
+        //TODO fix
+       // super.destroy();
     }
 
     public synchronized void generate() {

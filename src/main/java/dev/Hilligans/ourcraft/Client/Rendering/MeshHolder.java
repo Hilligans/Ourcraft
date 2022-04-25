@@ -2,7 +2,7 @@ package dev.Hilligans.ourcraft.Client.Rendering;
 
 public class MeshHolder {
 
-    public int id = 0;
+    public int id = -1;
     public int oldID = 0;
 
     public int index = 0;

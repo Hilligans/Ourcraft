@@ -52,9 +52,6 @@ public class ShaderManager {
         return stringBuilder.toString() + "\n\0";
     }
 
-
-
-
     public static int registerShader(String vertexShader, String fragmentShader) {
         int vertex =  GL30.glCreateShader(GL30.GL_VERTEX_SHADER);
         int fragment = GL30.glCreateShader(GL20.GL_FRAGMENT_SHADER);
@@ -78,7 +75,6 @@ public class ShaderManager {
         glDetachShader(shaderProgram,fragment);
         glDeleteShader(vertex);
         glDeleteShader(fragment);
-        //System.out.println(shaderProgram);
 
         return shaderProgram;
     }
@@ -113,10 +109,6 @@ public class ShaderManager {
         glDeleteShader(vertex);
         glDeleteShader(geometry);
         glDeleteShader(fragment);
-        //System.out.println(shaderProgram + "a");
         return shaderProgram;
     }
-
-
-
 }

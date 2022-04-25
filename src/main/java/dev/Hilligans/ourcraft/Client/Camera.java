@@ -237,90 +237,10 @@ public class Camera {
         }
     }
 
-    public static Vector3d duplicate() {
-        return new Vector3d(Camera.pos.x,Camera.pos.y,Camera.pos.z);
-    }
-
-    public static Vector3d duplicateAndAssign() {
-        playerChunkPos = new Vector3i((int)Camera.pos.x >> 4, 0, (int)Camera.pos.z >> 4);
-        renderPos = duplicate();
-        return new Vector3d(Camera.pos.x - (playerChunkPos.x << 4), Camera.pos.y, Camera.pos.z - (playerChunkPos.z << 4));
-    }
-
     public static Vector3d renderPos = new Vector3d();
-
-    public static Vector3d duplicateExtra() {
-        return new Vector3d(Camera.pos.x - (playerChunkPos.x << 4), Camera.pos.y, Camera.pos.z - (playerChunkPos.z << 4));
-    }
-
-    static Vector3d cameraUp = new Vector3d(0.0f, 1.0f, 0.0f);
-
-    public static MatrixStack getWorldStack() {
-        Matrix4d matrix4d = getPerspective();
-        return applyWorldStack(matrix4d);
-    }
-
-    public static MatrixStack getWorldStack(int W, int H, int x, int y) {
-        Matrix4d matrix4d = getPerspective(W,H,x,y);
-        return applyWorldStack(matrix4d);
-    }
-
-    private static MatrixStack applyWorldStack(Matrix4d matrix4d) {
-        Matrix4d view = getViewStack();
-        matrix4d.mul(view);
-        if(thirdPerson && thirdPersonMode == 1) {
-            matrix4d.lookAt(Camera.duplicateAndAssign().add(getLookVector().negate()), Camera.duplicateExtra(), cameraUp);
-        } else {
-            matrix4d.lookAt(Camera.duplicateAndAssign().add(getLookVector()), Camera.duplicateExtra(), cameraUp);
-        }
-        matrix4d.translate(0,0.15f,0);
-        if(KeyHandler.keyPressed[GLFW_KEY_LEFT_SHIFT]) {
-            matrix4d.translate(0,0.05f,0);
-        }
-        return new MatrixStack(matrix4d);
-    }
 
     public static Vector3d getLookVector() {
         return new Vector3d((Math.cos(Camera.yaw) * Math.cos(Camera.pitch)), (Math.sin(Camera.pitch)), (Math.sin(Camera.yaw) * Math.cos(Camera.pitch)));
-    }
-
-    public static Matrix4d getViewStack() {
-        Matrix4d view = new Matrix4d();
-        view.translate(0,0, Math.abs(thirdPersonMode));
-        if(thirdPerson) {
-            view.translate(0,0,getViewLength() * -1);
-        }
-        return view;
-    }
-
-    public static float getViewLength() {
-        Ray ray = new Ray(pitch,yaw,0.1f);
-        if(thirdPerson && thirdPersonMode == -1) {
-            ray.negate();
-        }
-        int x;
-        for(x = 0; x < thirdPersonScroll / 0.1; x++) {
-            Block block = ClientMain.getClient().clientWorld.getBlockState(ray.getNextBlock(x).add(pos)).getBlock();
-            if(!block.blockProperties.canWalkThrough) {
-                x -= 1;
-                break;
-            }
-        }
-        return x * 0.1f;
-    }
-
-    public static Matrix4d getPerspective() {
-        return new Matrix4d().perspective((float) Math.toRadians(fov), (float) ClientMain.getWindowX() / ClientMain.getWindowY(),0.1f,10000.0f);
-    }
-
-    public static Matrix4d getPerspective(int W, int H, int x, int y) {
-        return new Matrix4d().translate(W - 1 - 2*x, H - 1 - 2*y, 0).scale(W, H, 1).perspective((float) Math.toRadians(fov), (float) ClientMain.getWindowX() / ClientMain.getWindowY(),0.1f,10000.0f);
-    }
-
-    public static MatrixStack getScreenStack() {
-        Matrix4d matrix4d = new Matrix4d();
-        matrix4d.ortho(0,ClientMain.getWindowX(),ClientMain.getWindowY(),0,-1,20000);
-        return new MatrixStack(matrix4d);
     }
 
     public static double newX = (float)ClientMain.getWindowX() / 2;
@@ -333,11 +253,6 @@ public class Camera {
             playerEntity.render(matrixStack);
         }
     }
-
-    public static String getString() {
-        return "x:" + pos.x + " y:" + pos.y + " z:" + pos.z;
-    }
-
 
     public static double velX;
     public static double velY;

@@ -3,6 +3,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Graphics.API;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.PipelineState;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.ShaderSource;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
@@ -29,6 +30,8 @@ public interface IDefaultEngineImpl<T extends RenderWindow> {
     void drawAndDestroyMesh(T window, MatrixStack matrixStack, VertexMesh mesh, int texture, int program);
 
     void setState(T window, PipelineState state);
+
+    int createProgram(ShaderSource shaderSource);
 
     default void drawMesh(Object window, MatrixStack matrixStack, int texture, int program, int meshID, long indicesIndex, int length) {
         drawMesh((T)window, matrixStack, texture, program, meshID, indicesIndex, length);

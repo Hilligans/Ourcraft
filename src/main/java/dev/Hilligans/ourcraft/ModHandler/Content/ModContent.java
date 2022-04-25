@@ -3,6 +3,7 @@ package dev.Hilligans.ourcraft.ModHandler.Content;
 import dev.Hilligans.ourcraft.Biome.Biome;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
+import dev.Hilligans.ourcraft.Client.Input.Input;
 import dev.Hilligans.ourcraft.Client.Input.InputHandlerProvider;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.*;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
@@ -69,12 +70,14 @@ public class ModContent {
     public ArrayList<RegistryLoader> registryLoaders = new ArrayList<>();
     public ArrayList<ScreenBuilder> screenBuilders = new ArrayList<>();
     public ArrayList<Feature> features = new ArrayList<>();
-    public ArrayList<IGraphicsEngine<?,?,?>> graphicsEngines = new ArrayList<>();
+    public ArrayList<IGraphicsEngine<?,?>> graphicsEngines = new ArrayList<>();
     public ArrayList<RenderTarget> renderTargets = new ArrayList<>();
     public ArrayList<RenderPipeline> renderPipelines = new ArrayList<>();
     public ArrayList<RenderTaskSource> renderTasks = new ArrayList<>();
     public ArrayList<VertexFormat> vertexFormats = new ArrayList<>();
     public ArrayList<InputHandlerProvider> inputHandlerProviders = new ArrayList<>();
+    public ArrayList<Input> keybinds = new ArrayList<>();
+    public ArrayList<ShaderSource> shaders = new ArrayList<>();
 
     public HashMap<String,Protocol> protocols = new HashMap<>();
 
@@ -250,8 +253,8 @@ public class ModContent {
         }
     }
 
-    public void registerGraphicsEngine(IGraphicsEngine<?,?, ?>... graphicsEngines) {
-        for(IGraphicsEngine<?,?, ?> graphicsEngine : graphicsEngines) {
+    public void registerGraphicsEngine(IGraphicsEngine<?,?>... graphicsEngines) {
+        for(IGraphicsEngine<?,?> graphicsEngine : graphicsEngines) {
             this.graphicsEngines.add(graphicsEngine);
         }
     }
@@ -289,6 +292,20 @@ public class ModContent {
             provider.assignModContent(this);
         }
         this.inputHandlerProviders.addAll(Arrays.asList(providers));
+    }
+
+    public void registerKeybinds(Input... inputs) {
+        for(Input input : inputs) {
+            input.assignModContent(this);
+        }
+        this.keybinds.addAll(Arrays.asList(inputs));
+    }
+
+    public void registerShader(ShaderSource... shaderSources) {
+        for(ShaderSource shaderSource : shaderSources) {
+            shaderSource.assignModContent(this);
+        }
+        this.shaders.addAll(Arrays.asList(shaderSources));
     }
 
     public void putData(ByteArray byteArray) {

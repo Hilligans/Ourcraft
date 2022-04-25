@@ -7,6 +7,6 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 
 public abstract class RenderTask {
 
-    public abstract void draw(RenderWindow window, IGraphicsEngine<?,?,?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack);
+    public abstract void draw(RenderWindow window, IGraphicsEngine<?,?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack);
 
 }

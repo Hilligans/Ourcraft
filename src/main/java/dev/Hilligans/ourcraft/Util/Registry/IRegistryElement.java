@@ -1,5 +1,6 @@
 package dev.Hilligans.ourcraft.Util.Registry;
 
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Data.Descriptors.TagCollection;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
@@ -30,4 +31,6 @@ public interface IRegistryElement {
     default TagCollection getTagCollection() {
         return new TagCollection();
     }
+
+    default void loadGraphics(IGraphicsEngine<?,?> graphicsEngine) {}
 }

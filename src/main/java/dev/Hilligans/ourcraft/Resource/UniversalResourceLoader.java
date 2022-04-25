@@ -32,6 +32,11 @@ public class UniversalResourceLoader {
         return getResource(new ResourceLocation(path));
     }
 
+    public String getString(ResourceLocation resourceLocation) {
+        ResourceLoader<?> resourceLoader = extensionLoaders.get("txt");
+        return (String) resourceLoader.read(resourceLocation);
+    }
+
     public Object getResource(ResourceLocation resourceLocation) {
         String extension = getExtension(resourceLocation.path);
         if(extension == null) {

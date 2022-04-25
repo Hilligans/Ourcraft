@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsEngineBase;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanInstance;
@@ -17,12 +18,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
-public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer, VulkanWindow, VulkanDefaultImpl> {
+public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefaultImpl> {
 
     public VulkanInstance vulkanInstance;
-    public GameInstance gameInstance;
-
-    public StringRenderer stringRenderer;
 
     @Override
     public VulkanWindow createWindow() {
@@ -30,27 +28,7 @@ public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer, Vu
     }
 
     @Override
-    public VulkanGraphicsContainer getChunkGraphicsContainer(Chunk chunk) {
-        return null;
-    }
-
-    @Override
-    public VulkanGraphicsContainer createChunkGraphicsContainer() {
-        return null;
-    }
-
-    @Override
-    public void putChunkGraphicsContainer(Chunk chunk, VulkanGraphicsContainer container) {
-
-    }
-
-    @Override
     public void render(VulkanWindow window) {
-
-    }
-
-    @Override
-    public void renderWorld(MatrixStack matrixStack, ClientWorld world) {
 
     }
 
@@ -77,11 +55,6 @@ public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer, Vu
     }
 
     @Override
-    public GameInstance getGameInstance() {
-        return gameInstance;
-    }
-
-    @Override
     public Logger getLogger() {
         return null;
     }
@@ -97,13 +70,8 @@ public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer, Vu
     }
 
     @Override
-    public StringRenderer getStringRenderer() {
-        return stringRenderer;
-    }
-
-    @Override
-    public void setupStringRenderer(String defaultLanguage) {
-        stringRenderer = new StringRenderer(this);
+    public int getProgram(String name) {
+        return 0;
     }
 
     public static VulkanInstance getVulkanInstance() {
@@ -118,15 +86,6 @@ public class VulkanEngine implements IGraphicsEngine<VulkanGraphicsContainer, Vu
     }
 
     public static VulkanInstance sInstance;
-
-    @Override
-    public void assignModContent(ModContent modContent) {
-        this.gameInstance = modContent.gameInstance;
-    }
-
-    @Override
-    public void load(GameInstance gameInstance) {
-    }
 
     @Override
     public String getResourceName() {

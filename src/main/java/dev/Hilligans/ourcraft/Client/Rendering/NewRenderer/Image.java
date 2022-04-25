@@ -49,6 +49,18 @@ public class Image {
         }
     }
 
+    public Image(BufferedImage image) {
+        this.width = image.getWidth();
+        this.height = image.getHeight();
+        this.format = 4;
+        buffer = ByteBuffer.allocateDirect(width * height * 4);
+        for(int y = 0; y < height; y++) {
+            for(int x = 0; x < width; x++) {
+                putPixel(x,y,image.getRGB(x,y));
+            }
+        }
+    }
+
     public int getPixel(int x, int y) {
         int pos = x * format + y * format * width;
         return buffer.getInt(pos);

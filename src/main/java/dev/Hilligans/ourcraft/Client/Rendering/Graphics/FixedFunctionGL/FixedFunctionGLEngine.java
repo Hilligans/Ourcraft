@@ -5,6 +5,7 @@ import dev.Hilligans.ourcraft.Client.Camera;
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.PlayerMovementThread;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsEngineBase;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLGraphicsContainer;
@@ -45,11 +46,9 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 
-public class FixedFunctionGLEngine implements IGraphicsEngine<OpenGLGraphicsContainer,FixedFunctionGLWindow, FixedFunctionGLDefaultImpl> {
+public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWindow, FixedFunctionGLDefaultImpl> {
 
     public FixedFunctionGLDefaultImpl engineImpl;
-    public GameInstance gameInstance;
-    public StringRenderer stringRenderer;
 
     public FixedFunctionGLEngine() {
         engineImpl = new FixedFunctionGLDefaultImpl();
@@ -58,21 +57,6 @@ public class FixedFunctionGLEngine implements IGraphicsEngine<OpenGLGraphicsCont
     @Override
     public FixedFunctionGLWindow createWindow() {
         return null;
-    }
-
-    @Override
-    public OpenGLGraphicsContainer getChunkGraphicsContainer(Chunk chunk) {
-        return null;
-    }
-
-    @Override
-    public OpenGLGraphicsContainer createChunkGraphicsContainer() {
-        return null;
-    }
-
-    @Override
-    public void putChunkGraphicsContainer(Chunk chunk, OpenGLGraphicsContainer container) {
-
     }
 
     @Override
@@ -93,21 +77,15 @@ public class FixedFunctionGLEngine implements IGraphicsEngine<OpenGLGraphicsCont
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-        MatrixStack matrixStack = Camera.getWorldStack();
+        MatrixStack matrixStack = window.camera.getMatrix();
         matrixStack.applyColor();
         matrixStack.applyTransformation();
 
-        MatrixStack screenStack = Camera.getScreenStack();
+        MatrixStack screenStack = window.camera.getScreenStack();
         screenStack.applyColor();
         screenStack.applyTransformation();
 
-        //client.draw(window, matrixStack,screenStack);
         window.renderPipeline.render(client,matrixStack,screenStack);
-    }
-
-    @Override
-    public void renderWorld(MatrixStack matrixStack, ClientWorld world) {
-
     }
 
     @Override
@@ -168,11 +146,6 @@ public class FixedFunctionGLEngine implements IGraphicsEngine<OpenGLGraphicsCont
     }
 
     @Override
-    public GameInstance getGameInstance() {
-        return gameInstance;
-    }
-
-    @Override
     public Logger getLogger() {
         return null;
     }
@@ -188,18 +161,8 @@ public class FixedFunctionGLEngine implements IGraphicsEngine<OpenGLGraphicsCont
     }
 
     @Override
-    public StringRenderer getStringRenderer() {
-        return stringRenderer;
-    }
-
-    @Override
-    public void setupStringRenderer(String defaultLanguage) {
-        stringRenderer = new StringRenderer(this);
-    }
-
-    @Override
-    public void load(GameInstance gameInstance) {
-        this.gameInstance = gameInstance;
+    public int getProgram(String name) {
+        return 0;
     }
 
     @Override

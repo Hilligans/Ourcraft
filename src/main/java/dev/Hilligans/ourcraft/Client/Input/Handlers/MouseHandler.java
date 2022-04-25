@@ -20,7 +20,7 @@ public class MouseHandler implements IInputProvider {
         GLFW.glfwSetMouseButtonCallback(window.getWindowID(), new GLFWMouseButtonCallback() {
             @Override
             public void invoke(long window, int button, int action, int mods) {
-                handler.handleInput(button,action,window,mouse);
+                handler.handleInput(button,action,window,action, mouse);
             }
         });
     }
@@ -56,5 +56,20 @@ public class MouseHandler implements IInputProvider {
             return "Mouse Button Middle";
         }
         return "Mouse Button " + button;
+    }
+
+    @Override
+    public String getResourceName() {
+        return "mouse_button_handler";
+    }
+
+    @Override
+    public String getIdentifierName() {
+        return "ourcraft:" + getResourceName();
+    }
+
+    @Override
+    public String getUniqueName() {
+        return "input_handler.ourcraft." + getResourceName();
     }
 }

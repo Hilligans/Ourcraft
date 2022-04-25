@@ -84,25 +84,6 @@ public class WorldLoader {
         }
     }
 
-    public static ByteBuffer readResource(String path) {
-        try {
-            InputStream inputStream = Ourcraft.getResourceManager().getResource(path);
-            byte[] vals = inputStream.readAllBytes();
-            ByteBuffer byteBuffer = ByteBuffer.allocate(vals.length);
-            byteBuffer.put(vals);
-            byteBuffer.flip();
-            return byteBuffer;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    //TODO handle this properly
-    public static ByteBuffer readResource(ResourceLocation resourceLocation) {
-        return readResource(resourceLocation.path);
-    }
-
     public static String readString(String path) {
         StringBuilder stringBuilder = new StringBuilder();
         InputStream stream = WorldLoader.class.getResourceAsStream(path);

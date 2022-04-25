@@ -21,7 +21,6 @@ public class Shader {
 
     public Shader(String vertexShader, String geometryShader, String fragmentShader) {
         shader = ShaderManager.registerShader(vertexShader, geometryShader, fragmentShader);
-        //System.out.println(shader + "b");
     }
 
     public Shader addShaderElement(int type, int count, boolean normalised) {

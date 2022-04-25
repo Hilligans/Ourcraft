@@ -7,6 +7,7 @@ import org.lwjgl.vulkan.VkPipelineVertexInputStateCreateInfo;
 import org.lwjgl.vulkan.VkShaderModuleCreateInfo;
 import org.lwjgl.vulkan.VkVertexInputBindingDescription;
 
+import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
 
 import static org.lwjgl.vulkan.VK10.*;
@@ -18,12 +19,12 @@ public class Shader {
     public VkPipelineShaderStageCreateInfo shaderCreateInfo;
     public VkPipelineVertexInputStateCreateInfo stateCreateInfo;
 
-    public Shader(VulkanWindow vulkanWindow, byte[] shader, int bit) {
+    public Shader(VulkanWindow vulkanWindow, ByteBuffer shader, int bit) {
         this.vulkanWindow = vulkanWindow;
         VkShaderModuleCreateInfo createInfo = VkShaderModuleCreateInfo.calloc();
         createInfo.sType(VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO);
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
-            createInfo.pCode(memoryStack.bytes(shader));
+            createInfo.pCode(shader);
             LongBuffer longBuffer = memoryStack.mallocLong(1);
             vkCreateShaderModule(vulkanWindow.device.device, createInfo, null, longBuffer);
             this.shader = longBuffer.get(0);

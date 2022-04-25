@@ -30,7 +30,6 @@ public class SubChunk {
 
     public boolean empty = true;
 
-
     public int[] vals;
 
     public SubChunk(World world, long X, long Y, long Z) {

@@ -1,7 +1,9 @@
 package dev.Hilligans.ourcraft.World;
 
 import dev.Hilligans.ourcraft.Biome.Biome;
+import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Client;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.IMeshSource;
 import dev.Hilligans.ourcraft.Client.Rendering.MeshHolder;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.GLRenderer;
@@ -125,6 +127,30 @@ public class Chunk implements IMeshSource {
 
     }
 
+    public void build(IGraphicsEngine<?,?> graphicsEngine) {
+        if(solidMesh.id != -1) {
+            graphicsEngine.getDefaultImpl().destroyMesh(null,solidMesh.id);
+        }
+        PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
+        for(int x = 0; x < 16; x++) {
+            for(int y = 0; y < 256; y++) {
+                for(int z = 0; z < 16; z++) {
+                    BlockState block = getBlockState(x,y,z);
+                    for(int a = 0; a < 6; a++) {
+                        if(block.getBlock() != Blocks.AIR) {
+                            BlockState blockState = getBlockState(new BlockPos(x, y, z).add(Block.getBlockPos(block.getBlock().getSide(block,a))));
+                            if ((blockState.getBlock().blockProperties.transparent && (Settings.renderSameTransparent || block.getBlock() != blockState.getBlock())) || block.getBlock().blockProperties.alwaysRender) {
+                                block.getBlock().addVertices(primitiveBuilder,a,1.0f,block,new BlockPos(x + this.x,y,z + this.z),x,z);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        int id = graphicsEngine.getDefaultImpl().createMesh(null,primitiveBuilder.toVertexMesh().setVertexFormat("position_texture_color"));
+        solidMesh.set(id,primitiveBuilder.getVerticesCount());
+    }
+
     public void destroy() {
         for(SubChunk subChunk : chunks) {
             subChunk.destroy();
@@ -139,10 +165,6 @@ public class Chunk implements IMeshSource {
             VAOManager.destroyBuffer(id);
         }
         this.id = newId;
-    }
-
-    public void reload() {
-
     }
 
     public void generate() {

@@ -5,11 +5,8 @@ import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
 import dev.Hilligans.ourcraft.Client.Input.Input;
 import dev.Hilligans.ourcraft.Client.Input.InputHandlerProvider;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.*;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderPipeline;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTarget;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTaskSource;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Widget;
@@ -40,6 +37,7 @@ import dev.Hilligans.ourcraft.Util.ArgumentContainer;
 import dev.Hilligans.ourcraft.Util.Logger;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import dev.Hilligans.ourcraft.Recipe.IRecipe;
+import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
 import dev.Hilligans.ourcraft.Util.Registry.Registry;
 import dev.Hilligans.ourcraft.Util.Side;
 import dev.Hilligans.ourcraft.World.Feature;
@@ -96,6 +94,7 @@ public class GameInstance {
         REGISTRIES.put("ourcraft:vertex_formats", VERTEX_FORMATS);
         REGISTRIES.put("ourcraft:input_handler_providers", INPUT_HANDLER_PROVIDERS);
         REGISTRIES.put("ourcraft:textures", TEXTURES);
+        REGISTRIES.put("ourcraft:shaders", SHADERS);
     }
 
     public void loadContent() {
@@ -108,6 +107,16 @@ public class GameInstance {
         CONTENT_PACK.generateData();
     }
 
+    public void build(IGraphicsEngine<?,?> graphicsEngine) {
+        for(Registry<?> registry : REGISTRIES.ELEMENTS) {
+            for(Object o : registry.ELEMENTS) {
+                if(o instanceof IRegistryElement) {
+                    ((IRegistryElement) o).loadGraphics(graphicsEngine);
+                }
+            }
+        }
+    }
+
     public String path = System.getProperty("user.dir");
 
     public final Registry<Registry<?>> REGISTRIES = new Registry<>(this);
@@ -118,7 +127,7 @@ public class GameInstance {
     public final Registry<Tag> TAGS = new Registry<>(this, Tag.class);
     public final Registry<IRecipe<?>> RECIPES = new Registry<>(this, IRecipe.class);
     public final Registry<RecipeView<?>> RECIPE_VIEWS = new Registry<>(this, RecipeView.class);
-    public final Registry<IGraphicsEngine<?,?,?>> GRAPHICS_ENGINES = new Registry<>(this, IGraphicsEngine.class);
+    public final Registry<IGraphicsEngine<?,?>> GRAPHICS_ENGINES = new Registry<>(this, IGraphicsEngine.class);
     public final Registry<CommandHandler> COMMANDS = new Registry<>(this, CommandHandler.class);
     public final Registry<Protocol> PROTOCOLS = new Registry<>(this, Protocol.class);
     public final Registry<Setting> SETTINGS = new Registry<>(this, Setting.class);
@@ -136,6 +145,7 @@ public class GameInstance {
     public final Registry<VertexFormat> VERTEX_FORMATS = new Registry<>(this, VertexFormat.class);
     public final Registry<InputHandlerProvider> INPUT_HANDLER_PROVIDERS = new Registry<>(this, InputHandlerProvider.class);
     public final Registry<Texture> TEXTURES = new Registry<>(this, Texture.class);
+    public final Registry<ShaderSource> SHADERS = new Registry<>(this, ShaderSource.class);
 
     public void clear() {
         BLOCKS.clear();
@@ -252,8 +262,8 @@ public class GameInstance {
         }
     }
 
-    public void registerGraphicsEngine(IGraphicsEngine<?,?,?>... graphicsEngines) {
-        for(IGraphicsEngine<?,?,?> graphicsEngine : graphicsEngines) {
+    public void registerGraphicsEngine(IGraphicsEngine<?,?>... graphicsEngines) {
+        for(IGraphicsEngine<?,?> graphicsEngine : graphicsEngines) {
             GRAPHICS_ENGINES.put(graphicsEngine.getIdentifierName(), graphicsEngine);
         }
     }
@@ -280,6 +290,14 @@ public class GameInstance {
 
     public void registerTextures(Texture... textures) {
         TEXTURES.putAll(textures);
+    }
+
+    public void registerKeybind(Input... inputs) {
+        KEY_BINDS.putAll(inputs);
+    }
+
+    public void registerShader(ShaderSource... shaderSources) {
+        SHADERS.putAll(shaderSources);
     }
 
     public void register(String name, Object o) {

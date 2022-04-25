@@ -1,7 +1,6 @@
 package dev.Hilligans.ourcraft.Client;
 
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
-import dev.Hilligans.ourcraft.Client.Rendering.World.RenderableString;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
@@ -55,8 +54,7 @@ public class ChatWindow implements Screen {
                // messages.remove(x);
                 //x--;
       //      }
-      //  }
-        ArrayList<RenderableString> renderableStrings = new ArrayList<>();
+      //
         int biggest = 0;
 
         StringRenderer stringRenderer = window.getStringRenderer();

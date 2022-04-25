@@ -53,4 +53,19 @@ public class KeyPressHandler implements IInputProvider {
     public String getButtonName(int button, int extra) {
         return GLFW.glfwGetKeyName(button, extra);
     }
+
+    @Override
+    public String getResourceName() {
+        return "key_press_handler";
+    }
+
+    @Override
+    public String getIdentifierName() {
+        return "ourcraft:" + getResourceName();
+    }
+
+    @Override
+    public String getUniqueName() {
+        return "input_handler.ourcraft." + getResourceName();
+    }
 }

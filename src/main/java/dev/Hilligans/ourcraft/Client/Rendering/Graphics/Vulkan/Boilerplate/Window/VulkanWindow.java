@@ -54,7 +54,7 @@ public class VulkanWindow extends RenderWindow {
 
     public VkExtent2D extent2D = VkExtent2D.calloc();
 
-    public VulkanWindow(VulkanInstance vulkanInstance, int width, int height, IGraphicsEngine<?,?,?> graphicsEngine) {
+    public VulkanWindow(VulkanInstance vulkanInstance, int width, int height, IGraphicsEngine<?,?> graphicsEngine) {
         super(graphicsEngine);
         windowRenderer = new WindowRenderer(this);
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);

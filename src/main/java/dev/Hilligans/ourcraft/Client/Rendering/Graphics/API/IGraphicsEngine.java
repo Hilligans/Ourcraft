@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics.API;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.GraphicsData;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.GameInstance;
@@ -14,19 +15,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
-public interface IGraphicsEngine<T, Q extends RenderWindow, V extends IDefaultEngineImpl<Q>> extends IRegistryElement {
+public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngineImpl<Q>> extends IRegistryElement {
 
     Q createWindow();
 
-    T getChunkGraphicsContainer(Chunk chunk);
-
-    T createChunkGraphicsContainer();
-
-    void putChunkGraphicsContainer(Chunk chunk, T container);
-
     void render(Q window);
-
-    void renderWorld(MatrixStack matrixStack, ClientWorld world);
 
     void renderScreen(MatrixStack screenStack);
 
@@ -71,4 +64,14 @@ public interface IGraphicsEngine<T, Q extends RenderWindow, V extends IDefaultEn
     StringRenderer getStringRenderer();
 
     void setupStringRenderer(String defaultLanguage);
+
+    int getProgram(String name);
+
+    GraphicsData getGraphicsData();
+
+    default RenderWindow startEngine() {
+        RenderWindow window = setup();
+        getGameInstance().build(this);
+        return window;
+    }
 }

@@ -3,25 +3,27 @@ package dev.Hilligans.ourcraft;
 import dev.Hilligans.ourcraft.Biome.Biomes;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.Sounds;
+import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.Input.HandlerProviders.ControllerHandlerProvider;
 import dev.Hilligans.ourcraft.Client.Input.HandlerProviders.KeyPressHandlerProvider;
 import dev.Hilligans.ourcraft.Client.Input.HandlerProviders.MouseHandlerProvider;
+import dev.Hilligans.ourcraft.Client.Input.Input;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.*;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.FixedFunctionGL.FixedFunctionGLEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderPipeline;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTarget;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Tasks.GUIRenderTask;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Tasks.WorldRenderTask;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Tasks.WorldTransparentRenderTask;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
-import dev.Hilligans.ourcraft.Client.Rendering.Texture;
+import dev.Hilligans.ourcraft.Client.Rendering.Screens.EscapeScreen;
+import dev.Hilligans.ourcraft.Client.Rendering.Screens.JoinScreen;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
 import dev.Hilligans.ourcraft.Item.Data.ToolLevel;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.ModHandler.Identifier;
 import dev.Hilligans.ourcraft.Network.Protocols;
+import dev.Hilligans.ourcraft.Resource.Loaders.StringLoader;
 import dev.Hilligans.ourcraft.Resource.RegistryLoaders.JsonRegistryLoader;
 import dev.Hilligans.ourcraft.Resource.Loaders.ImageLoader;
 import dev.Hilligans.ourcraft.Resource.Loaders.JsonLoader;
@@ -31,13 +33,17 @@ import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import dev.Hilligans.ourcraft.Util.Side;
 import org.json.JSONArray;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
+import java.nio.DoubleBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static dev.Hilligans.ourcraft.Block.Blocks.*;
+import static dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler.GLFW_KEY_ESCAPE;
 
 public class Ourcraft {
 
@@ -60,7 +66,7 @@ public class Ourcraft {
     }
 
     public static void registerDefaultContent(ModContent modContent) {
-        modContent.registerResourceLoader(new JsonLoader(), new ImageLoader());
+        modContent.registerResourceLoader(new JsonLoader(), new ImageLoader(), new StringLoader());
         modContent.registerResourceLoader(new LitematicaSchematicLoader());
 
         modContent.registerBlocks(AIR,STONE,DIRT,GRASS,BEDROCK,IRON_ORE,LEAVES,LOG,SAND,CACTUS,CHEST,COLOR_BLOCK,STAIR_BLOCK,GRASS_PLANT,WEEPING_VINE,MAPLE_LOG,MAPLE_PLANKS,PINE_LOG,PINE_PLANKS,SPRUCE_LOG,SPRUCE_PLANKS,BIRCH_LOG,BIRCH_PLANKS,OAK_LOG,OAK_PLANKS,WILLOW_LOG,WILLOW_PLANKS,ACACIA_LOG,ACACIA_PLANKS,POPLAR_LOG,POPLAR_PLANKS,ELM_LOG,ELM_WOOD,PALM_LOG,PALM_WOOD,REDWOOD_LOG,REDWOOD_WOOD,SAPLING);
@@ -108,15 +114,21 @@ public class Ourcraft {
             Textures.addData(modContent);
 
             modContent.registerGraphicsEngine(new VulkanEngine());
+            modContent.registerGraphicsEngine(new OpenGLEngine());
             modContent.registerGraphicsEngine(new FixedFunctionGLEngine());
 
             modContent.registerRenderPipelines(new RenderPipeline("world_pipeline"));
 
-            modContent.registerRenderTarget(new RenderTarget("solid_world_renderer", "ourcraft:world_pipeline"));
-            modContent.registerRenderTarget(new RenderTarget("entity_renderer", "ourcraft:world_pipeline").afterTarget("solid_world_renderer","ourcraft"));
-            modContent.registerRenderTarget(new RenderTarget("particle_renderer", "ourcraft:world_pipeline").afterTarget("entity_renderer", "ourcraft"));
-            modContent.registerRenderTarget(new RenderTarget("translucent_world_renderer", "ourcraft:world_pipeline").afterTarget("particle_renderer", "ourcraft"));
-            modContent.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:world_pipeline").afterTarget("translucent_world_renderer", "ourcraft"));
+            modContent.registerRenderTarget(new RenderTarget("solid_world_renderer", "ourcraft:world_pipeline")
+                    .setPipelineState(new PipelineState().setDepth(true)));
+            modContent.registerRenderTarget(new RenderTarget("entity_renderer", "ourcraft:world_pipeline").afterTarget("solid_world_renderer","ourcraft")
+                    .setPipelineState(new PipelineState().setDepth(true)));
+            modContent.registerRenderTarget(new RenderTarget("particle_renderer", "ourcraft:world_pipeline").afterTarget("entity_renderer", "ourcraft")
+                    .setPipelineState(new PipelineState().setDepth(true)));
+            modContent.registerRenderTarget(new RenderTarget("translucent_world_renderer", "ourcraft:world_pipeline").afterTarget("particle_renderer", "ourcraft")
+                    .setPipelineState(new PipelineState().setDepth(true)));
+            modContent.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:world_pipeline").afterTarget("translucent_world_renderer", "ourcraft")
+                    .setPipelineState(new PipelineState()));
 
             modContent.registerRenderTask(new GUIRenderTask());
             modContent.registerRenderTask(new WorldRenderTask());
@@ -136,11 +148,56 @@ public class Ourcraft {
                     .addPart("position", VertexFormat.FLOAT,3)
                     .addPart("texture", VertexFormat.FLOAT, 2));
 
+            modContent.registerVertexFormat(new VertexFormat("position_texture_animatedWrap_shortenedColor", VertexFormat.TRIANGLES)
+                    .addPart("position", VertexFormat.FLOAT, 3)
+                    .addPart("texture", VertexFormat.FLOAT, 2)
+                    .addPart("textureWrap", VertexFormat.UNSIGNED_BYTE,1)
+                    .addPart("globalColor", VertexFormat.UNSIGNED_INT, 1));
+
+            modContent.registerShader(new ShaderSource("world_shader","ourcraft:position_texture_color", "Shaders/WorldVertexShader.glsl","Shaders/WorldFragmentShader.glsl"));
+
+
             modContent.registerInputHandlerProviders(new ControllerHandlerProvider(), new KeyPressHandlerProvider(), new MouseHandlerProvider());
+
+            modContent.registerKeybinds(new Input("ourcraft:mouse_button_handler::0") {
+                @Override
+                public void invoke(RenderWindow renderWindow, float strength) {
+                    Client client = renderWindow.getClient();
+                    if(client.screen != null) {
+                        DoubleBuffer doubleBuffer = getMousePos(renderWindow.getWindowID());
+                        client.screen.mouseClick((int) doubleBuffer.get(0), (int) doubleBuffer.get(1), GLFW.GLFW_MOUSE_BUTTON_1);
+                    }
+                }
+            });
+
+            modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_ESCAPE) {
+                @Override
+                public void invoke(RenderWindow renderWindow, float strength) {
+                    Client client = renderWindow.getClient();
+                    System.out.println("yes");
+                    if(client.renderWorld) {
+                        if (client.screen == null) {
+                            client.openScreen(new EscapeScreen(client));
+                        } else {
+                            client.closeScreen();
+                        }
+                    } else {
+                        client.openScreen(new JoinScreen(client));
+                    }
+                }
+            });
         }
 
 
         Ourcraft.getResourceManager().gameInstance = modContent.gameInstance;
+    }
+
+    public static DoubleBuffer getMousePos(long window) {
+        DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
+        DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
+        GLFW.glfwGetCursorPos(window, x, y);
+        //return BufferUtils.createDoubleBuffer(2);
+        return BufferUtils.createDoubleBuffer(2).put(x.get()).put(y.get());
     }
 
 

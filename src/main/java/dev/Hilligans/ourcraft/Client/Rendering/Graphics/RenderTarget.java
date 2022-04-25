@@ -15,6 +15,8 @@ public class RenderTarget implements IRegistryElement {
     public MatrixStack matrixStack;
     public ModContent modContent;
 
+    public PipelineState pipelineState;
+
     public RenderTarget(String name, String renderPipeline) {
         this.name = name;
         this.renderPipeline = renderPipeline;
@@ -29,6 +31,11 @@ public class RenderTarget implements IRegistryElement {
     public RenderTarget beforeTarget(String before, String modID) {
         this.before = before;
         this.targetedMod = modID;
+        return this;
+    }
+
+    public RenderTarget setPipelineState(PipelineState state) {
+        this.pipelineState = state;
         return this;
     }
 

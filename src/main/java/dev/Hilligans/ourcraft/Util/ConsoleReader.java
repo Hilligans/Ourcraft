@@ -1,12 +1,13 @@
 package dev.Hilligans.ourcraft.Util;
 
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 public class ConsoleReader extends Thread {
 
-    ConsoleEvent consoleEvent;
+    Consumer<String> consoleEvent;
 
-    public ConsoleReader(ConsoleEvent consoleEvent) {
+    public ConsoleReader(Consumer<String> consoleEvent) {
         this.consoleEvent = consoleEvent;
         this.start();
     }
@@ -14,12 +15,9 @@ public class ConsoleReader extends Thread {
     @Override
     public void run() {
         Scanner scan = new Scanner(System.in);
-        while (scan.hasNext()) {
-            consoleEvent.invoke(scan.nextLine());
+        String line;
+        while(!(line = scan.nextLine()).equals(""+((char) 3))) {
+            consoleEvent.accept(line);
         }
-    }
-
-    public interface ConsoleEvent {
-        void invoke(String message);
     }
 }

@@ -2,16 +2,13 @@ package dev.Hilligans.ourcraft.ModHandler.Content;
 
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
+import dev.Hilligans.ourcraft.Client.Input.Input;
 import dev.Hilligans.ourcraft.Client.Input.InputHandlerProvider;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.*;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderPipeline;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTarget;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderTaskSource;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.IModel;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
-import dev.Hilligans.ourcraft.Client.Rendering.Textures;
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Data.Primitives.Triplet;
 import dev.Hilligans.ourcraft.GameInstance;
@@ -145,7 +142,7 @@ public class ContentPack {
                 for(Feature feature : mod.features) {
                     gameInstance.registerFeature(feature);
                 }
-                for(IGraphicsEngine<?,?,?> graphicsEngine : mod.graphicsEngines) {
+                for(IGraphicsEngine<?,?> graphicsEngine : mod.graphicsEngines) {
                     gameInstance.registerGraphicsEngine(graphicsEngine);
                 }
                 for(RenderTarget renderTarget : mod.renderTargets) {
@@ -162,6 +159,12 @@ public class ContentPack {
                 }
                 for(InputHandlerProvider provider : mod.inputHandlerProviders) {
                     gameInstance.registerInputHandlerProviders(provider);
+                }
+                for(Input input : mod.keybinds) {
+                    gameInstance.registerKeybind(input);
+                }
+                for(ShaderSource shaderSource : mod.shaders) {
+                    gameInstance.registerShader(shaderSource);
                 }
             }
         }

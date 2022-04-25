@@ -4,12 +4,14 @@ import org.lwjgl.util.shaderc.Shaderc;
 
 import java.nio.ByteBuffer;
 
+import static org.lwjgl.vulkan.VK10.*;
+
 public class ShaderCompiler {
 
-    public static byte[] compileShader(String shaderCode, int shaderType) {
+    public static ByteBuffer compileShader(String shaderCode, int shaderType) {
         long compiler = 0;
         long options = 0;
-        byte[] compiledShader;
+        ByteBuffer compiledShader;
 
         try {
             compiler = Shaderc.shaderc_compiler_initialize();
@@ -28,9 +30,7 @@ public class ShaderCompiler {
                 throw new RuntimeException("Shader compilation failed: " + Shaderc.shaderc_result_get_error_message(result));
             }
 
-            ByteBuffer buffer = Shaderc.shaderc_result_get_bytes(result);
-            compiledShader = new byte[buffer.remaining()];
-            buffer.get(compiledShader);
+            compiledShader = Shaderc.shaderc_result_get_bytes(result);
         } finally {
             Shaderc.shaderc_compile_options_release(options);
             Shaderc.shaderc_compiler_release(compiler);
@@ -39,5 +39,7 @@ public class ShaderCompiler {
         return compiledShader;
     }
 
-
+    public static final int VERTEX_SHADER = VK_SHADER_STAGE_VERTEX_BIT;
+    public static final int FRAGMENT_SHADER = VK_SHADER_STAGE_FRAGMENT_BIT;
+    public static final int GEOMETRY_SHADER = VK_SHADER_STAGE_GEOMETRY_BIT;
 }

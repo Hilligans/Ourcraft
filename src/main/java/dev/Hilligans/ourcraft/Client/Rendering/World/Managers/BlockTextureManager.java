@@ -46,15 +46,14 @@ public class BlockTextureManager implements TextureManager {
         }
     }
 
-    public void generate() {
-        //System.out.println(textureSource);
+    public void generate(TextAtlas textAtlas) {
         if(location != null) {
-            int id = TextAtlas.instance.loadTextureId("Blocks/" + location, location.substring(0,location.length() - 4),textureSource);
+            int id = textAtlas.loadTextureId("Blocks/" + location, location.substring(0,location.length() - 4),textureSource);
             for (int x = 0; x < 6; x++) {
                 textures[x] = id;
 
                 if (textureNames != null && textureNames[x] != null) {
-                    textures[x] = TextAtlas.instance.loadTextureId("Blocks/" + textureNames[x], textureNames[x].substring(0,textureNames[x].length() - 4),textureSource);
+                    textures[x] = textAtlas.loadTextureId("Blocks/" + textureNames[x], textureNames[x].substring(0,textureNames[x].length() - 4),textureSource);
                 }
             }
         }

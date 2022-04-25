@@ -43,6 +43,7 @@ public class MiniMap {
         }
     }
 
+    //TODO fix
     public void draw(MatrixStack matrixStack, int chunkX, int chunkZ, int x, int y, int windowWidth, int windowHeight) {
         GL11.glDisable(GL11.GL_DEPTH_TEST);
 
@@ -59,7 +60,7 @@ public class MiniMap {
                 if (gridChunk.texture == -1 || count == 500) {
                     gridChunk.makeTexture1();
                 }
-                Renderer.drawTexture(matrixStack, gridChunk.texture, getX(chunkX + (X * 16), size,x,windowWidth), getZ(chunkX + (Z * 16), size,y,windowHeight), size, size);
+               // Renderer.drawTexture(matrixStack, gridChunk.texture, getX(chunkX + (X * 16), size,x,windowWidth), getZ(chunkX + (Z * 16), size,y,windowHeight), size, size);
 
             }
         }

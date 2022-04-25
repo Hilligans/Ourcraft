@@ -31,7 +31,7 @@ public class GUIRenderTask extends RenderTaskSource {
     public RenderTask getDefaultTask() {
         return new RenderTask() {
             @Override
-            public void draw(RenderWindow window, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack) {
+            public void draw(RenderWindow window, IGraphicsEngine<?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack) {
                 IDefaultEngineImpl<?> impl = engine.getDefaultImpl();
 
                 impl.setState(window, new PipelineState());
@@ -39,7 +39,7 @@ public class GUIRenderTask extends RenderTaskSource {
                 StringRenderer stringRenderer = engine.getStringRenderer();
 
                 if (client.playerData.f3) {
-                    stringRenderer.drawStringInternal(window, screenStack, Camera.getString(), client.windowX / 2, 0, 0.5f);
+                    //stringRenderer.drawStringInternal(window, screenStack, Camera.getString(), client.windowX / 2, 0, 0.5f);
                     stringRenderer.drawStringInternal(window, screenStack, "FPS:" + OpenGLEngine.renderWindow.frameTracker.getFPS(), client.windowX / 2, 29, 0.5f);
                     stringRenderer.drawStringInternal(window, screenStack, "Biome:" + client.clientWorld.biomeMap.getBiome((int) Camera.pos.x, (int) Camera.pos.z).name, client.windowX / 2, 58, 0.5f);
                     stringRenderer.drawStringInternal(window, screenStack, "VelY:" + Camera.velY, client.windowX / 2, 87, 0.5f);

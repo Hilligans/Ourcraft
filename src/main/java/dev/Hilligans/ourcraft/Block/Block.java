@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.Block;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.PrimitiveBuilder;
+import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.TextAtlas;
 import dev.Hilligans.ourcraft.Client.Rendering.Renderer;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.BlockTextureManager;
 import dev.Hilligans.ourcraft.Data.Descriptors.TagCollection;
@@ -152,8 +153,8 @@ public class Block implements IRegistryElement {
         return blockProperties.blockShape.getBoundingBox(world,pos);
     }
 
-    public void generateTextures() {
-        blockProperties.blockTextureManager.generate();
+    public void generateTextures(TextAtlas textAtlas) {
+        blockProperties.blockTextureManager.generate(textAtlas);
     }
 
     public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockPos blockPos, int x, int z) {
@@ -245,7 +246,7 @@ public class Block implements IRegistryElement {
         }
 
         if(modContent.gameInstance.side == Side.CLIENT) {
-            generateTextures();
+           // generateTextures();
         }
     }
 

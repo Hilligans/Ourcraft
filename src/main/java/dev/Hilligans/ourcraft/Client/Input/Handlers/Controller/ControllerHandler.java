@@ -180,4 +180,19 @@ public class ControllerHandler implements IInputProvider {
 
         return new ControllerSettings(id);
     }
+
+    @Override
+    public String getResourceName() {
+        return "controller_handler";
+    }
+
+    @Override
+    public String getIdentifierName() {
+        return "ourcraft:" + getResourceName();
+    }
+
+    @Override
+    public String getUniqueName() {
+        return "input_handler.ourcraft." + getResourceName();
+    }
 }

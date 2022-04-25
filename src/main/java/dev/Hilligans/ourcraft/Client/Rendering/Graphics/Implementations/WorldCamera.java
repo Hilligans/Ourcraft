@@ -138,9 +138,9 @@ public abstract class WorldCamera implements ICamera {
         Vector3d cameraPos = getLookVector();
         savePosition(cameraPos);
         if(thirdPersonMode == 2) {
-            perspective.lookAt(cameraPos.add(getLookVector().negate()), null, cameraUp());
+            perspective.lookAt(cameraPos.add(getLookVector().negate()), getSavedPosition(), cameraUp());
         } else {
-            perspective.lookAt(cameraPos.add(getLookVector()), null, cameraUp());
+            perspective.lookAt(cameraPos.add(getLookVector()), getSavedPosition(), cameraUp());
         }
         perspective.translate(0,0.15f,0);
         return new MatrixStack(perspective);
@@ -173,6 +173,7 @@ public abstract class WorldCamera implements ICamera {
         }
         return x * 0.1f;
     }
+
 
     @Override
     public void savePosition(Vector3d vector3d) {

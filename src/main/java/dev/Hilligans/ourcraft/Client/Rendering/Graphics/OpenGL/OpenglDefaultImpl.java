@@ -3,11 +3,15 @@ package dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.PipelineState;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.ShaderSource;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Client.Rendering.VertexMesh;
+import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.ShaderManager;
 import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.Hilligans.ourcraft.ModHandler.Content.UnknownResourceException;
+import dev.Hilligans.ourcraft.Resource.ResourceLocation;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -39,6 +43,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
     @Override
     public void drawMesh(OpenGLWindow window, MatrixStack matrixStack, int texture, int program, int meshID, long indicesIndex, int length) {
         Tuple<Integer, Integer> data = meshData.get(meshID);
+        matrixStack.applyTransformation(program);
         if(texture != boundTexture) {
             GL20.glBindTexture(textureTypes.get(texture), texture);
             boundTexture = texture;
@@ -182,6 +187,18 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
 
     }
 
+    @Override
+    public int createProgram(ShaderSource shaderSource) {
+        String vertex =  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.vertexShader, shaderSource.modContent.getModID()));
+        String fragment =  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.fragmentShader, shaderSource.modContent.getModID()));
+        String geometry = shaderSource.geometryShader == null ? null :  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.geometryShader, shaderSource.modContent.getModID()));
+
+        if(geometry == null) {
+            return ShaderManager.registerShader(vertex,fragment);
+        } else {
+            return ShaderManager.registerShader(vertex,geometry,fragment);
+        }
+    }
 
     VertexFormat[] cache = new VertexFormat[2];
 

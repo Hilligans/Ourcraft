@@ -3,11 +3,13 @@ package dev.Hilligans.ourcraft;
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Util.ArgumentContainer;
+import dev.Hilligans.ourcraft.Util.ConsoleReader;
 import dev.Hilligans.ourcraft.Util.GameResource.GameResourceTable;
 import dev.Hilligans.ourcraft.Util.Logger;
 import dev.Hilligans.ourcraft.Util.Side;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class ClientMain {
 
@@ -21,7 +23,7 @@ public class ClientMain {
     public static ArgumentContainer argumentContainer;
 
     public static long start = System.currentTimeMillis();
-    public static IGraphicsEngine<?, ?, ?> graphicsEngine = null;
+    public static IGraphicsEngine<?,?> graphicsEngine = null;
 
     public static void main(String[] args) throws IOException {
         argumentContainer = new ArgumentContainer(args);

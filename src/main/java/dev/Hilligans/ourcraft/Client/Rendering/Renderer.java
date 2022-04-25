@@ -20,21 +20,6 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class Renderer {
 
-    public static void drawTexture(MatrixStack matrixStack, int id, int x, int y, int width, int height) {
-        int z = 0;
-
-        float[] vertices = new float[] {x,y,z,0,0,x,y + height,z,0,1,x + width,y,z,1,0,x + width,y + height,z,1,1};
-        int[] indices = new int[] {0,1,2,2,1,3};
-        glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
-        int vao = VAOManager.createVAO(vertices, indices);
-        GL30.glBindTexture(GL_TEXTURE_2D,id);
-        GL30.glBindVertexArray(vao);
-        matrixStack.applyTransformation();
-        matrixStack.applyColor();
-        glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
-        VAOManager.destroyBuffer(vao);
-    }
-
     public static void renderBlockItem(MatrixStack matrixStack, int x, int y, int size, Block block, ItemStack itemStack) {
         Item item = itemStack.item;
         glUseProgram(ClientMain.getClient().shaderManager.colorShader);
@@ -86,18 +71,4 @@ public class Renderer {
         VAOManager.destroyBuffer(vao);
         glEnable(GL_DEPTH_TEST);
     }
-
-    public static void create(int id) {
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, glGenFramebuffers());
-        glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, id, 0);
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-    }
-
-    public static void resetShader(int id) {
-        Matrix4f matrix4f = new Matrix4f();
-        int trans = glGetUniformLocation(id, "transform");
-        float[] floats = new float[16];
-        glUniformMatrix4fv(trans,false,matrix4f.get(floats));
-    }
-
 }

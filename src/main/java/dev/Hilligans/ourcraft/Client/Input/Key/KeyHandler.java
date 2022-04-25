@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class KeyHandler implements IInputProvider {
+public class KeyHandler {
 
     public static Int2CharOpenHashMap mappedKeys = new Int2CharOpenHashMap();
     public static Int2ObjectOpenHashMap<String> namedKeys = new Int2ObjectOpenHashMap<>();
@@ -296,38 +296,4 @@ public class KeyHandler implements IInputProvider {
 
             GLFW_KEY_WORLD_1       = 161,
             GLFW_KEY_WORLD_2       = 162;
-    @Override
-    public void setWindow(long window, InputHandler handler) {
-
-    }
-
-    @Override
-    public int getSize() {
-        return 0;
-    }
-
-    @Override
-    public void setOffset(int offset) {
-
-    }
-
-    @Override
-    public int getOffset() {
-        return 0;
-    }
-
-    @Override
-    public boolean requiresTicking() {
-        return false;
-    }
-
-    @Override
-    public void tick() {
-
-    }
-
-    @Override
-    public String getButtonName(int button, int extra) {
-        return null;
-    }
 }

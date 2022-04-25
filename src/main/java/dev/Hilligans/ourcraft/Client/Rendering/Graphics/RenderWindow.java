@@ -8,6 +8,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.ICamera;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Implementations.PlayerCamera;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.Util.Logger;
@@ -20,14 +21,14 @@ public abstract class RenderWindow {
     public RenderPipeline renderPipeline;
 
     public ICamera camera;
-    public IGraphicsEngine<?, ?, ?> graphicsEngine;
+    public IGraphicsEngine<?,?> graphicsEngine;
     public Logger logger;
     public InputHandler inputHandler;
 
     public double mouseX;
     public double mouseY;
 
-    public RenderWindow(IGraphicsEngine<?, ?, ?> graphicsEngine) {
+    public RenderWindow(IGraphicsEngine<?,?> graphicsEngine) {
         this.graphicsEngine = graphicsEngine;
         if(graphicsEngine != null) {
             Logger log = graphicsEngine.getLogger();
@@ -36,6 +37,7 @@ public abstract class RenderWindow {
             }
         }
         setRenderPipeline("ourcraft:world_pipeline");
+        camera = new PlayerCamera();
     }
 
     public void setRenderPipeline(RenderPipeline renderPipeline) {
@@ -103,16 +105,16 @@ public abstract class RenderWindow {
         return graphicsEngine.getDefaultImpl();
     }
 
-    public IGraphicsEngine<?,?,?> getGraphicsEngine() {
+    public IGraphicsEngine<?,?> getGraphicsEngine() {
         return graphicsEngine;
     }
 
     public void setupInputs() {
-        inputHandler = new InputHandler(graphicsEngine.getGameInstance(), getWindowID());
+        inputHandler = new InputHandler(graphicsEngine.getGameInstance(), this);
         for(InputHandlerProvider provider : graphicsEngine.getGameInstance().INPUT_HANDLER_PROVIDERS.ELEMENTS) {
             IInputProvider p = provider.getProvider(graphicsEngine.getIdentifierName(), getWindowingName());
             if(p != null) {
-                p.setWindow(getWindowID(), inputHandler);
+                p.setWindow(this, inputHandler);
                 inputHandler.add(p);
             }
         }

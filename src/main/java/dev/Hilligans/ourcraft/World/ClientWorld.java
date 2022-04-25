@@ -110,7 +110,8 @@ public class ClientWorld extends World {
         ArrayList<Long> removedChunks = new ArrayList<>();
         chunkContainer.forEach(chunk -> {
             if(Math.abs(cameraX - chunk.x) > distance || Math.abs(cameraZ - chunk.z) > distance) {
-                chunk.destroy();
+                //TODO fix
+              //  chunk.destroy();
                 removedChunks.add((long)chunk.x & 4294967295L | ((long)chunk.z & 4294967295L) << 32);
             }
         });

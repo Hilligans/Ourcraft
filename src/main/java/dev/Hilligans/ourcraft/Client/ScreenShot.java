@@ -61,7 +61,7 @@ public class ScreenShot {
     }
 
     private static Image getImage(int width, int height, Client client, int W, int H, int startX, int startY) {
-        int maxSize = GL30.glGetInteger(GL_MAX_VIEWPORT_DIMS);
+  /*      int maxSize = GL30.glGetInteger(GL_MAX_VIEWPORT_DIMS);
         int sizeX = (int)Math.ceil(width / (float)maxSize);
         int sizeY = (int)Math.ceil(height / (float)maxSize);
         Image image = new Image(width,height,3);
@@ -77,26 +77,9 @@ public class ScreenShot {
             }
         }
         image.buffer.reset();
-        return image;
-    }
 
-    private static void draw(Client client, int W, int H, int x, int y) {
-
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glUseProgram(client.shaderManager.shaderProgram);
-        glBindTexture(GL_TEXTURE_2D, client.texture);
-        MatrixStack matrixStack = Camera.getWorldStack(W,H,x,y);
-        matrixStack.applyColor();
-        matrixStack.applyTransformation();
-
-
-        MatrixStack screenStack = Camera.getScreenStack();
-        screenStack.applyColor();
-        screenStack.applyTransformation();
-
-       // client.draw(null, matrixStack,screenStack);
+   */
+        return null;
     }
 
     private static void writeImage(BufferedImage bufferedImage) {
@@ -122,6 +105,8 @@ public class ScreenShot {
     }
 
     private static Triplet<Integer,Integer,Integer> setFrameBuffer(int width, int height, Client client) {
+
+    /*
         int buffer = glGenFramebuffers();
         glBindFramebuffer(GL_FRAMEBUFFER, buffer);
         int texture = glGenTextures();
@@ -140,5 +125,8 @@ public class ScreenShot {
         client.windowX = width;
         client.windowY = height;
         return new Triplet<>(buffer,texture,rbo);
+
+     */
+        return null;
     }
 }

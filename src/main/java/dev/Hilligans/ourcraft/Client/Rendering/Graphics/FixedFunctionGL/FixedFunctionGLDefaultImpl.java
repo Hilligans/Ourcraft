@@ -5,6 +5,8 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenglDefaultImpl;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.PipelineState;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.ShaderSource;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Client.Rendering.VertexMesh;
@@ -102,6 +104,12 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     public void setState(FixedFunctionGLWindow window, PipelineState state) {
 
     }
+
+    @Override
+    public int createProgram(ShaderSource shaderSource) {
+        return 0;
+    }
+
     private int getGLPrimitive(int type) {
         return type + 0x1400;
     }

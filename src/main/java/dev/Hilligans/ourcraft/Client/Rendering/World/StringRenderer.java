@@ -6,6 +6,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
+import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.TextureAtlas;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
@@ -31,23 +32,18 @@ import static org.lwjgl.opengl.GL20.*;
 
 public class StringRenderer {
 
-    public HashMap<String, Tuple<Integer,Integer>> characterOffset = new HashMap<>();
-
     public int width;
     public int height;
-
-    public int mappedCharacters = -1;
 
     public int stringHeight = 58;
 
     VertexFormat format;
 
-    public IGraphicsEngine<?,?,?> graphicsEngine;
+    public IGraphicsEngine<?,?> graphicsEngine;
 
-    public StringRenderer(IGraphicsEngine<?,?,?> graphicsEngine) {
+    public StringRenderer(IGraphicsEngine<?,?> graphicsEngine) {
         this.graphicsEngine = graphicsEngine;
         format = graphicsEngine.getGameInstance().VERTEX_FORMATS.get("ourcraft:position_texture");
-        buildChars();
     }
 
     public void drawStringTranslated(RenderWindow window, MatrixStack matrixStack, String string, int x, int y, float scale) {
@@ -94,7 +90,7 @@ public class StringRenderer {
                 width += getCharWidth(string.charAt(z)) * scale;
             }
             int finalWidth = width;
-            ensureTexturesBuilt(vals);
+            ensureTexturesBuilt(vals, window);
             vals.forEach((val) -> {
                 TextureAtlas textureAtlas = textureAtlases.get(val);
                 if(textureAtlas == null) {
@@ -121,7 +117,7 @@ public class StringRenderer {
                 width += getCharWidth(string.charAt(z)) * scale;
             }
             int finalWidth = width;
-            ensureTexturesBuilt(vals);
+            ensureTexturesBuilt(vals, window);
             vals.forEach((val) -> {
                 TextureAtlas textureAtlas = textureAtlases.get(val);
                 if(textureAtlas == null) {
@@ -209,12 +205,13 @@ public class StringRenderer {
         idMap.put(character, image);
     }
 
-    public void ensureTexturesBuilt(IntList intList) {
+    public void ensureTexturesBuilt(IntList intList, RenderWindow window) {
         intList.forEach((val) -> {
             if(!texturesBuilt.getOrDefault(val,(Boolean)false)) {
                 TextureAtlas textureAtlas = textureAtlases.get(val);
                 if(textureAtlas != null) {
-                    textureAtlas.buildAtlas();
+                    Image image = textureAtlas.toImage();
+                    textureAtlas.glTextureId = window.getEngineImpl().createTexture(window,image);
                     texturesBuilt.put(val, (Boolean) true);
                 }
             }
@@ -270,22 +267,6 @@ public class StringRenderer {
         return intList;
     }
 
-    public void draw(MatrixStack matrixStack, IntList vals, Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders) {
-        glEnable(GL_MULTISAMPLE);
-        ensureTexturesBuilt(vals);
-        vals.forEach((val) -> {
-            TextureAtlas textureAtlas = textureAtlases.get(val);
-            if(textureAtlas == null) {
-                return;
-            }
-            textureAtlas.bindTexture();
-            PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
-            primitiveBuilder.translate(1.0f,0,1.0f);
-            primitiveBuilder.draw1(matrixStack);
-        });
-        glDisable(GL_MULTISAMPLE);
-    }
-
     public int getCharWidth(char character) {
         try {
             if (charMap.containsKey(character)) {
@@ -294,5 +275,4 @@ public class StringRenderer {
         } catch (Exception ignored) {}
         return height;
     }
-
 }

@@ -28,67 +28,8 @@ import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 
 public class WorldTextureManager {
 
-    int width = 0;
-    int height = 1;
-
-    public HashMap<String, Integer> idHashMap = new HashMap<>();
-
-    public void clear() {
-        width = 0;
-        height = 1;
-        idHashMap.clear();
-    }
-
-    public static int registerTexture(Image image) {
-        int texture;
-        texture = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.buffer);
-        glGenerateMipmap(GL_TEXTURE_2D);
-        return texture;
-
-    }
-
-    static HashMap<String, BufferedImage> cachedImages = new HashMap<>();
-
-    public static BufferedImage loadImage(String path, String source) {
-        BufferedImage img = cachedImages.get(path);
-        if(img != null) {
-            return img;
-        }
-        Image image = ((Image)ClientMain.gameInstance.RESOURCE_LOADER.getResource(new ResourceLocation(path, source)));
-        if(image != null) {
-            return image.toBufferedImage();
-        }
-        System.out.println(path + ":" + source);
-        return DefaultImage();
-    }
-
     public static Image loadImage1(String path, String source, GameInstance gameInstance) {
         return (Image) gameInstance.RESOURCE_LOADER.getResource(new ResourceLocation("Images/" + path, source));
-    }
-
-    public static void allocatePixels(ByteBuffer byteBuffer, BufferedImage img) {
-        for(int x = 0; x < img.getWidth(); x++) {
-            for(int y = 0; y < img.getHeight(); y++) {
-                Color color = new Color(img.getRGB(x,y),true);
-                byteBuffer.put((x + y * img.getWidth()) * 4,(byte)color.getRed());
-                byteBuffer.put((x + y * img.getWidth()) * 4 + 1,(byte)color.getGreen());
-                byteBuffer.put((x + y * img.getWidth()) * 4 + 2,(byte)color.getBlue());
-                byteBuffer.put((x + y * img.getWidth()) * 4 + 3,(byte)color.getAlpha());
-            }
-        }
-    }
-
-    public static BufferedImage DefaultImage() {
-        BufferedImage img = new BufferedImage(2, 2, BufferedImage.TYPE_INT_ARGB);
-        img.setRGB(0, 0, Color.GREEN.getRGB());
-        img.setRGB(1, 0, Color.ORANGE.getRGB());
-        img.setRGB(0, 1, Color.MAGENTA.getRGB());
-        img.setRGB(1, 1, Color.BLUE.getRGB());
-        return img;
     }
 
     public static BufferedImage createFlipped(BufferedImage image) {
@@ -105,43 +46,6 @@ public class WorldTextureManager {
         g.drawImage(image, 0, 0, null);
         g.dispose();
         return newImage;
-    }
-
-    public float minX(int id) {
-        int y = id / width;
-        int x = id - (y * width);
-        return ((float)1 / width) * x;
-    }
-    public float maxX(int id) {
-        int y = id / width;
-        int x = id - (y * width);
-        return ((float)1 / width) * (x + 1);
-    }
-    public float minY(int id) {
-        int y = id / width;
-        return (float)(1 / height) * y;
-    }
-    public float maxY(int id) {
-        int y = id / width;
-        return (float)(1 / height) * (y + 1);
-    }
-
-    public static int loadAndRegisterTexture(String path) {
-        BufferedImage bufferedImage = createFlipped(loadImage(path, "ourcraft"));
-        return registerTexture1(bufferedImage);
-    }
-    private static int registerTexture1(BufferedImage bufferedImage) {
-        int texture;
-        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(bufferedImage.getWidth() * bufferedImage.getHeight() * 4);
-        allocatePixels(byteBuffer, bufferedImage);
-        texture = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, texture);
-       // glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, bufferedImage.getWidth(), bufferedImage.getHeight(), true);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bufferedImage.getWidth(), bufferedImage.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, byteBuffer);
-        glGenerateMipmap(GL_TEXTURE_2D);
-        return texture;
     }
 
     public static BufferedImage stringToBufferedImage(String s) {

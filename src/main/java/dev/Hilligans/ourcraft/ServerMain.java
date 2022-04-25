@@ -58,7 +58,7 @@ public class ServerMain {
         }.start();
         server = new MultiPlayerServer();
         server.addWorld(0,world);
-        server.startServer("25586");
+        server.startServer("25588");
 
     }
 

@@ -88,35 +88,4 @@ public class  VAOManager {
 
         return VAO;
     }
-
-    public static float[] convertVertices(ArrayList<Vector5f> vector5fs, boolean coloured) {
-        float[] floats;
-        if(coloured) {
-            floats = new float[vector5fs.size() * 9];
-            int a = 0;
-            for(Vector5f vector5f : vector5fs) {
-                vector5f.addToList(floats,a * 9);
-                a++;
-            }
-        } else {
-            floats = new float[vector5fs.size() * 5];
-            int a = 0;
-            for(Vector5f vector5f : vector5fs) {
-                vector5f.addToList(floats,a * 5);
-                a++;
-            }
-        }
-        return floats;
-    }
-
-    public static int[] convertIndices(ArrayList<Integer> indices) {
-        int[] integers = new int[indices.size()];
-        int a  = 0;
-        for(Integer integer : indices) {
-            integers[a] = integer;
-            a++;
-        }
-        return integers;
-    }
-
 }

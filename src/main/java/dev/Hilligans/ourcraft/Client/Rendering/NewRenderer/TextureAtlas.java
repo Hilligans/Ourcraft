@@ -47,10 +47,6 @@ public class TextureAtlas {
         this(maxTextureSize,MIN_TEXTURE_SIZE);
     }
 
-    public void bindTexture() {
-        GL30.glBindTexture(GL_TEXTURE_2D,glTextureId);
-    }
-
     public synchronized int addImage(BufferedImage img, int width) {
         int id;
         for(TextureAtlas.ImageHolder imageHolder : imageHolders) {
@@ -70,27 +66,16 @@ public class TextureAtlas {
         return id;
     }
 
-    public int buildAtlas() {
+    public Image toImage() {
         BufferedImage img;
         if(imageHolders.size() != 0) {
             img = imageHolders.get(0).bufferedImage;
-
             for (int x = 1; x < imageHolders.size(); x++) {
                 img = joinImage(img, imageHolders.get(x).bufferedImage);
             }
-
-            ByteBuffer byteBuffer = ByteBuffer.allocateDirect(img.getWidth() * img.getHeight() * 4);
-            allocatePixels(byteBuffer, img);
-            int texture = glGenTextures();
-            glBindTexture(GL_TEXTURE_2D, texture);
-            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.getWidth(), img.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, byteBuffer);
-            glGenerateMipmap(GL_TEXTURE_2D);
-            glTextureId = texture;
-            return texture;
+            return new Image(img);
         }
-        return -1;
+        return null;
     }
 
     public float minX(TextureSource textureSource) {
@@ -144,18 +129,6 @@ public class TextureAtlas {
             }
         }
         return img;
-    }
-
-    public static void allocatePixels(ByteBuffer byteBuffer, BufferedImage img) {
-        for(int x = 0; x < img.getWidth(); x++) {
-            for(int y = 0; y < img.getHeight(); y++) {
-                Color color = new Color(img.getRGB(x,y),true);
-                byteBuffer.put((x + y * img.getWidth()) * 4,(byte)color.getRed());
-                byteBuffer.put((x + y * img.getWidth()) * 4 + 1,(byte)color.getGreen());
-                byteBuffer.put((x + y * img.getWidth()) * 4 + 2,(byte)color.getBlue());
-                byteBuffer.put((x + y * img.getWidth()) * 4 + 3,(byte)color.getAlpha());
-            }
-        }
     }
 
     public static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(1,new NamedThreadFactory("opengl_character_builder"));

@@ -47,6 +47,8 @@ import org.lwjgl.openal.AL11;
 import org.lwjgl.opengl.GL30;
 
 import java.nio.DoubleBuffer;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -94,18 +96,19 @@ public class Client {
     public ClientNetwork authNetwork;
     public GameInstance gameInstance;
 
-    public IGraphicsEngine<?,?,?> graphicsEngine;
+    public IGraphicsEngine<?,?> graphicsEngine;
     public InputHandler inputHandler;
     public IInputProvider mouseBind;
 
     public Client(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
         logger = gameInstance.LOGGER.withKey("client");
-        graphicsEngine = new OpenGLEngine(this);
+        graphicsEngine = gameInstance.GRAPHICS_ENGINES.get("ourcraft:openglEngine");
+        ((OpenGLEngine)graphicsEngine).client = this;
         soundEngine = new SoundEngine(gameInstance);
     }
 
-    public Client setGraphicsEngine(IGraphicsEngine<?,?,?> graphicsEngine) {
+    public Client setGraphicsEngine(IGraphicsEngine<?,?> graphicsEngine) {
         if(graphicsEngine != null) {
             this.graphicsEngine = graphicsEngine;
             System.out.println(graphicsEngine.getResourceName());
@@ -131,7 +134,7 @@ public class Client {
             readUsernameAndPassword(tag);
         }
         authNetwork.sendPacket(new CGetToken(playerData.userName, playerData.login_token));
-        RenderWindow window = graphicsEngine.setup();
+        RenderWindow window = graphicsEngine.startEngine();
         soundEngine.init();
         soundEngine.setAttenuationModel(AL11.AL_LINEAR_DISTANCE_CLAMPED);
         registerKeyHandlers();
@@ -158,7 +161,7 @@ public class Client {
             gameInstance.EVENT_BUS.postEvent(new RenderWorldEvent(matrixStack,screenStack,this));
             rendering = true;
             clientWorld.tick();
-            graphicsEngine.renderWorld(matrixStack,clientWorld);
+           // graphicsEngine.renderWorld(matrixStack,clientWorld);
 
             BlockPos pos = clientWorld.traceBlockToBreak(Camera.pos.x, Camera.pos.y + Camera.playerBoundingBox.eyeHeight, Camera.pos.z, Camera.pitch, Camera.yaw);
             BlockState blockState = null;
@@ -186,10 +189,10 @@ public class Client {
             playerData.heldStack = ItemStack.emptyStack();
         }
         if(screen != null) {
-            glfwSetCursorPos(window, (double)windowX / 2, (double)windowY / 2);
-            screen.close(false);
-            screen = null;
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+            //glfwSetCursorPos(window, (double)windowX / 2, (double)windowY / 2);
+           // screen.close(false);
+          //  screen = null;
+          //  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
         }
         if(playerData.openContainer != null) {
             playerData.openContainer.closeContainer();
@@ -201,7 +204,7 @@ public class Client {
     public void openScreen(Screen screen1) {
         screen1.setWindow(graphicsEngine.getWindows().get(0));
         gameInstance.EVENT_BUS.postEvent(new OpenScreenEvent(screen1,screen));
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         if(screen != null) {
             screen.close(true);
         }
@@ -223,6 +226,7 @@ public class Client {
     }
 
     public void openScreen(Container container) {
+
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         ContainerScreen<?> containerScreen = container.getContainerScreen(this);
         gameInstance.EVENT_BUS.postEvent(new OpenScreenEvent(containerScreen,screen));
@@ -246,20 +250,6 @@ public class Client {
     }
 
     public void registerKeyHandlers() {
-        KeyHandler.register(new KeyPress() {
-            @Override
-            public void onPress() {
-                if(renderWorld) {
-                    if (screen == null) {
-                        openScreen(new EscapeScreen(client));
-                    } else {
-                        closeScreen();
-                    }
-                } else {
-                    openScreen(new JoinScreen(client));
-                }
-            }
-        },KeyHandler.GLFW_KEY_ESCAPE);
 
         KeyHandler.register(new KeyPress() {
             @Override
