@@ -139,6 +139,11 @@ public class Ourcraft {
                     .addPart("texture", VertexFormat.FLOAT, 2)
                     .addPart("color", VertexFormat.FLOAT, 4));
 
+            modContent.registerVertexFormat(new VertexFormat("position_color_texture", VertexFormat.TRIANGLES)
+                    .addPart("position", VertexFormat.FLOAT,3)
+                    .addPart("color", VertexFormat.FLOAT, 4)
+                    .addPart("texture", VertexFormat.FLOAT, 2));
+
             modContent.registerVertexFormat(new VertexFormat("position_texture_globalColor", VertexFormat.TRIANGLES)
                     .addPart("position", VertexFormat.FLOAT, 3)
                     .addPart("texture", VertexFormat.FLOAT, 2)
@@ -154,7 +159,8 @@ public class Ourcraft {
                     .addPart("textureWrap", VertexFormat.UNSIGNED_BYTE,1)
                     .addPart("globalColor", VertexFormat.UNSIGNED_INT, 1));
 
-            modContent.registerShader(new ShaderSource("world_shader","ourcraft:position_texture_color", "Shaders/WorldVertexShader.glsl","Shaders/WorldFragmentShader.glsl"));
+//            modContent.registerShader(new ShaderSource("world_shader","ourcraft:position_texture_color", "Shaders/WorldVertexShader.glsl","Shaders/WorldFragmentShader.glsl"));
+            modContent.registerShader(new ShaderSource("world_shader","ourcraft:position_color_texture", "Shaders/WorldVertexShader.glsl","Shaders/WorldFragmentShader.glsl"));
 
 
             modContent.registerInputHandlerProviders(new ControllerHandlerProvider(), new KeyPressHandlerProvider(), new MouseHandlerProvider());

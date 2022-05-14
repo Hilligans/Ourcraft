@@ -60,14 +60,20 @@ public class VertexBuffer {
     public int findMemoryTypes(int filter, int properties) {
         VkPhysicalDeviceMemoryProperties memProperties = VkPhysicalDeviceMemoryProperties.calloc();
         vkGetPhysicalDeviceMemoryProperties(device.physicalDevice.physicalDevice, memProperties);
-        if(1==1) {
-            return 3;
-        }
+      //  System.out.println("count:" + memProperties.memoryTypeCount());
+        //vkGetDeviceMemoryCommitment(device.physicalDevice.physicalDevice,);
+
         for (int i = 0; i < memProperties.memoryTypeCount(); i++) {
+            long[] longs = new long[10];
+            vkGetDeviceMemoryCommitment(device.device,i,longs);
+            System.out.println(longs[0]);
             // System.out.println(i);
             if ((filter & (1 << i)) == 1 && (memProperties.memoryTypes(i).propertyFlags() & properties) == properties) {
-                return i;
+                //return i;
             }
+        }
+        if(1==1) {
+            return 3;
         }
         device.vulkanInstance.exit("failed to find memory");
         return -1;

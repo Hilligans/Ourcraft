@@ -30,7 +30,7 @@ public class ClientMain {
         gameInstance.handleArgs(args);
         gameInstance.side = Side.CLIENT;
         gameInstance.loadContent();
-
+        
         new GameResourceTable().createMap(gameInstance);
 
         client = new Client(gameInstance);

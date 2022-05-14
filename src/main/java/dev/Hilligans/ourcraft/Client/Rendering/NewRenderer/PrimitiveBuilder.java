@@ -40,7 +40,7 @@ public class PrimitiveBuilder {
 
     public VertexMesh toVertexMesh() {
         VertexMesh vertexMesh = new VertexMesh(vertexFormat);
-        vertexMesh.addData(indices.elementData,vertices.elementData);
+        vertexMesh.addData(indices.getElementData(),vertices.getElementData());
         return vertexMesh;
     }
 

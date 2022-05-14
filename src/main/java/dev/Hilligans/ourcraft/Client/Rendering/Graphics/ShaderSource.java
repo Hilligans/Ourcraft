@@ -63,4 +63,12 @@ public class ShaderSource implements IRegistryElement {
     public void loadGraphics(IGraphicsEngine<?, ?> graphicsEngine) {
         program = graphicsEngine.getDefaultImpl().createProgram(this);
     }
+
+    @Override
+    public String toString() {
+        return "ShaderSource{" +
+                "name='" + name + '\'' +
+                ", program=" + program +
+                '}';
+    }
 }

@@ -14,6 +14,8 @@ import dev.Hilligans.ourcraft.World.DataProviders.ShortBlockState;
 import dev.Hilligans.ourcraft.Util.Settings;
 import org.lwjgl.opengl.GL30;
 
+import java.util.Arrays;
+
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
@@ -164,5 +166,15 @@ public class SubChunk {
         for(int x = 0; x < 4096; x++) {
             vals[x] = block;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "SubChunk{" +
+                "y=" + y +
+                ", x=" + x +
+                ", z=" + z +
+                ", vals=" + Arrays.toString(vals) +
+                '}';
     }
 }

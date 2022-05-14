@@ -21,6 +21,7 @@ import java.util.ArrayList;
 public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefaultImpl> {
 
     public VulkanInstance vulkanInstance;
+    public VulkanDefaultImpl impl;
 
     @Override
     public VulkanWindow createWindow() {
@@ -39,7 +40,10 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
 
     @Override
     public VulkanWindow setup() {
+        impl = new VulkanDefaultImpl(this);
         vulkanInstance = getVulkanInstance();
+        vulkanInstance.setGraphicsEngine(this);
+        vulkanInstance.setUp();
         vulkanInstance.run();
         return vulkanInstance.vulkanWindow;
     }
@@ -66,7 +70,7 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
 
     @Override
     public VulkanDefaultImpl getDefaultImpl() {
-        return null;
+        return impl;
     }
 
     @Override

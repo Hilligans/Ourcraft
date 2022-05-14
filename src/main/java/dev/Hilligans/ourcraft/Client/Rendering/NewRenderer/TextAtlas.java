@@ -1,5 +1,6 @@
 package dev.Hilligans.ourcraft.Client.Rendering.NewRenderer;
 
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.Hilligans.ourcraft.Ourcraft;
 import dev.Hilligans.ourcraft.Resource.ResourceLocation;
@@ -114,15 +115,16 @@ public class TextAtlas {
     public long time = 0;
     public double count  = 0;
 
-    public int upload() {
+    public int upload(IGraphicsEngine<?,?> engine) {
         clear();
         assemble();
-        texture = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.buffer);
-        glGenerateMipmap(GL_TEXTURE_2D);
+        //texture = glGenTextures();
+        texture = engine.getDefaultImpl().createTexture(null,image);
+    //    glBindTexture(GL_TEXTURE_2D, texture);
+    ////    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    //    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.buffer);
+    //    glGenerateMipmap(GL_TEXTURE_2D);
         return texture;
     }
 

@@ -3,6 +3,7 @@ package dev.Hilligans.ourcraft.Client;
 import dev.Hilligans.ourcraft.ClientMain;
 import org.joml.*;
 
+import java.util.Arrays;
 import java.util.Stack;
 
 import static org.lwjgl.opengl.GL20.*;
@@ -52,7 +53,9 @@ public class MatrixStack {
 
     public void applyTransformation(int shaderId) { ;
         int trans = glGetUniformLocation(shaderId, "transform");
-        float[] floats = new float[16];;
+        float[] floats = new float[16];
+        matrix4f.get(floats);
+        //System.out.println(Arrays.toString(floats));
         glUniformMatrix4fv(trans,false,matrix4f.get(floats));
     }
 

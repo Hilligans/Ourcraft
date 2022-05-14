@@ -37,7 +37,7 @@ public class Settings {
 
     public static boolean autoSave = false;
 
-    public static boolean optimizeMesh = true;
+    public static boolean optimizeMesh = false;
     public static int destroyChunkDistance = renderDistance;
 
 

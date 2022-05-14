@@ -147,7 +147,7 @@ public class Chunk implements IMeshSource {
                 }
             }
         }
-        int id = graphicsEngine.getDefaultImpl().createMesh(null,primitiveBuilder.toVertexMesh().setVertexFormat("position_texture_color"));
+        int id = graphicsEngine.getDefaultImpl().createMesh(null,primitiveBuilder.toVertexMesh().setVertexFormat("position_color_texture"));
         solidMesh.set(id,primitiveBuilder.getVerticesCount());
     }
 
@@ -438,6 +438,15 @@ public class Chunk implements IMeshSource {
 
     public MeshHolder getTranslucentMesh() {
         return translucentMesh;
+    }
+
+    @Override
+    public String toString() {
+        return "Chunk{" +
+                "chunks=" + chunks +
+                ", x=" + x +
+                ", z=" + z +
+                '}';
     }
 
     @Override

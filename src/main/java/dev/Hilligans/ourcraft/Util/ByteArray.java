@@ -509,6 +509,7 @@ public class ByteArray {
         for(float val : vals) {
             writeFloat(val);
         }
+
     }
 
     public void writeShorts(short[] vals) {

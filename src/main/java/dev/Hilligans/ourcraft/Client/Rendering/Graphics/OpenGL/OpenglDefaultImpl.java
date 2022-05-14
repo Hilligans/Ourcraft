@@ -19,6 +19,7 @@ import org.lwjgl.opengl.GL20;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -32,6 +33,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
     public Int2ObjectOpenHashMap<Tuple<Integer, Integer>> meshData = new Int2ObjectOpenHashMap<>();
     public Int2IntOpenHashMap textureTypes = new Int2IntOpenHashMap();
     public Int2LongOpenHashMap vertexArrayObjects = new Int2LongOpenHashMap();
+    public Int2ObjectOpenHashMap<VertexMesh> meshReferences = new Int2ObjectOpenHashMap<>();
 
     public int boundTexture = -1;
     public int boundProgram = -1;
@@ -56,6 +58,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
         if(data == null) {
             return;
         }
+        glBindVertexArray(meshID);
         GL20.glDrawElements(data.typeA, length, data.typeB, indicesIndex);
     }
 
@@ -71,6 +74,9 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
 
         glBindVertexArray(VAO);
 
+     //   System.out.println(Arrays.toString(mesh.vertices));
+      //  System.out.println(Arrays.toString(mesh.indices));
+
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, mesh.vertices, GL_STATIC_DRAW);
 
@@ -84,8 +90,13 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
             glVertexAttribPointer(x,part.primitiveCount, getGLPrimitive(part.primitiveType),part.normalized,stride,pointer);
             glEnableVertexAttribArray(x);
             pointer += part.getSize();
+           // System.out.println(part.name);
             x++;
         }
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        meshReferences.put(VAO, mesh);
+        meshData.put(VAO, new Tuple<>(GL_TRIANGLES, GL_UNSIGNED_INT));
         vertexArrayObjects.put(VAO, ((long)VBO << 32) | (long)EBO);
         return VAO;
     }
@@ -93,6 +104,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
     @Override
     public void destroyMesh(OpenGLWindow window, int mesh) {
         long array = vertexArrayObjects.get(mesh);
+        meshData.remove(mesh);
         if((int)array != 0) {
             glDeleteBuffers((int) array);
         }
@@ -194,7 +206,10 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
         String geometry = shaderSource.geometryShader == null ? null :  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.geometryShader, shaderSource.modContent.getModID()));
 
         if(geometry == null) {
-            return ShaderManager.registerShader(vertex,fragment);
+            System.out.println(vertex);
+            int val = ShaderManager.registerShader(vertex,fragment);
+            System.out.println(glGetError());
+            return val;
         } else {
             return ShaderManager.registerShader(vertex,geometry,fragment);
         }

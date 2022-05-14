@@ -17,7 +17,6 @@ public class VertexMesh {
     public VertexFormat vertexFormat;
     public String vertexFormatName;
 
-    public ArrayList<VertexComponent> vertexComponents = new ArrayList<>();
     public ArrayList<UniformComponent> uniformComponents = new ArrayList<>();
 
     //public IntBuffer indices;
@@ -59,15 +58,6 @@ public class VertexMesh {
     public VertexMesh addUniform(ByteBuffer byteBuffer) {
 
         return this;
-    }
-
-    static class VertexComponent {
-
-        ByteBuffer data;
-
-        public VertexComponent(ByteBuffer data) {
-            this.data = data;
-        }
     }
 
     static class UniformComponent {

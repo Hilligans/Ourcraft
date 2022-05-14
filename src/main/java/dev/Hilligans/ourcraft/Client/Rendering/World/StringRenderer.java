@@ -218,6 +218,7 @@ public class StringRenderer {
         });
     }
 
+    //TODO fix array index exception
     public void addVertices(PrimitiveBuilder primitiveBuilder, char character, int x, int y, float scale) {
         if(textureAtlases.containsKey(character >> 8)) {
             TextureAtlas textureAtlas = textureAtlases.getOrDefault(character >> 8, null);

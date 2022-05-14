@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate;
 
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.*;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngineException;
 import dev.Hilligans.ourcraft.Util.ArgumentContainer;
 import org.lwjgl.PointerBuffer;
@@ -32,17 +33,25 @@ public class VulkanInstance {
     public PointerBuffer extensions = memCallocPointer(64);
     public PointerBuffer instance = memAllocPointer(1);
 
+    public VulkanEngine engine;
+
     public VulkanInstance(VulkanProperties vulkanProperties) {
         this.vulkanProperties = vulkanProperties;
-            createInstance();
-            devices = new PhysicalDeviceManager(this);
-            physicalDevice = devices.selectPhysicalDevice();
-            logicalDevice = physicalDevice.logicalDevice;
-            vulkanWindow = physicalDevice.logicalDevice.getDefaultWindow();
-            vulkanWindow.selectFamily();
-            vulkanWindow.graphicsFamily.getQueue(0);
-            vulkanWindow.addData();
+    }
 
+    public void setUp() {
+        createInstance();
+        devices = new PhysicalDeviceManager(this);
+        physicalDevice = devices.selectPhysicalDevice();
+        logicalDevice = physicalDevice.logicalDevice;
+        vulkanWindow = physicalDevice.logicalDevice.getDefaultWindow();
+        vulkanWindow.selectFamily();
+        vulkanWindow.graphicsFamily.getQueue(0);
+        vulkanWindow.addData();
+    }
+
+    public void setGraphicsEngine(VulkanEngine engine) {
+        this.engine = engine;
     }
 
     public void createInstance() {

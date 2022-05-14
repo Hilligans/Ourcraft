@@ -144,6 +144,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         glEnable(GL_PROGRAM_POINT_SIZE);
 
         graphicsData.build();
+        TextAtlas.instance.upload(this);
 
         PlayerMovementThread playerMovementThread = new PlayerMovementThread(window);
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1, new NamedThreadFactory("player_movement"));

@@ -27,7 +27,7 @@ public class LogicalDevice {
     public LogicalDevice(PhysicalDevice physicalDevice) {
         this.vulkanInstance = physicalDevice.vulkanInstance;
         this.physicalDevice = physicalDevice;
-        this.defaultVulkanWindow = new VulkanWindow(physicalDevice.vulkanInstance,500,500,null).addDevice(this);
+        this.defaultVulkanWindow = new VulkanWindow(physicalDevice.vulkanInstance,500,500, vulkanInstance.engine).addDevice(this);
         try (MemoryStack memoryStack = MemoryStack.stackPush()) {
 
             PointerBuffer requiredExtensions = memoryStack.mallocPointer(1);

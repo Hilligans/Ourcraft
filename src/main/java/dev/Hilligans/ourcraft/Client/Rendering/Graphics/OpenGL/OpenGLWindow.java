@@ -24,6 +24,8 @@ public class OpenGLWindow extends RenderWindow {
         super(engine);
         this.camera = new FreeCamera(this);
         window = glfwCreateWindow(client.windowX,client.windowY,"Ourcraft",NULL,NULL);
+        width = client.windowX;
+        height = client.windowY;
         if(window == NULL) {
             glfwTerminate();
             throw new RuntimeException("Failed to create window");
