@@ -6,6 +6,7 @@ import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.ICamera;
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Util.Ray;
+import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.World.World;
 import org.joml.Matrix4d;
 import org.joml.Vector2f;
@@ -17,7 +18,7 @@ import java.util.Arrays;
 public abstract class WorldCamera implements ICamera {
 
     public double x;
-    public double y;
+    public double y = Chunk.terrain;
     public double z;
 
     public float pitch;
@@ -135,9 +136,10 @@ public abstract class WorldCamera implements ICamera {
 
     @Override
     public MatrixStack getMatrixStack(int W, int H, int x, int y) {
-        Matrix4d perspective = getPerspective(W, H, x, y, fov, getWindow().getAspectRatio(), 0.001f, 1000000000f);
+        pitch += 0.1;
+        Matrix4d perspective = getPerspective(W, H, x, y,  fov, getWindow().getAspectRatio(), 0.001f, 1000000000f);
         perspective.mul(getView());
-        Vector3d cameraPos = getLookVector();
+        Vector3d cameraPos = getCameraPos();
         savePosition(cameraPos);
         if(thirdPersonMode == 2) {
             perspective.lookAt(cameraPos.add(getLookVector().negate()), getSavedPosition(), cameraUp());
@@ -179,7 +181,7 @@ public abstract class WorldCamera implements ICamera {
 
     @Override
     public void savePosition(Vector3d vector3d) {
-        this.savedPosition = vector3d;
+        this.savedPosition = vector3d.get(new Vector3d());
     }
 
     @Override

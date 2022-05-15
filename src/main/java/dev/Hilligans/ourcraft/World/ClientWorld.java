@@ -140,10 +140,8 @@ public class ClientWorld extends World {
 
 
     public void requestChunk(int x, int z) {
-        if(!set.contains((long)x | (long) z << 32)) {
-            set.add((long)x | (long) z << 32);
-            client.sendPacket(new CRequestChunkPacket(x, z));
-        }
+        client.sendPacket(new CRequestChunkPacket(x, z));
+        set.add((long)x | (long) z << 32);
     }
 
     public void playSound(SoundBuffer soundBuffer, Vector3d pos) {

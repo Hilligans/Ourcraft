@@ -7,13 +7,10 @@ import dev.Hilligans.ourcraft.Entity.Entity;
 import dev.Hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.Hilligans.ourcraft.Network.Packet.AuthServerPackets.CTokenValid;
 import dev.Hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
+import dev.Hilligans.ourcraft.Network.Packet.Server.*;
 import dev.Hilligans.ourcraft.Network.PacketBase;
 import dev.Hilligans.ourcraft.Network.PacketData;
 import dev.Hilligans.ourcraft.Network.ServerNetworkHandler;
-import dev.Hilligans.ourcraft.Network.Packet.Server.SChatMessage;
-import dev.Hilligans.ourcraft.Network.Packet.Server.SDisconnectPacket;
-import dev.Hilligans.ourcraft.Network.Packet.Server.SHandshakePacket;
-import dev.Hilligans.ourcraft.Network.Packet.Server.SSendPlayerList;
 import dev.Hilligans.ourcraft.ServerMain;
 import dev.Hilligans.ourcraft.Util.Settings;
 import io.netty.channel.ChannelHandlerContext;
@@ -83,6 +80,7 @@ public class CHandshakePacket extends PacketBase {
         ServerMain.getWorld(serverPlayerData.getDimension()).addEntity(playerEntity);
         ServerNetworkHandler.sendPacket(new SHandshakePacket(playerId),ctx);
         ServerMain.getServer().sendPacket(new SChatMessage(name + " has joined the game"));
+        //ServerMain.getServer().sendPacket(new SUpdatePlayer(serverPlayerData.));
         ServerNetworkHandler.sendPacketExcept(new SSendPlayerList(name,playerId,true),ctx);
 
         //ServerMain.getServer().sendPacket(new SSendModContentPacket());

@@ -22,11 +22,12 @@ public class GraphicsData {
     public void buildTextures() {
         worldTextureAtlas = new TextAtlas();
 
+        TextAtlas.instance = worldTextureAtlas;
         for(Block block : graphicsEngine.getGameInstance().BLOCKS.ELEMENTS) {
             block.generateTextures(worldTextureAtlas);
         }
 
-        worldTexture = graphicsEngine.getDefaultImpl().createTexture(null,worldTextureAtlas.image);
+        worldTexture = worldTextureAtlas.upload(graphicsEngine);
     }
 
     public void clear() {

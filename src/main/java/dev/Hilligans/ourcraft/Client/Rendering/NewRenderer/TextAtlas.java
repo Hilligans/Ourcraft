@@ -188,7 +188,7 @@ public class TextAtlas {
         return register(new ImageLocation("Images/" + path,source));
     }
 
-    public final static TextAtlas instance = new TextAtlas();
+    public static TextAtlas instance = new TextAtlas();
 
     public static float getMinX(int id) {
         return (get(id,16)) / (float)instance.size;

@@ -196,7 +196,11 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
 
     @Override
     public void setState(OpenGLWindow window, PipelineState state) {
-
+        if(state.depthTest) {
+            glEnable(GL_DEPTH_TEST);
+        } else {
+            glDisable(GL_DEPTH_TEST);
+        }
     }
 
     @Override

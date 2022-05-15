@@ -154,6 +154,7 @@ public class SSendChunkPacket extends PacketBase {
     public void handle() {
         try {
             chunk.world.setChunk(chunk);
+            //System.out.println(chunk.x + ":" + chunk.z);
         } catch (Exception ignored) {
             ignored.printStackTrace();
         }

@@ -131,7 +131,9 @@ public class BlockModel implements IModel {
                 float offsetX = TextAtlas.getMaxX(id) - startX;
                 float offsetY = TextAtlas.getMaxY(id) - startY;
 
-                System.out.println(startX);
+                if(offsetX != 0) {
+                   // System.out.println("aaaa");
+                }
 
                 for (int x = 0; x < vals.length; x += 9) {
                     vals[x] = vertices[x] * size;

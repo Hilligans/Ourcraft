@@ -140,12 +140,14 @@ public class Client {
         registerKeyHandlers();
 
         gameInstance.EVENT_BUS.postEvent(new ClientStartRenderingEvent());
-
+        rWindow = window;
         graphicsEngine.createRenderLoop(gameInstance,window).run();
 
         cleanUp();
         System.exit(1);
     }
+
+    public RenderWindow rWindow;
 
     public void cleanUp() {
         glfwTerminate();

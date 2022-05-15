@@ -47,22 +47,25 @@ public class WorldRenderTask extends RenderTaskSource {
                     System.out.println(engine.getGameInstance().SHADERS.ELEMENTS);
                     shaderSource = engine.getGameInstance().SHADERS.get("ourcraft:world_shader");
                 }
+               // System.out.println(worldStack.matrix4f);
+                engine.getDefaultImpl().setState(window, new PipelineState().setDepth(true));
                 Vector3d pos = window.camera.getPosition();
+               // System.out.println(pos);
                 ClientWorld world = client.clientWorld;
                 if (client.renderWorld) {
 
                     for (int x = 0; x < Settings.renderDistance; x++) {
                         for (int z = 0; z < Settings.renderDistance; z++) {
                             Vector3i playerChunkPos = new Vector3i((int) pos.x >> 4, 0, (int) pos.z >> 4);
-                            drawChunk(window, client, engine, worldStack, playerChunkPos, getChunk(x + playerChunkPos.x, z + playerChunkPos.x, world));
+                            drawChunk(window, client, engine, worldStack, playerChunkPos, getChunk(x + playerChunkPos.x, z + playerChunkPos.z, world));
                             if (x != 0) {
-                                drawChunk(window, client, engine, worldStack, playerChunkPos, getChunk(-x + playerChunkPos.x, z + playerChunkPos.x, world));
+                                drawChunk(window, client, engine, worldStack, playerChunkPos, getChunk(-x + playerChunkPos.x, z + playerChunkPos.z, world));
                                 if (z != 0) {
-                                    drawChunk(window, client, engine, worldStack, playerChunkPos, getChunk(-x + playerChunkPos.x, -z + playerChunkPos.x, world));
+                                    drawChunk(window, client, engine, worldStack, playerChunkPos, getChunk(-x + playerChunkPos.x, -z + playerChunkPos.z, world));
                                 }
                             }
                             if (z != 0) {
-                                drawChunk(window, client, engine, worldStack, playerChunkPos, getChunk(x + playerChunkPos.x, -z + playerChunkPos.x, world));
+                                drawChunk(window, client, engine, worldStack, playerChunkPos, getChunk(x + playerChunkPos.x, -z + playerChunkPos.z, world));
                             }
                         }
                     }
@@ -74,26 +77,26 @@ public class WorldRenderTask extends RenderTaskSource {
     Long2BooleanOpenHashMap map = new Long2BooleanOpenHashMap();
     Chunk getChunk(int chunkX, int chunkY,ClientWorld world) {
         Chunk c = world.getChunk(chunkX,chunkY);
-        if(c == null && !map.getOrDefault((long)chunkX << 32 | chunkY,false)) {
+        if(c == null && !map.getOrDefault(((long)chunkX << 32) | chunkY,false)) {
+            //System.out.println("C:" + chunkX + ":" + chunkY);
             world.requestChunk(chunkX,chunkY);
-            map.put((long)chunkX << 32 | chunkY,true);
+            map.put(((long)chunkX << 32) | chunkY,true);
         }
         return c;
     }
 
     void drawChunk(RenderWindow window, Client client, IGraphicsEngine<?,?> engine, MatrixStack matrixStack, Vector3i playerChunkPos, Chunk chunk) {
         if(chunk != null) {
-           // if (matrixStack.frustumIntersection.testAab(new Vector3f((chunk.x - playerChunkPos.x) * 16, 0, (chunk.z - playerChunkPos.z) * 16), new Vector3f((chunk.x + 1 - playerChunkPos.x) * 16, 256f, (chunk.z + 1 - playerChunkPos.z) * 16))) {
+          //  if (matrixStack.frustumIntersection.testAab(new Vector3f((chunk.x - playerChunkPos.x) * 16, 0, (chunk.z - playerChunkPos.z) * 16), new Vector3f((chunk.x + 1 - playerChunkPos.x) * 16, 256f, (chunk.z + 1 - playerChunkPos.z) * 16))) {
                 matrixStack.push();
                 matrixStack.translate((chunk.x - playerChunkPos.x) * 16, 0, (chunk.z - playerChunkPos.z) * 16);
+
 
                 MeshHolder meshHolder = chunk.getSolidMesh();
                 int meshId = meshHolder.getId();
                 if (meshId != -1) {
-                    System.out.println("drawing");
                     engine.getDefaultImpl().drawMesh(window, matrixStack, engine.getGraphicsData().getWorldTexture(), shaderSource.program, meshId, meshHolder.index, meshHolder.length);
                 } else {
-                    System.out.println("build");
                     chunk.build(engine);
                 }
                 matrixStack.pop();

@@ -1,6 +1,8 @@
 package dev.Hilligans.ourcraft.Network.Packet.Server;
 
 import dev.Hilligans.ourcraft.Client.Camera;
+import dev.Hilligans.ourcraft.Client.Client;
+import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Network.PacketBase;
 import dev.Hilligans.ourcraft.Network.PacketData;
 
@@ -46,6 +48,8 @@ public class SUpdatePlayer extends PacketBase {
 
     @Override
     public void handle() {
+        ClientMain.getClient().rWindow.camera.setPosition(x,y,z);
+        ClientMain.getClient().rWindow.camera.setRotation(pitch,yaw);
         Camera.pos.set(x,y,z);
         Camera.pitch = pitch;
         Camera.yaw = yaw;

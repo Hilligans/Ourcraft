@@ -96,6 +96,7 @@ public interface ICamera {
 
     default Matrix4d getPerspective(int W, int H, int x, int y, float fov, float aspectRatio, float zNear, float zFar) {
         return new Matrix4d().translate(W - 1 - 2*x, H - 1 - 2*y, 0).scale(W, H, 1).perspective((float) Math.toRadians(fov), aspectRatio,zNear,zFar);
+       // return new Matrix4d().perspective((float) Math.toRadians(fov), aspectRatio,zNear,zFar);
     }
 
     Matrix4d getView();

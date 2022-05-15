@@ -148,7 +148,7 @@ public class Chunk implements IMeshSource {
             }
         }
         int id = graphicsEngine.getDefaultImpl().createMesh(null,primitiveBuilder.toVertexMesh().setVertexFormat("position_color_texture"));
-        solidMesh.set(id,primitiveBuilder.getVerticesCount());
+        solidMesh.set(id,primitiveBuilder.indices.size());
     }
 
     public void destroy() {
