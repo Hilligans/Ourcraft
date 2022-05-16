@@ -139,7 +139,7 @@ public abstract class WorldCamera implements ICamera {
         pitch += 0.1;
         Matrix4d perspective = getPerspective(W, H, x, y,  fov, getWindow().getAspectRatio(), 0.001f, 1000000000f);
         perspective.mul(getView());
-        Vector3d cameraPos = getCameraPos();
+        Vector3d cameraPos = getPosition();
         savePosition(cameraPos);
         if(thirdPersonMode == 2) {
             perspective.lookAt(cameraPos.add(getLookVector().negate()), getSavedPosition(), cameraUp());

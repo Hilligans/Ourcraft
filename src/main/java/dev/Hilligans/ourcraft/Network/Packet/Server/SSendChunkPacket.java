@@ -33,6 +33,7 @@ public class SSendChunkPacket extends PacketBase {
     @Override
     public void encode(PacketData packetData) {
         packetData.writeByte(mode);
+       // System.out.println(chunk.x + ":" + chunk.z);
         packetData.writeInt(chunk.x);
         packetData.writeInt(chunk.z);
 

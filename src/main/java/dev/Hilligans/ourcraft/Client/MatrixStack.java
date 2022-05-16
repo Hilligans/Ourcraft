@@ -20,7 +20,6 @@ public class MatrixStack {
     public MatrixStack(Matrix4f matrix4f) {
         this.matrix4f = matrix4f;
         color = new Vector4f(1.0f,1.0f,1.0f,1.0f);
-
     }
 
     public MatrixStack(Matrix4d matrix4d) {
@@ -47,6 +46,10 @@ public class MatrixStack {
         applyColor();
     }
 
+    public void updateFrustum() {
+        frustumIntersection.set(matrix4f);
+    }
+
     public Matrix4f get() {
         return matrix4f;
     }
@@ -55,7 +58,6 @@ public class MatrixStack {
         int trans = glGetUniformLocation(shaderId, "transform");
         float[] floats = new float[16];
         matrix4f.get(floats);
-        //System.out.println(Arrays.toString(floats));
         glUniformMatrix4fv(trans,false,matrix4f.get(floats));
     }
 

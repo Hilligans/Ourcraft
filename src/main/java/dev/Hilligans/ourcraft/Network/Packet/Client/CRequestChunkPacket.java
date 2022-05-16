@@ -38,6 +38,7 @@ public class CRequestChunkPacket extends PacketBase {
     @Override
     public void handle() {
         try {
+            //System.out.println(ChunkX + ":" + ChunkZ);
             int dim = ServerNetworkHandler.getPlayerData(ctx).getDimension();
             Chunk chunk = ServerMain.getWorld(dim).getOrGenerateChunk(ChunkX, ChunkZ);
             ServerMain.getWorld(dim).generateChunk(ChunkX + 1, ChunkZ);

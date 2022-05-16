@@ -7,9 +7,13 @@ import dev.Hilligans.ourcraft.Util.ConsoleReader;
 import dev.Hilligans.ourcraft.Util.GameResource.GameResourceTable;
 import dev.Hilligans.ourcraft.Util.Logger;
 import dev.Hilligans.ourcraft.Util.Side;
+import dev.Hilligans.ourcraft.World.Chunk;
+import dev.Hilligans.ourcraft.World.ClientWorld;
+import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 
 public class ClientMain {
 
