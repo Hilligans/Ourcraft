@@ -12,15 +12,6 @@ import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
 import dev.Hilligans.ourcraft.Util.Settings;
-import org.lwjgl.opengl.GL30;
-
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL20.glUseProgram;
 
 public class Texture implements IRegistryElement {
 
@@ -90,7 +81,7 @@ public class Texture implements IRegistryElement {
     }
 
     public void drawCenteredTexture(RenderWindow window, MatrixStack matrixStack, float size) {
-        drawTexture(window, matrixStack, (int)(ClientMain.getWindowX() / 2 - width / 2 * size), (int)(ClientMain.getWindowY() / 2 - height / 2 * size),(int)(width * size), (int)(height * size));
+        drawTexture(window, matrixStack, (int)(window.getWindowWidth() / 2 - width / 2 * size), (int)(window.getWindowHeight() / 2 - height / 2 * size),(int)(width * size), (int)(height * size));
     }
 
     public void drawCenteredTexture(RenderWindow window, MatrixStack matrixStack, int startX, int startY, int endX, int endY, float size) {

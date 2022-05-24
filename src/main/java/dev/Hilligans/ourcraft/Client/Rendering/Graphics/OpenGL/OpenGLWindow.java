@@ -62,7 +62,7 @@ public class OpenGLWindow extends RenderWindow {
         client.soundEngine.tick();
         if(client.screenShot) {
             client.screenShot = false;
-            ScreenShot.takeScreenShot();
+            ScreenShot.takeScreenShot(this);
         }
         glfwPollEvents();
         tick();

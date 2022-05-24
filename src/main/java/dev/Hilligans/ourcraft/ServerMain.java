@@ -29,37 +29,17 @@ public class ServerMain {
         gameInstance.handleArgs(args);
         gameInstance.side = Side.SERVER;
         gameInstance.loadContent();
-       // gameInstance.register("testt",gameInstance);
 
+        server(gameInstance);
+    }
+
+    public static void server(GameInstance gameInstance) {
         ServerWorld world = new ServerWorld(gameInstance);
         world.worldBuilders.add(new OreBuilder("ore", Blocks.GRASS,Blocks.STONE).setFrequency(20));
 
-       // Ourcraft.CONTENT_PACK.releaseMod("test_mod");
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-               /* try {
-                    Thread.sleep(10000);
-                } catch (Exception e) {}
-                System.out.println("running");
-                long mili = System.currentTimeMillis();
-                Chunk chunk = server.getDefaultWorld().getChunk(0,0);
-                chunk.chunks.get(0).set(Blocks.GRASS.getDefaultState().blockId << 16 | 65535);
-                AtomicInteger count = new AtomicInteger();
-                world.chunkContainer.forEach(chunk1 -> {
-                    chunk1.fastSet(chunk.chunks.get(0).vals);
-                    count.getAndIncrement();
-                });
-                System.out.println((System.currentTimeMillis() - mili) + " Miliseconds to do " + (count.get() * 16*16*4096) + " Blocks");
-
-                */
-            }
-        }.start();
         server = new MultiPlayerServer();
         server.addWorld(0,world);
         server.startServer("25588");
-
     }
 
     public static World getWorld(int id) {
@@ -77,5 +57,4 @@ public class ServerMain {
             System.out.println(line);
         }
     }
-
 }

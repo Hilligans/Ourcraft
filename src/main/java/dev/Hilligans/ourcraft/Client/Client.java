@@ -53,7 +53,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.glUseProgram;
 
 public class Client {
 
@@ -170,7 +169,7 @@ public class Client {
             if (pos != null) {
                 blockState = clientWorld.getBlockState(pos);
                 int id = blockState.getBlock().blockProperties.blockShape.generateOutline(clientWorld, pos);
-                glUseProgram(shaderManager.lineShader);
+                //glUseProgram(shaderManager.lineShader);
                 GL30.glBindVertexArray(id);
                 matrixStack.push();
                 matrixStack.translateMinusOffset(pos.x, pos.y, pos.z);
@@ -293,13 +292,6 @@ public class Client {
         KeyHandler.register(new KeyPress() {
             @Override
             public void onPress() {
-                playerData.f3 = !playerData.f3;
-            }
-        },GLFW_KEY_F3);
-
-        KeyHandler.register(new KeyPress() {
-            @Override
-            public void onPress() {
                 if(screen != null) {
                     if(playerData.openContainer != null) {
                         Slot slot = playerData.openContainer.getSlotAt((int)Camera.newX,(int)Camera.newY);
@@ -388,8 +380,6 @@ public class Client {
                 }
             }
         });
-
-
     }
 
     public static long timeSinceLastDraw = 0;

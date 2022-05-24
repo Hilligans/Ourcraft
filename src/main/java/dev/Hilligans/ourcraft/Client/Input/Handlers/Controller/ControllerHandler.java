@@ -114,7 +114,7 @@ public class ControllerHandler implements IInputProvider {
         for (int x = 0; x < Math.min(15,buttons.limit()); x++) {
             if (buttonPresses[id][x] != buttons.get(x)) {
                 buttonPresses[id][x] = buttons.get(x);
-                handleInput(handler, x, buttons.get(x), windowBind[id], id);
+                handleInput(handler, x, 1, windowBind[id], id, buttons.get(x));
             } else if (buttonPresses[id][x] == GLFW.GLFW_TRUE) {
 
             }
@@ -122,7 +122,7 @@ public class ControllerHandler implements IInputProvider {
         for (int x = 0; x < Math.min(6,axes.limit()); x++) {
             if (this.axes[id][x] != axes.get(x)) {
                 this.axes[id][x] = axes.get(x);
-                handleInput(handler, x + 15, axes.get(x), windowBind[id], id);
+                handleInput(handler, x + 15, 1, windowBind[id], id, axes.get(x));
             } else if (axes.get(x) != 0) {
 
             }
@@ -164,13 +164,13 @@ public class ControllerHandler implements IInputProvider {
         };
     }
 
-    private void handleInput(InputHandler inputHandler, int button, float value, long window, int extra) {
+    private void handleInput(InputHandler inputHandler, int button, int value, long window, int extra, float val) {
         if(inputHandler == null) {
             for(InputHandler handler : inputHandlers) {
-                handler.handleInput(button,value,window, 0, extra, 0, this);
+                handler.handleInput(button,value,window, 0, extra, 0, val, this);
             }
         } else {
-            inputHandler.handleInput(button,value,window,0, extra, 0, this);
+            inputHandler.handleInput(button,value,window,0, extra, 0, val, this);
         }
     }
 

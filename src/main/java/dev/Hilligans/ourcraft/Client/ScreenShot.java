@@ -1,5 +1,6 @@
 package dev.Hilligans.ourcraft.Client;
 
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.GLRenderer;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.WorldTextureManager;
@@ -25,16 +26,16 @@ import static org.lwjgl.opengl.GL30C.glBindFramebuffer;
 
 public class ScreenShot {
 
-    public static void takeScreenShot() {
+    public static void takeScreenShot(RenderWindow window) {
 
-        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(ClientMain.getWindowX() * ClientMain.getWindowY() * 3);
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect((int) (window.getWindowWidth() * window.getWindowHeight() * 3));
 
-        GL11.glReadPixels(0,0, ClientMain.getWindowX(),ClientMain.getWindowY(), GL11.GL_RGB,GL11.GL_UNSIGNED_BYTE,byteBuffer);
+        GL11.glReadPixels(0,0, (int) window.getWindowWidth(), (int) window.getWindowHeight(), GL11.GL_RGB,GL11.GL_UNSIGNED_BYTE,byteBuffer);
 
-        BufferedImage bufferedImage = new BufferedImage(ClientMain.getWindowX(), ClientMain.getWindowY(), BufferedImage.TYPE_INT_RGB);
+        BufferedImage bufferedImage = new BufferedImage((int) window.getWindowWidth(), (int) window.getWindowHeight(), BufferedImage.TYPE_INT_RGB);
 
-        for(int y = 0; y < ClientMain.getWindowY(); y++) {
-            for(int x = 0; x < ClientMain.getWindowX(); x++) {
+        for(int y = 0; y < window.getWindowHeight(); y++) {
+            for(int x = 0; x < window.getWindowWidth(); x++) {
                 bufferedImage.setRGB(x,y,new Color(byteBuffer.get() & 255,byteBuffer.get() & 255,byteBuffer.get() & 255).getRGB());
             }
         }
@@ -99,9 +100,10 @@ public class ScreenShot {
     }
 
     private static Image getImage(int width, int height) {
-        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(ClientMain.getWindowX() * ClientMain.getWindowY() * 3);
-        GL11.glReadPixels(0,0, ClientMain.getWindowX(),ClientMain.getWindowY(), GL11.GL_RGB,GL11.GL_UNSIGNED_BYTE,byteBuffer);
-        return new Image(width,height,3,byteBuffer);
+      //  ByteBuffer byteBuffer = ByteBuffer.allocateDirect(ClientMain.getWindowX() * ClientMain.getWindowY() * 3);
+       // GL11.glReadPixels(0,0, ClientMain.getWindowX(),ClientMain.getWindowY(), GL11.GL_RGB,GL11.GL_UNSIGNED_BYTE,byteBuffer);
+      //  return new Image(width,height,3,byteBuffer);
+        return null;
     }
 
     private static Triplet<Integer,Integer,Integer> setFrameBuffer(int width, int height, Client client) {

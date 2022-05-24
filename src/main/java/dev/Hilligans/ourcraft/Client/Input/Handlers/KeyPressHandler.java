@@ -20,7 +20,7 @@ public class KeyPressHandler implements IInputProvider {
         GLFW.glfwSetKeyCallback(window.getWindowID(), new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
-                inputHandler.handleInput(key,action,window,action,scancode,mods,handler);
+                inputHandler.handleInput(key,action,window,action,scancode,mods,action != 0 ? 1 : 0,handler);
             }
         });
     }

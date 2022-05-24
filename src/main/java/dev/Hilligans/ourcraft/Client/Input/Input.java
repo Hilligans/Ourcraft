@@ -1,15 +1,16 @@
 package dev.Hilligans.ourcraft.Client.Input;
 
-import dev.Hilligans.ourcraft.Client.Input.Key.KeyPress;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
 
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.GLFW_REPEAT;
 
 public abstract class Input implements IRegistryElement {
 
+    public boolean repeating;
     public String key;
     public String modID;
     public int[] keyBinds;
@@ -24,7 +25,14 @@ public abstract class Input implements IRegistryElement {
         bind(defaultBind);
     }
 
-    public abstract void invoke(RenderWindow renderWindow, float strength);
+    public Input(String defaultBind, boolean repeating) {
+        bind(defaultBind);
+        this.repeating = repeating;
+    }
+
+    public void press(RenderWindow renderWindow, float strength) {}
+
+    public void repeat(RenderWindow renderWindow, float strength) {}
 
     public void bind(String key) {
         this.boundKey = key;
@@ -57,7 +65,7 @@ public abstract class Input implements IRegistryElement {
     public void process(InputHandler inputHandler, int input, float mode, RenderWindow window, int action) {
         //TODO fix
         if(action == GLFW_PRESS) {
-            invoke(window, mode);
+            press(window, mode);
         }
     }
 

@@ -9,7 +9,6 @@ import org.lwjgl.opengl.GL30;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL20.glUseProgram;
 
 public class ResizingTexture extends Texture {
 
@@ -57,7 +56,7 @@ public class ResizingTexture extends Texture {
     public void drawTexture(MatrixStack matrixStack, int x, int y, int width, int height) {
         matrixStack.push();
         glDisable(GL_DEPTH_TEST);
-        glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
+        //glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
         int vao = createVAO(width,height,x,y);
         GL30.glBindTexture(GL_TEXTURE_2D,textureId);
         GL30.glBindVertexArray(vao);

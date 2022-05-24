@@ -18,7 +18,6 @@ import dev.Hilligans.ourcraft.Ourcraft;
 import org.joml.Vector3f;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public class ItemEntity extends Entity {
@@ -88,7 +87,7 @@ public class ItemEntity extends Entity {
         if(id == -1) {
             createMesh();
         }
-        glUseProgram(ClientMain.getClient().shaderManager.colorShader);
+        //glUseProgram(ClientMain.getClient().shaderManager.colorShader);
         glBindVertexArray(id);
         glBindTexture(GL_TEXTURE_2D, ClientMain.getClient().texture);
         matrixStack.translateMinusOffset(x,y,z);

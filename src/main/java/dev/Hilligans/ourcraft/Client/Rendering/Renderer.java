@@ -22,7 +22,7 @@ public class Renderer {
 
     public static void renderBlockItem(MatrixStack matrixStack, int x, int y, int size, Block block, ItemStack itemStack) {
         Item item = itemStack.item;
-        glUseProgram(ClientMain.getClient().shaderManager.colorShader);
+        //glUseProgram(ClientMain.getClient().shaderManager.colorShader);
         glDisable(GL_DEPTH_TEST);
         if(item.itemProperties.dynamicModel || item.vao == -1) {
             PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
@@ -55,7 +55,7 @@ public class Renderer {
         x += Settings.guiSize;
         y += Settings.guiSize;
         matrixStack.applyTransformation(ClientMain.getClient().shaderManager.shaderProgram);
-        glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
+        //glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
         glDisable(GL_DEPTH_TEST);
         int id = textureManager.getTextureId();
         float minX = TextAtlas.getMinX(id);

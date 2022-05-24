@@ -70,11 +70,13 @@ public class WorldLoader {
         try {
             File file = new File(path);
             if(file.exists()) {
-                RandomAccessFile aFile = new RandomAccessFile(path, "rw");
-                int length = (int) aFile.length();
-                ByteBuffer buf = ByteBuffer.allocateDirect(length);
-                buf.mark();
-                aFile.getChannel().read(buf);
+                ByteBuffer buf;
+                try (RandomAccessFile aFile = new RandomAccessFile(path, "rw")) {
+                    int length = (int) aFile.length();
+                    buf = ByteBuffer.allocateDirect(length);
+                    buf.mark();
+                    aFile.getChannel().read(buf);
+                }
                 buf.reset();
                 return buf;
             }

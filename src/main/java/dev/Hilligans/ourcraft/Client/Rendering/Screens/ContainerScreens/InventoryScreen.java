@@ -26,10 +26,10 @@ public class InventoryScreen extends ContainerScreen<InventoryContainer> {
         Textures.INVENTORY.drawCenteredTexture(window, matrixStack,0,0,158,99,Settings.guiSize);
     }
 
-    public static void drawHotbar(MatrixStack matrixStack) {
+    public static void drawHotbar(RenderWindow window, MatrixStack matrixStack) {
         int width = (int) (16 * Settings.guiSize);
-        int startX = (int) (ClientMain.getWindowX() / 2 - width * 4.5f);
-        int startY = (int) (ClientMain.getWindowY() - width - 1 * Settings.guiSize);
+        int startX = (int) (window.getWindowWidth() / 2 - width * 4.5f);
+        int startY = (int) (window.getWindowHeight() - width - 1 * Settings.guiSize);
         matrixStack.applyTransformation();
        // Textures.HOTBAR.drawCenteredXTexture(matrixStack,startY, Settings.guiSize);
 

@@ -22,7 +22,6 @@ import org.joml.Vector3f;
 import org.lwjgl.opengl.GL30;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.glUseProgram;
 
 public class Item implements IRecipeComponent, IRegistryElement {
 
@@ -63,7 +62,7 @@ public class Item implements IRecipeComponent, IRegistryElement {
         size -= Settings.guiSize * 2;
         x += Settings.guiSize;
         y += Settings.guiSize;
-        glUseProgram(ClientMain.getClient().shaderManager.colorShader);
+        //glUseProgram(ClientMain.getClient().shaderManager.colorShader);
         glDisable(GL_DEPTH_TEST);
         if(itemProperties.dynamicModel || vao == -1) {
             PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
@@ -89,14 +88,14 @@ public class Item implements IRecipeComponent, IRegistryElement {
     }
 
     public void renderHolding(RenderWindow window, MatrixStack matrixStack, int size, ItemStack itemStack) {
-        int x = ClientMain.getWindowX() / 16 * 12;
-        int y = ClientMain.getWindowY() / 16 * 12;
+        int x = (int) (window.getWindowWidth() / 16 * 12);
+        int y = (int) (window.getWindowHeight() / 16 * 12);
 
         size *= 2;
         size -= Settings.guiSize * 2;
         x += Settings.guiSize;
         y += Settings.guiSize;
-        glUseProgram(ClientMain.getClient().shaderManager.colorShader);
+        //glUseProgram(ClientMain.getClient().shaderManager.colorShader);
         glDisable(GL_DEPTH_TEST);
         if(itemProperties.dynamicModel || vao == -1) {
             PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);

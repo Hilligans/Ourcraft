@@ -35,7 +35,6 @@ import java.util.concurrent.TimeUnit;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL32.*;
 import static org.lwjgl.opengl.GL43.GL_DEBUG_OUTPUT;
 import static org.lwjgl.opengl.GL43.glDebugMessageCallback;
@@ -78,14 +77,14 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         window.frameTracker.count();
         Client.timeSinceLastDraw = currentTime;
 
-        client.unloadQueue.forEach(VAOManager::destroyBuffer);
-        client.unloadQueue.clear();
+       // client.unloadQueue.forEach(VAOManager::destroyBuffer);
+       // client.unloadQueue.clear();
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-        glUseProgram(client.shaderManager.shaderProgram);
+        //glUseProgram(client.shaderManager.shaderProgram);
 
         MatrixStack matrixStack = window.camera.getMatrix();
 

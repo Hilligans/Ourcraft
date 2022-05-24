@@ -17,9 +17,10 @@ import java.util.Arrays;
 
 public abstract class WorldCamera implements ICamera {
 
-    public double x;
-    public double y = Chunk.terrain;
-    public double z;
+    public Vector3d pos = new Vector3d(0,Chunk.terrain + 5, 0);
+   // public double x;
+   // public double y = Chunk.terrain + 5;
+  //  public double z;
 
     public float pitch;
     public float yaw;
@@ -44,21 +45,17 @@ public abstract class WorldCamera implements ICamera {
 
     @Override
     public void move(float x, float y, float z) {
-        this.x += x;
-        this.y += y;
-        this.z += z;
+        pos.add(x,y,z);
     }
 
     @Override
     public void setPosition(double x, double y, double z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        pos.set(x,y,z);
     }
 
     @Override
     public Vector3d getPosition() {
-        return new Vector3d(x,y,z);
+        return pos.get(new Vector3d());
     }
 
     @Override
@@ -136,7 +133,6 @@ public abstract class WorldCamera implements ICamera {
 
     @Override
     public MatrixStack getMatrixStack(int W, int H, int x, int y) {
-        pitch += 0.1;
         Matrix4d perspective = getPerspective(W, H, x, y,  fov, getWindow().getAspectRatio(), 0.001f, 1000000000f);
         perspective.mul(getView());
         Vector3d cameraPos = getPosition();

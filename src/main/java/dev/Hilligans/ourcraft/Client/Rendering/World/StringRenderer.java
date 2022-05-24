@@ -97,7 +97,7 @@ public class StringRenderer {
                     return;
                 }
                 PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
-                primitiveBuilder.translate(ClientMain.getWindowX() / 2f - finalWidth / 2f,0,0);
+                primitiveBuilder.translate(window.getWindowWidth() / 2f - finalWidth / 2f,0,0);
                 draw1(window,matrixStack,vals,primitiveBuilders);
             });
         } catch (Exception ignored) {}

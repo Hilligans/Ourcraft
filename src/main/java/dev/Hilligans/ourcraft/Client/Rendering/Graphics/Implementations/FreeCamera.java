@@ -18,8 +18,4 @@ public class FreeCamera extends WorldCamera {
         return window;
     }
 
-    @Override
-    public void move(float x, float y, float z) {
-
-    }
 }

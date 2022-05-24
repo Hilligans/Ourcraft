@@ -17,8 +17,4 @@ public class PlayerCamera extends WorldCamera {
         return null;
     }
 
-    @Override
-    public void move(float x, float y, float z) {
-
-    }
 }

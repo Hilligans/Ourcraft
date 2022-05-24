@@ -44,6 +44,8 @@ import java.util.concurrent.Executors;
 
 import static dev.Hilligans.ourcraft.Block.Blocks.*;
 import static dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler.GLFW_KEY_ESCAPE;
+import static dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler.GLFW_KEY_F3;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 
 public class Ourcraft {
 
@@ -51,7 +53,6 @@ public class Ourcraft {
     public static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(2,new NamedThreadFactory("random_executor"));
 
     public static String path = System.getProperty("user.dir");
-
 
     public static String hashString(String password, String salt) {
         return new String(BCrypt.withDefaults().hash(12,"abcdefghjklmmopq".getBytes(), (password + salt).getBytes()), StandardCharsets.UTF_8);
@@ -167,7 +168,7 @@ public class Ourcraft {
 
             modContent.registerKeybinds(new Input("ourcraft:mouse_button_handler::0") {
                 @Override
-                public void invoke(RenderWindow renderWindow, float strength) {
+                public void press(RenderWindow renderWindow, float strength) {
                     Client client = renderWindow.getClient();
                     if(client.screen != null) {
                         DoubleBuffer doubleBuffer = getMousePos(renderWindow.getWindowID());
@@ -178,7 +179,7 @@ public class Ourcraft {
 
             modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_ESCAPE) {
                 @Override
-                public void invoke(RenderWindow renderWindow, float strength) {
+                public void press(RenderWindow renderWindow, float strength) {
                     Client client = renderWindow.getClient();
                     System.out.println("yes");
                     if(client.renderWorld) {
@@ -190,6 +191,21 @@ public class Ourcraft {
                     } else {
                         client.openScreen(new JoinScreen(client));
                     }
+                }
+            });
+
+            modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_F3) {
+                @Override
+                public void press(RenderWindow renderWindow, float strength) {
+                    Client client = renderWindow.getClient();
+                    client.playerData.f3 = !client.playerData.f3;
+                }
+            });
+
+            modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_W, true) {
+                @Override
+                public void repeat(RenderWindow renderWindow, float strength) {
+                    renderWindow.getCamera().moveForeWard(-0.05f * strength);
                 }
             });
         }

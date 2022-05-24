@@ -96,6 +96,10 @@ public abstract class RenderWindow {
 
     }
 
+    public ICamera getCamera() {
+        return camera;
+    }
+
     public void setup() {
         setupInputs();
         renderPipeline.build(this);
@@ -125,6 +129,7 @@ public abstract class RenderWindow {
         for(IInputProvider provider : inputHandler.inputProviders) {
             provider.tick();
         }
+        inputHandler.tick();
     }
 
 }

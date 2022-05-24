@@ -12,6 +12,7 @@ import dev.Hilligans.ourcraft.World.ClientWorld;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -35,8 +36,15 @@ public class ClientMain {
         gameInstance.side = Side.CLIENT;
         gameInstance.loadContent();
 
-
         new GameResourceTable().createMap(gameInstance);
+
+        if(argumentContainer.getBoolean("--integratedServer", false)) {
+            try {
+                new Thread(() -> ServerMain.server(gameInstance)).start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         client = new Client(gameInstance);
         String graphicsEngine = argumentContainer.getString("--graphicsEngine", null);
@@ -44,7 +52,6 @@ public class ClientMain {
             System.out.println(graphicsEngine);
             client.setGraphicsEngine(gameInstance.GRAPHICS_ENGINES.get(graphicsEngine));
         }
-
         client.startClient();
     }
 
