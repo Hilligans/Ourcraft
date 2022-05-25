@@ -17,12 +17,12 @@ import java.util.Arrays;
 
 public abstract class WorldCamera implements ICamera {
 
-    public Vector3d pos = new Vector3d(0,Chunk.terrain + 5, 0);
+    public Vector3d pos = new Vector3d(1,Chunk.terrain + 5, 0);
    // public double x;
    // public double y = Chunk.terrain + 5;
   //  public double z;
 
-    public float pitch;
+    public float pitch = 1;
     public float yaw;
 
     public float velX;
@@ -128,12 +128,12 @@ public abstract class WorldCamera implements ICamera {
     }
 
     public Vector3d getLookVector() {
-        return new Vector3d((Math.cos(Camera.yaw) * Math.cos(Camera.pitch)), (Math.sin(Camera.pitch)), (Math.sin(Camera.yaw) * Math.cos(Camera.pitch)));
+        return new Vector3d((Math.cos(yaw) * Math.cos(pitch)), (Math.sin(pitch)), (Math.sin(yaw) * Math.cos(pitch)));
     }
 
     @Override
     public MatrixStack getMatrixStack(int W, int H, int x, int y) {
-        Matrix4d perspective = getPerspective(W, H, x, y,  fov, getWindow().getAspectRatio(), 0.001f, 1000000000f);
+        Matrix4d perspective = getPerspective(W, H, x, y,  fov, getWindow().getAspectRatio(), 0.001f, 1000000f);
         perspective.mul(getView());
         Vector3d cameraPos = getPosition();
         savePosition(cameraPos);

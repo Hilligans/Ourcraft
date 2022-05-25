@@ -43,6 +43,5 @@
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-core:2.17.1" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.11.0" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains:annotations:23.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.jooq:jool:0.9.14" level="project" />
   </component>
 </module>

@@ -19,9 +19,8 @@ import dev.Hilligans.ourcraft.World.ClientWorld;
 import dev.Hilligans.ourcraft.World.World;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import org.joml.Vector3d;
-import org.joml.Vector3f;
-import org.joml.Vector3i;
+import org.joml.*;
+import org.joml.Math;
 
 import java.nio.ByteBuffer;
 import java.time.LocalDate;
@@ -87,17 +86,13 @@ public class WorldRenderTask extends RenderTaskSource {
         if (chunk != null) {
             MeshHolder meshHolder = chunk.getSolidMesh();
             int meshId = meshHolder.getId();
-            matrixStack.updateFrustum();
-            Vector3f a = new Vector3f((chunk.x - playerChunkPos.x) * 16, 0, (chunk.z - playerChunkPos.z) * 16);
-            Vector3f b = new Vector3f((chunk.x + 1 - playerChunkPos.x) * 16, 256f, (chunk.z + 1 - playerChunkPos.z) * 16);
             if (meshId != -1) {
-              //  if (matrixStack.frustumIntersection.testAab(a.min(b, new Vector3f()), a.max(b, new Vector3f()))) {
-                //System.out.print(" " + chunk.x +":" + chunk.z);
+                if (matrixStack.frustumIntersection.testAab(new Vector3f((chunk.x - playerChunkPos.x) * 16, -256, (chunk.z - playerChunkPos.z) * 16), new Vector3f((chunk.x + 1 - playerChunkPos.x) * 16, 256f, (chunk.z + 1 - playerChunkPos.z) * 16))) {
                     matrixStack.push();
                     matrixStack.translate((chunk.x - playerChunkPos.x) * 16, 0, (chunk.z - playerChunkPos.z) * 16);
                     engine.getDefaultImpl().drawMesh(window, matrixStack, engine.getGraphicsData().getWorldTexture(), shaderSource.program, meshId, meshHolder.index, meshHolder.length);
                     matrixStack.pop();
-             //   }
+                }
             } else {
                 chunk.build(engine);
             }
