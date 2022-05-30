@@ -50,7 +50,6 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
 
     public OpenglDefaultImpl engineImpl;
 
-    public ArrayList<OpenGLWindow> windows = new ArrayList<>();
 
     public HashMap<String, Integer> programs = new HashMap<>();
 
@@ -84,15 +83,11 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-        //glUseProgram(client.shaderManager.shaderProgram);
-
         MatrixStack matrixStack = window.camera.getMatrix();
-
         matrixStack.applyColor();
         matrixStack.applyTransformation();
 
         MatrixStack screenStack = window.camera.getScreenStack();
-
         screenStack.applyColor();
         screenStack.applyTransformation();
 
@@ -157,10 +152,6 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
 
     }
 
-    @Override
-    public ArrayList<OpenGLWindow> getWindows() {
-        return windows;
-    }
 
     @Override
     public Logger getLogger() {

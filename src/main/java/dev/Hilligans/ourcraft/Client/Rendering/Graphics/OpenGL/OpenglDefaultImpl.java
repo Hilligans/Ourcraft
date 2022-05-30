@@ -16,6 +16,7 @@ import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -46,10 +47,10 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
     public void drawMesh(OpenGLWindow window, MatrixStack matrixStack, int texture, int program, int meshID, long indicesIndex, int length) {
         Tuple<Integer, Integer> data = meshData.get(meshID);
         matrixStack.applyTransformation(program);
-        if(texture != boundTexture) {
+      //  if(texture != boundTexture) {
             GL20.glBindTexture(textureTypes.get(texture), texture);
             boundTexture = texture;
-        }
+      //  }
         if(program != boundProgram){
             GL20.glUseProgram(program);
             boundProgram = program;
@@ -74,8 +75,6 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
 
         glBindVertexArray(VAO);
 
-     //   System.out.println(Arrays.toString(mesh.vertices));
-      //  System.out.println(Arrays.toString(mesh.indices));
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, mesh.vertices, GL_STATIC_DRAW);
@@ -94,6 +93,9 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
             x++;
         }
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        MemoryUtil.memFree(mesh.vertices);
+        MemoryUtil.memFree(mesh.indices);
 
         meshReferences.put(VAO, mesh);
         meshData.put(VAO, new Tuple<>(GL_TRIANGLES, GL_UNSIGNED_INT));
@@ -187,7 +189,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
             x++;
         }
 
-        glDrawElements(mesh.vertexFormat.primitiveType,mesh.indices.length,GL_UNSIGNED_INT,0);
+        glDrawElements(mesh.vertexFormat.primitiveType,mesh.indices.limit(),GL_UNSIGNED_INT,0);
 
         glDeleteBuffers(VBO);
         glDeleteBuffers(EBO);

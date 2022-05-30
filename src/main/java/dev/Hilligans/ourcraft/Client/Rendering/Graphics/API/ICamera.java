@@ -71,6 +71,10 @@ public interface ICamera {
         move((float) (Math.sin(getYaw()) * amount), 0, (float) -(Math.cos(getYaw()) * amount));
     }
 
+    default void moveUp(float amount) {
+        move(0,amount,0);
+    }
+
     default MatrixStack getMatrix() {
         return getMatrixStack(1,1,0,0);
     }

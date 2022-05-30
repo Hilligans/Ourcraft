@@ -39,7 +39,8 @@ public class GUIRenderTask extends RenderTaskSource {
                 StringRenderer stringRenderer = engine.getStringRenderer();
 
                 if (client.playerData.f3) {
-                    stringRenderer.drawStringInternal(window, screenStack, "FPS:" + OpenGLEngine.renderWindow.frameTracker.getFPS(), client.windowX / 2, 29, 0.5f);
+                    stringRenderer.drawStringInternal(window,screenStack,"1",0,0,0.5f);
+                    stringRenderer.drawStringInternal(window, screenStack, "FPS:" + window.frameTracker.getFPS(), client.windowX / 2, 29, 0.5f);
                     stringRenderer.drawStringInternal(window, screenStack, "Biome:" + client.clientWorld.biomeMap.getBiome((int) Camera.pos.x, (int) Camera.pos.z).name, client.windowX / 2, 58, 0.5f);
                     stringRenderer.drawStringInternal(window, screenStack, "VelY:" + Camera.velY, client.windowX / 2, 87, 0.5f);
                     Runtime runtime = Runtime.getRuntime();
@@ -59,22 +60,22 @@ public class GUIRenderTask extends RenderTaskSource {
                 ItemStack stack = client.playerData.inventory.getItem(client.playerData.handSlot);
                 if (stack != null && stack.item != null) {
                     int width = (int) (32 * Settings.guiSize);
-                    stack.item.renderHolding(window, screenStack, width, stack);
+                  //  stack.item.renderHolding(window, screenStack, width, stack);
                 }
 
-                InventoryScreen.drawHotbar(window, screenStack);
-                ChatWindow.render1(window, screenStack);
-                Camera.renderPlayer(worldStack);
+              //  InventoryScreen.drawHotbar(window, screenStack);
+              //  ChatWindow.render1(window, screenStack);
+              //  Camera.renderPlayer(worldStack);
 
 
                 if (client.screen != null) {
                     client.screen.render(window, screenStack);
                   //  client.playerData.heldStack.renderStack(screenStack, (int) (Camera.newX - Settings.guiSize * 8), (int) (Camera.newY - Settings.guiSize * 8));
                 } else {
-                    Textures.CURSOR.drawCenteredTexture(window, screenStack,1.0f);
+                   // Textures.CURSOR.drawCenteredTexture(window, screenStack,1.0f);
                     if (KeyHandler.keyPressed[GLFW_KEY_TAB]) {
                         if (client.playerList != null) {
-                            client.playerList.render(screenStack);
+                          //  client.playerList.render(screenStack);
                         }
                     }
                 }

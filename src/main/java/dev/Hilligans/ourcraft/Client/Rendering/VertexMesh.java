@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.Client.Rendering;
 
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import org.joml.Matrix4f;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
@@ -22,8 +23,8 @@ public class VertexMesh {
     //public IntBuffer indices;
     // public FloatBuffer vertices;
 
-    public int[] indices;
-    public float[] vertices;
+    public IntBuffer indices;
+    public FloatBuffer vertices;
 
 
     public VertexMesh(String vertexFormatName) {
@@ -40,9 +41,16 @@ public class VertexMesh {
         }
 
      */
-    public void addData(int[] indices, float[] vertices) {
+    public void addData(IntBuffer indices, FloatBuffer vertices) {
         this.indices = indices;
         this.vertices = vertices;
+    }
+
+    public void addData(int[] indices, float[] vertices) {
+        this.vertices = MemoryUtil.memAllocFloat(vertices.length).put(vertices).flip();
+        this.indices = MemoryUtil.memAllocInt(indices.length).put(indices).flip();
+       // this.vertices = ByteBuffer.allocateDirect(vertices.length * 4).asFloatBuffer().put(vertices).flip().mark();
+       // this.indices = ByteBuffer.allocateDirect(indices.length * 4).asIntBuffer().put(indices).flip().mark();
     }
 
     public VertexMesh setVertexFormat(String format) {

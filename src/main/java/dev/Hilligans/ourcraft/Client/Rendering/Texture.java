@@ -13,6 +13,10 @@ import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
 import dev.Hilligans.ourcraft.Util.Settings;
 
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
 public class Texture implements IRegistryElement {
 
     public String path;

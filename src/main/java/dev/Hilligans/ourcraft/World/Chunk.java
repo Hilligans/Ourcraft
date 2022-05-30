@@ -188,7 +188,7 @@ public class Chunk implements IMeshSource {
                 }
             }
         }
-
+/*
         for(int x = 0; x < 16; x++) {
             for(int y = 0; y < Settings.chunkHeight * 16; y++) {
                 for(int z = 0; z < 16; z++) {
@@ -202,6 +202,8 @@ public class Chunk implements IMeshSource {
                 }
             }
         }
+
+ */
         Chunk[] chunks = world.getChunksAround(x,z,0);
         for(Chunk chunk : chunks) {
             if(chunk != null) {

@@ -104,8 +104,8 @@ public class Item implements IRecipeComponent, IRegistryElement {
             vao = VAOManager.createVAO(primitiveBuilder);
         }
         matrixStack.push();
-        GL30.glBindVertexArray(vao);
-        glBindTexture(GL_TEXTURE_2D, ClientMain.getClient().texture);
+        //GL30.glBindVertexArray(vao);
+        //glBindTexture(GL_TEXTURE_2D, ClientMain.getClient().texture);
 
         matrixStack.translate(x,y,-250);
         matrixStack.scale(size);

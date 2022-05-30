@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.World;
 
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
 import dev.Hilligans.ourcraft.Util.Settings;
+import dev.Hilligans.ourcraft.World.ThreeDimension.IWorld;
 
 import java.util.ArrayList;
 
@@ -34,6 +35,10 @@ public class NewChunk {
         return null;
     }
 
+    public BlockState getBlockState(int x, int y, int z) {
+        return null;
+
+    }
     public SubChunk getSubChunk(int x, int y, int z) {
         return subChunks.get((y & 0b10000) >> 2 | (z & 0b10000) >> 3 | (x & 0b10000) >> 4);
     }

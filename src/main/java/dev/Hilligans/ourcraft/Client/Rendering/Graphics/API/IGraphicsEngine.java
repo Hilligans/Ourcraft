@@ -41,11 +41,16 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
         return new Runnable() {
             @Override
             public void run() {
-                while (!window.shouldClose()) {
-                    gameInstance.EVENT_BUS.postEvent(new RenderPreEvent());
-                    render((Q) window);
-                    gameInstance.EVENT_BUS.postEvent(new RenderPostEvent(window.getClient()));
-                    window.swapBuffers();
+                try {
+                    while (!window.shouldClose()) {
+                        gameInstance.EVENT_BUS.postEvent(new RenderPreEvent());
+                        render((Q) window);
+                        gameInstance.EVENT_BUS.postEvent(new RenderPostEvent(window.getClient()));
+                        window.swapBuffers();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw e;
                 }
             }
         };

@@ -1,34 +1,17 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics.Tasks;
 
-import dev.Hilligans.ourcraft.Client.Camera;
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Culling.CullingEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.*;
-import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.ICamera;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.MeshHolder;
-import dev.Hilligans.ourcraft.ClientMain;
-import dev.Hilligans.ourcraft.Data.Other.ChunkPos;
-import dev.Hilligans.ourcraft.Entity.Entity;
-import dev.Hilligans.ourcraft.GameInstance;
-import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
 import dev.Hilligans.ourcraft.Util.Settings;
-import dev.Hilligans.ourcraft.Util.TwoInt2ObjectMap;
 import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.World.ClientWorld;
-import dev.Hilligans.ourcraft.World.World;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import org.joml.*;
-import org.joml.Math;
-
-import java.nio.ByteBuffer;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.HashSet;
-
-import static org.lwjgl.opengl.GL11.*;
 
 public class WorldRenderTask extends RenderTaskSource {
 
@@ -37,13 +20,23 @@ public class WorldRenderTask extends RenderTaskSource {
     }
 
     public ShaderSource shaderSource;
+    public CullingEngine cullingEngine;
 
     @Override
     public RenderTask getDefaultTask() {
         return new RenderTask() {
             @Override
             public void draw(RenderWindow window, IGraphicsEngine<?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack) {
-                if(shaderSource == null) {
+                if(cullingEngine == null) {
+                    cullingEngine = new CullingEngine(null) {
+                        @Override
+                        public boolean shouldRenderChunk(Chunk chunk, ICamera camera) {
+                            return true;
+                        }
+                    };
+                }
+
+                if (shaderSource == null) {
                     System.out.println(engine.getGameInstance().SHADERS.ELEMENTS);
                     shaderSource = engine.getGameInstance().SHADERS.get("ourcraft:world_shader");
                 }
@@ -72,26 +65,30 @@ public class WorldRenderTask extends RenderTaskSource {
     }
 
     Long2BooleanOpenHashMap map = new Long2BooleanOpenHashMap();
-    Chunk getChunk(int chunkX, int chunkY,ClientWorld world) {
-        Chunk c = world.getChunk(chunkX,chunkY);
 
-        if(c == null && !map.getOrDefault(((long)chunkX << 32) ^ chunkY, false)) {
-            map.put(((long)chunkX << 32) ^  chunkY, true);
-            world.requestChunk(chunkX,chunkY);
+    Chunk getChunk(int chunkX, int chunkY, ClientWorld world) {
+        Chunk c = world.getChunk(chunkX, chunkY);
+
+        if (c == null && !map.getOrDefault(((long) chunkX << 32) ^ chunkY, false)) {
+            map.put(((long) chunkX << 32) ^ chunkY, true);
+            world.requestChunk(chunkX, chunkY);
         }
         return c;
     }
 
-    void drawChunk(RenderWindow window, Client client, IGraphicsEngine<?,?> engine, MatrixStack matrixStack, Vector3i playerChunkPos, Chunk chunk) {
+    void drawChunk(RenderWindow window, Client client, IGraphicsEngine<?, ?> engine, MatrixStack matrixStack, Vector3i playerChunkPos, Chunk chunk) {
         if (chunk != null) {
             MeshHolder meshHolder = chunk.getSolidMesh();
             int meshId = meshHolder.getId();
             if (meshId != -1) {
-                if (matrixStack.frustumIntersection.testAab(new Vector3f((chunk.x - playerChunkPos.x) * 16, -256, (chunk.z - playerChunkPos.z) * 16), new Vector3f((chunk.x + 1 - playerChunkPos.x) * 16, 256f, (chunk.z + 1 - playerChunkPos.z) * 16))) {
-                    matrixStack.push();
-                    matrixStack.translate((chunk.x - playerChunkPos.x) * 16, 0, (chunk.z - playerChunkPos.z) * 16);
-                    engine.getDefaultImpl().drawMesh(window, matrixStack, engine.getGraphicsData().getWorldTexture(), shaderSource.program, meshId, meshHolder.index, meshHolder.length);
-                    matrixStack.pop();
+                if (matrixStack.frustumIntersection.testAab(new Vector3f((chunk.x + playerChunkPos.x) * 16, -256, (chunk.z + playerChunkPos.z) * 16), new Vector3f((chunk.x + 1 + playerChunkPos.x) * 16, 256f, (chunk.z + 1 + playerChunkPos.z) * 16))) {
+                    if(cullingEngine.shouldRenderChunk(chunk, window.camera)) {
+                        matrixStack.push();
+                        matrixStack.translate((chunk.x + playerChunkPos.x) * 16, 0, (chunk.z + playerChunkPos.z) * 16);
+                        matrixStack.applyTransformation(shaderSource.program);
+                        engine.getDefaultImpl().drawMesh(window, matrixStack, engine.getGraphicsData().getWorldTexture(), shaderSource.program, meshId, meshHolder.index, meshHolder.length);
+                        matrixStack.pop();
+                    }
                 }
             } else {
                 chunk.build(engine);

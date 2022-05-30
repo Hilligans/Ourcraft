@@ -22,7 +22,7 @@ public abstract class WorldCamera implements ICamera {
    // public double y = Chunk.terrain + 5;
   //  public double z;
 
-    public float pitch = 1;
+    public float pitch;
     public float yaw;
 
     public float velX;
@@ -133,7 +133,7 @@ public abstract class WorldCamera implements ICamera {
 
     @Override
     public MatrixStack getMatrixStack(int W, int H, int x, int y) {
-        Matrix4d perspective = getPerspective(W, H, x, y,  fov, getWindow().getAspectRatio(), 0.001f, 1000000f);
+        Matrix4d perspective = getPerspective(W, H, x, y,  fov, getWindow().getAspectRatio(), 0.01f, 100000f);
         perspective.mul(getView());
         Vector3d cameraPos = getPosition();
         savePosition(cameraPos);

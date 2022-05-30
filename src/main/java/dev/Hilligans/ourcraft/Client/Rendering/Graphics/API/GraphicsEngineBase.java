@@ -1,13 +1,17 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics.API;
 
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.GraphicsData;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.GameInstance;
 
+import java.util.ArrayList;
+
 public abstract class GraphicsEngineBase<Q extends RenderWindow,V extends IDefaultEngineImpl<Q>> implements IGraphicsEngine<Q,V> {
 
     public StringRenderer stringRenderer;
+    public ArrayList<Q> windows = new ArrayList<>();
     public GraphicsData graphicsData;
 
     public GameInstance gameInstance;
@@ -26,6 +30,11 @@ public abstract class GraphicsEngineBase<Q extends RenderWindow,V extends IDefau
     public void setupStringRenderer(String defaultLanguage) {
         stringRenderer = new StringRenderer(this);
         stringRenderer.buildChars();
+    }
+
+    @Override
+    public ArrayList<Q> getWindows() {
+        return windows;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft;
 
 import dev.Hilligans.ourcraft.Client.Client;
+import dev.Hilligans.ourcraft.Client.Rendering.Culling.PlaneTestCullingEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Util.ArgumentContainer;
 import dev.Hilligans.ourcraft.Util.ConsoleReader;
@@ -10,6 +11,8 @@ import dev.Hilligans.ourcraft.Util.Side;
 import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.World.ClientWorld;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
+import org.joml.Intersectionf;
+import org.joml.Vector2f;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,6 +48,8 @@ public class ClientMain {
                 e.printStackTrace();
             }
         }
+
+      //  System.out.println("Ray Intersection " + Intersectionf.intersectRayAab(0,-1,0,0.9f,1,0,-1,0,-1,1,0.05f,1,new Vector2f()));
 
         client = new Client(gameInstance);
         String graphicsEngine = argumentContainer.getString("--graphicsEngine", null);

@@ -18,6 +18,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
 import java.nio.ByteBuffer;
@@ -27,27 +28,66 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunctionGLWindow> {
 
-    public OpenGLEngine engine;
+    public FixedFunctionGLEngine engine;
 
     public Int2ObjectOpenHashMap<Tuple<Integer, Integer>> meshData = new Int2ObjectOpenHashMap<>();
+    public Int2ObjectOpenHashMap<VertexMesh> meshes = new Int2ObjectOpenHashMap<>();
     public Int2IntOpenHashMap textureTypes = new Int2IntOpenHashMap();
     public Int2LongOpenHashMap vertexArrayObjects = new Int2LongOpenHashMap();
 
     public int boundTexture = -1;
 
+    public int meshPointer = 0;
+
     @Override
     public void drawMesh(FixedFunctionGLWindow window, MatrixStack matrixStack, int texture, int program, int meshID, long indicesIndex, int length) {
+        VertexMesh mesh = meshes.get(meshID);
+        VertexFormat format = mesh.vertexFormat;
+        glBegin(format.primitiveType);
+        int pos = format.getOffset("position");
+        int colour = format.getOffset("color");
+        int texturePos = format.getOffset("texture");
+        if(pos == -1 || texturePos == -1) {
+            throw new RuntimeException("Vertex Format Missing Pieces: " + format.formatName);
+        }
+        int stride = mesh.vertexFormat.getStride() / 4;
 
+        Vector4f vec = new Vector4f();
+     /*  if(colour != -1) {
+            for (int val : mesh.indices) {
+                int pointer = val * stride;
+                glTexCoord2f(mesh.vertices[texturePos + pointer], mesh.vertices[texturePos + pointer + 1]);
+                glColor4f(mesh.vertices[colour + pointer],mesh.vertices[colour + pointer + 1],mesh.vertices[colour + pointer + 2],mesh.vertices[colour + pointer + 3]);
+                vec.set(mesh.vertices[pos + pointer], mesh.vertices[pos + pointer + 1], mesh.vertices[pos + pointer + 2],0).mul(matrixStack.matrix4f);
+                glVertex3f(vec.x - 1,vec.y + 1,vec.z);
+            }
+        } else {
+            for (int val : mesh.indices) {
+                int pointer = val * stride;
+                glTexCoord2f(mesh.vertices[texturePos + pointer], mesh.vertices[texturePos + pointer + 1]);
+                vec.set(mesh.vertices[pos + pointer], mesh.vertices[pos + pointer + 1], mesh.vertices[pos + pointer + 2],0).mul(matrixStack.matrix4f);
+                glVertex3f(vec.x - 1,vec.y + 1,vec.z);
+            }
+        }
+
+      */
+
+        glEnd();
     }
 
     @Override
     public int createMesh(FixedFunctionGLWindow window, VertexMesh mesh) {
-        return 0;
+        if(mesh.vertexFormat == null) {
+            mesh.vertexFormat = getFormat(mesh.vertexFormatName);
+        }
+        int ptr = meshPointer++;
+        meshes.put(ptr,mesh);
+        return ptr;
     }
 
     @Override
     public void destroyMesh(FixedFunctionGLWindow window, int mesh) {
-
+        meshes.remove(mesh);
     }
 
     @Override
@@ -79,7 +119,7 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
             throw new RuntimeException("Vertex Format Missing Pieces: " + mesh.vertexFormat.formatName);
         }
         int stride = mesh.vertexFormat.getStride() / 4;
-
+/*
         if(colour != -1) {
             for (int val : mesh.indices) {
                 int pointer = val * stride;
@@ -96,6 +136,8 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
                 glVertex3f(vec.x - 1,vec.y + 1,vec.z);
             }
         }
+
+ */
 
         glEnd();
     }

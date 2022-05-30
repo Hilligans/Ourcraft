@@ -6,6 +6,7 @@ import dev.Hilligans.ourcraft.Client.Input.Key.MouseHandler;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Implementations.FreeCamera;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.ScreenShot;
+import org.lwjgl.opengl.GL30;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -105,7 +106,7 @@ public class OpenGLWindow extends RenderWindow {
                 double deltaY = ypos - halfWindowY;
 
                 if(camera != null) {
-                    camera.addRotation((float) (deltaY / camera.getSensitivity()), (float) (deltaX / camera.getSensitivity()));
+                 //   camera.addRotation((float) (deltaY / camera.getSensitivity()), (float) (deltaX / camera.getSensitivity()));
                 }
                 glfwSetCursorPos(window, halfWindowX, halfWindowY);
             }
@@ -114,6 +115,9 @@ public class OpenGLWindow extends RenderWindow {
         glfwSetWindowSizeCallback(window, (window, w, h) -> {
             width = w;
             height = h;
+            client.windowX = w;
+            client.windowY = h;
+            GL30.glViewport(0,0,w,h);
         });
 
         glfwSetWindowFocusCallback(window, (window, focused) -> windowFocused = focused);

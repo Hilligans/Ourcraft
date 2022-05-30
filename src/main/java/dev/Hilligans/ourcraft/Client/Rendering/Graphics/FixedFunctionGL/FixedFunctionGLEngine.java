@@ -3,6 +3,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Graphics.FixedFunctionGL;
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsEngineBase;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.GLRenderer;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.JoinScreen;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.ShaderManager;
@@ -22,9 +23,11 @@ import static org.lwjgl.opengl.GL11.glEnable;
 public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWindow, FixedFunctionGLDefaultImpl> {
 
     public FixedFunctionGLDefaultImpl engineImpl;
+    public Client client;
 
     public FixedFunctionGLEngine() {
         engineImpl = new FixedFunctionGLDefaultImpl();
+        engineImpl.engine = this;
     }
 
     @Override
@@ -71,18 +74,19 @@ public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWin
     @Override
     public FixedFunctionGLWindow setup() {
 
-        Client client = ClientMain.getClient();
+        client = ClientMain.getClient();
 
 
 
         glfwInit();
-      //  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
-      //  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
-    //    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+       // glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,1);
+      //  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,2);
+     //   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         glfwSetErrorCallback(GLFWErrorCallback.createPrint(System.out));
 
         FixedFunctionGLWindow renderWindow = new FixedFunctionGLWindow(client, this);
+        windows.add(renderWindow);
         renderWindow.setup();
         GL.createCapabilities();
 
@@ -113,10 +117,6 @@ public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWin
 
     }
 
-    @Override
-    public ArrayList<FixedFunctionGLWindow> getWindows() {
-        return null;
-    }
 
     @Override
     public Logger getLogger() {

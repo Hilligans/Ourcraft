@@ -67,7 +67,7 @@ public class GridChunk {
             glDeleteTextures(texture);
         }
         texture = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, texture);
+        //glBindTexture(GL_TEXTURE_2D, texture);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);

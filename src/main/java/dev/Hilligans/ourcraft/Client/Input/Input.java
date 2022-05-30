@@ -8,7 +8,7 @@ import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_REPEAT;
 
-public abstract class Input implements IRegistryElement {
+public class Input implements IRegistryElement {
 
     public boolean repeating;
     public String key;

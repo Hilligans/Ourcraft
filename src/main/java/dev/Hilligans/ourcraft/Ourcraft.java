@@ -8,6 +8,7 @@ import dev.Hilligans.ourcraft.Client.Input.HandlerProviders.ControllerHandlerPro
 import dev.Hilligans.ourcraft.Client.Input.HandlerProviders.KeyPressHandlerProvider;
 import dev.Hilligans.ourcraft.Client.Input.HandlerProviders.MouseHandlerProvider;
 import dev.Hilligans.ourcraft.Client.Input.Input;
+import dev.Hilligans.ourcraft.Client.Input.RepeatingInput;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.*;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.FixedFunctionGL.FixedFunctionGLEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
@@ -41,11 +42,12 @@ import java.nio.DoubleBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.BiConsumer;
 
 import static dev.Hilligans.ourcraft.Block.Blocks.*;
 import static dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler.GLFW_KEY_ESCAPE;
 import static dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler.GLFW_KEY_F3;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
+import static org.lwjgl.glfw.GLFW.*;
 
 public class Ourcraft {
 
@@ -202,12 +204,23 @@ public class Ourcraft {
                 }
             });
 
-            modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_W, true) {
-                @Override
-                public void repeat(RenderWindow renderWindow, float strength) {
-                    renderWindow.getCamera().moveForeWard(-0.05f * strength);
-                }
-            });
+            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_W,
+                    (window, strength) -> window.getCamera().moveForeWard(-0.05f * strength)));
+
+            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_A,
+                    (window, strength) -> window.getCamera().moveLeft(-0.05f * strength)));
+
+            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_S,
+                    (window, strength) -> window.getCamera().moveBackWard(-0.05f * strength)));
+
+            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_D,
+                    (window, strength) -> window.getCamera().moveRight(-0.05f * strength)));
+
+            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_SPACE,
+                    (window, strength) -> window.getCamera().moveUp(0.05f * strength)));
+
+            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_LEFT_SHIFT,
+                    (window, strength) -> window.getCamera().moveUp(-0.05f * strength)));
         }
 
 
