@@ -95,7 +95,7 @@ public class MatrixStack {
     }
 
     public void translateMinusOffset(float x, float y, float z) {
-        matrix4f.translate(x - (Camera.playerChunkPos.x << 4),y,z - (Camera.playerChunkPos.z << 4));
+       // matrix4f.translate(x - (Camera.playerChunkPos.x << 4),y,z - (Camera.playerChunkPos.z << 4));
     }
 
     public void translate(Vector3f vector3f) {

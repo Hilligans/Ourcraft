@@ -140,7 +140,7 @@ public class Chunk implements IMeshSource {
                         if(block.getBlock() != Blocks.AIR) {
                             BlockState blockState = getBlockState(new BlockPos(x, y, z).add(Block.getBlockPos(block.getBlock().getSide(block,a))));
                             if ((blockState.getBlock().blockProperties.transparent && (Settings.renderSameTransparent || block.getBlock() != blockState.getBlock())) || block.getBlock().blockProperties.alwaysRender) {
-                                block.getBlock().addVertices(primitiveBuilder,a,1.0f,block,new BlockPos(x + this.x,y,z + this.z),x,z);
+                                block.getBlock().addVertices(primitiveBuilder,a,1.0f,block,new BlockPos(x + this.x * 16,y,z + this.z * 16),x,z);
                             }
                         }
                     }

@@ -172,7 +172,7 @@ public class Client {
                 //glUseProgram(shaderManager.lineShader);
                 GL30.glBindVertexArray(id);
                 matrixStack.push();
-                matrixStack.translateMinusOffset(pos.x, pos.y, pos.z);
+                //matrixStack.translateMinusOffset(pos.x, pos.y, pos.z);
                 matrixStack.applyTransformation(shaderManager.lineShader);
                 GLRenderer.glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, 0);
                 matrixStack.pop();

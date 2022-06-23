@@ -60,7 +60,7 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
                 if(chunk != null) {
                     if (matrixStack.frustumIntersection.testAab(new Vector3f((chunk.x - playerChunkPos.x) * 16, 0, (chunk.z - playerChunkPos.z) * 16), new Vector3f((chunk.x + 1 - playerChunkPos.x) * 16, 256f, (chunk.z + 1 - playerChunkPos.z) * 16))) {
                         matrixStack.push();
-                        matrixStack.translate((chunk.x - playerChunkPos.x) * 16, 0, (chunk.z - playerChunkPos.z) * 16);
+                       // matrixStack.translate((chunk.x - playerChunkPos.x) * 16, 0, (chunk.z - playerChunkPos.z) * 16);
 
                         MeshHolder meshHolder = chunk.getSolidMesh();
                         int meshId = meshHolder.getId();

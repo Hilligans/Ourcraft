@@ -41,7 +41,7 @@ public class WorldRenderTask extends RenderTaskSource {
                     shaderSource = engine.getGameInstance().SHADERS.get("ourcraft:world_shader");
                 }
                 engine.getDefaultImpl().setState(window, new PipelineState().setDepth(true));
-                Vector3d pos = window.camera.getPosition();
+                Vector3d pos = window.camera.getSavedPosition();
                 ClientWorld world = client.clientWorld;
                 Vector3i playerChunkPos = new Vector3i((int) pos.x >> 4, 0, (int) pos.z >> 4);
                 if (client.renderWorld) {
@@ -81,10 +81,10 @@ public class WorldRenderTask extends RenderTaskSource {
             MeshHolder meshHolder = chunk.getSolidMesh();
             int meshId = meshHolder.getId();
             if (meshId != -1) {
-                if (matrixStack.frustumIntersection.testAab(new Vector3f((chunk.x + playerChunkPos.x) * 16, -256, (chunk.z + playerChunkPos.z) * 16), new Vector3f((chunk.x + 1 + playerChunkPos.x) * 16, 256f, (chunk.z + 1 + playerChunkPos.z) * 16))) {
+                if (matrixStack.frustumIntersection.testAab(new Vector3f((chunk.x - 1) * 16, -256, (chunk.z - 1) * 16), new Vector3f((chunk.x + 1) * 16, 256f, (chunk.z + 1) * 16))) {
                     if(cullingEngine.shouldRenderChunk(chunk, window.camera)) {
                         matrixStack.push();
-                        matrixStack.translate((chunk.x + playerChunkPos.x) * 16, 0, (chunk.z + playerChunkPos.z) * 16);
+                        matrixStack.translate((chunk.x) * 16, 0, (chunk.z) * 16);
                         matrixStack.applyTransformation(shaderSource.program);
                         engine.getDefaultImpl().drawMesh(window, matrixStack, engine.getGraphicsData().getWorldTexture(), shaderSource.program, meshId, meshHolder.index, meshHolder.length);
                         matrixStack.pop();

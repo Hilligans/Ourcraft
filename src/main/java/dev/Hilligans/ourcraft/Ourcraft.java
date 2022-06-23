@@ -208,13 +208,13 @@ public class Ourcraft {
                     (window, strength) -> window.getCamera().moveForeWard(-0.05f * strength)));
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_A,
-                    (window, strength) -> window.getCamera().moveLeft(-0.05f * strength)));
+                    (window, strength) -> window.getCamera().moveLeft(0.05f * strength)));
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_S,
-                    (window, strength) -> window.getCamera().moveBackWard(-0.05f * strength)));
+                    (window, strength) -> window.getCamera().moveBackWard(0.05f * strength)));
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_D,
-                    (window, strength) -> window.getCamera().moveRight(-0.05f * strength)));
+                    (window, strength) -> window.getCamera().moveRight(0.05f * strength)));
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_SPACE,
                     (window, strength) -> window.getCamera().moveUp(0.05f * strength)));

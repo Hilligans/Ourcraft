@@ -8,6 +8,7 @@ import dev.Hilligans.ourcraft.Util.DaisyChain;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import dev.Hilligans.ourcraft.Util.Pipeline;
 import dev.Hilligans.ourcraft.Util.PipelineStage;
+import io.netty.util.Constant;
 import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
 
@@ -19,6 +20,7 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -118,13 +120,7 @@ public class TextAtlas {
     public int upload(IGraphicsEngine<?,?> engine) {
         clear();
         assemble();
-        //texture = glGenTextures();
         texture = engine.getDefaultImpl().createTexture(null,image);
-    //    glBindTexture(GL_TEXTURE_2D, texture);
-    ////    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    //    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    //    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.buffer);
-    //    glGenerateMipmap(GL_TEXTURE_2D);
         return texture;
     }
 
