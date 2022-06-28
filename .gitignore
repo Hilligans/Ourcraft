@@ -8,3 +8,5 @@ mods/
 lib/
 /lib/
 /target/
+/target/classes/
+/classes/

@@ -81,17 +81,20 @@ public class WorldRenderTask extends RenderTaskSource {
             MeshHolder meshHolder = chunk.getSolidMesh();
             int meshId = meshHolder.getId();
             if (meshId != -1) {
-                if (matrixStack.frustumIntersection.testAab(new Vector3f((chunk.x - 1) * 16, -256, (chunk.z - 1) * 16), new Vector3f((chunk.x + 1) * 16, 256f, (chunk.z + 1) * 16))) {
+                if (matrixStack.frustumIntersection.testAab(new Vector3f((chunk.getX() - 1) * chunk.getWidth(), chunk.getY() * chunk.getHeight(), (chunk.getZ() - 1) * chunk.getWidth()), new Vector3f((chunk.getX() + 1) * chunk.getWidth(), (chunk.getY() + 1) * chunk.getHeight(), (chunk.getZ() + 1) * chunk.getWidth()))) {
                     if(cullingEngine.shouldRenderChunk(chunk, window.camera)) {
                         matrixStack.push();
-                        matrixStack.translate((chunk.x) * 16, 0, (chunk.z) * 16);
+                        matrixStack.translate((chunk.getX()) * chunk.getWidth(), 0, (chunk.getZ()) * chunk.getWidth());
                         matrixStack.applyTransformation(shaderSource.program);
                         engine.getDefaultImpl().drawMesh(window, matrixStack, engine.getGraphicsData().getWorldTexture(), shaderSource.program, meshId, meshHolder.index, meshHolder.length);
                         matrixStack.pop();
                     }
                 }
             } else {
-                chunk.build(engine);
+                if(chunk.world.getChunk((int) (chunk.getX() + 1), (int) chunk.getZ()) != null && chunk.world.getChunk((int) (chunk.getX() - 1), (int) chunk.getZ()) != null
+                && chunk.world.getChunk((int) chunk.getX(), (int) (chunk.getZ() + 1)) != null && chunk.world.getChunk((int) chunk.getX(), (int) (chunk.getZ() - 1)) != null) {
+                    chunk.build(engine);
+                }
             }
         }
     }

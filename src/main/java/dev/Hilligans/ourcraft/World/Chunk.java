@@ -24,6 +24,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2IntOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
+import org.joml.Intersectiond;
 import org.lwjgl.opengl.*;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ import static org.lwjgl.opengl.GL15.glGetBufferSubData;
 import static org.lwjgl.opengl.GL31C.GL_COPY_READ_BUFFER;
 import static org.lwjgl.opengl.GL31C.GL_COPY_WRITE_BUFFER;
 
-public class Chunk implements IMeshSource {
+public class Chunk implements IMeshSource, IChunk {
 
     public ArrayList<SubChunk> chunks = new ArrayList<>();
 
@@ -252,13 +253,45 @@ public class Chunk implements IMeshSource {
         return world.biomeMap.getBiome(x,z);
     }
 
-    public BlockState getBlockState(int x, int y, int z) {
+    @Override
+    public int getWidth() {
+        return 16;
+    }
+
+    @Override
+    public int getHeight() {
+        return 256;
+    }
+
+    @Override
+    public long getX() {
+        return x;
+    }
+
+    @Override
+    public long getY() {
+        return 0;
+    }
+
+    @Override
+    public long getZ() {
+        return z;
+    }
+
+    public BlockState getBlockState(long x, long y, long z) {
         if(y >= Settings.chunkHeight * 16 || y < 0) {
             return Blocks.AIR.getDefaultState();
         }
-        int pos = y >> 4;
+        int pos = (int) (y >> 4);
         SubChunk subChunk = chunks.get(pos);
-        return subChunk.getBlock(x & 15, y & 15, z & 15);
+        return subChunk.getBlock((int) (x & 15), (int) (y & 15), (int) (z & 15));
+    }
+
+    public BlockState getBlockStateChecked(int x, int y, int z) {
+        if(x > 15 || x < 0 || z > 15 || z < 0) {
+            return world.getBlockState(x,y,z);
+        }
+        return getBlockState(x,y,z);
     }
 
     public BlockState getBlockState(BlockPos blockPos) {
@@ -281,7 +314,7 @@ public class Chunk implements IMeshSource {
         //subChunk.setDataProvider(pos.x & 15, pos.y & 15, pos.z & 15, dataProvider);
     }
 
-    public void setBlockState(int x, int y, int z, BlockState blockState) {
+    public void setBlockState(long x, long y, long z, BlockState blockState) {
         needsSaving = true;
         if(y > Settings.chunkHeight * 16 || y < 0) {
            return;
@@ -291,7 +324,7 @@ public class Chunk implements IMeshSource {
             short height = (short) (x << 4 | z);
             if (blockState.getBlock().blockProperties.airBlock) {
                 if (heightMap.get(height) == y) {
-                    for (int i = y; i > 0; i--) {
+                    for (int i = (int) y; i > 0; i--) {
                         if (!getBlockState(x, i, z).getBlock().blockProperties.airBlock) {
                             heightMap.put(height, i);
                         }
@@ -299,12 +332,12 @@ public class Chunk implements IMeshSource {
                 }
             } else {
                 if (heightMap.get(height) < y) {
-                    heightMap.put(height, y);
+                    heightMap.put(height, (int) y);
                 }
             }
         }
-        int pos = y >> 4;
-        chunks.get(pos).setBlockState(x,y,z,blockState);
+        int pos = (int) (y >> 4);
+        chunks.get(pos).setBlockState((int) x, (int) y, (int) z,blockState);
     }
 
     public BlockPos getHeight(int x, int z) {

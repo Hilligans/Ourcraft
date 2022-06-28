@@ -68,10 +68,7 @@ public abstract class World {
 
     public void scheduleTick(BlockPos pos, int time) {
         if(isServer()) {
-           // Chunk chunk = getChunk(pos.getChunkPos());
-        //   if(chunk != null) {
-         //       chunk.scheduleTick(pos, time);
-         //   }
+
         }
     }
 
