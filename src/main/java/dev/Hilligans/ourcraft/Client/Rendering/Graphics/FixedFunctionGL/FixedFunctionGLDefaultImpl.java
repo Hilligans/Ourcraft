@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics.FixedFunctionGL;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsContext;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenglDefaultImpl;
@@ -26,7 +27,7 @@ import java.nio.ByteBuffer;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.opengl.GL11.*;
 
-public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunctionGLWindow> {
+public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunctionGLWindow, GraphicsContext> {
 
     public FixedFunctionGLEngine engine;
 
@@ -40,7 +41,7 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     public int meshPointer = 0;
 
     @Override
-    public void drawMesh(FixedFunctionGLWindow window, MatrixStack matrixStack, int texture, int program, int meshID, long indicesIndex, int length) {
+    public void drawMesh(FixedFunctionGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, int texture, int program, int meshID, long indicesIndex, int length) {
         VertexMesh mesh = meshes.get(meshID);
         VertexFormat format = mesh.vertexFormat;
         glBegin(format.primitiveType);
@@ -76,7 +77,7 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     }
 
     @Override
-    public int createMesh(FixedFunctionGLWindow window, VertexMesh mesh) {
+    public int createMesh(FixedFunctionGLWindow window, GraphicsContext graphicsContext, VertexMesh mesh) {
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
@@ -86,22 +87,22 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     }
 
     @Override
-    public void destroyMesh(FixedFunctionGLWindow window, int mesh) {
+    public void destroyMesh(FixedFunctionGLWindow window, GraphicsContext graphicsContext, int mesh) {
         meshes.remove(mesh);
     }
 
     @Override
-    public int createTexture(FixedFunctionGLWindow window, ByteBuffer buffer, int width, int height, int format) {
+    public int createTexture(FixedFunctionGLWindow window, GraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format) {
         return 0;
     }
 
     @Override
-    public void destroyTexture(FixedFunctionGLWindow window, int texture) {
+    public void destroyTexture(FixedFunctionGLWindow window, GraphicsContext graphicsContext, int texture) {
 
     }
 
     @Override
-    public void drawAndDestroyMesh(FixedFunctionGLWindow window, MatrixStack matrixStack, VertexMesh mesh, int texture, int program) {
+    public void drawAndDestroyMesh(FixedFunctionGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh, int texture, int program) {
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
@@ -143,13 +144,23 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     }
 
     @Override
-    public void setState(FixedFunctionGLWindow window, PipelineState state) {
+    public void setState(FixedFunctionGLWindow window, GraphicsContext graphicsContext, PipelineState state) {
 
     }
 
     @Override
-    public int createProgram(ShaderSource shaderSource) {
+    public int createProgram(GraphicsContext graphicsContext,ShaderSource shaderSource) {
         return 0;
+    }
+
+    @Override
+    public void uploadData(GraphicsContext graphicsContext, float[] data, String name) {
+
+    }
+
+    @Override
+    public void uploadData(GraphicsContext graphicsContext, float[] data, int index) {
+
     }
 
     private int getGLPrimitive(int type) {

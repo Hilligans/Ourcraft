@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Graphics;
 
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsContext;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
@@ -21,9 +22,9 @@ public class RenderPipeline implements IRegistryElement {
         this.name = name;
     }
 
-    public void render(Client client, MatrixStack worldStack, MatrixStack screenStack) {
+    public void render(Client client, MatrixStack worldStack, MatrixStack screenStack, GraphicsContext graphicsContext) {
         for(RenderTask renderTask : renderTasks) {
-            renderTask.draw(window,window.getGraphicsEngine(),client,worldStack,screenStack);
+            renderTask.draw(window,graphicsContext,window.getGraphicsEngine(),client,worldStack,screenStack);
         }
     }
 

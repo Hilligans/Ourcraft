@@ -6,12 +6,12 @@ import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.TextAtlas;
 
 public class GraphicsData {
 
-    public IGraphicsEngine<?,?> graphicsEngine;
+    public IGraphicsEngine<?,?,?> graphicsEngine;
 
     public int worldTexture;
     public TextAtlas worldTextureAtlas;
 
-    public GraphicsData(IGraphicsEngine<?,?> graphicsEngine) {
+    public GraphicsData(IGraphicsEngine<?,?,?> graphicsEngine) {
         this.graphicsEngine = graphicsEngine;
     }
 
@@ -34,8 +34,9 @@ public class GraphicsData {
         clearTextures();
     }
 
+    ///TODO fix
     public void clearTextures() {
-        graphicsEngine.getDefaultImpl().destroyTexture(null,worldTexture);
+        graphicsEngine.getDefaultImpl().destroyTexture(null,null,worldTexture);
     }
 
     public int getWorldTexture() {

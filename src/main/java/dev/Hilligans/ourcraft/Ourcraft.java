@@ -3,6 +3,7 @@ package dev.Hilligans.ourcraft;
 import dev.Hilligans.ourcraft.Biome.Biomes;
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.Audio.Sounds;
+import dev.Hilligans.ourcraft.Client.ChatWindow;
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.Input.HandlerProviders.ControllerHandlerProvider;
 import dev.Hilligans.ourcraft.Client.Input.HandlerProviders.KeyPressHandlerProvider;
@@ -19,6 +20,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.EscapeScreen;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.JoinScreen;
+import dev.Hilligans.ourcraft.Client.Rendering.Screens.TagEditorScreen;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
 import dev.Hilligans.ourcraft.Item.Data.ToolLevel;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
@@ -221,6 +223,24 @@ public class Ourcraft {
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_LEFT_SHIFT,
                     (window, strength) -> window.getCamera().moveUp(-0.05f * strength)));
+
+            modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_H) {
+                @Override
+                public void press(RenderWindow renderWindow, float strength) {
+                    Client client = renderWindow.getClient();
+                    client.openScreen(new TagEditorScreen(client));
+                }
+            });
+
+            modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_T) {
+                @Override
+                public void press(RenderWindow renderWindow, float strength) {
+                    Client client = renderWindow.getClient();
+                    if(client.renderWorld) {
+                        client.openScreen(new ChatWindow());
+                    }
+                }
+            });
         }
 
 
@@ -233,6 +253,4 @@ public class Ourcraft {
         GLFW.glfwGetCursorPos(window, x, y);
         return BufferUtils.createDoubleBuffer(2).put(x.get()).put(y.get());
     }
-
-
 }

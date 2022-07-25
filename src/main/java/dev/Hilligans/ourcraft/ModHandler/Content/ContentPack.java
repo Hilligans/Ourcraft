@@ -142,7 +142,7 @@ public class ContentPack {
                 for(Feature feature : mod.features) {
                     gameInstance.registerFeature(feature);
                 }
-                for(IGraphicsEngine<?,?> graphicsEngine : mod.graphicsEngines) {
+                for(IGraphicsEngine<?,?,?> graphicsEngine : mod.graphicsEngines) {
                     gameInstance.registerGraphicsEngine(graphicsEngine);
                 }
                 for(RenderTarget renderTarget : mod.renderTargets) {

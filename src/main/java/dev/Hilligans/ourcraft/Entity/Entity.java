@@ -11,6 +11,7 @@ import dev.Hilligans.ourcraft.Network.Packet.Server.SUpdateEntityPacket;
 import dev.Hilligans.ourcraft.Network.PacketData;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
 import dev.Hilligans.ourcraft.ServerMain;
+import dev.Hilligans.ourcraft.Util.EntityPosition;
 import dev.Hilligans.ourcraft.World.World;
 import dev.Hilligans.ourcraft.Util.Settings;
 import org.joml.Vector2f;
@@ -21,9 +22,10 @@ import java.util.ArrayList;
 
 public abstract class Entity {
 
-    public float x,y,z,pitch,yaw,velX,velY,velZ;
+    public float pitch,yaw,velX,velY,velZ;
 
-    public Vector3d pos = new Vector3d();
+    public EntityPosition position;
+
     public Vector3d vel = new Vector3d();
     public Vector2f rot = new Vector2f();
 
@@ -40,33 +42,27 @@ public abstract class Entity {
 
     public Entity(int id) {
         this.id = id;
-        x = 0;
-        y = 0;
-        z = 0;
+        position = new EntityPosition();
         boundingBox = new BoundingBox(0,0,0,0,0,0);
         setWorld();
     }
 
-    public Entity(float x, float y, float z, int id) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+    public Entity(double x, double y, double z, int id) {
+        position = new EntityPosition(x,y,z);
         this.id = id;
         boundingBox = new BoundingBox(0,0,0,0,0,0);
         setWorld();
     }
 
     public Entity(Vector3d pos, int id) {
-        this.pos = pos;
+        position = new EntityPosition(pos.x,pos.y,pos.z);
         this.id = id;
         boundingBox = new BoundingBox(0,0,0,0,0,0);
         setWorld();
     }
 
     public Entity(PacketData packetData) {
-        x = packetData.readFloat();
-        y = packetData.readFloat();
-        z = packetData.readFloat();
+        position = new EntityPosition(packetData);
         pitch = packetData.readFloat();
         yaw = packetData.readFloat();
         id = packetData.readInt();
@@ -82,18 +78,13 @@ public abstract class Entity {
         }
     }
 
-    public Entity setPos(float x, float y, float z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+    public Entity setPos(double x, double y, double z) {
+        position.set(x,y,z);
         return this;
     }
 
     public Entity setPos(Vector3d vector3d) {
-        this.x = (float) vector3d.x;
-        this.y = (float) vector3d.y;
-        this.z = (float) vector3d.z;
-        this.pos = vector3d;
+        position.set(vector3d.x, vector3d.y, vector3d.z);
         return this;
     }
 
@@ -128,9 +119,7 @@ public abstract class Entity {
 
     public void writeData(PacketData packetData) {
         packetData.writeInt(type);
-        packetData.writeFloat(x);
-        packetData.writeFloat(y);
-        packetData.writeFloat(z);
+        position.write(packetData);
         packetData.writeFloat(pitch);
         packetData.writeFloat(yaw);
         packetData.writeInt(id);
@@ -186,9 +175,7 @@ public abstract class Entity {
         if (x == 2 || x == 4 || x == 5) {
             velZ = 0;
         }
-        this.x += velX;
-        this.y += velY;
-        this.z += velZ;
+        position.add(velX,velY,velZ);
     }
 
     private Vector3f tryMovement(int side, float velX, float velY, float velZ) {
@@ -213,9 +200,8 @@ public abstract class Entity {
     }
 
 
-
     public boolean getAllowedMovement(Vector3f motion, World world) {
-        BlockPos pos = new BlockPos((int)Math.floor(x),(int)Math.floor(y),(int)Math.floor(z));
+        BlockPos pos = new BlockPos(position);
         int X = (int) Math.ceil(Math.abs(motion.x)) + 1;
         int Y = (int) Math.ceil(Math.abs(motion.y)) + 1;
         int Z = (int) Math.ceil(Math.abs(motion.z)) + 1;
@@ -225,7 +211,7 @@ public abstract class Entity {
                 for(int z = -Z; z < Z; z++) {
                     Block block = world.getBlockState(pos.copy().add(x,y,z)).getBlock();
                     if(block != Blocks.AIR) {
-                        boolean canMove = block.getAllowedMovement(new Vector3d(motion.x,motion.y,motion.z), new Vector3d(this.x, this.y, this.z), pos.copy().add(x, y, z), boundingBox, world);
+                        boolean canMove = block.getAllowedMovement(new Vector3d(motion.x,motion.y,motion.z), new Vector3d(position.getX(), position.getY(), position.getZ()), pos.copy().add(x, y, z), boundingBox, world);
                         if(!canMove) {
                             return false;
                         }
@@ -234,6 +220,18 @@ public abstract class Entity {
             }
         }
         return true;
+    }
+
+    public double getX() {
+        return position.getX();
+    }
+
+    public double getY() {
+        return position.getY();
+    }
+
+    public double getZ() {
+        return position.getZ();
     }
 
     static int iD = 0;
@@ -248,7 +246,4 @@ public abstract class Entity {
         entities.add(PlayerEntity::new);
         entities.add(ItemEntity::new);
     }
-
-
-
 }

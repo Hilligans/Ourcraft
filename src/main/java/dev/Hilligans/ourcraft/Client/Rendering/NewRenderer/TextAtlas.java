@@ -117,10 +117,10 @@ public class TextAtlas {
     public long time = 0;
     public double count  = 0;
 
-    public int upload(IGraphicsEngine<?,?> engine) {
+    public int upload(IGraphicsEngine<?,?,?> engine) {
         clear();
         assemble();
-        texture = engine.getDefaultImpl().createTexture(null,image);
+        texture = engine.getDefaultImpl().createTexture(null,null,image);
         return texture;
     }
 

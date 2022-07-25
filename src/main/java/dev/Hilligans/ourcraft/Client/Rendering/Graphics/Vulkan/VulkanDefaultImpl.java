@@ -18,7 +18,7 @@ import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 
 import java.nio.ByteBuffer;
 
-public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow> {
+public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, VulkanGraphicsContext> {
 
     public VulkanEngine engine;
 
@@ -27,42 +27,42 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow> {
     }
 
     @Override
-    public void drawMesh(VulkanWindow window, MatrixStack matrixStack, int texture, int program, int meshID, long indicesIndex, int length) {
+    public void drawMesh(VulkanWindow window, VulkanGraphicsContext graphicsContext, MatrixStack matrixStack, int texture, int program, int meshID, long indicesIndex, int length) {
 
     }
 
     @Override
-    public int createMesh(VulkanWindow window, VertexMesh mesh) {
+    public int createMesh(VulkanWindow window, VulkanGraphicsContext graphicsContext, VertexMesh mesh) {
         return 0;
     }
 
     @Override
-    public void destroyMesh(VulkanWindow window, int mesh) {
+    public void destroyMesh(VulkanWindow window, VulkanGraphicsContext graphicsContext, int mesh) {
 
     }
 
     @Override
-    public int createTexture(VulkanWindow window, ByteBuffer buffer, int width, int height, int format) {
+    public int createTexture(VulkanWindow window, VulkanGraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format) {
         return 0;
     }
 
     @Override
-    public void destroyTexture(VulkanWindow window, int texture) {
+    public void destroyTexture(VulkanWindow window, VulkanGraphicsContext graphicsContext, int texture) {
 
     }
 
     @Override
-    public void drawAndDestroyMesh(VulkanWindow window, MatrixStack matrixStack, VertexMesh mesh, int texture, int program) {
+    public void drawAndDestroyMesh(VulkanWindow window, VulkanGraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh, int texture, int program) {
 
     }
 
     @Override
-    public void setState(VulkanWindow window, PipelineState state) {
+    public void setState(VulkanWindow window, VulkanGraphicsContext graphicsContext, PipelineState state) {
 
     }
 
     @Override
-    public int createProgram(ShaderSource shaderSource) {
+    public int createProgram(VulkanGraphicsContext graphicsContext, ShaderSource shaderSource) {
         String vertex =  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.vertexShader, shaderSource.modContent.getModID()));
         String fragment = engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.fragmentShader, shaderSource.modContent.getModID()));
         String geometry = shaderSource.geometryShader == null ? null :  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.geometryShader, shaderSource.modContent.getModID()));
@@ -72,6 +72,16 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow> {
         ByteBuffer geometryShader = geometry != null ? ShaderCompiler.compileShader(geometry,ShaderCompiler.GEOMETRY_SHADER) : null;
 
         return 0;
+    }
+
+    @Override
+    public void uploadData(VulkanGraphicsContext graphicsContext, float[] data, String name) {
+
+    }
+
+    @Override
+    public void uploadData(VulkanGraphicsContext graphicsContext, float[] data, int index) {
+
     }
 
 }

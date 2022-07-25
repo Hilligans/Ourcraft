@@ -100,7 +100,7 @@ public class ServerWorld extends World {
                     final long start = System.currentTimeMillis();
                     ArrayList<Long> players = new ArrayList<>();
                     for (ServerPlayerData playerData : ServerNetworkHandler.playerData.values()) {
-                        players.add(ChunkPos.fromPos((int) playerData.playerEntity.x, (int) playerData.playerEntity.z));
+                        players.add(ChunkPos.fromPos((int) playerData.playerEntity.getX(), (int) playerData.playerEntity.getZ()));
                         playerData.save();
                     }
 

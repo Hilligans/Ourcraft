@@ -60,8 +60,8 @@ public class ShaderSource implements IRegistryElement {
     }
 
     @Override
-    public void loadGraphics(IGraphicsEngine<?, ?> graphicsEngine) {
-        program = graphicsEngine.getDefaultImpl().createProgram(this);
+    public void loadGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine) {
+        program = graphicsEngine.getDefaultImpl().createProgram(null,this);
     }
 
     @Override

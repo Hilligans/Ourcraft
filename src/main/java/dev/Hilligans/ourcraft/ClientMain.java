@@ -31,7 +31,7 @@ public class ClientMain {
     public static ArgumentContainer argumentContainer;
 
     public static long start = System.currentTimeMillis();
-    public static IGraphicsEngine<?,?> graphicsEngine = null;
+    public static IGraphicsEngine<?,?,?> graphicsEngine = null;
 
     public static void main(String[] args) throws IOException {
         argumentContainer = new ArgumentContainer(args);
@@ -48,7 +48,6 @@ public class ClientMain {
                 e.printStackTrace();
             }
         }
-
       //  System.out.println("Ray Intersection " + Intersectionf.intersectRayAab(0,-1,0,0.9f,1,0,-1,0,-1,1,0.05f,1,new Vector2f()));
 
         client = new Client(gameInstance);

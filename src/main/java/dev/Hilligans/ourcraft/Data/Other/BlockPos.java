@@ -1,5 +1,6 @@
 package dev.Hilligans.ourcraft.Data.Other;
 
+import dev.Hilligans.ourcraft.Util.IPosition;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 
@@ -38,6 +39,12 @@ public class BlockPos {
         this.x = (int)Math.round(x);
         this.y = (int)Math.round(y);
         this.z = (int)Math.round(z);
+    }
+
+    public BlockPos(IPosition position) {
+        this.x = (int) position.getRawX();
+        this.y = (int) position.getRawY();
+        this.z = (int) position.getRawZ();
     }
 
     public static BlockPos fromSubChunkPos(int pos) {

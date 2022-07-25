@@ -95,7 +95,7 @@ public class Client {
     public ClientNetwork authNetwork;
     public GameInstance gameInstance;
 
-    public IGraphicsEngine<?,?> graphicsEngine;
+    public IGraphicsEngine<?,?,?> graphicsEngine;
     public InputHandler inputHandler;
     public IInputProvider mouseBind;
 
@@ -107,7 +107,7 @@ public class Client {
         soundEngine = new SoundEngine(gameInstance);
     }
 
-    public Client setGraphicsEngine(IGraphicsEngine<?,?> graphicsEngine) {
+    public Client setGraphicsEngine(IGraphicsEngine<?,?,?> graphicsEngine) {
         if(graphicsEngine != null) {
             this.graphicsEngine = graphicsEngine;
             System.out.println(graphicsEngine.getResourceName());

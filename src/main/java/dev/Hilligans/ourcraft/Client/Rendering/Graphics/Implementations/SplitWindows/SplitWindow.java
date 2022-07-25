@@ -14,7 +14,7 @@ public class SplitWindow extends RenderWindow {
     public ArrayList<RenderWindow> windows = new ArrayList<>();
 
 
-    public SplitWindow(IGraphicsEngine<?,?> graphicsEngine) {
+    public SplitWindow(IGraphicsEngine<?,?,?> graphicsEngine) {
         super(graphicsEngine);
     }
 

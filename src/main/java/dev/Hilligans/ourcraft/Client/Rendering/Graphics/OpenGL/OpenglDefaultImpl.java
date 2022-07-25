@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsContext;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.PipelineState;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
@@ -27,7 +28,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
-public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
+public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, GraphicsContext> {
 
     public OpenGLEngine engine;
 
@@ -44,7 +45,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
     }
 
     @Override
-    public void drawMesh(OpenGLWindow window, MatrixStack matrixStack, int texture, int program, int meshID, long indicesIndex, int length) {
+    public void drawMesh(OpenGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, int texture, int program, int meshID, long indicesIndex, int length) {
         Tuple<Integer, Integer> data = meshData.get(meshID);
         matrixStack.applyTransformation(program);
       //  if(texture != boundTexture) {
@@ -64,7 +65,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
     }
 
     @Override
-    public int createMesh(OpenGLWindow window, VertexMesh mesh) {
+    public int createMesh(OpenGLWindow window, GraphicsContext graphicsContext, VertexMesh mesh) {
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
@@ -104,7 +105,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
     }
 
     @Override
-    public void destroyMesh(OpenGLWindow window, int mesh) {
+    public void destroyMesh(OpenGLWindow window, GraphicsContext graphicsContext, int mesh) {
         long array = vertexArrayObjects.get(mesh);
         meshData.remove(mesh);
         if((int)array != 0) {
@@ -119,7 +120,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
     }
 
     @Override
-    public int createTexture(OpenGLWindow window, Image image) {
+    public int createTexture(OpenGLWindow window, GraphicsContext graphicsContext, Image image) {
         int texture = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -132,7 +133,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
     }
 
     @Override
-    public int createTexture(OpenGLWindow window, ByteBuffer buffer, int width, int height, int format) {
+    public int createTexture(OpenGLWindow window, GraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format) {
         int texture = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -145,13 +146,13 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
     }
 
     @Override
-    public void destroyTexture(OpenGLWindow window, int texture) {
+    public void destroyTexture(OpenGLWindow window, GraphicsContext graphicsContext, int texture) {
         glDeleteTextures(texture);
         textureTypes.remove(texture);
     }
 
     @Override
-    public void drawAndDestroyMesh(OpenGLWindow window, MatrixStack matrixStack, VertexMesh mesh, int texture, int program) {
+    public void drawAndDestroyMesh(OpenGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh, int texture, int program) {
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
@@ -197,7 +198,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
     }
 
     @Override
-    public void setState(OpenGLWindow window, PipelineState state) {
+    public void setState(OpenGLWindow window, GraphicsContext graphicsContext, PipelineState state) {
         if(state.depthTest) {
             glEnable(GL_DEPTH_TEST);
         } else {
@@ -206,7 +207,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
     }
 
     @Override
-    public int createProgram(ShaderSource shaderSource) {
+    public int createProgram(GraphicsContext graphicsContext, ShaderSource shaderSource) {
         String vertex =  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.vertexShader, shaderSource.modContent.getModID()));
         String fragment =  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.fragmentShader, shaderSource.modContent.getModID()));
         String geometry = shaderSource.geometryShader == null ? null :  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.geometryShader, shaderSource.modContent.getModID()));
@@ -219,6 +220,16 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow> {
         } else {
             return ShaderManager.registerShader(vertex,geometry,fragment);
         }
+    }
+
+    @Override
+    public void uploadData(GraphicsContext graphicsContext, float[] data, String name) {
+
+    }
+
+    @Override
+    public void uploadData(GraphicsContext graphicsContext, float[] data, int index) {
+
     }
 
     VertexFormat[] cache = new VertexFormat[2];

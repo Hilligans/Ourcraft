@@ -9,12 +9,18 @@ public abstract class WorldType {
 
     public static final Vector3fi DOWN = new Vector3fi(0,-1,0);
 
+    /**
+     * Used to control entity physics.
+     */
     @Immutable
     public Vector3fc getGravityVector(Vector3f position) {
         return DOWN;
     }
 
-    public void b() {
-        ((Vector3f)getGravityVector(null)).x = 10;
+    /**
+     * Used to control block physics such as water movement and block texturing.
+     */
+    public Vector3fc getBlockGravity(int x, int y, int z) {
+        return DOWN;
     }
 }

@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Graphics.FixedFunctionGL;
 
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsContext;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsEngineBase;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.GLRenderer;
@@ -20,7 +21,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_SAMPLES;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.glEnable;
 
-public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWindow, FixedFunctionGLDefaultImpl> {
+public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWindow, FixedFunctionGLDefaultImpl, GraphicsContext> {
 
     public FixedFunctionGLDefaultImpl engineImpl;
     public Client client;
@@ -61,7 +62,7 @@ public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWin
         screenStack.applyColor();
         screenStack.applyTransformation();
 
-        window.renderPipeline.render(client,matrixStack,screenStack);
+        window.renderPipeline.render(client,matrixStack,screenStack,null);
     }
 
     @Override

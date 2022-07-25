@@ -29,7 +29,7 @@ public class BlockItem extends Item {
     public boolean onActivate(World world, PlayerEntity playerEntity) {
         RayResult rayResult;
         if (world.isServer()) {
-            rayResult = world.traceBlock(playerEntity.x, playerEntity.y + playerEntity.boundingBox.eyeHeight, playerEntity.z, playerEntity.pitch, playerEntity.yaw);
+            rayResult = world.traceBlock(playerEntity.getX(), playerEntity.getY() + playerEntity.boundingBox.eyeHeight, playerEntity.getZ(), playerEntity.pitch, playerEntity.yaw);
         } else {
             rayResult = world.traceBlock(Camera.pos.x, Camera.pos.y + Camera.playerBoundingBox.eyeHeight, Camera.pos.z, Camera.pitch, Camera.yaw);
         }
@@ -47,7 +47,7 @@ public class BlockItem extends Item {
 
         BlockState blockState;
         if(world.isServer()) {
-            blockState = block.getStateForPlacement(new Vector3d(playerEntity.x, playerEntity.y, playerEntity.z),rayResult);
+            blockState = block.getStateForPlacement(new Vector3d(playerEntity.getX(), playerEntity.getY(), playerEntity.getZ()),rayResult);
         } else {
             blockState = block.getStateForPlacement(Camera.pos,rayResult);
         }
@@ -56,7 +56,7 @@ public class BlockItem extends Item {
         for (Entity entity : world.entities.values()) {
             if (entity instanceof LivingEntity) {
                 if(world.isServer()) {
-                    if (!block.getAllowedMovement(new Vector3d(), new Vector3d(playerEntity.x, playerEntity.y, playerEntity.z), pos, entity.boundingBox, world)) {
+                    if (!block.getAllowedMovement(new Vector3d(), new Vector3d(playerEntity.getX(), playerEntity.getY(), playerEntity.getZ()), pos, entity.boundingBox, world)) {
                         world.setBlockState(pos,oldState);
                         return false;
                     }

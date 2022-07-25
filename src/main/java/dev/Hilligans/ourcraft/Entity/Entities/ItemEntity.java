@@ -29,7 +29,7 @@ public class ItemEntity extends Entity {
     public int pickupDelay;
 
 
-    public ItemEntity(float x, float y, float z, int id, Block block) {
+    public ItemEntity(double x, double y, double z, int id, Block block) {
         super(x, y, z, id);
         this.block = block;
         type = 1;
@@ -39,7 +39,7 @@ public class ItemEntity extends Entity {
         pickupDelay = 10;
     }
 
-    public ItemEntity(float x, float y, float z, int id, ItemStack itemStack) {
+    public ItemEntity(double x, double y, double z, int id, ItemStack itemStack) {
         super(x,y,z,id);
         this.type = 1;
         this.itemStack = itemStack;
@@ -90,7 +90,7 @@ public class ItemEntity extends Entity {
         //glUseProgram(ClientMain.getClient().shaderManager.colorShader);
         glBindVertexArray(id);
         glBindTexture(GL_TEXTURE_2D, ClientMain.getClient().texture);
-        matrixStack.translateMinusOffset(x,y,z);
+        matrixStack.translateMinusOffset((float) getX(), (float) getY(), (float) getZ());
         matrixStack.rotate((float) Math.toRadians(ClientMain.getClient().getRenderTime() / 3f),new Vector3f(0,1,0));
         matrixStack.translate(-0.25f,0,-0.25f);
         if((ClientMain.getClient().getRenderTime() % 400) > 200) {

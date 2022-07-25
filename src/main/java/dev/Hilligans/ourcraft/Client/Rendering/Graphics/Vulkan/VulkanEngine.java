@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 
-public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefaultImpl> {
+public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefaultImpl, VulkanGraphicsContext> {
 
     public VulkanInstance vulkanInstance;
     public VulkanDefaultImpl impl;

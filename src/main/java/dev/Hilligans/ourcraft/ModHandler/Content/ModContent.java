@@ -70,7 +70,7 @@ public class ModContent {
     public ArrayList<RegistryLoader> registryLoaders = new ArrayList<>();
     public ArrayList<ScreenBuilder> screenBuilders = new ArrayList<>();
     public ArrayList<Feature> features = new ArrayList<>();
-    public ArrayList<IGraphicsEngine<?,?>> graphicsEngines = new ArrayList<>();
+    public ArrayList<IGraphicsEngine<?,?,?>> graphicsEngines = new ArrayList<>();
     public ArrayList<RenderTarget> renderTargets = new ArrayList<>();
     public ArrayList<RenderPipeline> renderPipelines = new ArrayList<>();
     public ArrayList<RenderTaskSource> renderTasks = new ArrayList<>();
@@ -253,8 +253,8 @@ public class ModContent {
         }
     }
 
-    public void registerGraphicsEngine(IGraphicsEngine<?,?>... graphicsEngines) {
-        for(IGraphicsEngine<?,?> graphicsEngine : graphicsEngines) {
+    public void registerGraphicsEngine(IGraphicsEngine<?,?,?>... graphicsEngines) {
+        for(IGraphicsEngine<?,?,?> graphicsEngine : graphicsEngines) {
             this.graphicsEngines.add(graphicsEngine);
         }
     }

@@ -24,9 +24,7 @@ public class TeleportCommand extends CommandHandler {
                 float x = Float.parseFloat(args[1]);
                 float y = Float.parseFloat(args[2]);
                 float z = Float.parseFloat(args[3]);
-                playerEntity.x = x;
-                playerEntity.y = y;
-                playerEntity.z = z;
+                playerEntity.setPos(x,y,z);
                 ServerMain.getServer().sendPacket(new SUpdateEntityPacket(x,y,z,playerEntity.pitch,playerEntity.yaw,playerEntity.id));
                 ServerMain.getServer().sendPacket(new SUpdatePlayer(x,y,z,playerEntity.pitch,playerEntity.yaw),playerEntity);
             } else {
@@ -39,9 +37,7 @@ public class TeleportCommand extends CommandHandler {
                     float x = Float.parseFloat(args[0]);
                     float y = Float.parseFloat(args[1]);
                     float z = Float.parseFloat(args[2]);
-                    entity.x = x;
-                    entity.y = y;
-                    entity.z = z;
+                    entity.setPos(x,y,z);
                     ServerMain.getServer().sendPacket(new SUpdateEntityPacket(x, y, z, entity.pitch, entity.yaw, entity.id));
 
                     if (entity instanceof PlayerEntity) {

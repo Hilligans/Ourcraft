@@ -87,10 +87,6 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketDat
         }
     }
 
-    public static Channel getChannel(int id) {
-        return channels.find(mappedChannels.get(id));
-    }
-
     public static ChannelFuture sendPacket(PacketBase packetBase, ChannelHandlerContext ctx) {
         return ctx.channel().writeAndFlush(new PacketData(packetBase));
     }

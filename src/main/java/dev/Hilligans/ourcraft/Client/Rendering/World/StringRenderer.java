@@ -39,9 +39,9 @@ public class StringRenderer {
 
     VertexFormat format;
 
-    public IGraphicsEngine<?,?> graphicsEngine;
+    public IGraphicsEngine<?,?,?> graphicsEngine;
 
-    public StringRenderer(IGraphicsEngine<?,?> graphicsEngine) {
+    public StringRenderer(IGraphicsEngine<?,?,?> graphicsEngine) {
         this.graphicsEngine = graphicsEngine;
         format = graphicsEngine.getGameInstance().VERTEX_FORMATS.get("ourcraft:position_texture");
     }
@@ -125,8 +125,8 @@ public class StringRenderer {
                 }
                 PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
                 primitiveBuilder.translate(x - finalWidth / 2f,0,0);
-                IDefaultEngineImpl<?> impl = window.getEngineImpl();
-                impl.drawAndDestroyMesh(window,matrixStack,primitiveBuilder.toVertexMesh(),textureAtlas.glTextureId,ShaderManager.guiShader.shader);
+                IDefaultEngineImpl<?,?> impl = window.getEngineImpl();
+                impl.drawAndDestroyMesh(window,null,matrixStack,primitiveBuilder.toVertexMesh(),textureAtlas.glTextureId,ShaderManager.guiShader.shader);
 
             });
         } catch (Exception ignored) {
@@ -163,8 +163,8 @@ public class StringRenderer {
             }
             PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
             primitiveBuilder.translate(1.0f,0,1.0f);
-            IDefaultEngineImpl<?> impl = window.getEngineImpl();
-            impl.drawAndDestroyMesh(window,matrixStack,primitiveBuilder.toVertexMesh(),textureAtlas.glTextureId,ShaderManager.guiShader.shader);
+            IDefaultEngineImpl<?,?> impl = window.getEngineImpl();
+            impl.drawAndDestroyMesh(window,null,matrixStack,primitiveBuilder.toVertexMesh(),textureAtlas.glTextureId,ShaderManager.guiShader.shader);
         });
     }
 
@@ -211,7 +211,7 @@ public class StringRenderer {
                 TextureAtlas textureAtlas = textureAtlases.get(val);
                 if(textureAtlas != null) {
                     Image image = textureAtlas.toImage();
-                    textureAtlas.glTextureId = window.getEngineImpl().createTexture(window,image);
+                    textureAtlas.glTextureId = window.getEngineImpl().createTexture(window,null,image);
                     texturesBuilt.put(val, (Boolean) true);
                 }
             }

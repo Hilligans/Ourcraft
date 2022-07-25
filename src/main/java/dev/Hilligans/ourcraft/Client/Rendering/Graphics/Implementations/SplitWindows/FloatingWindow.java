@@ -11,7 +11,7 @@ public class FloatingWindow extends RenderWindow {
     public ArrayList<RenderWindow> windows = new ArrayList<>();
 
 
-    public FloatingWindow(IGraphicsEngine<?,?> graphicsEngine) {
+    public FloatingWindow(IGraphicsEngine<?,?,?> graphicsEngine) {
         super(graphicsEngine);
     }
 

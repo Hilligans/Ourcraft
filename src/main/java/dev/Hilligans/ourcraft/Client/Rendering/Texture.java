@@ -56,9 +56,9 @@ public class Texture implements IRegistryElement {
     }
 
     public void drawTexture(RenderWindow window, MatrixStack matrixStack, int x, int y, int width, int height, int startX, int startY, int endX, int endY) {
-        IDefaultEngineImpl<?> defaultEngineImpl = window.getEngineImpl();
+        IDefaultEngineImpl<?,?> defaultEngineImpl = window.getEngineImpl();
         if(textureId == -1) {
-            textureId = window.getEngineImpl().createTexture(window,texture);
+            textureId = window.getEngineImpl().createTexture(window,null,texture);
         }
 
         float minX = (float)startX / this.width;
@@ -72,7 +72,7 @@ public class Texture implements IRegistryElement {
 
         mesh.addData(indices, vertices);
 
-        defaultEngineImpl.drawAndDestroyMesh(window,matrixStack,mesh,textureId,ClientMain.getClient().shaderManager.shaderProgram);
+        defaultEngineImpl.drawAndDestroyMesh(window,null,matrixStack,mesh,textureId,ClientMain.getClient().shaderManager.shaderProgram);
 
     }
 

@@ -1,10 +1,13 @@
 package dev.Hilligans.ourcraft.Addons.Bot;
 
+import dev.Hilligans.ourcraft.Addons.Bot.PathFinding.Path;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
 import dev.Hilligans.ourcraft.Data.Descriptors.ItemDescriptor;
 import dev.Hilligans.ourcraft.Util.Settings;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
+
+import java.util.concurrent.CompletableFuture;
 
 public class BotActions {
 
@@ -48,6 +51,15 @@ public class BotActions {
 
         }
         return -1;
+    }
+
+    public BotActionResult runPath(BotInstance botInstance, Path path) {
+
+
+
+
+
+        return BotActionResult.SUCCESS;
     }
 
 

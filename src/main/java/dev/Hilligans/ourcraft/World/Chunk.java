@@ -128,9 +128,10 @@ public class Chunk implements IMeshSource, IChunk {
 
     }
 
-    public void build(IGraphicsEngine<?,?> graphicsEngine) {
+    ///TODO fix
+    public void build(IGraphicsEngine<?,?,?> graphicsEngine) {
         if(solidMesh.id != -1) {
-            graphicsEngine.getDefaultImpl().destroyMesh(null,solidMesh.id);
+            graphicsEngine.getDefaultImpl().destroyMesh(null,null,solidMesh.id);
         }
         PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
         for(int x = 0; x < 16; x++) {
@@ -148,7 +149,7 @@ public class Chunk implements IMeshSource, IChunk {
                 }
             }
         }
-        int id = graphicsEngine.getDefaultImpl().createMesh(null,primitiveBuilder.toVertexMesh().setVertexFormat("position_color_texture"));
+        int id = graphicsEngine.getDefaultImpl().createMesh(null,null,primitiveBuilder.toVertexMesh().setVertexFormat("position_color_texture"));
         solidMesh.set(id,primitiveBuilder.indices.size());
     }
 

@@ -189,7 +189,7 @@ public class EntityPosition implements IPosition {
     public void write(ByteArray byteArray) {
         byteArray.writeInt(chunkX);
         byteArray.writeInt(chunkY);
-        byteArray.writeByte(chunkZ);
+        byteArray.writeInt(chunkZ);
 
         byteArray.writeFloat(x);
         byteArray.writeFloat(y);

@@ -54,7 +54,7 @@ public class PlayerEntity extends LivingEntity {
 
         for(Entity entity : ServerMain.getWorld(dimension).entities.values()) {
             if(entity instanceof ItemEntity) {
-                if (entity.boundingBox.intersectsBox(itemPickupBox, new Vector3d(entity.x, entity.y, entity.z), new Vector3d(x, y, z))) {
+                if (entity.boundingBox.intersectsBox(itemPickupBox, new Vector3d(entity.getX(), entity.getY(), entity.getZ()), new Vector3d(getX(), getY(), getZ()))) {
                     if(((ItemEntity)entity).pickupDelay == 0) {
                         ItemStack itemStack = ((ItemEntity) entity).itemStack;
                         int count = itemStack.count;
@@ -94,7 +94,7 @@ public class PlayerEntity extends LivingEntity {
         GL30.glBindTexture(GL_TEXTURE_2D,imageId);
         GL30.glBindVertexArray(textureId);
 
-        matrixStack.translateMinusOffset(x,y,z);
+        matrixStack.translateMinusOffset((float) getX(), (float) getY(), (float) getZ());
         matrixStack.rotate(-yaw,new Vector3f(0,1,0));
         matrixStack.rotate(pitch,new Vector3f(0,0,1));
         matrixStack.applyTransformation();

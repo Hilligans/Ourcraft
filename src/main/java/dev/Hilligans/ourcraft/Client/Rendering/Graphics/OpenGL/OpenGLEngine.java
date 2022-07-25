@@ -4,6 +4,7 @@ import dev.Hilligans.ourcraft.Client.Camera;
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.PlayerMovementThread;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsContext;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsEngineBase;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
@@ -39,7 +40,7 @@ import static org.lwjgl.opengl.GL32.*;
 import static org.lwjgl.opengl.GL43.GL_DEBUG_OUTPUT;
 import static org.lwjgl.opengl.GL43.glDebugMessageCallback;
 
-public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefaultImpl> {
+public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefaultImpl, GraphicsContext> {
 
     public Logger logger;
 
@@ -91,8 +92,10 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         screenStack.applyColor();
         screenStack.applyTransformation();
 
-        window.renderPipeline.render(client,matrixStack,screenStack);
+        window.renderPipeline.render(client,matrixStack,screenStack, new GraphicsContext());
     }
+
+
 
     @Override
     public OpenGLWindow setup() {

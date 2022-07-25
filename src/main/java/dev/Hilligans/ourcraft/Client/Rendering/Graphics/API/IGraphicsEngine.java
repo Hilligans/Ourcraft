@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
-public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngineImpl<Q>> extends IRegistryElement {
+public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngineImpl<Q,X>, X extends GraphicsContext> extends IRegistryElement {
 
     Q createWindow();
 

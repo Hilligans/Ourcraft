@@ -4,6 +4,9 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+
+import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_REPEAT;
@@ -15,7 +18,7 @@ public class Input implements IRegistryElement {
     public String modID;
     public int[] keyBinds;
 
-    public String boundKey;
+    public ArrayList<String> boundKey = new ArrayList<>(1);
 
     public String displayName;
 
@@ -35,7 +38,15 @@ public class Input implements IRegistryElement {
     public void repeat(RenderWindow renderWindow, float strength) {}
 
     public void bind(String key) {
-        this.boundKey = key;
+        this.boundKey.add(key);
+    }
+
+    public void removeBind(String key) {
+        boundKey.remove(key);
+    }
+
+    public void removeBind(int index) {
+        boundKey.remove(index);
     }
 
     @Override
@@ -70,27 +81,32 @@ public class Input implements IRegistryElement {
     }
 
     public int[] build(InputHandler handler) {
-        String[] parts = boundKey.split("\\.");
+        IntArrayList list = new IntArrayList();
 
-        int[] vals = new int[parts.length];
-        StringBuilder builder = new StringBuilder();
-        int x = 0;
+        for(String key : boundKey) {
+            String[] parts = key.split("\\.");
 
-        for(String string : parts) {
-            String[] pieces = string.split("::");
-            String source = pieces[0];
-            int index = Integer.parseInt(pieces[1]);
+           //int[] vals = new int[parts.length];
+            StringBuilder builder = new StringBuilder();
 
-            IInputProvider provider = handler.hashedProvider.get(source);
-            System.out.println(source);
-            builder.append(provider.getButtonName(index,0)).append(' ');
-            int newIndex = provider.getOffset() + index;
-            vals[x++] = newIndex;
+            for (String string : parts) {
+                String[] pieces = string.split("::");
+                String source = pieces[0];
+                int index = Integer.parseInt(pieces[1]);
+
+                IInputProvider provider = handler.hashedProvider.get(source);
+                System.out.println(source);
+                builder.append(provider.getButtonName(index, 0)).append(' ');
+                int newIndex = provider.getOffset() + index;
+                if(!list.contains(newIndex)) {
+                    list.add(newIndex);
+                }
+            }
+
+            displayName = builder.toString();
+            //keyBinds = vals;
         }
 
-        displayName = builder.toString();
-        keyBinds = vals;
-
-        return vals;
+        return list.toIntArray();
     }
 }

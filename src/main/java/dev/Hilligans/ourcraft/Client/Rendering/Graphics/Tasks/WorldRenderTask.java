@@ -4,6 +4,7 @@ import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.Culling.CullingEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.*;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsContext;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.ICamera;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.MeshHolder;
@@ -26,7 +27,7 @@ public class WorldRenderTask extends RenderTaskSource {
     public RenderTask getDefaultTask() {
         return new RenderTask() {
             @Override
-            public void draw(RenderWindow window, IGraphicsEngine<?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack) {
+            public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?,?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack) {
                 if(cullingEngine == null) {
                     cullingEngine = new CullingEngine(null) {
                         @Override
@@ -40,22 +41,22 @@ public class WorldRenderTask extends RenderTaskSource {
                     System.out.println(engine.getGameInstance().SHADERS.ELEMENTS);
                     shaderSource = engine.getGameInstance().SHADERS.get("ourcraft:world_shader");
                 }
-                engine.getDefaultImpl().setState(window, new PipelineState().setDepth(true));
+                engine.getDefaultImpl().setState(window,graphicsContext, new PipelineState().setDepth(true));
                 Vector3d pos = window.camera.getSavedPosition();
                 ClientWorld world = client.clientWorld;
                 Vector3i playerChunkPos = new Vector3i((int) pos.x >> 4, 0, (int) pos.z >> 4);
                 if (client.renderWorld) {
                     for (int x = 0; x < Settings.renderDistance; x++) {
                         for (int z = 0; z < Settings.renderDistance; z++) {
-                            drawChunk(window, client, engine, worldStack, playerChunkPos, getChunk(x + playerChunkPos.x, z + playerChunkPos.z, world));
+                            drawChunk(window, graphicsContext, client, engine, worldStack, playerChunkPos, getChunk(x + playerChunkPos.x, z + playerChunkPos.z, world));
                             if (x != 0) {
-                                drawChunk(window, client, engine, worldStack, playerChunkPos, getChunk(-x + playerChunkPos.x, z + playerChunkPos.z, world));
+                                drawChunk(window, graphicsContext, client, engine, worldStack, playerChunkPos, getChunk(-x + playerChunkPos.x, z + playerChunkPos.z, world));
                                 if (z != 0) {
-                                    drawChunk(window, client, engine, worldStack, playerChunkPos, getChunk(-x + playerChunkPos.x, -z + playerChunkPos.z, world));
+                                    drawChunk(window, graphicsContext, client, engine, worldStack, playerChunkPos, getChunk(-x + playerChunkPos.x, -z + playerChunkPos.z, world));
                                 }
                             }
                             if (z != 0) {
-                                drawChunk(window, client, engine, worldStack, playerChunkPos, getChunk(x + playerChunkPos.x, -z + playerChunkPos.z, world));
+                                drawChunk(window, graphicsContext, client, engine, worldStack, playerChunkPos, getChunk(x + playerChunkPos.x, -z + playerChunkPos.z, world));
                             }
                         }
                     }
@@ -76,7 +77,7 @@ public class WorldRenderTask extends RenderTaskSource {
         return c;
     }
 
-    void drawChunk(RenderWindow window, Client client, IGraphicsEngine<?, ?> engine, MatrixStack matrixStack, Vector3i playerChunkPos, Chunk chunk) {
+    void drawChunk(RenderWindow window, GraphicsContext graphicsContext, Client client, IGraphicsEngine<?, ?,?> engine, MatrixStack matrixStack, Vector3i playerChunkPos, Chunk chunk) {
         if (chunk != null) {
             MeshHolder meshHolder = chunk.getSolidMesh();
             int meshId = meshHolder.getId();
@@ -86,7 +87,7 @@ public class WorldRenderTask extends RenderTaskSource {
                         matrixStack.push();
                         matrixStack.translate((chunk.getX()) * chunk.getWidth(), 0, (chunk.getZ()) * chunk.getWidth());
                         matrixStack.applyTransformation(shaderSource.program);
-                        engine.getDefaultImpl().drawMesh(window, matrixStack, engine.getGraphicsData().getWorldTexture(), shaderSource.program, meshId, meshHolder.index, meshHolder.length);
+                        engine.getDefaultImpl().drawMesh(window,graphicsContext, matrixStack, engine.getGraphicsData().getWorldTexture(), shaderSource.program, meshId, meshHolder.index, meshHolder.length);
                         matrixStack.pop();
                     }
                 }

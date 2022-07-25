@@ -21,14 +21,14 @@ public abstract class RenderWindow {
     public RenderPipeline renderPipeline;
 
     public ICamera camera;
-    public IGraphicsEngine<?,?> graphicsEngine;
+    public IGraphicsEngine<?,?,?> graphicsEngine;
     public Logger logger;
     public InputHandler inputHandler;
 
     public double mouseX;
     public double mouseY;
 
-    public RenderWindow(IGraphicsEngine<?,?> graphicsEngine) {
+    public RenderWindow(IGraphicsEngine<?,?,?> graphicsEngine) {
         this.graphicsEngine = graphicsEngine;
         if(graphicsEngine != null) {
             Logger log = graphicsEngine.getLogger();
@@ -105,11 +105,11 @@ public abstract class RenderWindow {
         renderPipeline.build(this);
     }
 
-    public IDefaultEngineImpl<?> getEngineImpl() {
+    public IDefaultEngineImpl<?,?> getEngineImpl() {
         return graphicsEngine.getDefaultImpl();
     }
 
-    public IGraphicsEngine<?,?> getGraphicsEngine() {
+    public IGraphicsEngine<?,?,?> getGraphicsEngine() {
         return graphicsEngine;
     }
 

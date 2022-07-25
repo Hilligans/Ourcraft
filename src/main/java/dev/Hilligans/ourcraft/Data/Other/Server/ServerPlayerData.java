@@ -12,6 +12,7 @@ import dev.Hilligans.ourcraft.Item.Items;
 import dev.Hilligans.ourcraft.Ourcraft;
 import dev.Hilligans.ourcraft.ServerMain;
 import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
+import dev.Hilligans.ourcraft.Util.EntityPosition;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 
@@ -70,9 +71,7 @@ public class ServerPlayerData {
                 heldStack = inventory.readStack(-1);
             }
             if (playerEntity != null) {
-                playerEntity.x = (float) tag.getDouble("x").val;
-                playerEntity.y = (float) tag.getDouble("y").val;
-                playerEntity.z = (float) tag.getDouble("z").val;
+                playerEntity.position = new EntityPosition(tag);
                 playerEntity.pitch = tag.getFloat("pitch").val;
                 playerEntity.yaw = tag.getFloat("yaw").val;
             }
@@ -87,9 +86,7 @@ public class ServerPlayerData {
         inventory.writeStack(-1,heldStack);
         tag.putTag("inventory",inventory);
 
-        tag.putDouble("x",playerEntity.x);
-        tag.putDouble("y",playerEntity.y);
-        tag.putDouble("z",playerEntity.z);
+        playerEntity.position.write(tag);
         tag.putFloat("pitch",playerEntity.pitch);
         tag.putFloat("yaw",playerEntity.yaw);
     }
@@ -132,10 +129,10 @@ public class ServerPlayerData {
         if(slot == -1) {
             if(!heldStack.isEmpty()) {
                 if(count == -1 || count >= heldStack.count) {
-                    ServerMain.getWorld(getDimension()).addEntity(new ItemEntity(playerEntity.x, playerEntity.y, playerEntity.z, Entity.getNewId(), heldStack).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
+                    ServerMain.getWorld(getDimension()).addEntity(new ItemEntity(playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), Entity.getNewId(), heldStack).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
                     heldStack = ItemStack.emptyStack();
                 } else {
-                    ServerMain.getWorld(getDimension()).addEntity(new ItemEntity(playerEntity.x,playerEntity.y,playerEntity.z,Entity.getNewId(),new ItemStack(heldStack.item,count)).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
+                    ServerMain.getWorld(getDimension()).addEntity(new ItemEntity(playerEntity.getX(),playerEntity.getY(),playerEntity.getZ(),Entity.getNewId(),new ItemStack(heldStack.item,count)).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
                     heldStack.count -= count;
                 }
             }
@@ -144,10 +141,10 @@ public class ServerPlayerData {
             if(itemSlot != null) {
                 if(!itemSlot.getContents().isEmpty()) {
                     if(count == -1 || count >= itemSlot.getContents().count) {
-                        ServerMain.getWorld(getDimension()).addEntity(new ItemEntity(playerEntity.x, playerEntity.y, playerEntity.z, Entity.getNewId(), itemSlot.getContents()).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
+                        ServerMain.getWorld(getDimension()).addEntity(new ItemEntity(playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), Entity.getNewId(), itemSlot.getContents()).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
                         itemSlot.setContents(ItemStack.emptyStack());
                     } else {
-                        ServerMain.getWorld(getDimension()).addEntity(new ItemEntity(playerEntity.x,playerEntity.y,playerEntity.z,Entity.getNewId(),new ItemStack(itemSlot.getContents().item,count)).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
+                        ServerMain.getWorld(getDimension()).addEntity(new ItemEntity(playerEntity.getX(),playerEntity.getY(),playerEntity.getZ(),Entity.getNewId(),new ItemStack(itemSlot.getContents().item,count)).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
                         itemSlot.getContents().count -= count;
                     }
                 }

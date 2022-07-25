@@ -29,7 +29,7 @@ public class SUpdateEntityPacket extends PacketBase {
     }
 
     public SUpdateEntityPacket(Entity entity) {
-        this(entity.x,entity.y,entity.z,entity.pitch,entity.yaw,entity.id);
+        this((float) entity.getX(), (float) entity.getY(), (float) entity.getZ(),entity.pitch,entity.yaw,entity.id);
     }
 
     @Override

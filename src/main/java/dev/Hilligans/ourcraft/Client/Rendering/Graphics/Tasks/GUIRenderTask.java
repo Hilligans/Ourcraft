@@ -5,6 +5,7 @@ import dev.Hilligans.ourcraft.Client.ChatWindow;
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsContext;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
@@ -31,10 +32,10 @@ public class GUIRenderTask extends RenderTaskSource {
     public RenderTask getDefaultTask() {
         return new RenderTask() {
             @Override
-            public void draw(RenderWindow window, IGraphicsEngine<?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack) {
-                IDefaultEngineImpl<?> impl = engine.getDefaultImpl();
+            public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?,?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack) {
+                IDefaultEngineImpl<?,?> impl = engine.getDefaultImpl();
 
-                impl.setState(window, new PipelineState());
+                impl.setState(window,graphicsContext, new PipelineState());
 
                 StringRenderer stringRenderer = engine.getStringRenderer();
 

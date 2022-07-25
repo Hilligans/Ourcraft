@@ -67,7 +67,7 @@ public class CRequestContent extends PacketBase {
         for(Entity entity : ServerMain.getWorld(serverPlayerData.getDimension()).entities.values()) {
             ServerNetworkHandler.sendPacket(new SCreateEntityPacket(entity),ctx);
         }
-        ServerNetworkHandler.sendPacket(new SUpdatePlayer(playerEntity.x,playerEntity.y,playerEntity.z,0,0),ctx);
+        ServerNetworkHandler.sendPacket(new SUpdatePlayer((float) playerEntity.getX(), (float) playerEntity.getY(), (float) playerEntity.getZ(),0,0),ctx);
         serverPlayerData.playerInventory.age++;
 
     //    if(version != ServerSidedData.getInstance().version) {

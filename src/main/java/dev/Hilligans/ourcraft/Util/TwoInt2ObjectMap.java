@@ -17,6 +17,4 @@ public class TwoInt2ObjectMap<O> {
         }
         return null;
     }
-
-
 }
