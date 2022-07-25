@@ -25,6 +25,7 @@ import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import dev.Hilligans.ourcraft.World.ClientWorld;
 import org.joml.Matrix4d;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL45;
 import org.lwjgl.opengl.GLDebugMessageCallback;
 import org.lwjgl.system.MemoryUtil;
 
@@ -121,8 +122,8 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         glDebugMessageCallback(new GLDebugMessageCallback() {
             @Override
             public void invoke(int source, int type, int id, int severity, int length, long message, long userParam) {
-                System.out.println("OpenGL ERROR Callback ");
-                System.out.println(new String(MemoryUtil.memCharBuffer(message,length).reset().array()));
+                System.out.println("OpenGL ERROR Callback " + severity);
+                System.out.println(MemoryUtil.memCharBuffer(message, length).flip());
             }
         }, 0);
 

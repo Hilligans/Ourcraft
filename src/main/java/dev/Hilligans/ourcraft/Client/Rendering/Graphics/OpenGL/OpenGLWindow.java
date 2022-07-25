@@ -58,6 +58,7 @@ public class OpenGLWindow extends RenderWindow {
 
     @Override
     public void swapBuffers() {
+        glfwSwapInterval(0);
         glfwSwapBuffers(window);
         client.rendering = false;
         client.soundEngine.tick();
