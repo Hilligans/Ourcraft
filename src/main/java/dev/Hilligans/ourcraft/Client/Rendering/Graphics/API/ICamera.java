@@ -95,7 +95,7 @@ public interface ICamera {
     MatrixStack getMatrixStack(int W, int H, int x, int y);
 
     default MatrixStack getScreenStack(int W, int H, int x, int y) {
-        return new MatrixStack(new Matrix4d().translate(W - 1 - 2*x, H - 1 - 2*y, 0).scale(W, H, 1).ortho(0, ClientMain.getWindowX(),ClientMain.getWindowY(),0,-1,20000));
+        return new MatrixStack(new Matrix4d().translate(W - 1 - 2*x, H - 1 - 2*y, 0).scale(W, H, 1).ortho(0, getWindowWidth(),getWindowHeight(),0,-1,20000));
     }
 
     default Matrix4d getPerspective(int W, int H, int x, int y, float fov, float aspectRatio, float zNear, float zFar) {
@@ -114,4 +114,12 @@ public interface ICamera {
     void savePosition(Vector3d vector3d);
 
     Vector3d getSavedPosition();
+
+    default float getWindowWidth() {
+        return getWindow().getWindowWidth();
+    }
+
+    default float getWindowHeight() {
+        return getWindow().getWindowHeight();
+    }
 }

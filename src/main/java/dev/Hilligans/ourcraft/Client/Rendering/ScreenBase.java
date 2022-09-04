@@ -101,7 +101,10 @@ public abstract class ScreenBase implements Screen {
         this.window = renderWindow;
         System.out.println(renderWindow);
         for(Widget widget : widgets) {
-            widget.window = renderWindow;
+            widget.addSource(renderWindow);
         }
+        buildContentForWindow(renderWindow);
     }
+
+    public void buildContentForWindow(RenderWindow window) {}
 }

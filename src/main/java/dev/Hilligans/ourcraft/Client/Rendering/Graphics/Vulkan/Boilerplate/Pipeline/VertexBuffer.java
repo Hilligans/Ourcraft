@@ -65,15 +65,15 @@ public class VertexBuffer {
 
         for (int i = 0; i < memProperties.memoryTypeCount(); i++) {
             long[] longs = new long[10];
-            vkGetDeviceMemoryCommitment(device.device,i,longs);
-            System.out.println(longs[0]);
+            //vkGetDeviceMemoryCommitment(device.device,i,longs);
+            System.out.println("Longs" + longs[0]);
             // System.out.println(i);
             if ((filter & (1 << i)) == 1 && (memProperties.memoryTypes(i).propertyFlags() & properties) == properties) {
-                //return i;
+                return i;
             }
         }
         if(1==1) {
-            return 3;
+            return 1;
         }
         device.vulkanInstance.exit("failed to find memory");
         return -1;
@@ -91,5 +91,4 @@ public class VertexBuffer {
         vkDestroyBuffer(device.device,buffer,null);
         vkFreeMemory(device.device, memory, null);
     }
-
 }

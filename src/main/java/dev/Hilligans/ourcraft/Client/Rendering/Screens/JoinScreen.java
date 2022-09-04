@@ -20,21 +20,30 @@ import dev.Hilligans.ourcraft.World.Builders.OreBuilder;
 import dev.Hilligans.ourcraft.World.ServerWorld;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_H;
-
 public class JoinScreen extends ScreenBase {
 
     public ServerSelectorWidget selected;
-    Button play = new Button(100, ClientMain.getWindowY() / 2 + 100, 200, 50, "menu.join", new ButtonAction() {
-        @Override
-        public void onPress() {
-            if(selected != null) {
-                selected.joinServer();
-            }
-        }
-    }).isEnabled(false);
+    Button play;
 
     public JoinScreen(Client client) {
         super(client);
+        registerKeyPress(new KeyPress() {
+            @Override
+            public void onPress() {
+                client.openScreen(new TagEditorScreen(client));
+            }
+        }, GLFW_KEY_H);
+    }
+
+    @Override
+    public void buildContentForWindow(RenderWindow window) {
+        int windowY = (int) window.getWindowHeight();
+
+        play = new Button(100, windowY / 2 + 100, 200, 50, "menu.join", () -> {
+            if(selected != null) {
+                selected.joinServer();
+            }
+        }).isEnabled(false);
         addWidget(play);
         addWidget(new ServerSelectorWidget(100,300,200,80,"localhost","25588",this));
         addWidget(new ServerSelectorWidget(100,400,200,80,"198.100.150.46","25588",this));
@@ -58,7 +67,7 @@ public class JoinScreen extends ScreenBase {
             Thread thread = new Thread(() -> client.multiPlayerServer.startServer(portString));
             thread.setName("client_networking");
             thread.start();
-           this.portString = portString;
+            this.portString = portString;
         }));
 
         addWidget(new Button(500,500,200,50,"menu.singleplayerjoin", () -> {
@@ -72,12 +81,6 @@ public class JoinScreen extends ScreenBase {
 
         addWidget(new Button(500,600,200,50,"menu.mod_list", () -> client.openScreen(new ModListScreen(client))));
 
-        registerKeyPress(new KeyPress() {
-            @Override
-            public void onPress() {
-                client.openScreen(new TagEditorScreen(client));
-            }
-        }, GLFW_KEY_H);
     }
 
     public String portString;

@@ -59,7 +59,7 @@ public class ChatWindow implements Screen {
 
         StringRenderer stringRenderer = window.getStringRenderer();
 
-        int y = (int) (ClientMain.getWindowY() - stringRenderer.stringHeight * 1.5);
+        int y = (int) (window.getWindowHeight() - stringRenderer.stringHeight * 1.5);
         int size = messages.size();
         for(int x = 0; x < size; x++) {
             if(messages.get(size - x - 1).getTypeB() < System.currentTimeMillis() && !typing) {
@@ -91,7 +91,7 @@ public class ChatWindow implements Screen {
 
         String val = getString();
         if(!val.equals("")) {
-            stringRenderer.drawStringInternal(window, matrixStack, val,0,ClientMain.getWindowY() - stringRenderer.stringHeight / 2,0.5f);
+            stringRenderer.drawStringInternal(window, matrixStack, val,0, (int) (window.getWindowHeight() - stringRenderer.stringHeight / 2),0.5f);
         }
     }
 

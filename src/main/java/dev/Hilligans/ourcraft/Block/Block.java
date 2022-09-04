@@ -1,10 +1,12 @@
 package dev.Hilligans.ourcraft.Block;
 
+import dev.Hilligans.ourcraft.Block.BlockState.IBlockState;
+import dev.Hilligans.ourcraft.Block.BlockState.IBlockStateTable;
+import dev.Hilligans.ourcraft.Block.BlockState.NewBlockState;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.TextAtlas;
 import dev.Hilligans.ourcraft.Client.Rendering.Renderer;
-import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.BlockTextureManager;
 import dev.Hilligans.ourcraft.Data.Descriptors.TagCollection;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.DataBlockState;
@@ -27,8 +29,12 @@ import dev.Hilligans.ourcraft.World.World;
 import org.joml.Vector3d;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class Block implements IRegistryElement {
 
+    IBlockStateTable table;
     public String name;
     public String modId;
     public short id;
@@ -206,6 +212,30 @@ public class Block implements IRegistryElement {
         return null;
     }
 
+    public void registerBlockStates(IBlockState state) {}
+
+    public void addMethodKeys(ArrayList<String> keys) {}
+
+    public IBlockState randomTick(IBlockState state, World world, BlockPos pos, Random random) {
+        return null;
+    }
+
+    //TODO add break source
+    public void onBreak(IBlockState state, World world) {}
+
+    //TODO add placer
+    public void onPlace(IBlockState state, World world) {}
+
+    //TODO add placing context
+    public IBlockState getStateForPlacement() {
+        return getDefaultState1();
+    }
+
+    //TODO pull state from table
+    public IBlockState getDefaultState1() {
+        return null;
+    }
+
     @Override
     public String toString() {
         return "Block{" +
@@ -273,5 +303,9 @@ public class Block implements IRegistryElement {
     @Override
     public TagCollection getTagCollection() {
         return blockProperties.tags;
+    }
+
+    public IBlockStateTable getTable() {
+        return table;
     }
 }

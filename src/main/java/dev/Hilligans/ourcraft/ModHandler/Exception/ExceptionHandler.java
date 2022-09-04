@@ -17,10 +17,10 @@ public abstract class ExceptionHandler<T extends Exception> implements IRegistry
         return exceptionClass;
     }
 
-    public abstract boolean handleException(T exception, @Nullable IContext context);
+    public abstract boolean handleException(T exception, @Nullable IContext context, CrashReport crashReport);
 
-    public boolean handle(Exception e, @Nullable IContext context) {
-        return handleException((T)e, context);
+    public boolean handle(Exception e, @Nullable IContext context, CrashReport crashReport) {
+        return handleException((T)e, context, crashReport);
     }
 
     @Override

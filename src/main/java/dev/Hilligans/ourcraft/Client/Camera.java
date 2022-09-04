@@ -126,14 +126,6 @@ public class Camera {
         }
     }
 
-    public static void addToThirdPerson(float amount) {
-        if(amount > 0) {
-            thirdPersonScroll = Math.min(16,thirdPersonScroll + amount);
-        } else {
-            thirdPersonScroll = Math.max(2.0f,thirdPersonScroll + amount);
-        }
-    }
-
     public static void toggleThirdPerson() {
         if(thirdPerson) {
             if (thirdPersonMode == 1) {
@@ -245,14 +237,6 @@ public class Camera {
 
     public static double newX = (float)ClientMain.getWindowX() / 2;
     public static double newY = (float)ClientMain.getWindowY() / 2;
-
-    public static void renderPlayer(MatrixStack matrixStack) {
-        if(thirdPerson) {
-            playerEntity.setPos(pos);
-            playerEntity.setRot((float) pitch, (float) yaw);
-            playerEntity.render(matrixStack);
-        }
-    }
 
     public static double velX;
     public static double velY;

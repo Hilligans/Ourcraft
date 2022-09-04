@@ -22,8 +22,6 @@ public class MiniMapScreen extends ScreenBase {
     int mouseLastX = 0;
     int mouseLastY = 0;
 
-
-
     @Override
     public void drawScreen(RenderWindow window, MatrixStack matrixStack) {
         super.drawScreen(window, matrixStack);
@@ -37,7 +35,7 @@ public class MiniMapScreen extends ScreenBase {
             mouseLastX = (int) mousePos.get(0);
             mouseLastY = (int) mousePos.get(1);
         }
-        miniMap.draw(matrixStack,miniMap.lastX, miniMap.lastY,0,0,ClientMain.getWindowX(),ClientMain.getWindowY());
+        miniMap.draw(matrixStack,miniMap.lastX, miniMap.lastY,0,0, (int) window.getWindowWidth(), (int) window.getWindowHeight());
     }
 
     @Override

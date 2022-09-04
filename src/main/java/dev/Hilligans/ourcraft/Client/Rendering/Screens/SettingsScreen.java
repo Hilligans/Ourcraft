@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Screens;
 
 import dev.Hilligans.ourcraft.Client.Camera;
 import dev.Hilligans.ourcraft.Client.Client;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBase;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Button;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.SliderWidget;
@@ -12,6 +13,12 @@ public class SettingsScreen extends ScreenBase {
 
     public SettingsScreen(Client client) {
         super(client);
+    }
+
+    @Override
+    public void buildContentForWindow(RenderWindow window) {
+        super.buildContentForWindow(window);
+
         addWidget(new SliderWidget("settings.sensitivity",50, 50, 200, 40, 50, 300, (int) Camera.sensitivity, value -> Camera.sensitivity = value));
         addWidget(new SliderWidget("settings.fov",50, 150, 200, 40, 10, 110, Camera.fov, value -> Camera.fov = value));
         addWidget(new SliderWidget("settings.render_distance", 50, 250, 400, 40, 2, 512, Settings.renderDistance, value -> Settings.renderDistance = value));

@@ -15,12 +15,12 @@ public class EntityExecutor implements CommandExecutor {
 
     @Override
     public double getX() {
-        return entity.x;
+        return entity.getX();
     }
 
     @Override
     public double getY() {
-        return entity.y;
+        return entity.getY();
     }
 
     @Override

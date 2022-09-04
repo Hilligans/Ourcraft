@@ -320,6 +320,7 @@ public class Client {
     }
 
     public void createCallbacks() {
+        /*
         mouseHandler = new MouseHandler(this);
 
         glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
@@ -380,6 +381,8 @@ public class Client {
                 }
             }
         });
+
+         */
     }
 
     public static long timeSinceLastDraw = 0;

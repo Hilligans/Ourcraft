@@ -30,7 +30,7 @@ public class DataWidget extends Widget {
     @Override
     public void render(RenderWindow window, MatrixStack matrixStack, int xOffset, int yOffset) {
         super.render(window, matrixStack, xOffset, yOffset);
-        if (this.getY() > 0 && this.getY() < ClientMain.getWindowY() && this.isActive()) {
+        if (this.getY() > 0 && this.getY() < window.getWindowHeight() && this.isActive()) {
             if (shouldRender) {
                 switch (type) {
                     case 0:

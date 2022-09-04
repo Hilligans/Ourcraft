@@ -59,6 +59,10 @@ public class Widget {
         return this;
     }
 
+    public void addSource(RenderWindow renderWindow) {
+        this.window = renderWindow;
+    }
+
     public void render(RenderWindow window, MatrixStack matrixStack, int xOffset, int yOffset) {}
 
     public void screenClose() {}

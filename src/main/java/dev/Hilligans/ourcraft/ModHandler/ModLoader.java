@@ -27,7 +27,7 @@ public class ModLoader {
 
     public String mod = "ourcraft";
     public GameInstance gameInstance;
-
+    public boolean suspended = false;
     public HashMap<String, Triplet<Class<?>,String,Boolean>> mainClasses = new HashMap<>();
 
     public ModLoader(GameInstance gameInstance) {
@@ -165,5 +165,12 @@ public class ModLoader {
             }
         }
         return null;
+    }
+
+    public synchronized boolean isSuspended() {
+        return suspended;
+    }
+    public synchronized void suspend() {
+        suspended = true;
     }
 }
