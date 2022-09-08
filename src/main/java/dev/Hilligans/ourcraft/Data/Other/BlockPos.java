@@ -51,6 +51,13 @@ public class BlockPos {
         return new BlockPos(pos & 0xF, (pos & 0xF0) >> 4, (pos & 0xF00) >> 8);
     }
 
+    public BlockPos set(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        return this;
+    }
+
     public BlockPos add(BlockPos pos) {
         x += pos.x;
         y += pos.y;
@@ -174,6 +181,18 @@ public class BlockPos {
 
     public boolean isSubChunkValid() {
         return x >= 0 && x <= 15 && y >= 0 && y <= 15 && z >= 0 && z <= 15;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getZ() {
+        return z;
     }
 
     @Override

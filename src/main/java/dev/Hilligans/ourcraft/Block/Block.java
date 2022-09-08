@@ -2,7 +2,7 @@ package dev.Hilligans.ourcraft.Block;
 
 import dev.Hilligans.ourcraft.Block.BlockState.IBlockState;
 import dev.Hilligans.ourcraft.Block.BlockState.IBlockStateTable;
-import dev.Hilligans.ourcraft.Block.BlockState.NewBlockState;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.IMethodResult;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.TextAtlas;
@@ -25,6 +25,7 @@ import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
 import dev.Hilligans.ourcraft.Util.Side;
 import dev.Hilligans.ourcraft.World.DataProvider;
 import dev.Hilligans.ourcraft.World.DataProviders.ShortBlockState;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.IWorld;
 import dev.Hilligans.ourcraft.World.World;
 import org.joml.Vector3d;
 import org.json.JSONObject;
@@ -216,15 +217,15 @@ public class Block implements IRegistryElement {
 
     public void addMethodKeys(ArrayList<String> keys) {}
 
-    public IBlockState randomTick(IBlockState state, World world, BlockPos pos, Random random) {
+    public IBlockState randomTick(IMethodResult result, IBlockState state, IWorld world, BlockPos pos, Random random) {
         return null;
     }
 
     //TODO add break source
-    public void onBreak(IBlockState state, World world) {}
+    public void onBreak(IMethodResult result, IBlockState state, IWorld world) {}
 
     //TODO add placer
-    public void onPlace(IBlockState state, World world) {}
+    public void onPlace(IMethodResult result, IBlockState state, IWorld world) {}
 
     //TODO add placing context
     public IBlockState getStateForPlacement() {
@@ -233,7 +234,7 @@ public class Block implements IRegistryElement {
 
     //TODO pull state from table
     public IBlockState getDefaultState1() {
-        return null;
+        return table.getBlockState(0);
     }
 
     @Override

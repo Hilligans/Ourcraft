@@ -2,7 +2,7 @@ package dev.Hilligans.ourcraft.World;
 
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
 import dev.Hilligans.ourcraft.Util.Settings;
-import dev.Hilligans.ourcraft.World.ThreeDimension.IWorld;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.IWorld;
 
 import java.util.ArrayList;
 

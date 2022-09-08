@@ -4,7 +4,8 @@ import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Block.BlockState.*;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
 import dev.Hilligans.ourcraft.Data.Other.BlockProperties;
-import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.IMethodResult;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.IWorld;
 import dev.Hilligans.ourcraft.World.World;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class CropBlock extends Block {
     }
 
     @Override
-    public IBlockState randomTick(IBlockState state, World world, BlockPos pos, Random random) {
+    public IBlockState randomTick(IMethodResult result, IBlockState state, IWorld world, BlockPos pos, Random random) {
         int value = (int) state.getValue(stages);
         if(value == stages.count) {
             return null;

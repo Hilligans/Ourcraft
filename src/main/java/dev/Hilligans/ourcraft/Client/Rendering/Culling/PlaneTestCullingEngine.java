@@ -3,13 +3,11 @@ package dev.Hilligans.ourcraft.Client.Rendering.Culling;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.ICamera;
 import dev.Hilligans.ourcraft.Data.Other.BoundingBox;
 import dev.Hilligans.ourcraft.World.Chunk;
-import dev.Hilligans.ourcraft.World.ThreeDimension.IWorld;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.IWorld;
 import dev.Hilligans.ourcraft.World.SubChunk;
-import org.joml.Intersectiond;
 import org.joml.Vector3d;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class PlaneTestCullingEngine extends CullingEngine {
 

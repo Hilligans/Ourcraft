@@ -1,7 +1,7 @@
 package dev.Hilligans.ourcraft.World;
 
+import dev.Hilligans.ourcraft.World.NewWorldSystem.IChunkContainer;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import org.lwjgl.opengl.GL30;
 
 import java.util.function.Consumer;
 

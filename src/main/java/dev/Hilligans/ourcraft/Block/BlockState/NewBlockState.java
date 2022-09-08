@@ -20,6 +20,11 @@ public class NewBlockState implements IBlockState {
     public Object[] map;
 
 
+    @Override
+    public Block getBlock() {
+        return block;
+    }
+
     public void register(IBlockStateType<?> type) {
         size *= type.getCount();
         vals.add(type);
@@ -35,6 +40,9 @@ public class NewBlockState implements IBlockState {
         }
     }
 
+    /**
+     * just using iteration due to most of the time blocks will only have a few state types and would perform better than a map.
+     */
     public Object getValue(IBlockStateType<?> type) {
         for(int x = 0; x < vals.size(); x++) {
             if(vals.get(x) == type) {

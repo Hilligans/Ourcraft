@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.World;
 
 import dev.Hilligans.ourcraft.Biome.Biome;
 import dev.Hilligans.ourcraft.Block.Block;
+import dev.Hilligans.ourcraft.Block.BlockState.IBlockState;
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.IMeshSource;
@@ -20,14 +21,16 @@ import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.Hilligans.ourcraft.Entity.Entity;
 import dev.Hilligans.ourcraft.World.Builders.WorldBuilder;
 import dev.Hilligans.ourcraft.Util.Settings;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.IChunk;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.ISubChunk;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2IntOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
-import org.joml.Intersectiond;
 import org.lwjgl.opengl.*;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -277,6 +280,41 @@ public class Chunk implements IMeshSource, IChunk {
     @Override
     public long getZ() {
         return z;
+    }
+
+    @Override
+    public IBlockState getBlockState1(long x, long y, long z) {
+        return null;
+    }
+
+    @Override
+    public void setBlockState(long x, long y, long z, IBlockState blockState) {
+
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public void forEach(Consumer<ISubChunk> consumer) {
+
+    }
+
+    @Override
+    public boolean isGenerated() {
+        return false;
+    }
+
+    @Override
+    public boolean isPopulated() {
+        return false;
+    }
+
+    @Override
+    public boolean isStructured() {
+        return false;
     }
 
     public BlockState getBlockState(long x, long y, long z) {

@@ -1,4 +1,6 @@
-package dev.Hilligans.ourcraft.World;
+package dev.Hilligans.ourcraft.World.NewWorldSystem;
+
+import dev.Hilligans.ourcraft.World.Chunk;
 
 import java.util.function.Consumer;
 

@@ -37,6 +37,7 @@ import dev.Hilligans.ourcraft.ModHandler.Events.Client.*;
 import dev.Hilligans.ourcraft.Resource.ResourceManager;
 import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 import dev.Hilligans.ourcraft.Util.Logger;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.IWorld;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 import dev.Hilligans.ourcraft.Server.MultiPlayerServer;
 import dev.Hilligans.ourcraft.Util.Settings;
@@ -87,6 +88,8 @@ public class Client {
 
     public ClientPlayerData playerData = new ClientPlayerData();
     public ClientWorld clientWorld;
+
+    public IWorld newClientWorld;
 
     public MultiPlayerServer multiPlayerServer;
     public boolean rendering = false;

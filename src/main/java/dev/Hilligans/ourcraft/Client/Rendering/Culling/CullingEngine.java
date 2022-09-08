@@ -2,7 +2,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Culling;
 
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.ICamera;
 import dev.Hilligans.ourcraft.World.Chunk;
-import dev.Hilligans.ourcraft.World.ThreeDimension.IWorld;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.IWorld;
 
 public abstract class CullingEngine {
 

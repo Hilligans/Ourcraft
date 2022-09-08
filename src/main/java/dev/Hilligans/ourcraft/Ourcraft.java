@@ -242,8 +242,6 @@ public class Ourcraft {
                 }
             });
         }
-
-
         Ourcraft.getResourceManager().gameInstance = modContent.gameInstance;
     }
 

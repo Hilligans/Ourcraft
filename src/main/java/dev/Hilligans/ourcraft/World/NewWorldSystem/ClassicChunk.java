@@ -1,7 +1,14 @@
-package dev.Hilligans.ourcraft.World;
+package dev.Hilligans.ourcraft.World.NewWorldSystem;
 
+import dev.Hilligans.ourcraft.Block.BlockState.IBlockState;
 import dev.Hilligans.ourcraft.Block.Blocks;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.IChunk;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.ISubChunk;
+import dev.Hilligans.ourcraft.World.SubChunk;
+import dev.Hilligans.ourcraft.World.World;
+
+import java.util.function.Consumer;
 
 public class ClassicChunk implements IChunk {
 
@@ -11,6 +18,10 @@ public class ClassicChunk implements IChunk {
 
     public SubChunk[] chunks;
     public World world;
+
+    public boolean generated = false;
+    public boolean populated = false;
+    public boolean structured = false;
 
     public ClassicChunk(World world, int height, int x, int z) {
         this.world = world;
@@ -46,6 +57,10 @@ public class ClassicChunk implements IChunk {
     }
 
     @Override
+    public IBlockState getBlockState1(long x, long y, long z) {
+        return null;
+    }
+
     public BlockState getBlockState(long x, long y, long z) {
         SubChunk subChunk = chunks[(int) (y >> 4)];
         if(subChunk == null) {
@@ -55,6 +70,35 @@ public class ClassicChunk implements IChunk {
     }
 
     @Override
+    public void setBlockState(long x, long y, long z, IBlockState blockState) {
+
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public void forEach(Consumer<ISubChunk> consumer) {
+
+    }
+
+    @Override
+    public boolean isGenerated() {
+        return generated;
+    }
+
+    @Override
+    public boolean isPopulated() {
+        return populated;
+    }
+
+    @Override
+    public boolean isStructured() {
+        return structured;
+    }
+
     public void setBlockState(long x, long y, long z, BlockState blockState) {
         SubChunk subChunk = chunks[(int) (y >> 4)];
         if(subChunk == null) {

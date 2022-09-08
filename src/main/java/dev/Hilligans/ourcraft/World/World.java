@@ -17,6 +17,7 @@ import dev.Hilligans.ourcraft.Util.Noises.BiomeNoise;
 import dev.Hilligans.ourcraft.Util.Noises.Noise;
 import dev.Hilligans.ourcraft.Util.Noises.SimplexNoise;
 import dev.Hilligans.ourcraft.Util.Settings;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.IChunkContainer;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
@@ -344,10 +345,5 @@ public abstract class World {
             this.z = z;
             this.blockState = blockState;
         }
-
     }
-
-
-
-
 }
