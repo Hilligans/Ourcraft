@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.Block;
 
 import dev.Hilligans.ourcraft.Block.BlockState.IBlockState;
 import dev.Hilligans.ourcraft.Block.BlockState.IBlockStateTable;
+import dev.Hilligans.ourcraft.Block.BlockState.NewBlockState;
 import dev.Hilligans.ourcraft.World.NewWorldSystem.IMethodResult;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.PrimitiveBuilder;
@@ -28,6 +29,7 @@ import dev.Hilligans.ourcraft.World.DataProviders.ShortBlockState;
 import dev.Hilligans.ourcraft.World.NewWorldSystem.IWorld;
 import dev.Hilligans.ourcraft.World.World;
 import org.joml.Vector3d;
+import org.joml.Vector3f;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -114,9 +116,6 @@ public class Block implements IRegistryElement {
         return blockProperties.blockStateSize != 0;
     }
 
-    public int blockStateByteCount() {
-        return blockProperties.blockStateSize;
-    }
 
     public BlockState getStateWithData(short data) {
         if(blockProperties.blockStateSize != 0) {
@@ -171,6 +170,11 @@ public class Block implements IRegistryElement {
     public int getSide(BlockState blockState, int side) {
         return blockProperties.blockShape.getSide(blockState,side);
     }
+
+    public int getSide(IBlockState blockState, int side) {
+        return blockProperties.blockShape.getSide(blockState,side);
+    }
+
 
     public static BlockPos getBlockPos(int side) {
         switch (side) {
@@ -234,7 +238,16 @@ public class Block implements IRegistryElement {
 
     //TODO pull state from table
     public IBlockState getDefaultState1() {
-        return table.getBlockState(0);
+        return new NewBlockState(this);
+      //  return table.getBlockState(0);
+    }
+
+    public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, IBlockState blockState, BlockPos blockPos, int x, int z) {
+        blockProperties.blockShape.addVertices(primitiveBuilder,side,size,blockState,blockProperties.blockTextureManager,new Vector3f(), x,blockPos.y,z);
+    }
+
+    public int getRotation(IBlockState state) {
+        return 0;
     }
 
     @Override

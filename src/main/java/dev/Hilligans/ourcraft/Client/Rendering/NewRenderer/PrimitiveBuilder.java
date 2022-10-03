@@ -38,8 +38,14 @@ public class PrimitiveBuilder {
         this.vertexFormat = vertexFormat;
     }
 
+    public PrimitiveBuilder setVertexFormat(VertexFormat vertexFormat) {
+        this.vertexFormat = vertexFormat;
+        return this;
+    }
+
     public VertexMesh toVertexMesh() {
         VertexMesh vertexMesh = new VertexMesh(vertexFormat);
+        vertexMesh.vertexFormatName = vertexFormat.formatName;
         vertexMesh.addData(indices.getElementData(),vertices.getElementData());
         return vertexMesh;
     }

@@ -38,6 +38,7 @@ import dev.Hilligans.ourcraft.Resource.ResourceManager;
 import dev.Hilligans.ourcraft.Tag.CompoundNBTTag;
 import dev.Hilligans.ourcraft.Util.Logger;
 import dev.Hilligans.ourcraft.World.NewWorldSystem.IWorld;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.SimpleWorld;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 import dev.Hilligans.ourcraft.Server.MultiPlayerServer;
 import dev.Hilligans.ourcraft.Util.Settings;
@@ -89,7 +90,7 @@ public class Client {
     public ClientPlayerData playerData = new ClientPlayerData();
     public ClientWorld clientWorld;
 
-    public IWorld newClientWorld;
+    public IWorld newClientWorld = new SimpleWorld(0,"");
 
     public MultiPlayerServer multiPlayerServer;
     public boolean rendering = false;
@@ -101,6 +102,9 @@ public class Client {
     public IGraphicsEngine<?,?,?> graphicsEngine;
     public InputHandler inputHandler;
     public IInputProvider mouseBind;
+
+    public int renderDistance = 16;
+    public int renderYDistance = 1;
 
     public Client(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
@@ -159,7 +163,7 @@ public class Client {
         }
     }
 
-    public void draw(RenderWindow window, MatrixStack matrixStack, MatrixStack screenStack) {
+/*    public void draw(RenderWindow window, MatrixStack matrixStack, MatrixStack screenStack) {
         gameInstance.EVENT_BUS.postEvent(new RenderStartEvent(matrixStack,screenStack,this));
         if(renderWorld && !gameInstance.REBUILDING.get()) {
             gameInstance.EVENT_BUS.postEvent(new RenderWorldEvent(matrixStack,screenStack,this));
@@ -184,6 +188,8 @@ public class Client {
         }
         gameInstance.EVENT_BUS.postEvent(new RenderEndEvent(matrixStack,screenStack,this));
     }
+
+ */
 
     public int chunks = 0;
 

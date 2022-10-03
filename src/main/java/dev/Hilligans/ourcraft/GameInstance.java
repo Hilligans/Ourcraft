@@ -68,9 +68,13 @@ public class GameInstance {
     //public final
     public Side side;
 
+    public int gameInstanceUniversalID = -1;
+
     public final ToolLevelList MATERIAL_LIST = new ToolLevelList();
 
     public GameInstance() {
+        gameInstanceUniversalID = getNewGameInstanceUniversalID();
+
         REGISTRIES.put("ouracrft:blocks", BLOCKS);
         REGISTRIES.put("ourcraft:items", ITEMS);
         REGISTRIES.put("ourcraft:biomes", BIOMES);
@@ -347,5 +351,11 @@ public class GameInstance {
 
     public void handleArgs(String[] args) {
         ARGUMENTS.handle(args);
+    }
+
+    private static int staticGameInstanceUniversalID = 0;
+
+    public static synchronized int getNewGameInstanceUniversalID() {
+        return staticGameInstanceUniversalID++;
     }
 }

@@ -14,4 +14,6 @@ public interface IBlockState {
     IBlockState getNewState(IBlockStateType<?> stateType, Object obj);
 
     int getBlockStateID();
+
+    int getBlockID();
 }

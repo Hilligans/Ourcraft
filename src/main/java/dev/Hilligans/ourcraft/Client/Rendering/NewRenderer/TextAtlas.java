@@ -105,7 +105,6 @@ public class TextAtlas {
                 }
             });
         }
-        System.out.println(time / count);
         executorService.shutdown();
         try {
             executorService.awaitTermination(100000, TimeUnit.MILLISECONDS);

@@ -79,7 +79,6 @@ public class SubChunk {
     }
 
 
-
     public void destroy() {
         if(id != -1 && id != -2 && id != -3) {
             VAOManager.destroyBuffer(id);

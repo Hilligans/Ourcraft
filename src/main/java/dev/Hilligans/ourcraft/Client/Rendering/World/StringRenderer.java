@@ -10,25 +10,18 @@ import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.TextureAtlas;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
-import dev.Hilligans.ourcraft.Client.Rendering.VertexMesh;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.ShaderManager;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.WorldTextureManager;
-import dev.Hilligans.ourcraft.ClientMain;
-import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.Hilligans.ourcraft.Data.Primitives.IntList;
-import dev.Hilligans.ourcraft.Data.Primitives.Triplet;
 import dev.Hilligans.ourcraft.Ourcraft;
 import it.unimi.dsi.fastutil.chars.Char2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2BooleanArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import org.lwjgl.stb.STBTTPackedchar;
 
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
 import java.util.concurrent.Future;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.*;
 
 public class StringRenderer {
 
@@ -190,7 +183,7 @@ public class StringRenderer {
             for (int y = 0; y < 16; y++) {
                 if (Character.isDefined(startPos * 256 + x * 16 + y)) {
                     char character = Character.toChars(startPos * 256 + x * 16 + y)[0];
-                    BufferedImage bufferedImage = WorldTextureManager.stringToBufferedImage(character + "");
+                    BufferedImage bufferedImage = WorldTextureManager.charToBufferedImage(character);
                     if (bufferedImage != null) {
                         put(character, bufferedImage.getWidth(), textureAtlas.addImage(bufferedImage, 64));
                     }

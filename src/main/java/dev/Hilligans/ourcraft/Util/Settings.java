@@ -4,7 +4,7 @@ import dev.Hilligans.ourcraft.Data.Other.BoundingBox;
 
 public class Settings {
 
-    public static int renderDistance = 16;
+    public static int renderDistance = 8;
     public static boolean requestChunks = true;
 
     public static final int chunkHeight = 16;

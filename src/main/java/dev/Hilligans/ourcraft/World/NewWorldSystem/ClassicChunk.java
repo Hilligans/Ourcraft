@@ -16,19 +16,19 @@ public class ClassicChunk implements IChunk {
     public int z;
     public int height;
 
-    public SubChunk[] chunks;
-    public World world;
+    public ISubChunk[] chunks;
+    public IWorld world;
 
     public boolean generated = false;
     public boolean populated = false;
     public boolean structured = false;
 
-    public ClassicChunk(World world, int height, int x, int z) {
+    public ClassicChunk(IWorld world, int height, int x, int z) {
         this.world = world;
         this.height = height;
         this.x = x;
         this.z = z;
-        chunks = new SubChunk[height];
+        chunks = new ISubChunk[height];
     }
 
     @Override
@@ -58,20 +58,23 @@ public class ClassicChunk implements IChunk {
 
     @Override
     public IBlockState getBlockState1(long x, long y, long z) {
-        return null;
-    }
-
-    public BlockState getBlockState(long x, long y, long z) {
-        SubChunk subChunk = chunks[(int) (y >> 4)];
-        if(subChunk == null) {
-            return Blocks.AIR.getDefaultState();
+        if(y < 0) {
+            return Blocks.AIR.getDefaultState1();
         }
-        return subChunk.getBlock((int) (x % 15), (int) (y % 15), (int) (z % 15));
+        ISubChunk subChunk = chunks[(int) (y >> 4)];
+        if(subChunk == null) {
+            return Blocks.AIR.getDefaultState1();
+        }
+        return subChunk.getBlockState((int) (x % 15), (int) (y % 15), (int) (z % 15));
     }
 
     @Override
     public void setBlockState(long x, long y, long z, IBlockState blockState) {
-
+        ISubChunk subChunk = chunks[(int) (y >> 4)];
+        if(subChunk == null) {
+            subChunk = chunks[(int) (y >> 4)] = new SimpleSubChunkImpl(16,16);
+        }
+        subChunk.setBlockState((int) (x % 15), (int)(y % 15), (int) (z % 15),blockState);
     }
 
     @Override
@@ -81,7 +84,9 @@ public class ClassicChunk implements IChunk {
 
     @Override
     public void forEach(Consumer<ISubChunk> consumer) {
-
+        for(ISubChunk subChunk : chunks) {
+            consumer.accept(subChunk);
+        }
     }
 
     @Override
@@ -97,13 +102,5 @@ public class ClassicChunk implements IChunk {
     @Override
     public boolean isStructured() {
         return structured;
-    }
-
-    public void setBlockState(long x, long y, long z, BlockState blockState) {
-        SubChunk subChunk = chunks[(int) (y >> 4)];
-        if(subChunk == null) {
-            subChunk = chunks[(int) (y >> 4)] = new SubChunk(world,x * 16L,(y >> 4) * 16,z * 16L);
-        }
-        subChunk.setBlockState((int) (x % 15), (int) (y % 15), (int) (z % 15),blockState);
     }
 }

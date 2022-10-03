@@ -14,6 +14,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.*;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.FixedFunctionGL.FixedFunctionGLEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Tasks.GUIRenderTask;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Tasks.NewWorldRenderTask;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Tasks.WorldRenderTask;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Tasks.WorldTransparentRenderTask;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngine;
@@ -135,9 +136,23 @@ public class Ourcraft {
             modContent.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:world_pipeline").afterTarget("translucent_world_renderer", "ourcraft")
                     .setPipelineState(new PipelineState()));
 
+            modContent.registerRenderPipelines(new RenderPipeline("new_world_pipeline"));
+
+            modContent.registerRenderTarget(new RenderTarget("new_solid_world_renderer", "ourcraft:new_world_pipeline")
+                    .setPipelineState(new PipelineState().setDepth(true)));
+            modContent.registerRenderTarget(new RenderTarget("entity_renderer", "ourcraft:new_world_pipeline").afterTarget("new_solid_world_renderer","ourcraft")
+                    .setPipelineState(new PipelineState().setDepth(true)));
+            modContent.registerRenderTarget(new RenderTarget("particle_renderer", "ourcraft:new_world_pipeline").afterTarget("entity_renderer", "ourcraft")
+                    .setPipelineState(new PipelineState().setDepth(true)));
+            modContent.registerRenderTarget(new RenderTarget("translucent_world_renderer", "ourcraft:new_world_pipeline").afterTarget("particle_renderer", "ourcraft")
+                    .setPipelineState(new PipelineState().setDepth(true)));
+            modContent.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:new_world_pipeline").afterTarget("translucent_world_renderer", "ourcraft")
+                    .setPipelineState(new PipelineState()));
+
             modContent.registerRenderTask(new GUIRenderTask());
             modContent.registerRenderTask(new WorldRenderTask());
             modContent.registerRenderTask(new WorldTransparentRenderTask());
+            modContent.registerRenderTask(new NewWorldRenderTask());
 
             modContent.registerVertexFormat(new VertexFormat("position_texture_color", VertexFormat.TRIANGLES)
                     .addPart("position", VertexFormat.FLOAT,3)

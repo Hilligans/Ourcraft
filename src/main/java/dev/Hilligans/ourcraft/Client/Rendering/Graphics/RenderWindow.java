@@ -36,7 +36,7 @@ public abstract class RenderWindow {
                 logger = log.withKey("window");
             }
         }
-        setRenderPipeline("ourcraft:world_pipeline");
+        setRenderPipeline("ourcraft:new_world_pipeline");
         camera = new PlayerCamera();
     }
 

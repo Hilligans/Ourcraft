@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.Data.Other.BlockShapes;
 
 import dev.Hilligans.ourcraft.Block.Block;
+import dev.Hilligans.ourcraft.Block.BlockState.IBlockState;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.BlockModel;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
@@ -63,6 +64,15 @@ public class BlockShape {
         }
     }
 
+    public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, IBlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset, float offsetX, float offsetY, float offsetZ) {
+        int rot = blockState.getBlock().getRotation(blockState);
+        if (rot != -1) {
+            getModel(blockState).addData(primitiveBuilder,blockTextureManager,side,size,offset.add(offsetX,offsetY,offsetZ),rot & 3,(rot & 12) >> 2);
+        } else {
+            getModel(blockState).addData(primitiveBuilder, blockTextureManager, side, size, offset.add(offsetX, offsetY, offsetZ), 0, 0);
+        }
+    }
+
     public void putRotation(int blockState, int rotX, int rotY) {
         boundingBoxes.put(blockState,defaultBoundingBox.rotateX(rotX,1.0f).rotateY(-rotY,1.0f));
         rotations.put(blockState, (short) (rotX | rotY << 2));
@@ -84,8 +94,20 @@ public class BlockShape {
         return side;
     }
 
+    public int getSide(IBlockState blockState, int side) {
+        int val = blockState.getBlock().getRotation(blockState);
+        if(val != -1) {
+            return Block.rotationSides[val << 3 | side];
+        }
+        return side;
+    }
+
     public BlockModel getModel(BlockState blockState) {
         return models.getOrDefault(blockState.blockId,data);
+    }
+
+    public BlockModel getModel(IBlockState state) {
+        return models.getOrDefault(state.getBlockID(), data);
     }
 
     public short getRotation(BlockState blockState) {

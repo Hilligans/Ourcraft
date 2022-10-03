@@ -28,10 +28,12 @@ public interface IWorld {
     default void setBlockState(BlockPos pos, IBlockState newState) {
         setBlockState(pos.getX(),pos.getY(),pos.getZ(),newState);
     }
-    
+
     IChunk getChunk(long blockX, long blockY, long blockZ);
 
     IChunk getChunkNonNull(long blockX, long blockY, long blockZ);
 
     void setChunk(long blockX, long blockY, long blockZ, IChunk chunk);
+
+    IThreeDChunkContainer getChunkContainer();
 }

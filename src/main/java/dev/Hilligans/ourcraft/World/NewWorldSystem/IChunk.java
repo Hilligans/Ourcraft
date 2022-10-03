@@ -36,6 +36,11 @@ public interface IChunk {
     }
 
     IBlockState getBlockState1(long x, long y, long z);
+
+    default IBlockState getBlockState1(BlockPos pos) {
+        return getBlockState1(pos.getX(),pos.getY(),pos.getZ());
+    }
+
     void setBlockState(long x, long y, long z, IBlockState blockState);
 
     boolean isEmpty();
@@ -52,4 +57,14 @@ public interface IChunk {
     boolean isPopulated();
 
     boolean isStructured();
+
+    default void fill(IBlockState state, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+        for(int x = minX; x < maxX; x++) {
+            for(int y = minY; y < maxY; y++) {
+                for(int z = minZ; z < maxZ; z++) {
+                    setBlockState(x,y,z,state);
+                }
+            }
+        }
+    }
 }

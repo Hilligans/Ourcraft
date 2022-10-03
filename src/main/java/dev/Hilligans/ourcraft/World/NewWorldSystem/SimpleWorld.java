@@ -83,6 +83,11 @@ public class SimpleWorld implements IServerWorld, IMethodResult {
     }
 
     @Override
+    public IThreeDChunkContainer getChunkContainer() {
+        return chunkContainer;
+    }
+
+    @Override
     public void queueUpdate(int x, int y, int z) {
 
     }

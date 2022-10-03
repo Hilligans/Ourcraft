@@ -1,30 +1,14 @@
 package dev.Hilligans.ourcraft.Client.Rendering.World.Managers;
 
-import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
-import dev.Hilligans.ourcraft.ClientMain;
-import dev.Hilligans.ourcraft.Data.Primitives.Triplet;
 import dev.Hilligans.ourcraft.GameInstance;
-import dev.Hilligans.ourcraft.Ourcraft;
 import dev.Hilligans.ourcraft.Resource.ResourceLocation;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.util.HashMap;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 
 public class WorldTextureManager {
 
@@ -48,13 +32,10 @@ public class WorldTextureManager {
         return newImage;
     }
 
-    public static BufferedImage stringToBufferedImage(String s) {
+    public static BufferedImage charToBufferedImage(char s) {
         //First, we have to calculate the string's width and height
-
         BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics g = img.getGraphics();
-
-
 
         //Font font = new Font("Tahoma", Font.PLAIN, 48);
         Font font = new Font("SansSerif", Font.PLAIN, 48);
@@ -63,7 +44,7 @@ public class WorldTextureManager {
 
         //Get the string visual bounds
         FontRenderContext frc = g.getFontMetrics().getFontRenderContext();
-        Rectangle2D rect = font.getStringBounds(s, frc);
+        Rectangle2D rect = font.getStringBounds(s + "", frc);
         //Release resources
         g.dispose();
 
@@ -76,15 +57,14 @@ public class WorldTextureManager {
 
         img = new BufferedImage((int) Math.ceil(rect.getWidth()), (int) Math.ceil(rect.getHeight()), BufferedImage.TYPE_INT_ARGB);
         g = img.getGraphics();
-        g.setColor(Color.white); //Otherwise the text would be white
+        g.setColor(Color.white);
         g.setFont(font);
         FontMetrics fm = g.getFontMetrics();
         int x = 0;
         int y = fm.getAscent();
-        g.drawString(s, x, y);
+        g.drawString(s + "", x, y);
         g.dispose();
 
-        //Return the image
         return img;
     }
 }

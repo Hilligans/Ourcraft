@@ -1,16 +1,20 @@
 package dev.Hilligans.ourcraft.World.NewWorldSystem;
 
-public class PreTickedWorld implements IWorld {
+public class NewClientWorld implements IWorld {
+
+    public String name;
+    public int worldID;
+    IThreeDChunkContainer chunkContainer = new NewChunkContainer();
 
 
     @Override
     public String getName() {
-        return null;
+        return name;
     }
 
     @Override
     public int getID() {
-        return 0;
+        return worldID;
     }
 
     @Override
@@ -20,7 +24,7 @@ public class PreTickedWorld implements IWorld {
 
     @Override
     public IChunk getChunk(long blockX, long blockY, long blockZ) {
-        return null;
+        return chunkContainer.getChunk(blockX,blockY,blockZ);
     }
 
     @Override

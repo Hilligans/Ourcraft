@@ -10,10 +10,11 @@ public class MeshHolder {
 
     public int meshTexture = 0;
 
-    public void set(int id, int length) {
+    public MeshHolder set(int id, int length) {
         oldID = id;
         this.id = id;
         this.length = length;
+        return this;
     }
 
     public int getId() {

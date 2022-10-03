@@ -69,4 +69,9 @@ public class NewBlockState implements IBlockState {
     public int getBlockStateID() {
         return blockStateReferenceID + blockData;
     }
+
+    @Override
+    public int getBlockID() {
+        return block.id;
+    }
 }

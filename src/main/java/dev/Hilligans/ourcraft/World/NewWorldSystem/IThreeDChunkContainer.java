@@ -6,7 +6,7 @@ import dev.Hilligans.ourcraft.World.NewWorldSystem.IChunk;
 
 import java.util.function.Consumer;
 
-public interface IThreeDChunkContainer {
+public interface IThreeDChunkContainer extends IThreeDContainer<IChunk> {
 
     IChunk getChunk(long x, long y, long z);
 

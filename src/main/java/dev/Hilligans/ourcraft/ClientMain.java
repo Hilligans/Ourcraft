@@ -13,11 +13,9 @@ import dev.Hilligans.ourcraft.World.ClientWorld;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
 import org.joml.Intersectionf;
 import org.joml.Vector2f;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 
 public class ClientMain {
 
