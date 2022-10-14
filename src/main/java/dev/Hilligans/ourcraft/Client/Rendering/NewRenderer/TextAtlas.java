@@ -11,6 +11,7 @@ import dev.Hilligans.ourcraft.Util.PipelineStage;
 import io.netty.util.Constant;
 import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
+import org.lwjgl.system.MemoryStack;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -85,23 +86,25 @@ public class TextAtlas {
             executorService.submit(() -> {
                 Image tempImage;
                 long spot = -1;
-                try {
-                    tempImage = (Image)Ourcraft.GAME_INSTANCE.RESOURCE_LOADER.getResource(new ResourceLocation(imageLocation.path, imageLocation.modId));
-                    if(tempImage == null) {
-                        System.out.println(new ResourceLocation(imageLocation.path, imageLocation.modId).toIdentifier());
-                        return;
+                try (MemoryStack stack = MemoryStack.stackPush()) {
+                    try {
+                        tempImage = (Image) Ourcraft.GAME_INSTANCE.RESOURCE_LOADER.getResource(new ResourceLocation(imageLocation.path, imageLocation.modId));
+                        if (tempImage == null) {
+                            System.out.println(new ResourceLocation(imageLocation.path, imageLocation.modId).toIdentifier());
+                            return;
+                        }
+                        tempImage.flip(false, tempImage.mallocSizedBuffer(stack)).ensureSquare();
+
+                        count++;
+                        long starts = System.nanoTime();
+                        spot = findSpot(tempImage.width, imageLocation.index);
+                        image.putImage(tempImage, (int) (spot >> 32), (int) (spot));
+                        time += System.nanoTime() - starts;
+
+                    } catch (Exception e) {
+                        System.out.println("Failed to put image x:" + ((int) (spot >> 32)) + " y:" + (int) (spot));
+                        e.printStackTrace();
                     }
-                    tempImage.flip(false).ensureSquare();
-
-                    count++;
-                    long starts = System.nanoTime();
-                    spot = findSpot(tempImage.width, imageLocation.index);
-                    image.putImage(tempImage, (int)(spot >> 32), (int)(spot));
-                    time += System.nanoTime() - starts;
-
-                } catch (Exception e) {
-                    System.out.println("Failed to put image x:" + ((int)(spot >> 32)) + " y:" + (int)(spot));
-                    e.printStackTrace();
                 }
             });
         }

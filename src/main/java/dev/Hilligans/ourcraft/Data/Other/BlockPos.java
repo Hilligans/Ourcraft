@@ -72,6 +72,13 @@ public class BlockPos {
         return this;
     }
 
+    public BlockPos add(long x, long y, long z) {
+        this.x += x;
+        this.y += y;
+        this.z += z;
+        return this;
+    }
+
     public BlockPos add(Vector3d vector3d) {
         this.x += vector3d.x;
         this.y += vector3d.y;
@@ -193,6 +200,12 @@ public class BlockPos {
 
     public int getZ() {
         return z;
+    }
+
+    public boolean inRange(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+        return  minX <= x && x <= maxX &&
+                minZ <= z && z <= maxZ &&
+                minY <= y && y <= maxY;
     }
 
     @Override

@@ -107,6 +107,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         renderWindow = new OpenGLWindow(client, this);
+        renderWindow.setRenderPipeline(gameInstance.ARGUMENTS.getString("--renderPipeline", "ourcraft:new_world_pipeline"));
         windows.add(renderWindow);
         renderWindow.setup();
         GL.createCapabilities();

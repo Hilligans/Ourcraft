@@ -74,7 +74,7 @@ public class SimpleWorld implements IServerWorld, IMethodResult {
 
     @Override
     public IChunk getChunkNonNull(long blockX, long blockY, long blockZ) {
-        return null;
+        return getChunk(blockX,blockY,blockZ);
     }
 
     @Override

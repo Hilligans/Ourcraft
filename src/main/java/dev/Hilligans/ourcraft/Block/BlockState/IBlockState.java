@@ -5,9 +5,10 @@ import dev.Hilligans.ourcraft.Block.Block;
 public interface IBlockState {
 
     Block getBlock();
-    void register(IBlockStateType<?> type);
 
-    void build(int id);
+    void setStateBuilder(IBlockStateBuilder builder);
+
+    IBlockStateBuilder getBuilder();
 
     Object getValue(IBlockStateType<?> type);
 

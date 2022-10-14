@@ -10,6 +10,8 @@ import dev.Hilligans.ourcraft.Block.Blocks;
 import dev.Hilligans.ourcraft.Network.PacketBase;
 import dev.Hilligans.ourcraft.Network.PacketData;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.ClassicChunk;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.IChunk;
 import it.unimi.dsi.fastutil.shorts.Short2ByteOpenHashMap;
 
 import java.util.ArrayList;
@@ -21,12 +23,12 @@ public class SSendChunkPacket extends PacketBase {
 
     public SSendChunkPacket() {
         super(2);
-        mode = 2;
+        mode = 0;
     }
 
     public SSendChunkPacket(Chunk chunk) {
         this();
-        mode = 2;
+        mode = 0;
         this.chunk = chunk;
     }
 
@@ -39,8 +41,8 @@ public class SSendChunkPacket extends PacketBase {
 
         if(mode == 0) {
             for (int x = 0; x < 16; x++) {
-                for (int y = 0; y < Settings.chunkHeight * 16; y++) {
                     for (int z = 0; z < 16; z++) {
+                        for (int y = 0; y < Settings.chunkHeight * 16; y++) {
                         packetData.writeShort(chunk.getBlockState(x, y, z).getBlock().id);
                     }
                 }
@@ -61,7 +63,7 @@ public class SSendChunkPacket extends PacketBase {
                             mappedBlocks.put(blockState.getBlock().id,pointer);
                             blockIds.add(blockState.getBlock().id);
                             if(hasData) {
-                                blockData.add(((DataBlockState) blockState).readData());
+                                blockData.add(blockState.readData());
                             } else {
                                 blockData.add((short) 0);
                             }
@@ -105,16 +107,21 @@ public class SSendChunkPacket extends PacketBase {
     public void decode(PacketData packetData) {
         try {
             mode = packetData.readByte();
-            chunk = new Chunk(packetData.readInt(), packetData.readInt(), ClientMain.getClient().clientWorld);
-
+            int chunkX = packetData.readInt();
+            int chunkZ = packetData.readInt();
+            chunk = new Chunk(chunkX, chunkZ, ClientMain.getClient().clientWorld);
+            IChunk chunk1 = new ClassicChunk(ClientMain.getClient().newClientWorld,256,chunkX,chunkZ);
             if (mode == 0) {
                 for (int x = 0; x < 16; x++) {
-                    for (int y = 0; y < Settings.chunkHeight * 16; y++) {
                         for (int z = 0; z < 16; z++) {
-                            chunk.setBlockState(x, y, z, Blocks.getBlockWithID(packetData.readShort()).getDefaultState());
+                            for (int y = 0; y < Settings.chunkHeight * 16; y++) {
+                            Block block = Blocks.getBlockWithID(packetData.readShort());
+                            chunk1.setBlockState(x,y,z,block.getDefaultState1());
+                           // chunk.setBlockState(x, y, z, block.getDefaultState());
                         }
                     }
                 }
+                ClientMain.getClient().newClientWorld.setChunk((long) chunkX * 16, 0, (long) chunkZ * 16, chunk1);
             } else if (mode == 1) {
 
                 int size = packetData.readByte();
@@ -145,10 +152,25 @@ public class SSendChunkPacket extends PacketBase {
                         blockList.add(new Tuple<>(block.getDefaultState(),packetData.readInt()));
                     }
                 }
+                //old impl
                 chunk.setFromChainedList(blockList);
+                chunk1 = new ClassicChunk(ClientMain.getClient().newClientWorld,256,chunkX,chunkZ);
+                int offset = 0;
+                for(Tuple<BlockState, Integer> tuple : blockList) {
+                    for(int i = 0; i < tuple.getTypeB(); i++) {
+                        int x = offset & 15;
+                        int y = offset >> 4 & 255;
+                        int z = offset >> 12 & 15;
+                        chunk1.setBlockState(x,y,z,tuple.getTypeA().getBlock().getDefaultState1());
+                        offset++;
+                    }
+                }
+                ClientMain.getClient().newClientWorld.setChunk((long) chunkX * 16, 0, (long) chunkZ * 16, chunk1);
             }
            // WorldCompressor.asCompressedStream(chunk);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
+        }
     }
 
     @Override

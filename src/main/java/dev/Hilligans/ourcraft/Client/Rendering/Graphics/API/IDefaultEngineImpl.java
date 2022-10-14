@@ -13,6 +13,8 @@ import java.nio.ByteBuffer;
 
 public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsContext> {
 
+    default void close() {}
+
     void drawMesh(T window, Q graphicsContext, MatrixStack matrixStack, int texture, int program, int meshID, long indicesIndex, int length);
 
     int createMesh(T window, Q graphicsContext, VertexMesh mesh);

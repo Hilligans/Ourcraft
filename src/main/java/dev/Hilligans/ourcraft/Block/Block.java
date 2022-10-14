@@ -1,8 +1,6 @@
 package dev.Hilligans.ourcraft.Block;
 
-import dev.Hilligans.ourcraft.Block.BlockState.IBlockState;
-import dev.Hilligans.ourcraft.Block.BlockState.IBlockStateTable;
-import dev.Hilligans.ourcraft.Block.BlockState.NewBlockState;
+import dev.Hilligans.ourcraft.Block.BlockState.*;
 import dev.Hilligans.ourcraft.World.NewWorldSystem.IMethodResult;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.PrimitiveBuilder;
@@ -37,7 +35,7 @@ import java.util.Random;
 
 public class Block implements IRegistryElement {
 
-    IBlockStateTable table;
+    public IBlockStateTable table;
     public String name;
     public String modId;
     public short id;
@@ -77,6 +75,8 @@ public class Block implements IRegistryElement {
         this.blockProperties.blockTextureManager.textureSource = modId;
     }
 
+    public void registerBlockStates(BlockStateBuilder builder) {
+    }
     public String getName() {
         return "block." + modId + "." + name;
     }
@@ -217,8 +217,6 @@ public class Block implements IRegistryElement {
         return null;
     }
 
-    public void registerBlockStates(IBlockState state) {}
-
     public void addMethodKeys(ArrayList<String> keys) {}
 
     public IBlockState randomTick(IMethodResult result, IBlockState state, IWorld world, BlockPos pos, Random random) {
@@ -238,8 +236,7 @@ public class Block implements IRegistryElement {
 
     //TODO pull state from table
     public IBlockState getDefaultState1() {
-        return new NewBlockState(this);
-      //  return table.getBlockState(0);
+        return table.getBlockState(0);
     }
 
     public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, IBlockState blockState, BlockPos blockPos, int x, int z) {
@@ -321,5 +318,9 @@ public class Block implements IRegistryElement {
 
     public IBlockStateTable getTable() {
         return table;
+    }
+
+    public void setTable(IBlockStateTable table) {
+        this.table = table;
     }
 }

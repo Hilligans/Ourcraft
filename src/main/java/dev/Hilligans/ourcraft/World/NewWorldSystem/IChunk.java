@@ -15,6 +15,18 @@ public interface IChunk {
     long getY();
     long getZ();
 
+    default long getBlockX() {
+        return getX() * getWidth();
+    }
+
+    default long getBlockY() {
+        return getY() * getHeight();
+    }
+
+    default long getBlockZ() {
+        return getZ() * getWidth();
+    }
+
     default int getYOffset() {
         return 0;
     }
@@ -43,6 +55,8 @@ public interface IChunk {
 
     void setBlockState(long x, long y, long z, IBlockState blockState);
 
+    IWorld getWorld();
+
     boolean isEmpty();
 
     /**
@@ -51,6 +65,10 @@ public interface IChunk {
      */
 
     void forEach(Consumer<ISubChunk> consumer);
+
+    void setDirty(boolean value);
+
+    boolean isDirty();
 
     boolean isGenerated();
 

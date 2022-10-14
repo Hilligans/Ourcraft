@@ -7,16 +7,18 @@ import java.util.ArrayList;
 
 public class VertexFormat implements IRegistryElement {
 
-    public ModContent modContent;
     public String formatName;
+    public String modID;
+
 
     public ArrayList<VertexPart> parts = new ArrayList<>();
 
     public int primitiveType;
 
-    public VertexFormat(String formatName, int primitiveType) {
+    public VertexFormat(String modID, String formatName, int primitiveType) {
         this.formatName = formatName;
         this.primitiveType = primitiveType;
+        this.modID = modID;
     }
 
     public VertexFormat addPart(String name, int primitiveType, int primitiveCount) {
@@ -54,17 +56,12 @@ public class VertexFormat implements IRegistryElement {
 
     @Override
     public String getIdentifierName() {
-        return modContent.getModID() + ":" + formatName;
+        return modID + ":" + formatName;
     }
 
     @Override
     public String getUniqueName() {
-        return "vertex_format." + modContent.getModID() + "." + formatName;
-    }
-
-    @Override
-    public void assignModContent(ModContent modContent) {
-        this.modContent = modContent;
+        return "vertex_format." + modID + "." + formatName;
     }
 
     public static final int

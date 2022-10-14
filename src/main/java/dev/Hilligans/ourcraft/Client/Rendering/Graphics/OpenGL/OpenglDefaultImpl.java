@@ -22,6 +22,7 @@ import org.lwjgl.system.MemoryUtil;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.function.Consumer;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -52,10 +53,10 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
             GL20.glBindTexture(textureTypes.get(texture), texture);
             boundTexture = texture;
       //  }
-        if(program != boundProgram){
+     //   if(program != boundProgram){
             GL20.glUseProgram(program);
             boundProgram = program;
-        }
+        //   }
 
         if(data == null) {
             return;
@@ -157,16 +158,18 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
         glDisable(GL_DEPTH_TEST);
-        matrixStack.applyTransformation(program);
        // if(texture != boundTexture) {
            // GL20.glBindTexture(textureTypes.get(texture), texture);
-        GL20.glBindTexture(GL_TEXTURE_2D, texture);
+        if(texture != 0) {
+            GL20.glBindTexture(GL_TEXTURE_2D, texture);
             boundTexture = texture;
+        }
       //  }
-        if(program != boundProgram){
+      //  if(program != boundProgram){
             GL20.glUseProgram(program);
             boundProgram = program;
-        }
+      //  }
+        matrixStack.applyTransformation(program);
 
         int VAO = glGenVertexArrays();
         int VBO = glGenBuffers();
@@ -213,9 +216,8 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         String geometry = shaderSource.geometryShader == null ? null :  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.geometryShader, shaderSource.modContent.getModID()));
 
         if(geometry == null) {
-            System.out.println(vertex);
             int val = ShaderManager.registerShader(vertex,fragment);
-            System.out.println(glGetError());
+            System.out.println("Shader Error:" + glGetError());
             return val;
         } else {
             return ShaderManager.registerShader(vertex,geometry,fragment);
@@ -230,6 +232,24 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     @Override
     public void uploadData(GraphicsContext graphicsContext, float[] data, int index) {
 
+    }
+
+    @Override
+    public void close() {
+        for(int texture : textureTypes.keySet()) {
+            glDeleteTextures(texture);
+        }
+        textureTypes.clear();
+        /*
+        long array = vertexArrayObjects.get(mesh);
+        meshData.remove(mesh);
+        if((int)array != 0) {
+            glDeleteBuffers((int) array);
+        }
+        glDeleteBuffers((int)(array >> 32));
+        glDeleteBuffers(mesh);
+
+         */
     }
 
     VertexFormat[] cache = new VertexFormat[2];

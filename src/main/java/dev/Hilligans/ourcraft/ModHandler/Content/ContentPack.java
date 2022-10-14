@@ -177,7 +177,6 @@ public class ContentPack {
             }
         }
         built = false;
-        gameInstance.REBUILDING.set(false);
     }
 
     public void recursivelyLoad(String modID) {

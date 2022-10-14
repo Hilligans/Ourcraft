@@ -1,6 +1,7 @@
 package dev.Hilligans.ourcraft.World.NewWorldSystem;
 
 import dev.Hilligans.ourcraft.Block.BlockState.IBlockState;
+import dev.Hilligans.ourcraft.Block.Blocks;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
 
 public interface IWorld {
@@ -13,7 +14,11 @@ public interface IWorld {
 
     default IBlockState getBlockState(long x, long y, long z) {
         IChunk chunk = getChunkNonNull(x,y,z);
-        return chunk.getBlockState1(x,y,z);
+        if(chunk != null) {
+            return chunk.getBlockState1(x, y, z);
+        } else {
+            return Blocks.STONE.getDefaultState1();
+        }
     }
 
     default IBlockState getBlockState(BlockPos pos) {

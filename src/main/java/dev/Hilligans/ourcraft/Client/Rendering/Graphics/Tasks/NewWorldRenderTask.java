@@ -14,13 +14,20 @@ import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.ShaderManager;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
+import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
+import dev.Hilligans.ourcraft.Network.Packet.Client.CRequestChunkPacket;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.World.ClientWorld;
 import dev.Hilligans.ourcraft.World.NewWorldSystem.*;
+import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
+
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 
@@ -32,6 +39,8 @@ public class NewWorldRenderTask extends RenderTaskSource {
 
     public ShaderSource shaderSource;
     public CullingEngine cullingEngine;
+
+    public ExecutorService chunkBuilder = Executors.newSingleThreadExecutor();
 
     public IThreeDContainer<MeshHolder> meshes = new EmptyContainer<>();
 
@@ -106,31 +115,80 @@ public class NewWorldRenderTask extends RenderTaskSource {
     }
     IChunk getChunk(int chunkX, int chunkY, int chunkZ, IWorld world) {
         return world.getChunk((long) chunkX << 4, (long) chunkY << 4, (long) chunkZ << 4);
-        //return null;
     }
 
     void drawChunk(RenderWindow window, GraphicsContext graphicsContext, Client client, IGraphicsEngine<?, ?,?> engine, MatrixStack matrixStack, Vector3i playerChunkPos, IChunk chunk, MeshHolder meshHolder, int x, int y, int z) {
+        for(Tuple<IChunk, PrimitiveBuilder> tuple : primitiveBuilders) {
+            asyncedChunks.remove( ((long)(int)tuple.getTypeA().getX() << 32) ^ (int)tuple.getTypeA().getZ());
+            tuple.typeB.setVertexFormat(window.getGraphicsEngine().getGameInstance().VERTEX_FORMATS.get("ourcraft:position_color_texture"));
+            int meshID = window.getGraphicsEngine().getDefaultImpl().createMesh(window, graphicsContext, tuple.typeB.toVertexMesh());
+            meshes.setChunk(tuple.getTypeA().getX(),tuple.getTypeA().getY(),tuple.getTypeA().getZ(),new MeshHolder().set(meshID,tuple.getTypeB().indices.size()));
+            primitiveBuilders.remove(tuple);
+        }
         if (meshHolder != null) {
             if(meshHolder.id != -1) {
                 //TODO fix not technically the right bounding box
-                matrixStack.frustumIntersection.testAab((chunk.getX() - 1) * chunk.getWidth(), (chunk.getY() - 1) * chunk.getHeight(), (chunk.getZ() - 1) * chunk.getWidth(), (chunk.getX() + 1) * chunk.getWidth(), (chunk.getY() + 1) * chunk.getHeight(), (chunk.getZ() + 1) * chunk.getWidth());
-                matrixStack.push();
-                matrixStack.translate(chunk.getX() * chunk.getWidth(), chunk.getY() * chunk.getHeight(), chunk.getZ() * chunk.getWidth());
-                matrixStack.applyTransformation(shaderSource.program);
-                engine.getDefaultImpl().drawMesh(window,graphicsContext,matrixStack,engine.getGraphicsData().getWorldTexture(), shaderSource.program, meshHolder.getId(), meshHolder.index, meshHolder.length);
-                matrixStack.pop();
+                if(matrixStack.frustumIntersection.testAab((chunk.getX() - 1) * chunk.getWidth(), (chunk.getY() - 1) * chunk.getHeight(), (chunk.getZ() - 1) * chunk.getWidth(), (chunk.getX() + 1) * chunk.getWidth(), (chunk.getY() + 1) * chunk.getHeight(), (chunk.getZ() + 1) * chunk.getWidth())) {
+                    matrixStack.push();
+                    matrixStack.translate(chunk.getX() * chunk.getWidth(), chunk.getY() * chunk.getHeight(), chunk.getZ() * chunk.getWidth());
+                    matrixStack.applyTransformation(shaderSource.program);
+                    engine.getDefaultImpl().drawMesh(window, graphicsContext, matrixStack, engine.getGraphicsData().getWorldTexture(), shaderSource.program, meshHolder.getId(), meshHolder.index, meshHolder.length);
+                    matrixStack.pop();
+                }
             }
         } else if(chunk != null) {
-            buildMesh(window, graphicsContext, chunk);
+            //if(chunk.isDirty()) {
+            if(!asyncedChunks.getOrDefault(((long)(int)chunk.getX() << 32) ^ (int)chunk.getZ(), false)) {
+                if (getChunk((int) chunk.getX() + 1, (int) chunk.getY(), (int) chunk.getZ(), chunk.getWorld()) != null &&
+                        getChunk((int) chunk.getX() - 1, (int) chunk.getY(), (int) chunk.getZ(), chunk.getWorld()) != null &&
+                        getChunk((int) chunk.getX(), (int) chunk.getY(), (int) chunk.getZ() + 1, chunk.getWorld()) != null &&
+                        getChunk((int) chunk.getX(), (int) chunk.getY(), (int) chunk.getZ() - 1, chunk.getWorld()) != null) {
+                    if (x < 2 && y < 2 && z < 2) {
+                        buildMesh(window, graphicsContext, chunk);
+                    } else {
+                        if (putChunk((int) chunk.getX(), (int) chunk.getZ())) {
+                            chunkBuilder.submit(() -> {
+                                PrimitiveBuilder primitiveBuilder = getPrimitiveBuilder(chunk);
+                                primitiveBuilders.add(new Tuple<>(chunk, primitiveBuilder));
+                            });
+                        }
+                    }
+
+
+                }
+            }
+            //    chunk.setDirty(false);
+            //}
         } else {
-            IWorld world = client.newClientWorld;
-            IChunk chunk1 = new ClassicChunk(world,256,x,z);
-            chunk1.fill(Blocks.STONE.getDefaultState1(),0,0,0,16,64,16);
-            world.setChunk((long) x * chunk1.getWidth(), (long) y * chunk1.getHeight(), (long) z * chunk1.getWidth(),chunk1);
+            getChunk(x,z,client.newClientWorld,client);
+          //  IWorld world = client.newClientWorld;
+          //  IChunk chunk1 = new ClassicChunk(world,256,x,z);
+          ///  chunk1.fill(Blocks.STONE.getDefaultState1(),0,0,0,16,64,16);
+          //  world.setChunk((long) x * chunk1.getWidth(), (long) y * chunk1.getHeight(), (long) z * chunk1.getWidth(),chunk1);
         }
     }
 
-    public void buildMesh(RenderWindow window, GraphicsContext graphicsContext, IChunk chunk) {
+    public ConcurrentLinkedQueue<Tuple<IChunk, PrimitiveBuilder>> primitiveBuilders = new ConcurrentLinkedQueue<>();
+    Long2BooleanOpenHashMap asyncedChunks = new Long2BooleanOpenHashMap();
+    Long2BooleanOpenHashMap map = new Long2BooleanOpenHashMap();
+
+    void getChunk(int chunkX, int chunkZ, IWorld world, Client client) {
+        if (!map.getOrDefault(((long) chunkX << 32) ^ chunkZ, false)) {
+            map.put(((long) chunkX << 32) ^ chunkZ, true);
+            client.sendPacket(new CRequestChunkPacket(chunkX, chunkZ));
+        }
+    }
+
+    boolean putChunk(int chunkX, int chunkZ) {
+        if (!asyncedChunks.getOrDefault(((long) chunkX << 32) ^ chunkZ, false)) {
+            asyncedChunks.put(((long) chunkX << 32) ^ chunkZ, true);
+            return true;
+        }
+        return false;
+    }
+
+
+    public PrimitiveBuilder getPrimitiveBuilder(IChunk chunk) {
         PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
         for(int x = 0; x < chunk.getWidth(); x++) {
             for(int y = 0; y < chunk.getHeight(); y++) {
@@ -138,7 +196,13 @@ public class NewWorldRenderTask extends RenderTaskSource {
                     IBlockState block = chunk.getBlockState1(x,y,z);
                     for(int a = 0; a < 6; a++) {
                         if(block.getBlock() != Blocks.AIR) {
-                            IBlockState newState = chunk.getBlockState1(new BlockPos(x, y, z).add(Block.getBlockPos(block.getBlock().getSide(block,a))));
+                            BlockPos p = new BlockPos(x,y,z).add(Block.getBlockPos(block.getBlock().getSide(block,a)));
+                            IBlockState newState;
+                            if(!p.inRange(0,0,0,16,255,16)) {
+                                newState = chunk.getWorld().getBlockState(p.add(chunk.getBlockX(),chunk.getBlockY(),chunk.getBlockZ()));
+                            } else {
+                                newState = chunk.getBlockState1(new BlockPos(x, y, z).add(Block.getBlockPos(block.getBlock().getSide(block, a))));
+                            }
                             if(newState.getBlock().blockProperties.transparent && (Settings.renderSameTransparent || block.getBlock() != newState.getBlock()) || block.getBlock().blockProperties.alwaysRender) {
                                 block.getBlock().addVertices(primitiveBuilder,a,1f,block,new BlockPos(x + chunk.getX(), y + chunk.getY(), z + chunk.getY()),x,z);
                             }
@@ -147,6 +211,11 @@ public class NewWorldRenderTask extends RenderTaskSource {
                 }
             }
         }
+        return primitiveBuilder;
+    }
+
+    public void buildMesh(RenderWindow window, GraphicsContext graphicsContext, IChunk chunk) {
+        PrimitiveBuilder primitiveBuilder = getPrimitiveBuilder(chunk);
         primitiveBuilder.setVertexFormat(window.getGraphicsEngine().getGameInstance().VERTEX_FORMATS.get("ourcraft:position_color_texture"));
         int meshID = window.getGraphicsEngine().getDefaultImpl().createMesh(window, graphicsContext, primitiveBuilder.toVertexMesh());
         meshes.setChunk(chunk.getX(),chunk.getY(),chunk.getZ(),new MeshHolder().set(meshID,primitiveBuilder.indices.size()));

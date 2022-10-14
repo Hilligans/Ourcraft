@@ -4,11 +4,11 @@ import dev.Hilligans.ourcraft.Data.Other.BoundingBox;
 
 public class Settings {
 
-    public static int renderDistance = 8;
+    public static int renderDistance = 32;
     public static boolean requestChunks = true;
 
     public static final int chunkHeight = 16;
-    public static final int maxHeight = chunkHeight * 16;
+    public static final int maxHeight = chunkHeight * 32;
     public static final int minHeight = 0;
 
     public static final int gameVersion = 3;

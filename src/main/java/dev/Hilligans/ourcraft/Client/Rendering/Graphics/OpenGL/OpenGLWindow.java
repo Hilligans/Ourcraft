@@ -3,6 +3,7 @@ package dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL;
 import dev.Hilligans.ourcraft.Client.Client;
 import dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler;
 import dev.Hilligans.ourcraft.Client.Input.Key.MouseHandler;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.FrameTracker;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Implementations.FreeCamera;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.ScreenShot;
@@ -60,6 +61,7 @@ public class OpenGLWindow extends RenderWindow {
     public void swapBuffers() {
         glfwSwapInterval(0);
         glfwSwapBuffers(window);
+     //   frameTracker.count();
         client.rendering = false;
         client.soundEngine.tick();
         if(client.screenShot) {

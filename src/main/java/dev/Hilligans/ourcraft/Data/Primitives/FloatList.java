@@ -128,10 +128,11 @@ public class FloatList {
         size++;
     }
 
-    public void add(float[] values) {
+    public FloatList add(float... values) {
         ensureCapacityInternal(size + values.length);
         System.arraycopy(values,0,elementData,size,values.length);
         size+=values.length;
+        return this;
     }
 
     public void add(Float[] values) {

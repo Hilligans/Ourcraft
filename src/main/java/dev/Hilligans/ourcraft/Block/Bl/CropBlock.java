@@ -20,8 +20,8 @@ public class CropBlock extends Block {
     }
 
     @Override
-    public void registerBlockStates(IBlockState state) {
-        state.register(stages);
+    public void registerBlockStates(BlockStateBuilder builder) {
+        builder.register(stages);
     }
 
     @Override

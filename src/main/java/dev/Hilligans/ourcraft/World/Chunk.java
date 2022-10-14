@@ -23,6 +23,7 @@ import dev.Hilligans.ourcraft.World.Builders.WorldBuilder;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.World.NewWorldSystem.IChunk;
 import dev.Hilligans.ourcraft.World.NewWorldSystem.ISubChunk;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.IWorld;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2IntOpenHashMap;
@@ -293,6 +294,11 @@ public class Chunk implements IMeshSource, IChunk {
     }
 
     @Override
+    public IWorld getWorld() {
+        return null;
+    }
+
+    @Override
     public boolean isEmpty() {
         return false;
     }
@@ -300,6 +306,16 @@ public class Chunk implements IMeshSource, IChunk {
     @Override
     public void forEach(Consumer<ISubChunk> consumer) {
 
+    }
+
+    @Override
+    public void setDirty(boolean value) {
+
+    }
+
+    @Override
+    public boolean isDirty() {
+        return false;
     }
 
     @Override

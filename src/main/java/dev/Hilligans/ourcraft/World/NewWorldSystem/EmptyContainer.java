@@ -12,7 +12,7 @@ public class EmptyContainer<T> implements IThreeDContainer<T> {
 
 
     @Override
-    public T getChunk(long x, long y, long z) {
+    public synchronized T getChunk(long x, long y, long z) {
         Int2ObjectOpenHashMap<T> c = container.get(to(x,y));
         if(c == null) {
             return null;
@@ -21,7 +21,7 @@ public class EmptyContainer<T> implements IThreeDContainer<T> {
     }
 
     @Override
-    public T setChunk(long x, long y, long z, T val) {
+    public synchronized T setChunk(long x, long y, long z, T val) {
         Int2ObjectOpenHashMap<T> c = container.computeIfAbsent(to(x,y), (a) -> new Int2ObjectOpenHashMap<>());
         return c.put((int)z,val);
     }

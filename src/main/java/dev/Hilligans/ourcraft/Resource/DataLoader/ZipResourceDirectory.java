@@ -1,5 +1,6 @@
 package dev.Hilligans.ourcraft.Resource.DataLoader;
 
+import dev.Hilligans.ourcraft.Resource.IBufferAllocator;
 import dev.Hilligans.ourcraft.Util.DaisyChain;
 import dev.Hilligans.ourcraft.Util.PipelineStage;
 
@@ -47,6 +48,18 @@ public class ZipResourceDirectory implements ResourceDirectory {
         SeekableByteChannel rbc = Files.newByteChannel(someFileInJarPath, EnumSet.of(StandardOpenOption.READ));
 
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect((int) rbc.size());
+        rbc.read(byteBuffer);
+        byteBuffer.rewind();
+        rbc.close();
+        return byteBuffer;
+    }
+
+    @Override
+    public ByteBuffer get(String path, IBufferAllocator allocator) throws IOException {
+        Path someFileInJarPath = jarFS.getPath("/" + path);
+        SeekableByteChannel rbc = Files.newByteChannel(someFileInJarPath, EnumSet.of(StandardOpenOption.READ));
+
+        ByteBuffer byteBuffer = allocator.malloc((int) rbc.size());
         rbc.read(byteBuffer);
         byteBuffer.rewind();
         rbc.close();

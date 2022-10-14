@@ -17,6 +17,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.Screens.JoinScreen;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.ShaderManager;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.VAOManager;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
+import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Container.Container;
 import dev.Hilligans.ourcraft.Container.Slot;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
@@ -103,7 +104,7 @@ public class Client {
     public InputHandler inputHandler;
     public IInputProvider mouseBind;
 
-    public int renderDistance = 16;
+    public int renderDistance = 32;
     public int renderYDistance = 1;
 
     public Client(GameInstance gameInstance) {
@@ -147,6 +148,7 @@ public class Client {
 
         gameInstance.EVENT_BUS.postEvent(new ClientStartRenderingEvent());
         rWindow = window;
+        System.err.println("Time to start running: " + (System.currentTimeMillis() - ClientMain.startTime));
         graphicsEngine.createRenderLoop(gameInstance,window).run();
 
         cleanUp();

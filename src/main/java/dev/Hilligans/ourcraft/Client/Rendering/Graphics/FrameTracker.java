@@ -13,6 +13,9 @@ public class FrameTracker {
     public long[] frameTimes;
     public int pointer;
 
+    public FrameTracker() {
+        setFrameTimeBufferSize(1000);
+    }
     public FrameTracker setMaxFrameRate(int time) {
         this.maxFrameRate = time;
         return this;
@@ -35,7 +38,14 @@ public class FrameTracker {
             pointer = pointer >= frameTimes.length ? 0 : pointer;
             frameTimes[pointer] = currentTime - lastFrame;
         }
+        pointer++;
         lastFrame = currentTime;
+    }
+
+    public long getFrame(int index) {
+        index = (pointer % frameTimes.length) - index;
+        index = index < 0 ? index + frameTimes.length: index;
+        return frameTimes[index];
     }
 
     public boolean shouldDraw() {

@@ -57,6 +57,9 @@ public class GUIRenderTask extends RenderTaskSource {
                         client.chunks = client.clientWorld.chunkContainer.getSize();
                     }
                     stringRenderer.drawStringInternal(window, screenStack, "Chunks:" + client.chunks, client.windowX / 2, 329, 0.5f);
+                    stringRenderer.drawStringInternal(window,screenStack, "X:" + client.rWindow.camera.getCameraPos().x, client.windowX / 2, 358,0.5f);
+                    stringRenderer.drawStringInternal(window,screenStack, "Y:" + client.rWindow.camera.getCameraPos().y, client.windowX / 2, 387,0.5f);
+                    stringRenderer.drawStringInternal(window,screenStack, "Z:" + client.rWindow.camera.getCameraPos().z, client.windowX / 2, 416,0.5f);
                 }
                 ItemStack stack = client.playerData.inventory.getItem(client.playerData.handSlot);
                 if (stack != null && stack.item != null) {

@@ -2,6 +2,10 @@ package dev.Hilligans.ourcraft;
 
 import dev.Hilligans.ourcraft.Biome.Biome;
 import dev.Hilligans.ourcraft.Block.Block;
+import dev.Hilligans.ourcraft.Block.BlockState.BlockStateBuilder;
+import dev.Hilligans.ourcraft.Block.BlockState.BlockStateTable;
+import dev.Hilligans.ourcraft.Block.BlockState.IBlockState;
+import dev.Hilligans.ourcraft.Block.BlockState.IBlockStateTable;
 import dev.Hilligans.ourcraft.Client.Audio.SoundBuffer;
 import dev.Hilligans.ourcraft.Client.Input.Input;
 import dev.Hilligans.ourcraft.Client.Input.InputHandlerProvider;
@@ -27,6 +31,7 @@ import dev.Hilligans.ourcraft.Network.PacketBase;
 import dev.Hilligans.ourcraft.Network.Protocol;
 import dev.Hilligans.ourcraft.Recipe.RecipeHelper.RecipeView;
 import dev.Hilligans.ourcraft.Resource.DataLoader.DataLoader;
+import dev.Hilligans.ourcraft.Resource.IBufferAllocator;
 import dev.Hilligans.ourcraft.Resource.RegistryLoaders.RegistryLoader;
 import dev.Hilligans.ourcraft.Resource.Loaders.ResourceLoader;
 import dev.Hilligans.ourcraft.Resource.ResourceLocation;
@@ -108,7 +113,10 @@ public class GameInstance {
         MOD_LOADER.loadDefaultMods();
         CONTENT_PACK.buildVital();
         CONTENT_PACK.mods.forEach((s, modContent) -> modContent.invokeRegistryLoaders());
+        REBUILDING.set(true);
         CONTENT_PACK.generateData();
+        buildBlockStates();
+        REBUILDING.set(false);
     }
 
     public void build(IGraphicsEngine<?,?,?> graphicsEngine) {
@@ -150,6 +158,24 @@ public class GameInstance {
     public final Registry<InputHandlerProvider> INPUT_HANDLER_PROVIDERS = new Registry<>(this, InputHandlerProvider.class);
     public final Registry<Texture> TEXTURES = new Registry<>(this, Texture.class);
     public final Registry<ShaderSource> SHADERS = new Registry<>(this, ShaderSource.class);
+    public ArrayList<IBlockState> BLOCK_STATES;
+
+    public void buildBlockStates() {
+        BLOCK_STATES = new ArrayList<>(BLOCKS.ELEMENTS.size());
+        int offset = 0;
+        for(Block block : getBlocks()) {
+            BlockStateBuilder builder = new BlockStateBuilder();
+            block.registerBlockStates(builder);
+            IBlockStateTable table = new BlockStateTable(BLOCK_STATES,offset);
+            block.setTable(table);
+            builder.setBlock(block);
+            offset += builder.getSize();
+            for(int x = 0; x < builder.getSize(); x++) {
+                builder.setBlock(block);
+                BLOCK_STATES.add(builder.build(x));
+            }
+        }
+    }
 
     public void clear() {
         BLOCKS.clear();
@@ -339,6 +365,10 @@ public class GameInstance {
 
     public ByteBuffer getResourceDirect(ResourceLocation resourceLocation) {
         return DATA_LOADER.getDirect(resourceLocation);
+    }
+
+    public ByteBuffer getResource(ResourceLocation resourceLocation, IBufferAllocator allocator) {
+        return DATA_LOADER.get(resourceLocation, allocator);
     }
 
     public void registerDefaultContent() {

@@ -43,9 +43,8 @@ public class Texture implements IRegistryElement {
 
     public void register() {
         Image image = WorldTextureManager.loadImage1(path, source.getModID(), source.gameInstance);
-
         if(image == null) {
-            System.out.println(source.getModID() + ":" + path);
+            System.out.println("Null Image" + source.getModID() + ":" + path);
             return;
         }
 
@@ -73,7 +72,6 @@ public class Texture implements IRegistryElement {
         mesh.addData(indices, vertices);
 
         defaultEngineImpl.drawAndDestroyMesh(window,null,matrixStack,mesh,textureId,ClientMain.getClient().shaderManager.shaderProgram);
-
     }
 
     public void drawTexture(RenderWindow window, MatrixStack matrixStack, int x, int y, int width, int height) {

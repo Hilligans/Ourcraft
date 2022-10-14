@@ -1,5 +1,6 @@
 package dev.Hilligans.ourcraft.Resource.DataLoader;
 
+import dev.Hilligans.ourcraft.Resource.IBufferAllocator;
 import dev.Hilligans.ourcraft.Util.PipelineStage;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 
@@ -27,6 +28,23 @@ public class FolderResourceDirectory implements ResourceDirectory {
     @Override
     public ByteBuffer getDirect(String path) {
         return WorldLoader.readBufferDirect(folder.getPath() + "/" + path);
+    }
+
+    @Override
+    public ByteBuffer get(String path, IBufferAllocator allocator) throws IOException {
+        try {
+            File file = new File(folder.getPath() + "/" + path);
+            if(file.exists()) {
+                try (RandomAccessFile aFile = new RandomAccessFile(folder.getPath() + "/" + path, "r")) {
+                    ByteBuffer buf = allocator.malloc((int) aFile.length());
+                    aFile.getChannel().read(buf);
+                    return buf.rewind();
+                }
+            }
+            return null;
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 
     @Override

@@ -45,7 +45,6 @@ public class PrimitiveBuilder {
 
     public VertexMesh toVertexMesh() {
         VertexMesh vertexMesh = new VertexMesh(vertexFormat);
-        vertexMesh.vertexFormatName = vertexFormat.formatName;
         vertexMesh.addData(indices.getElementData(),vertices.getElementData());
         return vertexMesh;
     }
@@ -94,6 +93,15 @@ public class PrimitiveBuilder {
         this.indices.add(count,count + 1, count + 2,count + 3, count + 2, count + 1);
         this.vertices.add(vertices);
         size+= 4;
+    }
+
+    public void addSolidQuad(float minX, float minY, float maxX, float maxY, float... data) {
+        int count = getVerticesCount();
+        float z = 0.95f;
+        this.indices.add(count,count + 1, count + 2,count + 3, count + 2, count + 1);
+        this.vertices.ensureCapacity(this.vertices.size() + (3 + data.length) * 4);
+        this.vertices.add(minX,minY,z).add(data).add(minX,maxY,z).add(data).add(maxX,minY,z).add(data).add(maxX,maxY,z).add(data);
+        size += 4;
     }
 
     public void buildQuad(float minX, float minY, float z, float minTexX, float minTexY, float maxX, float maxY, float maxTexX, float maxTexY) {

@@ -1,18 +1,22 @@
 package dev.Hilligans.ourcraft.Resource.Loaders;
 
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
+import dev.Hilligans.ourcraft.Resource.IAllocator;
 import dev.Hilligans.ourcraft.Resource.ResourceLocation;
+import dev.Hilligans.ourcraft.Resource.StackBufferAllocator;
 import dev.Hilligans.ourcraft.Resource.UniversalResourceLoader;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 import org.lwjgl.stb.STBIWriteCallbackI;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.stb.STBImageWrite;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.system.MemoryUtil.memByteBuffer;
 
-public class ImageLoader extends ResourceLoader<Image> {
+public class ImageLoader extends ResourceLoader<Image> implements IAllocator<Image> {
 
     public ImageLoader() {
         super("default_image_loader", "image");
@@ -29,16 +33,18 @@ public class ImageLoader extends ResourceLoader<Image> {
         if(width[0] == 0) {
             throw new RuntimeException("Failed to load image: " + STBImage.stbi_failure_reason());
         }
-        return new Image(width[0],height[0],4,temp);
+        return new Image(width[0],height[0],4,temp).setAllocator(this);
     }
 
     @Override
     public Image read(ResourceLocation path) {
-        ByteBuffer buffer = gameInstance.getResourceDirect(path);
-        if(buffer == null) {
-            return null;
+        try (MemoryStack memoryStack = MemoryStack.stackPush()) {
+            ByteBuffer buffer = gameInstance.getResource(path, new StackBufferAllocator(memoryStack));
+            if (buffer == null) {
+                return null;
+            }
+            return read(buffer);
         }
-        return read(buffer);
     }
 
     @Override
@@ -62,5 +68,10 @@ public class ImageLoader extends ResourceLoader<Image> {
             case "bmp" -> STBImageWrite.stbi_write_bmp_to_func(writeCallbackI,2,image.width,image.height,image.format,image.buffer);
             case "tga" -> STBImageWrite.stbi_write_tga_to_func(writeCallbackI,3,image.width,image.height,image.format,image.buffer);
         }
+    }
+
+    @Override
+    public void free(Image resource) {
+        STBImage.stbi_image_free(resource.getBuffer());
     }
 }

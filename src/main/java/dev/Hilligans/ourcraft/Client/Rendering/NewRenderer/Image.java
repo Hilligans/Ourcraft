@@ -1,7 +1,10 @@
 package dev.Hilligans.ourcraft.Client.Rendering.NewRenderer;
 
 import dev.Hilligans.ourcraft.Ourcraft;
+import dev.Hilligans.ourcraft.Resource.EmptyAllocator;
+import dev.Hilligans.ourcraft.Resource.IAllocator;
 import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.MemoryStack;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
@@ -14,6 +17,8 @@ public class Image {
     public int width;
     public int height;
     public int format;
+
+    public IAllocator<Image> allocator;
 
     public Image(int width, int height) {
         this(width,height,4);
@@ -59,6 +64,18 @@ public class Image {
                 putPixel(x,y,image.getRGB(x,y));
             }
         }
+    }
+
+    public Image setAllocator(IAllocator<Image> allocator) {
+        this.allocator = allocator;
+        return this;
+    }
+
+    public void free() {
+        if(allocator == null) {
+            throw new RuntimeException();
+        }
+        allocator.free(this);
     }
 
     public int getPixel(int x, int y) {
@@ -168,8 +185,12 @@ public class Image {
         return this;
     }
 
-    public Image flip(boolean horizontal) {
-        Image tempImage = new Image(getWidth(), getHeight(), format);
+    public ByteBuffer mallocSizedBuffer(MemoryStack stack) {
+        return stack.malloc(getWidth() * getHeight() * format);
+    }
+
+    public Image flip(boolean horizontal, ByteBuffer buffer) {
+         Image tempImage = new Image(getWidth(), getHeight(), format, buffer);
 
         int width = getWidth();
         int height = getHeight();
@@ -186,7 +207,9 @@ public class Image {
                 }
             }
         }
-        buffer = tempImage.buffer;
+        free();
+        allocator = (IAllocator<Image>) EmptyAllocator.INSTANCE;
+        this.buffer = tempImage.buffer;
         return this;
     }
 

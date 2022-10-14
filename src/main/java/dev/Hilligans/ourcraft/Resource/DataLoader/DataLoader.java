@@ -1,5 +1,6 @@
 package dev.Hilligans.ourcraft.Resource.DataLoader;
 
+import dev.Hilligans.ourcraft.Resource.IBufferAllocator;
 import dev.Hilligans.ourcraft.Resource.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,6 +55,18 @@ public class DataLoader {
         }
         try {
             return resourceDirectory.getDirect(resourceLocation.path);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    public ByteBuffer get(ResourceLocation resourceLocation, IBufferAllocator allocator) {
+        ResourceDirectory resourceDirectory = resourceDirectoryHashMap.get(resourceLocation.getSource());
+        if(resourceDirectory == null) {
+            return null;
+        }
+        try {
+            return resourceDirectory.get(resourceLocation.path, allocator);
         } catch (IOException e) {
             return null;
         }

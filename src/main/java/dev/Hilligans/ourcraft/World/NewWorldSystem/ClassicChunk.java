@@ -19,6 +19,8 @@ public class ClassicChunk implements IChunk {
     public ISubChunk[] chunks;
     public IWorld world;
 
+    public boolean dirty;
+
     public boolean generated = false;
     public boolean populated = false;
     public boolean structured = false;
@@ -38,7 +40,7 @@ public class ClassicChunk implements IChunk {
 
     @Override
     public int getHeight() {
-        return height * 16;
+        return height;
     }
 
     @Override
@@ -74,7 +76,14 @@ public class ClassicChunk implements IChunk {
         if(subChunk == null) {
             subChunk = chunks[(int) (y >> 4)] = new SimpleSubChunkImpl(16,16);
         }
-        subChunk.setBlockState((int) (x % 15), (int)(y % 15), (int) (z % 15),blockState);
+        if(subChunk.setBlockState((int) (x % 15), (int)(y % 15), (int) (z % 15),blockState) != blockState) {
+            dirty = true;
+        }
+    }
+
+    @Override
+    public IWorld getWorld() {
+        return world;
     }
 
     @Override
@@ -87,6 +96,16 @@ public class ClassicChunk implements IChunk {
         for(ISubChunk subChunk : chunks) {
             consumer.accept(subChunk);
         }
+    }
+
+    @Override
+    public void setDirty(boolean value) {
+        dirty = value;
+    }
+
+    @Override
+    public boolean isDirty() {
+        return dirty;
     }
 
     @Override

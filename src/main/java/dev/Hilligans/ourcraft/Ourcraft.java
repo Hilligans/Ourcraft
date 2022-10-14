@@ -20,6 +20,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Tasks.WorldTransparentRe
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.ScreenBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.EscapeScreen;
+import dev.Hilligans.ourcraft.Client.Rendering.Screens.FrameTimeScreen;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.JoinScreen;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.TagEditorScreen;
 import dev.Hilligans.ourcraft.Client.Rendering.Textures;
@@ -154,34 +155,12 @@ public class Ourcraft {
             modContent.registerRenderTask(new WorldTransparentRenderTask());
             modContent.registerRenderTask(new NewWorldRenderTask());
 
-            modContent.registerVertexFormat(new VertexFormat("position_texture_color", VertexFormat.TRIANGLES)
-                    .addPart("position", VertexFormat.FLOAT,3)
-                    .addPart("texture", VertexFormat.FLOAT, 2)
-                    .addPart("color", VertexFormat.FLOAT, 4));
+            modContent.registerVertexFormat(position_texture_color, position_color_texture, position_texture_globalColor, position_texture, position_texture_animatedWrap_shortenedColor, position_color);
 
-            modContent.registerVertexFormat(new VertexFormat("position_color_texture", VertexFormat.TRIANGLES)
-                    .addPart("position", VertexFormat.FLOAT,3)
-                    .addPart("color", VertexFormat.FLOAT, 4)
-                    .addPart("texture", VertexFormat.FLOAT, 2));
-
-            modContent.registerVertexFormat(new VertexFormat("position_texture_globalColor", VertexFormat.TRIANGLES)
-                    .addPart("position", VertexFormat.FLOAT, 3)
-                    .addPart("texture", VertexFormat.FLOAT, 2)
-                    .addPart("globalColor", VertexFormat.UNSIGNED_INT, 1));
-
-            modContent.registerVertexFormat(new VertexFormat("position_texture", VertexFormat.TRIANGLES)
-                    .addPart("position", VertexFormat.FLOAT,3)
-                    .addPart("texture", VertexFormat.FLOAT, 2));
-
-            modContent.registerVertexFormat(new VertexFormat("position_texture_animatedWrap_shortenedColor", VertexFormat.TRIANGLES)
-                    .addPart("position", VertexFormat.FLOAT, 3)
-                    .addPart("texture", VertexFormat.FLOAT, 2)
-                    .addPart("textureWrap", VertexFormat.UNSIGNED_BYTE,1)
-                    .addPart("globalColor", VertexFormat.UNSIGNED_INT, 1));
 
 //            modContent.registerShader(new ShaderSource("world_shader","ourcraft:position_texture_color", "Shaders/WorldVertexShader.glsl","Shaders/WorldFragmentShader.glsl"));
             modContent.registerShader(new ShaderSource("world_shader","ourcraft:position_color_texture", "Shaders/WorldVertexShader.glsl","Shaders/WorldFragmentShader.glsl"));
-
+            modContent.registerShader(new ShaderSource("position_color_shader", "ourcraft:position_color", "Shaders/WorldVertexColorShader.glsl","Shaders/WorldFragmentShader.glsl"));
 
             modContent.registerInputHandlerProviders(new ControllerHandlerProvider(), new KeyPressHandlerProvider(), new MouseHandlerProvider());
 
@@ -247,6 +226,14 @@ public class Ourcraft {
                 }
             });
 
+            modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_P) {
+                @Override
+                public void press(RenderWindow renderWindow, float strength) {
+                    Client client = renderWindow.getClient();
+                    client.openScreen(new FrameTimeScreen(client));
+                }
+            });
+
             modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_T) {
                 @Override
                 public void press(RenderWindow renderWindow, float strength) {
@@ -266,4 +253,33 @@ public class Ourcraft {
         GLFW.glfwGetCursorPos(window, x, y);
         return BufferUtils.createDoubleBuffer(2).put(x.get()).put(y.get());
     }
+
+    public static final VertexFormat position_texture_color = new VertexFormat("ourcraft", "position_texture_color", VertexFormat.TRIANGLES)
+            .addPart("position", VertexFormat.FLOAT,3)
+            .addPart("texture", VertexFormat.FLOAT, 2)
+            .addPart("color", VertexFormat.FLOAT, 4);
+
+    public static final VertexFormat position_color_texture = new VertexFormat("ourcraft", "position_color_texture", VertexFormat.TRIANGLES)
+            .addPart("position", VertexFormat.FLOAT,3)
+            .addPart("color", VertexFormat.FLOAT, 4)
+            .addPart("texture", VertexFormat.FLOAT, 2);
+
+    public static final VertexFormat position_texture_globalColor = new VertexFormat("oucraft", "position_texture_globalColor", VertexFormat.TRIANGLES)
+            .addPart("position", VertexFormat.FLOAT, 3)
+            .addPart("texture", VertexFormat.FLOAT, 2)
+            .addPart("globalColor", VertexFormat.UNSIGNED_INT, 1);
+
+    public static final VertexFormat position_texture = new VertexFormat("ourcraft", "position_texture", VertexFormat.TRIANGLES)
+            .addPart("position", VertexFormat.FLOAT,3)
+            .addPart("texture", VertexFormat.FLOAT, 2);
+
+    public static final VertexFormat position_texture_animatedWrap_shortenedColor = new VertexFormat("ourcraft", "position_texture_animatedWrap_shortenedColor", VertexFormat.TRIANGLES)
+            .addPart("position", VertexFormat.FLOAT, 3)
+            .addPart("texture", VertexFormat.FLOAT, 2)
+            .addPart("textureWrap", VertexFormat.UNSIGNED_BYTE,1)
+            .addPart("globalColor", VertexFormat.UNSIGNED_INT, 1);
+
+    public static final VertexFormat position_color = new VertexFormat("ourcraft", "position_color", VertexFormat.TRIANGLES)
+            .addPart("position", VertexFormat.FLOAT, 3)
+            .addPart("color", VertexFormat.FLOAT, 4);
 }

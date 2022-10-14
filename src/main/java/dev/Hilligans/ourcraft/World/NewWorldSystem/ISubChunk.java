@@ -12,7 +12,7 @@ public interface ISubChunk {
 
     IBlockState getBlockState(long x, long y, long z);
 
-    void setBlockState(long x, long y, long z, IBlockState blockState);
+    IBlockState setBlockState(long x, long y, long z, IBlockState blockState);
 
     boolean isEmpty();
 }
