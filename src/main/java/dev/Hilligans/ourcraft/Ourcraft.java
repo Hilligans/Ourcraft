@@ -159,8 +159,9 @@ public class Ourcraft {
 
 
 //            modContent.registerShader(new ShaderSource("world_shader","ourcraft:position_texture_color", "Shaders/WorldVertexShader.glsl","Shaders/WorldFragmentShader.glsl"));
-            modContent.registerShader(new ShaderSource("world_shader","ourcraft:position_color_texture", "Shaders/WorldVertexShader.glsl","Shaders/WorldFragmentShader.glsl"));
-            modContent.registerShader(new ShaderSource("position_color_shader", "ourcraft:position_color", "Shaders/WorldVertexColorShader.glsl","Shaders/WorldFragmentShader.glsl"));
+            modContent.registerShader(new ShaderSource("world_shader","ourcraft:position_color_texture", "Shaders/WorldVertexShader.glsl","Shaders/WorldFragmentShader.glsl").uniformNames("transform", "color"));
+            modContent.registerShader(new ShaderSource("position_color_shader", "ourcraft:position_color", "Shaders/WorldVertexColorShader.glsl","Shaders/WorldFragmentShader.glsl").uniformNames("transform", "color"));
+            modContent.registerShader(new ShaderSource("position_texture", "ourcraft:position_texture", "Shaders/PositionTexture.vsh","Shaders/PositionTexture.fsh").uniformNames("transform", "color"));
 
             modContent.registerInputHandlerProviders(new ControllerHandlerProvider(), new KeyPressHandlerProvider(), new MouseHandlerProvider());
 

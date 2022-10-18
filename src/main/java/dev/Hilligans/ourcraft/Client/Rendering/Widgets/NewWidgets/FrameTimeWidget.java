@@ -14,6 +14,7 @@ import java.awt.*;
 public class FrameTimeWidget extends Widget {
 
     public FrameTracker frameTracker;
+    public int matrixIndex;
     public int barPixelWidth;
     public ShaderSource shaderSource;
 
@@ -28,7 +29,9 @@ public class FrameTimeWidget extends Widget {
 
     @Override
     public void addSource(RenderWindow renderWindow) {
+        super.addSource(renderWindow);
         this.frameTracker = renderWindow.frameTracker;
+        this.shaderSource = renderWindow.getGraphicsEngine().getGameInstance().SHADERS.get("ourcraft:position_color_shader");
     }
 
     public PrimitiveBuilder buildFrame() {
@@ -48,17 +51,14 @@ public class FrameTimeWidget extends Widget {
 
     @Override
     public void render(RenderWindow window, MatrixStack matrixStack, int xOffset, int yOffset) {
-        if (shaderSource == null) {
-            shaderSource = window.getGraphicsEngine().getGameInstance().SHADERS.get("ourcraft:position_color_shader");
-        }
         VertexMesh mesh = buildFrame().toVertexMesh();
 
        // Textures.BACKFILL.drawTexture(window,matrixStack,getX(),getY(),width,height);
       //  window.getEngineImpl().setState(window,null,new PipelineState().setDepth(false));
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
         window.getEngineImpl().drawAndDestroyMesh(window,null,matrixStack,mesh,0,shaderSource.program);
         window.getEngineImpl().drawAndDestroyMesh(window,null,matrixStack,mesh,0,shaderSource.program);
        // Textures.FRAME_TIME.drawTexture(window,matrixStack,getX(),getY(),width,height);
         Textures.FRAME_TIME.drawTexture(window,matrixStack,getX(),getY(),width,height);
     }
+
 }

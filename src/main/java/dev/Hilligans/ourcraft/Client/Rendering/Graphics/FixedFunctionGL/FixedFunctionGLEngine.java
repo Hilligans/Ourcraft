@@ -55,12 +55,10 @@ public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWin
 
 
         MatrixStack matrixStack = window.camera.getMatrix();
-        matrixStack.applyColor();
-        matrixStack.applyTransformation();
+        //matrixStack.applyColor();
 
         MatrixStack screenStack = window.camera.getScreenStack();
-        screenStack.applyColor();
-        screenStack.applyTransformation();
+        //screenStack.applyColor();
 
         window.renderPipeline.render(client,matrixStack,screenStack,null);
     }

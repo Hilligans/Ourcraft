@@ -1,10 +1,7 @@
 package dev.Hilligans.ourcraft.Resource.Loaders;
 
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
-import dev.Hilligans.ourcraft.Resource.IAllocator;
-import dev.Hilligans.ourcraft.Resource.ResourceLocation;
-import dev.Hilligans.ourcraft.Resource.StackBufferAllocator;
-import dev.Hilligans.ourcraft.Resource.UniversalResourceLoader;
+import dev.Hilligans.ourcraft.Resource.*;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 import org.lwjgl.stb.STBIWriteCallbackI;
 import org.lwjgl.stb.STBImage;
@@ -38,13 +35,13 @@ public class ImageLoader extends ResourceLoader<Image> implements IAllocator<Ima
 
     @Override
     public Image read(ResourceLocation path) {
-        try (MemoryStack memoryStack = MemoryStack.stackPush()) {
-            ByteBuffer buffer = gameInstance.getResource(path, new StackBufferAllocator(memoryStack));
-            if (buffer == null) {
-                return null;
-            }
-            return read(buffer);
+        ByteBuffer buffer = gameInstance.getResource(path, new BufferAllocator());
+        if (buffer == null) {
+            return null;
         }
+        Image img = read(buffer);
+        MemoryUtil.memFree(buffer);
+        return img;
     }
 
     @Override

@@ -97,8 +97,10 @@ public class PlayerEntity extends LivingEntity {
         matrixStack.translateMinusOffset((float) getX(), (float) getY(), (float) getZ());
         matrixStack.rotate(-yaw,new Vector3f(0,1,0));
         matrixStack.rotate(pitch,new Vector3f(0,0,1));
-        matrixStack.applyTransformation();
-        glDrawElements(GL_TRIANGLES, verticesCount,GL_UNSIGNED_INT,0);
+
+        //TODO fix
+        //matrixStack.applyTransformation();
+        //glDrawElements(GL_TRIANGLES, verticesCount,GL_UNSIGNED_INT,0);
     }
 
     @Override

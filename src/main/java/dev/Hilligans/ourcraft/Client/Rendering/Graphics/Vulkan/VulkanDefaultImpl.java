@@ -17,6 +17,7 @@ import dev.Hilligans.ourcraft.WorldSave.FileLoader;
 import dev.Hilligans.ourcraft.WorldSave.WorldLoader;
 
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 
 public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, VulkanGraphicsContext> {
 
@@ -75,13 +76,14 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     }
 
     @Override
-    public void uploadData(VulkanGraphicsContext graphicsContext, float[] data, String name) {
+    public void uploadData(VulkanGraphicsContext graphicsContext, FloatBuffer data, int index, String type, int program) {
 
     }
 
-    @Override
-    public void uploadData(VulkanGraphicsContext graphicsContext, float[] data, int index) {
 
+    @Override
+    public int getUniformIndex(VulkanGraphicsContext graphicsContext, String name, int shader) {
+        return 0;
     }
 
 }

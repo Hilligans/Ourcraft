@@ -23,6 +23,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.opengl.GL11.*;
@@ -154,13 +155,14 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     }
 
     @Override
-    public void uploadData(GraphicsContext graphicsContext, float[] data, String name) {
+    public void uploadData(GraphicsContext graphicsContext, FloatBuffer data, int index, String type, int program) {
 
     }
 
-    @Override
-    public void uploadData(GraphicsContext graphicsContext, float[] data, int index) {
 
+    @Override
+    public int getUniformIndex(GraphicsContext graphicsContext, String name, int shader) {
+        return 0;
     }
 
     private int getGLPrimitive(int type) {

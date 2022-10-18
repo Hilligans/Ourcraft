@@ -22,14 +22,14 @@ public class OpenGLWindow extends RenderWindow {
     public float width;
     public float height;
 
-    public OpenGLWindow(Client client, OpenGLEngine engine) {
+    public OpenGLWindow(Client client, OpenGLEngine engine, String name, int width, int height) {
         super(engine);
         this.camera = new FreeCamera(this);
-        window = glfwCreateWindow(client.windowX,client.windowY,"Ourcraft",NULL,NULL);
-        width = client.windowX;
-        height = client.windowY;
+        window = glfwCreateWindow(width,height,name,NULL,NULL);
+        this.width = width;
+        this.height = height;
         if(window == NULL) {
-            glfwTerminate();
+            //glfwTerminate();
             throw new RuntimeException("Failed to create window");
         }
         glfwMakeContextCurrent(window);
@@ -61,7 +61,6 @@ public class OpenGLWindow extends RenderWindow {
     public void swapBuffers() {
         glfwSwapInterval(0);
         glfwSwapBuffers(window);
-     //   frameTracker.count();
         client.rendering = false;
         client.soundEngine.tick();
         if(client.screenShot) {

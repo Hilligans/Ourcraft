@@ -99,15 +99,4 @@ public class Widget {
             this.y = (int) (sizeY * percentY) - height / 2;
         }
     }
-
-    public static ArrayList<WidgetFetcher> widgets = new ArrayList<>();
-
-    public static void register() {
-        widgets.add(Button::new);
-    }
-
-
-
-
-
 }

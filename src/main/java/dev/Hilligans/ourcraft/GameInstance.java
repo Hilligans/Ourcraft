@@ -375,7 +375,6 @@ public class GameInstance {
         Ourcraft.registerDefaultContent(OURCRAFT);
         PacketBase.register();
         Container.register();
-        Widget.register();
         Entity.register();
     }
 

@@ -38,20 +38,17 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
     Logger getLogger();
 
     default Runnable createRenderLoop(GameInstance gameInstance, RenderWindow window) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    while (!window.shouldClose()) {
-                        gameInstance.EVENT_BUS.postEvent(new RenderPreEvent());
-                        render((Q) window);
-                        gameInstance.EVENT_BUS.postEvent(new RenderPostEvent(window.getClient()));
-                        window.swapBuffers();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw e;
+        return () -> {
+            try {
+                while (!window.shouldClose()) {
+                    gameInstance.EVENT_BUS.postEvent(new RenderPreEvent());
+                    render((Q) window);
+                    gameInstance.EVENT_BUS.postEvent(new RenderPostEvent(window.getClient()));
+                    window.swapBuffers();
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw e;
             }
         };
     }
@@ -78,5 +75,10 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
         RenderWindow window = setup();
         getGameInstance().build(this);
         return window;
+    }
+
+    @Override
+    default void cleanup() {
+        close();
     }
 }

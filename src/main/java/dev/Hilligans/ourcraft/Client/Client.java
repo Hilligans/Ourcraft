@@ -1,6 +1,5 @@
 package dev.Hilligans.ourcraft.Client;
 
-import dev.Hilligans.ourcraft.Block.Blocks;
 import dev.Hilligans.ourcraft.Client.Input.InputHandler;
 import dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler;
 import dev.Hilligans.ourcraft.Client.Input.Key.KeyPress;
@@ -9,19 +8,12 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
-import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.GLRenderer;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.ContainerScreens.CreativeInventoryScreen;
 import dev.Hilligans.ourcraft.Client.Rendering.Screens.ContainerScreens.InventoryScreen;
-import dev.Hilligans.ourcraft.Client.Rendering.Screens.EscapeScreen;
-import dev.Hilligans.ourcraft.Client.Rendering.Screens.JoinScreen;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.ShaderManager;
-import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.VAOManager;
-import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Container.Container;
 import dev.Hilligans.ourcraft.Container.Slot;
-import dev.Hilligans.ourcraft.Data.Other.BlockPos;
-import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
 import dev.Hilligans.ourcraft.Data.Other.PlayerList;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.Item.ItemStack;
@@ -45,9 +37,7 @@ import dev.Hilligans.ourcraft.Server.MultiPlayerServer;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.World.ClientWorld;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.*;
 import org.lwjgl.openal.AL11;
-import org.lwjgl.opengl.GL30;
 
 import java.nio.DoubleBuffer;
 import java.util.ArrayList;
@@ -55,7 +45,6 @@ import java.util.Collections;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
 
 public class Client {
 
@@ -150,7 +139,7 @@ public class Client {
         rWindow = window;
         System.err.println("Time to start running: " + (System.currentTimeMillis() - ClientMain.startTime));
         graphicsEngine.createRenderLoop(gameInstance,window).run();
-
+        graphicsEngine.close();
         cleanUp();
         System.exit(1);
     }
@@ -158,7 +147,6 @@ public class Client {
     public RenderWindow rWindow;
 
     public void cleanUp() {
-        glfwTerminate();
         soundEngine.cleanup();
         for(SoundBuffer soundBuffer : gameInstance.SOUNDS.ELEMENTS) {
             soundBuffer.cleanup();
@@ -239,7 +227,7 @@ public class Client {
 
     public void openScreen(Container container) {
 
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         ContainerScreen<?> containerScreen = container.getContainerScreen(this);
         gameInstance.EVENT_BUS.postEvent(new OpenScreenEvent(containerScreen,screen));
         if(screen != null) {
@@ -400,20 +388,21 @@ public class Client {
     public static float drawTime = 1000f * 1000000 / Settings.maxFps;
 
     public void processInput(long window) {
-        if(screen == null) {
-            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-                Camera.strafeLeft();
-            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-                Camera.strafeRight();
-            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-                Camera.moveForeWard();
-            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-                Camera.moveBackWard();
-            if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-                Camera.moveUp();
-            if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-                Camera.moveDown();
+        /*if(screen == null) {
+            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS);
+               // Camera.strafeLeft();
+            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS);
+               // Camera.strafeRight();
+            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS);
+               // Camera.moveForeWard();
+            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS);
+               // Camera.moveBackWard();
+            if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS);
+               // Camera.moveUp();
+            if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS);
+                //Camera.moveDown();
         }
+         */
     }
 
     public void sendPacket(PacketBase packetBase) {
@@ -451,6 +440,4 @@ public class Client {
     public long getRenderTime() {
          return renderTime;
     }
-
-
 }

@@ -84,14 +84,11 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
         MatrixStack matrixStack = window.camera.getMatrix();
-        matrixStack.applyColor();
-        matrixStack.applyTransformation();
+        //matrixStack.applyColor();
 
         MatrixStack screenStack = window.camera.getScreenStack();
-        screenStack.applyColor();
-        screenStack.applyTransformation();
+        //screenStack.applyColor();
 
         window.renderPipeline.render(client,matrixStack,screenStack, new GraphicsContext());
     }
@@ -106,7 +103,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        renderWindow = new OpenGLWindow(client, this);
+        renderWindow = new OpenGLWindow(client, this, "Ourcraft", 1600, 800);
         renderWindow.setRenderPipeline(gameInstance.ARGUMENTS.getString("--renderPipeline", "ourcraft:new_world_pipeline"));
         windows.add(renderWindow);
         renderWindow.setup();
@@ -145,16 +142,12 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         graphicsData.build();
         //TextAtlas.instance.upload(this);
 
-        PlayerMovementThread playerMovementThread = new PlayerMovementThread(window);
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1, new NamedThreadFactory("player_movement"));
-        executorService.scheduleAtFixedRate(playerMovementThread, 0, 5, TimeUnit.MILLISECONDS);
-
         return renderWindow;
     }
 
     @Override
     public void close() {
-
+        glfwTerminate();
     }
 
 

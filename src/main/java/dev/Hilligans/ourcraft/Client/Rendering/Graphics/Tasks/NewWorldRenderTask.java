@@ -15,6 +15,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.ShaderManager;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
 import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
+import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.Network.Packet.Client.CRequestChunkPacket;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.World.Chunk;
@@ -24,6 +25,7 @@ import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
+import org.lwjgl.system.MemoryStack;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
@@ -38,6 +40,7 @@ public class NewWorldRenderTask extends RenderTaskSource {
     }
 
     public ShaderSource shaderSource;
+
     public CullingEngine cullingEngine;
 
     public ExecutorService chunkBuilder = Executors.newSingleThreadExecutor();
@@ -49,10 +52,6 @@ public class NewWorldRenderTask extends RenderTaskSource {
         return new RenderTask() {
             @Override
             public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack) {
-                if (shaderSource == null) {
-                    System.out.println(engine.getGameInstance().SHADERS.ELEMENTS);
-                    shaderSource = engine.getGameInstance().SHADERS.get("ourcraft:world_shader");
-                }
                 IWorld world = client.newClientWorld;
                 engine.getDefaultImpl().setState(window,graphicsContext, new PipelineState().setDepth(true));
                 Vector3d pos = window.camera.getSavedPosition();
@@ -120,7 +119,7 @@ public class NewWorldRenderTask extends RenderTaskSource {
     void drawChunk(RenderWindow window, GraphicsContext graphicsContext, Client client, IGraphicsEngine<?, ?,?> engine, MatrixStack matrixStack, Vector3i playerChunkPos, IChunk chunk, MeshHolder meshHolder, int x, int y, int z) {
         for(Tuple<IChunk, PrimitiveBuilder> tuple : primitiveBuilders) {
             asyncedChunks.remove( ((long)(int)tuple.getTypeA().getX() << 32) ^ (int)tuple.getTypeA().getZ());
-            tuple.typeB.setVertexFormat(window.getGraphicsEngine().getGameInstance().VERTEX_FORMATS.get("ourcraft:position_color_texture"));
+            tuple.typeB.setVertexFormat(shaderSource.vertexFormat);
             int meshID = window.getGraphicsEngine().getDefaultImpl().createMesh(window, graphicsContext, tuple.typeB.toVertexMesh());
             meshes.setChunk(tuple.getTypeA().getX(),tuple.getTypeA().getY(),tuple.getTypeA().getZ(),new MeshHolder().set(meshID,tuple.getTypeB().indices.size()));
             primitiveBuilders.remove(tuple);
@@ -131,7 +130,7 @@ public class NewWorldRenderTask extends RenderTaskSource {
                 if(matrixStack.frustumIntersection.testAab((chunk.getX() - 1) * chunk.getWidth(), (chunk.getY() - 1) * chunk.getHeight(), (chunk.getZ() - 1) * chunk.getWidth(), (chunk.getX() + 1) * chunk.getWidth(), (chunk.getY() + 1) * chunk.getHeight(), (chunk.getZ() + 1) * chunk.getWidth())) {
                     matrixStack.push();
                     matrixStack.translate(chunk.getX() * chunk.getWidth(), chunk.getY() * chunk.getHeight(), chunk.getZ() * chunk.getWidth());
-                    matrixStack.applyTransformation(shaderSource.program);
+                    engine.getDefaultImpl().uploadMatrix(graphicsContext,matrixStack,shaderSource);
                     engine.getDefaultImpl().drawMesh(window, graphicsContext, matrixStack, engine.getGraphicsData().getWorldTexture(), shaderSource.program, meshHolder.getId(), meshHolder.index, meshHolder.length);
                     matrixStack.pop();
                 }
@@ -153,8 +152,6 @@ public class NewWorldRenderTask extends RenderTaskSource {
                             });
                         }
                     }
-
-
                 }
             }
             //    chunk.setDirty(false);
@@ -187,7 +184,6 @@ public class NewWorldRenderTask extends RenderTaskSource {
         return false;
     }
 
-
     public PrimitiveBuilder getPrimitiveBuilder(IChunk chunk) {
         PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
         for(int x = 0; x < chunk.getWidth(); x++) {
@@ -216,8 +212,19 @@ public class NewWorldRenderTask extends RenderTaskSource {
 
     public void buildMesh(RenderWindow window, GraphicsContext graphicsContext, IChunk chunk) {
         PrimitiveBuilder primitiveBuilder = getPrimitiveBuilder(chunk);
-        primitiveBuilder.setVertexFormat(window.getGraphicsEngine().getGameInstance().VERTEX_FORMATS.get("ourcraft:position_color_texture"));
+        primitiveBuilder.setVertexFormat(shaderSource.vertexFormat);
         int meshID = window.getGraphicsEngine().getDefaultImpl().createMesh(window, graphicsContext, primitiveBuilder.toVertexMesh());
         meshes.setChunk(chunk.getX(),chunk.getY(),chunk.getZ(),new MeshHolder().set(meshID,primitiveBuilder.indices.size()));
+    }
+
+    @Override
+    public void load(GameInstance gameInstance) {
+        super.load(gameInstance);
+        shaderSource = gameInstance.SHADERS.get("ourcraft:world_shader");
+    }
+
+    @Override
+    public void loadGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine) {
+        super.loadGraphics(graphicsEngine);
     }
 }

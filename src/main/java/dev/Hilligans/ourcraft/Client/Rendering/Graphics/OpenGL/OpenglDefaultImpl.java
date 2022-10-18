@@ -17,9 +17,13 @@ import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL33;
+import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -27,6 +31,7 @@ import java.util.function.Consumer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL30.*;
 
 public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, GraphicsContext> {
@@ -48,15 +53,14 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     @Override
     public void drawMesh(OpenGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, int texture, int program, int meshID, long indicesIndex, int length) {
         Tuple<Integer, Integer> data = meshData.get(meshID);
-        matrixStack.applyTransformation(program);
-      //  if(texture != boundTexture) {
+        if(texture != boundTexture) {
             GL20.glBindTexture(textureTypes.get(texture), texture);
             boundTexture = texture;
-      //  }
-     //   if(program != boundProgram){
+        }
+      //  if(program != boundProgram){
             GL20.glUseProgram(program);
             boundProgram = program;
-        //   }
+      //  }
 
         if(data == null) {
             return;
@@ -91,7 +95,6 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
             glVertexAttribPointer(x,part.primitiveCount, getGLPrimitive(part.primitiveType),part.normalized,stride,pointer);
             glEnableVertexAttribArray(x);
             pointer += part.getSize();
-           // System.out.println(part.name);
             x++;
         }
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -158,19 +161,22 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
         glDisable(GL_DEPTH_TEST);
-       // if(texture != boundTexture) {
-           // GL20.glBindTexture(textureTypes.get(texture), texture);
-        if(texture != 0) {
-            GL20.glBindTexture(GL_TEXTURE_2D, texture);
-            boundTexture = texture;
+        if(texture != boundTexture) {
+            // GL20.glBindTexture(textureTypes.get(texture), texture);
+            if (texture != 0) {
+                GL20.glBindTexture(GL_TEXTURE_2D, texture);
+                boundTexture = texture;
+            }
         }
-      //  }
       //  if(program != boundProgram){
             GL20.glUseProgram(program);
             boundProgram = program;
       //  }
-        matrixStack.applyTransformation(program);
-
+      //  matrixStack.applyTransformation(program);
+        //try(MemoryStack memoryStack = MemoryStack.stackPush()) {
+          //  uploadData(graphicsContext, memoryStack.floats(matrixStack.color.x, matrixStack.color.y, matrixStack.color.z, matrixStack.color.w), "4f");
+          //  uploadData(graphicsContext, matrixStack.get().get(memoryStack.mallocFloat(16)));
+        //}
         int VAO = glGenVertexArrays();
         int VBO = glGenBuffers();
         int EBO = glGenBuffers();
@@ -212,7 +218,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     @Override
     public int createProgram(GraphicsContext graphicsContext, ShaderSource shaderSource) {
         String vertex =  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.vertexShader, shaderSource.modContent.getModID()));
-        String fragment =  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.fragmentShader, shaderSource.modContent.getModID()));
+        String fragment = engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.fragmentShader, shaderSource.modContent.getModID()));
         String geometry = shaderSource.geometryShader == null ? null :  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.geometryShader, shaderSource.modContent.getModID()));
 
         if(geometry == null) {
@@ -225,13 +231,23 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public void uploadData(GraphicsContext graphicsContext, float[] data, String name) {
-
+    public void uploadData(GraphicsContext graphicsContext, FloatBuffer data, int index, String type, int program) {
+        //if(program != boundProgram) {
+            GL20.glUseProgram(program);
+            boundProgram = program;
+       // }
+        if ("4fv".equals(type)) {
+            GL33.glUniformMatrix4fv(index, false, data);
+        } else if("4f".equals(type)) {
+            GL33.glUniform4fv(index, data);
+        } else {
+            throw new RuntimeException();
+        }
     }
 
     @Override
-    public void uploadData(GraphicsContext graphicsContext, float[] data, int index) {
-
+    public int getUniformIndex(GraphicsContext graphicsContext, String name, int shader) {
+        return glGetUniformLocation(shader, name);
     }
 
     @Override

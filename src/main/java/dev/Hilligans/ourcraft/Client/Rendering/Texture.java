@@ -2,7 +2,9 @@ package dev.Hilligans.ourcraft.Client.Rendering;
 
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.ShaderSource;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.VAOManager;
@@ -10,8 +12,10 @@ import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.WorldTextureManage
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.GameInstance;
 import dev.Hilligans.ourcraft.ModHandler.Content.ModContent;
+import dev.Hilligans.ourcraft.Resource.ResourceLocation;
 import dev.Hilligans.ourcraft.Util.Registry.IRegistryElement;
 import dev.Hilligans.ourcraft.Util.Settings;
+import org.lwjgl.opengl.GL11;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -28,7 +32,9 @@ public class Texture implements IRegistryElement {
     public int textureId = -1;
 
     public Image texture;
-    public VertexFormat format;
+    public ShaderSource shaderSource;
+
+    public int program;
 
     public Texture(String path) {
         this.path = path;
@@ -41,36 +47,21 @@ public class Texture implements IRegistryElement {
         this.texture = texture;
     }
 
-    public void register() {
-        Image image = WorldTextureManager.loadImage1(path, source.getModID(), source.gameInstance);
-        if(image == null) {
-            System.out.println("Null Image" + source.getModID() + ":" + path);
-            return;
-        }
-
-        width = image.getWidth();
-        height = image.getHeight();
-        this.texture = image;
-        //textureId = WorldTextureManager.registerTexture(image);
-    }
-
     public void drawTexture(RenderWindow window, MatrixStack matrixStack, int x, int y, int width, int height, int startX, int startY, int endX, int endY) {
         IDefaultEngineImpl<?,?> defaultEngineImpl = window.getEngineImpl();
-        if(textureId == -1) {
-            textureId = window.getEngineImpl().createTexture(window,null,texture);
-        }
 
         float minX = (float)startX / this.width;
         float minY = (float)startY / this.height;
         float maxX = (float)endX / this.width;
         float maxY = (float)endY / this.height;
-        float[] vertices = new float[] {x,y,0,minX,minY,x,y + height,0,minX,maxY,x + width,y,0,maxX,minY,x + width,y + height,0,maxX,maxY};
+        float[] vertices = new float[] {x,y,-1,minX,minY,x,y + height,-1,minX,maxY,x + width,y,-1,maxX,minY,x + width,y + height,-1,maxX,maxY};
         int[] indices = new int[] {0,1,2,2,1,3};
 
-        VertexMesh mesh = new VertexMesh(format);
+        VertexMesh mesh = new VertexMesh(shaderSource.vertexFormat);
 
         mesh.addData(indices, vertices);
 
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
         defaultEngineImpl.drawAndDestroyMesh(window,null,matrixStack,mesh,textureId,ClientMain.getClient().shaderManager.shaderProgram);
     }
 
@@ -148,7 +139,19 @@ public class Texture implements IRegistryElement {
 
     @Override
     public void load(GameInstance gameInstance) {
-        format = gameInstance.VERTEX_FORMATS.get("ourcraft:position_texture");
-        register();
+        shaderSource = gameInstance.SHADERS.get("ourcraft:position_texture");
+        texture = (Image) gameInstance.RESOURCE_LOADER.getResource(new ResourceLocation(path,source.getModID()));
+        if(texture == null) {
+            System.err.println(path);
+            return;
+        }
+        width = texture.getWidth();
+        height = texture.getHeight();
+    }
+
+    @Override
+    public void loadGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine) {
+        IRegistryElement.super.loadGraphics(graphicsEngine);
+        textureId = graphicsEngine.getDefaultImpl().createTexture(null,null, texture);
     }
 }

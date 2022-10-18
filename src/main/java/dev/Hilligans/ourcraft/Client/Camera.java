@@ -37,11 +37,6 @@ public class Camera {
     public static boolean thirdPerson = false;
     public static int thirdPersonMode = -1;
 
-    public static Vector3i playerChunkPos = null;
-
-    public static float thirdPersonScroll = 2.0f;
-
-
     public static PlayerEntity playerEntity = new PlayerEntity(0,0,0,Integer.MIN_VALUE);
 
     public static boolean isOnGround = false;

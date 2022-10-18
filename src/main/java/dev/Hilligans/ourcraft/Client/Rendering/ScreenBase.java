@@ -6,6 +6,7 @@ import dev.Hilligans.ourcraft.Client.Input.Key.KeyHandler;
 import dev.Hilligans.ourcraft.Client.Input.Key.KeyPress;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.ShaderSource;
 import dev.Hilligans.ourcraft.Client.Rendering.Widgets.Widget;
 import dev.Hilligans.ourcraft.Network.Packet.Client.CCloseScreen;
 import org.lwjgl.glfw.GLFW;
@@ -21,6 +22,7 @@ public abstract class ScreenBase implements Screen {
     public ArrayList<KeyPress> keyPresses = new ArrayList<>();
 
     public Client client;
+    public ShaderSource defaultShader;
 
     public ScreenBase() {}
 
@@ -99,7 +101,7 @@ public abstract class ScreenBase implements Screen {
     @Override
     public void setWindow(RenderWindow renderWindow) {
         this.window = renderWindow;
-        System.out.println(renderWindow);
+        this.defaultShader = renderWindow.getGraphicsEngine().getGameInstance().SHADERS.get("ourcraft:position_texture_color");
         for(Widget widget : widgets) {
             widget.addSource(renderWindow);
         }

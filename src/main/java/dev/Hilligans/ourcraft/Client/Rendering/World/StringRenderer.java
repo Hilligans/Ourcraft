@@ -5,6 +5,7 @@ import dev.Hilligans.ourcraft.Client.MatrixStack;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.ShaderSource;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.PrimitiveBuilder;
@@ -17,11 +18,13 @@ import dev.Hilligans.ourcraft.Ourcraft;
 import it.unimi.dsi.fastutil.chars.Char2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2BooleanArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import org.lwjgl.system.MemoryStack;
 
 import java.awt.image.BufferedImage;
 import java.util.concurrent.Future;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.glUseProgram;
 
 public class StringRenderer {
 
@@ -30,13 +33,14 @@ public class StringRenderer {
 
     public int stringHeight = 58;
 
-    VertexFormat format;
+    public ShaderSource shaderSource;
+
 
     public IGraphicsEngine<?,?,?> graphicsEngine;
 
     public StringRenderer(IGraphicsEngine<?,?,?> graphicsEngine) {
         this.graphicsEngine = graphicsEngine;
-        format = graphicsEngine.getGameInstance().VERTEX_FORMATS.get("ourcraft:position_texture");
+        shaderSource = graphicsEngine.getGameInstance().SHADERS.get("ourcraft:position_texture");
     }
 
     public void drawStringTranslated(RenderWindow window, MatrixStack matrixStack, String string, int x, int y, float scale) {
@@ -58,7 +62,7 @@ public class StringRenderer {
         int width = 0;
         IntList vals = getAtlases(string);
         Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
-        vals.forEach((val) -> primitiveBuilders.put(val, new PrimitiveBuilder(format)));
+        vals.forEach((val) -> primitiveBuilders.put(val, new PrimitiveBuilder(shaderSource.vertexFormat)));
 
         for(int z = 0; z < string.length(); z++) {
             PrimitiveBuilder primitiveBuilder = primitiveBuilders.get((int) string.charAt(z) >> 8);
@@ -102,7 +106,7 @@ public class StringRenderer {
         try {
             IntList vals = getAtlases(string);
             Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
-            vals.forEach((val) -> primitiveBuilders.put(val, new PrimitiveBuilder(format)));
+            vals.forEach((val) -> primitiveBuilders.put(val, new PrimitiveBuilder(shaderSource.vertexFormat)));
             int width = 0;
             for(int z = 0; z < string.length(); z++) {
                 PrimitiveBuilder primitiveBuilder = primitiveBuilders.get((int)string.charAt(z) >> 8);
@@ -111,6 +115,8 @@ public class StringRenderer {
             }
             int finalWidth = width;
             ensureTexturesBuilt(vals, window);
+            IDefaultEngineImpl<?,?> impl = window.getEngineImpl();
+            impl.uploadMatrix(null,matrixStack,shaderSource);
             vals.forEach((val) -> {
                 TextureAtlas textureAtlas = textureAtlases.get(val);
                 if(textureAtlas == null) {
@@ -118,8 +124,7 @@ public class StringRenderer {
                 }
                 PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
                 primitiveBuilder.translate(x - finalWidth / 2f,0,0);
-                IDefaultEngineImpl<?,?> impl = window.getEngineImpl();
-                impl.drawAndDestroyMesh(window,null,matrixStack,primitiveBuilder.toVertexMesh(),textureAtlas.glTextureId,ShaderManager.guiShader.shader);
+                impl.drawAndDestroyMesh(window,null,matrixStack,primitiveBuilder.toVertexMesh(),textureAtlas.glTextureId,shaderSource.program);
 
             });
         } catch (Exception ignored) {
@@ -140,8 +145,6 @@ public class StringRenderer {
                 addVertices(primitiveBuilder, string.charAt(z), x + width, y, scale);
                 width += getCharWidth(string.charAt(z)) * scale;
             }
-            matrixStack.applyColor();
-            matrixStack.applyTransformation();
             Textures.BACKGROUND.drawTexture(window, matrixStack, x, y, width, (int) (stringHeight * scale));
             draw1(window,matrixStack,vals,primitiveBuilders);
         } catch (Exception ignored) {}
@@ -149,6 +152,7 @@ public class StringRenderer {
     }
 
     public void draw1(RenderWindow window, MatrixStack matrixStack, IntList vals, Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders) {
+
         vals.forEach((val) -> {
             TextureAtlas textureAtlas = textureAtlases.get(val);
             if(textureAtlas == null) {
@@ -157,7 +161,8 @@ public class StringRenderer {
             PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
             primitiveBuilder.translate(1.0f,0,1.0f);
             IDefaultEngineImpl<?,?> impl = window.getEngineImpl();
-            impl.drawAndDestroyMesh(window,null,matrixStack,primitiveBuilder.toVertexMesh(),textureAtlas.glTextureId,ShaderManager.guiShader.shader);
+            impl.uploadMatrix(null,matrixStack,shaderSource);
+            impl.drawAndDestroyMesh(window,null,matrixStack,primitiveBuilder.toVertexMesh(),textureAtlas.glTextureId,shaderSource.program);
         });
     }
 

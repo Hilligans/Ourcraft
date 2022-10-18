@@ -10,7 +10,6 @@ import static org.lwjgl.opengl.GL20.*;
 
 public class MatrixStack {
 
-
     public Stack<Matrix4f> matrix4fStack = new Stack<>();
     public Stack<Vector4f> colorStack = new Stack<>();
     public Matrix4f matrix4f;
@@ -43,7 +42,7 @@ public class MatrixStack {
     public void pop() {
         matrix4f = matrix4fStack.pop();
         color = colorStack.pop();
-        applyColor();
+        //applyColor();
     }
 
     public void updateFrustum() {
@@ -54,24 +53,11 @@ public class MatrixStack {
         return matrix4f;
     }
 
-    public void applyTransformation(int shaderId) { ;
+    public void applyTransformation(int shaderId) {
         int trans = glGetUniformLocation(shaderId, "transform");
         float[] floats = new float[16];
         matrix4f.get(floats);
         glUniformMatrix4fv(trans,false,matrix4f.get(floats));
-    }
-
-    public void applyTransformation() {
-        applyTransformation(ClientMain.getClient().shaderManager.shaderProgram);
-    }
-
-    public void applyColor(int shaderId) {
-        int trans = glGetUniformLocation(shaderId, "color");
-        glUniform4f(trans,color.x,color.y,color.z,color.w);
-    }
-
-    public void applyColor() {
-        applyColor(ClientMain.getClient().shaderManager.shaderProgram);
     }
 
     public void setColor(float r, float g, float b, float a) {

@@ -19,6 +19,9 @@ public class ShaderSource implements IRegistryElement {
 
     public int program;
 
+    public String[] uniformNames;
+    public int[] uniformIndexes;
+
     public ShaderSource(String name, String format, String vertexShader, String fragmentShader) {
         this.name = name;
         this.format = format;
@@ -32,6 +35,11 @@ public class ShaderSource implements IRegistryElement {
         this.vertexShader = vertexShader;
         this.fragmentShader = fragmentShader;
         this.geometryShader = geometryShader;
+    }
+
+    public ShaderSource uniformNames(String... names) {
+        this.uniformNames = names;
+        return this;
     }
 
     @Override
@@ -62,6 +70,12 @@ public class ShaderSource implements IRegistryElement {
     @Override
     public void loadGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine) {
         program = graphicsEngine.getDefaultImpl().createProgram(null,this);
+        if(uniformNames != null) {
+            uniformIndexes = new int[uniformNames.length];
+            for(int x = 0; x < uniformNames.length; x++) {
+                uniformIndexes[x] = graphicsEngine.getDefaultImpl().getUniformIndex(null, uniformNames[x], program);
+            }
+        }
     }
 
     @Override

@@ -29,7 +29,7 @@ public class ScreenBuilder implements IRegistryElement {
         JSONArray textures = jsonObject.getJSONArray("textures");
         for(int x = 0; x < textures.length(); x++) {
             JSONObject textureObject = textures.getJSONObject(x);
-            Texture texture = new Texture(textureObject.getString("texture"));
+            Texture texture = new Texture("Images/" + textureObject.getString("texture"));
             TextureElement textureElement = new TextureElement(texture, getInt(textureObject.getJSONArray("region")),getFloat(textureObject.getJSONArray("position")),getFloat(textureObject.getJSONArray("area")));
             this.textures.add(textureElement);
         }
