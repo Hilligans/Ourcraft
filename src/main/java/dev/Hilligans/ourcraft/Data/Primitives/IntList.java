@@ -1,5 +1,9 @@
 package dev.Hilligans.ourcraft.Data.Primitives;
 
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.IntBuffer;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
@@ -113,6 +117,11 @@ public class IntList {
         int[] ints = new int[size];
         System.arraycopy(elementData,0,ints,0,size);
         return ints;
+    }
+
+    public IntBuffer getElementDataBuffer() {
+        IntBuffer buffer = MemoryUtil.memAllocInt(size);
+        return buffer.put(elementData, 0, size).flip();
     }
 
     public float set(int index, int element) {

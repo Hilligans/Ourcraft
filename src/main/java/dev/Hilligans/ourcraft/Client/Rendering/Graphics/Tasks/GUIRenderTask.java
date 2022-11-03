@@ -32,7 +32,7 @@ public class GUIRenderTask extends RenderTaskSource {
     public RenderTask getDefaultTask() {
         return new RenderTask() {
             @Override
-            public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?,?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack) {
+            public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?,?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack, float delta) {
                 IDefaultEngineImpl<?,?> impl = engine.getDefaultImpl();
 
                 impl.setState(window,graphicsContext, new PipelineState());

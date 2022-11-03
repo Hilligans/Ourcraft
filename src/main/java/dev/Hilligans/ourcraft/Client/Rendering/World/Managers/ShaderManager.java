@@ -15,29 +15,29 @@ import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
 public class ShaderManager {
 
-    public int shaderProgram;
+    //public int shaderProgram;
     public int colorShader;
-    public int opaqueColorShader;
-    public int transparentColorShader;
-    public int lineShader;
+    //public int opaqueColorShader;
+    //public int transparentColorShader;
+    //public int lineShader;
 
-    public static Shader particleShader = new Shader(Util.particleVertexShader,Util.particleFragmentShader)
-            .addShaderElement(GL_FLOAT,3,false)
-            .addShaderElement(GL_FLOAT,2,false);
-    public static Shader particleShader1 = new Shader(readShader("/Shaders/ParticleVertexShader.glsl"),readShader("/Shaders/test1.glsl"),readShader("/Shaders/ParticleFragmentShader.glsl")).addShaderElement(GL_FLOAT,3,false).addShaderElement(GL_FLOAT,4,false).addShaderElement(GL_FLOAT,1,false);
+  //  public static Shader particleShader = new Shader(Util.particleVertexShader,Util.particleFragmentShader)
+  //          .addShaderElement(GL_FLOAT,3,false)
+  //          .addShaderElement(GL_FLOAT,2,false);
+  //  public static Shader particleShader1 = new Shader(readShader("/Shaders/ParticleVertexShader.glsl"),readShader("/Shaders/test1.glsl"),readShader("/Shaders/ParticleFragmentShader.glsl")).addShaderElement(GL_FLOAT,3,false).addShaderElement(GL_FLOAT,4,false).addShaderElement(GL_FLOAT,1,false);
 
-    public static Shader particleShader2 = new Shader(readShader("/Shaders/Particle/ParticleVertexShader.glsl"),readShader("/Shaders/Particle/ParticleFragmentShader.glsl")).addShaderElement(GL_FLOAT,4,false).addShaderElement(GL_FLOAT,1,false);
+  //  public static Shader particleShader2 = new Shader(readShader("/Shaders/Particle/ParticleVertexShader.glsl"),readShader("/Shaders/Particle/ParticleFragmentShader.glsl")).addShaderElement(GL_FLOAT,4,false).addShaderElement(GL_FLOAT,1,false);
 
     public static Shader worldShader = new Shader(readShader("/Shaders/WorldVertexShader.glsl"),readShader("/Shaders/WorldFragmentShader.glsl")).addShaderElement(GL_FLOAT,3,false).addShaderElement(GL_FLOAT,4,false).addShaderElement(GL_FLOAT,2,false);
     //  .addShaderElement(GL_FLOAT,1,false);
-    public static Shader guiShader = new Shader(readShader("/Shaders/VertexShader.glsl"),readShader("/Shaders/FragmentShader.glsl")).addShaderElement(GL_FLOAT,3,false).addShaderElement(GL_FLOAT,2,false);
+    //public static Shader guiShader = new Shader(readShader("/Shaders/VertexShader.glsl"),readShader("/Shaders/FragmentShader.glsl")).addShaderElement(GL_FLOAT,3,false).addShaderElement(GL_FLOAT,2,false);
 
     public ShaderManager() {
-        shaderProgram = ShaderManager.registerShader(Util.shader,Util.fragmentShader1);
+        //shaderProgram = ShaderManager.registerShader(Util.shader,Util.fragmentShader1);
         colorShader = ShaderManager.registerShader(Util.coloredShader,Util.fragmentShader1);
-        transparentColorShader = colorShader;
-        opaqueColorShader = ShaderManager.registerShader(Util.coloredShader,Util.fragmentShader2);
-        lineShader = ShaderManager.registerShader(Util.lineShader, Util.lineFragment);
+        //transparentColorShader = colorShader;
+        //opaqueColorShader = ShaderManager.registerShader(Util.coloredShader,Util.fragmentShader2);
+        //lineShader = ShaderManager.registerShader(Util.lineShader, Util.lineFragment);
     }
 
     public static String readShader(String source) {

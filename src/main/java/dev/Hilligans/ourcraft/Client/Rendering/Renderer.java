@@ -2,6 +2,7 @@ package dev.Hilligans.ourcraft.Client.Rendering;
 
 import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.Client.MatrixStack;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.TextAtlas;
 import dev.Hilligans.ourcraft.ClientMain;
@@ -11,6 +12,7 @@ import dev.Hilligans.ourcraft.Item.ItemStack;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.ShaderManager;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.TextureManager;
 import dev.Hilligans.ourcraft.Client.Rendering.World.Managers.VAOManager;
+import dev.Hilligans.ourcraft.Ourcraft;
 import dev.Hilligans.ourcraft.Util.Settings;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -21,7 +23,7 @@ import static org.lwjgl.opengl.GL30.*;
 public class Renderer {
 
     public static void renderBlockItem(MatrixStack matrixStack, int x, int y, int size, Block block, ItemStack itemStack) {
-        Item item = itemStack.item;
+     /*   Item item = itemStack.item;
         //glUseProgram(ClientMain.getClient().shaderManager.colorShader);
         glDisable(GL_DEPTH_TEST);
         if(item.itemProperties.dynamicModel || item.vao == -1) {
@@ -47,6 +49,8 @@ public class Renderer {
             VAOManager.destroyBuffer(item.vao);
         }
         glEnable(GL_DEPTH_TEST);
+
+      */
     }
 
     public static void renderItem(MatrixStack matrixStack, int x, int y, int size, TextureManager textureManager) {
@@ -54,7 +58,7 @@ public class Renderer {
         size -= Settings.guiSize * 2;
         x += Settings.guiSize;
         y += Settings.guiSize;
-        matrixStack.applyTransformation(ClientMain.getClient().shaderManager.shaderProgram);
+        //matrixStack.applyTransformation(ClientMain.getClient().shaderManager.shaderProgram);
         //glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
         glDisable(GL_DEPTH_TEST);
         int id = textureManager.getTextureId();
@@ -70,5 +74,23 @@ public class Renderer {
         glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
         VAOManager.destroyBuffer(vao);
         glEnable(GL_DEPTH_TEST);
+    }
+
+    public static void renderItem(RenderWindow window, MatrixStack matrixStack, int x, int y, int size, TextureManager textureManager) {
+        size *= 2;
+        size -= Settings.guiSize * 2;
+        x += Settings.guiSize;
+        y += Settings.guiSize;
+        int id = textureManager.getTextureId();
+        float minX = TextAtlas.getMinX(id);
+        float maxX = TextAtlas.getMaxX(id);
+        float minY = TextAtlas.getMinY(id);
+        float maxY = TextAtlas.getMaxY(id);
+        float[] vertices = new float[] {x,y,0,minX,minY,x,y + size,0,minX,maxY,x + size,y,0,maxX,minY,x + size,y + size,0,maxX,maxY};
+        int[] indices = new int[] {0,1,2,2,1,3};
+        window.getEngineImpl().uploadMatrix(null, matrixStack, null);
+        VertexMesh mesh = new VertexMesh(Ourcraft.position_color_texture);
+        mesh.addData(indices, vertices);
+        window.getGraphicsEngine().getDefaultImpl().drawAndDestroyMesh(window, null, matrixStack, mesh, textureManager.getTextureId(), 0);
     }
 }

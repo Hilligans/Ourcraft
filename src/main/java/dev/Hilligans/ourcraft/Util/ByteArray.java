@@ -38,7 +38,8 @@ public class ByteArray {
     }
 
     public ByteArray(ByteBuffer buffer) {
-        this(buffer.array());
+        this(Unpooled.wrappedBuffer(buffer));
+        this.size = 0;
     }
 
     public ByteBuffer toByteBuffer() {

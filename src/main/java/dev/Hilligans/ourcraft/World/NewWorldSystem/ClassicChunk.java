@@ -74,11 +74,20 @@ public class ClassicChunk implements IChunk {
     public void setBlockState(long x, long y, long z, IBlockState blockState) {
         ISubChunk subChunk = chunks[(int) (y >> 4)];
         if(subChunk == null) {
+            if(blockState == Blocks.AIR.getDefaultState1()) {
+                return;
+            }
             subChunk = chunks[(int) (y >> 4)] = new SimpleSubChunkImpl(16,16);
         }
         if(subChunk.setBlockState((int) (x % 15), (int)(y % 15), (int) (z % 15),blockState) != blockState) {
             dirty = true;
         }
+    }
+
+    @Override
+    public void setChunkPosition(long x, long y, long z) {
+        this.x = (int) x;
+        this.z = (int) z;
     }
 
     @Override

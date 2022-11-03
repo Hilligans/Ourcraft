@@ -52,6 +52,6 @@ public class EmptyContainer<T> implements IThreeDContainer<T> {
     }
 
     public long to(long x, long y) {
-        return ((long)(int)y << 32) | (int)x;
+        return (y << 32) | (x & 0xffffffffL);
     }
 }

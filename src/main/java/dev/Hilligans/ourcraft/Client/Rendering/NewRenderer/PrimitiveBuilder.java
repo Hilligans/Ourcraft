@@ -45,7 +45,7 @@ public class PrimitiveBuilder {
 
     public VertexMesh toVertexMesh() {
         VertexMesh vertexMesh = new VertexMesh(vertexFormat);
-        vertexMesh.addData(indices.getElementData(),vertices.getElementData());
+        vertexMesh.addData(indices.getElementDataBuffer(), vertices.getElementDataBuffer());
         return vertexMesh;
     }
 
@@ -189,25 +189,6 @@ public class PrimitiveBuilder {
         glDrawElements(type, indices.size(), GL_UNSIGNED_INT, 0);
         matrixStack.pop();
         VAOManager.destroyBuffer(id);
-    }
-
-    public void draw1(MatrixStack matrixStack) {
-
-        if(id == -1) {
-           // id = VAOManager.createVAO(this,GL_DYNAMIC_DRAW);
-        } else {
-           // glBindBuffer(GL_ARRAY_BUFFER, VAOManager.buffers.get(id).typeA);
-          //  glBufferData(GL_ARRAY_BUFFER,this.vertices.getElementData(),GL_STREAM_DRAW);
-          //  glBindBuffer(GL_ARRAY_BUFFER, VAOManager.buffers.get(id).typeB);
-         //   glBufferData(GL_ELEMENT_ARRAY_BUFFER,this.indices.getElementData(),GL_STREAM_DRAW);
-        }
-      //  GL30.glBindVertexArray(id);
-        matrixStack.push();
-        matrixStack.applyTransformation(shader.shader);
-        //glDrawElements(type, indices.size(), GL_UNSIGNED_INT, 0);
-        VAOManager.destroyBuffer(id);
-        id = -1;
-        matrixStack.pop();
     }
 
     public static int id = -1;

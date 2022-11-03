@@ -78,9 +78,6 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         window.frameTracker.count();
         Client.timeSinceLastDraw = currentTime;
 
-       // client.unloadQueue.forEach(VAOManager::destroyBuffer);
-       // client.unloadQueue.clear();
-
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

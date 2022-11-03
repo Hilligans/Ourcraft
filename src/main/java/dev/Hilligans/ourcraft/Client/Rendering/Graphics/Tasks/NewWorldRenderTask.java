@@ -43,7 +43,7 @@ public class NewWorldRenderTask extends RenderTaskSource {
 
     public CullingEngine cullingEngine;
 
-    public ExecutorService chunkBuilder = Executors.newSingleThreadExecutor();
+    public ExecutorService chunkBuilder = Executors.newFixedThreadPool(2);
 
     public IThreeDContainer<MeshHolder> meshes = new EmptyContainer<>();
 
@@ -51,19 +51,19 @@ public class NewWorldRenderTask extends RenderTaskSource {
     public RenderTask getDefaultTask() {
         return new RenderTask() {
             @Override
-            public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack) {
+            public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack, float delta) {
                 IWorld world = client.newClientWorld;
-                engine.getDefaultImpl().setState(window,graphicsContext, new PipelineState().setDepth(true));
+                engine.getDefaultImpl().setState(window, graphicsContext, new PipelineState().setDepth(true));
                 Vector3d pos = window.camera.getSavedPosition();
                 int chunkWidth = world.getChunkContainer().getChunkWidth();
                 int chunkHeight = world.getChunkContainer().getChunkHeight();
                 int renderYDist = client.renderYDistance;
                 renderYDist = 1;
-                Vector3i playerChunkPos = new Vector3i((int)pos.x / chunkWidth, (int)pos.y / chunkHeight,  (int)pos.z / chunkWidth);
-                if(client.renderWorld) {
-                    for(int x = 0; x < client.renderDistance; x++) {
-                        for(int y = 0; y < renderYDist; y++) {
-                            for(int z = 0; z < client.renderDistance; z++) {
+                Vector3i playerChunkPos = new Vector3i((int) pos.x / chunkWidth, (int) pos.y / chunkHeight, (int) pos.z / chunkWidth);
+                if (client.renderWorld) {
+                    for (int x = 0; x < client.renderDistance; x++) {
+                        for (int y = 0; y < renderYDist; y++) {
+                            for (int z = 0; z < client.renderDistance; z++) {
                                 int xx = x + playerChunkPos.x;
                                 int yy = y + playerChunkPos.y;
                                 int zz = z + playerChunkPos.z;
@@ -71,35 +71,35 @@ public class NewWorldRenderTask extends RenderTaskSource {
                                 int ny = -y + playerChunkPos.y;
                                 int nz = -z + playerChunkPos.z;
 
-                                drawChunk(window,graphicsContext,client,engine,worldStack,playerChunkPos,getChunk(xx, yy, zz, world),getMesh(xx, yy, zz), xx, yy, zz);
-                                if(x == 0 && y == 0 && z == 0) {
+                                drawChunk(window, graphicsContext, client, engine, worldStack, playerChunkPos, getChunk(xx, yy, zz, world), getMesh(xx, yy, zz), xx, yy, zz);
+                                if (x == 0 && y == 0 && z == 0) {
                                     continue;
                                 }
-                                drawChunk(window,graphicsContext,client,engine,worldStack,playerChunkPos,getChunk(nx, ny, nz, world), getMesh(nx, ny, nz), nx, ny, nz);
-                                if(x == 0 && y == 0) {
+                                drawChunk(window, graphicsContext, client, engine, worldStack, playerChunkPos, getChunk(nx, ny, nz, world), getMesh(nx, ny, nz), nx, ny, nz);
+                                if (x == 0 && y == 0) {
                                     continue;
                                 }
-                                drawChunk(window,graphicsContext,client,engine,worldStack,playerChunkPos,getChunk(nx, ny, zz, world), getMesh(nx, ny, zz), nx, ny, zz);
-                                if(x == 0 && z == 0) {
+                                drawChunk(window, graphicsContext, client, engine, worldStack, playerChunkPos, getChunk(nx, ny, zz, world), getMesh(nx, ny, zz), nx, ny, zz);
+                                if (x == 0 && z == 0) {
                                     continue;
                                 }
-                                drawChunk(window,graphicsContext,client,engine,worldStack,playerChunkPos,getChunk(nx, yy, nz, world), getMesh(nx, yy, nz), nx, yy, nz);
-                                if(y == 0 && z == 0) {
+                                drawChunk(window, graphicsContext, client, engine, worldStack, playerChunkPos, getChunk(nx, yy, nz, world), getMesh(nx, yy, nz), nx, yy, nz);
+                                if (y == 0 && z == 0) {
                                     continue;
                                 }
-                                drawChunk(window,graphicsContext,client,engine,worldStack,playerChunkPos,getChunk(xx, ny, nz, world), getMesh(xx, ny, nz), xx, ny, nz);
-                                if(x == 0) {
+                                drawChunk(window, graphicsContext, client, engine, worldStack, playerChunkPos, getChunk(xx, ny, nz, world), getMesh(xx, ny, nz), xx, ny, nz);
+                                if (x == 0) {
                                     continue;
                                 }
-                                drawChunk(window,graphicsContext,client,engine,worldStack,playerChunkPos,getChunk(nx, yy, zz, world), getMesh(nx, yy, zz), nx, yy, zz);
-                                if(y == 0) {
+                                drawChunk(window, graphicsContext, client, engine, worldStack, playerChunkPos, getChunk(nx, yy, zz, world), getMesh(nx, yy, zz), nx, yy, zz);
+                                if (y == 0) {
                                     continue;
                                 }
-                                drawChunk(window,graphicsContext,client,engine,worldStack,playerChunkPos,getChunk(xx, ny, zz, world), getMesh(xx, ny, zz), xx, ny, zz);
-                                if(z == 0) {
+                                drawChunk(window, graphicsContext, client, engine, worldStack, playerChunkPos, getChunk(xx, ny, zz, world), getMesh(xx, ny, zz), xx, ny, zz);
+                                if (z == 0) {
                                     continue;
                                 }
-                                drawChunk(window,graphicsContext,client,engine,worldStack,playerChunkPos,getChunk(xx, yy, nz, world), getMesh(xx, yy, nz), xx, yy, nz);
+                                drawChunk(window, graphicsContext, client, engine, worldStack, playerChunkPos, getChunk(xx, yy, nz, world), getMesh(xx, yy, nz), xx, yy, nz);
                             }
                         }
                     }
@@ -118,7 +118,7 @@ public class NewWorldRenderTask extends RenderTaskSource {
 
     void drawChunk(RenderWindow window, GraphicsContext graphicsContext, Client client, IGraphicsEngine<?, ?,?> engine, MatrixStack matrixStack, Vector3i playerChunkPos, IChunk chunk, MeshHolder meshHolder, int x, int y, int z) {
         for(Tuple<IChunk, PrimitiveBuilder> tuple : primitiveBuilders) {
-            asyncedChunks.remove( ((long)(int)tuple.getTypeA().getX() << 32) ^ (int)tuple.getTypeA().getZ());
+            asyncedChunks.remove(((tuple.getTypeA().getX()) << 32) | (tuple.getTypeA().getZ() & 0xffffffffL));
             tuple.typeB.setVertexFormat(shaderSource.vertexFormat);
             int meshID = window.getGraphicsEngine().getDefaultImpl().createMesh(window, graphicsContext, tuple.typeB.toVertexMesh());
             meshes.setChunk(tuple.getTypeA().getX(),tuple.getTypeA().getY(),tuple.getTypeA().getZ(),new MeshHolder().set(meshID,tuple.getTypeB().indices.size()));
@@ -127,7 +127,8 @@ public class NewWorldRenderTask extends RenderTaskSource {
         if (meshHolder != null) {
             if(meshHolder.id != -1) {
                 //TODO fix not technically the right bounding box
-                if(matrixStack.frustumIntersection.testAab((chunk.getX() - 1) * chunk.getWidth(), (chunk.getY() - 1) * chunk.getHeight(), (chunk.getZ() - 1) * chunk.getWidth(), (chunk.getX() + 1) * chunk.getWidth(), (chunk.getY() + 1) * chunk.getHeight(), (chunk.getZ() + 1) * chunk.getWidth())) {
+                matrixStack.updateFrustum();
+                if(matrixStack.frustumIntersection.testAab((chunk.getX()) * chunk.getWidth(), (chunk.getY() - 1) * chunk.getHeight(), (chunk.getZ()) * chunk.getWidth(), (chunk.getX() + 1) * chunk.getWidth(), (chunk.getY() + 1) * chunk.getHeight(), (chunk.getZ() + 1) * chunk.getWidth())) {
                     matrixStack.push();
                     matrixStack.translate(chunk.getX() * chunk.getWidth(), chunk.getY() * chunk.getHeight(), chunk.getZ() * chunk.getWidth());
                     engine.getDefaultImpl().uploadMatrix(graphicsContext,matrixStack,shaderSource);
@@ -136,13 +137,14 @@ public class NewWorldRenderTask extends RenderTaskSource {
                 }
             }
         } else if(chunk != null) {
+
             //if(chunk.isDirty()) {
             if(!asyncedChunks.getOrDefault(((long)(int)chunk.getX() << 32) ^ (int)chunk.getZ(), false)) {
                 if (getChunk((int) chunk.getX() + 1, (int) chunk.getY(), (int) chunk.getZ(), chunk.getWorld()) != null &&
                         getChunk((int) chunk.getX() - 1, (int) chunk.getY(), (int) chunk.getZ(), chunk.getWorld()) != null &&
                         getChunk((int) chunk.getX(), (int) chunk.getY(), (int) chunk.getZ() + 1, chunk.getWorld()) != null &&
                         getChunk((int) chunk.getX(), (int) chunk.getY(), (int) chunk.getZ() - 1, chunk.getWorld()) != null) {
-                    if (x < 2 && y < 2 && z < 2) {
+                    if ((x < 2 && y < 2 && z < 2)) {
                         buildMesh(window, graphicsContext, chunk);
                     } else {
                         if (putChunk((int) chunk.getX(), (int) chunk.getZ())) {
@@ -158,10 +160,6 @@ public class NewWorldRenderTask extends RenderTaskSource {
             //}
         } else {
             getChunk(x,z,client.newClientWorld,client);
-          //  IWorld world = client.newClientWorld;
-          //  IChunk chunk1 = new ClassicChunk(world,256,x,z);
-          ///  chunk1.fill(Blocks.STONE.getDefaultState1(),0,0,0,16,64,16);
-          //  world.setChunk((long) x * chunk1.getWidth(), (long) y * chunk1.getHeight(), (long) z * chunk1.getWidth(),chunk1);
         }
     }
 
@@ -170,22 +168,22 @@ public class NewWorldRenderTask extends RenderTaskSource {
     Long2BooleanOpenHashMap map = new Long2BooleanOpenHashMap();
 
     void getChunk(int chunkX, int chunkZ, IWorld world, Client client) {
-        if (!map.getOrDefault(((long) chunkX << 32) ^ chunkZ, false)) {
-            map.put(((long) chunkX << 32) ^ chunkZ, true);
+        if (!map.getOrDefault((((long)chunkX) << 32) | (chunkZ & 0xffffffffL), false)) {
+            map.put((((long)chunkX) << 32) | (chunkZ & 0xffffffffL), true);
             client.sendPacket(new CRequestChunkPacket(chunkX, chunkZ));
         }
     }
 
     boolean putChunk(int chunkX, int chunkZ) {
-        if (!asyncedChunks.getOrDefault(((long) chunkX << 32) ^ chunkZ, false)) {
-            asyncedChunks.put(((long) chunkX << 32) ^ chunkZ, true);
+        if (!asyncedChunks.getOrDefault((((long) chunkX) << 32) | (chunkZ & 0xffffffffL), false)) {
+            asyncedChunks.put((((long)chunkX) << 32) | (chunkZ & 0xffffffffL), true);
             return true;
         }
         return false;
     }
 
     public PrimitiveBuilder getPrimitiveBuilder(IChunk chunk) {
-        PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
+        PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(shaderSource.vertexFormat);
         for(int x = 0; x < chunk.getWidth(); x++) {
             for(int y = 0; y < chunk.getHeight(); y++) {
                 for(int z = 0; z < chunk.getWidth(); z++) {

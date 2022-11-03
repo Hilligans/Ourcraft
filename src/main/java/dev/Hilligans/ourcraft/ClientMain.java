@@ -49,7 +49,9 @@ public class ClientMain {
 
         if(argumentContainer.getBoolean("--integratedServer", false)) {
             try {
-                new Thread(() -> ServerMain.server(gameInstance)).start();
+                Thread thread = new Thread(() -> ServerMain.server(gameInstance));
+                thread.setName("Server-Thread");
+                thread.start();
             } catch (Exception e) {
                 e.printStackTrace();
             }

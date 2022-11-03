@@ -50,15 +50,15 @@ public class PacketData extends ByteArray {
 
     public void writeToByteBuf(ByteBuf byteBuf, int packetWidth, boolean compressed) {
         byteBuf.writeInt(size + 4 + packetWidth);
-        if(compressed) {
+        if (compressed) {
             Deflater compressor = new Deflater();
             ByteBuffer buffer;
-            if(packetWidth == 1) {
-                buffer = this.byteBuf.nioBuffer(1,this.size);
+            if (packetWidth == 1) {
+                buffer = this.byteBuf.nioBuffer(1, this.size);
                 buffer.put(0, (byte) packetId);
             } else {
-                buffer = this.byteBuf.nioBuffer(2,this.size);
-                buffer.putShort(0,packetId);
+                buffer = this.byteBuf.nioBuffer(2, this.size);
+                buffer.putShort(0, packetId);
             }
             compressor.setInput(buffer);
             compressor.finish();
@@ -75,15 +75,6 @@ public class PacketData extends ByteArray {
             }
             byteBuf.writeBytes(this.byteBuf);
         }
-
-
-    }
-
-    public PacketBase createPacket() {
-        PacketBase packetBase = PacketBase.packets.get(packetId).get();
-        packetBase.ctx = ctx;
-        packetBase.decode(this);
-        return packetBase;
     }
 
     public PacketBase createPacket(Protocol protocol) {
@@ -92,6 +83,4 @@ public class PacketData extends ByteArray {
         packetBase.decode(this);
         return packetBase;
     }
-
-
 }

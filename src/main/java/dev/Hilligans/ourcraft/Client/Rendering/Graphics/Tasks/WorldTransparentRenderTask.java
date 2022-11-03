@@ -27,7 +27,7 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
     public RenderTask getDefaultTask() {
         return new RenderTask() {
             @Override
-            public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?,?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack) {
+            public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?,?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack, float delta) {
                 IDefaultEngineImpl<?,?> imp = engine.getDefaultImpl();
                 Vector3d pos = Camera.renderPos;
                 World world = client.clientWorld;

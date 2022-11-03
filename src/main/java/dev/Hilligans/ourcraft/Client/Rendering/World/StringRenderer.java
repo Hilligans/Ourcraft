@@ -79,7 +79,7 @@ public class StringRenderer {
         try {
             IntList vals = getAtlases(string);
             Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
-            vals.forEach((val) -> primitiveBuilders.put(val,new PrimitiveBuilder(GL_TRIANGLES,ShaderManager.guiShader)));
+            vals.forEach((val) -> primitiveBuilders.put(val,new PrimitiveBuilder(shaderSource.vertexFormat)));
             int width = 0;
             for(int z = 0; z < string.length(); z++) {
                 PrimitiveBuilder primitiveBuilder = primitiveBuilders.get((int)string.charAt(z) >> 8);
@@ -138,7 +138,7 @@ public class StringRenderer {
         try {
             IntList vals = getAtlases(string);
             Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
-            vals.forEach((val) -> primitiveBuilders.put(val, new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.guiShader)));
+            vals.forEach((val) -> primitiveBuilders.put(val, new PrimitiveBuilder(shaderSource.vertexFormat)));
             int width = 0;
             for (int z = 0; z < string.length(); z++) {
                 PrimitiveBuilder primitiveBuilder = primitiveBuilders.get((int) string.charAt(z) >> 8);

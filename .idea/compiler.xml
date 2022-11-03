@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Ourcraft" target="16" />
+      <module name="Ourcraft" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>

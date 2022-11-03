@@ -9,7 +9,7 @@ import dev.Hilligans.ourcraft.Data.Other.BoundingBox;
 import java.util.Random;
 import java.util.function.Consumer;
 
-public class SimpleWorld implements IServerWorld, IMethodResult {
+public class SimpleWorld implements IWorld {
 
     public int worldID;
     public String worldName;
@@ -59,7 +59,7 @@ public class SimpleWorld implements IServerWorld, IMethodResult {
                         int y = val;
                         pos.set(x, y, z);
                         IBlockState blockState = chunk.getBlockState1(x, y, z);
-                        blockState.getBlock().randomTick(self, blockState, self, pos, random);
+                        //blockState.getBlock().randomTick(self, blockState, self, pos, random);
                     }
                 }
             });
@@ -79,46 +79,15 @@ public class SimpleWorld implements IServerWorld, IMethodResult {
 
     @Override
     public void setChunk(long blockX, long blockY, long blockZ, IChunk chunk) {
-        chunkContainer.setChunk(blockX,blockY,blockZ,chunk);
+        IChunk oldChunk = chunkContainer.setChunk(blockX,blockY,blockZ,chunk);
+        chunk.set(this);
+        if(oldChunk != null) {
+            oldChunk.free(this);
+        }
     }
 
     @Override
     public IThreeDChunkContainer getChunkContainer() {
         return chunkContainer;
-    }
-
-    @Override
-    public void queueUpdate(int x, int y, int z) {
-
-    }
-
-    @Override
-    public void queueUpdate(BlockPos pos) {
-
-    }
-
-    @Override
-    public void queueSixUpdates(int x, int y, int z) {
-
-    }
-
-    @Override
-    public void queueSixUpdates(BlockPos pos) {
-
-    }
-
-    @Override
-    public void scheduleTick(int x, int y, int z, Block block, int delay) {
-
-    }
-
-    @Override
-    public void scheduleTick(BlockPos pos, Block block, int delay) {
-
-    }
-
-    @Override
-    public BlockPos getWorldSpawn(BoundingBox boundingBox) {
-        return null;
     }
 }

@@ -84,14 +84,17 @@ public class InputHandler {
         handleInput(input,mode,windowID,action,0,0,mode != 0 ? 1 : 0,provider);
     }
 
-    public void tick() {
+    public void tick(float deltaTime) {
+        if(deltaTime > 100) {
+            throw new RuntimeException();
+        }
         for(int x = 0; x < repeatingIds.size(); x++) {
             int val = repeatingIds.getInt(x);
             float strength = pressedInputs[val];
             if(strength != 0) {
                 ArrayList<Input> inputs1 = repeatingInputs[val];
                 for (Input input : inputs1) {
-                    input.repeat(window,strength);
+                    input.repeat(window,strength * deltaTime);
                 }
             }
         }

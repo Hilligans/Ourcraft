@@ -15,6 +15,7 @@ public class FrameTracker {
 
     public FrameTracker() {
         setFrameTimeBufferSize(1000);
+        lastFrame = System.currentTimeMillis();
     }
     public FrameTracker setMaxFrameRate(int time) {
         this.maxFrameRate = time;

@@ -24,10 +24,11 @@ public class SettingsScreen extends ScreenBase {
         addWidget(new SliderWidget("settings.render_distance", 50, 250, 400, 40, 2, 512, Settings.renderDistance, value -> Settings.renderDistance = value));
         addWidget(new ToggleWidget(50, 350, 200, 40, "settings.transparent_textures", Settings.renderTransparency, value -> {
             Settings.renderTransparency = value;
+            //TODO fix
             if(value) {
-                client.shaderManager.colorShader = client.shaderManager.transparentColorShader;
+                //client.shaderManager.colorShader = client.shaderManager.transparentColorShader;
             } else {
-                client.shaderManager.colorShader = client.shaderManager.opaqueColorShader;
+                //client.shaderManager.colorShader = client.shaderManager.opaqueColorShader;
             }
         }));
         addWidget(new Button(300, 50, 200, 40, "settings.sound_options", () -> client.openScreen(new VolumeScreen(client))));

@@ -4,6 +4,7 @@ import dev.Hilligans.ourcraft.Block.Block;
 import dev.Hilligans.ourcraft.ClientMain;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.DataBlockState;
 import dev.Hilligans.ourcraft.Data.Primitives.Tuple;
+import dev.Hilligans.ourcraft.Ourcraft;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.Block.Blocks;
@@ -13,13 +14,16 @@ import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
 import dev.Hilligans.ourcraft.World.NewWorldSystem.ClassicChunk;
 import dev.Hilligans.ourcraft.World.NewWorldSystem.IChunk;
 import it.unimi.dsi.fastutil.shorts.Short2ByteOpenHashMap;
+import org.lwjgl.system.MemoryUtil;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 public class SSendChunkPacket extends PacketBase {
 
     public byte mode;
     public Chunk chunk;
+    public IChunk newChunk;
 
     public SSendChunkPacket() {
         super(2);
@@ -32,8 +36,23 @@ public class SSendChunkPacket extends PacketBase {
         this.chunk = chunk;
     }
 
+    public SSendChunkPacket(IChunk chunk) {
+        this();
+        mode = 0;
+        this.newChunk = chunk;
+    }
+
     @Override
     public void encode(PacketData packetData) {
+        try {
+            //System.out.println(buf.limit());
+            int pos = Ourcraft.chainedChunkStream.fillBuffer(packetData.byteBuf, packetData.size, newChunk);
+            packetData.size = pos;
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+        /*
         packetData.writeByte(mode);
        // System.out.println(chunk.x + ":" + chunk.z);
         packetData.writeInt(chunk.x);
@@ -100,15 +119,24 @@ public class SSendChunkPacket extends PacketBase {
             }
 
         }
+    */
     }
 
 
     @Override
     public void decode(PacketData packetData) {
+        IChunk chunk = new ClassicChunk(ClientMain.getClient().newClientWorld,256,0,0);
+        try {
+            Ourcraft.chainedChunkStream.fillChunk(packetData.byteBuf, packetData.size, chunk);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ClientMain.getClient().newClientWorld.setChunk( chunk.getBlockX(), 0,  chunk.getBlockZ(), chunk);
+        /*
         try {
             mode = packetData.readByte();
             int chunkX = packetData.readInt();
-            int chunkZ = packetData.readInt();
+            int chunkZ = packetData.readInt(); *
             chunk = new Chunk(chunkX, chunkZ, ClientMain.getClient().clientWorld);
             IChunk chunk1 = new ClassicChunk(ClientMain.getClient().newClientWorld,256,chunkX,chunkZ);
             if (mode == 0) {
@@ -171,12 +199,14 @@ public class SSendChunkPacket extends PacketBase {
         } catch (Exception ignored) {
             ignored.printStackTrace();
         }
+
+         */
     }
 
     @Override
     public void handle() {
         try {
-            chunk.world.setChunk(chunk);
+            //chunk.world.setChunk(chunk);
             //System.out.println(chunk.x + ":" + chunk.z);
         } catch (Exception ignored) {
             ignored.printStackTrace();

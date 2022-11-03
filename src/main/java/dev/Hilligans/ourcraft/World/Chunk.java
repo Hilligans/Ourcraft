@@ -294,6 +294,11 @@ public class Chunk implements IMeshSource, IChunk {
     }
 
     @Override
+    public void setChunkPosition(long x, long y, long z) {
+
+    }
+
+    @Override
     public IWorld getWorld() {
         return null;
     }

@@ -1,6 +1,10 @@
 package dev.Hilligans.ourcraft.Data.Primitives;
 
 
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -103,6 +107,11 @@ public class FloatList {
         float[] floats = new float[size()];
         System.arraycopy(elementData,0,floats,0,size);
         return floats;
+    }
+
+    public FloatBuffer getElementDataBuffer() {
+        FloatBuffer buffer = MemoryUtil.memAllocFloat(size);
+        return buffer.put(elementData,0,size).flip();
     }
 
     public float set(int index, float element) {

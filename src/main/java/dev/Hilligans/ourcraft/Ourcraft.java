@@ -37,6 +37,8 @@ import dev.Hilligans.ourcraft.Schematic.LitematicaSchematicLoader;
 import dev.Hilligans.ourcraft.Util.NamedThreadFactory;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import dev.Hilligans.ourcraft.Util.Side;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.ChainedBlockChunkStream;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.ChunkStream;
 import org.json.JSONArray;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
@@ -73,6 +75,7 @@ public class Ourcraft {
     }
 
     public static void registerDefaultContent(ModContent modContent) {
+        chainedChunkStream.assignModContent(modContent);
         modContent.registerResourceLoader(new JsonLoader(), new ImageLoader(), new StringLoader());
         modContent.registerResourceLoader(new LitematicaSchematicLoader());
 
@@ -180,7 +183,6 @@ public class Ourcraft {
                 @Override
                 public void press(RenderWindow renderWindow, float strength) {
                     Client client = renderWindow.getClient();
-                    System.out.println("yes");
                     if(client.renderWorld) {
                         if (client.screen == null) {
                             client.openScreen(new EscapeScreen(client));
@@ -202,22 +204,22 @@ public class Ourcraft {
             });
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_W,
-                    (window, strength) -> window.getCamera().moveForeWard(-0.05f * strength)));
+                    (window, strength) -> window.getCamera().moveForeWard(-5f * strength)));
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_A,
-                    (window, strength) -> window.getCamera().moveLeft(0.05f * strength)));
+                    (window, strength) -> window.getCamera().moveLeft(5f * strength)));
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_S,
-                    (window, strength) -> window.getCamera().moveBackWard(0.05f * strength)));
+                    (window, strength) -> window.getCamera().moveBackWard(5f * strength)));
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_D,
-                    (window, strength) -> window.getCamera().moveRight(0.05f * strength)));
+                    (window, strength) -> window.getCamera().moveRight(5f * strength)));
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_SPACE,
-                    (window, strength) -> window.getCamera().moveUp(0.05f * strength)));
+                    (window, strength) -> window.getCamera().moveUp(5f * strength)));
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_LEFT_SHIFT,
-                    (window, strength) -> window.getCamera().moveUp(-0.05f * strength)));
+                    (window, strength) -> window.getCamera().moveUp(-5f * strength)));
 
             modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_H) {
                 @Override
@@ -283,4 +285,6 @@ public class Ourcraft {
     public static final VertexFormat position_color = new VertexFormat("ourcraft", "position_color", VertexFormat.TRIANGLES)
             .addPart("position", VertexFormat.FLOAT, 3)
             .addPart("color", VertexFormat.FLOAT, 4);
+
+    public static ChunkStream chainedChunkStream = new ChainedBlockChunkStream("");
 }

@@ -3,6 +3,9 @@ package dev.Hilligans.ourcraft.World.NewWorldSystem;
 import dev.Hilligans.ourcraft.Block.BlockState.IBlockState;
 import dev.Hilligans.ourcraft.Data.Other.BlockPos;
 import dev.Hilligans.ourcraft.Data.Other.BlockStates.BlockState;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -55,6 +58,8 @@ public interface IChunk {
 
     void setBlockState(long x, long y, long z, IBlockState blockState);
 
+    void setChunkPosition(long x, long y, long z);
+
     IWorld getWorld();
 
     boolean isEmpty();
@@ -85,4 +90,8 @@ public interface IChunk {
             }
         }
     }
+
+    default void free(@Nullable IWorld world) {}
+
+    default void set(@NotNull IWorld world) {}
 }

@@ -6,6 +6,7 @@ import dev.Hilligans.ourcraft.ServerMain;
 import dev.Hilligans.ourcraft.World.Chunk;
 import dev.Hilligans.ourcraft.Network.PacketData;
 import dev.Hilligans.ourcraft.Network.ServerNetworkHandler;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.IChunk;
 
 public class CRequestChunkPacket extends PacketBase {
 
@@ -38,18 +39,19 @@ public class CRequestChunkPacket extends PacketBase {
     @Override
     public void handle() {
         try {
+
             //System.out.println(ChunkX + ":" + ChunkZ);
             int dim = ServerNetworkHandler.getPlayerData(ctx).getDimension();
-            Chunk chunk = ServerMain.getWorld(dim).getOrGenerateChunk(ChunkX, ChunkZ);
+          /*  Chunk chunk = ServerMain.getWorld(dim).getOrGenerateChunk(ChunkX, ChunkZ);
             ServerMain.getWorld(dim).generateChunk(ChunkX + 1, ChunkZ);
             ServerMain.getWorld(dim).generateChunk(ChunkX - 1, ChunkZ);
             ServerMain.getWorld(dim).generateChunk(ChunkX, ChunkZ + 1);
             ServerMain.getWorld(dim).generateChunk(ChunkX, ChunkZ - 1);
-
+           */
+            IChunk chunk = ServerMain.getServer().newWorlds.get(dim).getChunkNonNull(ChunkX * 16L,0, ChunkZ * 16L);
             if (chunk != null) {
                 ServerNetworkHandler.sendPacket(new SSendChunkPacket(chunk), ctx);
             }
         } catch (Exception ignored) {}
     }
-
 }

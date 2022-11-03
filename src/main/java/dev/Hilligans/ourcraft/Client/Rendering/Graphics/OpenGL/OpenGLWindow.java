@@ -113,7 +113,6 @@ public class OpenGLWindow extends RenderWindow {
                 glfwSetCursorPos(window, halfWindowX, halfWindowY);
             }
         });
-
         glfwSetWindowSizeCallback(window, (window, w, h) -> {
             width = w;
             height = h;

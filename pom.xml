@@ -14,8 +14,8 @@
         <lwjgl.version>3.2.3</lwjgl.version>
         <lwjgl.natives>natives-linux</lwjgl.natives>
 
-        <maven.compiler.source>16</maven.compiler.source>
-        <maven.compiler.target>16</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
 

@@ -9,9 +9,12 @@ import dev.Hilligans.ourcraft.ModHandler.Events.Server.MultiPlayerServerStartEve
 import dev.Hilligans.ourcraft.Network.Packet.Client.CHandshakePacket;
 import dev.Hilligans.ourcraft.Network.Packet.Server.SDisconnectPacket;
 import dev.Hilligans.ourcraft.Network.PacketBase;
+import dev.Hilligans.ourcraft.Network.ServerNetwork;
 import dev.Hilligans.ourcraft.Network.ServerNetworkHandler;
 import dev.Hilligans.ourcraft.Network.ServerNetworkInit;
 import dev.Hilligans.ourcraft.Ourcraft;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.IServerWorld;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.IWorld;
 import dev.Hilligans.ourcraft.World.ServerWorld;
 import dev.Hilligans.ourcraft.World.World;
 import dev.Hilligans.ourcraft.Util.ConsoleReader;
@@ -31,6 +34,7 @@ public class MultiPlayerServer implements IServer {
     public long time = 0;
 
     public Int2ObjectOpenHashMap<World> worlds = new Int2ObjectOpenHashMap<>();
+    public Int2ObjectOpenHashMap<IWorld> newWorlds = new Int2ObjectOpenHashMap<>();
     public HashMap<ChannelHandlerContext, CHandshakePacket> waitingPlayers = new HashMap<>();
     public HashMap<String, Tuple<ChannelHandlerContext,Long>> playerQueue = new HashMap<>();
     public GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
@@ -44,8 +48,9 @@ public class MultiPlayerServer implements IServer {
         executorService1.scheduleAtFixedRate(new PlayerHandler(this), 0, 10, TimeUnit.MILLISECONDS);
         ConsoleReader consoleReader = new ConsoleReader(this::executeCommand);
 
+        ServerNetwork serverNetwork = new ServerNetwork(gameInstance.PROTOCOLS.get("Play"));
         try {
-            ServerNetworkInit.startServer(port);
+            serverNetwork.startServer(port);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -60,6 +65,15 @@ public class MultiPlayerServer implements IServer {
             }
         }
         worlds.put(id,world);
+    }
+
+    public void addWorld(IServerWorld world) {
+        for(int x = -Settings.renderDistance; x < Settings.renderDistance; x++) {
+            for(int z = -Settings.renderDistance; z < Settings.renderDistance; z++) {
+                world.getChunkNonNull(x * 16L,0,z * 16L);
+            }
+        }
+        newWorlds.put(world.getID(), world);
     }
 
     @Override

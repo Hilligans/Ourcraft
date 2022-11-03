@@ -98,9 +98,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
             x++;
         }
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        MemoryUtil.memFree(mesh.vertices);
-        MemoryUtil.memFree(mesh.indices);
+        mesh.destroy();
 
         meshReferences.put(VAO, mesh);
         meshData.put(VAO, new Tuple<>(GL_TRIANGLES, GL_UNSIGNED_INT));

@@ -93,7 +93,7 @@ public class Client {
     public InputHandler inputHandler;
     public IInputProvider mouseBind;
 
-    public int renderDistance = 32;
+    public int renderDistance = 8;
     public int renderYDistance = 1;
 
     public Client(GameInstance gameInstance) {

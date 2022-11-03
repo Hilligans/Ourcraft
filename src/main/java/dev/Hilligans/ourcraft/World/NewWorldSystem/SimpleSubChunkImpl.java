@@ -5,15 +5,13 @@ import dev.Hilligans.ourcraft.Block.Blocks;
 
 public class SimpleSubChunkImpl implements ISubChunk {
 
-   // public IBlockState[] blockStates;
-    public IBlockState[][][] blockStates;
+    public IBlockState[] blockStates;
 
     public int width;
     public int height;
 
     public SimpleSubChunkImpl(int width, int height) {
-     //   blockStates = new IBlockState[width*height*width];
-        blockStates = new IBlockState[width][height][width];
+        blockStates = new IBlockState[width*height*width];
         this.width = width;
         this.height = height;
     }
@@ -31,8 +29,7 @@ public class SimpleSubChunkImpl implements ISubChunk {
     @Override
     public IBlockState getBlockState(long x, long y, long z) {
         try {
-            IBlockState b = blockStates[(int) x][(int) y][(int) z];
-          //  IBlockState b =  blockStates[(int) ((x * width + y) * height + z)];
+            IBlockState b =  blockStates[(int) ((x * width + y) * height + z)];
             return b == null ? Blocks.AIR.getDefaultState1() : b;
         } catch (Exception e) {
            // e.printStackTrace();
@@ -43,10 +40,9 @@ public class SimpleSubChunkImpl implements ISubChunk {
     @Override
     public IBlockState setBlockState(long x, long y, long z, IBlockState blockState) {
         try {
-            return blockStates[(int) x][(int) y][(int) z] = blockState;
-         //   return blockStates[(int) ((x * width + y) * height + z)] = blockState;
+            return blockStates[(int) ((x * width + y) * height + z)] = blockState;
         } catch (Exception e) {
-        e.printStackTrace();
+            e.printStackTrace();
         }
         return null;
     }

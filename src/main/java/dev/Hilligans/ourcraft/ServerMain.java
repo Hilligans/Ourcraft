@@ -7,6 +7,8 @@ import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.Util.Side;
 import dev.Hilligans.ourcraft.World.Builders.OreBuilder;
 import dev.Hilligans.ourcraft.World.Chunk;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.IWorld;
+import dev.Hilligans.ourcraft.World.NewWorldSystem.SimpleServerWorld;
 import dev.Hilligans.ourcraft.World.ServerWorld;
 import dev.Hilligans.ourcraft.World.World;
 
@@ -39,8 +41,13 @@ public class ServerMain {
 
         server = new MultiPlayerServer();
         server.addWorld(0,world);
+        server.addWorld(new SimpleServerWorld(0, "server_world"));
         System.out.println("starting server");
         server.startServer("25588");
+    }
+
+    public static void newServer(GameInstance gameInstance) {
+
     }
 
     public static World getWorld(int id) {

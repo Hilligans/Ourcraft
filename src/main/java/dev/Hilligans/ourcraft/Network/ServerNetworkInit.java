@@ -23,7 +23,6 @@ import java.net.ServerSocket;
 public class ServerNetworkInit extends ChannelInitializer<SocketChannel> {
 
     public static void startServer(String port) throws Exception {
-        PacketBase.register();
         Container.register();
 
         final int PORT = Integer.parseInt(System.getProperty("port", port));
@@ -67,7 +66,7 @@ public class ServerNetworkInit extends ChannelInitializer<SocketChannel> {
 //        pipeline.addLast(new StringDecoder());
 
         // and then business logic.
-        pipeline.addLast(new ServerNetworkHandler());
+     //   pipeline.addLast(new ServerNetworkHandler());
     }
 
     public static final int MIN_PORT_NUMBER = 20000;

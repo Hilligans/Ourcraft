@@ -129,7 +129,14 @@ public abstract class RenderWindow {
         for(IInputProvider provider : inputHandler.inputProviders) {
             provider.tick();
         }
-        inputHandler.tick();
+        if(frameTracker.getFrame(0) == 0) {
+            return;
+        }
+        try {
+            inputHandler.tick(frameTracker.getFrame(0) / 1000f);
+        } catch (Exception e) {
+            System.out.println(frameTracker.getFrame(0));
+        }
     }
 
 }

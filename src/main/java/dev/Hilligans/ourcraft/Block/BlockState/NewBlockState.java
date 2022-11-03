@@ -77,4 +77,10 @@ public class NewBlockState implements IBlockState {
     public int getBlockID() {
         return block.id;
     }
+
+    @Override
+    public IBlockState setBlockStateID(int val) {
+        this.blockStateReferenceID = val;
+        return this;
+    }
 }

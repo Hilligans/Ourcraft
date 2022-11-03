@@ -169,11 +169,11 @@ public class GameInstance {
             IBlockStateTable table = new BlockStateTable(BLOCK_STATES,offset);
             block.setTable(table);
             builder.setBlock(block);
-            offset += builder.getSize();
             for(int x = 0; x < builder.getSize(); x++) {
                 builder.setBlock(block);
-                BLOCK_STATES.add(builder.build(x));
+                BLOCK_STATES.add(builder.build(x).setBlockStateID(offset));
             }
+            offset += builder.getSize();
         }
     }
 
@@ -373,7 +373,6 @@ public class GameInstance {
 
     public void registerDefaultContent() {
         Ourcraft.registerDefaultContent(OURCRAFT);
-        PacketBase.register();
         Container.register();
         Entity.register();
     }

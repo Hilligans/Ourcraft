@@ -28,6 +28,12 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketDat
     public static Int2ObjectOpenHashMap<ChannelId> mappedChannels = new Int2ObjectOpenHashMap<>();
     public static Int2ObjectOpenHashMap<ServerPlayerData> playerData = new Int2ObjectOpenHashMap<>();
 
+    public ServerNetwork network;
+
+    public ServerNetworkHandler(ServerNetwork network) {
+        this.network = network;
+    }
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         ctx.pipeline().get(SslHandler.class).handshakeFuture().addListener(
@@ -60,7 +66,7 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketDat
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, PacketData msg) throws Exception {
-        PacketBase packetBase = msg.createPacket();
+        PacketBase packetBase = msg.createPacket(network.receiveProtocol);
         if(!(packetBase instanceof CHandshakePacket)) {
             if (mappedId.getOrDefault(ctx.channel().id(), Integer.MIN_VALUE) == Integer.MIN_VALUE) {
                 ctx.close();

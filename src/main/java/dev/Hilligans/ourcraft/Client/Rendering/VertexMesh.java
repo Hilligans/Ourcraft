@@ -49,8 +49,11 @@ public class VertexMesh {
     public void addData(int[] indices, float[] vertices) {
         this.vertices = MemoryUtil.memAllocFloat(vertices.length).put(vertices).flip();
         this.indices = MemoryUtil.memAllocInt(indices.length).put(indices).flip();
-       // this.vertices = ByteBuffer.allocateDirect(vertices.length * 4).asFloatBuffer().put(vertices).flip().mark();
-       // this.indices = ByteBuffer.allocateDirect(indices.length * 4).asIntBuffer().put(indices).flip().mark();
+    }
+
+    public void destroy() {
+        MemoryUtil.memFree(vertices);
+        MemoryUtil.memFree(indices);
     }
 
     public VertexMesh setVertexFormat(String format) {

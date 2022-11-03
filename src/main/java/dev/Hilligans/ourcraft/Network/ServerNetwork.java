@@ -19,7 +19,7 @@ public class ServerNetwork extends Network {
     }
 
     public void startServer(String port) throws Exception {
-        networkHandler = new ServerNetworkHandler();
+        networkHandler = new ServerNetworkHandler(this);
 
         final int PORT = Integer.parseInt(System.getProperty("port", port));
 

@@ -88,6 +88,7 @@ public class Item implements IRecipeComponent, IRegistryElement {
     }
 
     public void renderHolding(RenderWindow window, MatrixStack matrixStack, int size, ItemStack itemStack) {
+       /*
         int x = (int) (window.getWindowWidth() / 16 * 12);
         int y = (int) (window.getWindowHeight() / 16 * 12);
 
@@ -119,6 +120,8 @@ public class Item implements IRecipeComponent, IRegistryElement {
         }
         glEnable(GL_DEPTH_TEST);
         drawString(window, matrixStack,x - size / 2,y,size/2,itemStack.count);
+
+        */
     }
 
     public void addData(PrimitiveBuilder primitiveBuilder, float size) {

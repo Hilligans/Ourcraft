@@ -80,7 +80,7 @@ public class SoundBuffer implements IRegistryElement {
         return decodeVorbis(source.gameInstance.getResourceDirect(new ResourceLocation(resource,source)),info);
     }
 
-    private  ShortBuffer decodeVorbis(ByteBuffer buffer, STBVorbisInfo info) {
+    private ShortBuffer decodeVorbis(ByteBuffer buffer, STBVorbisInfo info) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             IntBuffer intBuf = stack.mallocInt(1);
             long decoder = stb_vorbis_open_memory(buffer, intBuf, null);

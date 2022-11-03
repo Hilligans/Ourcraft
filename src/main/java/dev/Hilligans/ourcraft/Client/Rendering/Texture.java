@@ -61,8 +61,8 @@ public class Texture implements IRegistryElement {
 
         mesh.addData(indices, vertices);
 
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        defaultEngineImpl.drawAndDestroyMesh(window,null,matrixStack,mesh,textureId,ClientMain.getClient().shaderManager.shaderProgram);
+        //GL11.glDisable(GL11.GL_DEPTH_TEST);
+        defaultEngineImpl.drawAndDestroyMesh(window,null,matrixStack,mesh,textureId,shaderSource.program);
     }
 
     public void drawTexture(RenderWindow window, MatrixStack matrixStack, int x, int y, int width, int height) {
