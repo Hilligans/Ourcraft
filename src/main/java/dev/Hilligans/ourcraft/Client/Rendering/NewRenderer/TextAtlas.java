@@ -122,7 +122,7 @@ public class TextAtlas {
     public int upload(IGraphicsEngine<?,?,?> engine) {
         clear();
         assemble();
-        texture = engine.getDefaultImpl().createTexture(null,null,image);
+        texture = (int) engine.getDefaultImpl().createTexture(null,null,image);
         return texture;
     }
 

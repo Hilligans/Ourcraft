@@ -31,14 +31,15 @@ public class WindowRenderer {
             }
             vulkanWindow.frameManager.startDrawing(imageIndex.get(0));
 
-            VkSubmitInfo submitInfo = VkSubmitInfo.callocStack(memoryStack).sType(VK_STRUCTURE_TYPE_SUBMIT_INFO).waitSemaphoreCount(1).pWaitSemaphores(imageSemaphore.get(memoryStack));
+            VkSubmitInfo submitInfo = VkSubmitInfo.calloc().sType(VK_STRUCTURE_TYPE_SUBMIT_INFO).waitSemaphoreCount(1).pWaitSemaphores(imageSemaphore.get(memoryStack));
             submitInfo.pWaitDstStageMask(memoryStack.ints(VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT));
             submitInfo.pCommandBuffers(memoryStack.mallocPointer(1).put(0, vulkanWindow.commandBuffer.commandBuffers.get(imageIndex.get(0))));
             submitInfo.pSignalSemaphores(renderSemaphore.get(memoryStack));
 
             vkResetFences(vulkanWindow.device.device, vulkanWindow.frameManager.getFence());
 
-            if(vkQueueSubmit(vulkanWindow.graphicsFamily.getQueue(0).vkQueue,submitInfo, vulkanWindow.frameManager.imagesInFlight[vulkanWindow.frameManager.currentFrame]) != VK_SUCCESS) {
+         //   if(vkQueueSubmit(vulkanWindow.graphicsFamily.getQueue(0).vkQueue, submitInfo, vulkanWindow.frameManager.imagesInFlight[vulkanWindow.frameManager.currentFrame]) != VK_SUCCESS) {
+            if(vkQueueSubmit(vulkanWindow.graphicsFamily.getQueue(0).vkQueue, submitInfo, vulkanWindow.frameManager.getFencePointer()) != VK_SUCCESS) {
                 vulkanWindow.device.vulkanInstance.exit("Failed to submit to queue");
             }
 

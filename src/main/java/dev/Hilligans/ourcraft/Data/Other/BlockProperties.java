@@ -63,6 +63,11 @@ public class BlockProperties {
         return this;
     }
 
+    public BlockProperties translucent() {
+        this.translucent = true;
+        return this;
+    }
+
     public BlockProperties transparent(boolean transparent) {
         this.transparent = transparent;
         return this;

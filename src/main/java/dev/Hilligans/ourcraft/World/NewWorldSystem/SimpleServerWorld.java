@@ -9,6 +9,8 @@ import dev.Hilligans.ourcraft.Server.MultiPlayerServer;
 import dev.Hilligans.ourcraft.Util.Settings;
 import dev.Hilligans.ourcraft.World.Chunk;
 
+import java.util.Random;
+
 public class SimpleServerWorld extends SimpleWorld implements IServerWorld, IMethodResult {
 
     public MultiPlayerServer server;
@@ -18,11 +20,16 @@ public class SimpleServerWorld extends SimpleWorld implements IServerWorld, IMet
     }
 
     public IChunk getGeneratedChunk(int xx, int zz) {
+        Random random = new Random();
         IChunk chunk = new ClassicChunk(this, 256, xx, zz);
         for(int x = 0; x < 16; x++) {
             for(int y = 0; y < 64; y++) {
                 for(int z = 0; z < 16; z++) {
-                    chunk.setBlockState(x,y,z,Blocks.STONE.getDefaultState1());
+                    if(y < 60) {
+                        chunk.setBlockState(x, y, z, Blocks.STONE.getDefaultState1());
+                    } else {
+                        chunk.setBlockState(x, y, z, Blocks.RED.getDefaultState1());
+                    }
                 }
             }
         }

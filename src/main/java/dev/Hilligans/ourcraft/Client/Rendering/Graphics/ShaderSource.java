@@ -69,11 +69,11 @@ public class ShaderSource implements IRegistryElement {
 
     @Override
     public void loadGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine) {
-        program = graphicsEngine.getDefaultImpl().createProgram(null,this);
+        program = (int) graphicsEngine.getDefaultImpl().createProgram(null,this);
         if(uniformNames != null) {
             uniformIndexes = new int[uniformNames.length];
             for(int x = 0; x < uniformNames.length; x++) {
-                uniformIndexes[x] = graphicsEngine.getDefaultImpl().getUniformIndex(null, uniformNames[x], program);
+                uniformIndexes[x] = (int) graphicsEngine.getDefaultImpl().getUniformIndex(null, uniformNames[x], program);
             }
         }
     }

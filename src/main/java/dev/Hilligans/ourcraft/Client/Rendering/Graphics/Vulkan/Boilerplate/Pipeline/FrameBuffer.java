@@ -11,15 +11,15 @@ import static org.lwjgl.vulkan.VK10.*;
 public class FrameBuffer {
 
     public VulkanWindow vulkanWindow;
-    public VkFramebufferCreateInfo framebufferCreateInfo;
     public long frameBuffer;
 
     public FrameBuffer(VulkanWindow vulkanWindow, int index) {
         this.vulkanWindow = vulkanWindow;
-        framebufferCreateInfo = VkFramebufferCreateInfo.calloc();
-        framebufferCreateInfo.sType(VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO);
-        framebufferCreateInfo.renderPass(vulkanWindow.renderPass.renderPass);
         try (MemoryStack memoryStack = MemoryStack.stackPush()) {
+            VkFramebufferCreateInfo framebufferCreateInfo;
+            framebufferCreateInfo = VkFramebufferCreateInfo.calloc(memoryStack);
+            framebufferCreateInfo.sType(VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO);
+            framebufferCreateInfo.renderPass(vulkanWindow.renderPass.renderPass);
             LongBuffer longBuffer = memoryStack.longs(vulkanWindow.imageView.imageViews.get(index));
             framebufferCreateInfo.pAttachments(longBuffer);
             framebufferCreateInfo.width(vulkanWindow.vulkanWidth);

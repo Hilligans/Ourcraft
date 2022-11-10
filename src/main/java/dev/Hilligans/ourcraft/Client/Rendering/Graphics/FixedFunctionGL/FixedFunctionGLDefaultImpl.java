@@ -37,13 +37,13 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     public Int2IntOpenHashMap textureTypes = new Int2IntOpenHashMap();
     public Int2LongOpenHashMap vertexArrayObjects = new Int2LongOpenHashMap();
 
-    public int boundTexture = -1;
+    public long boundTexture = -1;
 
     public int meshPointer = 0;
 
     @Override
-    public void drawMesh(FixedFunctionGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, int texture, int program, int meshID, long indicesIndex, int length) {
-        VertexMesh mesh = meshes.get(meshID);
+    public void drawMesh(FixedFunctionGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, long texture, long program, long meshID, long indicesIndex, int length) {
+        VertexMesh mesh = meshes.get((int)meshID);
         VertexFormat format = mesh.vertexFormat;
         glBegin(format.primitiveType);
         int pos = format.getOffset("position");
@@ -78,7 +78,7 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     }
 
     @Override
-    public int createMesh(FixedFunctionGLWindow window, GraphicsContext graphicsContext, VertexMesh mesh) {
+    public long createMesh(FixedFunctionGLWindow window, GraphicsContext graphicsContext, VertexMesh mesh) {
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
@@ -88,29 +88,29 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     }
 
     @Override
-    public void destroyMesh(FixedFunctionGLWindow window, GraphicsContext graphicsContext, int mesh) {
-        meshes.remove(mesh);
+    public void destroyMesh(FixedFunctionGLWindow window, GraphicsContext graphicsContext, long mesh) {
+        meshes.remove((int)mesh);
     }
 
     @Override
-    public int createTexture(FixedFunctionGLWindow window, GraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format) {
+    public long createTexture(FixedFunctionGLWindow window, GraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format) {
         return 0;
     }
 
     @Override
-    public void destroyTexture(FixedFunctionGLWindow window, GraphicsContext graphicsContext, int texture) {
+    public void destroyTexture(FixedFunctionGLWindow window, GraphicsContext graphicsContext, long texture) {
 
     }
 
     @Override
-    public void drawAndDestroyMesh(FixedFunctionGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh, int texture, int program) {
+    public void drawAndDestroyMesh(FixedFunctionGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh, long texture, long program) {
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
         Matrix4f matrix4f = matrixStack.get();
         // if(texture != boundTexture) {
         //glBindTexture(textureTypes.get(texture), texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
+        glBindTexture(GL_TEXTURE_2D, (int)texture);
         boundTexture = texture;
         //  }
         glBegin(mesh.vertexFormat.primitiveType);
@@ -150,18 +150,18 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     }
 
     @Override
-    public int createProgram(GraphicsContext graphicsContext,ShaderSource shaderSource) {
+    public long createProgram(GraphicsContext graphicsContext,ShaderSource shaderSource) {
         return 0;
     }
 
     @Override
-    public void uploadData(GraphicsContext graphicsContext, FloatBuffer data, int index, String type, int program) {
+    public void uploadData(GraphicsContext graphicsContext, FloatBuffer data, long index, String type, long program) {
 
     }
 
 
     @Override
-    public int getUniformIndex(GraphicsContext graphicsContext, String name, int shader) {
+    public long getUniformIndex(GraphicsContext graphicsContext, String name, long shader) {
         return 0;
     }
 

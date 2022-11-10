@@ -43,34 +43,34 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     public Int2LongOpenHashMap vertexArrayObjects = new Int2LongOpenHashMap();
     public Int2ObjectOpenHashMap<VertexMesh> meshReferences = new Int2ObjectOpenHashMap<>();
 
-    public int boundTexture = -1;
-    public int boundProgram = -1;
+    public long boundTexture = -1;
+    public long boundProgram = -1;
 
     public OpenglDefaultImpl(OpenGLEngine engine) {
         this.engine = engine;
     }
 
     @Override
-    public void drawMesh(OpenGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, int texture, int program, int meshID, long indicesIndex, int length) {
-        Tuple<Integer, Integer> data = meshData.get(meshID);
+    public void drawMesh(OpenGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, long texture, long program, long meshID, long indicesIndex, int length) {
+        Tuple<Integer, Integer> data = meshData.get((int)meshID);
         if(texture != boundTexture) {
-            GL20.glBindTexture(textureTypes.get(texture), texture);
+            GL20.glBindTexture((Integer) textureTypes.get((int)texture), (int)texture);
             boundTexture = texture;
         }
-      //  if(program != boundProgram){
-            GL20.glUseProgram(program);
+        if(program != boundProgram){
+            GL20.glUseProgram((int) program);
             boundProgram = program;
-      //  }
+        }
 
         if(data == null) {
             return;
         }
-        glBindVertexArray(meshID);
+        glBindVertexArray((int)meshID);
         GL20.glDrawElements(data.typeA, length, data.typeB, indicesIndex);
     }
 
     @Override
-    public int createMesh(OpenGLWindow window, GraphicsContext graphicsContext, VertexMesh mesh) {
+    public long createMesh(OpenGLWindow window, GraphicsContext graphicsContext, VertexMesh mesh) {
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
@@ -107,14 +107,14 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public void destroyMesh(OpenGLWindow window, GraphicsContext graphicsContext, int mesh) {
-        long array = vertexArrayObjects.get(mesh);
-        meshData.remove(mesh);
+    public void destroyMesh(OpenGLWindow window, GraphicsContext graphicsContext, long mesh) {
+        long array = vertexArrayObjects.get((int)mesh);
+        meshData.remove((int)mesh);
         if((int)array != 0) {
             glDeleteBuffers((int) array);
         }
         glDeleteBuffers((int)(array >> 32));
-        glDeleteBuffers(mesh);
+        glDeleteBuffers((int)mesh);
     }
 
     private int getGLPrimitive(int type) {
@@ -122,7 +122,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public int createTexture(OpenGLWindow window, GraphicsContext graphicsContext, Image image) {
+    public long createTexture(OpenGLWindow window, GraphicsContext graphicsContext, Image image) {
         int texture = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -135,7 +135,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public int createTexture(OpenGLWindow window, GraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format) {
+    public long createTexture(OpenGLWindow window, GraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format) {
         int texture = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -148,13 +148,13 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public void destroyTexture(OpenGLWindow window, GraphicsContext graphicsContext, int texture) {
-        glDeleteTextures(texture);
-        textureTypes.remove(texture);
+    public void destroyTexture(OpenGLWindow window, GraphicsContext graphicsContext, long texture) {
+        glDeleteTextures((int)texture);
+        textureTypes.remove((int)texture);
     }
 
     @Override
-    public void drawAndDestroyMesh(OpenGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh, int texture, int program) {
+    public void drawAndDestroyMesh(OpenGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh, long texture, long program) {
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
@@ -162,19 +162,14 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         if(texture != boundTexture) {
             // GL20.glBindTexture(textureTypes.get(texture), texture);
             if (texture != 0) {
-                GL20.glBindTexture(GL_TEXTURE_2D, texture);
+                GL20.glBindTexture(GL_TEXTURE_2D, (int)texture);
                 boundTexture = texture;
             }
         }
-      //  if(program != boundProgram){
-            GL20.glUseProgram(program);
+        if(program != boundProgram){
+            GL20.glUseProgram((int)program);
             boundProgram = program;
-      //  }
-      //  matrixStack.applyTransformation(program);
-        //try(MemoryStack memoryStack = MemoryStack.stackPush()) {
-          //  uploadData(graphicsContext, memoryStack.floats(matrixStack.color.x, matrixStack.color.y, matrixStack.color.z, matrixStack.color.w), "4f");
-          //  uploadData(graphicsContext, matrixStack.get().get(memoryStack.mallocFloat(16)));
-        //}
+        }
         int VAO = glGenVertexArrays();
         int VBO = glGenBuffers();
         int EBO = glGenBuffers();
@@ -214,8 +209,8 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public int createProgram(GraphicsContext graphicsContext, ShaderSource shaderSource) {
-        String vertex =  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.vertexShader, shaderSource.modContent.getModID()));
+    public long createProgram(GraphicsContext graphicsContext, ShaderSource shaderSource) {
+        String vertex = engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.vertexShader, shaderSource.modContent.getModID()));
         String fragment = engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.fragmentShader, shaderSource.modContent.getModID()));
         String geometry = shaderSource.geometryShader == null ? null :  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.geometryShader, shaderSource.modContent.getModID()));
 
@@ -229,23 +224,23 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public void uploadData(GraphicsContext graphicsContext, FloatBuffer data, int index, String type, int program) {
+    public void uploadData(GraphicsContext graphicsContext, FloatBuffer data, long index, String type, long program) {
         //if(program != boundProgram) {
-            GL20.glUseProgram(program);
+            GL20.glUseProgram((int)program);
             boundProgram = program;
        // }
         if ("4fv".equals(type)) {
-            GL33.glUniformMatrix4fv(index, false, data);
+            GL33.glUniformMatrix4fv((int) index, false, data);
         } else if("4f".equals(type)) {
-            GL33.glUniform4fv(index, data);
+            GL33.glUniform4fv((int) index, data);
         } else {
             throw new RuntimeException();
         }
     }
 
     @Override
-    public int getUniformIndex(GraphicsContext graphicsContext, String name, int shader) {
-        return glGetUniformLocation(shader, name);
+    public long getUniformIndex(GraphicsContext graphicsContext, String name, long shader) {
+        return glGetUniformLocation((int) shader, name);
     }
 
     @Override

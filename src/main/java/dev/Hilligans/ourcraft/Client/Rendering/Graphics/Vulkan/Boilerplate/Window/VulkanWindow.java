@@ -9,6 +9,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipel
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.QueueFamily;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VkInterface;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanInstance;
+import dev.Hilligans.ourcraft.Ourcraft;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.shaderc.Shaderc;
@@ -77,11 +78,11 @@ public class VulkanWindow extends RenderWindow {
         renderPass = new RenderPass(this);
         viewport = new Viewport(this);
         vertexShader = new Shader(this, ShaderCompiler.compileShader(shader, Shaderc.shaderc_glsl_vertex_shader),VK_SHADER_STAGE_VERTEX_BIT);
-        vertexShader.set(new VertexShaderInput(this));
+        vertexShader.set(Ourcraft.position_RGB);
         buffer = new VertexBuffer(device);
-        buffer.putData(new float[] {0.0f, -0.8f, -1.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, -1.0f, 1.0f, 0.0f, 1.0f, -0.5f, 0.5f, 300.0f,  1.0f, 0.0f, 1.0f});
+        buffer.putData(new float[] {0.0f, -0.8f, 1.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, -0.5f, 0.5f, 1.0f,  1.0f, 0.0f, 1.0f});
         fragmentShader = new Shader(this,ShaderCompiler.compileShader(fragment,Shaderc.shaderc_glsl_fragment_shader),VK_SHADER_STAGE_FRAGMENT_BIT);
-        graphicsPipeline = new GraphicsPipeline(this);
+        graphicsPipeline = new GraphicsPipeline(this, renderPass, viewport);
         commandBuffer = new CommandBuffer(device,swapChain.size);
         for (int x = 0; x < swapChain.size; x++) {
             frameBuffers.add(new FrameBuffer(this,x));
@@ -114,7 +115,6 @@ public class VulkanWindow extends RenderWindow {
     }
 
     public void startDrawing() {
-        System.out.println("pee");
         frameManager = new FrameManager(this);
         while (!glfwWindowShouldClose(window)) {
             glfwPollEvents();
@@ -131,10 +131,10 @@ public class VulkanWindow extends RenderWindow {
             frameBuffer.cleanup();
         }
         graphicsPipeline.cleanup();
-        renderPass.cleanup();
+        renderPass.free();
         buffer.cleanup();
-        vertexShader.cleanup();
-        fragmentShader.cleanup();
+        vertexShader.free();
+        fragmentShader.free();
         imageView.cleanup();
         graphicsFamily.cleanup();
         commandBuffer.cleanup();
@@ -182,7 +182,7 @@ public class VulkanWindow extends RenderWindow {
 
     @Override
     public boolean shouldClose() {
-        return false;
+        return glfwWindowShouldClose(window);
     }
 
     @Override

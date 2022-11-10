@@ -33,7 +33,7 @@ public class Semaphore {
     }
 
     public LongBuffer get(MemoryStack memoryStack) {
-        return memoryStack.mallocLong(1).put(0,semaphore);
+        return memoryStack.mallocLong(1).put(0, semaphore);
     }
 
 

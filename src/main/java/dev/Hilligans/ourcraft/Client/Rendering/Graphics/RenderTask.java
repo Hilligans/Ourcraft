@@ -10,4 +10,7 @@ public abstract class RenderTask {
 
     public abstract void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack, float delta);
 
+    public void close() {
+    }
+
 }

@@ -54,7 +54,7 @@ public class Texture implements IRegistryElement {
         float minY = (float)startY / this.height;
         float maxX = (float)endX / this.width;
         float maxY = (float)endY / this.height;
-        float[] vertices = new float[] {x,y,-1,minX,minY,x,y + height,-1,minX,maxY,x + width,y,-1,maxX,minY,x + width,y + height,-1,maxX,maxY};
+        float[] vertices = new float[] {x,y,0,minX,minY,x,y + height,0,minX,maxY,x + width,y,0,maxX,minY,x + width,y + height,0,maxX,maxY};
         int[] indices = new int[] {0,1,2,2,1,3};
 
         VertexMesh mesh = new VertexMesh(shaderSource.vertexFormat);
@@ -152,6 +152,6 @@ public class Texture implements IRegistryElement {
     @Override
     public void loadGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine) {
         IRegistryElement.super.loadGraphics(graphicsEngine);
-        textureId = graphicsEngine.getDefaultImpl().createTexture(null,null, texture);
+        textureId = (int) graphicsEngine.getDefaultImpl().createTexture(null,null, texture);
     }
 }

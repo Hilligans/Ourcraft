@@ -14,6 +14,7 @@ public class SimpleWorld implements IWorld {
     public int worldID;
     public String worldName;
     public boolean randomTick = false;
+    public boolean isClientWorld = true;
 
     public float randomTickSpeed = 3f / (16*16*16);
 
@@ -81,6 +82,9 @@ public class SimpleWorld implements IWorld {
     public void setChunk(long blockX, long blockY, long blockZ, IChunk chunk) {
         IChunk oldChunk = chunkContainer.setChunk(blockX,blockY,blockZ,chunk);
         chunk.set(this);
+        if(isClientWorld) {
+            chunk.setDirty(true);
+        }
         if(oldChunk != null) {
             oldChunk.free(this);
         }

@@ -28,18 +28,18 @@ public class ImageView {
             viewCount = intBuffer.get(0);
 
             for(int x = 0; x < viewCount; x++) {
-                VkImageViewCreateInfo createInfo = VkImageViewCreateInfo.calloc();
+                VkImageViewCreateInfo createInfo = VkImageViewCreateInfo.calloc(memoryStack);
                 createInfo.sType(VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO);
                 createInfo.image(longBuffer.get(x));
                 createInfo.viewType(VK_IMAGE_VIEW_TYPE_2D);
                 createInfo.format(vulkanWindow.swapChain.surfaceFormat.format());
-                VkComponentMapping componentMapping = VkComponentMapping.calloc();
+                VkComponentMapping componentMapping = VkComponentMapping.calloc(memoryStack);
                 componentMapping.r(VK_COMPONENT_SWIZZLE_IDENTITY);
                 componentMapping.g(VK_COMPONENT_SWIZZLE_IDENTITY);
                 componentMapping.b(VK_COMPONENT_SWIZZLE_IDENTITY);
                 componentMapping.a(VK_COMPONENT_SWIZZLE_IDENTITY);
                 createInfo.components(componentMapping);
-                VkImageSubresourceRange subresourceRange = VkImageSubresourceRange.calloc();
+                VkImageSubresourceRange subresourceRange = VkImageSubresourceRange.calloc(memoryStack);
                 subresourceRange.aspectMask(VK_IMAGE_ASPECT_COLOR_BIT);
                 subresourceRange.baseMipLevel(0);
                 subresourceRange.levelCount(1);

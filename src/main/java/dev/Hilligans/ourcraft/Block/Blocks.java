@@ -16,6 +16,7 @@ public class Blocks {
     public static final Block AIR = new Block("air", new BlockProperties().transparent().airBlock().canWalkThrough());
     public static final Block STONE = new Block("stone",new BlockProperties().withTexture("stone.png"));
 
+    public static final Block RED = new Block("red", new BlockProperties().withTexture("red.png").translucent().transparent());
     public static final Block DIRT = new Block("dirt",new BlockProperties().withTexture("dirt.png"));
     public static final Block GRASS = new Block("grass", new BlockProperties().withTexture("grass_side.png").withSidedTexture("grass_block.png",Block.UP).withSidedTexture("dirt.png",Block.DOWN)).setBlockDrop(Blocks.DIRT);
     public static final Block BEDROCK = new Block( "bedrock",new BlockProperties().withTexture("bedrock.png"));

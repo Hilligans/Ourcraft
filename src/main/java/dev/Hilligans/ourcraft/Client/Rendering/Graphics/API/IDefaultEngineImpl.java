@@ -18,51 +18,51 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
     default void close() {
     }
 
-    void drawMesh(T window, Q graphicsContext, MatrixStack matrixStack, int texture, int program, int meshID, long indicesIndex, int length);
+    void drawMesh(T window, Q graphicsContext, MatrixStack matrixStack, long texture, long program, long meshID, long indicesIndex, int length);
 
-    int createMesh(T window, Q graphicsContext, VertexMesh mesh);
+    long createMesh(T window, Q graphicsContext, VertexMesh mesh);
 
-    void destroyMesh(T window, Q graphicsContext, int mesh);
+    void destroyMesh(T window, Q graphicsContext, long mesh);
 
-    default int createTexture(T window, Q graphicsContext, Image image) {
+    default long createTexture(T window, Q graphicsContext, Image image) {
         return createTexture(window, graphicsContext, image.getBuffer(), image.getWidth(), image.getHeight(), image.format);
     }
 
-    int createTexture(T window, Q graphicsContext, ByteBuffer buffer, int width, int height, int format);
+    long createTexture(T window, Q graphicsContext, ByteBuffer buffer, int width, int height, int format);
 
-    void destroyTexture(T window, Q graphicsContext, int texture);
+    void destroyTexture(T window, Q graphicsContext, long texture);
 
-    void drawAndDestroyMesh(T window, Q graphicsContext, MatrixStack matrixStack, VertexMesh mesh, int texture, int program);
+    void drawAndDestroyMesh(T window, Q graphicsContext, MatrixStack matrixStack, VertexMesh mesh, long texture, long program);
 
     void setState(T window, Q graphicsContext, PipelineState state);
 
-    int createProgram(Q graphicsContext, ShaderSource shaderSource);
+    long createProgram(Q graphicsContext, ShaderSource shaderSource);
 
-    void uploadData(Q graphicsContext, FloatBuffer data, int index, String type, int program);
+    void uploadData(Q graphicsContext, FloatBuffer data, long index, String type, long program);
 
-    int getUniformIndex(Q graphicsContext, String name, int shader);
+    long getUniformIndex(Q graphicsContext, String name, long shader);
 
-    default void drawMesh(Object window, Object graphicsContext, MatrixStack matrixStack, int texture, int program, int meshID, long indicesIndex, int length) {
+    default void drawMesh(Object window, Object graphicsContext, MatrixStack matrixStack, long texture, long program, long meshID, long indicesIndex, int length) {
         drawMesh((T) window, (Q) graphicsContext, matrixStack, texture, program, meshID, indicesIndex, length);
     }
 
-    default int createMesh(Object window, Object graphicsContext, VertexMesh mesh) {
+    default long createMesh(Object window, Object graphicsContext, VertexMesh mesh) {
         return createMesh((T) window, (Q) graphicsContext, mesh);
     }
 
-    default int createTexture(Object window, Object graphicsContext, Image image) {
+    default long createTexture(Object window, Object graphicsContext, Image image) {
         return createTexture((T) window, (Q) graphicsContext, image);
     }
 
-    default int createTexture(Object window, Object graphicsContext, ByteBuffer buffer, int width, int height, int format) {
+    default long createTexture(Object window, Object graphicsContext, ByteBuffer buffer, int width, int height, int format) {
         return createTexture((T) window, (Q) graphicsContext, buffer, width, height, format);
     }
 
-    default void destroyTexture(Object window, Object graphicsContext, int texture) {
+    default void destroyTexture(Object window, Object graphicsContext, long texture) {
         destroyTexture((T) window, (Q) graphicsContext, texture);
     }
 
-    default void drawAndDestroyMesh(Object window, Object graphicsContext, MatrixStack matrixStack, VertexMesh mesh, int texture, int program) {
+    default void drawAndDestroyMesh(Object window, Object graphicsContext, MatrixStack matrixStack, VertexMesh mesh, long texture, long program) {
         drawAndDestroyMesh((T) window, (Q) graphicsContext, matrixStack, mesh, texture, program);
     }
 
@@ -70,17 +70,17 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
         setState((T) window, (Q) graphicsContext, state);
     }
 
-    default void uploadData(Object graphicsContext, FloatBuffer data, int index, String type, int program) {
+    default void uploadData(Object graphicsContext, FloatBuffer data, long index, String type, long program) {
         uploadData((Q) graphicsContext, data, index, type, program);
     }
 
-    default void uploadData(Object graphicsContext, float[] data, int index, String type, int program) {
+    default void uploadData(Object graphicsContext, float[] data, long index, String type, long program) {
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             uploadData((Q) graphicsContext, memoryStack.floats(data), index, type, program);
         }
     }
 
-    default int getUniformIndex(Object graphicsContext, String name, int shader) {
+    default long getUniformIndex(Object graphicsContext, String name, long shader) {
         return getUniformIndex((Q) graphicsContext, name, shader);
     }
 

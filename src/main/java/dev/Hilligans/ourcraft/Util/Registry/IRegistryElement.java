@@ -33,4 +33,6 @@ public interface IRegistryElement {
     }
 
     default void loadGraphics(IGraphicsEngine<?,?,?> graphicsEngine) {}
+
+    default void close() {}
 }

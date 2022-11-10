@@ -153,7 +153,7 @@ public class Chunk implements IMeshSource, IChunk {
                 }
             }
         }
-        int id = graphicsEngine.getDefaultImpl().createMesh(null,null,primitiveBuilder.toVertexMesh().setVertexFormat("position_color_texture"));
+        int id = (int) graphicsEngine.getDefaultImpl().createMesh(null,null,primitiveBuilder.toVertexMesh().setVertexFormat("position_color_texture"));
         solidMesh.set(id,primitiveBuilder.indices.size());
     }
 

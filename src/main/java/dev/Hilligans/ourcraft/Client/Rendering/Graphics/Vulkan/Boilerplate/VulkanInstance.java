@@ -146,8 +146,8 @@ public class VulkanInstance {
     }
 
     public void exit(String reason) {
-        new VulkanEngineException(reason).printStackTrace();
-        System.exit(0);
+        throw new VulkanEngineException(reason);
+        //System.exit(0);
     }
 
 }

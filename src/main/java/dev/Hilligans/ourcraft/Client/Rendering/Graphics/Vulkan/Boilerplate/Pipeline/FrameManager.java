@@ -38,6 +38,10 @@ public class FrameManager {
         return MemoryUtil.memAllocLong(1).put(0,vkFences[currentFrame]);
     }
 
+    public long getFencePointer() {
+        return vkFences[currentFrame];
+    }
+
     public Semaphore getImageSemaphore() {
         return imageAvailableSemaphores[currentFrame];
     }
@@ -64,7 +68,7 @@ public class FrameManager {
     private void createSyncData() {
         try {
             try (MemoryStack memoryStack = MemoryStack.stackPush()) {
-                VkFenceCreateInfo createInfo = VkFenceCreateInfo.callocStack(memoryStack).sType(VK_STRUCTURE_TYPE_FENCE_CREATE_INFO).flags(VK_FENCE_CREATE_SIGNALED_BIT);
+                VkFenceCreateInfo createInfo = VkFenceCreateInfo.calloc(memoryStack).sType(VK_STRUCTURE_TYPE_FENCE_CREATE_INFO).flags(VK_FENCE_CREATE_SIGNALED_BIT);
                 LongBuffer longBuffer = memoryStack.mallocLong(1);
                 for (int x = 0; x < MAX_FRAMES_IN_FLIGHT; x++) {
                     if (vkCreateFence(vulkanWindow.device.device, createInfo, null, longBuffer) != VK_SUCCESS) {

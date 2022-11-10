@@ -75,6 +75,8 @@ public class VulkanProperties {
         for (String string : validationLayers) {
             if (availableLayers.containsKey(string)) {
                 layersToEnable.add(string);
+            } else {
+                System.out.println("Validation layer " + string + " was requested but not found.");
             }
         }
         PointerBuffer pointerBuffer = memoryStack.callocPointer(layersToEnable.size());

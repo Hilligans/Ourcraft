@@ -17,6 +17,7 @@ import org.joml.Matrix4d;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.system.MemoryUtil;
 
 import java.io.IOException;
 import java.util.function.Consumer;
@@ -42,10 +43,6 @@ public class ClientMain {
         gameInstance.handleArgs(args);
         gameInstance.side = Side.CLIENT;
         gameInstance.loadContent();
-
-        Consumer<EntityFetcher> r = gameInstance::registerEntities;
-
-        new GameResourceTable().createMap(gameInstance);
 
         if(argumentContainer.getBoolean("--integratedServer", false)) {
             try {

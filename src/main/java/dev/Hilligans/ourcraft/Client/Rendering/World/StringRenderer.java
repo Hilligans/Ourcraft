@@ -209,7 +209,7 @@ public class StringRenderer {
                 TextureAtlas textureAtlas = textureAtlases.get(val);
                 if(textureAtlas != null) {
                     Image image = textureAtlas.toImage();
-                    textureAtlas.glTextureId = window.getEngineImpl().createTexture(window,null,image);
+                    textureAtlas.glTextureId = (int) window.getEngineImpl().createTexture(window,null,image);
                     texturesBuilt.put(val, (Boolean) true);
                 }
             }

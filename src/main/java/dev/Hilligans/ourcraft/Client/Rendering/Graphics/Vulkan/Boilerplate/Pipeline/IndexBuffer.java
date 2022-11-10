@@ -4,22 +4,26 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Logic
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
-import org.lwjgl.vulkan.*;
+import org.lwjgl.vulkan.VkBufferCreateInfo;
+import org.lwjgl.vulkan.VkMemoryAllocateInfo;
+import org.lwjgl.vulkan.VkMemoryRequirements;
+import org.lwjgl.vulkan.VkPhysicalDeviceMemoryProperties;
 
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 
 import static org.lwjgl.vulkan.VK10.*;
 
-public class VertexBuffer {
+public class IndexBuffer {
+
 
     public LogicalDevice device;
     public long buffer;
     public long memory;
-    public FloatBuffer vertices;
+    public IntBuffer indices;
 
-    public VertexBuffer(LogicalDevice device) {
+    public IndexBuffer(LogicalDevice device) {
         this.device = device;
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             VkBufferCreateInfo createInfo = VkBufferCreateInfo.callocStack(memoryStack);
@@ -44,25 +48,25 @@ public class VertexBuffer {
                 device.vulkanInstance.exit("failed to allocate memory");
             }
             memory = pos.get(0);
-            vkBindBufferMemory(device.device,buffer, memory,0);
+            vkBindBufferMemory(device.device,buffer,memory,0);
         }
     }
 
-    public VertexBuffer putData(float[] vertices) {
+    public IndexBuffer putData(int[] indices) {
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             PointerBuffer pos = memoryStack.mallocPointer(1);
-            vkMapMemory(device.device, memory, 0, vertices.length, 0, pos);
-            this.vertices = MemoryUtil.memFloatBuffer(pos.get(0),vertices.length).put(vertices);
+            vkMapMemory(device.device, memory, 0, indices.length, 0, pos);
+            this.indices = MemoryUtil.memIntBuffer(pos.get(0),indices.length).put(indices);
             vkUnmapMemory(device.device,memory);
         }
         return this;
     }
 
-    public VertexBuffer putData(FloatBuffer vertices) {
+    public IndexBuffer putData(IntBuffer indices) {
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             PointerBuffer pos = memoryStack.mallocPointer(1);
-            vkMapMemory(device.device, memory, 0, vertices.remaining(), 0, pos);
-            this.vertices = MemoryUtil.memFloatBuffer(pos.get(0),vertices.remaining()).put(vertices);
+            vkMapMemory(device.device, memory, 0, indices.remaining(), 0, pos);
+            this.indices = MemoryUtil.memIntBuffer(pos.get(0),indices.remaining()).put(indices);
             vkUnmapMemory(device.device,memory);
         }
         return this;
@@ -100,7 +104,8 @@ public class VertexBuffer {
     }
 
     public void cleanup() {
-        vkDestroyBuffer(device.device, buffer,null);
+        vkDestroyBuffer(device.device,buffer,null);
         vkFreeMemory(device.device, memory, null);
     }
+
 }

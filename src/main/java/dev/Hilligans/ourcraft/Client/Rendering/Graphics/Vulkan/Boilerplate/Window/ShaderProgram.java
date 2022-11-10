@@ -26,7 +26,4 @@ public class ShaderProgram {
         pipelineCreateInfo.topology(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
         pipelineCreateInfo.primitiveRestartEnable(false);
     }
-
-
-
 }

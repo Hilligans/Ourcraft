@@ -38,6 +38,4 @@ public class VertexBufferManager {
             vkFreeMemory(device.device, buffer.typeB, null);
         }
     }
-
-
 }

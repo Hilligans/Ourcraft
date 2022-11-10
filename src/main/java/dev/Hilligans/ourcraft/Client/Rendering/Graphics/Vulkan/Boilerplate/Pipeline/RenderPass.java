@@ -5,6 +5,9 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Windo
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.*;
 
+import java.nio.LongBuffer;
+
+import static org.lwjgl.vulkan.KHRSwapchain.VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 import static org.lwjgl.vulkan.VK10.*;
 
 public class RenderPass {
@@ -14,7 +17,6 @@ public class RenderPass {
 
     public VkPipelineRasterizationStateCreateInfo createInfo;
     public VkPipelineMultisampleStateCreateInfo sampleCreateInfo;
-    public VkPipelineColorBlendAttachmentState colorPipeline;
 
     public VkPipelineColorBlendStateCreateInfo colorBlend;
     public long renderPass;
@@ -38,11 +40,12 @@ public class RenderPass {
             sampleCreateInfo.sampleShadingEnable(false);
             sampleCreateInfo.rasterizationSamples(VK_SAMPLE_COUNT_1_BIT);
 
+            VkPipelineColorBlendAttachmentState colorPipeline;
             colorPipeline = VkPipelineColorBlendAttachmentState.calloc();
             colorPipeline.colorWriteMask(VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT);
             colorPipeline.blendEnable(false);
 
-            VkPipelineDynamicStateCreateInfo dynamicStateCreateInfo = VkPipelineDynamicStateCreateInfo.calloc();
+            VkPipelineDynamicStateCreateInfo dynamicStateCreateInfo = VkPipelineDynamicStateCreateInfo.calloc(memoryStack);
             dynamicStateCreateInfo.sType(VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO);
             dynamicStateCreateInfo.pDynamicStates(memoryStack.ints(VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_LINE_WIDTH));
 
@@ -59,39 +62,101 @@ public class RenderPass {
             colorBlend.blendConstants(1, 0.0f);
             colorBlend.blendConstants(2, 0.0f);
             colorBlend.blendConstants(3, 0.0f);
+
+            ////////////////////
+
+            VkAttachmentDescription attachmentDescription = VkAttachmentDescription.calloc(memoryStack);
+            attachmentDescription.format(vulkanWindow.swapChain.surfaceFormat.format());
+            attachmentDescription.samples(VK_SAMPLE_COUNT_1_BIT);
+            attachmentDescription.loadOp(VK_ATTACHMENT_LOAD_OP_CLEAR);
+            attachmentDescription.storeOp(VK_ATTACHMENT_STORE_OP_STORE);
+
+            attachmentDescription.stencilLoadOp(VK_ATTACHMENT_LOAD_OP_DONT_CARE);
+            attachmentDescription.stencilStoreOp(VK_ATTACHMENT_STORE_OP_DONT_CARE);
+            attachmentDescription.initialLayout(VK_IMAGE_LAYOUT_UNDEFINED);
+            attachmentDescription.finalLayout(VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+
+
+            VkAttachmentReference.Buffer attachmentReference = VkAttachmentReference.calloc(1, memoryStack);
+            attachmentReference.get(0).layout(VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+            attachmentReference.get(0).attachment(0);
+
+            VkSubpassDescription description = VkSubpassDescription.calloc(memoryStack);
+            description.pipelineBindPoint(VK_PIPELINE_BIND_POINT_GRAPHICS);
+            description.colorAttachmentCount(1);
+            description.pColorAttachments(attachmentReference);
+
+            VkSubpassDependency dependency = VkSubpassDependency.calloc(memoryStack);
+            dependency.srcSubpass(VK_SUBPASS_EXTERNAL);
+            dependency.dstSubpass(0);
+            dependency.srcStageMask(VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
+            dependency.srcAccessMask(0);
+            dependency.dstStageMask(VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
+            dependency.dstAccessMask(VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT);
+
+            VkAttachmentDescription.Buffer descriptionBuffer = VkAttachmentDescription.calloc(1, memoryStack);
+            descriptionBuffer.put(0, attachmentDescription);
+            VkSubpassDescription.Buffer subpassBuffer = VkSubpassDescription.calloc(1, memoryStack);
+            subpassBuffer.put(0, description);
+
+            VkSubpassDependency.Buffer dependencies = VkSubpassDependency.calloc(1, memoryStack);
+            dependencies.put(0, dependency);
+
+
+            VkPipelineInputAssemblyStateCreateInfo pipelineInputAssemblyStateCreateInfo = VkPipelineInputAssemblyStateCreateInfo.calloc(memoryStack);
+            pipelineInputAssemblyStateCreateInfo.primitiveRestartEnable(false);
+            pipelineInputAssemblyStateCreateInfo.sType(VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO);
+            pipelineInputAssemblyStateCreateInfo.topology(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+
+            VkRenderPassCreateInfo renderPassInfo = VkRenderPassCreateInfo.calloc(memoryStack);
+            renderPassInfo.sType(VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO);
+            renderPassInfo.pAttachments(descriptionBuffer);
+            renderPassInfo.pSubpasses(subpassBuffer);
+            renderPassInfo.pDependencies(dependencies);
+
+            LongBuffer longBuffer = memoryStack.mallocLong(1);
+            if (vkCreateRenderPass(vulkanWindow.device.device, renderPassInfo, null, longBuffer) != VK_SUCCESS) {
+                System.err.println("Failed to create render pass");
+            }
+            renderPass = longBuffer.get(0);
         }
     }
 
     public void createRenderPass(int index,VertexBuffer vertexBuffer) {
-        VkRenderPassBeginInfo renderPassBeginInfo = VkRenderPassBeginInfo.calloc();
-        renderPassBeginInfo.sType(VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO);
-        renderPassBeginInfo.renderPass(renderPass);
-        renderPassBeginInfo.framebuffer(vulkanWindow.frameBuffers.get(index).frameBuffer);
+        try (MemoryStack memoryStack = MemoryStack.stackPush()) {
+            VkRenderPassBeginInfo renderPassBeginInfo = VkRenderPassBeginInfo.calloc(memoryStack);
+            renderPassBeginInfo.sType(VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO);
+            renderPassBeginInfo.renderPass(renderPass);
+            renderPassBeginInfo.framebuffer(vulkanWindow.frameBuffers.get(index).frameBuffer);
 
 
-        renderPassBeginInfo.renderArea(a -> a.extent().set(vulkanWindow.vulkanWidth, vulkanWindow.vulkanHeight));
-        VkClearValue vkClearValue = VkClearValue.calloc();
-        vkClearValue.color(VkInterface.clearValue(0,1,0,1));
-        VkClearValue.Buffer buffer = VkClearValue.calloc(1);
-        buffer.put(0,vkClearValue);
-        renderPassBeginInfo.pClearValues(buffer);
+            renderPassBeginInfo.renderArea(a -> a.extent().set(vulkanWindow.vulkanWidth, vulkanWindow.vulkanHeight));
+            VkClearValue vkClearValue = VkClearValue.calloc(memoryStack);
+            vkClearValue.color(VkInterface.clearValue(0, 1, 0, 1));
+            VkClearValue.Buffer buffer = VkClearValue.calloc(1, memoryStack);
+            buffer.put(0, vkClearValue);
+            renderPassBeginInfo.pClearValues(buffer);
 
-        vkCmdBeginRenderPass(vulkanWindow.commandBuffer.commandBufferList.get(index),renderPassBeginInfo,VK_SUBPASS_CONTENTS_INLINE);
-        vkCmdBindPipeline(vulkanWindow.commandBuffer.commandBufferList.get(index),VK_PIPELINE_BIND_POINT_GRAPHICS, vulkanWindow.graphicsPipeline.pipeline);
-        try(MemoryStack memoryStack = MemoryStack.stackPush()) {
-            vkCmdBindVertexBuffers(vulkanWindow.commandBuffer.commandBufferList.get(index), 0, memoryStack.longs(vertexBuffer.buffer),memoryStack.longs(0));
+            vkCmdBeginRenderPass(vulkanWindow.commandBuffer.commandBufferList.get(index), renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+            vkCmdBindPipeline(vulkanWindow.commandBuffer.commandBufferList.get(index), VK_PIPELINE_BIND_POINT_GRAPHICS, vulkanWindow.graphicsPipeline.pipeline);
+            vkCmdBindVertexBuffers(vulkanWindow.commandBuffer.commandBufferList.get(index), 0, memoryStack.longs(vertexBuffer.buffer), memoryStack.longs(0));
         }
-        vkCmdDraw(vulkanWindow.commandBuffer.commandBufferList.get(index),3,1,0,0);
+        vkCmdDraw(vulkanWindow.commandBuffer.commandBufferList.get(index), 3, 1, 0, 0);
 
 
         vkCmdEndRenderPass(vulkanWindow.commandBuffer.commandBufferList.get(index));
         vkEndCommandBuffer(vulkanWindow.commandBuffer.commandBufferList.get(index));
     }
 
-    public void cleanup() {
-        vkDestroyRenderPass(vulkanWindow.device.device,renderPass,null);
-        pipelineLayout.cleanup();
+    public void freeInit() {
+        createInfo.free();
+        sampleCreateInfo.free();
+        colorBlend.pAttachments().free();
+        colorBlend.free();
     }
 
-
+    public void free() {
+        vkDestroyRenderPass(vulkanWindow.device.device,renderPass,null);
+        pipelineLayout.free();
+    }
 }

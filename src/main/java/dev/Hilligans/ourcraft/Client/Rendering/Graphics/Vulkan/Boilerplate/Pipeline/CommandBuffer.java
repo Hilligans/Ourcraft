@@ -21,20 +21,21 @@ public class CommandBuffer {
     public ArrayList<VkCommandBuffer> commandBufferList = new ArrayList<>();
 
     public CommandBuffer(LogicalDevice device, int size) {
+
         this.device = device;
         this.commandPool = new CommandPool(device);
-        VkCommandBufferAllocateInfo commandBufferAllocateInfo = VkCommandBufferAllocateInfo.calloc();
-        commandBufferAllocateInfo.sType(VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO);
-        commandBufferAllocateInfo.commandPool(commandPool.commandPool);
-        commandBufferAllocateInfo.level(VK_COMMAND_BUFFER_LEVEL_PRIMARY);
-        commandBufferAllocateInfo.commandBufferCount(size);
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
+            VkCommandBufferAllocateInfo commandBufferAllocateInfo = VkCommandBufferAllocateInfo.calloc(memoryStack);
+            commandBufferAllocateInfo.sType(VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO);
+            commandBufferAllocateInfo.commandPool(commandPool.commandPool);
+            commandBufferAllocateInfo.level(VK_COMMAND_BUFFER_LEVEL_PRIMARY);
+            commandBufferAllocateInfo.commandBufferCount(size);
             commandBuffers = MemoryUtil.memAllocPointer(size);
             if (vkAllocateCommandBuffers(device.device, commandBufferAllocateInfo, commandBuffers) != VK_SUCCESS) {
                 device.vulkanInstance.exit("Failed to allocate command buffers");
             }
             for (int x = 0; x < commandBuffers.capacity(); x++) {
-                VkCommandBufferBeginInfo vkCommandBufferBeginInfo = VkCommandBufferBeginInfo.callocStack(memoryStack);
+                VkCommandBufferBeginInfo vkCommandBufferBeginInfo = VkCommandBufferBeginInfo.calloc(memoryStack);
                 vkCommandBufferBeginInfo.sType(VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO);
                 VkCommandBuffer vkCommandBuffer = new VkCommandBuffer(commandBuffers.get(x), device.device);
                 commandBufferList.add(vkCommandBuffer);
@@ -67,5 +68,6 @@ public class CommandBuffer {
 
     public void cleanup() {
         commandPool.cleanup();
+        MemoryUtil.memFree(commandBuffers);
     }
 }

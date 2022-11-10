@@ -22,7 +22,9 @@ public class VertexFormat implements IRegistryElement {
     }
 
     public VertexFormat addPart(String name, int primitiveType, int primitiveCount) {
-        parts.add(new VertexPart(name, primitiveType, primitiveCount));
+        VertexPart part = new VertexPart(name, primitiveType, primitiveCount);
+        part.offset = getStride();
+        parts.add(part);
         return this;
     }
 
@@ -96,6 +98,8 @@ public class VertexFormat implements IRegistryElement {
         public int primitiveSize;
         public int primitiveCount;
         public int primitiveType;
+
+        public int offset;
 
         public boolean normalized;
 

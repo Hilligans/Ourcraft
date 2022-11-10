@@ -51,7 +51,8 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
 
     @Override
     public void close() {
-        vulkanInstance.exit("closing");
+        vulkanInstance.cleanup();
+        //vulkanInstance.exit("closing");
     }
 
     @Override
@@ -80,7 +81,7 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
     }
 
     public static VulkanInstance getVulkanInstance() {
-        return getVulkanInstance(new VulkanProperties(ClientMain.argumentContainer).warningValidation().errorValidation().addValidationLayers("VK_LAYER_KHRONOS_validation", "VK_LAYER_KHRONOS_validation").enableValidationLayers());
+        return getVulkanInstance(new VulkanProperties(ClientMain.argumentContainer).warningValidation().errorValidation().addValidationLayers("VK_LAYER_KHRONOS_validation").verboseValidation().enableValidationLayers());
     }
 
     public static VulkanInstance getVulkanInstance(VulkanProperties vulkanProperties) {

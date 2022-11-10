@@ -73,7 +73,7 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
 
     default RenderWindow startEngine() {
         RenderWindow window = setup();
-        getGameInstance().build(this);
+        //getGameInstance().build(this);
         return window;
     }
 

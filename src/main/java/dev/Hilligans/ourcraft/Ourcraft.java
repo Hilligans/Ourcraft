@@ -80,7 +80,9 @@ public class Ourcraft {
         modContent.registerResourceLoader(new LitematicaSchematicLoader());
 
         modContent.registerBlocks(AIR,STONE,DIRT,GRASS,BEDROCK,IRON_ORE,LEAVES,LOG,SAND,CACTUS,CHEST,COLOR_BLOCK,STAIR_BLOCK,GRASS_PLANT,WEEPING_VINE,MAPLE_LOG,MAPLE_PLANKS,PINE_LOG,PINE_PLANKS,SPRUCE_LOG,SPRUCE_PLANKS,BIRCH_LOG,BIRCH_PLANKS,OAK_LOG,OAK_PLANKS,WILLOW_LOG,WILLOW_PLANKS,ACACIA_LOG,ACACIA_PLANKS,POPLAR_LOG,POPLAR_PLANKS,ELM_LOG,ELM_WOOD,PALM_LOG,PALM_WOOD,REDWOOD_LOG,REDWOOD_WOOD,SAPLING);
+        modContent.registerBlock(RED);
         modContent.registerBiome(Biomes.PLAINS,Biomes.SANDY_HILLS,Biomes.DESERT,Biomes.FOREST);
+
         Sounds.reg();
         modContent.registerSounds(Sounds.BLOCK_BREAK, Sounds.MUSIC);
         //modContent.registerTexture(Textures.TEXTURES.toArray(new Texture[0]));
@@ -221,6 +223,9 @@ public class Ourcraft {
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_LEFT_SHIFT,
                     (window, strength) -> window.getCamera().moveUp(-5f * strength)));
 
+            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_DOWN,
+                    (window, strength) -> window.getCamera().addRotation(0.1f * strength,0)));
+
             modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_H) {
                 @Override
                 public void press(RenderWindow renderWindow, float strength) {
@@ -285,6 +290,10 @@ public class Ourcraft {
     public static final VertexFormat position_color = new VertexFormat("ourcraft", "position_color", VertexFormat.TRIANGLES)
             .addPart("position", VertexFormat.FLOAT, 3)
             .addPart("color", VertexFormat.FLOAT, 4);
+
+    public static final VertexFormat position_RGB = new VertexFormat("ourcraft", "position_RGB", VertexFormat.TRIANGLES)
+            .addPart("position", VertexFormat.FLOAT, 3)
+            .addPart("color", VertexFormat.FLOAT, 3);
 
     public static ChunkStream chainedChunkStream = new ChainedBlockChunkStream("");
 }
