@@ -131,6 +131,7 @@ public class Client {
         }
         authNetwork.sendPacket(new CGetToken(playerData.userName, playerData.login_token));
         RenderWindow window = graphicsEngine.startEngine();
+        window.setClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         soundEngine.init();
         soundEngine.setAttenuationModel(AL11.AL_LINEAR_DISTANCE_CLAMPED);
         registerKeyHandlers();

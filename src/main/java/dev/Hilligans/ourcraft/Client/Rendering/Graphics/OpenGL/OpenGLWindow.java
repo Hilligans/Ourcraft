@@ -7,6 +7,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.FrameTracker;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Implementations.FreeCamera;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.ScreenShot;
+import org.joml.Vector4f;
 import org.lwjgl.opengl.GL30;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -21,6 +22,7 @@ public class OpenGLWindow extends RenderWindow {
     public boolean windowFocused = true;
     public float width;
     public float height;
+    public Vector4f clearColor = new Vector4f();
 
     public OpenGLWindow(Client client, OpenGLEngine engine, String name, int width, int height) {
         super(engine);
@@ -94,6 +96,11 @@ public class OpenGLWindow extends RenderWindow {
     @Override
     public String getWindowingName() {
         return "glfw";
+    }
+
+    @Override
+    public void setClearColor(float r, float g, float b, float a) {
+        this.clearColor.set(r,g,b,a);
     }
 
     public void registerCallbacks() {

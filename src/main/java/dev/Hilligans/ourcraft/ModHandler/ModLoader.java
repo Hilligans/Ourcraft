@@ -34,6 +34,10 @@ public class ModLoader {
         this.gameInstance = gameInstance;
     }
 
+    public ModContent requestMod(String modID) {
+        return new ModContent(modID, gameInstance);
+    }
+
     public void loadDefaultMods() {
         loadAllMods(new File("mods/"));
         if(true) {
@@ -74,7 +78,7 @@ public class ModLoader {
                         if(modID != null) {
                             System.out.println("yes");
                             this.mod = modID;
-                            ModContent modContent = new ModContent(modID,gameInstance);
+                            ModContent modContent = requestMod(modID);
                             modContent.isJar = false;
                             modContent.path = folder.getPath();
                             FolderResourceDirectory resourceDirectory = new FolderResourceDirectory(new File("target/classes/"));
@@ -103,7 +107,7 @@ public class ModLoader {
                 Class<?> testClass = Class.forName(name,false,child);
                 String modID = getModID(testClass);
                 if(modID != null) {
-                    ModContent modContent = new ModContent(modID,gameInstance);
+                    ModContent modContent = requestMod(modID);
                     modContent.path = name;
                     ZipResourceDirectory zipResourceDirectory = new ZipResourceDirectory(new ZipFile(file.getPath()), file.getPath());
                     JSONObject jsonObject = getContent(zipResourceDirectory);

@@ -1,5 +1,6 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline;
 
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.Shader;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.Viewport;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.VulkanWindow;
 import org.lwjgl.opengl.GL;
@@ -18,7 +19,7 @@ public class GraphicsPipeline {
     public VulkanWindow vulkanWindow;
     public long pipeline;
 
-    public GraphicsPipeline(VulkanWindow vulkanWindow, RenderPass renderPass, Viewport viewport) {
+    public GraphicsPipeline(VulkanWindow vulkanWindow, RenderPass renderPass, Viewport viewport, Shader vertexShader, Shader fragmentShader) {
         this.vulkanWindow = vulkanWindow;
 
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
@@ -32,8 +33,8 @@ public class GraphicsPipeline {
             VkGraphicsPipelineCreateInfo graphicsPipelineCreateInfo = VkGraphicsPipelineCreateInfo.calloc(memoryStack);
             graphicsPipelineCreateInfo.sType(VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO);
             VkPipelineShaderStageCreateInfo.Buffer stageCreateInfosBuffer = VkPipelineShaderStageCreateInfo.calloc(2, memoryStack);
-            stageCreateInfosBuffer.put(0, vulkanWindow.vertexShader.shaderCreateInfo);
-            stageCreateInfosBuffer.put(1, vulkanWindow.fragmentShader.shaderCreateInfo);
+            stageCreateInfosBuffer.put(0, vertexShader.shaderCreateInfo);
+            stageCreateInfosBuffer.put(1, fragmentShader.shaderCreateInfo);
             graphicsPipelineCreateInfo.pStages(stageCreateInfosBuffer);
             graphicsPipelineCreateInfo.pVertexInputState(vulkanWindow.vertexShader.stateCreateInfo);
             graphicsPipelineCreateInfo.pInputAssemblyState(pipelineInputAssemblyStateCreateInfo);

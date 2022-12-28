@@ -24,6 +24,7 @@ public class RenderPass {
 
     public RenderPass(VulkanWindow vulkanWindow) {
         this.vulkanWindow = vulkanWindow;
+
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             createInfo = VkPipelineRasterizationStateCreateInfo.calloc();
             createInfo.sType(VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO);
@@ -122,7 +123,29 @@ public class RenderPass {
         }
     }
 
-    public void createRenderPass(int index,VertexBuffer vertexBuffer) {
+    public void startRenderPass(VulkanWindow window, FrameBuffer frameBuffer, VkCommandBuffer commandBuffer) {
+        try (MemoryStack memoryStack = MemoryStack.stackPush()) {
+            VkRenderPassBeginInfo renderPassBeginInfo = VkRenderPassBeginInfo.calloc(memoryStack);
+            renderPassBeginInfo.sType(VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO);
+            renderPassBeginInfo.renderPass(renderPass);
+            renderPassBeginInfo.framebuffer(frameBuffer.frameBuffer);
+
+            renderPassBeginInfo.renderArea(a -> a.extent().set(vulkanWindow.vulkanWidth, vulkanWindow.vulkanHeight));
+            VkClearValue vkClearValue = VkClearValue.calloc(memoryStack);
+            vkClearValue.color(VkInterface.clearValue(window.clearColor.x, window.clearColor.y, window.clearColor.z, window.clearColor.w));
+            VkClearValue.Buffer buffer = VkClearValue.calloc(1, memoryStack);
+            buffer.put(0, vkClearValue);
+            renderPassBeginInfo.pClearValues(buffer);
+
+            vkCmdBeginRenderPass(commandBuffer, renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+        }
+    }
+
+    public void endRenderPass(VkCommandBuffer commandBuffer) {
+        vkCmdEndRenderPass(commandBuffer);
+    }
+
+    public void createRenderPass(int index, VertexBuffer vertexBuffer) {
         try (MemoryStack memoryStack = MemoryStack.stackPush()) {
             VkRenderPassBeginInfo renderPassBeginInfo = VkRenderPassBeginInfo.calloc(memoryStack);
             renderPassBeginInfo.sType(VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO);

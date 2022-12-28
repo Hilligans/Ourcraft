@@ -58,6 +58,7 @@ public class Item implements IRecipeComponent, IRegistryElement {
     }
 
     public void render(MatrixStack matrixStack, int x, int y, int size, ItemStack itemStack) {
+        /*
         size *= 2;
         size -= Settings.guiSize * 2;
         x += Settings.guiSize;
@@ -85,6 +86,8 @@ public class Item implements IRecipeComponent, IRegistryElement {
         glEnable(GL_DEPTH_TEST);
         //TODO fix
         //drawString(matrixStack,x - size / 2,y,size/2,itemStack.count);
+
+         */
     }
 
     public void renderHolding(RenderWindow window, MatrixStack matrixStack, int size, ItemStack itemStack) {

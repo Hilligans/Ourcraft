@@ -83,7 +83,7 @@ public class ItemEntity extends Entity {
 
     @Override
     public void render(MatrixStack matrixStack) {
-        matrixStack.push();
+        /*matrixStack.push();
         if(id == -1) {
             createMesh();
         }
@@ -98,9 +98,11 @@ public class ItemEntity extends Entity {
         } else {
             matrixStack.translate(0, (float) (-0.00125 * (ClientMain.getClient().getRenderTime() % 200) + 0.125f), 0);
         }
-        matrixStack.applyTransformation(ClientMain.getClient().shaderManager.colorShader);
-        glDrawElements(GL_TRIANGLES, verticesCount,GL_UNSIGNED_INT,0);
+        //matrixStack.applyTransformation(ClientMain.getClient().shaderManager.colorShader);
+        //glDrawElements(GL_TRIANGLES, verticesCount,GL_UNSIGNED_INT,0);
         matrixStack.pop();
+
+         */
     }
 
     @Override

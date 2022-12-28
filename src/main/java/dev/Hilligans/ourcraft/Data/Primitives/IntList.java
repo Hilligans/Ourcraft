@@ -19,7 +19,7 @@ public class IntList {
 
     public int[] elementData;
 
-    private int size;
+    public int size;
 
     protected int modCount = 0;
 
@@ -70,11 +70,11 @@ public class IntList {
         return minCapacity;
     }
 
-    private void ensureCapacityInternal(int minCapacity) {
+    public void ensureCapacityInternal(int minCapacity) {
         ensureExplicitCapacity(calculateCapacity(elementData, minCapacity));
     }
 
-    private void ensureExplicitCapacity(int minCapacity) {
+    public void ensureExplicitCapacity(int minCapacity) {
         modCount++;
         if (minCapacity - elementData.length > 0)
             grow(minCapacity);

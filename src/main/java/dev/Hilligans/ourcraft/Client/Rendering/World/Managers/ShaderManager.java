@@ -4,6 +4,7 @@ import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Shader;
 import dev.Hilligans.ourcraft.Util.Util;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL41;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -16,17 +17,7 @@ import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 public class ShaderManager {
 
     //public int shaderProgram;
-    public int colorShader;
-    //public int opaqueColorShader;
-    //public int transparentColorShader;
-    //public int lineShader;
-
-  //  public static Shader particleShader = new Shader(Util.particleVertexShader,Util.particleFragmentShader)
-  //          .addShaderElement(GL_FLOAT,3,false)
-  //          .addShaderElement(GL_FLOAT,2,false);
-  //  public static Shader particleShader1 = new Shader(readShader("/Shaders/ParticleVertexShader.glsl"),readShader("/Shaders/test1.glsl"),readShader("/Shaders/ParticleFragmentShader.glsl")).addShaderElement(GL_FLOAT,3,false).addShaderElement(GL_FLOAT,4,false).addShaderElement(GL_FLOAT,1,false);
-
-  //  public static Shader particleShader2 = new Shader(readShader("/Shaders/Particle/ParticleVertexShader.glsl"),readShader("/Shaders/Particle/ParticleFragmentShader.glsl")).addShaderElement(GL_FLOAT,4,false).addShaderElement(GL_FLOAT,1,false);
+    //public int colorShader;
 
     public static Shader worldShader = new Shader(readShader("/Shaders/WorldVertexShader.glsl"),readShader("/Shaders/WorldFragmentShader.glsl")).addShaderElement(GL_FLOAT,3,false).addShaderElement(GL_FLOAT,4,false).addShaderElement(GL_FLOAT,2,false);
     //  .addShaderElement(GL_FLOAT,1,false);
@@ -34,7 +25,7 @@ public class ShaderManager {
 
     public ShaderManager() {
         //shaderProgram = ShaderManager.registerShader(Util.shader,Util.fragmentShader1);
-        colorShader = ShaderManager.registerShader(Util.coloredShader,Util.fragmentShader1);
+        //colorShader = ShaderManager.registerShader(Util.coloredShader,Util.fragmentShader1);
         //transparentColorShader = colorShader;
         //opaqueColorShader = ShaderManager.registerShader(Util.coloredShader,Util.fragmentShader2);
         //lineShader = ShaderManager.registerShader(Util.lineShader, Util.lineFragment);
@@ -79,6 +70,55 @@ public class ShaderManager {
         return shaderProgram;
     }
 
+    public static int registerShader(String vertexShader, String fragmentShader, String tessControlShader, String tessEvalShader) {
+        int vertex =  GL30.glCreateShader(GL30.GL_VERTEX_SHADER);
+        int fragment = GL30.glCreateShader(GL20.GL_FRAGMENT_SHADER);
+        int tess_control = GL41.glCreateShader(GL41.GL_TESS_CONTROL_SHADER);
+        int tess_eval = GL41.glCreateShader(GL41.GL_TESS_EVALUATION_SHADER);
+
+        glShaderSource(vertex, vertexShader);
+        glShaderSource(fragment,fragmentShader);
+        glShaderSource(tess_control, tessControlShader);
+        glShaderSource(tess_eval, tessEvalShader);
+
+        glCompileShader(vertex);
+        glCompileShader(fragment);
+        glCompileShader(tess_control);
+        glCompileShader(tess_eval);
+
+        if(GL30.glGetShaderi(vertex, GL20.GL_COMPILE_STATUS) == 0) {
+            System.out.println("Failed to compile vertex shader \n" + vertexShader);
+        }
+        if(GL30.glGetShaderi(fragment, GL20.GL_COMPILE_STATUS) == 0) {
+            System.out.println("Failed to compile fragment shader \n" + fragmentShader);
+        }
+        if(GL30.glGetShaderi(tess_control, GL20.GL_COMPILE_STATUS) == 0) {
+            System.out.println("Failed to compile tessellation control shader \n" + tessControlShader);
+        }
+        if(GL30.glGetShaderi(tess_eval, GL20.GL_COMPILE_STATUS) == 0) {
+            System.out.println("Failed to compile tessellation evaluation shader \n" + tessEvalShader);
+        }
+
+        int shaderProgram = glCreateProgram();
+        glAttachShader(shaderProgram,vertex);
+        glAttachShader(shaderProgram,fragment);
+        glAttachShader(shaderProgram,tess_control);
+        glAttachShader(shaderProgram,tess_eval);
+        glLinkProgram(shaderProgram);
+
+        glDetachShader(shaderProgram,vertex);
+        glDetachShader(shaderProgram,fragment);
+        glDetachShader(shaderProgram,tess_control);
+        glDetachShader(shaderProgram,tess_eval);
+
+        glDeleteShader(vertex);
+        glDeleteShader(fragment);
+        glDeleteShader(tess_control);
+        glDeleteShader(tess_eval);
+
+        return shaderProgram;
+    }
+
     public static int registerShader(String vertexShader, String geometryShader, String fragmentShader) {
         int vertex =  GL30.glCreateShader(GL30.GL_VERTEX_SHADER);
         int geometry = GL30.glCreateShader(GL_GEOMETRY_SHADER);
@@ -111,4 +151,6 @@ public class ShaderManager {
         glDeleteShader(fragment);
         return shaderProgram;
     }
+
+
 }

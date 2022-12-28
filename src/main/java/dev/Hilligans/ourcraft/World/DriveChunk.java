@@ -87,7 +87,7 @@ public class DriveChunk extends Chunk {
             load();
         }
         time = System.currentTimeMillis();
-        super.render(matrixStack);
+        //super.render(matrixStack);
     }
 
     public synchronized void destroy() {
@@ -216,6 +216,5 @@ public class DriveChunk extends Chunk {
             load();
         }
         time = System.currentTimeMillis();
-        super.buildMesh1();
     }
 }

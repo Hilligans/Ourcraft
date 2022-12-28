@@ -52,33 +52,6 @@ public class SubChunk {
         }
     }
 
-    public void createMesh1() {
-        PrimitiveBuilder primitiveBuilder = getMeshBuilder();
-        verticesCount = primitiveBuilder.indices.size();
-        id = VAOManager.createVAO(primitiveBuilder);
-    }
-
-    public PrimitiveBuilder getMeshBuilder() {
-        PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
-        for(int x = 0; x < 16; x++) {
-            for(int y = 0; y < 16; y++) {
-                for(int z = 0; z < 16; z++) {
-                    BlockState block = getBlock(x,y,z);
-                    for(int a = 0; a < 6; a++) {
-                        if(block.getBlock() != Blocks.AIR) {
-                            BlockState blockState = getBlock(new BlockPos(x, y, z).add(Block.getBlockPos(block.getBlock().getSide(block,a))));
-                            if ((blockState.getBlock().blockProperties.transparent && (Settings.renderSameTransparent || block.getBlock() != blockState.getBlock())) || block.getBlock().blockProperties.alwaysRender) {
-                                block.getBlock().addVertices(primitiveBuilder,a,1.0f,block,new BlockPos(x + this.x,y + this.y,z + this.z),x,z);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return primitiveBuilder;
-    }
-
-
     public void destroy() {
         if(id != -1 && id != -2 && id != -3) {
             VAOManager.destroyBuffer(id);
@@ -149,7 +122,7 @@ public class SubChunk {
             }
         }
         if (id == -1) {
-            createMesh1();
+           // createMesh1();
         }
 
         if (verticesCount != 0) {

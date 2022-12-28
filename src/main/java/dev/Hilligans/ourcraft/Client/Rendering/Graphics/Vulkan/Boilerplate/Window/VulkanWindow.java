@@ -10,6 +10,8 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Queue
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VkInterface;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanInstance;
 import dev.Hilligans.ourcraft.Ourcraft;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.shaderc.Shaderc;
@@ -55,6 +57,8 @@ public class VulkanWindow extends RenderWindow {
 
     public VkExtent2D extent2D = VkExtent2D.calloc();
 
+    public Vector4f clearColor = new Vector4f();
+
     public VulkanWindow(VulkanInstance vulkanInstance, int width, int height, IGraphicsEngine<?,?,?> graphicsEngine) {
         super(graphicsEngine);
         windowRenderer = new WindowRenderer(this);
@@ -82,7 +86,7 @@ public class VulkanWindow extends RenderWindow {
         buffer = new VertexBuffer(device);
         buffer.putData(new float[] {0.0f, -0.8f, 1.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, -0.5f, 0.5f, 1.0f,  1.0f, 0.0f, 1.0f});
         fragmentShader = new Shader(this,ShaderCompiler.compileShader(fragment,Shaderc.shaderc_glsl_fragment_shader),VK_SHADER_STAGE_FRAGMENT_BIT);
-        graphicsPipeline = new GraphicsPipeline(this, renderPass, viewport);
+        graphicsPipeline = new GraphicsPipeline(this, renderPass, viewport, vertexShader, fragmentShader);
         commandBuffer = new CommandBuffer(device,swapChain.size);
         for (int x = 0; x < swapChain.size; x++) {
             frameBuffers.add(new FrameBuffer(this,x));
@@ -119,7 +123,9 @@ public class VulkanWindow extends RenderWindow {
         while (!glfwWindowShouldClose(window)) {
             glfwPollEvents();
             //buffer.vertices.put(2,-buffer.vertices.get(2));
-            windowRenderer.render();
+
+            windowRenderer.render(commandBuffer.get(0));
+            //windowRenderer.render();
         }
         cleanup();
     }
@@ -218,5 +224,10 @@ public class VulkanWindow extends RenderWindow {
     @Override
     public String getWindowingName() {
         return "glfw";
+    }
+
+    @Override
+    public void setClearColor(float r, float g, float b, float a) {
+        this.clearColor.set(r,g,b,a);
     }
 }

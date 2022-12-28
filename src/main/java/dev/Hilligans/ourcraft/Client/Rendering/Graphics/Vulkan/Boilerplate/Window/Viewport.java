@@ -1,5 +1,6 @@
 package dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window;
 
+import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.vulkan.VkPipelineViewportStateCreateInfo;
 import org.lwjgl.vulkan.VkRect2D;
 import org.lwjgl.vulkan.VkViewport;
@@ -30,9 +31,11 @@ public class Viewport {
         viewportCreateInfo.pViewports(viewportBuffer);
         viewportCreateInfo.scissorCount(1);
         viewportCreateInfo.pScissors(scissorBuffer);
-
     }
 
-
-
+    public void free() {
+        scissor.free();
+        vkViewport.free();
+        viewportCreateInfo.free();
+    }
 }

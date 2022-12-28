@@ -212,11 +212,44 @@ public class NewWorldRenderTask extends RenderTaskSource {
                 return primitiveBuilder;
             }
 
+            public PrimitiveBuilder getPrimitiveBuilder(IChunk chunk, PrimitiveBuilder primitiveBuilder) {
+                primitiveBuilder = (primitiveBuilder == null ? new PrimitiveBuilder(shaderSource.vertexFormat) : primitiveBuilder);
+                for(int x = 0; x < chunk.getWidth(); x++) {
+                    for(int y = chunk.getHeight() - 1; y >= 0; y--) {
+                        for(int z = 0; z < chunk.getWidth(); z++) {
+                            IBlockState block = chunk.getBlockState1(x,y,z);
+                            if(block.getBlock() != Blocks.AIR && !block.getBlock().blockProperties.translucent) {
+                                for (int a = 0; a < 6; a++) {
+                                    BlockPos p = new BlockPos(x, y, z).add(Block.getBlockPos(block.getBlock().getSide(block, a)));
+                                    IBlockState newState;
+                                    if (!p.inRange(0, 0, 0, 16, 255, 16)) {
+                                        newState = chunk.getWorld().getBlockState(p.add(chunk.getBlockX(), chunk.getBlockY(), chunk.getBlockZ()));
+                                    } else {
+                                        newState = chunk.getBlockState1(new BlockPos(x, y, z).add(Block.getBlockPos(block.getBlock().getSide(block, a))));
+                                    }
+                                    if (newState.getBlock().blockProperties.transparent && (Settings.renderSameTransparent || block.getBlock() != newState.getBlock()) || block.getBlock().blockProperties.alwaysRender) {
+                                        block.getBlock().addVertices(primitiveBuilder, a, 1f, block, new BlockPos(x + chunk.getX(), y + chunk.getY(), z + chunk.getY()), x, z);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return primitiveBuilder;
+            }
+
+            public PrimitiveBuilder primitiveBuilder = null;
             public void buildMesh(RenderWindow window, GraphicsContext graphicsContext, IChunk chunk) {
-                PrimitiveBuilder primitiveBuilder = getPrimitiveBuilder(chunk);
+                long start = System.currentTimeMillis();
+                primitiveBuilder = getPrimitiveBuilder(chunk, primitiveBuilder);
                 primitiveBuilder.setVertexFormat(shaderSource.vertexFormat);
                 int meshID = (int) window.getGraphicsEngine().getDefaultImpl().createMesh(window, graphicsContext, primitiveBuilder.toVertexMesh());
                 meshes.setChunk(chunk.getX(),chunk.getY(),chunk.getZ(),new MeshHolder().set(meshID,primitiveBuilder.indices.size()));
+                primitiveBuilder.size = 0;
+                primitiveBuilder.vertices.size = 0;
+                primitiveBuilder.indices.size = 0;
+                long end = System.currentTimeMillis();
+                System.out.println("Time to build:" + (end - start));
             }
         };
     }

@@ -7,9 +7,13 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.PipelineState;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.ShaderSource;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline.GraphicsPipeline;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline.IndexBuffer;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline.RenderPass;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline.VertexBuffer;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.Shader;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.ShaderCompiler;
+import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.Viewport;
 import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.VulkanWindow;
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Client.Rendering.Texture;
@@ -45,6 +49,7 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
             vkCmdBindPipeline(graphicsContext.getBuffer(),VK_PIPELINE_BIND_POINT_GRAPHICS, program);
             graphicsContext.program = program;
         }
+
         if(texture != graphicsContext.texture) {
         }
 
@@ -97,13 +102,18 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     public long createProgram(VulkanGraphicsContext graphicsContext, ShaderSource shaderSource) {
         String vertex =  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.vertexShader, shaderSource.modContent.getModID()));
         String fragment = engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.fragmentShader, shaderSource.modContent.getModID()));
-        String geometry = shaderSource.geometryShader == null ? null :  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.geometryShader, shaderSource.modContent.getModID()));
 
-        ByteBuffer vertexShader = ShaderCompiler.compileShader(vertex,ShaderCompiler.VERTEX_SHADER);
-        ByteBuffer fragmentShader = ShaderCompiler.compileShader(fragment,ShaderCompiler.FRAGMENT_SHADER);
-        ByteBuffer geometryShader = geometry != null ? ShaderCompiler.compileShader(geometry,ShaderCompiler.GEOMETRY_SHADER) : null;
+      //  ByteBuffer geometryShader = geometry != null ? ShaderCompiler.compileShader(geometry,ShaderCompiler.GEOMETRY_SHADER) : null;
 
-        return 0;
+        RenderPass renderPass = new RenderPass(graphicsContext.window);
+        Viewport viewport = new Viewport(graphicsContext.window);
+
+        Shader vertexShader = new Shader(graphicsContext.window, ShaderCompiler.compileShader(vertex,ShaderCompiler.VERTEX_SHADER), VK_SHADER_STAGE_VERTEX_BIT);
+        Shader fragmentShader = new Shader(graphicsContext.window, ShaderCompiler.compileShader(fragment,ShaderCompiler.FRAGMENT_SHADER), VK_SHADER_STAGE_FRAGMENT_BIT);
+
+        GraphicsPipeline graphicsPipeline = new GraphicsPipeline(graphicsContext.window, renderPass, viewport, vertexShader, fragmentShader);
+
+        return graphicsPipeline.pipeline;
     }
 
     @Override

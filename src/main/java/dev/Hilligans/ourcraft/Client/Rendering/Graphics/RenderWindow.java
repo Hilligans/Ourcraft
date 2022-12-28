@@ -12,6 +12,10 @@ import dev.Hilligans.ourcraft.Client.Rendering.Graphics.Implementations.PlayerCa
 import dev.Hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.Hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 import dev.Hilligans.ourcraft.Util.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2f;
+import org.joml.Vector4f;
 
 import java.util.ArrayList;
 
@@ -84,6 +88,8 @@ public abstract class RenderWindow {
 
     public void setMousePosition(float x, float y) {}
 
+    public void setClearColor(float r, float g, float b, float a) {}
+
     public Image renderToImage() {
         return null;
     }
@@ -105,12 +111,31 @@ public abstract class RenderWindow {
         renderPipeline.build(this);
     }
 
+    @NotNull
     public IDefaultEngineImpl<?,?> getEngineImpl() {
         return graphicsEngine.getDefaultImpl();
     }
 
+    @NotNull
     public IGraphicsEngine<?,?,?> getGraphicsEngine() {
         return graphicsEngine;
+    }
+
+    public boolean hasSubWindow() {
+        return false;
+    }
+
+    @Nullable
+    public RenderWindow[] getSubWindows() {
+        return null;
+    }
+
+    public Vector4f getViewport() {
+        return new Vector4f(0, 0, getWindowWidth(), getWindowHeight());
+    }
+
+    public Vector2f getScissor() {
+        return new Vector2f(0,0);
     }
 
     public void setupInputs() {
@@ -138,5 +163,4 @@ public abstract class RenderWindow {
             System.out.println(frameTracker.getFrame(0));
         }
     }
-
 }

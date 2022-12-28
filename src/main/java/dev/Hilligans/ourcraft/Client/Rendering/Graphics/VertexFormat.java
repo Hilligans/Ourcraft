@@ -10,7 +10,6 @@ public class VertexFormat implements IRegistryElement {
     public String formatName;
     public String modID;
 
-
     public ArrayList<VertexPart> parts = new ArrayList<>();
 
     public int primitiveType;

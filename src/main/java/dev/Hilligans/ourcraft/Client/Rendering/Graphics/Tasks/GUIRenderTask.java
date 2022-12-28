@@ -61,11 +61,11 @@ public class GUIRenderTask extends RenderTaskSource {
                     stringRenderer.drawStringInternal(window,screenStack, "Y:" + client.rWindow.camera.getCameraPos().y, client.windowX / 2, 387,0.5f);
                     stringRenderer.drawStringInternal(window,screenStack, "Z:" + client.rWindow.camera.getCameraPos().z, client.windowX / 2, 416,0.5f);
                 }
-                ItemStack stack = client.playerData.inventory.getItem(client.playerData.handSlot);
-                if (stack != null && stack.item != null) {
-                    int width = (int) (32 * Settings.guiSize);
+              //  ItemStack stack = client.playerData.inventory.getItem(client.playerData.handSlot);
+             //   if (stack != null && stack.item != null) {
+             //       int width = (int) (32 * Settings.guiSize);
                   //  stack.item.renderHolding(window, screenStack, width, stack);
-                }
+             //   }
 
               //  InventoryScreen.drawHotbar(window, screenStack);
               //  ChatWindow.render1(window, screenStack);
@@ -75,14 +75,14 @@ public class GUIRenderTask extends RenderTaskSource {
                 if (client.screen != null) {
                     client.screen.render(window, screenStack);
                   //  client.playerData.heldStack.renderStack(screenStack, (int) (Camera.newX - Settings.guiSize * 8), (int) (Camera.newY - Settings.guiSize * 8));
-                } else {
+                } //else {
                    // Textures.CURSOR.drawCenteredTexture(window, screenStack,1.0f);
-                    if (KeyHandler.keyPressed[GLFW_KEY_TAB]) {
-                        if (client.playerList != null) {
+                 //   if (KeyHandler.keyPressed[GLFW_KEY_TAB]) {
+                //        if (client.playerList != null) {
                           //  client.playerList.render(screenStack);
-                        }
-                    }
-                }
+                //        }
+               //     }
+             //   }
             }
         };
     }

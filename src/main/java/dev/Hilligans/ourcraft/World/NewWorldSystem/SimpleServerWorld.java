@@ -23,13 +23,20 @@ public class SimpleServerWorld extends SimpleWorld implements IServerWorld, IMet
         Random random = new Random();
         IChunk chunk = new ClassicChunk(this, 256, xx, zz);
         for(int x = 0; x < 16; x++) {
-            for(int y = 0; y < 64; y++) {
+            for(int y = 0; y < chunk.getHeight(); y++) {
                 for(int z = 0; z < 16; z++) {
-                    if(y < 60) {
+                  /*  if(y < 60) {
                         chunk.setBlockState(x, y, z, Blocks.STONE.getDefaultState1());
                     } else {
-                        chunk.setBlockState(x, y, z, Blocks.RED.getDefaultState1());
+                        if(y % 2 == 0) {
+                            chunk.setBlockState(x, y, z, Blocks.RED.getDefaultState1());
+                        } else {
+                            chunk.setBlockState(x, y, z, Blocks.AIR.getDefaultState1());
+                        }
                     }
+
+                   */
+                    chunk.setBlockState(x, y, z, (x % 2 == 1 ^ z % 2 == 1 ^ y % 2 == 1) ? Blocks.STONE.getDefaultState1() : Blocks.AIR.getDefaultState1());
                 }
             }
         }

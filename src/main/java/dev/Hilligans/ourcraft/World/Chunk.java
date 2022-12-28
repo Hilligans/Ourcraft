@@ -110,28 +110,6 @@ public class Chunk implements IMeshSource, IChunk {
         }
     }
 
-    public void render(MatrixStack matrixStack) {
-        if(id == -1 || !Settings.optimizeMesh) {
-            boolean val = true;
-            for (SubChunk subChunk : chunks) {
-                subChunk.renderMesh(matrixStack);
-                val = val && subChunk.id != -2 && subChunk.id != -3 && subChunk.id != -1;
-            }
-            if(val && Settings.optimizeMesh) {
-                buildMesh1();
-            }
-        } else {
-            if (sizeVal != 0) {
-                GL30.glBindVertexArray(id);
-                matrixStack.push();
-                matrixStack.applyTransformation(ShaderManager.worldShader.shader);
-                GLRenderer.glDrawElements(GL_TRIANGLES, sizeVal, GL_UNSIGNED_INT, 0);
-                matrixStack.pop();
-            }
-        }
-
-    }
-
     ///TODO fix
     public void build(IGraphicsEngine<?,?,?> graphicsEngine) {
         if(solidMesh.id != -1) {
@@ -452,67 +430,6 @@ public class Chunk implements IMeshSource, IChunk {
     }
 
     public int id = -1;
-    public int sizeVal = -1;
-
-    public void buildMesh1() {
-        glGetError();
-        PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
-        int pointer = 0;
-
-        int size = 0;
-        for(SubChunk subChunk : chunks) {
-            if (subChunk.id == -1 || subChunk.id == -2 || subChunk.verticesCount == -1) {
-                continue;
-            }
-            int vertexID = VAOManager.buffers.get(subChunk.id).typeA;
-            glBindBuffer           (GL_COPY_READ_BUFFER, vertexID);
-            size += GL30.glGetBufferParameteri(GL_COPY_READ_BUFFER,GL_BUFFER_SIZE);
-        }
-        int VBO = glGenBuffers();
-        glBindBuffer(GL_COPY_WRITE_BUFFER, VBO);
-        glBufferData(GL_COPY_WRITE_BUFFER,size,GL_STATIC_DRAW);
-
-        for(SubChunk subChunk : chunks) {
-            if (subChunk.id == -1 || subChunk.id == -2 || subChunk.verticesCount == -1 || subChunk.verticesCount == 0) {
-                continue;
-            }
-            int vertexID = VAOManager.buffers.get(subChunk.id).typeA;
-            int indexID = VAOManager.buffers.get(subChunk.id).typeB;
-            glBindBuffer           (GL_COPY_READ_BUFFER, vertexID);
-            int sizeVal = GL30.glGetBufferParameteri(GL_COPY_READ_BUFFER,GL_BUFFER_SIZE);
-            glBindBuffer           (GL_COPY_WRITE_BUFFER, VBO);
-            GL31.glCopyBufferSubData(GL_COPY_READ_BUFFER,GL_COPY_WRITE_BUFFER, 0, pointer, sizeVal);
-            int[] indices = new int[subChunk.verticesCount];
-            glBindBuffer(GL_COPY_READ_BUFFER,indexID);
-            glGetBufferSubData(GL_COPY_READ_BUFFER, 0, indices);
-
-            primitiveBuilder.add(indices);
-            primitiveBuilder.sizeVal += sizeVal / 4 / primitiveBuilder.shader.shaderElementCount;
-            pointer += sizeVal;
-
-            subChunk.id = -1;
-            VAOManager.destroyBuffer(subChunk.id);
-        }
-
-        int VAO = glGenVertexArrays();
-        int EBO = glGenBuffers();
-        glBindVertexArray(VAO);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, primitiveBuilder.indices.getElementData(), GL_STATIC_DRAW);
-        int x = 0;
-        pointer = 0;
-        for(Shader.ShaderElement shaderElement : primitiveBuilder.shader.shaderElements) {
-            glVertexAttribPointer(x,shaderElement.count,shaderElement.type,shaderElement.normalised,primitiveBuilder.shader.shaderElementCount * 4,pointer * 4);
-            glEnableVertexAttribArray(x);
-            x++;
-            pointer += shaderElement.count;
-        }
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        VAOManager.buffers.put((VAO),new Tuple<>(VBO,EBO));
-        sizeVal = primitiveBuilder.indices.size();
-        id = VAO;
-    }
 
     public void fastSet(int[] vals) {
         for(int x = 0; x < 16; x++) {

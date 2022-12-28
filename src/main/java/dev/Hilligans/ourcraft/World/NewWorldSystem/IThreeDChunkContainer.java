@@ -1,7 +1,6 @@
 package dev.Hilligans.ourcraft.World.NewWorldSystem;
 
 import dev.Hilligans.ourcraft.World.Chunk;
-import dev.Hilligans.ourcraft.World.NewChunk;
 import dev.Hilligans.ourcraft.World.NewWorldSystem.IChunk;
 
 import java.util.function.Consumer;

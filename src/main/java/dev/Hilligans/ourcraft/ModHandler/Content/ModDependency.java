@@ -23,7 +23,4 @@ public class ModDependency {
         this(modID,minVersion);
         this.maxVersion = maxVersion;
     }
-
-
-
 }

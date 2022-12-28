@@ -10,6 +10,7 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.system.MemoryUtil;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -20,6 +21,8 @@ public class PrimitiveBuilder {
 
     public FloatList vertices = new FloatList();
     public IntList indices = new IntList();
+
+
 
     public int type;
     public int size = 0;
@@ -49,6 +52,11 @@ public class PrimitiveBuilder {
         return vertexMesh;
     }
 
+    public void ensureCapacity(int vertexSize, int indexSize) {
+        vertices.ensureCapacityInternal(vertices.size() + vertexSize);
+        indices.ensureCapacityInternal(indices.size() + indexSize);
+    }
+
     public void add(float... floats) {
         count += floats.length;
         vertices.add(floats);
@@ -56,11 +64,6 @@ public class PrimitiveBuilder {
         size++;
     }
 
-    public void addMinus(float... floats) {
-        count += floats.length;
-        vertices.add(floats);
-        size++;
-    }
 
     public void add(float[] vertices, int[] indices) {
         count += vertices.length;
@@ -76,17 +79,7 @@ public class PrimitiveBuilder {
         }
     }
 
-    public void addLargest(int[] indices) {
-        int val = largest;
-        for(int index : indices) {
-            this.indices.add(index + val);
-            if(index > largest) {
-                largest = index;
-            }
-        }
-    }
     public int sizeVal = 0;
-    int largest = 0;
 
     public void addQuad(float... vertices) {
         int count = getVerticesCount();

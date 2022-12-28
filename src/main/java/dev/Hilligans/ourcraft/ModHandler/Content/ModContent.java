@@ -255,6 +255,7 @@ public class ModContent {
 
     public void registerGraphicsEngine(IGraphicsEngine<?,?,?>... graphicsEngines) {
         for(IGraphicsEngine<?,?,?> graphicsEngine : graphicsEngines) {
+            graphicsEngine.assignModContent(this);
             this.graphicsEngines.add(graphicsEngine);
         }
     }
@@ -424,6 +425,10 @@ public class ModContent {
 
     public GameInstance getGameInstance() {
         return gameInstance;
+    }
+
+    public CoreExtensionView getCoreView() {
+        return new CoreExtensionView(this);
     }
 
     @Override

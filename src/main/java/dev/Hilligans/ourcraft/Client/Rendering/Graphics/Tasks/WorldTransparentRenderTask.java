@@ -193,8 +193,6 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
         int startY = playerY < 0 ? 0 : playerY > chunkHeight ? chunkHeight - 1 : Math.max(playerY, chunkHeight - playerY);
         int startZ = playerZ < 0 ? 0 : playerZ > chunkWidth ? chunkWidth - 1 : Math.max(playerZ, chunkWidth - playerZ);
 
-
-
         for(int x = 0; x < chunk.getWidth(); x++) {
             for(int y = chunk.getHeight() - 1; y >= 0; y--) {
                 for(int z = 0; z < chunk.getWidth(); z++) {
@@ -208,8 +206,7 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
                             } else {
                                 newState = chunk.getBlockState1(new BlockPos(x, y, z).add(Block.getBlockPos(block.getBlock().getSide(block, a))));
                             }
-
-                            if (newState.getBlock().blockProperties.translucent) {
+                            if (newState.getBlock() != block.getBlock()) {
                                 block.getBlock().addVertices(primitiveBuilder, a, 1f, block, new BlockPos(x + chunk.getX(), y + chunk.getY(), z + chunk.getY()), x, z);
                             }
                         }

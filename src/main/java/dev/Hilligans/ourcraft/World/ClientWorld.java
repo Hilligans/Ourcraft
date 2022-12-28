@@ -66,7 +66,8 @@ public class ClientWorld extends World {
                 purgeChunks(Settings.destroyChunkDistance + 2);
             }
         } else {
-            if(Settings.asyncChunkBuilding) {
+
+            /*if(Settings.asyncChunkBuilding) {
                 while(!queuedChunks.isEmpty()) {
                     SubChunk subChunk = queuedChunks.poll();
                     ClientUtil.chunkBuilder.submit(() -> {
@@ -84,6 +85,8 @@ public class ClientWorld extends World {
                 buildChunks(12);
             }
             purgeTime++;
+
+             */
         }
 
     }
@@ -97,12 +100,6 @@ public class ClientWorld extends World {
 
 
     int purgeTime = 0;
-
-    public void buildChunks(int count) {
-        for(int x = 0; x < Math.min(count,queuedChunks.size()); x++) {
-            queuedChunks.poll().createMesh1();
-        }
-    }
 
     public void purgeChunks(int distance) {
         int cameraX = (int) Camera.pos.x >> 4;

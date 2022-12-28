@@ -214,6 +214,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         String fragment = engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.fragmentShader, shaderSource.modContent.getModID()));
         String geometry = shaderSource.geometryShader == null ? null :  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.geometryShader, shaderSource.modContent.getModID()));
 
+
         if(geometry == null) {
             int val = ShaderManager.registerShader(vertex,fragment);
             System.out.println("Shader Error:" + glGetError());
