@@ -197,6 +197,7 @@ public class NewWorldRenderTask extends RenderTaskSource {
                 return false;
             }
 
+            /*
             public PrimitiveBuilder getPrimitiveBuilder(IChunk chunk) {
                 PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(shaderSource.vertexFormat);
                 for(int x = 0; x < chunk.getWidth(); x++) {
@@ -223,9 +224,10 @@ public class NewWorldRenderTask extends RenderTaskSource {
                 return primitiveBuilder;
             }
 
+             */
+
             public PrimitiveBuilder getPrimitiveBuilder(IChunk chunk, PrimitiveBuilder primitiveBuilder) {
                 BlockPos p = new BlockPos(0, 0, 0);
-                BlockPos d = new BlockPos(0, 0, 0);
                 primitiveBuilder = (primitiveBuilder == null ? new PrimitiveBuilder(shaderSource.vertexFormat) : primitiveBuilder);
                 for(int x = 0; x < chunk.getWidth(); x++) {
                     for(int y = 0; y < chunk.getHeight(); y++) {
@@ -233,7 +235,7 @@ public class NewWorldRenderTask extends RenderTaskSource {
                             IBlockState block = chunk.getBlockState1(x,y,z);
                             if(block.getBlock() != Blocks.AIR && !block.getBlock().blockProperties.translucent) {
                                 for (int a = 0; a < 6; a++) {
-                                    p.set(x, y, y).add(Block.getBlockPosImmutable(block.getBlock().getSide(block, a)));
+                                    p.set(x, y, z).add(Block.getBlockPosImmutable(block.getBlock().getSide(block, a)));
                                     IBlockState newState;
                                     if (!p.inRange(0, 0, 0, chunk.getWidth() - 1, chunk.getHeight() - 1, chunk.getWidth() - 1)) {
                                         newState = chunk.getWorld().getBlockState(p.add(chunk.getBlockX(), chunk.getBlockY(), chunk.getBlockZ()));
@@ -241,7 +243,7 @@ public class NewWorldRenderTask extends RenderTaskSource {
                                         newState = chunk.getBlockState1(p);
                                     }
                                     if (newState.getBlock().blockProperties.transparent && (Settings.renderSameTransparent || block.getBlock() != newState.getBlock()) || block.getBlock().blockProperties.alwaysRender) {
-                                        block.getBlock().addVertices(primitiveBuilder, a, 1f, block, new BlockPos(x, y, z), x, z);
+                                        block.getBlock().addVertices(primitiveBuilder, a, 1f, block, p.set(x, y, z), x, z);
                                     }
                                 }
                             }
@@ -267,6 +269,8 @@ public class NewWorldRenderTask extends RenderTaskSource {
                 long end = System.currentTimeMillis();
                 //System.out.println("Time to build:" + (end - start));
             }
+
+            /*
             public IPrimitiveBuilder getPrimitiveBuilder1(IChunk chunk) {
                 BufferPrimitiveBuilder primitiveBuilder = new BufferPrimitiveBuilder(128, 128).setVertexFormat(shaderSource.vertexFormat);
                 for(int x = 0; x < chunk.getWidth(); x++) {
@@ -292,6 +296,8 @@ public class NewWorldRenderTask extends RenderTaskSource {
                 }
                 return primitiveBuilder;
             }
+
+             */
         };
     }
 
