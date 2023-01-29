@@ -44,7 +44,7 @@ public interface IWorld {
 
     void setChunk(long blockX, long blockY, long blockZ, IChunk chunk);
 
-    Vector3fi DOWN = new Vector3fi(0,-1,0);
+    Vector3f DOWN = new Vector3f(0,-1,0);
 
     @Immutable
     default Vector3fc getGravityVector(Vector3f position) {

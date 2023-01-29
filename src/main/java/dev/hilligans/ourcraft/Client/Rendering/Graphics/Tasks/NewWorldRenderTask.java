@@ -13,7 +13,6 @@ import dev.hilligans.ourcraft.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import dev.hilligans.ourcraft.Data.Other.BlockPos;
 import dev.hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.hilligans.ourcraft.GameInstance;
-import dev.hilligans.ourcraft.Network.Packet.Client.CRequestChunkPacket;
 import dev.hilligans.ourcraft.Util.Settings;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.*;
 import dev.hilligans.ourcraft.World.NewWorldSystem.EmptyContainer;
@@ -180,14 +179,6 @@ public class NewWorldRenderTask extends RenderTaskSource {
 
             public ConcurrentLinkedQueue<Tuple<IChunk, PrimitiveBuilder>> primitiveBuilders = new ConcurrentLinkedQueue<>();
             Long2BooleanOpenHashMap asyncedChunks = new Long2BooleanOpenHashMap();
-            Long2BooleanOpenHashMap map = new Long2BooleanOpenHashMap();
-
-            void getChunk(int chunkX, int chunkZ, IWorld world, Client client) {
-                if (!map.getOrDefault((((long)chunkX) << 32) | (chunkZ & 0xffffffffL), false)) {
-                    map.put((((long)chunkX) << 32) | (chunkZ & 0xffffffffL), true);
-                    //client.sendPacket(new CRequestChunkPacket(chunkX, chunkZ));
-                }
-            }
 
             boolean putChunk(int chunkX, int chunkZ) {
                 if (!asyncedChunks.getOrDefault((((long) chunkX) << 32) | (chunkZ & 0xffffffffL), false)) {
@@ -259,9 +250,6 @@ public class NewWorldRenderTask extends RenderTaskSource {
                 primitiveBuilder = getPrimitiveBuilder(chunk, primitiveBuilder);
                 primitiveBuilder.setVertexFormat(shaderSource.vertexFormat);
                 int meshID = (int) window.getGraphicsEngine().getDefaultImpl().createMesh(window, graphicsContext, primitiveBuilder.toVertexMesh());
-                if(primitiveBuilder.indices.size == 0) {
-                    System.out.println(chunk.getX() + " " + chunk.getY() + " " + chunk.getZ());
-                }
                 meshes.setChunk(chunk.getX(),chunk.getY(),chunk.getZ(),new MeshHolder().set(meshID,primitiveBuilder.indices.size()));
                 primitiveBuilder.size = 0;
                 primitiveBuilder.vertices.size = 0;

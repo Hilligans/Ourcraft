@@ -36,8 +36,10 @@ public class GUIRenderTask extends RenderTaskSource {
                     Runtime runtime = Runtime.getRuntime();
                     long usedMB = (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024;
                     stringRenderer.drawStringInternal(window, screenStack, "Memory:" + usedMB + "MB", client.windowX / 2, 126, 0.5f);
-                    stringRenderer.drawStringInternal(window, screenStack, "Pitch:" + Math.toDegrees(Camera.pitch), client.windowX / 2, 155, 0.5f);
-                    stringRenderer.drawStringInternal(window, screenStack, "Yaw:" + Math.toDegrees(Camera.yaw), client.windowX / 2, 184, 0.5f);
+                    */
+                    //stringRenderer.drawStringInternal(window, screenStack, "Pitch:" + Math.toDegrees(window.camera.getPitch()), client.windowX / 2, 155, 0.5f);
+                    stringRenderer.drawStringInternal(window, screenStack, "Yaw:" + Math.toDegrees(window.camera.getYaw()), client.windowX / 2, 184, 0.5f);
+                    /*
                     stringRenderer.drawStringInternal(window, screenStack, "Sounds:" + client.soundEngine.sounds.size(), client.windowX / 2, 213, 0.5f);
                     stringRenderer.drawStringInternal(window, screenStack, "Render Calls:" + GLRenderer.drawCalls, client.windowX / 2, 242, 0.5f);
                     stringRenderer.drawStringInternal(window, screenStack, "Vertices:" + GLRenderer.count, client.windowX / 2, 271, 0.5f);

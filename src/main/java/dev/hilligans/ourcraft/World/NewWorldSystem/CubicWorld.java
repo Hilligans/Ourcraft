@@ -1,5 +1,8 @@
 package dev.hilligans.ourcraft.World.NewWorldSystem;
 
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
+
 public class CubicWorld implements IWorld {
 
     public int radius;
@@ -25,6 +28,12 @@ public class CubicWorld implements IWorld {
 
     @Override
     public void tick() {
+    }
+
+    @Override
+    public Vector3fc getGravityVector(Vector3f position) {
+        int component = position.maxComponent();
+        return new Vector3f().setComponent(component, position.get(component) > 0 ? -1 : 1);
     }
 
     @Override

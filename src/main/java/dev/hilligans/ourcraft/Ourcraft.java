@@ -11,6 +11,7 @@ import dev.hilligans.ourcraft.Client.Input.HandlerProviders.MouseHandlerProvider
 import dev.hilligans.ourcraft.Client.Input.Input;
 import dev.hilligans.ourcraft.Client.Input.RepeatingInput;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.FixedFunctionGL.FixedFunctionGLEngine;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Implementations.WorldCamera;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Tasks.GUIRenderTask;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Tasks.NewWorldRenderTask;
@@ -231,11 +232,21 @@ public class Ourcraft {
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_DOWN,
                     (window, strength) -> window.getCamera().addRotation(0.1f * strength, 0)));
 
+            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_UP,
+                    (window, strength) -> window.getCamera().addRotation(-0.1f * strength, 0)));
+
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_LEFT,
-                    (window, strength) -> window.getCamera().addRotation(0, -1f * strength)));
+                    (window, strength) -> window.getCamera().addRotation(0, -0.3f * strength)));
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_RIGHT,
-                    (window, strength) -> window.getCamera().addRotation(0, 1f * strength)));
+                    (window, strength) -> window.getCamera().addRotation(0, 0.3f * strength)));
+
+            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_L,
+                    (window, strength) -> ((WorldCamera)window.getCamera()).roll -= 0.1f * strength));
+
+            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_O,
+                    (window, strength) -> ((WorldCamera)window.getCamera()).roll += 0.1f * strength));
+
 
             modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_H) {
                 @Override

@@ -705,8 +705,6 @@ public class Vector3fi implements Vector3fc {
             return true;
         if (v == null)
             return false;
-        if (!(v instanceof Vector3fc))
-            return false;
         if (!Runtime.equals(x, v.x(), delta))
             return false;
         if (!Runtime.equals(y, v.y(), delta))

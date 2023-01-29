@@ -62,7 +62,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
 
         glClearColor(window.clearColor.x, window.clearColor.y, window.clearColor.z, window.clearColor.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+        window.camera.tick();
         MatrixStack matrixStack = window.camera.getMatrix();
         //matrixStack.applyColor();
 
