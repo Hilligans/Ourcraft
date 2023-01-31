@@ -11,8 +11,12 @@ import dev.hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.hilligans.ourcraft.ModHandler.Events.Client.GLInitEvent;
 import dev.hilligans.ourcraft.Util.Logger;
 import dev.hilligans.ourcraft.World.ClientWorld;
+import org.joml.Matrix3f;
+import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL43;
 import org.lwjgl.opengl.GLDebugMessageCallback;
+import org.lwjgl.opengl.GLUtil;
 import org.lwjgl.system.MemoryUtil;
 
 import java.util.HashMap;
@@ -96,11 +100,15 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         setupStringRenderer("");
 
         glEnable(GL_DEBUG_OUTPUT);
+
         glDebugMessageCallback(new GLDebugMessageCallback() {
             @Override
             public void invoke(int source, int type, int id, int severity, int length, long message, long userParam) {
-                System.out.println("OpenGL ERROR Callback " + severity);
-                System.out.println(MemoryUtil.memCharBuffer(message, length).flip());
+                if(severity == GL43.GL_DEBUG_SEVERITY_NOTIFICATION) {
+                    System.out.println(MemoryUtil.memUTF8(message));
+                } else {
+                    System.err.println(MemoryUtil.memUTF8(message));
+                }
             }
         }, 0);
 

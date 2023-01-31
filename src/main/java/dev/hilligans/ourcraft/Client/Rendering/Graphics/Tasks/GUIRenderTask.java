@@ -11,6 +11,8 @@ import dev.hilligans.ourcraft.Client.Rendering.Graphics.RenderTaskSource;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.hilligans.ourcraft.Client.Rendering.World.StringRenderer;
 
+import java.lang.reflect.Array;
+
 public class GUIRenderTask extends RenderTaskSource {
 
     public GUIRenderTask() {
@@ -37,7 +39,7 @@ public class GUIRenderTask extends RenderTaskSource {
                     long usedMB = (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024;
                     stringRenderer.drawStringInternal(window, screenStack, "Memory:" + usedMB + "MB", client.windowX / 2, 126, 0.5f);
                     */
-                    //stringRenderer.drawStringInternal(window, screenStack, "Pitch:" + Math.toDegrees(window.camera.getPitch()), client.windowX / 2, 155, 0.5f);
+                    stringRenderer.drawStringInternal(window, screenStack, "Pitch:" + Math.toDegrees(window.camera.getPitch()), client.windowX / 2, 155, 0.5f);
                     stringRenderer.drawStringInternal(window, screenStack, "Yaw:" + Math.toDegrees(window.camera.getYaw()), client.windowX / 2, 184, 0.5f);
                     /*
                     stringRenderer.drawStringInternal(window, screenStack, "Sounds:" + client.soundEngine.sounds.size(), client.windowX / 2, 213, 0.5f);

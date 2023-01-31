@@ -54,11 +54,11 @@ public interface ICamera {
 
     Vector3f getMotion();
 
-    default void moveForeWard(float amount) {
+    default void moveForward(float amount) {
         move((float) (Math.cos(getYaw()) * amount), 0, (float) (Math.sin(getYaw()) * amount));
     }
 
-    default void moveBackWard(float amount) {
+    default void moveBackward(float amount) {
         move((float) (-Math.cos(getYaw()) * amount), 0, (float) (-Math.sin(getYaw()) * amount));
     }
 

@@ -23,6 +23,10 @@ public abstract class WorldCamera implements ICamera {
     public Vector3f gravityVector = new Vector3f(0, -1, 0);
     public Matrix3f moveMatrix = new Matrix3f();
     public Vector3f moveVector = new Vector3f();
+    public Quaternionf f = new Quaternionf();
+
+    public Vector3f forwardVector = new Vector3f(1,0,0);
+    public Vector3f leftVector = new Vector3f(0, 0, 1);
 
     public float pitch;
     public float yaw;
@@ -64,33 +68,110 @@ public abstract class WorldCamera implements ICamera {
 
         Vector3f gravityVector = (Vector3f) world1.getGravityVector(pos.get(new Vector3f()).get(new Vector3f()));
         if(!this.gravityVector.get(new Vector3f()).mul(moveMatrix).equals(gravityVector)) {
-            updateCameraForGravity(gravityVector, x);
+            updateCameraForGravity(gravityVector);
         }
 
         ClientMain.getClient().sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,pitch,yaw,ClientMain.getClient().playerId));
     }
 
-    public void updateCameraForGravity(Vector3fc newVector, float x) {
+    public void updateCameraForGravity(Vector3fc newVector) {
+        Vector3f grav = gravityVector.get(new Vector3f()).mul(moveMatrix);
+
         int comp = newVector.x() != 0 ? 0 : newVector.y() != 0 ? 1 : 2;
+        int oldComp = grav.x() != 0 ? 0 : grav.y() != 0 ? 1 : 2;
         int sign = (newVector.get(comp) > 0 ? 1 : -1);
+        int oldSign = (grav.get(oldComp) > 0 ? 1 : -1);
 
+        int ss = sign * oldSign * (1 > 0 ? -1 : 1);
         int s = (comp + 1) * sign;
-        moveMatrix = moveMatrices[s + 3];
-        System.out.println(s + 3);
+        //moveMatrix = moveMatrices[s + 3];
 
-        pitch += x > 0 ? (3.1415f / 2f) : -(3.1415f / 2f);
 
-        //TODO fix this somehow
-        roll = (float) ((-Math.abs(yaw) * (x > 0 ? 1 : 0)));
+        float direction = ((float) (Math.PI/2) * getDirection((comp + 1) * sign, (oldComp + 1) * oldSign));
+        //System.out.println(getDirection((comp + 1) * sign, (oldComp + 1) * oldSign));
+
+        //System.out.println(direction);
+        //new Matrix3f()
+        Vector3f rotVector = new Vector3f(1, 1, 1);
+        rotVector.setComponent(comp, 0);
+        rotVector.setComponent(oldComp, 0);
+
+        //gravityVector.rotateAxis(direction, rotVector.x, rotVector.y, rotVector.z);
+        //forwardVector.rotateAxis(direction, rotVector.x, rotVector.y, rotVector.z);
+        //leftVector.rotateAxis(direction, rotVector.x, rotVector.y, rotVector.z);
+
+        if(comp == 0) {
+            if(oldComp == 1) {
+                //gravityVector.rotateZ(direction);
+                //moveMatrix.rotateZ(direction);
+                f.rotateLocalZ(direction);
+            } else {
+                //gravityVector.rotateY(direction);
+                //moveMatrix.rotateY(direction);
+                f.rotateLocalY(direction);
+            }
+        } else if (comp == 1) {
+            if(oldComp == 0) {
+                //gravityVector.rotateZ(direction);
+                //moveMatrix.rotateZ(direction);
+                f.rotateLocalZ(direction);
+            } else {
+                //gravityVector.rotateX(direction);
+                //moveMatrix.rotateX(direction);
+                f.rotateLocalX(direction);
+            }
+        } else {
+            if(oldComp == 0) {
+                //gravityVector.rotateY(direction);
+                //moveMatrix.rotateY(direction);
+                f.rotateLocalY(direction);
+            } else {
+                //gravityVector.rotateX(direction);
+                //moveMatrix.rotateX(direction);
+                f.rotateLocalX(direction);
+            }
+        }
+        moveMatrix = new Matrix3f().rotate(f);
+        //System.out.println(moveMatrix);
+        for(int x = 0; x < 3; x++) {
+            for (int y = 0; y < 3; y++) {
+                moveMatrix.set(x, y, Math.round(moveMatrix.get(x, y)));
+            }
+        }
+        //System.out.println(moveMatrix);
+        gravityVector.round();
+        forwardVector.round();
+        leftVector.round();
+
+        //System.out.println(gravityVector.get(new Vector3f()).mul(moveMatrix));
+        //System.out.println(newVector);
+
+       // moveMatrix.rotateZ((float) -(Math.PI/2));
+
+   //     Vector3f column1 = moveMatrix.getRow(comp, new Vector3f());
+   //     Vector3f column2 = moveMatrix.getRow(oldComp, new Vector3f());
+
+   //     moveMatrix.setRow(oldComp, column1.mul(ss, ss, ss));
+   //     moveMatrix.setRow(comp, column2.mul(-ss, -ss, -ss));
+
+        //pitch += (Math.cos(yaw) > 0 ? 1f : -1f) * -direction;
+
+        //pitch += -direction;
+        //pitch += x > 0 ? (3.1415f / 2f) : -(3.1415f / 2f);
+        //roll = (float) ((-Math.abs(yaw) * (x > 0 ? 1 : 0)));
 
         addRotation(0, 0);
     }
 
     public static Matrix3f[] moveMatrices = {
-        null,
+        new Matrix3f(1, 0, 0,
+                    0, 1, 0,
+                    0, 0, 1),
+
         new Matrix3f(1, 0, 0,
                      0, 1, 0,
                      0, 0, 1),
+
         new Matrix3f(0, -1, 0,
                     1, 0, 0,
                      0, 0, 1),
@@ -98,12 +179,15 @@ public abstract class WorldCamera implements ICamera {
         new Matrix3f(0, 1, 0,
                       -1,0, 0,
                       0, 0, 1),
+
         new Matrix3f(-1,0, 0,
                     0, -1, 0,
                      0, 0, 1),
-        null
-    };
 
+       new Matrix3f(1, 0, 0,
+                    0, 1, 0,
+                    0, 0, 1),
+    };
 
 
     @Override
@@ -251,4 +335,19 @@ public abstract class WorldCamera implements ICamera {
     public Vector3d getSavedPosition() {
         return savedPosition;
     }
+
+
+    /**
+     * x = 1
+     * y = 2
+     * z = 3
+     */
+    public static int getDirection(int current, int old) {
+        String code = current + "" + old;
+        return switch (code) {
+            case "-1-2", "2-1", "12", "-21",    "3-2", "23", "-32", "-2-3",   "-13", "-3-1", "1-3", "31" -> -1;
+            default -> 1;
+        };
+    }
+
 }
