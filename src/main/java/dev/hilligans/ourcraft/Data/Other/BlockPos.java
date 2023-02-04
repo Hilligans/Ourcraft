@@ -1,8 +1,9 @@
 package dev.hilligans.ourcraft.Data.Other;
 
 import dev.hilligans.ourcraft.Util.IPosition;
-import org.joml.Vector3d;
-import org.joml.Vector3f;
+import org.joml.*;
+
+import java.lang.Math;
 
 public class BlockPos {
 
@@ -55,6 +56,13 @@ public class BlockPos {
         this.x = x;
         this.y = y;
         this.z = z;
+        return this;
+    }
+
+    public BlockPos set(BlockPos pos) {
+        this.x = pos.x;
+        this.y = pos.y;
+        this.z = pos.z;
         return this;
     }
 
@@ -200,6 +208,13 @@ public class BlockPos {
 
     public int getZ() {
         return z;
+    }
+
+    public void mul(Matrix3f mat) {
+        float lx = x, ly = y, lz = z;
+        this.x = (int) org.joml.Math.fma(mat.m00(), lx, org.joml.Math.fma(mat.m10(), ly, mat.m20() * lz));
+        this.y = (int) org.joml.Math.fma(mat.m01(), lx, org.joml.Math.fma(mat.m11(), ly, mat.m21() * lz));
+        this.z = (int) org.joml.Math.fma(mat.m02(), lx, org.joml.Math.fma(mat.m12(), ly, mat.m22() * lz));
     }
 
     public boolean inRange(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {

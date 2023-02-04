@@ -4,7 +4,11 @@ import dev.hilligans.ourcraft.Block.Blocks;
 import dev.hilligans.ourcraft.Data.Other.BlockPos;
 import dev.hilligans.ourcraft.Data.Other.BoundingBox;
 import dev.hilligans.ourcraft.Server.MultiPlayerServer;
+import dev.hilligans.ourcraft.World.Features.TreeFeature;
 import dev.hilligans.ourcraft.World.WorldGen.IWorldHeightBuilder;
+import dev.hilligans.planets.world.PlanetFeaturePlacerHelper;
+
+import java.util.Random;
 
 public class ServerCubicWorld extends CubicWorld implements IServerWorld {
 
@@ -43,7 +47,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorld {
 
     @Override
     public void generateWorld() {
-        int chunkGenerationRadius = 10;
+        int chunkGenerationRadius = 15;
         IWorldHeightBuilder.GenerationBoundingBox generationBoundingBox = worldHeightBuilder.getGenerationBoundingBox();
         for(int x = -chunkGenerationRadius; x < chunkGenerationRadius; x++) {
             for(int y = -chunkGenerationRadius; y < chunkGenerationRadius; y++) {
@@ -63,15 +67,17 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorld {
         }
 
 
-        for(int a = 0; a < radius; a++) {
-            for(int b = 0; b < radius; b++) {
+
+        /*
+        for(int a = -radius; a < radius; a++) {
+            for(int b = -radius; b < radius; b++) {
                 int height = worldHeightBuilder.getWorldHeight(a, b, radius);
                 for(int c = 0; c < height; c++) {
                     setBlockState(a, b, radius + c, Blocks.STONE.getDefaultState1());
                 }
                 height = worldHeightBuilder.getWorldHeight(a, b, -radius);
                 for(int c = 0; c < height; c++) {
-                    setBlockState(a, b, radius - c, Blocks.STONE.getDefaultState1());
+                    setBlockState(a, b, -radius - c, Blocks.STONE.getDefaultState1());
                 }
                 height = worldHeightBuilder.getWorldHeight(a, radius, b);
                 for(int c = 0; c < height; c++) {
@@ -79,7 +85,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorld {
                 }
                 height = worldHeightBuilder.getWorldHeight(a, -radius, b);
                 for(int c = 0; c < height; c++) {
-                    setBlockState(a, radius - c, b, Blocks.STONE.getDefaultState1());
+                    setBlockState(a, -radius - c, b, Blocks.STONE.getDefaultState1());
                 }
                 height = worldHeightBuilder.getWorldHeight(radius, a, b);
                 for(int c = 0; c < height; c++) {
@@ -87,7 +93,42 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorld {
                 }
                 height = worldHeightBuilder.getWorldHeight(-radius, a, b);
                 for(int c = 0; c < height; c++) {
-                    setBlockState(radius - c, a, b, Blocks.STONE.getDefaultState1());
+                    setBlockState(-radius - c, a, b, Blocks.STONE.getDefaultState1());
+                }
+            }
+        }
+
+         */
+        PlanetFeaturePlacerHelper helper = new PlanetFeaturePlacerHelper(this);
+        TreeFeature treeFeature = new TreeFeature();
+
+        BlockPos pos = new BlockPos(0, 0, 0);
+        Random random = new Random();
+        for(int a = -radius; a < radius; a++) {
+            for (int b = -radius; b < radius; b++) {
+                if(random.nextInt(64) == 0) {
+                    helper.setPlacementPosition(pos.set(radius, a, b));
+                    treeFeature.place(helper);
+                }
+                if(random.nextInt(64) == 0) {
+                    helper.setPlacementPosition(pos.set(a, radius, b));
+                    treeFeature.place(helper);
+                }
+                if(random.nextInt(64) == 0) {
+                    helper.setPlacementPosition(pos.set(a, b, radius));
+                    treeFeature.place(helper);
+                }
+                if(random.nextInt(64) == 0) {
+                    helper.setPlacementPosition(pos.set(-radius, a, b));
+                    treeFeature.place(helper);
+                }
+                if(random.nextInt(64) == 0) {
+                    helper.setPlacementPosition(pos.set(a, -radius, b));
+                    treeFeature.place(helper);
+                }
+                if(random.nextInt(64) == 0) {
+                    helper.setPlacementPosition(pos.set(a, b, -radius));
+                    treeFeature.place(helper);
                 }
             }
         }

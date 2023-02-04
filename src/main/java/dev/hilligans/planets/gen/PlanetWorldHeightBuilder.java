@@ -20,13 +20,21 @@ public class PlanetWorldHeightBuilder implements IWorldHeightBuilder {
 
     @Override
     public int getWorldHeight(long x, long y, long z) {
+        long a = 0;
+        long b = 0;
         if (x == radius) {
-
+            a = y;
+            b = z;
         } else if (y == radius) {
-
+            a = x;
+            b = z;
         } else {
-
+            a = x;
+            b = y;
         }
+
+        //return (int) Math.sqrt((long) radius *radius*3 - a*a - b*b);
+
         return random.nextInt(4);
     }
 

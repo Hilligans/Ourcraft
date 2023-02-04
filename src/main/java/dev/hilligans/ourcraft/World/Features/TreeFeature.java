@@ -1,0 +1,26 @@
+package dev.hilligans.ourcraft.World.Features;
+
+import dev.hilligans.ourcraft.Block.Blocks;
+import dev.hilligans.ourcraft.World.NewWorldSystem.IFeature;
+import dev.hilligans.ourcraft.World.NewWorldSystem.IFeaturePlacerHelper;
+
+public class TreeFeature implements IFeature {
+
+    @Override
+    public void place(IFeaturePlacerHelper placerHelper) {
+        for(int y = 0; y < 8; y++) {
+            if(y != 6 && y != 7) {
+                placerHelper.setState(0, y, 0, Blocks.LOG.getDefaultState1());
+            }
+            if(y >= 5) {
+                for(int x = -2; x < 3; x++) {
+                    for(int z = -2; z < 3; z++) {
+                        if((x != 0 && z != 0) || y >= 6) {
+                            placerHelper.setState(x, y, z, Blocks.LEAVES.getDefaultState1());
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

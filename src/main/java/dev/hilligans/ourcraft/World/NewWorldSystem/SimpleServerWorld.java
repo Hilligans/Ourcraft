@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.World.NewWorldSystem;
 
 import dev.hilligans.ourcraft.Block.Block;
+import dev.hilligans.ourcraft.Block.BlockState.IBlockState;
 import dev.hilligans.ourcraft.Block.Blocks;
 import dev.hilligans.ourcraft.Data.Other.BlockPos;
 import dev.hilligans.ourcraft.Data.Other.BoundingBox;
@@ -8,9 +9,10 @@ import dev.hilligans.ourcraft.Server.MultiPlayerServer;
 
 import java.util.Random;
 
-public class SimpleServerWorld extends SimpleWorld implements IServerWorld, IMethodResult {
+public class SimpleServerWorld extends SimpleWorld implements IServerWorld, IMethodResult, IFeaturePlacerHelper {
 
     public MultiPlayerServer server;
+    public BlockPos featurePlacerPosition = new BlockPos(0, 0, 0);
 
     public SimpleServerWorld(int id, String name) {
         super(id, name);
@@ -98,5 +100,60 @@ public class SimpleServerWorld extends SimpleWorld implements IServerWorld, IMet
     @Override
     public BlockPos getWorldSpawn(BoundingBox boundingBox) {
         return null;
+    }
+
+    @Override
+    public IWorld getParentWorld() {
+        return this;
+    }
+
+    @Override
+    public BlockPos getBlockPos() {
+        return featurePlacerPosition;
+    }
+
+    @Override
+    public void setState(BlockPos pos, IBlockState blockState) {
+        setBlockState(pos.x + featurePlacerPosition.y, pos.y + featurePlacerPosition.y, pos.z + featurePlacerPosition.z, blockState);
+    }
+
+    @Override
+    public void setState(long x, long y, long z, IBlockState blockState) {
+        setBlockState(x + featurePlacerPosition.x, y + featurePlacerPosition.y, z + featurePlacerPosition.z, blockState);
+    }
+
+    @Override
+    public void setStateRaw(BlockPos pos, IBlockState blockState) {
+        setBlockState(pos, blockState);
+    }
+
+    @Override
+    public void setStateRaw(long x, long y, long z, IBlockState blockState) {
+        setBlockState(x, y, z, blockState);
+    }
+
+    @Override
+    public IBlockState getState(BlockPos blockPos) {
+        return getBlockState(blockPos.x + featurePlacerPosition.x, blockPos.y + featurePlacerPosition.y, blockPos.z + featurePlacerPosition.z);
+    }
+
+    @Override
+    public IBlockState getState(long x, long y, long z) {
+        return getBlockState(x + featurePlacerPosition.x, y + featurePlacerPosition.y, z + featurePlacerPosition.z);
+    }
+
+    @Override
+    public IBlockState getStateRaw(BlockPos blockPos) {
+        return getBlockState(blockPos);
+    }
+
+    @Override
+    public IBlockState getStateRaw(long x, long y, long z) {
+        return getBlockState(x, y, z);
+    }
+
+    @Override
+    public void setPlacementPosition(BlockPos pos) {
+        this.featurePlacerPosition.set(pos);
     }
 }
