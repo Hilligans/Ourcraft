@@ -9,6 +9,7 @@ import dev.hilligans.ourcraft.World.Builders.OreBuilder;
 import dev.hilligans.ourcraft.World.NewWorldSystem.*;
 import dev.hilligans.ourcraft.World.ServerWorld;
 import dev.hilligans.ourcraft.World.World;
+import dev.hilligans.ourcraft.World.WorldGen.IWorldHeightBuilder;
 import dev.hilligans.planets.gen.PlanetWorldHeightBuilder;
 
 import java.io.BufferedReader;
@@ -41,7 +42,14 @@ public class ServerMain {
         server = new MultiPlayerServer();
         server.addWorld(0,world);
         //server.addWorld(new SimpleServerWorld(0, "server_world"));
-        IServerWorld world1 = new ServerCubicWorld(0, "planet", 64, new PlanetWorldHeightBuilder(null, 64));
+        IServerWorld world1 = new ServerCubicWorld(0, "planet", 64, new PlanetWorldHeightBuilder(new IWorldHeightBuilder[]{
+                new SimpleHeightBuilder(),
+                new SimpleHeightBuilder(),
+                new SimpleHeightBuilder(),
+                new SimpleHeightBuilder(),
+                new SimpleHeightBuilder(),
+                new SimpleHeightBuilder()
+        }, 64));
         world1.generateWorld();
         System.out.println("Done generating");
         server.addWorld(world1);

@@ -30,11 +30,11 @@ public class CubicWorld implements IWorld {
     public void tick() {
     }
 
-    @Override
-    public Vector3fc getGravityVector(Vector3f position) {
-        int component = position.maxComponent();
-        return new Vector3f().setComponent(component, position.get(component) > 0 ? -1 : 1);
-    }
+    //@Override
+    //public Vector3fc getGravityVector(Vector3f position) {
+      //  int component = position.maxComponent();
+      //  return new Vector3f().setComponent(component, position.get(component) > 0 ? -1 : 1);
+        //}
 
     @Override
     public IChunk getChunk(long blockX, long blockY, long blockZ) {
