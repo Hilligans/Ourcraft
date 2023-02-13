@@ -15,6 +15,7 @@ import dev.hilligans.ourcraft.Client.Rendering.Graphics.Implementations.WorldCam
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Tasks.GUIRenderTask;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Tasks.NewWorldRenderTask;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Tasks.WorldTransparentRenderTask;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngine;
 import dev.hilligans.ourcraft.Client.Rendering.ScreenBuilder;
 import dev.hilligans.ourcraft.Client.Rendering.Screens.EscapeScreen;
@@ -142,8 +143,8 @@ public class Ourcraft {
 
             view.registerRenderTask(new GUIRenderTask());
             //view.registerRenderTask(new WorldRenderTask());
-            //view.registerRenderTask(new WorldTransparentRenderTask());
             view.registerRenderTask(new NewWorldRenderTask());
+            view.registerRenderTask(new WorldTransparentRenderTask());
 
             view.registerVertexFormat(position_texture_color, position_color_texture, position_texture_globalColor, position_texture, position_texture_animatedWrap_shortenedColor, position_color);
 
@@ -168,6 +169,7 @@ public class Ourcraft {
 
         modContent.registerBlocks(Blocks.AIR, Blocks.STONE, Blocks.DIRT, Blocks.GRASS, Blocks.BEDROCK, Blocks.IRON_ORE, Blocks.LEAVES, Blocks.LOG, Blocks.SAND, Blocks.CACTUS, Blocks.CHEST, Blocks.COLOR_BLOCK, Blocks.STAIR_BLOCK, Blocks.GRASS_PLANT, Blocks.WEEPING_VINE, Blocks.MAPLE_LOG, Blocks.MAPLE_PLANKS, Blocks.PINE_LOG, Blocks.PINE_PLANKS, Blocks.SPRUCE_LOG, Blocks.SPRUCE_PLANKS, Blocks.BIRCH_LOG, Blocks.BIRCH_PLANKS, Blocks.OAK_LOG, Blocks.OAK_PLANKS, Blocks.WILLOW_LOG, Blocks.WILLOW_PLANKS, Blocks.ACACIA_LOG, Blocks.ACACIA_PLANKS, Blocks.POPLAR_LOG, Blocks.POPLAR_PLANKS, Blocks.ELM_LOG, Blocks.ELM_WOOD, Blocks.PALM_LOG, Blocks.PALM_WOOD, Blocks.REDWOOD_LOG, Blocks.REDWOOD_WOOD, Blocks.SAPLING);
         modContent.registerBlock(Blocks.RED);
+        modContent.registerBlock(Blocks.WATER);
         modContent.registerBiome(Biomes.PLAINS,Biomes.SANDY_HILLS,Biomes.DESERT,Biomes.FOREST);
 
         Sounds.reg();

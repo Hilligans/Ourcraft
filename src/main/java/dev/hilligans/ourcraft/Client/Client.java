@@ -96,8 +96,8 @@ public class Client {
     public InputHandler inputHandler;
     public IInputProvider mouseBind;
 
-    public int renderDistance = 8;
-    public int renderYDistance = 6;
+    public int renderDistance = 12;
+    public int renderYDistance = 8;
 
     public Client(GameInstance gameInstance) {
         this.gameInstance = gameInstance;

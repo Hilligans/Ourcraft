@@ -2,17 +2,19 @@ package dev.hilligans.ourcraft.World.NewWorldSystem;
 
 import dev.hilligans.ourcraft.Block.BlockState.IBlockState;
 import dev.hilligans.ourcraft.Block.Blocks;
+import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.Ourcraft;
 
-public class SimpleSubChunkImpl implements ISubChunk {
+public class GlobalPaletteImpl implements ISubChunk {
 
-    public IBlockState[] blockStates;
+    public short[] blockStates;
 
-    public int width;
-    public int height;
+    public byte width;
+    public byte height;
 
-    public SimpleSubChunkImpl(int width, int height) {
-        this.width = width;
-        this.height = height;
+    public GlobalPaletteImpl(int width, int height) {
+        this.width = (byte) width;
+        this.height = (byte) height;
     }
 
     @Override
@@ -31,10 +33,10 @@ public class SimpleSubChunkImpl implements ISubChunk {
             return Blocks.AIR.getDefaultState1();
         }
         try {
-            IBlockState b =  blockStates[(int) ((x * width + y) * height + z)];
-            return b == null ? Blocks.AIR.getDefaultState1() : b;
+            short b = blockStates[(int) ((x * width + y) * height + z)];
+            return b == 0 ? Blocks.AIR.getDefaultState1() : Ourcraft.GAME_INSTANCE.BLOCK_STATES.get(b);
         } catch (Exception e) {
-           // e.printStackTrace();
+            // e.printStackTrace();
         }
         return Blocks.AIR.getDefaultState1();
     }
@@ -43,13 +45,13 @@ public class SimpleSubChunkImpl implements ISubChunk {
     public IBlockState setBlockState(long x, long y, long z, IBlockState blockState) {
         if(blockStates == null) {
             if(blockState.getBlock() != Blocks.AIR) {
-                blockStates = new IBlockState[width * height * width];
+                blockStates = new short[width * height * width];
             } else {
                 return blockState;
             }
         }
         try {
-            return blockStates[(int) ((x * width + y) * height + z)] = blockState;
+            return Ourcraft.GAME_INSTANCE.BLOCK_STATES.get(blockStates[(int) ((x * width + y) * height + z)] = (short) blockState.getBlockStateID());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -84,9 +84,9 @@ public interface ICamera {
 
     default Vector3d getCameraPos() {
         Vector3d vector3d = getPosition();
-        double x = vector3d.x - ((int)vector3d.x >> 4);
-        double y = vector3d.y - ((int)vector3d.y >> 4);
-        double z = vector3d.z - ((int)vector3d.z >> 4);
+        double x = vector3d.x - ((int)vector3d.x >> 5);
+        double y = vector3d.y - ((int)vector3d.y >> 5);
+        double z = vector3d.z - ((int)vector3d.z >> 5);
 
         return new Vector3d(x,y,z);
     }

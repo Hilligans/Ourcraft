@@ -36,7 +36,6 @@ public class PlanetFeaturePlacerHelper implements IFeaturePlacerHelper {
         Vector3f vector3f = pos.get3f();
         int component = vector3f.maxComponent() + 1;
         int sign = vector3f.get(component - 1) > 0 ? 1 : -1;
-        System.err.println((sign * component) + 3);
         transformMatrix = table[(sign * component) + 3];
     }
 
@@ -124,4 +123,8 @@ public class PlanetFeaturePlacerHelper implements IFeaturePlacerHelper {
             new Matrix3d(),
             new Matrix3d().rotateLocalX(Math.PI/2)
     };
+
+    public IBlockState getBlockstateBelow() {
+        return getState(0, -1, 0);
+    }
 }

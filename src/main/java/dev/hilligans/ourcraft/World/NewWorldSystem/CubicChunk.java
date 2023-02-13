@@ -77,7 +77,7 @@ public class CubicChunk implements IChunk {
         int index = getIndex(x & 31, y & 31, z & 31);
         ISubChunk subChunk = subChunks[index];
         if(subChunk == null) {
-            subChunk = new SimpleSubChunkImpl(16,16);
+            subChunk = new GlobalPaletteImpl(16,16);
             subChunks[index] = subChunk;
         }
         subChunk.setBlockState(x & 15, y & 15, z & 15, blockState);

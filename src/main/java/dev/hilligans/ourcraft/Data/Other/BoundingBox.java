@@ -90,6 +90,24 @@ public class BoundingBox implements IBoundingBox {
         return -1;
     }
 
+    public void resizeForPoint(float x, float y, float z) {
+        if(x < minX) {
+            minX = x;
+        } else if(maxX < x) {
+            maxX = x;
+        }
+        if(y < minY) {
+            minY = y;
+        } else if(maxY < y) {
+            maxY = y;
+        }
+        if(z < minZ) {
+            minZ = z;
+        } else if(maxZ < z) {
+            maxZ = z;
+        }
+    }
+
     public int getHitSide(Vector3f vector3f, BlockPos source) {
         return getHitSide(new Vector3f(vector3f.x - source.x, vector3f.y - source.y, vector3f.z - source.z));
     }

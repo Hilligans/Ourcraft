@@ -117,12 +117,12 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.63.Final</version>
+            <version>4.1.86.Final</version>
         </dependency>
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20210307</version>
+            <version>20220320</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>

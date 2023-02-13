@@ -6,6 +6,8 @@ import dev.hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.hilligans.ourcraft.Client.Rendering.World.Managers.WorldTextureManager;
 import dev.hilligans.ourcraft.Data.Primitives.Triplet;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.stb.STBImage;
+import org.lwjgl.stb.STBImageWrite;
 
 import javax.imageio.ImageIO;
 import java.awt.Color;

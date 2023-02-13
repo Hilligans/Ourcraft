@@ -131,7 +131,6 @@ public class NewWorldRenderTask extends RenderTaskSource {
                     }
                 } else {
                     IChunk chunk = getChunk(x, y, z, world);
-
                     if (chunk != null) {
                         if (chunk.isDirty()) {
                             if (    getChunk(x + 1, y, z, world) != null &&
@@ -144,7 +143,7 @@ public class NewWorldRenderTask extends RenderTaskSource {
                                     buildMesh(window, graphicsContext, chunk);
                                     //System.out.println(chunk.getX() + " " + chunk.getY() + " " + chunk.getZ());
                                     //System.out.println(chunk.getBlockState1(0,0,0).getBlock().getName());
-                                    chunk.setDirty(false);
+                                 //   chunk.setDirty(false);
                                 }
                             }
                            /* if (!asyncedChunks.getOrDefault(((long) x << 32) ^ (int) (z & 0xffffffffL), false)) {
@@ -233,7 +232,7 @@ public class NewWorldRenderTask extends RenderTaskSource {
                                     } else {
                                         newState = chunk.getBlockState1(p);
                                     }
-                                    if (newState.getBlock().blockProperties.transparent && (Settings.renderSameTransparent || block.getBlock() != newState.getBlock()) || block.getBlock().blockProperties.alwaysRender) {
+                                    if (newState.getBlock().blockProperties.transparent && (Settings.renderSameTransparent || block.getBlock() != newState.getBlock()) || block.getBlock().blockProperties.alwaysRender || newState.getBlock().blockProperties.translucent) {
                                         block.getBlock().addVertices(primitiveBuilder, a, 1f, block, p.set(x, y, z), x, z);
                                     }
                                 }
