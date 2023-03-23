@@ -7,6 +7,8 @@ public interface IWorldHeightBuilder {
 
     int getWorldHeight(long x, long y, long z);
 
+    IWorldHeightBuilder setSeed(long seed);
+
     /**
      * Returns plane pairs for how to generate terrain.
      * Anything with PlaneType.SURFACE will ask to get the surface height with an x y z variable as a point on the plane. The returned value will be the height offset from the plane.

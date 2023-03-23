@@ -17,7 +17,7 @@ public class PlanetWorldHeightBuilder implements IWorldHeightBuilder {
     public IWorldHeightBuilder[] builders;
 
     public int radius;
-    public Random random;
+    public long seed;
     public int warpingRadius;
     public float w = 20;
 
@@ -26,7 +26,6 @@ public class PlanetWorldHeightBuilder implements IWorldHeightBuilder {
         this.builders = builders;
         this.radius = radius;
         this.warpingRadius = (int) (radius - w);
-        this.random = new Random();
     }
 
     @Override
@@ -178,6 +177,16 @@ public class PlanetWorldHeightBuilder implements IWorldHeightBuilder {
         } else {
             return 0;
         }
+    }
+
+    @Override
+    public IWorldHeightBuilder setSeed(long seed) {
+        this.seed = seed;
+        Random random = new Random(seed);
+        for(IWorldHeightBuilder heightBuilder : builders) {
+            heightBuilder.setSeed(random.nextLong());
+        }
+        return this;
     }
 
     public float getEffect(long distance) {

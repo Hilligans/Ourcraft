@@ -68,6 +68,11 @@ public class SimpleServerWorld extends SimpleWorld implements IServerWorld, IMet
     }
 
     @Override
+    public IWorldGenerator getWorldGenerator() {
+        return null;
+    }
+
+    @Override
     public void queueUpdate(int x, int y, int z) {
 
     }

@@ -8,11 +8,19 @@ import org.joml.SimplexNoise;
 public class SimpleHeightBuilder implements IWorldHeightBuilder {
 
     public int surfaceHeight = 64;
-    PerlinNoise perlinNoise = new PerlinNoise(new Random().nextInt(Short.MAX_VALUE), 0.5, 0.03, 40, 3);
+    public long seed;
+    PerlinNoise perlinNoise = new PerlinNoise(0, 0.5, 0.03, 40, 3);
 
     @Override
     public int getWorldHeight(long x, long y, long z) {
         return (int) perlinNoise.getHeight(x, z) + 10;
+    }
+
+    @Override
+    public IWorldHeightBuilder setSeed(long seed) {
+        this.seed = seed;
+        perlinNoise.setSeed((short) seed);
+        return this;
     }
 
     @Override

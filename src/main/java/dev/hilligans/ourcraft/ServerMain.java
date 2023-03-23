@@ -49,7 +49,7 @@ public class ServerMain {
                 new SimpleHeightBuilder(),
                 new SimpleHeightBuilder(),
                 new SimpleHeightBuilder()
-        }, 64));
+        }, 64).setSeed(1));
         world1.generateWorld();
         System.out.println("Done generating");
         server.addWorld(world1);

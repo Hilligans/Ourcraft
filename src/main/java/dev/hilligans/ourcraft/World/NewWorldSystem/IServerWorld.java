@@ -53,4 +53,6 @@ public interface IServerWorld extends IWorld {
     }
 
     default void generateWorld() {}
+
+    IWorldGenerator getWorldGenerator();
 }

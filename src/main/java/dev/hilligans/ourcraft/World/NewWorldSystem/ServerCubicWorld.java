@@ -14,6 +14,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorld {
 
     public MultiPlayerServer multiPlayerServer;
     public IWorldHeightBuilder worldHeightBuilder;
+    public IWorldGenerator worldGenerator;
     public final int widthBits = 5;
 
     public ServerCubicWorld(int id, String worldName, int radius, IWorldHeightBuilder worldHeightBuilder) {
@@ -866,5 +867,10 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorld {
                 }
             }
         }
+    }
+
+    @Override
+    public IWorldGenerator getWorldGenerator() {
+        return worldGenerator;
     }
 }
