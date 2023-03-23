@@ -18,7 +18,7 @@ public class CommandBuffer {
     public LogicalDevice device;
     public CommandPool commandPool;
     public PointerBuffer commandBuffers;
-    public ArrayList<VkCommandBuffer> commandBufferList = new ArrayList<>();
+    public ArrayList<VkCommandBuffer> commandBufferList;
 
     public CommandBuffer(LogicalDevice device, int size) {
         this.device = device;
@@ -28,7 +28,7 @@ public class CommandBuffer {
             commandBuffers = buffers.getTypeA();
             commandBufferList = buffers.getTypeB();
 
-            beginRecording();
+            //beginRecording();
         }
     }
 
@@ -36,7 +36,7 @@ public class CommandBuffer {
         return commandBufferList.get(index);
     }
 
-    public void beginRecording() {
+   /* public void beginRecording() {
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             for (int x = 0; x < commandBuffers.capacity(); x++) {
                 VkCommandBufferBeginInfo vkCommandBufferBeginInfo = VkCommandBufferBeginInfo.calloc(memoryStack);
@@ -50,9 +50,23 @@ public class CommandBuffer {
         }
     }
 
+    */
+
+    public void beginRecording(int index) {
+        try (MemoryStack memoryStack = MemoryStack.stackPush()) {
+            VkCommandBufferBeginInfo vkCommandBufferBeginInfo = VkCommandBufferBeginInfo.calloc(memoryStack);
+            vkCommandBufferBeginInfo.sType(VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO);
+            VkCommandBuffer vkCommandBuffer = new VkCommandBuffer(commandBuffers.get(index), device.device);
+            commandBufferList.add(vkCommandBuffer);
+            if (vkBeginCommandBuffer(vkCommandBuffer, vkCommandBufferBeginInfo) != VK_SUCCESS) {
+                device.vulkanInstance.exit("failed to begin recording command buffer");
+            }
+        }
+    }
+
     public void createPass(RenderPass renderPass) {
         for(int x = 0; x < commandBufferList.size(); x++) {
-            renderPass.createRenderPass(x,renderPass.vulkanWindow.buffer);
+           // renderPass.createRenderPass(x,renderPass.vulkanWindow.buffer);
         }
     }
 

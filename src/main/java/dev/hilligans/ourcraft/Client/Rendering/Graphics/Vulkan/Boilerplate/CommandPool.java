@@ -23,6 +23,7 @@ public class CommandPool {
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             VkCommandPoolCreateInfo commandPoolCreateInfo = VkCommandPoolCreateInfo.calloc(memoryStack);
             commandPoolCreateInfo.sType(VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO);
+            commandPoolCreateInfo.flags(VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
             commandPoolCreateInfo.queueFamilyIndex(device.defaultVulkanWindow.graphicsFamily.index);
             LongBuffer longBuffer = memoryStack.callocLong(1);
             if (vkCreateCommandPool(device.device, commandPoolCreateInfo, null, longBuffer) != VK_SUCCESS) {
@@ -46,6 +47,11 @@ public class CommandPool {
             if (vkAllocateCommandBuffers(device.device, commandBufferAllocateInfo, commandBuffers) != VK_SUCCESS) {
                 device.vulkanInstance.exit("Failed to allocate command buffers");
             }
+        }
+
+        for (int x = 0; x < commandBuffers.capacity(); x++) {
+            VkCommandBuffer vkCommandBuffer = new VkCommandBuffer(commandBuffers.get(x), device.device);
+            commandBufferList.add(vkCommandBuffer);
         }
 
         return new Tuple<>(commandBuffers, commandBufferList);

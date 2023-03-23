@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.Client.Rendering.Graphics;
 
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsContext;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.ModHandler.Content.ModContent;
@@ -68,9 +69,9 @@ public class ShaderSource implements IRegistryElement {
     }
 
     @Override
-    public void loadGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine) {
+    public void loadGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
         System.err.println("LOADING");
-        program = (int) graphicsEngine.getDefaultImpl().createProgram(null,this);
+        program = (int) graphicsEngine.getDefaultImpl().createProgram(graphicsContext,this);
         if(uniformNames != null) {
             System.out.println(name);
             uniformIndexes = new int[uniformNames.length];

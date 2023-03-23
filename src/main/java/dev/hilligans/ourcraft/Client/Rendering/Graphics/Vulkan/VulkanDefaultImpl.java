@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.Client.MatrixStack;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.PipelineState;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.ShaderSource;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.LogicalDevice;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline.GraphicsPipeline;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline.IndexBuffer;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline.RenderPass;
@@ -11,16 +12,20 @@ import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipel
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.Shader;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.ShaderCompiler;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.Viewport;
-import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.VulkanWindow;
 import dev.hilligans.ourcraft.Client.Rendering.VertexMesh;
 import dev.hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.hilligans.ourcraft.Resource.ResourceLocation;
+import dev.hilligans.ourcraft.Util.NamedThreadFactory;
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.vulkan.VkPipelineLayoutCreateInfo;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.util.HashMap;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.lwjgl.vulkan.VK10.*;
 
@@ -29,6 +34,14 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     public VulkanEngine engine;
 
     public Long2ObjectOpenHashMap<Tuple<VertexBuffer, IndexBuffer>> meshes = new Long2ObjectOpenHashMap<>();
+
+    public AtomicLong pipelineIndex = new AtomicLong();
+    public final Long2ObjectOpenHashMap<GraphicsPipeline> pipelines = new Long2ObjectOpenHashMap<>();
+
+    public final HashMap<String, Shader> shaderCache = new HashMap<>();
+    public ForkJoinPool pool = new ForkJoinPool(1);
+    public boolean asyncShaderLoading = true;
+
     public Long2LongOpenHashMap indexIndex = new Long2LongOpenHashMap();
     public VulkanDefaultImpl(VulkanEngine vulkanEngine) {
         this.engine = vulkanEngine;
@@ -36,14 +49,9 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
 
 
     @Override
-    public void drawMesh(VulkanWindow window, VulkanGraphicsContext graphicsContext, MatrixStack matrixStack, long texture, long program, long meshID, long indicesIndex, int length) {
-        if(program != graphicsContext.program) {
-            vkCmdBindPipeline(graphicsContext.getBuffer(),VK_PIPELINE_BIND_POINT_GRAPHICS, program);
-            graphicsContext.program = program;
-        }
+    public void drawMesh(VulkanWindow window, VulkanGraphicsContext graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
+        System.out.println("Drawing");
 
-        if(texture != graphicsContext.texture) {
-        }
 
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             vkCmdBindVertexBuffers(graphicsContext.getBuffer(), 0, memoryStack.longs(meshID), memoryStack.longs(0));
@@ -81,8 +89,25 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     }
 
     @Override
-    public void drawAndDestroyMesh(VulkanWindow window, VulkanGraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh, long texture, long program) {
+    public void drawAndDestroyMesh(VulkanWindow window, VulkanGraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh) {
+        System.out.println("Drawing");
+    }
 
+    @Override
+    public void bindTexture(VulkanWindow window, VulkanGraphicsContext graphicsContext, long texture) {
+        if (texture != graphicsContext.texture) {
+
+        }
+    }
+
+    @Override
+    public void bindPipeline(VulkanWindow window, VulkanGraphicsContext graphicsContext, long pipeline) {
+        if (pipeline != graphicsContext.program) {
+            vkCmdBindPipeline(graphicsContext.getBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+            graphicsContext.program = pipeline;
+            //TODO may cause problems
+            graphicsContext.bindPipeline(pipelines.get(pipeline));
+        }
     }
 
     @Override
@@ -92,25 +117,44 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
 
     @Override
     public long createProgram(VulkanGraphicsContext graphicsContext, ShaderSource shaderSource) {
-        String vertex =  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.vertexShader, shaderSource.modContent.getModID()));
-        String fragment = engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.fragmentShader, shaderSource.modContent.getModID()));
+        LogicalDevice device = graphicsContext.device;
 
-      //  ByteBuffer geometryShader = geometry != null ? ShaderCompiler.compileShader(geometry,ShaderCompiler.GEOMETRY_SHADER) : null;
+        GraphicsPipeline graphicsPipeline = new GraphicsPipeline(graphicsContext.device, shaderSource);
 
-        RenderPass renderPass = new RenderPass(graphicsContext.window);
-        Viewport viewport = new Viewport(graphicsContext.window);
+        if(asyncShaderLoading) {
+            submitShader(shaderSource.vertexShader, shaderSource.modContent.getModID(), device, VK_SHADER_STAGE_VERTEX_BIT);
+            submitShader(shaderSource.fragmentShader, shaderSource.modContent.getModID(), device, VK_SHADER_STAGE_FRAGMENT_BIT);
+        } else {
+            compileShaderAndPut(shaderSource.vertexShader, shaderSource.modContent.getModID(), device, VK_SHADER_STAGE_VERTEX_BIT);
+            compileShaderAndPut(shaderSource.fragmentShader, shaderSource.modContent.getModID(), device, VK_SHADER_STAGE_FRAGMENT_BIT);
 
-        Shader vertexShader = new Shader(graphicsContext.window, ShaderCompiler.compileShader(vertex,ShaderCompiler.VERTEX_SHADER), VK_SHADER_STAGE_VERTEX_BIT);
-        Shader fragmentShader = new Shader(graphicsContext.window, ShaderCompiler.compileShader(fragment,ShaderCompiler.FRAGMENT_SHADER), VK_SHADER_STAGE_FRAGMENT_BIT);
+            Shader vertexShader;
+            Shader fragmentShader;
+            synchronized (shaderCache) {
+                vertexShader = shaderCache.get(shaderSource.vertexShader);
+                fragmentShader = shaderCache.get(shaderSource.fragmentShader);
+            }
+            if (vertexShader == null || fragmentShader == null) {
+                return -1;
+            }
+            graphicsPipeline.build(graphicsContext.window.renderPass, graphicsContext.window.viewport, vertexShader, fragmentShader);
+        }
 
-        GraphicsPipeline graphicsPipeline = new GraphicsPipeline(graphicsContext.window, renderPass, viewport, vertexShader, fragmentShader);
-
+        synchronized (pipelines) {
+            pipelines.put(graphicsPipeline.pipeline, graphicsPipeline);
+        }
         return graphicsPipeline.pipeline;
     }
 
     @Override
-    public void uploadData(VulkanGraphicsContext graphicsContext, FloatBuffer data, long index, String type, long program) {
+    public void uploadData(VulkanGraphicsContext graphicsContext, FloatBuffer data, long index, String type, long program, ShaderSource shaderSource) {
+        GraphicsPipeline pipeline = graphicsContext.boundPipeline;
+        if(pipeline == null) {
+            throw new VulkanEngineException("Bound graphics pipeline is null");
+        }
 
+        //TODO add offset
+        vkCmdPushConstants(graphicsContext.getBuffer(), pipeline.layout.pipeline, VK_SHADER_STAGE_VERTEX_BIT, 0, data);
     }
 
 
@@ -119,4 +163,50 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
         return 0;
     }
 
+    public void submitShader(String path, String modID, LogicalDevice device, int bit) {
+        synchronized (shaderCache) {
+            if(!shaderCache.containsKey(path)) {
+                shaderCache.put(path, null);
+                pool.submit(() -> {
+                    compileShaderAndPut(path, modID, device, bit);
+                });
+            }
+        }
+    }
+
+    public void compileShaderAndPut(String path, String modID, LogicalDevice device, int bit) {
+        String newPath = path.substring(0, path.length() - 5) + ".vulkan.glsl";
+        try {
+            System.out.println("Yew " + pipelineIndex.getAndIncrement());
+            String shaderSource = engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(newPath, modID));
+            if(shaderSource == null) {
+                System.out.println("Failed to load vulkan shader " + path);
+                return;
+            }
+            Shader shader = new Shader(device, ShaderCompiler.compileShader(shaderSource, newPath, bit), bit);
+            synchronized (shaderCache) {
+                shaderCache.put(path, shader);
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to compile shader " + newPath);
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public void compilePipelines(RenderPass renderPass, Viewport viewport) {
+        //Wait for queue to be done compiling
+        if(asyncShaderLoading) {
+            boolean res = pool.awaitQuiescence(1000, TimeUnit.SECONDS);
+            for (GraphicsPipeline graphicsPipeline : pipelines.values()) {
+                Shader vertexShader = shaderCache.get(graphicsPipeline.shaderSource.vertexShader);
+                Shader fragmentShader = shaderCache.get(graphicsPipeline.shaderSource.fragmentShader);
+                if(vertexShader == null || fragmentShader == null) {
+                    System.out.println("Missing shader " + graphicsPipeline.shaderSource.vertexShader);
+                    continue;
+                }
+                graphicsPipeline.build(renderPass, viewport, vertexShader, fragmentShader);
+            }
+        }
+    }
 }

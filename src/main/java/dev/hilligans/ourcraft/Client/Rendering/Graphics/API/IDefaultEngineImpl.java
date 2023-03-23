@@ -6,6 +6,7 @@ import dev.hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.ShaderSource;
 import dev.hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.hilligans.ourcraft.Client.Rendering.VertexMesh;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;
@@ -16,7 +17,7 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
     default void close() {
     }
 
-    void drawMesh(T window, Q graphicsContext, MatrixStack matrixStack, long texture, long program, long meshID, long indicesIndex, int length);
+    void drawMesh(T window, Q graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length);
 
     long createMesh(T window, Q graphicsContext, VertexMesh mesh);
 
@@ -30,18 +31,22 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
 
     void destroyTexture(T window, Q graphicsContext, long texture);
 
-    void drawAndDestroyMesh(T window, Q graphicsContext, MatrixStack matrixStack, VertexMesh mesh, long texture, long program);
+    void drawAndDestroyMesh(T window, Q graphicsContext, MatrixStack matrixStack, VertexMesh mesh);
+
+    void bindTexture(T window, Q graphicsContext, long texture);
+
+    void bindPipeline(T window, Q graphicsContext, long pipeline);
 
     void setState(T window, Q graphicsContext, PipelineState state);
 
     long createProgram(Q graphicsContext, ShaderSource shaderSource);
 
-    void uploadData(Q graphicsContext, FloatBuffer data, long index, String type, long program);
+    void uploadData(Q graphicsContext, FloatBuffer data, long index, String type, long program, ShaderSource shaderSource);
 
     long getUniformIndex(Q graphicsContext, String name, long shader);
 
-    default void drawMesh(Object window, Object graphicsContext, MatrixStack matrixStack, long texture, long program, long meshID, long indicesIndex, int length) {
-        drawMesh((T) window, (Q) graphicsContext, matrixStack, texture, program, meshID, indicesIndex, length);
+    default void drawMesh(Object window, Object graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
+        drawMesh((T) window, (Q) graphicsContext, matrixStack, meshID, indicesIndex, length);
     }
 
     default long createMesh(Object window, Object graphicsContext, VertexMesh mesh) {
@@ -60,21 +65,33 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
         destroyTexture((T) window, (Q) graphicsContext, texture);
     }
 
-    default void drawAndDestroyMesh(Object window, Object graphicsContext, MatrixStack matrixStack, VertexMesh mesh, long texture, long program) {
-        drawAndDestroyMesh((T) window, (Q) graphicsContext, matrixStack, mesh, texture, program);
+    default void drawAndDestroyMesh(Object window, Object graphicsContext, MatrixStack matrixStack, VertexMesh mesh) {
+        drawAndDestroyMesh((T) window, (Q) graphicsContext, matrixStack, mesh);
+    }
+
+    default void bindTexture(Object window, Object graphicsContext, long texture) {
+        bindTexture((T) window, (Q) graphicsContext, texture);
+    }
+
+    default void bindPipeline(Object window, Object graphicsContext, long pipeline) {
+        bindPipeline((T) window, (Q) graphicsContext, pipeline);
     }
 
     default void setState(Object window, Object graphicsContext, PipelineState state) {
         setState((T) window, (Q) graphicsContext, state);
     }
 
-    default void uploadData(Object graphicsContext, FloatBuffer data, long index, String type, long program) {
-        uploadData((Q) graphicsContext, data, index, type, program);
+    default long createProgram(Object graphicsContext, ShaderSource shaderSource) {
+        return createProgram((Q) graphicsContext, shaderSource);
     }
 
-    default void uploadData(Object graphicsContext, float[] data, long index, String type, long program) {
+    default void uploadData(Object graphicsContext, FloatBuffer data, long index, String type, long program, ShaderSource shaderSource) {
+        uploadData((Q) graphicsContext, data, index, type, program, shaderSource);
+    }
+
+    default void uploadData(Object graphicsContext, float[] data, long index, String type, long program, ShaderSource shaderSource) {
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
-            uploadData((Q) graphicsContext, memoryStack.floats(data), index, type, program);
+            uploadData((Q) graphicsContext, memoryStack.floats(data), index, type, program, shaderSource);
         }
     }
 
@@ -82,10 +99,10 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
         return getUniformIndex((Q) graphicsContext, name, shader);
     }
 
-    default void uploadMatrix(GraphicsContext context, MatrixStack matrixStack, ShaderSource shaderSource) {
+    default void uploadMatrix(GraphicsContext context, MatrixStack matrixStack, @NotNull ShaderSource shaderSource) {
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
-            uploadData(context, memoryStack.floats(matrixStack.color.x, matrixStack.color.y, matrixStack.color.z, matrixStack.color.w), shaderSource.uniformIndexes[1], "4f", shaderSource.program);
-            uploadData(context, matrixStack.matrix4f.get(memoryStack.mallocFloat(16)), shaderSource.uniformIndexes[0], "4fv", shaderSource.program);
+            uploadData(context, memoryStack.floats(matrixStack.color.x, matrixStack.color.y, matrixStack.color.z, matrixStack.color.w), shaderSource.uniformIndexes[1], "4f", shaderSource.program, shaderSource);
+            uploadData(context, matrixStack.matrix4f.get(memoryStack.mallocFloat(16)), shaderSource.uniformIndexes[0], "4fv", shaderSource.program, shaderSource);
         }
     }
 }

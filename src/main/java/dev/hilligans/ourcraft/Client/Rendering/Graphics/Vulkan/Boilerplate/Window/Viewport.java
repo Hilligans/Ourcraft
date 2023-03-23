@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window;
 
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanWindow;
 import org.lwjgl.vulkan.VkPipelineViewportStateCreateInfo;
 import org.lwjgl.vulkan.VkRect2D;
 import org.lwjgl.vulkan.VkViewport;

@@ -2,6 +2,8 @@ package dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Wind
 
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline.VertexBuffer;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Semaphore;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanGraphicsContext;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanWindow;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.VkCommandBuffer;
@@ -29,17 +31,26 @@ public class WindowRenderer {
             Semaphore renderSemaphore = vulkanWindow.frameManager.getRenderSemaphore();
             vkWaitForFences(vulkanWindow.device.device, vulkanWindow.frameManager.getFence(), true, Long.MAX_VALUE);
             vkAcquireNextImageKHR(vulkanWindow.device.device, vulkanWindow.swapChain.swapChain, Long.MAX_VALUE, imageSemaphore.semaphore, VK_NULL_HANDLE, imageIndex);
+
             if(!vulkanWindow.frameManager.canDrawToImage(imageIndex.get(0))) {
                 vkWaitForFences(vulkanWindow.device.device, vulkanWindow.frameManager.imagesInFlight[imageIndex.get(0)],true,Integer.MAX_VALUE);
             }
+            VulkanGraphicsContext context = vulkanWindow.context;
+            context.setBufferInUse(imageIndex.get(0));
             vulkanWindow.frameManager.startDrawing(imageIndex.get(0));
 
             VkSubmitInfo submitInfo = VkSubmitInfo.calloc().sType(VK_STRUCTURE_TYPE_SUBMIT_INFO).waitSemaphoreCount(1).pWaitSemaphores(imageSemaphore.get(memoryStack));
             submitInfo.pWaitDstStageMask(memoryStack.ints(VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT));
+
+            VkCommandBuffer buffer = vulkanWindow.commandBuffer.commandBufferList.get(imageIndex.get(0));
+
             submitInfo.pCommandBuffers(memoryStack.mallocPointer(1).put(0, vulkanWindow.commandBuffer.commandBuffers.get(imageIndex.get(0))));
             submitInfo.pSignalSemaphores(renderSemaphore.get(memoryStack));
 
             vkResetFences(vulkanWindow.device.device, vulkanWindow.frameManager.getFence());
+            vkResetCommandBuffer(buffer, 0);
+
+            //draw to buffer
 
          //   if(vkQueueSubmit(vulkanWindow.graphicsFamily.getQueue(0).vkQueue, submitInfo, vulkanWindow.frameManager.imagesInFlight[vulkanWindow.frameManager.currentFrame]) != VK_SUCCESS) {
             if(vkQueueSubmit(vulkanWindow.graphicsFamily.getQueue(0).vkQueue, submitInfo, vulkanWindow.frameManager.getFencePointer()) != VK_SUCCESS) {
@@ -61,18 +72,24 @@ public class WindowRenderer {
         }
     }
 
-    public void render(VkCommandBuffer... commandBuffers) {
+    public int waitForNextFrame() {
         try (MemoryStack memoryStack = MemoryStack.stackPush()) {
             IntBuffer imageIndex = memoryStack.mallocInt(1);
             Semaphore imageSemaphore = vulkanWindow.frameManager.getImageSemaphore();
-            Semaphore renderSemaphore = vulkanWindow.frameManager.getRenderSemaphore();
             vkWaitForFences(vulkanWindow.device.device, vulkanWindow.frameManager.getFence(), true, Long.MAX_VALUE);
             vkAcquireNextImageKHR(vulkanWindow.device.device, vulkanWindow.swapChain.swapChain, Long.MAX_VALUE, imageSemaphore.semaphore, VK_NULL_HANDLE, imageIndex);
-            if(!vulkanWindow.frameManager.canDrawToImage(imageIndex.get(0))) {
-                vkWaitForFences(vulkanWindow.device.device, vulkanWindow.frameManager.imagesInFlight[imageIndex.get(0)],true,Integer.MAX_VALUE);
+            if (!vulkanWindow.frameManager.canDrawToImage(imageIndex.get(0))) {
+                vkWaitForFences(vulkanWindow.device.device, vulkanWindow.frameManager.imagesInFlight[imageIndex.get(0)], true, Integer.MAX_VALUE);
             }
             vulkanWindow.frameManager.startDrawing(imageIndex.get(0));
+            return imageIndex.get(0);
+        }
+    }
 
+    public void render(VkCommandBuffer... commandBuffers) {
+        try (MemoryStack memoryStack = MemoryStack.stackPush()) {
+            Semaphore renderSemaphore = vulkanWindow.frameManager.getRenderSemaphore();
+            Semaphore imageSemaphore = vulkanWindow.frameManager.getImageSemaphore();
             VkSubmitInfo submitInfo = VkSubmitInfo.calloc().sType(VK_STRUCTURE_TYPE_SUBMIT_INFO).waitSemaphoreCount(1).pWaitSemaphores(imageSemaphore.get(memoryStack));
             submitInfo.pWaitDstStageMask(memoryStack.ints(VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT));
             PointerBuffer bufferPointers = memoryStack.mallocPointer(commandBuffers.length);
@@ -82,13 +99,19 @@ public class WindowRenderer {
             submitInfo.pCommandBuffers(bufferPointers);
             submitInfo.pSignalSemaphores(renderSemaphore.get(memoryStack));
 
-            vkResetFences(vulkanWindow.device.device, vulkanWindow.frameManager.getFence());
+            vkResetFences(vulkanWindow.device.device, vulkanWindow.frameManager.getFencePointer());
 
             if(vkQueueSubmit(vulkanWindow.graphicsFamily.getQueue(0).vkQueue, submitInfo, vulkanWindow.frameManager.getFencePointer()) != VK_SUCCESS) {
                 vulkanWindow.device.vulkanInstance.exit("Failed to submit to queue");
             }
+        }
+    }
 
-            VkPresentInfoKHR presentInfoKHR = VkPresentInfoKHR.calloc();
+    public void present(int imageIndex) {
+        try(MemoryStack memoryStack = MemoryStack.stackPush()) {
+            Semaphore renderSemaphore = vulkanWindow.frameManager.getRenderSemaphore();
+
+            VkPresentInfoKHR presentInfoKHR = VkPresentInfoKHR.calloc(memoryStack);
             presentInfoKHR.sType(VK_STRUCTURE_TYPE_PRESENT_INFO_KHR);
             presentInfoKHR.pWaitSemaphores(renderSemaphore.get(memoryStack));
 
@@ -96,9 +119,10 @@ public class WindowRenderer {
             swapChain.put(0, vulkanWindow.swapChain.swapChain);
             presentInfoKHR.swapchainCount(1);
             presentInfoKHR.pSwapchains(swapChain);
-            presentInfoKHR.pImageIndices(imageIndex);
 
-            vkQueuePresentKHR(vulkanWindow.graphicsFamily.getQueue(0).vkQueue,presentInfoKHR);
+            presentInfoKHR.pImageIndices(memoryStack.ints(imageIndex));
+
+            vkQueuePresentKHR(vulkanWindow.graphicsFamily.getQueue(0).vkQueue, presentInfoKHR);
             vulkanWindow.frameManager.advanceFrame();
         }
     }

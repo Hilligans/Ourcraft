@@ -43,9 +43,9 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public void drawMesh(OpenGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, long texture, long program, long meshID, long indicesIndex, int length) {
+    public void drawMesh(OpenGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
         Tuple<Integer, Integer> data = meshData.get((int)meshID);
-        if(texture != boundTexture) {
+       /* if(texture != boundTexture) {
             GL20.glBindTexture((Integer) textureTypes.get((int)texture), (int)texture);
             boundTexture = texture;
         }
@@ -53,6 +53,8 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
             GL20.glUseProgram((int) program);
             boundProgram = program;
         }
+
+        */
 
         if(data == null) {
             return;
@@ -146,12 +148,12 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public void drawAndDestroyMesh(OpenGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh, long texture, long program) {
+    public void drawAndDestroyMesh(OpenGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh) {
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
         glDisable(GL_DEPTH_TEST);
-        if(texture != boundTexture) {
+      /*  if(texture != boundTexture) {
             // GL20.glBindTexture(textureTypes.get(texture), texture);
             if (texture != 0) {
                 GL20.glBindTexture(GL_TEXTURE_2D, (int)texture);
@@ -162,6 +164,8 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
             GL20.glUseProgram((int)program);
             boundProgram = program;
         }
+
+       */
         int VAO = glGenVertexArrays();
         int VBO = glGenBuffers();
         int EBO = glGenBuffers();
@@ -192,6 +196,22 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
+    public void bindTexture(OpenGLWindow window, GraphicsContext graphicsContext, long texture) {
+        if(texture != boundTexture) {
+            GL20.glBindTexture(textureTypes.get((int)texture), (int)texture);
+            boundTexture = texture;
+        }
+    }
+
+    @Override
+    public void bindPipeline(OpenGLWindow window, GraphicsContext graphicsContext, long pipeline) {
+        if(pipeline != boundProgram){
+            GL20.glUseProgram((int) pipeline);
+            boundProgram = pipeline;
+        }
+    }
+
+    @Override
     public void setState(OpenGLWindow window, GraphicsContext graphicsContext, PipelineState state) {
         if(state.depthTest) {
             glEnable(GL_DEPTH_TEST);
@@ -217,7 +237,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public void uploadData(GraphicsContext graphicsContext, FloatBuffer data, long index, String type, long program) {
+    public void uploadData(GraphicsContext graphicsContext, FloatBuffer data, long index, String type, long program, ShaderSource shaderSource) {
         //if(program != boundProgram) {
             GL20.glUseProgram((int)program);
             boundProgram = program;

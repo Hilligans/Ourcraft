@@ -1,8 +1,9 @@
 package dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline;
 
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.ShaderSource;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.LogicalDevice;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.Shader;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.Viewport;
-import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.VulkanWindow;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.*;
 
@@ -12,53 +13,64 @@ import static org.lwjgl.vulkan.VK10.*;
 
 public class GraphicsPipeline {
 
-    public VulkanWindow vulkanWindow;
+    public LogicalDevice device;
+    public ShaderSource shaderSource;
+    public PipelineLayout layout;
     public long pipeline;
 
-    public GraphicsPipeline(VulkanWindow vulkanWindow, RenderPass renderPass, Viewport viewport, Shader vertexShader, Shader fragmentShader) {
-        this.vulkanWindow = vulkanWindow;
 
+    public GraphicsPipeline(LogicalDevice device, ShaderSource shaderSource) {
+        this.device = device;
+        this.shaderSource = shaderSource;
+    }
+
+    public void addToBuffer(MemoryStack memoryStack, int bufferIndex, VkGraphicsPipelineCreateInfo.Buffer buffer, RenderPass renderPass, Viewport viewport, Shader vertexShader, Shader fragmentShader) {
+        VkPipelineInputAssemblyStateCreateInfo pipelineInputAssemblyStateCreateInfo = VkPipelineInputAssemblyStateCreateInfo.calloc(memoryStack);
+        pipelineInputAssemblyStateCreateInfo.primitiveRestartEnable(false);
+        pipelineInputAssemblyStateCreateInfo.sType(VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO);
+        pipelineInputAssemblyStateCreateInfo.topology(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+
+        VkGraphicsPipelineCreateInfo graphicsPipelineCreateInfo = VkGraphicsPipelineCreateInfo.calloc(memoryStack);
+        graphicsPipelineCreateInfo.sType(VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO);
+        VkPipelineShaderStageCreateInfo.Buffer stageCreateInfosBuffer = VkPipelineShaderStageCreateInfo.calloc(2, memoryStack);
+        stageCreateInfosBuffer.put(0, vertexShader.shaderCreateInfo);
+        stageCreateInfosBuffer.put(1, fragmentShader.shaderCreateInfo);
+        graphicsPipelineCreateInfo.pStages(stageCreateInfosBuffer);
+        graphicsPipelineCreateInfo.pVertexInputState(vertexShader.stateCreateInfo);
+        graphicsPipelineCreateInfo.pInputAssemblyState(pipelineInputAssemblyStateCreateInfo);
+        graphicsPipelineCreateInfo.pViewportState(viewport.viewportCreateInfo);
+        graphicsPipelineCreateInfo.pRasterizationState(renderPass.createInfo);
+        graphicsPipelineCreateInfo.pMultisampleState(renderPass.sampleCreateInfo);
+        graphicsPipelineCreateInfo.pColorBlendState(renderPass.colorBlend);
+        graphicsPipelineCreateInfo.layout(renderPass.pipelineLayout.pipeline);
+        graphicsPipelineCreateInfo.renderPass(renderPass.renderPass);
+        graphicsPipelineCreateInfo.subpass(0);
+
+        buffer.put(bufferIndex, graphicsPipelineCreateInfo);
+
+        this.layout = renderPass.pipelineLayout;
+    }
+
+    public long build(RenderPass renderPass, Viewport viewport, Shader vertexShader, Shader fragmentShader) {
+        if(pipeline != 0) {
+            vkDestroyPipeline(device.device, pipeline,null);
+        }
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             LongBuffer longBuffer = memoryStack.mallocLong(1);
 
-            VkPipelineInputAssemblyStateCreateInfo pipelineInputAssemblyStateCreateInfo = VkPipelineInputAssemblyStateCreateInfo.calloc(memoryStack);
-            pipelineInputAssemblyStateCreateInfo.primitiveRestartEnable(false);
-            pipelineInputAssemblyStateCreateInfo.sType(VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO);
-            pipelineInputAssemblyStateCreateInfo.topology(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
-
-            VkGraphicsPipelineCreateInfo graphicsPipelineCreateInfo = VkGraphicsPipelineCreateInfo.calloc(memoryStack);
-            graphicsPipelineCreateInfo.sType(VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO);
-            VkPipelineShaderStageCreateInfo.Buffer stageCreateInfosBuffer = VkPipelineShaderStageCreateInfo.calloc(2, memoryStack);
-            stageCreateInfosBuffer.put(0, vertexShader.shaderCreateInfo);
-            stageCreateInfosBuffer.put(1, fragmentShader.shaderCreateInfo);
-            graphicsPipelineCreateInfo.pStages(stageCreateInfosBuffer);
-            graphicsPipelineCreateInfo.pVertexInputState(vulkanWindow.vertexShader.stateCreateInfo);
-            graphicsPipelineCreateInfo.pInputAssemblyState(pipelineInputAssemblyStateCreateInfo);
-            graphicsPipelineCreateInfo.pViewportState(viewport.viewportCreateInfo);
-            graphicsPipelineCreateInfo.pRasterizationState(renderPass.createInfo);
-            graphicsPipelineCreateInfo.pMultisampleState(renderPass.sampleCreateInfo);
-            graphicsPipelineCreateInfo.pColorBlendState(renderPass.colorBlend);
-            graphicsPipelineCreateInfo.layout(renderPass.pipelineLayout.pipeline);
-            graphicsPipelineCreateInfo.renderPass(renderPass.renderPass);
-            graphicsPipelineCreateInfo.subpass(0);
-
             VkGraphicsPipelineCreateInfo.Buffer buffer3 = VkGraphicsPipelineCreateInfo.calloc(1, memoryStack);
-            buffer3.put(0, graphicsPipelineCreateInfo);
+            addToBuffer(memoryStack, 0, buffer3, renderPass, viewport, vertexShader, fragmentShader);
 
-            //longBuffer = memoryStack.callocLong(1);
-
-            if (vkCreateGraphicsPipelines(vulkanWindow.device.device, VK_NULL_HANDLE, buffer3, null, longBuffer) != VK_SUCCESS) {
-                vulkanWindow.device.vulkanInstance.exit("Failed to create pipeline");
+            if (vkCreateGraphicsPipelines(device.device, VK_NULL_HANDLE, buffer3, null, longBuffer) != VK_SUCCESS) {
+                device.vulkanInstance.exit("Failed to create pipeline");
             }
 
-            vulkanWindow.vertexShader.freeInit();
-            renderPass.freeInit();
-
             pipeline = longBuffer.get(0);
+            return pipeline;
         }
     }
 
     public void cleanup() {
-        vkDestroyPipeline(vulkanWindow.device.device, pipeline,null);
+        vkDestroyPipeline(device.device, pipeline,null);
     }
 }

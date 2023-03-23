@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.Client.Rendering;
 
 import dev.hilligans.ourcraft.Client.MatrixStack;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsContext;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
@@ -53,7 +54,9 @@ public class Texture implements IRegistryElement {
         mesh.addData(indices, vertices);
 
         //GL11.glDisable(GL11.GL_DEPTH_TEST);
-        defaultEngineImpl.drawAndDestroyMesh(window,null,matrixStack,mesh,textureId,shaderSource.program);
+        defaultEngineImpl.bindPipeline(window, null, shaderSource.program);
+        defaultEngineImpl.bindTexture(window, null, textureId);
+        defaultEngineImpl.drawAndDestroyMesh(window,null,matrixStack,mesh);
     }
 
     public void drawTexture(RenderWindow window, MatrixStack matrixStack, int x, int y, int width, int height) {
@@ -141,8 +144,8 @@ public class Texture implements IRegistryElement {
     }
 
     @Override
-    public void loadGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine) {
-        IRegistryElement.super.loadGraphics(graphicsEngine);
+    public void loadGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
+        IRegistryElement.super.loadGraphics(graphicsEngine, graphicsContext);
         textureId = (int) graphicsEngine.getDefaultImpl().createTexture(null,null, texture);
     }
 }

@@ -81,9 +81,9 @@ public class Renderer {
         float maxY = TextAtlas.getMaxY(id);
         float[] vertices = new float[] {x,y,0,minX,minY,x,y + size,0,minX,maxY,x + size,y,0,maxX,minY,x + size,y + size,0,maxX,maxY};
         int[] indices = new int[] {0,1,2,2,1,3};
-        window.getEngineImpl().uploadMatrix(null, matrixStack, null);
+        //window.getEngineImpl().uploadMatrix(null, matrixStack, null);
         VertexMesh mesh = new VertexMesh(Ourcraft.position_color_texture);
         mesh.addData(indices, vertices);
-        window.getGraphicsEngine().getDefaultImpl().drawAndDestroyMesh(window, null, matrixStack, mesh, textureManager.getTextureId(), 0);
+        //window.getGraphicsEngine().getDefaultImpl().drawAndDestroyMesh(window, null, matrixStack, mesh, textureManager.getTextureId(), 0);
     }
 }

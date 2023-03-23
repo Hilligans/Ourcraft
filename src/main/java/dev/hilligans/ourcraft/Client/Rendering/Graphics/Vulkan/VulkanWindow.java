@@ -1,19 +1,20 @@
-package dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window;
+package dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan;
 
 import dev.hilligans.ourcraft.Client.Client;
 import dev.hilligans.ourcraft.Client.Input.InputHandler;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Implementations.FreeCamera;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.LogicalDevice;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.QueueFamily;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VkInterface;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanInstance;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.*;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline.*;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.util.shaderc.Shaderc;
 import org.lwjgl.vulkan.VkExtent2D;
 import org.lwjgl.vulkan.VkQueue;
 
@@ -21,6 +22,7 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL15.glMapBuffer;
 import static org.lwjgl.vulkan.KHRSurface.*;
 import static org.lwjgl.vulkan.VK10.VK_SHADER_STAGE_FRAGMENT_BIT;
 import static org.lwjgl.vulkan.VK10.VK_SHADER_STAGE_VERTEX_BIT;
@@ -51,7 +53,7 @@ public class VulkanWindow extends RenderWindow {
     public int glfwWidth;
     public int glfwHeight;
     public WindowRenderer windowRenderer;
-
+    public VulkanGraphicsContext context;
     public Client client;
 
     public VkExtent2D extent2D = VkExtent2D.calloc();
@@ -62,12 +64,13 @@ public class VulkanWindow extends RenderWindow {
         super(graphicsEngine);
         windowRenderer = new WindowRenderer(this);
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
         this.window = glfwCreateWindow(width, height, "Vulkan",0,0);
 
         surface = VkInterface.glfwCreateWindowSurface(vulkanInstance.vkInstance, window, null);
         GLFW.glfwSetWindowSizeCallback(window, this::resize);
+        camera = new FreeCamera(this);
     }
 
     public VulkanWindow addDevice(LogicalDevice device) {
@@ -80,17 +83,22 @@ public class VulkanWindow extends RenderWindow {
         imageView = new ImageView(this);
         renderPass = new RenderPass(this);
         viewport = new Viewport(this);
-        vertexShader = new Shader(this, ShaderCompiler.compileShader(shader, Shaderc.shaderc_glsl_vertex_shader),VK_SHADER_STAGE_VERTEX_BIT);
+        vertexShader = new Shader(device, ShaderCompiler.compileShader(shader, "shader.glsl", VK_SHADER_STAGE_VERTEX_BIT),VK_SHADER_STAGE_VERTEX_BIT);
         vertexShader.set(Ourcraft.position_RGB);
         buffer = new VertexBuffer(device);
         buffer.putData(new float[] {0.0f, -0.8f, 1.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, -0.5f, 0.5f, 1.0f,  1.0f, 0.0f, 1.0f});
-        fragmentShader = new Shader(this,ShaderCompiler.compileShader(fragment,Shaderc.shaderc_glsl_fragment_shader),VK_SHADER_STAGE_FRAGMENT_BIT);
-        graphicsPipeline = new GraphicsPipeline(this, renderPass, viewport, vertexShader, fragmentShader);
-        commandBuffer = new CommandBuffer(device,swapChain.size);
+        fragmentShader = new Shader(device,ShaderCompiler.compileShader(fragment, "shader.glsl", VK_SHADER_STAGE_FRAGMENT_BIT),VK_SHADER_STAGE_FRAGMENT_BIT);
+        graphicsPipeline = new GraphicsPipeline(device, null);
+        graphicsPipeline.build(renderPass, viewport, vertexShader, fragmentShader);
+        commandBuffer = new CommandBuffer(device, swapChain.size);
         for (int x = 0; x < swapChain.size; x++) {
             frameBuffers.add(new FrameBuffer(this,x));
         }
-        commandBuffer.createPass(renderPass);
+        //commandBuffer.createPass(renderPass);
+        //System.out.println("Command buffer size " + commandBuffer.commandBufferList.size());
+
+        this.context = new VulkanGraphicsContext(commandBuffer, device, this);
+        this.frameManager = new FrameManager(this);
         return this;
     }
 
@@ -117,17 +125,15 @@ public class VulkanWindow extends RenderWindow {
         extent2D.height(vulkanHeight);
     }
 
+    /*
     public void startDrawing() {
-        frameManager = new FrameManager(this);
         while (!glfwWindowShouldClose(window)) {
             glfwPollEvents();
             //buffer.vertices.put(2,-buffer.vertices.get(2));
-
-            windowRenderer.render(commandBuffer.get(0));
-            //windowRenderer.render();
         }
         cleanup();
     }
+     */
 
     public void cleanup() {
         frameManager.cleanup();
@@ -192,7 +198,9 @@ public class VulkanWindow extends RenderWindow {
 
     @Override
     public void swapBuffers() {
-        startDrawing();
+        windowRenderer.present(context.bufferIndex);
+        glfwPollEvents();
+        //startDrawing();
     }
 
     @Override

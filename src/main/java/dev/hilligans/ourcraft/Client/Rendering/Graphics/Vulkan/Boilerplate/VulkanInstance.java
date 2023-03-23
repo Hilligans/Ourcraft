@@ -3,7 +3,7 @@ package dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngine;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngineException;
 import dev.hilligans.ourcraft.Util.ArgumentContainer;
-import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.VulkanWindow;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanWindow;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFWVulkan;
 import org.lwjgl.system.MemoryStack;

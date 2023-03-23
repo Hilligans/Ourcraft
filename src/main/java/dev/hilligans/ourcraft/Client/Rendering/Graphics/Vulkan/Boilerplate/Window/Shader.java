@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window;
 
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.LogicalDevice;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.vulkan.*;
@@ -12,21 +13,21 @@ import static org.lwjgl.vulkan.VK10.*;
 
 public class Shader {
 
-    public VulkanWindow vulkanWindow;
+    public LogicalDevice device;
     public long shader;
     public VkPipelineShaderStageCreateInfo shaderCreateInfo;
     public VkPipelineVertexInputStateCreateInfo stateCreateInfo;
     public VkVertexInputBindingDescription bindingDescription;
 
-    public Shader(VulkanWindow vulkanWindow, ByteBuffer shader, int bit) {
-        this.vulkanWindow = vulkanWindow;
+    public Shader(LogicalDevice device, ByteBuffer shader, int bit) {
+        this.device = device;
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
         VkShaderModuleCreateInfo createInfo = VkShaderModuleCreateInfo.calloc(memoryStack);
         createInfo.sType(VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO);
 
             createInfo.pCode(shader);
             LongBuffer longBuffer = memoryStack.mallocLong(1);
-            vkCreateShaderModule(vulkanWindow.device.device, createInfo, null, longBuffer);
+            vkCreateShaderModule(device.device, createInfo, null, longBuffer);
             this.shader = longBuffer.get(0);
 
             shaderCreateInfo = VkPipelineShaderStageCreateInfo.calloc();
@@ -87,6 +88,6 @@ public class Shader {
     }
 
     public void free() {
-        vkDestroyShaderModule(vulkanWindow.device.device, shader,null);
+        vkDestroyShaderModule(device.device, shader,null);
     }
 }

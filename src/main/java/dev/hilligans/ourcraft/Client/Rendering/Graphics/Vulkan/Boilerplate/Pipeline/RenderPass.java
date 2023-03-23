@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline;
 
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VkInterface;
-import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.VulkanWindow;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanWindow;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.*;
 
@@ -21,6 +21,8 @@ public class RenderPass {
     public VkPipelineColorBlendStateCreateInfo colorBlend;
     public long renderPass;
 
+
+    public RenderPass(VulkanWindow vulkanWindow, int a) {}
 
     public RenderPass(VulkanWindow vulkanWindow) {
         this.vulkanWindow = vulkanWindow;

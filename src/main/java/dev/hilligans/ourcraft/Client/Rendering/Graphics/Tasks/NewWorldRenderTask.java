@@ -56,6 +56,8 @@ public class NewWorldRenderTask extends RenderTaskSource {
                 int renderYDist = client.renderYDistance;
                 Vector3i playerChunkPos = new Vector3i((int) pos.x / chunkWidth, (int) pos.y / chunkHeight, (int) pos.z / chunkWidth);
                 if (client.renderWorld) {
+                    engine.getDefaultImpl().bindPipeline(window, graphicsContext, shaderSource.program);
+                    engine.getDefaultImpl().bindTexture(window, graphicsContext, engine.getGraphicsData().getWorldTexture());
                     for (int x = 0; x < client.renderDistance; x++) {
                         for (int y = 0; y < renderYDist; y++) {
                             for (int z = 0; z < client.renderDistance; z++) {
@@ -125,7 +127,7 @@ public class NewWorldRenderTask extends RenderTaskSource {
                             matrixStack.push();
                             matrixStack.translate(x * chunkWidth, y * chunkHeight, z * chunkWidth);
                             engine.getDefaultImpl().uploadMatrix(graphicsContext, matrixStack, shaderSource);
-                            engine.getDefaultImpl().drawMesh(window, graphicsContext, matrixStack, engine.getGraphicsData().getWorldTexture(), shaderSource.program, meshHolder.getId(), meshHolder.index, meshHolder.length);
+                            engine.getDefaultImpl().drawMesh(window, graphicsContext, matrixStack, meshHolder.getId(), meshHolder.index, meshHolder.length);
                             matrixStack.pop();
                         }
                     }
@@ -295,7 +297,7 @@ public class NewWorldRenderTask extends RenderTaskSource {
     }
 
     @Override
-    public void loadGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine) {
-        super.loadGraphics(graphicsEngine);
+    public void loadGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
+        super.loadGraphics(graphicsEngine, graphicsContext);
     }
 }

@@ -7,6 +7,7 @@ import dev.hilligans.ourcraft.Client.Client;
 import dev.hilligans.ourcraft.Client.MatrixStack;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.*;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsContext;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.hilligans.ourcraft.Client.Rendering.MeshHolder;
 import dev.hilligans.ourcraft.Client.Rendering.NewRenderer.PrimitiveBuilder;
@@ -54,6 +55,8 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
                 //renderYDist = 1;
                 Vector3i playerChunkPos = new Vector3i((int) pos.x / chunkWidth, (int) pos.y / chunkHeight, (int) pos.z / chunkWidth);
                 if (client.renderWorld) {
+                    engine.getDefaultImpl().bindPipeline(window, graphicsContext, shaderSource.program);
+                    engine.getDefaultImpl().bindTexture(window, graphicsContext, engine.getGraphicsData().getWorldTexture());
                     for (int x = client.renderDistance - 1; x >= 0; x--) {
                         for (int y = renderYDist - 1; y >= 0; y--) {
                             for (int z = client.renderDistance - 1; z >= 0; z--) {
@@ -119,8 +122,9 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
                 if (matrixStack.frustumIntersection.testAab((x) * chunkWidth, (y) * chunkHeight, (z) * chunkWidth, (x + 1) * chunkWidth, (y + 1) * chunkHeight, (z + 1) * chunkWidth)) {
                     matrixStack.push();
                     matrixStack.translate(x * chunkWidth, y * chunkHeight, z * chunkWidth);
-                    engine.getDefaultImpl().uploadMatrix(graphicsContext, matrixStack, shaderSource);
-                    engine.getDefaultImpl().drawMesh(window, graphicsContext, matrixStack, engine.getGraphicsData().getWorldTexture(), shaderSource.program, meshHolder.getId(), meshHolder.index, meshHolder.length);
+                    IDefaultEngineImpl<?,?> impl = engine.getDefaultImpl();
+                    impl.uploadMatrix(graphicsContext, matrixStack, shaderSource);
+                    impl.drawMesh(window, graphicsContext, matrixStack, meshHolder.getId(), meshHolder.index, meshHolder.length);
                     matrixStack.pop();
                 }
             }
@@ -210,7 +214,7 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
     }
 
     @Override
-    public void loadGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine) {
-        super.loadGraphics(graphicsEngine);
+    public void loadGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
+        super.loadGraphics(graphicsEngine, graphicsContext);
     }
 }

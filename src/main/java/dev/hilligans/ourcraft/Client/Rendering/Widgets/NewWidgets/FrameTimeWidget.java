@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.Client.Rendering.Widgets.NewWidgets;
 
 import dev.hilligans.ourcraft.Client.MatrixStack;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.FrameTracker;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.ShaderSource;
@@ -55,8 +56,13 @@ public class FrameTimeWidget extends Widget {
 
        // Textures.BACKFILL.drawTexture(window,matrixStack,getX(),getY(),width,height);
       //  window.getEngineImpl().setState(window,null,new PipelineState().setDepth(false));
-        window.getEngineImpl().drawAndDestroyMesh(window,null,matrixStack,mesh,0,shaderSource.program);
-        window.getEngineImpl().drawAndDestroyMesh(window,null,matrixStack,mesh,0,shaderSource.program);
+
+        IDefaultEngineImpl<?, ?> impl = window.getEngineImpl();
+        impl.bindPipeline(window, null, shaderSource.program);
+        impl.bindTexture(window, null, 0);
+
+        //window.getEngineImpl().drawAndDestroyMesh(window,null,matrixStack,mesh,0,shaderSource.program);
+        //window.getEngineImpl().drawAndDestroyMesh(window,null,matrixStack,mesh,0,shaderSource.program);
        // Textures.FRAME_TIME.drawTexture(window,matrixStack,getX(),getY(),width,height);
         Textures.FRAME_TIME.drawTexture(window,matrixStack,getX(),getY(),width,height);
     }

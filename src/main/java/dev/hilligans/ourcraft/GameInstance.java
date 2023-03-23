@@ -10,6 +10,7 @@ import dev.hilligans.ourcraft.Client.Audio.SoundBuffer;
 import dev.hilligans.ourcraft.Client.Input.Input;
 import dev.hilligans.ourcraft.Client.Input.InputHandlerProvider;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.*;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsContext;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.hilligans.ourcraft.Client.Rendering.ScreenBuilder;
 import dev.hilligans.ourcraft.Client.Rendering.Texture;
@@ -117,11 +118,11 @@ public class GameInstance {
         REBUILDING.set(false);
     }
 
-    public void build(IGraphicsEngine<?,?,?> graphicsEngine) {
+    public void build(IGraphicsEngine<?,?,?> graphicsEngine, GraphicsContext graphicsContext) {
         for(Registry<?> registry : REGISTRIES.ELEMENTS) {
             for(Object o : registry.ELEMENTS) {
                 if(o instanceof IRegistryElement) {
-                    ((IRegistryElement) o).loadGraphics(graphicsEngine);
+                    ((IRegistryElement) o).loadGraphics(graphicsEngine, graphicsContext);
                 }
             }
         }

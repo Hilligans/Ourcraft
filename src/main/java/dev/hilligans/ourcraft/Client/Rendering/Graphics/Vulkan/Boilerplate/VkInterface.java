@@ -58,11 +58,4 @@ public class VkInterface {
         vkClearValue.float32(0,r).float32(1,g).float32(2,b).float32(3,a);
         return vkClearValue;
     }
-
-
-
-
-
-
-
 }

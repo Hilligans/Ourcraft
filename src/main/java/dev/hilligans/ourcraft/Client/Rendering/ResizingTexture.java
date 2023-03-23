@@ -51,8 +51,10 @@ public class ResizingTexture extends Texture {
     public void drawTexture(RenderWindow window, MatrixStack matrixStack, int x, int y, int width, int height) {
         PrimitiveBuilder primitiveBuilder = get(width,height,x,y);
         IDefaultEngineImpl<?,?> defaultEngineImpl = window.getEngineImpl();
+        defaultEngineImpl.bindTexture(window, null, textureId);
+        defaultEngineImpl.bindPipeline(window, null, shaderSource.program);
         defaultEngineImpl.uploadMatrix(null, matrixStack, shaderSource);
-        defaultEngineImpl.drawAndDestroyMesh(window,null,matrixStack,primitiveBuilder.toVertexMesh(),textureId,shaderSource.program);
+        defaultEngineImpl.drawAndDestroyMesh(window,null,matrixStack,primitiveBuilder.toVertexMesh());
     }
 
     static class Segment {

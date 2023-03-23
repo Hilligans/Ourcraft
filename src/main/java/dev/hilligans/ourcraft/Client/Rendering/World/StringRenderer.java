@@ -118,7 +118,9 @@ public class StringRenderer {
                 }
                 PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
                 primitiveBuilder.translate(x - finalWidth / 2f,0,0);
-                impl.drawAndDestroyMesh(window,null,matrixStack,primitiveBuilder.toVertexMesh(),textureAtlas.glTextureId,shaderSource.program);
+                impl.bindPipeline(window,null,shaderSource.program);
+                impl.bindTexture(window,null,textureAtlas.glTextureId);
+                impl.drawAndDestroyMesh(window,null,matrixStack,primitiveBuilder.toVertexMesh());
 
             });
         } catch (Exception ignored) {
@@ -156,7 +158,9 @@ public class StringRenderer {
             primitiveBuilder.translate(1.0f,0,1.0f);
             IDefaultEngineImpl<?,?> impl = window.getEngineImpl();
             impl.uploadMatrix(null,matrixStack,shaderSource);
-            impl.drawAndDestroyMesh(window,null,matrixStack,primitiveBuilder.toVertexMesh(),textureAtlas.glTextureId,shaderSource.program);
+            impl.bindPipeline(window,null,shaderSource.program);
+            impl.bindTexture(window,null,textureAtlas.glTextureId);
+            impl.drawAndDestroyMesh(window,null,matrixStack,primitiveBuilder.toVertexMesh());
         });
     }
 

@@ -37,7 +37,6 @@ public class WorldTextureManager {
         BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics g = img.getGraphics();
 
-        //Font font = new Font("Tahoma", Font.PLAIN, 48);
         Font font = new Font("SansSerif", Font.PLAIN, 48);
         //Set the font to be used when drawing the string
         g.setFont(font);

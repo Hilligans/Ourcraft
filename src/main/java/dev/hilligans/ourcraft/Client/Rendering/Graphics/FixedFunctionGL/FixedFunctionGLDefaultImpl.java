@@ -34,7 +34,7 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     public int meshPointer = 0;
 
     @Override
-    public void drawMesh(FixedFunctionGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, long texture, long program, long meshID, long indicesIndex, int length) {
+    public void drawMesh(FixedFunctionGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
         VertexMesh mesh = meshes.get((int)meshID);
         VertexFormat format = mesh.vertexFormat;
         glBegin(format.primitiveType);
@@ -95,15 +95,25 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     }
 
     @Override
-    public void drawAndDestroyMesh(FixedFunctionGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh, long texture, long program) {
+    public void bindTexture(FixedFunctionGLWindow window, GraphicsContext graphicsContext, long texture) {
+
+    }
+
+    @Override
+    public void bindPipeline(FixedFunctionGLWindow window, GraphicsContext graphicsContext, long pipeline) {
+
+    }
+
+    @Override
+    public void drawAndDestroyMesh(FixedFunctionGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh) {
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
         Matrix4f matrix4f = matrixStack.get();
         // if(texture != boundTexture) {
         //glBindTexture(textureTypes.get(texture), texture);
-        glBindTexture(GL_TEXTURE_2D, (int)texture);
-        boundTexture = texture;
+        //glBindTexture(GL_TEXTURE_2D, (int)texture);
+        //boundTexture = texture;
         //  }
         glBegin(mesh.vertexFormat.primitiveType);
         int pos = mesh.vertexFormat.getOffset("position");
@@ -147,7 +157,7 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     }
 
     @Override
-    public void uploadData(GraphicsContext graphicsContext, FloatBuffer data, long index, String type, long program) {
+    public void uploadData(GraphicsContext graphicsContext, FloatBuffer data, long index, String type, long program, ShaderSource shaderSource) {
 
     }
 

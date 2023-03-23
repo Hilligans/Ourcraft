@@ -9,6 +9,7 @@ import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngine;
 import dev.hilligans.ourcraft.Client.Rendering.Screen;
 import dev.hilligans.ourcraft.Client.Rendering.ScreenBuilder;
 import dev.hilligans.ourcraft.Client.Rendering.Screens.ContainerScreens.CreativeInventoryScreen;
@@ -110,6 +111,9 @@ public class Client {
     public Client setGraphicsEngine(IGraphicsEngine<?,?,?> graphicsEngine) {
         if(graphicsEngine != null) {
             this.graphicsEngine = graphicsEngine;
+            if(graphicsEngine instanceof VulkanEngine engine) {
+                engine.client = this;
+            }
             System.out.println(graphicsEngine.getResourceName());
         }
         return this;

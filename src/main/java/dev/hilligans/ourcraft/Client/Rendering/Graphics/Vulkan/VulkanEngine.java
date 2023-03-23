@@ -1,10 +1,10 @@
 package dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan;
 
+import dev.hilligans.ourcraft.Client.Client;
 import dev.hilligans.ourcraft.Client.MatrixStack;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsEngineBase;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanInstance;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanProperties;
-import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.VulkanWindow;
 import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.Util.Logger;
 
@@ -14,6 +14,7 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
 
     public VulkanInstance vulkanInstance;
     public VulkanDefaultImpl impl;
+    public Client client;
 
     @Override
     public VulkanWindow createWindow() {
@@ -22,7 +23,27 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
 
     @Override
     public void render(VulkanWindow window) {
+        long currentTime = System.nanoTime();
+        if(currentTime - Client.timeSinceLastDraw < Client.drawTime) {
+            //System.out.println("Returning");
+            //return;
+        }
+        window.frameTracker.count();
+        Client.timeSinceLastDraw = currentTime;
 
+        window.camera.tick();
+        MatrixStack matrixStack = window.camera.getMatrix();
+        MatrixStack screenStack = window.camera.getScreenStack();
+
+        int index = window.windowRenderer.waitForNextFrame();
+
+        window.context.setBufferInUse(index);
+        window.context.startRecording();
+        window.renderPipeline.render(client, matrixStack, screenStack, window.context);
+        window.context.endRecording();
+
+        window.windowRenderer.render(window.context.getBuffer());
+        //window.renderPipeline.render(client,matrixStack,screenStack, new GraphicsContext());
     }
 
     @Override
@@ -36,12 +57,17 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
         vulkanInstance = getVulkanInstance();
         vulkanInstance.setGraphicsEngine(this);
         vulkanInstance.setUp();
-        vulkanInstance.run();
+        gameInstance.build(this, vulkanInstance.vulkanWindow.context);
+        impl.compilePipelines(vulkanInstance.vulkanWindow.renderPass, vulkanInstance.vulkanWindow.viewport);
+        //vulkanInstance.run();
         return vulkanInstance.vulkanWindow;
     }
 
     @Override
     public void close() {
+        for(VulkanWindow window : windows) {
+            window.close();
+        }
         vulkanInstance.cleanup();
         //vulkanInstance.exit("closing");
     }

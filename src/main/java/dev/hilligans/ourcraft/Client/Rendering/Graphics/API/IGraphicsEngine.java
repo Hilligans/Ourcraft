@@ -47,6 +47,7 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
                 e.printStackTrace();
                 throw e;
             }
+            System.out.println("Closing");
         };
     }
 

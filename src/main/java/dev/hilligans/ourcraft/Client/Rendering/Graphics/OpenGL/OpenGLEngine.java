@@ -93,7 +93,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
 
         client.glStarted = true;
         client.gameInstance.EVENT_BUS.postEvent(new GLInitEvent(window));
-        gameInstance.build(this);
+        gameInstance.build(this, null);
         client.shaderManager = new ShaderManager();
 
         setupStringRenderer("");
