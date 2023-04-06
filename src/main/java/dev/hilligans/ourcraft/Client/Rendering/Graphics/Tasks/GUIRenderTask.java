@@ -26,8 +26,6 @@ public class GUIRenderTask extends RenderTaskSource {
             public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?,?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack, float delta) {
                 IDefaultEngineImpl<?,?> impl = engine.getDefaultImpl();
 
-                impl.setState(window,graphicsContext, new PipelineState());
-
                 StringRenderer stringRenderer = engine.getStringRenderer();
 
                 if (client.playerData.f3) {
@@ -78,6 +76,11 @@ public class GUIRenderTask extends RenderTaskSource {
                 //        }
                //     }
              //   }
+            }
+
+            @Override
+            public PipelineState getPipelineState() {
+                return new PipelineState();
             }
         };
     }

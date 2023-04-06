@@ -8,6 +8,8 @@ import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Vulka
 import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.Util.Logger;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.util.ArrayList;
 
 public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefaultImpl, VulkanGraphicsContext> {
@@ -57,6 +59,7 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
         vulkanInstance = getVulkanInstance();
         vulkanInstance.setGraphicsEngine(this);
         vulkanInstance.setUp();
+        vulkanInstance.vulkanWindow.setup();
         gameInstance.build(this, vulkanInstance.vulkanWindow.context);
         impl.compilePipelines(vulkanInstance.vulkanWindow.renderPass, vulkanInstance.vulkanWindow.viewport);
         //vulkanInstance.run();

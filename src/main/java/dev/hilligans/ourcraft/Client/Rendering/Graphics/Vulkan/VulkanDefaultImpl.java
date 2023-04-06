@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.vulkan.VK10.*;
 
 public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, VulkanGraphicsContext> {
@@ -41,6 +42,7 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     public final HashMap<String, Shader> shaderCache = new HashMap<>();
     public ForkJoinPool pool = new ForkJoinPool(1);
     public boolean asyncShaderLoading = true;
+    public boolean exceptionOnWarning = true;
 
     public Long2LongOpenHashMap indexIndex = new Long2LongOpenHashMap();
     public VulkanDefaultImpl(VulkanEngine vulkanEngine) {
@@ -51,7 +53,6 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     @Override
     public void drawMesh(VulkanWindow window, VulkanGraphicsContext graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
         System.out.println("Drawing");
-
 
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             vkCmdBindVertexBuffers(graphicsContext.getBuffer(), 0, memoryStack.longs(meshID), memoryStack.longs(0));
@@ -64,11 +65,15 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     @Override
     public long createMesh(VulkanWindow window, VulkanGraphicsContext graphicsContext, VertexMesh mesh) {
         //TODO avoid the double copying
-        VertexBuffer vertexBuffer = new VertexBuffer(graphicsContext.getDevice()).putData(mesh.vertices);
-        IndexBuffer indexBuffer = new IndexBuffer(graphicsContext.getDevice()).putData(mesh.indices);
-        indexIndex.put(vertexBuffer.buffer, indexBuffer.buffer);
-        meshes.put(vertexBuffer.buffer, new Tuple<>(vertexBuffer, indexBuffer));
-        return vertexBuffer.buffer;
+        VertexBuffer vertexBuffer = new VertexBuffer(graphicsContext.device, mesh.vertices, graphicsContext.getBuffer());
+       // IndexBuffer indexBuffer = new IndexBuffer();
+
+        //VertexBuffer vertexBuffer = new VertexBuffer(graphicsContext.getDevice()).putData(mesh.vertices);
+       // IndexBuffer indexBuffer = new IndexBuffer(graphicsContext.getDevice()).putData(mesh.indices);
+      //  indexIndex.put(vertexBuffer.buffer, indexBuffer.buffer);
+       // meshes.put(vertexBuffer.buffer, new Tuple<>(vertexBuffer, indexBuffer));
+       // return vertexBuffer.buffer;
+        return 0;
     }
 
     @Override
@@ -80,6 +85,7 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
 
     @Override
     public long createTexture(VulkanWindow window, VulkanGraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format) {
+        System.out.println("Texture");
         return 0;
     }
 
@@ -108,10 +114,15 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
             //TODO may cause problems
             graphicsContext.bindPipeline(pipelines.get(pipeline));
         }
+        //TODO bind appropriate renderpass
+
     }
 
     @Override
     public void setState(VulkanWindow window, VulkanGraphicsContext graphicsContext, PipelineState state) {
+        if(graphicsContext.pipelineStateSet) {
+            throw new VulkanEngineException("Graphics state was already set by the render task and cannot be reset inside the render task");
+        }
 
     }
 
@@ -140,6 +151,24 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
             graphicsPipeline.build(graphicsContext.window.renderPass, graphicsContext.window.viewport, vertexShader, fragmentShader);
         }
 
+        int offset = 0;
+        if(shaderSource.uniformNames != null) {
+            shaderSource.uniformIndexes = new int[shaderSource.uniformNames.size()];
+            for(int x = 0; x < shaderSource.uniformNames.size(); x++) {
+                shaderSource.uniformIndexes[x] = offset;
+                offset += switch (shaderSource.uniformTypes.get(x)) {
+                    case "4fv" -> 16 * 4;
+                    case "4f" -> 4 * 4;
+                    default -> throw new VulkanEngineException("Unknown uniform type: " + shaderSource.uniformTypes.get(x));
+                };
+                if(offset > 128) {
+                    if (exceptionOnWarning) {
+                        throw new VulkanEngineException("Vulkan spec only guarantees 128 bytes for push constants");
+                    }
+                }
+            }
+        }
+
         synchronized (pipelines) {
             pipelines.put(graphicsPipeline.pipeline, graphicsPipeline);
         }
@@ -152,15 +181,7 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
         if(pipeline == null) {
             throw new VulkanEngineException("Bound graphics pipeline is null");
         }
-
-        //TODO add offset
-        vkCmdPushConstants(graphicsContext.getBuffer(), pipeline.layout.pipeline, VK_SHADER_STAGE_VERTEX_BIT, 0, data);
-    }
-
-
-    @Override
-    public long getUniformIndex(VulkanGraphicsContext graphicsContext, String name, long shader) {
-        return 0;
+        vkCmdPushConstants(graphicsContext.getBuffer(), pipeline.layout.pipeline, VK_SHADER_STAGE_VERTEX_BIT, (int)index, data);
     }
 
     public void submitShader(String path, String modID, LogicalDevice device, int bit) {

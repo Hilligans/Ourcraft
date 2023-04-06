@@ -23,9 +23,7 @@ public class RenderPipeline implements IRegistryElement {
     }
 
     public void render(Client client, MatrixStack worldStack, MatrixStack screenStack, GraphicsContext graphicsContext) {
-        for(RenderTask renderTask : renderTasks) {
-            renderTask.draw(window,graphicsContext,window.getGraphicsEngine(),client,worldStack,screenStack, 1);
-        }
+        window.render(graphicsContext, client, worldStack, screenStack);
     }
 
     public void addRenderTarget(RenderTarget renderTarget) {

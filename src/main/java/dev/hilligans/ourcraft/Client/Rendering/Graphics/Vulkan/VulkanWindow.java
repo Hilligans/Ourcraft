@@ -5,10 +5,7 @@ import dev.hilligans.ourcraft.Client.Input.InputHandler;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Implementations.FreeCamera;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
-import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.LogicalDevice;
-import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.QueueFamily;
-import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VkInterface;
-import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanInstance;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.*;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.*;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline.*;
@@ -42,7 +39,9 @@ public class VulkanWindow extends RenderWindow {
     public ArrayList<FrameBuffer> frameBuffers = new ArrayList<>();
     public ImageView imageView;
     public Viewport viewport;
-    public CommandBuffer commandBuffer;
+
+    public Queue renderQueue;
+    public CommandPool renderPool;
     public RenderPass renderPass;
     public Shader vertexShader;
     public Shader fragmentShader;
@@ -85,25 +84,27 @@ public class VulkanWindow extends RenderWindow {
         viewport = new Viewport(this);
         vertexShader = new Shader(device, ShaderCompiler.compileShader(shader, "shader.glsl", VK_SHADER_STAGE_VERTEX_BIT),VK_SHADER_STAGE_VERTEX_BIT);
         vertexShader.set(Ourcraft.position_RGB);
-        buffer = new VertexBuffer(device);
-        buffer.putData(new float[] {0.0f, -0.8f, 1.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, -0.5f, 0.5f, 1.0f,  1.0f, 0.0f, 1.0f});
+
+        SingleUseCommandBuffer buf = device.queueFamilyManager.getSingleCommandPool(false, false, true, false);
+        buffer = new VertexBuffer(device, new float[] {0.0f, -0.8f, 1.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, -0.5f, 0.5f, 1.0f,  1.0f, 0.0f, 1.0f}, buf.getCommandBuffer());
+        buf.endAndSubmit();
+
         fragmentShader = new Shader(device,ShaderCompiler.compileShader(fragment, "shader.glsl", VK_SHADER_STAGE_FRAGMENT_BIT),VK_SHADER_STAGE_FRAGMENT_BIT);
         graphicsPipeline = new GraphicsPipeline(device, null);
         graphicsPipeline.build(renderPass, viewport, vertexShader, fragmentShader);
-        commandBuffer = new CommandBuffer(device, swapChain.size);
+        renderPool = new CommandPool(device, graphicsFamily.findQueue());
         for (int x = 0; x < swapChain.size; x++) {
             frameBuffers.add(new FrameBuffer(this,x));
         }
-        //commandBuffer.createPass(renderPass);
-        //System.out.println("Command buffer size " + commandBuffer.commandBufferList.size());
+        renderPool.allocCommandBuffers(swapChain.size);
 
-        this.context = new VulkanGraphicsContext(commandBuffer, device, this);
+        this.context = new VulkanGraphicsContext(renderPool, device, this);
         this.frameManager = new FrameManager(this);
         return this;
     }
 
     public VulkanWindow selectFamily() {
-        graphicsFamily = device.queueGroup.findSupported(true,false,false,true);
+        graphicsFamily = device.queueFamilyManager.getQueueFamily(true,false,false,true);
         if(graphicsFamily == null) {
             device.vulkanInstance.exit("No queue family found");
         }
@@ -148,7 +149,6 @@ public class VulkanWindow extends RenderWindow {
         fragmentShader.free();
         imageView.cleanup();
         graphicsFamily.cleanup();
-        commandBuffer.cleanup();
         vkDestroySurfaceKHR(device.vulkanInstance.vkInstance,surface,null);
         glfwDestroyWindow(window);
     }

@@ -21,7 +21,7 @@ public class VertexBufferManager {
     }
 
     public VertexBuffer createBuffer(float[] vertices) {
-        VertexBuffer vertexBuffer = new VertexBuffer(device);
+        //VertexBuffer vertexBuffer = new VertexBuffer(device);
         return null;
     }
 

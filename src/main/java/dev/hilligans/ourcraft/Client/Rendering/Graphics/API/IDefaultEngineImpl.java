@@ -43,8 +43,6 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
 
     void uploadData(Q graphicsContext, FloatBuffer data, long index, String type, long program, ShaderSource shaderSource);
 
-    long getUniformIndex(Q graphicsContext, String name, long shader);
-
     default void drawMesh(Object window, Object graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
         drawMesh((T) window, (Q) graphicsContext, matrixStack, meshID, indicesIndex, length);
     }
@@ -93,10 +91,6 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             uploadData((Q) graphicsContext, memoryStack.floats(data), index, type, program, shaderSource);
         }
-    }
-
-    default long getUniformIndex(Object graphicsContext, String name, long shader) {
-        return getUniformIndex((Q) graphicsContext, name, shader);
     }
 
     default void uploadMatrix(GraphicsContext context, MatrixStack matrixStack, @NotNull ShaderSource shaderSource) {

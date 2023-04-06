@@ -4,10 +4,8 @@ import dev.hilligans.ourcraft.Client.Client;
 import dev.hilligans.ourcraft.Client.Input.InputHandler;
 import dev.hilligans.ourcraft.Client.Input.InputHandlerProvider;
 import dev.hilligans.ourcraft.Client.Input.Key.KeyPress;
-import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.ICamera;
-import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
-import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
-import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IInputProvider;
+import dev.hilligans.ourcraft.Client.MatrixStack;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.*;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Implementations.PlayerCamera;
 import dev.hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.hilligans.ourcraft.Client.Rendering.World.StringRenderer;
@@ -40,6 +38,18 @@ public abstract class RenderWindow {
         }
         setRenderPipeline("ourcraft:new_world_pipeline");
         camera = new PlayerCamera();
+    }
+
+    public void render(GraphicsContext graphicsContext, Client client, MatrixStack worldStack, MatrixStack screenStack) {
+        for(RenderTask renderTask : renderPipeline.renderTasks) {
+            PipelineState pipelineState = renderTask.getPipelineState();
+            graphicsContext.setPipelineState(false);
+            if(pipelineState != null) {
+                graphicsEngine.getDefaultImpl().setState(this, graphicsContext, pipelineState);
+                graphicsContext.setPipelineState(true);
+            }
+            renderTask.draw(this, graphicsContext, this.getGraphicsEngine(), client, worldStack, screenStack, 1);
+        }
     }
 
     public void setRenderPipeline(RenderPipeline renderPipeline) {

@@ -58,7 +58,7 @@ public class ZipResourceDirectory implements ResourceDirectory {
 
         ByteBuffer byteBuffer = allocator.malloc((int) rbc.size());
         rbc.read(byteBuffer);
-        byteBuffer.rewind();
+        byteBuffer.flip();
         rbc.close();
         return byteBuffer;
     }

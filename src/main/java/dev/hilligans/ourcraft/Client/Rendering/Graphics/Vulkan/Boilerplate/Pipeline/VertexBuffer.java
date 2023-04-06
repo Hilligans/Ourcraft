@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline;
 
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.LogicalDevice;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanBuffer;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -14,10 +15,43 @@ import static org.lwjgl.vulkan.VK10.*;
 public class VertexBuffer {
 
     public LogicalDevice device;
-    public long buffer;
-    public long memory;
+    public VulkanBuffer buffer;
     public FloatBuffer vertices;
+    public VertexBuffer(LogicalDevice device, float[] data, VkCommandBuffer commandBuffer) {
+        try (MemoryStack memoryStack = MemoryStack.stackPush()) {
+            int bufferSize = data.length * 4;
+            VulkanBuffer stagingBuffer = device.allocateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
+            PointerBuffer pos = memoryStack.mallocPointer(1);
+            vkMapMemory(device.device, stagingBuffer.memory, 0, bufferSize, 0, pos);
+            this.vertices = MemoryUtil.memFloatBuffer(pos.get(0), bufferSize).put(data);
+            vkUnmapMemory(device.device, stagingBuffer.memory);
+
+            buffer = device.allocateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+            stagingBuffer.copyTo(commandBuffer, buffer);
+            stagingBuffer.free();
+        }
+    }
+
+    public VertexBuffer(LogicalDevice device, FloatBuffer vertices, VkCommandBuffer commandBuffer) {
+        try (MemoryStack memoryStack = MemoryStack.stackPush()) {
+            int bufferSize = vertices.capacity() * 4;
+            VulkanBuffer stagingBuffer = device.allocateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+            PointerBuffer pos = memoryStack.mallocPointer(1);
+            vkMapMemory(device.device, stagingBuffer.memory, 0, bufferSize, 0, pos);
+            this.vertices = MemoryUtil.memFloatBuffer(pos.get(0), bufferSize).put(vertices);
+            vkUnmapMemory(device.device, stagingBuffer.memory);
+
+            buffer = device.allocateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+            stagingBuffer.copyTo(commandBuffer, buffer);
+            stagingBuffer.free();
+        }
+    }
+
+    /*
     public VertexBuffer(LogicalDevice device) {
         this.device = device;
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
@@ -27,7 +61,7 @@ public class VertexBuffer {
             createInfo.usage(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
             createInfo.sharingMode(VK_SHARING_MODE_EXCLUSIVE);
             LongBuffer pos = memoryStack.mallocLong(1);
-            if(vkCreateBuffer(device.device,createInfo,null,pos) != VK_SUCCESS) {
+            if(vkCreateBuffer(device.device, createInfo,null, pos) != VK_SUCCESS) {
                 device.vulkanInstance.exit("failed to create vertex buffer");
             }
             this.buffer = pos.get(0);
@@ -67,39 +101,9 @@ public class VertexBuffer {
         return this;
     }
 
-    public int findMemoryTypes(int filter, int properties) {
-        try(MemoryStack memoryStack = MemoryStack.stackPush()) {
-            VkPhysicalDeviceMemoryProperties memProperties = VkPhysicalDeviceMemoryProperties.calloc(memoryStack);
-            vkGetPhysicalDeviceMemoryProperties(device.physicalDevice.physicalDevice, memProperties);
-            //  System.out.println("count:" + memProperties.memoryTypeCount());
-            //vkGetDeviceMemoryCommitment(device.physicalDevice.physicalDevice,);
-
-            for (int i = 0; i < memProperties.memoryTypeCount(); i++) {
-                long[] longs = new long[10];
-                //vkGetDeviceMemoryCommitment(device.device,i,longs);
-                // System.out.println(i);
-                if ((filter & (1 << i)) == 1 && (memProperties.memoryTypes(i).propertyFlags() & properties) == properties) {
-                    return i;
-                }
-            }
-            if (1 == 1) {
-                return 1;
-            }
-            device.vulkanInstance.exit("failed to find memory");
-        }
-        return -1;
-    }
-
-    public void update(float[] vertices) {
-
-    }
-
-    public void updateAsync(float[] vertices) {
-
-    }
+     */
 
     public void cleanup() {
-        vkDestroyBuffer(device.device, buffer,null);
-        vkFreeMemory(device.device, memory, null);
+        buffer.free();
     }
 }

@@ -47,7 +47,7 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
             @Override
             public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack, float delta) {
                 IWorld world = client.newClientWorld;
-                engine.getDefaultImpl().setState(window, graphicsContext, new PipelineState().setDepth(true));
+                //engine.getDefaultImpl().setState(window, graphicsContext, new PipelineState().setDepth(true));
                 Vector3d pos = window.camera.getSavedPosition();
                 int chunkWidth = world.getChunkContainer().getChunkWidth();
                 int chunkHeight = world.getChunkContainer().getChunkHeight();
@@ -94,6 +94,10 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
                     }
                 }
             }
+            @Override
+            public PipelineState getPipelineState() {
+                return new PipelineState().setDepth(true);
+            }
         };
     }
 
@@ -132,7 +136,7 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
             IChunk chunk = getChunk(x, y, z, world);
             if (chunk != null) {
                 if (chunk.isDirty()) {
-                    if (    getChunk(x + 1, y, z, world) != null &&
+                    if (getChunk(x + 1, y, z, world) != null &&
                             getChunk(x - 1, y, z, world) != null &&
                             getChunk(x, y + 1, z, world) != null &&
                             getChunk(x, y - 1, z, world) != null &&
@@ -140,30 +144,16 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
                             getChunk(x, y, z - 1, world) != null) {
                         if ((Math.abs(x - playerChunkPos.x) < rebuildDistance && Math.abs(y - playerChunkPos.y) < rebuildDistance && Math.abs(z - playerChunkPos.z) < rebuildDistance)) {
                             buildMesh(window, graphicsContext, chunk);
-                            //System.out.println(chunk.getX() + " " + chunk.getY() + " " + chunk.getZ());
-                            //System.out.println(chunk.getBlockState1(0,0,0).getBlock().getName());
                             chunk.setDirty(false);
                         }
                     }
-                } else {
-                    //  System.out.printf("X:%s Y:%s Z:%s\n", x, y, z);
                 }
-            } else {
-                //getChunk(x, z, client.newClientWorld, client);
             }
         }
     }
 
     public ConcurrentLinkedQueue<Tuple<IChunk, PrimitiveBuilder>> primitiveBuilders = new ConcurrentLinkedQueue<>();
     Long2BooleanOpenHashMap asyncedChunks = new Long2BooleanOpenHashMap();
-    Long2BooleanOpenHashMap map = new Long2BooleanOpenHashMap();
-
-    void getChunk(int chunkX, int chunkZ, IWorld world, Client client) {
-        if (!map.getOrDefault((((long)chunkX) << 32) | (chunkZ & 0xffffffffL), false)) {
-            map.put((((long)chunkX) << 32) | (chunkZ & 0xffffffffL), true);
-            client.sendPacket(new CRequestChunkPacket(chunkX, chunkZ));
-        }
-    }
 
     boolean putChunk(int chunkX, int chunkZ) {
         if (!asyncedChunks.getOrDefault((((long) chunkX) << 32) | (chunkZ & 0xffffffffL), false)) {
@@ -218,3 +208,5 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
         super.loadGraphics(graphicsEngine, graphicsContext);
     }
 }
+
+

@@ -27,6 +27,8 @@ public class RenderPass {
     public RenderPass(VulkanWindow vulkanWindow) {
         this.vulkanWindow = vulkanWindow;
 
+        boolean depth = false;
+
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             createInfo = VkPipelineRasterizationStateCreateInfo.calloc();
             createInfo.sType(VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO);
@@ -79,7 +81,19 @@ public class RenderPass {
             attachmentDescription.initialLayout(VK_IMAGE_LAYOUT_UNDEFINED);
             attachmentDescription.finalLayout(VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
 
+            if(depth) {
+                VkAttachmentDescription depthAttachment = VkAttachmentDescription.calloc(memoryStack);
+                //TODO add
+                // depthAttachment.format = findDepthFormat();
+                depthAttachment.samples(VK_SAMPLE_COUNT_1_BIT);
+                depthAttachment.loadOp(VK_ATTACHMENT_LOAD_OP_CLEAR);
+                depthAttachment.storeOp(VK_ATTACHMENT_STORE_OP_DONT_CARE);
+                depthAttachment.stencilLoadOp(VK_ATTACHMENT_LOAD_OP_DONT_CARE);
+                depthAttachment.stencilStoreOp(VK_ATTACHMENT_STORE_OP_DONT_CARE);
+                depthAttachment.initialLayout(VK_IMAGE_LAYOUT_UNDEFINED);
+                depthAttachment.finalLayout(VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
+            }
             VkAttachmentReference.Buffer attachmentReference = VkAttachmentReference.calloc(1, memoryStack);
             attachmentReference.get(0).layout(VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
             attachmentReference.get(0).attachment(0);
@@ -145,32 +159,6 @@ public class RenderPass {
 
     public void endRenderPass(VkCommandBuffer commandBuffer) {
         vkCmdEndRenderPass(commandBuffer);
-    }
-
-    public void createRenderPass(int index, VertexBuffer vertexBuffer) {
-        try (MemoryStack memoryStack = MemoryStack.stackPush()) {
-            VkRenderPassBeginInfo renderPassBeginInfo = VkRenderPassBeginInfo.calloc(memoryStack);
-            renderPassBeginInfo.sType(VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO);
-            renderPassBeginInfo.renderPass(renderPass);
-            renderPassBeginInfo.framebuffer(vulkanWindow.frameBuffers.get(index).frameBuffer);
-
-
-            renderPassBeginInfo.renderArea(a -> a.extent().set(vulkanWindow.vulkanWidth, vulkanWindow.vulkanHeight));
-            VkClearValue vkClearValue = VkClearValue.calloc(memoryStack);
-            vkClearValue.color(VkInterface.clearValue(0, 1, 0, 1));
-            VkClearValue.Buffer buffer = VkClearValue.calloc(1, memoryStack);
-            buffer.put(0, vkClearValue);
-            renderPassBeginInfo.pClearValues(buffer);
-
-            vkCmdBeginRenderPass(vulkanWindow.commandBuffer.commandBufferList.get(index), renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
-            vkCmdBindPipeline(vulkanWindow.commandBuffer.commandBufferList.get(index), VK_PIPELINE_BIND_POINT_GRAPHICS, vulkanWindow.graphicsPipeline.pipeline);
-            vkCmdBindVertexBuffers(vulkanWindow.commandBuffer.commandBufferList.get(index), 0, memoryStack.longs(vertexBuffer.buffer), memoryStack.longs(0));
-        }
-        vkCmdDraw(vulkanWindow.commandBuffer.commandBufferList.get(index), 3, 1, 0, 0);
-
-
-        vkCmdEndRenderPass(vulkanWindow.commandBuffer.commandBufferList.get(index));
-        vkEndCommandBuffer(vulkanWindow.commandBuffer.commandBufferList.get(index));
     }
 
     public void freeInit() {

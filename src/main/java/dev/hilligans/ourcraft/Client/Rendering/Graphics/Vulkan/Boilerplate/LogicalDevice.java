@@ -1,14 +1,15 @@
 package dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate;
 
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.VertexBufferManager;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngineException;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanWindow;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.vulkan.KHRSwapchain;
-import org.lwjgl.vulkan.VkDevice;
-import org.lwjgl.vulkan.VkDeviceCreateInfo;
-import org.lwjgl.vulkan.VkDeviceQueueCreateInfo;
+import org.lwjgl.vulkan.*;
 
+import java.nio.LongBuffer;
+
+import static dev.hilligans.ourcraft.Client.Rendering.Widgets.FolderWidget.size;
 import static org.lwjgl.vulkan.VK10.*;
 
 public class LogicalDevice {
@@ -16,17 +17,16 @@ public class LogicalDevice {
     public PhysicalDevice physicalDevice;
     public VulkanInstance vulkanInstance;
     public VkDevice device;
-    public QueueGroup queueGroup = new QueueGroup();
+    public VulkanQueueFamilyManager queueFamilyManager;
     public VkDeviceQueueCreateInfo.Buffer buffer;
-    public VulkanWindow defaultVulkanWindow;
     public VertexBufferManager bufferManager = new VertexBufferManager(this);
-
-    public boolean acquiredDefaultWindow = false;
 
     public LogicalDevice(PhysicalDevice physicalDevice) {
         this.vulkanInstance = physicalDevice.vulkanInstance;
         this.physicalDevice = physicalDevice;
-        this.defaultVulkanWindow = new VulkanWindow(physicalDevice.vulkanInstance,500,500, vulkanInstance.engine).addDevice(this);
+
+        queueFamilyManager = new VulkanQueueFamilyManager(this);
+
         try (MemoryStack memoryStack = MemoryStack.stackPush()) {
 
             PointerBuffer requiredExtensions = memoryStack.mallocPointer(1);
@@ -34,13 +34,13 @@ public class LogicalDevice {
 
             VkDeviceCreateInfo info = VkDeviceCreateInfo.calloc(memoryStack);
             info.sType(VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO);
-            buffer = VkDeviceQueueCreateInfo.calloc(physicalDevice.queueFamilies.size());
+            buffer = VkDeviceQueueCreateInfo.calloc(queueFamilyManager.queueFamilies.size());
             int x = 0;
-            for (QueueFamily queueFamily : physicalDevice.queueFamilies) {
+            for (QueueFamily queueFamily : queueFamilyManager.queueFamilies) {
                 buffer.get(x).set(queueFamily.createInfo(memoryStack));
-                queueGroup.addQueue(queueFamily);
                 x++;
             }
+
             info.pQueueCreateInfos(buffer);
             info.pEnabledFeatures(physicalDevice.deviceFeatures);
             info.ppEnabledExtensionNames(requiredExtensions);
@@ -51,8 +51,8 @@ public class LogicalDevice {
         }
     }
 
-    public VulkanWindow getDefaultWindow() {
-        return defaultVulkanWindow;
+    public VulkanBuffer allocateBuffer(int size, int usage, int properties) {
+        return new VulkanBuffer(this, size, usage, properties);
     }
 
     public VulkanWindow createNewWindow() {

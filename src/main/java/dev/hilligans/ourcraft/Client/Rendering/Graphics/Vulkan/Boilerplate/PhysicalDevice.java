@@ -18,7 +18,6 @@ public class PhysicalDevice {
     public VulkanInstance vulkanInstance;
     public VkPhysicalDeviceProperties properties = VkPhysicalDeviceProperties.calloc();
     public VkPhysicalDeviceFeatures deviceFeatures = VkPhysicalDeviceFeatures.calloc();
-    public ArrayList<QueueFamily> queueFamilies = new ArrayList<>();
     public VkSurfaceCapabilitiesKHR surfaceCapabilities;
     public IntBuffer presentModes;
     public VkSurfaceFormatKHR.Buffer surfaceFormats;
@@ -28,17 +27,17 @@ public class PhysicalDevice {
     public PhysicalDevice(VkPhysicalDevice physicalDevice, VulkanInstance vulkanInstance) {
         this.physicalDevice = physicalDevice;
         this.vulkanInstance = vulkanInstance;
-        getQueueFamilies();
+        vkGetPhysicalDeviceProperties(physicalDevice, properties);
         this.logicalDevice = createDevice();
-        getSurfaceCapabilities();
-
-        for(QueueFamily queueFamily : queueFamilies) {
-            queueFamily.testPresent();
-        }
     }
 
     public LogicalDevice createDevice() {
         return new LogicalDevice(this);
+    }
+
+    public void buildForSurface(long surface) {
+        getSurfaceCapabilities(surface);
+        logicalDevice.queueFamilyManager.testSurface(surface);
     }
 
     public boolean supportsSwapChain() {
@@ -68,31 +67,19 @@ public class PhysicalDevice {
         return properties.deviceType() == VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU;
     }
 
-    private void getQueueFamilies() {
-        try(MemoryStack memoryStack = MemoryStack.stackPush()) {
-            vkGetPhysicalDeviceProperties(physicalDevice, properties);
-            IntBuffer size = memoryStack.mallocInt(1);
-            vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, size, null);
-            VkQueueFamilyProperties.Buffer buffer = VkQueueFamilyProperties.calloc(size.get(0));
-            vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, size, buffer);
-            AtomicInteger x = new AtomicInteger();
-            buffer.forEach(t -> queueFamilies.add(new QueueFamily(t, this, x.getAndIncrement())));
-        }
-    }
-
-    private void getSurfaceCapabilities() {
+    private void getSurfaceCapabilities(long surface) {
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             surfaceCapabilities = VkSurfaceCapabilitiesKHR.calloc();
-            vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, logicalDevice.defaultVulkanWindow.surface, surfaceCapabilities);
+            vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, surfaceCapabilities);
 
             IntBuffer size = memoryStack.mallocInt(1);
-            vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, logicalDevice.getDefaultWindow().surface, size, null);
+            vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, size, null);
             surfaceFormats = VkSurfaceFormatKHR.calloc(size.get(0));
-            vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, logicalDevice.getDefaultWindow().surface, size, surfaceFormats);
+            vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, size, surfaceFormats);
 
-            vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, logicalDevice.getDefaultWindow().surface, size, null);
+            vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, size, null);
             presentModes = memoryStack.callocInt(size.get(0));
-            vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, logicalDevice.getDefaultWindow().surface, size, presentModes);
+            vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, size, presentModes);
         }
     }
 
@@ -112,6 +99,31 @@ public class PhysicalDevice {
             }
         }
         return VK_PRESENT_MODE_FIFO_KHR;
+    }
+
+    public int findMemoryType(int filter, int properties) {
+        System.out.println("Yee");
+        try(MemoryStack memoryStack = MemoryStack.stackPush()) {
+            VkPhysicalDeviceMemoryProperties memProperties = VkPhysicalDeviceMemoryProperties.calloc(memoryStack);
+            vkGetPhysicalDeviceMemoryProperties(physicalDevice, memProperties);
+            //  System.out.println("count:" + memProperties.memoryTypeCount());
+            //vkGetDeviceMemoryCommitment(device.physicalDevice.physicalDevice,);
+
+            for (int i = 0; i < memProperties.memoryTypeCount(); i++) {
+                long[] longs = new long[10];
+                //vkGetDeviceMemoryCommitment(device.device,i,longs);
+                // System.out.println(i);
+                if ((filter & (1 << i)) == 1 && (memProperties.memoryTypes(i).propertyFlags() & properties) == properties) {
+                    System.out.println("Yes");
+                    return i;
+                }
+            }
+            if (1 == 1) {
+                return 1;
+            }
+            vulkanInstance.exit("failed to find memory");
+        }
+        return -1;
     }
 
     public void cleanup() {

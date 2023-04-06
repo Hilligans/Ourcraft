@@ -28,9 +28,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class NewWorldRenderTask extends RenderTaskSource {
+public class WorldRenderTask extends RenderTaskSource {
 
-    public NewWorldRenderTask() {
+    public WorldRenderTask() {
         super("new_world_render_task", "ourcraft:new_solid_world_renderer");
     }
 
@@ -48,8 +48,10 @@ public class NewWorldRenderTask extends RenderTaskSource {
         return new RenderTask() {
             @Override
             public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack, float delta) {
+                int a = 0;
+
                 IWorld world = client.newClientWorld;
-                engine.getDefaultImpl().setState(window, graphicsContext, new PipelineState().setDepth(true));
+                //engine.getDefaultImpl().setState(window, graphicsContext, new PipelineState().setDepth(true));
                 Vector3d pos = window.camera.getSavedPosition();
                 int chunkWidth = world.getChunkContainer().getChunkWidth();
                 int chunkHeight = world.getChunkContainer().getChunkHeight();
@@ -111,6 +113,8 @@ public class NewWorldRenderTask extends RenderTaskSource {
 
             public static int rebuildDistance = 10;
 
+
+
             void drawChunk(RenderWindow window, GraphicsContext graphicsContext, Client client, IGraphicsEngine<?, ?,?> engine, MatrixStack matrixStack, Vector3i playerChunkPos, IWorld world, int x, int y, int z, int chunkWidth, int chunkHeight) {
                 MeshHolder meshHolder = getMesh(x, y, z);
                 for (Tuple<IChunk, PrimitiveBuilder> tuple : primitiveBuilders) {
@@ -169,11 +173,7 @@ public class NewWorldRenderTask extends RenderTaskSource {
                         }
 
                             */
-                        } else {
-                            //  System.out.printf("X:%s Y:%s Z:%s\n", x, y, z);
                         }
-                    } else {
-                        //getChunk(x, z, client.newClientWorld, client);
                     }
                 }
             }
@@ -287,6 +287,10 @@ public class NewWorldRenderTask extends RenderTaskSource {
             }
 
              */
+            @Override
+            public PipelineState getPipelineState() {
+                return new PipelineState().setDepth(true);
+            }
         };
     }
 

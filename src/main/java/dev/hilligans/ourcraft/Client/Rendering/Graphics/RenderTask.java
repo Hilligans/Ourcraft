@@ -9,6 +9,14 @@ public abstract class RenderTask {
 
     public abstract void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack, float delta);
 
+
+    /**
+     * If this method returns not null that means the pipeline state must be fixed for the entire task and will throw an exception if the state is attempted to be modified
+     */
+    public PipelineState getPipelineState() {
+        return null;
+    }
+
     public void close() {
     }
 

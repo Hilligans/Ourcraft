@@ -14,7 +14,7 @@ import dev.hilligans.ourcraft.Client.Rendering.Graphics.FixedFunctionGL.FixedFun
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Implementations.WorldCamera;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Tasks.GUIRenderTask;
-import dev.hilligans.ourcraft.Client.Rendering.Graphics.Tasks.NewWorldRenderTask;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Tasks.WorldRenderTask;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Tasks.WorldTransparentRenderTask;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngine;
 import dev.hilligans.ourcraft.Client.Rendering.ScreenBuilder;
@@ -143,19 +143,18 @@ public class Ourcraft {
 
             view.registerRenderTask(new GUIRenderTask());
             //view.registerRenderTask(new WorldRenderTask());
-            view.registerRenderTask(new NewWorldRenderTask());
+            view.registerRenderTask(new WorldRenderTask());
             view.registerRenderTask(new WorldTransparentRenderTask());
 
             view.registerVertexFormat(position_texture_color, position_color_texture, position_texture_globalColor, position_texture, position_texture_animatedWrap_shortenedColor, position_color);
 
 
 //            view.registerShader(new ShaderSource("world_shader","ourcraft:position_texture_color", "Shaders/WorldVertexShader.glsl","Shaders/WorldFragmentShader.glsl"));
-            view.registerShader(new ShaderSource("world_shader", "ourcraft:position_color_texture", "Shaders/WorldVertexShader.glsl", "Shaders/WorldFragmentShader.glsl").uniformNames("transform", "color"));
-            view.registerShader(new ShaderSource("position_color_shader", "ourcraft:position_color", "Shaders/WorldVertexColorShader.glsl", "Shaders/WorldFragmentShader.glsl").uniformNames("transform", "color"));
-            view.registerShader(new ShaderSource("position_texture", "ourcraft:position_texture", "Shaders/PositionTexture.vsh", "Shaders/PositionTexture.fsh").uniformNames("transform", "color"));
+            view.registerShader(new ShaderSource("world_shader", "ourcraft:position_color_texture", "Shaders/WorldVertexShader.glsl", "Shaders/WorldFragmentShader.glsl").withUniform("transform", "4fv").withUniform("color", "4f"));
+            view.registerShader(new ShaderSource("position_color_shader", "ourcraft:position_color", "Shaders/WorldVertexColorShader.glsl", "Shaders/WorldFragmentShader.glsl").withUniform("transform", "4fv").withUniform("color", "4f"));
+            view.registerShader(new ShaderSource("position_texture", "ourcraft:position_texture", "Shaders/PositionTexture.vsh", "Shaders/PositionTexture.fsh").withUniform("transform", "4fv").withUniform("color", "4f"));
 
             view.registerInputHandlerProviders(new ControllerHandlerProvider(), new KeyPressHandlerProvider(), new MouseHandlerProvider());
-
         }
     }
 

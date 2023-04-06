@@ -41,12 +41,6 @@ public class VkInterface {
         }
     }
 
-    public static PointerBuffer vkGetDeviceQueue(VkDevice device, int queueFamilyIndex, int queueIndex) {
-            PointerBuffer pointerBuffer = MemoryUtil.memAllocPointer(1);
-            VK10.vkGetDeviceQueue(device,queueFamilyIndex,queueIndex,pointerBuffer);
-            return pointerBuffer;
-    }
-
     public static VkOffset2D createOffset2D(int x, int y) {
         VkOffset2D vkOffset2D = VkOffset2D.malloc();
         vkOffset2D.set(x,y);

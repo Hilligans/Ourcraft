@@ -44,9 +44,9 @@ public class VulkanInstance {
         devices = new PhysicalDeviceManager(this);
         physicalDevice = devices.selectPhysicalDevice();
         logicalDevice = physicalDevice.logicalDevice;
-        vulkanWindow = physicalDevice.logicalDevice.getDefaultWindow();
+        vulkanWindow = new VulkanWindow(physicalDevice.vulkanInstance,500,500, engine).addDevice(logicalDevice);
+        physicalDevice.buildForSurface(vulkanWindow.surface);
         vulkanWindow.selectFamily();
-        vulkanWindow.graphicsFamily.getQueue(0);
         vulkanWindow.addData();
     }
 

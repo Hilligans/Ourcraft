@@ -6,6 +6,7 @@ import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IDefaultEngineImpl;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.PipelineState;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.ShaderSource;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.VertexFormat;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngineException;
 import dev.hilligans.ourcraft.Client.Rendering.NewRenderer.Image;
 import dev.hilligans.ourcraft.Client.Rendering.VertexMesh;
 import dev.hilligans.ourcraft.Client.Rendering.World.Managers.ShaderManager;
@@ -213,6 +214,9 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
 
     @Override
     public void setState(OpenGLWindow window, GraphicsContext graphicsContext, PipelineState state) {
+        if(graphicsContext.pipelineStateSet) {
+            throw new RuntimeException("Graphics state was already set by the render task and cannot be reset inside the render task");
+        }
         if(state.depthTest) {
             glEnable(GL_DEPTH_TEST);
         } else {
@@ -226,14 +230,21 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         String fragment = engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.fragmentShader, shaderSource.modContent.getModID()));
         String geometry = shaderSource.geometryShader == null ? null :  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.geometryShader, shaderSource.modContent.getModID()));
 
-
+        int shader;
         if(geometry == null) {
-            int val = ShaderManager.registerShader(vertex,fragment);
-            System.out.println("Shader Error:" + glGetError());
-            return val;
+            shader = ShaderManager.registerShader(vertex, fragment);
         } else {
-            return ShaderManager.registerShader(vertex,geometry,fragment);
+            shader = ShaderManager.registerShader(vertex, geometry, fragment);
         }
+
+        if(shaderSource.uniformNames != null) {
+            shaderSource.uniformIndexes = new int[shaderSource.uniformNames.size()];
+            for(int x = 0; x < shaderSource.uniformNames.size(); x++) {
+                shaderSource.uniformIndexes[x] = glGetUniformLocation(shader, shaderSource.uniformNames.get(x));
+            }
+        }
+
+        return shader;
     }
 
     @Override
@@ -249,11 +260,6 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         } else {
             throw new RuntimeException();
         }
-    }
-
-    @Override
-    public long getUniformIndex(GraphicsContext graphicsContext, String name, long shader) {
-        return glGetUniformLocation((int) shader, name);
     }
 
     @Override

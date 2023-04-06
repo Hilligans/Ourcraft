@@ -24,6 +24,7 @@ public class WindowRenderer {
         this.vulkanWindow = vulkanWindow;
     }
 
+    /*
     public void render() {
         try (MemoryStack memoryStack = MemoryStack.stackPush()) {
             IntBuffer imageIndex = memoryStack.mallocInt(1);
@@ -71,6 +72,7 @@ public class WindowRenderer {
             vulkanWindow.frameManager.advanceFrame();
         }
     }
+     */
 
     public int waitForNextFrame() {
         try (MemoryStack memoryStack = MemoryStack.stackPush()) {
@@ -127,6 +129,7 @@ public class WindowRenderer {
         }
     }
 
+    /*
     public void submitDraws(VkCommandBuffer commandBuffer, VertexBuffer vertexBuffer) {
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vulkanWindow.graphicsPipeline.pipeline);
@@ -134,6 +137,8 @@ public class WindowRenderer {
             vkCmdDraw(commandBuffer, 3, 1, 0, 0);
         }
     }
+
+     */
 
     public void resetBuffer(VkCommandBuffer commandBuffer) {
 

@@ -6,4 +6,11 @@ public class GraphicsContext {
         return 0;
     }
 
+    public boolean pipelineStateSet = false;
+
+    public GraphicsContext setPipelineState(boolean state) {
+        this.pipelineStateSet = state;
+        return this;
+    }
+
 }

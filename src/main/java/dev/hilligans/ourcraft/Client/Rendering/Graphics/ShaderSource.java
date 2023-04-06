@@ -6,6 +6,8 @@ import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.hilligans.ourcraft.Util.Registry.IRegistryElement;
 
+import java.util.ArrayList;
+
 public class ShaderSource implements IRegistryElement {
 
     public String format;
@@ -20,7 +22,8 @@ public class ShaderSource implements IRegistryElement {
 
     public int program;
 
-    public String[] uniformNames;
+    public ArrayList<String> uniformNames = new ArrayList<>(4);
+    public ArrayList<String> uniformTypes = new ArrayList<>(4);
     public int[] uniformIndexes;
 
     public ShaderSource(String name, String format, String vertexShader, String fragmentShader) {
@@ -38,8 +41,9 @@ public class ShaderSource implements IRegistryElement {
         this.geometryShader = geometryShader;
     }
 
-    public ShaderSource uniformNames(String... names) {
-        this.uniformNames = names;
+    public ShaderSource withUniform(String name, String type) {
+        uniformNames.add(name);
+        uniformTypes.add(type);
         return this;
     }
 
@@ -72,13 +76,16 @@ public class ShaderSource implements IRegistryElement {
     public void loadGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
         System.err.println("LOADING");
         program = (int) graphicsEngine.getDefaultImpl().createProgram(graphicsContext,this);
+        /*
         if(uniformNames != null) {
             System.out.println(name);
-            uniformIndexes = new int[uniformNames.length];
-            for(int x = 0; x < uniformNames.length; x++) {
-                uniformIndexes[x] = (int) graphicsEngine.getDefaultImpl().getUniformIndex(null, uniformNames[x], program);
+            uniformIndexes = new int[uniformNames.size()];
+            for(int x = 0; x < uniformNames.size(); x++) {
+                uniformIndexes[x] = (int) graphicsEngine.getDefaultImpl().getUniformIndex(null, uniformNames.get(x), uniformTypes.get(x), program);
             }
         }
+
+         */
     }
 
     @Override

@@ -2,12 +2,9 @@ package dev.hilligans.ourcraft.Client.Rendering.Graphics.Tasks;
 
 import dev.hilligans.ourcraft.Client.Client;
 import dev.hilligans.ourcraft.Client.MatrixStack;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.*;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsContext;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
-import dev.hilligans.ourcraft.Client.Rendering.Graphics.RenderTask;
-import dev.hilligans.ourcraft.Client.Rendering.Graphics.RenderTaskSource;
-import dev.hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
-import dev.hilligans.ourcraft.Client.Rendering.Graphics.ShaderSource;
 import dev.hilligans.ourcraft.GameInstance;
 
 public class ChunkDebugRenderTask extends RenderTaskSource {
@@ -24,6 +21,11 @@ public class ChunkDebugRenderTask extends RenderTaskSource {
             @Override
             public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack, float delta) {
 
+            }
+
+            @Override
+            public PipelineState getPipelineState() {
+                return null;
             }
         };
     }

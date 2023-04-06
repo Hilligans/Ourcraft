@@ -161,12 +161,6 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
 
     }
 
-
-    @Override
-    public long getUniformIndex(GraphicsContext graphicsContext, String name, long shader) {
-        return 0;
-    }
-
     private int getGLPrimitive(int type) {
         return type + 0x1400;
     }
