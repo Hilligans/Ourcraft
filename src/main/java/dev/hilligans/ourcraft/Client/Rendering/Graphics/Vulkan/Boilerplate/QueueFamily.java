@@ -121,6 +121,7 @@ public class QueueFamily {
     }
 
     public void cleanup() {
+        //vkDestroy
         properties.free();
     }
 

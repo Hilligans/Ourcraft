@@ -33,8 +33,8 @@ public abstract class WorldCamera implements ICamera {
     public float roll;
     public float roller;
 
-    public double maxPitch = 3.1415 / 2;
-    public double minPitch = -3.1415 / 2;
+    public float maxPitch = 3.1415f / 2;
+    public float minPitch = -3.1415f / 2;
     public double maxYaw = 6.283;
     public double minYaw = -6.283;
 
@@ -215,21 +215,22 @@ public abstract class WorldCamera implements ICamera {
     @Override
     public void addRotation(float pitch, float yaw) {
         this.pitch += pitch;
-        this.yaw += yaw * 1;
+        this.yaw += yaw;
 
         if(this.pitch > maxPitch) {
-            this.pitch = (float) maxPitch;
+            this.pitch = maxPitch;
         }
 
         if(this.pitch < minPitch) {
-            this.pitch = (float) minPitch;
+            this.pitch = minPitch;
         }
 
-        if(this.yaw > 6.283) {
-            this.yaw = - 6.283f;
-        } else if(this.yaw < -6.283) {
-            this.yaw = 6.283f;
-        }
+        //if(this.yaw > 6.283) {
+        //    this.yaw -= 6.283f * 2;
+        //} else if(this.yaw < -6.283) {
+        //    this.yaw += 6.283f * 2;
+        //}
+        this.yaw = (this.yaw + 6.283f) % 6.283f;
     }
 
     @Override

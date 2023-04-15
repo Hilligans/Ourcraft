@@ -9,6 +9,7 @@ import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipel
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline.IndexBuffer;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline.RenderPass;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline.VertexBuffer;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanTexture;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.Shader;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.ShaderCompiler;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.Viewport;
@@ -23,6 +24,7 @@ import org.lwjgl.vulkan.VkPipelineLayoutCreateInfo;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -30,7 +32,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.vulkan.VK10.*;
 
-public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, VulkanGraphicsContext> {
+public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, VulkanBaseGraphicsContext> {
 
     public VulkanEngine engine;
 
@@ -38,6 +40,7 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
 
     public AtomicLong pipelineIndex = new AtomicLong();
     public final Long2ObjectOpenHashMap<GraphicsPipeline> pipelines = new Long2ObjectOpenHashMap<>();
+    public final Long2ObjectOpenHashMap<VulkanTexture> textures = new Long2ObjectOpenHashMap<>();
 
     public final HashMap<String, Shader> shaderCache = new HashMap<>();
     public ForkJoinPool pool = new ForkJoinPool(1);
@@ -51,7 +54,7 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
 
 
     @Override
-    public void drawMesh(VulkanWindow window, VulkanGraphicsContext graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
+    public void drawMesh(VulkanWindow window, VulkanBaseGraphicsContext graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
         System.out.println("Drawing");
 
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
@@ -63,9 +66,9 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     }
 
     @Override
-    public long createMesh(VulkanWindow window, VulkanGraphicsContext graphicsContext, VertexMesh mesh) {
+    public long createMesh(VulkanWindow window, VulkanBaseGraphicsContext graphicsContext, VertexMesh mesh) {
         //TODO avoid the double copying
-        VertexBuffer vertexBuffer = new VertexBuffer(graphicsContext.device, mesh.vertices, graphicsContext.getBuffer());
+        VertexBuffer vertexBuffer = new VertexBuffer(graphicsContext.getDevice(), mesh.vertices, graphicsContext.getBuffer());
        // IndexBuffer indexBuffer = new IndexBuffer();
 
         //VertexBuffer vertexBuffer = new VertexBuffer(graphicsContext.getDevice()).putData(mesh.vertices);
@@ -77,37 +80,44 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     }
 
     @Override
-    public void destroyMesh(VulkanWindow window, VulkanGraphicsContext graphicsContext, long mesh) {
+    public void destroyMesh(VulkanWindow window, VulkanBaseGraphicsContext graphicsContext, long mesh) {
         Tuple<VertexBuffer, IndexBuffer> meshData = new Tuple<>();
         //TODO free when resources are no longer in use
         //meshData.getTypeA().cleanup();
     }
 
     @Override
-    public long createTexture(VulkanWindow window, VulkanGraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format) {
-        System.out.println("Texture");
-        return 0;
+    public long createTexture(VulkanWindow window, VulkanBaseGraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format) {
+        VulkanTexture vulkanTexture = new VulkanTexture(graphicsContext.getCommandBuffer(), graphicsContext.getDevice(), buffer, width, height, format);
+        synchronized (textures) {
+            textures.put(vulkanTexture.image, vulkanTexture);
+        }
+        return vulkanTexture.image;
     }
 
     @Override
-    public void destroyTexture(VulkanWindow window, VulkanGraphicsContext graphicsContext, long texture) {
-
+    public void destroyTexture(VulkanWindow window, VulkanBaseGraphicsContext graphicsContext, long texture) {
+        synchronized (textures) {
+            textures.remove(texture).cleanup();
+        }
     }
 
     @Override
-    public void drawAndDestroyMesh(VulkanWindow window, VulkanGraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh) {
+    public void drawAndDestroyMesh(VulkanWindow window, VulkanBaseGraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh) {
         System.out.println("Drawing");
     }
 
     @Override
-    public void bindTexture(VulkanWindow window, VulkanGraphicsContext graphicsContext, long texture) {
+    public void bindTexture(VulkanWindow window, VulkanBaseGraphicsContext gc, long texture) {
+        VulkanGraphicsContext graphicsContext = (VulkanGraphicsContext)gc;
         if (texture != graphicsContext.texture) {
 
         }
     }
 
     @Override
-    public void bindPipeline(VulkanWindow window, VulkanGraphicsContext graphicsContext, long pipeline) {
+    public void bindPipeline(VulkanWindow window, VulkanBaseGraphicsContext gc, long pipeline) {
+        VulkanGraphicsContext graphicsContext = (VulkanGraphicsContext)gc;
         if (pipeline != graphicsContext.program) {
             vkCmdBindPipeline(graphicsContext.getBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
             graphicsContext.program = pipeline;
@@ -119,7 +129,7 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     }
 
     @Override
-    public void setState(VulkanWindow window, VulkanGraphicsContext graphicsContext, PipelineState state) {
+    public void setState(VulkanWindow window, VulkanBaseGraphicsContext graphicsContext, PipelineState state) {
         if(graphicsContext.pipelineStateSet) {
             throw new VulkanEngineException("Graphics state was already set by the render task and cannot be reset inside the render task");
         }
@@ -127,10 +137,10 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     }
 
     @Override
-    public long createProgram(VulkanGraphicsContext graphicsContext, ShaderSource shaderSource) {
-        LogicalDevice device = graphicsContext.device;
+    public long createProgram(VulkanBaseGraphicsContext graphicsContext, ShaderSource shaderSource) {
+        LogicalDevice device = graphicsContext.getDevice();
 
-        GraphicsPipeline graphicsPipeline = new GraphicsPipeline(graphicsContext.device, shaderSource);
+        GraphicsPipeline graphicsPipeline = new GraphicsPipeline(device, shaderSource);
 
         if(asyncShaderLoading) {
             submitShader(shaderSource.vertexShader, shaderSource.modContent.getModID(), device, VK_SHADER_STAGE_VERTEX_BIT);
@@ -148,7 +158,7 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
             if (vertexShader == null || fragmentShader == null) {
                 return -1;
             }
-            graphicsPipeline.build(graphicsContext.window.renderPass, graphicsContext.window.viewport, vertexShader, fragmentShader);
+            graphicsPipeline.build(graphicsContext.getWindow().renderPass, graphicsContext.getWindow().viewport, vertexShader, fragmentShader);
         }
 
         int offset = 0;
@@ -176,7 +186,8 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     }
 
     @Override
-    public void uploadData(VulkanGraphicsContext graphicsContext, FloatBuffer data, long index, String type, long program, ShaderSource shaderSource) {
+    public void uploadData(VulkanBaseGraphicsContext gc, FloatBuffer data, long index, String type, long program, ShaderSource shaderSource) {
+        VulkanGraphicsContext graphicsContext = (VulkanGraphicsContext)gc;
         GraphicsPipeline pipeline = graphicsContext.boundPipeline;
         if(pipeline == null) {
             throw new VulkanEngineException("Bound graphics pipeline is null");
@@ -229,5 +240,15 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
                 graphicsPipeline.build(renderPass, viewport, vertexShader, fragmentShader);
             }
         }
+    }
+
+    @Override
+    public void cleanup() {
+        /*
+        for(VulkanTexture texture : textures.values()) {
+            texture.cleanup();
+        }
+         */
+        textures.clear();
     }
 }

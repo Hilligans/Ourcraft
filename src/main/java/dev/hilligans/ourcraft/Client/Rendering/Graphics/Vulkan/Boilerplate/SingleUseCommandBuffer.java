@@ -43,7 +43,7 @@ public class SingleUseCommandBuffer {
 
             VkCommandBufferBeginInfo vkCommandBufferBeginInfo = VkCommandBufferBeginInfo.calloc(memoryStack);
             vkCommandBufferBeginInfo.sType(VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO);
-            //vkCommandBufferBeginInfo.flags(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+            vkCommandBufferBeginInfo.flags(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
             if (vkBeginCommandBuffer(commandBuffer, vkCommandBufferBeginInfo) != VK_SUCCESS) {
                 device.vulkanInstance.exit("failed to begin recording command buffer");
             }
@@ -59,10 +59,50 @@ public class SingleUseCommandBuffer {
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             VkSubmitInfo submitInfo = VkSubmitInfo.calloc(memoryStack).sType(VK_STRUCTURE_TYPE_SUBMIT_INFO);
             submitInfo.pCommandBuffers(memoryStack.pointers(commandBuffer));
-            //queue.submitQueue(submitInfo, VK_NULL_HANDLE);
+
+            VkFenceCreateInfo createInfo = VkFenceCreateInfo.calloc(memoryStack).sType(VK_STRUCTURE_TYPE_FENCE_CREATE_INFO).flags(VK_FENCE_CREATE_SIGNALED_BIT);
+            LongBuffer longBuffer = memoryStack.mallocLong(1);
+            if (vkCreateFence(device.device, createInfo, null, longBuffer) != VK_SUCCESS) {
+                throw new RuntimeException();
+            }
+            vkResetFences(device.device, longBuffer.get(0));
+            queue.submitQueue(submitInfo, longBuffer.get(0));
+
+            long fence = longBuffer.get(0);
+            device.submitResourceForCleanup(() -> {
+                vkWaitForFences(device.device, fence, true, Long.MAX_VALUE);
+                vkDestroyCommandPool(device.device,commandPool,null);
+                vkDestroyFence(device.device, fence, null);
+                queue.queueOwners.decrementAndGet();
+            });
         }
-        //queue.queueOwners.decrementAndGet();
-        //vkDestroyCommandPool(device.device,commandPool,null);
+    }
+
+    public void endAndSubmit(ArrayList<Runnable> runnables) {
+        vkEndCommandBuffer(commandBuffer);
+        try(MemoryStack memoryStack = MemoryStack.stackPush()) {
+            VkSubmitInfo submitInfo = VkSubmitInfo.calloc(memoryStack).sType(VK_STRUCTURE_TYPE_SUBMIT_INFO);
+            submitInfo.pCommandBuffers(memoryStack.pointers(commandBuffer));
+
+            VkFenceCreateInfo createInfo = VkFenceCreateInfo.calloc(memoryStack).sType(VK_STRUCTURE_TYPE_FENCE_CREATE_INFO).flags(VK_FENCE_CREATE_SIGNALED_BIT);
+            LongBuffer longBuffer = memoryStack.mallocLong(1);
+            if (vkCreateFence(device.device, createInfo, null, longBuffer) != VK_SUCCESS) {
+                throw new RuntimeException();
+            }
+            vkResetFences(device.device, longBuffer.get(0));
+            queue.submitQueue(submitInfo, longBuffer.get(0));
+
+            long fence = longBuffer.get(0);
+            device.submitResourceForCleanup(() -> {
+                vkWaitForFences(device.device, fence, true, Long.MAX_VALUE);
+                vkDestroyCommandPool(device.device,commandPool,null);
+                vkDestroyFence(device.device, fence, null);
+                queue.queueOwners.decrementAndGet();
+                for(Runnable runnable : runnables) {
+                    runnable.run();
+                }
+            });
+        }
     }
 }
 

@@ -21,7 +21,7 @@ public class Texture implements IRegistryElement {
     public int width;
     public int height;
 
-    public int textureId = -1;
+    public long textureId = -1;
 
     public Image texture;
     public ShaderSource shaderSource;
@@ -146,6 +146,12 @@ public class Texture implements IRegistryElement {
     @Override
     public void loadGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
         IRegistryElement.super.loadGraphics(graphicsEngine, graphicsContext);
-        textureId = (int) graphicsEngine.getDefaultImpl().createTexture(null,null, texture);
+        textureId = graphicsEngine.getDefaultImpl().createTexture(null, graphicsContext, texture);
+    }
+
+    @Override
+    public void cleanupGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
+        IRegistryElement.super.cleanupGraphics(graphicsEngine, graphicsContext);
+        graphicsEngine.getDefaultImpl().destroyTexture(null, graphicsContext, textureId);
     }
 }

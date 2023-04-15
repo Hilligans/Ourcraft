@@ -35,5 +35,5 @@ public interface IRegistryElement {
 
     default void loadGraphics(IGraphicsEngine<?,?,?> graphicsEngine, GraphicsContext graphicsContext) {}
 
-    default void close() {}
+    default void cleanupGraphics(IGraphicsEngine<?,?,?> graphicsEngine, GraphicsContext graphicsContext) {}
 }

@@ -128,6 +128,16 @@ public class GameInstance {
         }
     }
 
+    public void cleanupGraphics(IGraphicsEngine<?,?,?> graphicsEngine, GraphicsContext graphicsContext) {
+        for(Registry<?> registry : REGISTRIES.ELEMENTS) {
+            for(Object o : registry.ELEMENTS) {
+                if(o instanceof IRegistryElement) {
+                    ((IRegistryElement) o).cleanupGraphics(graphicsEngine, graphicsContext);
+                }
+            }
+        }
+    }
+
     public String path = System.getProperty("user.dir");
 
     public final Registry<Registry<?>> REGISTRIES = new Registry<>(this);

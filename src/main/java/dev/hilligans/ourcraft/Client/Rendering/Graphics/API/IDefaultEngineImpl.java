@@ -17,6 +17,8 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
     default void close() {
     }
 
+    default void cleanup() {}
+
     void drawMesh(T window, Q graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length);
 
     long createMesh(T window, Q graphicsContext, VertexMesh mesh);

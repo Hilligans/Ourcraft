@@ -27,8 +27,6 @@ public class ClientMain {
 
     public static long startTime;
     public static void main(String[] args) throws IOException {
-        PrintStream out = new PrintStream(new FileOutputStream("output.txt"));
-        System.setOut(out);
         startTime = System.currentTimeMillis();
         argumentContainer = new ArgumentContainer(args);
         gameInstance.handleArgs(args);

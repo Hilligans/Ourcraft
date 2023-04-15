@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan;
 
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsContext;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.CommandBuffer;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.CommandPool;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.LogicalDevice;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline.GraphicsPipeline;
@@ -9,7 +10,7 @@ import org.lwjgl.vulkan.VkCommandBuffer;
 
 import static org.lwjgl.vulkan.VK10.vkEndCommandBuffer;
 
-public class VulkanGraphicsContext extends GraphicsContext {
+public class VulkanGraphicsContext extends VulkanBaseGraphicsContext {
 
     public CommandPool commandPool;
     public LogicalDevice device;
@@ -34,8 +35,18 @@ public class VulkanGraphicsContext extends GraphicsContext {
         return device;
     }
 
+    @Override
+    public VulkanWindow getWindow() {
+        return window;
+    }
+
     public VkCommandBuffer getBuffer() {
         return commandPool.commandBuffers.get(bufferIndex);
+    }
+
+    @Override
+    public CommandBuffer getCommandBuffer() {
+        return null;
     }
 
     /*public void advanceBufferInUse() {

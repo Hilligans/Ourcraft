@@ -21,6 +21,7 @@ public class VulkanProperties {
     public int colorFormat = VK_FORMAT_B8G8R8_SRGB;
     public int colorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
     public int presentMode = VK_PRESENT_MODE_IMMEDIATE_KHR;
+    public boolean attemptMemoryRelocations;
 
     public ArgumentContainer argumentContainer;
 
@@ -30,6 +31,7 @@ public class VulkanProperties {
 
     public VulkanProperties(ArgumentContainer argumentContainer) {
         this.argumentContainer = argumentContainer;
+        attemptMemoryRelocations = argumentContainer.getBoolean("attemptMemoryRelocations", true);
     }
 
     public VulkanProperties addValidationLayers(String... layers) {

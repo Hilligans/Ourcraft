@@ -92,9 +92,10 @@ public class VulkanWindow extends RenderWindow {
         fragmentShader = new Shader(device,ShaderCompiler.compileShader(fragment, "shader.glsl", VK_SHADER_STAGE_FRAGMENT_BIT),VK_SHADER_STAGE_FRAGMENT_BIT);
         graphicsPipeline = new GraphicsPipeline(device, null);
         graphicsPipeline.build(renderPass, viewport, vertexShader, fragmentShader);
+
         renderPool = new CommandPool(device, graphicsFamily.findQueue());
         for (int x = 0; x < swapChain.size; x++) {
-            frameBuffers.add(new FrameBuffer(this,x));
+            frameBuffers.add(new FrameBuffer(this, x));
         }
         renderPool.allocCommandBuffers(swapChain.size);
 
@@ -148,6 +149,7 @@ public class VulkanWindow extends RenderWindow {
         vertexShader.free();
         fragmentShader.free();
         imageView.cleanup();
+        renderPool.cleanup();
         graphicsFamily.cleanup();
         vkDestroySurfaceKHR(device.vulkanInstance.vkInstance,surface,null);
         glfwDestroyWindow(window);

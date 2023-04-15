@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngine;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngineException;
 import dev.hilligans.ourcraft.Util.ArgumentContainer;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanWindow;
+import dev.hilligans.ourcraft.Util.NamedThreadFactory;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFWVulkan;
 import org.lwjgl.system.MemoryStack;
@@ -11,11 +12,15 @@ import org.lwjgl.vulkan.*;
 
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.vulkan.EXTDebugMarker.VK_EXT_DEBUG_MARKER_EXTENSION_NAME;
 import static org.lwjgl.vulkan.EXTDebugUtils.VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
+import static org.lwjgl.vulkan.EXTValidationFeatures.VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT;
 import static org.lwjgl.vulkan.VK10.*;
 import static org.lwjgl.vulkan.VK11.*;
 
@@ -35,8 +40,11 @@ public class VulkanInstance {
 
     public VulkanEngine engine;
 
+    public boolean attemptMemoryRelocations;
+
     public VulkanInstance(VulkanProperties vulkanProperties) {
         this.vulkanProperties = vulkanProperties;
+        this.attemptMemoryRelocations = vulkanProperties.attemptMemoryRelocations;
     }
 
     public void setUp() {
@@ -48,6 +56,7 @@ public class VulkanInstance {
         physicalDevice.buildForSurface(vulkanWindow.surface);
         vulkanWindow.selectFamily();
         vulkanWindow.addData();
+
     }
 
     public void setGraphicsEngine(VulkanEngine engine) {
@@ -73,7 +82,6 @@ public class VulkanInstance {
                 validationLayers = vulkanProperties.enableLayers(memoryStack);
                 pAddress = vulkanProperties.setupLayerDebugger().address();
                 extensions.put(memoryStack.UTF8(VK_EXT_DEBUG_UTILS_EXTENSION_NAME));
-
             }
 
             applicationInfo = VkApplicationInfo.calloc();
@@ -132,6 +140,8 @@ public class VulkanInstance {
         return devices.getDefaultDevice();
     }
 
+
+
     public void cleanup() {
         logicalDevice.destroy();
         physicalDevice.cleanup();
@@ -150,4 +160,27 @@ public class VulkanInstance {
         //System.exit(0);
     }
 
+    public static String getStringErrorCode(int code) {
+        return switch (code) {
+            case 0 -> "VK_SUCCESS";
+            case 1 -> "VK_NOT_READY";
+            case 2 -> "VK_TIMEOUT";
+            case 3 -> "VK_EVENT_SET";
+            case 4 -> "VK_EVENT_RESET";
+            case 5 -> "VK_INCOMPLETE";
+            case -1 -> "VK_ERROR_OUT_OF_HOST_MEMORY";
+            case -2 -> "VK_ERROR_OUT_OF_DEVICE_MEMORY";
+            case -3 -> "VK_ERROR_INITIALIZATION_FAILED";
+            case -4 -> "VK_ERROR_DEVICE_LOST";
+            case -5 -> "VK_ERROR_MEMORY_MAP_FAILED";
+            case -6 -> "VK_ERROR_LAYER_NOT_PRESENT";
+            case -7 -> "VK_ERROR_EXTENSION_NOT_PRESENT";
+            case -8 -> "VK_ERROR_FEATURE_NOT_PRESENT";
+            case -9 -> "VK_ERROR_INCOMPATIBLE_DRIVER";
+            case -10 -> "VK_ERROR_TOO_MANY_OBJECTS";
+            case -11 -> "VK_ERROR_FORMAT_NOT_SUPPORTED";
+            case -12 -> "VK_ERROR_FRAGMENTED_POOL";
+            default -> "VK_ERROR_UNKNOWN";
+        };
+    }
 }

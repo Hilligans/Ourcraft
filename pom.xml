@@ -70,6 +70,10 @@
         </dependency>
         <dependency>
             <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-vma</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
             <classifier>${lwjgl.natives}</classifier>
         </dependency>
@@ -96,6 +100,11 @@
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-shaderc</artifactId>
+            <classifier>${lwjgl.natives}</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-vma</artifactId>
             <classifier>${lwjgl.natives}</classifier>
         </dependency>
 

@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan;
 import dev.hilligans.ourcraft.Client.Client;
 import dev.hilligans.ourcraft.Client.MatrixStack;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsEngineBase;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.SingleUseCommandBuffer;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanInstance;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanProperties;
 import dev.hilligans.ourcraft.ClientMain;
@@ -12,7 +13,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.util.ArrayList;
 
-public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefaultImpl, VulkanGraphicsContext> {
+public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefaultImpl, VulkanBaseGraphicsContext> {
 
     public VulkanInstance vulkanInstance;
     public VulkanDefaultImpl impl;
@@ -60,7 +61,14 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
         vulkanInstance.setGraphicsEngine(this);
         vulkanInstance.setUp();
         vulkanInstance.vulkanWindow.setup();
-        gameInstance.build(this, vulkanInstance.vulkanWindow.context);
+        this.windows.add(vulkanInstance.vulkanWindow);
+
+        SingleUseCommandBuffer buf = vulkanInstance.logicalDevice.queueFamilyManager.getSingleCommandPool(false, false, true, false);
+        VulkanBaseGraphicsContext graphicsContext = new TransferVulkanContext(buf.getCommandBuffer(), vulkanInstance.logicalDevice, vulkanInstance.vulkanWindow);
+        gameInstance.build(this, graphicsContext);
+        buf.endAndSubmit(graphicsContext.getCommandBuffer().onCompletion);
+
+
         impl.compilePipelines(vulkanInstance.vulkanWindow.renderPass, vulkanInstance.vulkanWindow.viewport);
         //vulkanInstance.run();
         return vulkanInstance.vulkanWindow;
@@ -68,9 +76,11 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
 
     @Override
     public void close() {
+        gameInstance.cleanupGraphics(this, null);
         for(VulkanWindow window : windows) {
             window.close();
         }
+        impl.cleanup();
         vulkanInstance.cleanup();
         //vulkanInstance.exit("closing");
     }

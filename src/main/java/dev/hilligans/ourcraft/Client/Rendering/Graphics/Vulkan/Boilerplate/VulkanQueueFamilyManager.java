@@ -51,4 +51,8 @@ public class VulkanQueueFamilyManager {
     public QueueFamily getQueueFamily(boolean graphics, boolean compute, boolean transfer, boolean present) {
         return queueGroup.findSupported(graphics, compute, transfer, present);
     }
+
+    public void cleanup() {
+        //vkDestroyQue
+    }
 }

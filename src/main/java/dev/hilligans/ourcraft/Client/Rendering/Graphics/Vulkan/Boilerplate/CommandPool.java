@@ -1,15 +1,16 @@
 package dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate;
 
 import org.lwjgl.PointerBuffer;
+import org.lwjgl.system.JNI;
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.vulkan.VkCommandBuffer;
-import org.lwjgl.vulkan.VkCommandBufferAllocateInfo;
-import org.lwjgl.vulkan.VkCommandBufferBeginInfo;
-import org.lwjgl.vulkan.VkCommandPoolCreateInfo;
+import org.lwjgl.vulkan.*;
 
 import java.nio.LongBuffer;
 import java.util.ArrayList;
 
+import static org.lwjgl.system.MemoryUtil.memAddress;
+import static org.lwjgl.vulkan.EXTDebugMarker.VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT;
+import static org.lwjgl.vulkan.EXTDebugReport.VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT;
 import static org.lwjgl.vulkan.VK10.*;
 
 public class CommandPool {
@@ -50,6 +51,17 @@ public class CommandPool {
 
             for (int x = 0; x < commandBuffers.capacity(); x++) {
                 VkCommandBuffer vkCommandBuffer = new VkCommandBuffer(commandBuffers.get(x), device.device);
+                VkDebugMarkerObjectNameInfoEXT nameInfo = VkDebugMarkerObjectNameInfoEXT.calloc(memoryStack);
+                nameInfo.sType(VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT);
+                nameInfo.objectType(VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT);
+                nameInfo.object(commandBuffers.get(x));
+                nameInfo.pObjectName(MemoryStack.stackASCII("Primary Command Buffer " + x));
+
+                //long pfnDebugMarkerSetObjectName = vkGetDeviceProcAddr(device.device, memoryStack.ASCII("vkDebugMarkerSetObjectNameEXT"));
+                //JNI.invokePPI(device.device.address(), memAddress(memoryStack.ASCII("name")), pfnDebugMarkerSetObjectName);
+
+
+               // pfnDebugMarkerSetObjectName(device, &nameInfo);
                 this.commandBuffers.add(vkCommandBuffer);
             }
         }

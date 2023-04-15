@@ -77,6 +77,5 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
 
     @Override
     default void cleanup() {
-        close();
     }
 }
