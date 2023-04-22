@@ -8,6 +8,7 @@ import org.lwjgl.vulkan.VkDeviceQueueCreateInfo;
 import org.lwjgl.vulkan.VkQueueFamilyProperties;
 
 import java.nio.FloatBuffer;
+import java.util.Arrays;
 
 import static org.lwjgl.vulkan.VK10.*;
 
@@ -95,7 +96,7 @@ public class QueueFamily {
             try(MemoryStack memoryStack = MemoryStack.stackPush()) {
                 PointerBuffer pointerBuffer = memoryStack.mallocPointer(1);
                 vkGetDeviceQueue(device.device, this.index, index, pointerBuffer);
-                queues[index] = new Queue(device, pointerBuffer.get(0), index, this.index);
+                queues[index] = new Queue(device, pointerBuffer.get(0), index, this.index, this);
             }
         }
         return queues[index];
@@ -120,9 +121,25 @@ public class QueueFamily {
         return (hasTransfer() ? 1 : 0) + (hasCompute() ? 1 : 0) + (hasGraphics() ? 1 : 0);
     }
 
+    @Override
+    public String toString() {
+        return "QueueFamily{" +
+                "compute=" + hasCompute() +
+                ", graphics=" + hasGraphics() +
+                ", present=" + hasPresent() +
+                ", transfer=" + hasTransfer() +
+                ", device=" + device +
+                ", index=" + index +
+                ", queueIndex=" + queueIndex +
+                ", supportsPresent=" + supportsPresent +
+                ", queues=" + Arrays.toString(queues) +
+                '}';
+    }
+
     public void cleanup() {
         //vkDestroy
         properties.free();
     }
+
 
 }

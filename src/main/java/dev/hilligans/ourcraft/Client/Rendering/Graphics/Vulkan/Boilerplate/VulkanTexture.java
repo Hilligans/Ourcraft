@@ -93,7 +93,7 @@ public class VulkanTexture {
             VkMemoryAllocateInfo allocInfo = VkMemoryAllocateInfo.calloc(memoryStack);
             allocInfo.sType(VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO);
             allocInfo.allocationSize(requirements.size());
-            allocInfo.memoryTypeIndex(device.physicalDevice.findMemoryType(requirements.memoryTypeBits(), VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+            allocInfo.memoryTypeIndex(device.findMemoryType(requirements.memoryTypeBits(), VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
             LongBuffer mem = memoryStack.mallocLong(1);
 

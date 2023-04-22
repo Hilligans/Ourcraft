@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline;
 
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.CommandBuffer;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.LogicalDevice;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.VulkanBuffer;
 import org.lwjgl.PointerBuffer;
@@ -17,7 +18,9 @@ public class VertexBuffer {
     public LogicalDevice device;
     public VulkanBuffer buffer;
     public FloatBuffer vertices;
-    public VertexBuffer(LogicalDevice device, float[] data, VkCommandBuffer commandBuffer) {
+    public boolean available;
+
+    public VertexBuffer(LogicalDevice device, float[] data, CommandBuffer commandBuffer) {
         try (MemoryStack memoryStack = MemoryStack.stackPush()) {
             int bufferSize = data.length * 4;
             VulkanBuffer stagingBuffer = device.allocateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
@@ -29,12 +32,14 @@ public class VertexBuffer {
 
             buffer = device.allocateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-            stagingBuffer.copyTo(commandBuffer, buffer);
-            stagingBuffer.free();
+            stagingBuffer.copyTo(commandBuffer.getCommandBuffer(), buffer);
+
+            commandBuffer.add(() -> available = true);
+            commandBuffer.add(stagingBuffer::free);
         }
     }
 
-    public VertexBuffer(LogicalDevice device, FloatBuffer vertices, VkCommandBuffer commandBuffer) {
+    public VertexBuffer(LogicalDevice device, FloatBuffer vertices, CommandBuffer commandBuffer) {
         try (MemoryStack memoryStack = MemoryStack.stackPush()) {
             int bufferSize = vertices.capacity() * 4;
             VulkanBuffer stagingBuffer = device.allocateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
@@ -46,8 +51,10 @@ public class VertexBuffer {
 
             buffer = device.allocateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-            stagingBuffer.copyTo(commandBuffer, buffer);
-            stagingBuffer.free();
+            stagingBuffer.copyTo(commandBuffer.getCommandBuffer(), buffer);
+
+            commandBuffer.add(() -> available = true);
+            commandBuffer.add(stagingBuffer::free);
         }
     }
 
@@ -80,27 +87,6 @@ public class VertexBuffer {
             vkBindBufferMemory(device.device,buffer, memory,0);
         }
     }
-
-    public VertexBuffer putData(float[] vertices) {
-        try(MemoryStack memoryStack = MemoryStack.stackPush()) {
-            PointerBuffer pos = memoryStack.mallocPointer(1);
-            vkMapMemory(device.device, memory, 0, vertices.length, 0, pos);
-            this.vertices = MemoryUtil.memFloatBuffer(pos.get(0),vertices.length).put(vertices);
-            vkUnmapMemory(device.device,memory);
-        }
-        return this;
-    }
-
-    public VertexBuffer putData(FloatBuffer vertices) {
-        try(MemoryStack memoryStack = MemoryStack.stackPush()) {
-            PointerBuffer pos = memoryStack.mallocPointer(1);
-            vkMapMemory(device.device, memory, 0, vertices.remaining(), 0, pos);
-            this.vertices = MemoryUtil.memFloatBuffer(pos.get(0),vertices.remaining()).put(vertices);
-            vkUnmapMemory(device.device,memory);
-        }
-        return this;
-    }
-
      */
 
     public void cleanup() {

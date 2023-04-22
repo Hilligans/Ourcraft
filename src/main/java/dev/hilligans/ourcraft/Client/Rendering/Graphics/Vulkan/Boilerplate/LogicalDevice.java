@@ -16,7 +16,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 import static dev.hilligans.ourcraft.Client.Rendering.Widgets.FolderWidget.size;
+import static org.lwjgl.vulkan.EXTMemoryBudget.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT;
 import static org.lwjgl.vulkan.VK10.*;
+import static org.lwjgl.vulkan.VK11.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2;
+import static org.lwjgl.vulkan.VK11.vkGetPhysicalDeviceMemoryProperties2;
 
 public class LogicalDevice {
 
@@ -32,6 +35,7 @@ public class LogicalDevice {
     public LogicalDevice(PhysicalDevice physicalDevice) {
         this.vulkanInstance = physicalDevice.vulkanInstance;
         this.physicalDevice = physicalDevice;
+        getMemoryAllocations();
 
         queueFamilyManager = new VulkanQueueFamilyManager(this);
 
@@ -83,8 +87,46 @@ public class LogicalDevice {
 
     }
 
+    public void getMemoryAllocations() {
+        /*
+        try(MemoryStack memoryStack = MemoryStack.stackPush()) {
+            VkPhysicalDeviceMemoryBudgetPropertiesEXT budget = VkPhysicalDeviceMemoryBudgetPropertiesEXT.calloc(memoryStack);
+            budget.sType(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT);
+            VkPhysicalDeviceMemoryProperties2 properties = VkPhysicalDeviceMemoryProperties2.calloc(memoryStack);
+            properties.sType(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2);
+            properties.pNext(budget);
+
+            vkGetPhysicalDeviceMemoryProperties2(physicalDevice.physicalDevice, properties);
+
+            for(int x = 0; x < budget.heapBudget().limit(); x++) {
+                System.out.println("Heap Budget " + budget.heapBudget(x));
+                System.out.println("Heap Usage " + budget.heapUsage(x));
+            }
+        }
+        
+         */
+    }
+
     public VulkanBuffer allocateBuffer(int size, int usage, int properties) {
         return new VulkanBuffer(this, size, usage, properties);
+    }
+
+    public int findMemoryType(int filter, int properties) {
+        //System.out.println("Yee");
+        try(MemoryStack memoryStack = MemoryStack.stackPush()) {
+            VkPhysicalDeviceMemoryProperties memProperties = VkPhysicalDeviceMemoryProperties.calloc(memoryStack);
+            vkGetPhysicalDeviceMemoryProperties(physicalDevice.physicalDevice, memProperties);
+            //  System.out.println("count:" + memProperties.memoryTypeCount());
+            //vkGetDeviceMemoryCommitment(device.physicalDevice.physicalDevice,);
+
+            for (int i = 0; i < memProperties.memoryTypeCount(); i++) {
+                if ((filter & (1 << i)) != 0 && (memProperties.memoryTypes(i).propertyFlags() & properties) == properties) {
+                    return i;
+                }
+            }
+            vulkanInstance.exit("failed to find memory");
+        }
+        return -1;
     }
 
     public VulkanWindow createNewWindow() {
@@ -113,8 +155,10 @@ public class LogicalDevice {
         bufferManager.cleanup();
 
         try {
-            cleanup.awaitTermination(1000, TimeUnit.SECONDS);
-        } catch (Exception e) {
+            if(!cleanup.awaitTermination(100, TimeUnit.SECONDS)) {
+                throw new VulkanEngineException("Failed to clean up resources in time");
+            }
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         vkDestroyDevice(device,null);

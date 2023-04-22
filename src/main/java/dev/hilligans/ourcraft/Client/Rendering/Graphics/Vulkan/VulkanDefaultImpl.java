@@ -27,6 +27,7 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
@@ -35,19 +36,21 @@ import static org.lwjgl.vulkan.VK10.*;
 public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, VulkanBaseGraphicsContext> {
 
     public VulkanEngine engine;
-
-    public Long2ObjectOpenHashMap<Tuple<VertexBuffer, IndexBuffer>> meshes = new Long2ObjectOpenHashMap<>();
+    public AtomicBoolean running = new AtomicBoolean(true);
 
     public AtomicLong pipelineIndex = new AtomicLong();
     public final Long2ObjectOpenHashMap<GraphicsPipeline> pipelines = new Long2ObjectOpenHashMap<>();
     public final Long2ObjectOpenHashMap<VulkanTexture> textures = new Long2ObjectOpenHashMap<>();
+
+    public final Long2ObjectOpenHashMap<VertexBuffer> vertexBuffers = new Long2ObjectOpenHashMap<>();
+    public final Long2ObjectOpenHashMap<IndexBuffer> indexBuffers = new Long2ObjectOpenHashMap<>();
+    public final Long2LongOpenHashMap vertexToIndexMap = new Long2LongOpenHashMap();
 
     public final HashMap<String, Shader> shaderCache = new HashMap<>();
     public ForkJoinPool pool = new ForkJoinPool(1);
     public boolean asyncShaderLoading = true;
     public boolean exceptionOnWarning = true;
 
-    public Long2LongOpenHashMap indexIndex = new Long2LongOpenHashMap();
     public VulkanDefaultImpl(VulkanEngine vulkanEngine) {
         this.engine = vulkanEngine;
     }
@@ -59,7 +62,10 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
 
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             vkCmdBindVertexBuffers(graphicsContext.getBuffer(), 0, memoryStack.longs(meshID), memoryStack.longs(0));
-            vkCmdBindIndexBuffer(graphicsContext.getBuffer(), indexIndex.get(meshID), 0, VK_INDEX_TYPE_UINT32);
+
+            synchronized (vertexToIndexMap) {
+                vkCmdBindIndexBuffer(graphicsContext.getBuffer(), vertexToIndexMap.get(meshID), 0, VK_INDEX_TYPE_UINT32);
+            }
 
             vkCmdDrawIndexed(graphicsContext.getBuffer(), length, 1, (int) indicesIndex, 0, 0);
         }
@@ -67,23 +73,33 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
 
     @Override
     public long createMesh(VulkanWindow window, VulkanBaseGraphicsContext graphicsContext, VertexMesh mesh) {
-        //TODO avoid the double copying
-        VertexBuffer vertexBuffer = new VertexBuffer(graphicsContext.getDevice(), mesh.vertices, graphicsContext.getBuffer());
-       // IndexBuffer indexBuffer = new IndexBuffer();
+        VertexBuffer vertexBuffer = new VertexBuffer(graphicsContext.getDevice(), mesh.vertices, graphicsContext.getCommandBuffer());
+        synchronized (vertexBuffers) {
+            vertexBuffers.put(vertexBuffer.buffer.buffer, vertexBuffer);
+        }
+        IndexBuffer indexBuffer = new IndexBuffer(graphicsContext.getDevice(), mesh.indices, graphicsContext.getCommandBuffer());
+        synchronized (indexBuffers) {
+            indexBuffers.put(indexBuffer.buffer.buffer, indexBuffer);
+        }
+        synchronized (vertexToIndexMap) {
+            vertexToIndexMap.put(vertexBuffer.buffer.buffer, indexBuffer.buffer.buffer);
+        }
 
-        //VertexBuffer vertexBuffer = new VertexBuffer(graphicsContext.getDevice()).putData(mesh.vertices);
-       // IndexBuffer indexBuffer = new IndexBuffer(graphicsContext.getDevice()).putData(mesh.indices);
-      //  indexIndex.put(vertexBuffer.buffer, indexBuffer.buffer);
-       // meshes.put(vertexBuffer.buffer, new Tuple<>(vertexBuffer, indexBuffer));
-       // return vertexBuffer.buffer;
-        return 0;
+        return vertexBuffer.buffer.buffer;
     }
 
     @Override
     public void destroyMesh(VulkanWindow window, VulkanBaseGraphicsContext graphicsContext, long mesh) {
-        Tuple<VertexBuffer, IndexBuffer> meshData = new Tuple<>();
-        //TODO free when resources are no longer in use
-        //meshData.getTypeA().cleanup();
+        synchronized (vertexBuffers) {
+            vertexBuffers.remove(mesh).cleanup();
+        }
+        long indexBuffer;
+        synchronized (vertexToIndexMap) {
+            indexBuffer = vertexToIndexMap.remove(mesh);
+        }
+        synchronized (indexBuffers) {
+            indexBuffers.remove(indexBuffer).cleanup();
+        }
     }
 
     @Override
@@ -104,7 +120,7 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
 
     @Override
     public void drawAndDestroyMesh(VulkanWindow window, VulkanBaseGraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh) {
-        System.out.println("Drawing");
+        System.out.println("DrawingANdDestroyed");
     }
 
     @Override
@@ -125,7 +141,6 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
             graphicsContext.bindPipeline(pipelines.get(pipeline));
         }
         //TODO bind appropriate renderpass
-
     }
 
     @Override
@@ -133,7 +148,6 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
         if(graphicsContext.pipelineStateSet) {
             throw new VulkanEngineException("Graphics state was already set by the render task and cannot be reset inside the render task");
         }
-
     }
 
     @Override
@@ -199,6 +213,7 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
         synchronized (shaderCache) {
             if(!shaderCache.containsKey(path)) {
                 shaderCache.put(path, null);
+                System.out.println("Waiting " + path);
                 pool.submit(() -> {
                     compileShaderAndPut(path, modID, device, bit);
                 });
@@ -209,7 +224,6 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     public void compileShaderAndPut(String path, String modID, LogicalDevice device, int bit) {
         String newPath = path.substring(0, path.length() - 5) + ".vulkan.glsl";
         try {
-            System.out.println("Yew " + pipelineIndex.getAndIncrement());
             String shaderSource = engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(newPath, modID));
             if(shaderSource == null) {
                 System.out.println("Failed to load vulkan shader " + path);
@@ -217,7 +231,12 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
             }
             Shader shader = new Shader(device, ShaderCompiler.compileShader(shaderSource, newPath, bit), bit);
             synchronized (shaderCache) {
-                shaderCache.put(path, shader);
+                if(running.get()) {
+                    System.out.println("Putting " + path);
+                    shaderCache.put(path, shader);
+                } else {
+                    shader.free();
+                }
             }
         } catch (Exception e) {
             System.err.println("Failed to compile shader " + newPath);
@@ -244,11 +263,18 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
 
     @Override
     public void cleanup() {
-        /*
+        running.set(false);
         for(VulkanTexture texture : textures.values()) {
             texture.cleanup();
         }
-         */
+        synchronized (shaderCache) {
+            for (Shader shader : shaderCache.values()) {
+                if(shader != null) {
+                    shader.free();
+                }
+            }
+            shaderCache.clear();
+        }
         textures.clear();
     }
 }

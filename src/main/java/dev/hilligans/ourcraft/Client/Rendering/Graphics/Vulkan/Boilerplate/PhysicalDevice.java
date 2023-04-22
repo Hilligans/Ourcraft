@@ -101,31 +101,6 @@ public class PhysicalDevice {
         return VK_PRESENT_MODE_FIFO_KHR;
     }
 
-    public int findMemoryType(int filter, int properties) {
-        System.out.println("Yee");
-        try(MemoryStack memoryStack = MemoryStack.stackPush()) {
-            VkPhysicalDeviceMemoryProperties memProperties = VkPhysicalDeviceMemoryProperties.calloc(memoryStack);
-            vkGetPhysicalDeviceMemoryProperties(physicalDevice, memProperties);
-            //  System.out.println("count:" + memProperties.memoryTypeCount());
-            //vkGetDeviceMemoryCommitment(device.physicalDevice.physicalDevice,);
-
-            for (int i = 0; i < memProperties.memoryTypeCount(); i++) {
-                long[] longs = new long[10];
-                //vkGetDeviceMemoryCommitment(device.device,i,longs);
-                // System.out.println(i);
-                if ((filter & (1 << i)) == 1 && (memProperties.memoryTypes(i).propertyFlags() & properties) == properties) {
-                    System.out.println("Yes");
-                    return i;
-                }
-            }
-            if (1 == 1) {
-                return 1;
-            }
-            vulkanInstance.exit("failed to find memory");
-        }
-        return -1;
-    }
-
     public void cleanup() {
         deviceFeatures.free();
         properties.free();

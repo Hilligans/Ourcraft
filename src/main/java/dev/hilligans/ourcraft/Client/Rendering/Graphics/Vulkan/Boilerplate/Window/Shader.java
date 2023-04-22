@@ -22,8 +22,8 @@ public class Shader {
     public Shader(LogicalDevice device, ByteBuffer shader, int bit) {
         this.device = device;
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
-        VkShaderModuleCreateInfo createInfo = VkShaderModuleCreateInfo.calloc(memoryStack);
-        createInfo.sType(VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO);
+            VkShaderModuleCreateInfo createInfo = VkShaderModuleCreateInfo.calloc(memoryStack);
+            createInfo.sType(VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO);
 
             createInfo.pCode(shader);
             LongBuffer longBuffer = memoryStack.mallocLong(1);
@@ -39,7 +39,6 @@ public class Shader {
 
             stateCreateInfo = VkPipelineVertexInputStateCreateInfo.calloc();
             stateCreateInfo.sType(VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO);
-
         }
     }
 
@@ -60,9 +59,10 @@ public class Shader {
 
             parts.put(x, description);
         }
-
-        stateCreateInfo.pVertexBindingDescriptions(VkVertexInputBindingDescription.calloc(1).put(0,bindingDescription));
-        stateCreateInfo.pVertexAttributeDescriptions(parts);
+        //try(MemoryStack memoryStack = MemoryStack.stackPush()) {
+            stateCreateInfo.pVertexBindingDescriptions(VkVertexInputBindingDescription.calloc(1).put(0, bindingDescription));
+            stateCreateInfo.pVertexAttributeDescriptions(parts);
+        //}
     }
 
     public static int getFormat(int type, int length) {
@@ -80,14 +80,21 @@ public class Shader {
 
     public void freeInit() {
        // stateCreateInfo.pVertexBindingDescriptions().free();
+        VkVertexInputBindingDescription.Buffer b;
+        if((b = stateCreateInfo.pVertexBindingDescriptions()) != null) {
+            b.free();
+        }
         stateCreateInfo.free();
-        bindingDescription.free();
+        if(bindingDescription != null) {
+            bindingDescription.free();
+        }
 
         MemoryUtil.memFree(shaderCreateInfo.pName());
         shaderCreateInfo.free();
     }
 
     public void free() {
+        freeInit();
         vkDestroyShaderModule(device.device, shader,null);
     }
 }

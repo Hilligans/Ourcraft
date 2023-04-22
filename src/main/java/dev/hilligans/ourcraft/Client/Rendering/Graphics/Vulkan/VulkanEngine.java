@@ -13,6 +13,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.util.ArrayList;
 
+import static org.lwjgl.vulkan.VK10.vkEnumerateInstanceExtensionProperties;
+
 public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefaultImpl, VulkanBaseGraphicsContext> {
 
     public VulkanInstance vulkanInstance;
@@ -31,6 +33,8 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
             //System.out.println("Returning");
             //return;
         }
+
+        vulkanInstance.logicalDevice.getMemoryAllocations();
         window.frameTracker.count();
         Client.timeSinceLastDraw = currentTime;
 
@@ -45,7 +49,7 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
         window.renderPipeline.render(client, matrixStack, screenStack, window.context);
         window.context.endRecording();
 
-        window.windowRenderer.render(window.context.getBuffer());
+        window.windowRenderer.render(window.renderPool.queue, window.context.getBuffer());
         //window.renderPipeline.render(client,matrixStack,screenStack, new GraphicsContext());
     }
 
@@ -63,8 +67,8 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
         vulkanInstance.vulkanWindow.setup();
         this.windows.add(vulkanInstance.vulkanWindow);
 
-        SingleUseCommandBuffer buf = vulkanInstance.logicalDevice.queueFamilyManager.getSingleCommandPool(false, false, true, false);
-        VulkanBaseGraphicsContext graphicsContext = new TransferVulkanContext(buf.getCommandBuffer(), vulkanInstance.logicalDevice, vulkanInstance.vulkanWindow);
+        SingleUseCommandBuffer buf = vulkanInstance.logicalDevice.queueFamilyManager.getSingleCommandPool(true, false, true, false);
+        VulkanBaseGraphicsContext graphicsContext = new TransferVulkanContext(buf.getBuffer(), vulkanInstance.logicalDevice, vulkanInstance.vulkanWindow);
         gameInstance.build(this, graphicsContext);
         buf.endAndSubmit(graphicsContext.getCommandBuffer().onCompletion);
 

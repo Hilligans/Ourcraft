@@ -11,6 +11,7 @@ import org.lwjgl.vulkan.*;
 import java.nio.LongBuffer;
 
 import static org.lwjgl.vulkan.VK10.*;
+import static org.lwjgl.vulkan.VK11.vkGetPhysicalDeviceMemoryProperties2;
 
 
 public class DescriptorSet {
@@ -66,7 +67,6 @@ public class DescriptorSet {
                 imageInfo.imageLayout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
                 imageInfo.imageView(texture.imageView);
                 imageInfo.sampler(texture.sampler);
-
                 VkWriteDescriptorSet descriptorWrite = VkWriteDescriptorSet.calloc(memoryStack);
                 descriptorWrite.sType(VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET);
                 descriptorWrite.dstSet(descriptorSets.get(x));

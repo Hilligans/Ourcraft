@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate;
 
 import dev.hilligans.ourcraft.Data.Primitives.Tuple;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.VkCommandBuffer;
@@ -8,6 +9,7 @@ import org.lwjgl.vulkan.VkFenceCreateInfo;
 import org.lwjgl.vulkan.VkQueue;
 import org.lwjgl.vulkan.VkSubmitInfo;
 
+import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -22,16 +24,18 @@ public class Queue {
     public LogicalDevice device;
     public int queueIndex;
     public int queueFamilyIndex;
+    public QueueFamily queueFamily;
 
     public ConcurrentLinkedQueue<Tuple<VkCommandBuffer, Runnable>> asyncSubmitQueue = new ConcurrentLinkedQueue<>();
 
     //The count of how many different owners there are of this queue
     public AtomicInteger queueOwners = new AtomicInteger();
 
-    public Queue(LogicalDevice device, long handle, int queueIndex, int queueFamilyIndex) {
+    public Queue(LogicalDevice device, long handle, int queueIndex, int queueFamilyIndex, QueueFamily queueFamily) {
         this.device = device;
         this.queueFamilyIndex = queueFamilyIndex;
         this.queueIndex = queueIndex;
+        this.queueFamily = queueFamily;
         System.out.println("device " + device.device + " handle " + handle);
         this.vkQueue = new VkQueue(handle, device.device);
     }
@@ -40,12 +44,12 @@ public class Queue {
         return new CommandPool(device, this);
     }
 
-    public synchronized QueueSubmitResult submitQueue(VkSubmitInfo submitInfo, long fence) {
-        return new QueueSubmitResult(vkQueueSubmit(vkQueue, submitInfo, fence));
+    public synchronized QueueSubmitResult submitQueue(long fence,  VkCommandBuffer... commandBuffers) {
+        return this.submitQueue(fence, null, null, null, commandBuffers);
     }
 
-    public synchronized QueueSubmitResult submitQueue(VkCommandBuffer commandBuffer, long fence) {
-        int count = asyncSubmitQueue.size() + 1;
+    public synchronized QueueSubmitResult submitQueue(long fence, @Nullable LongBuffer signalSemaphores, @Nullable LongBuffer waitSemaphores, @Nullable IntBuffer waitMask, VkCommandBuffer... commandBuffers) {
+        int count = asyncSubmitQueue.size() + commandBuffers.length;
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             PointerBuffer buffers = memoryStack.mallocPointer(count);
             ArrayList<Runnable> runnables = new ArrayList<>();
@@ -54,18 +58,35 @@ public class Queue {
                 if(val == null) {
                     throw new RuntimeException();
                 }
-                buffers.put(x, val.typeA);
+                buffers.put(val.typeA);
                 if(val.typeB != null) {
                     runnables.add(val.typeB);
                 }
             }
-            buffers.put(count - 1, commandBuffer);
+
+            for(VkCommandBuffer commandBuffer : commandBuffers) {
+                buffers.put(commandBuffer);
+            }
 
             VkSubmitInfo submitInfo = VkSubmitInfo.calloc(memoryStack).sType(VK_STRUCTURE_TYPE_SUBMIT_INFO);
-            submitInfo.pCommandBuffers(buffers);
+            submitInfo.pCommandBuffers(buffers.flip());
+            if(signalSemaphores != null) {
+                submitInfo.pSignalSemaphores(signalSemaphores);
+            }
+            if(waitSemaphores != null) {
+                submitInfo.waitSemaphoreCount(waitSemaphores.capacity());
+                submitInfo.pWaitSemaphores(waitSemaphores);
+            }
+            if(waitMask != null) {
+                submitInfo.pWaitDstStageMask(waitMask);
+            }
 
             return submitQueue(submitInfo, fence).withRunnables(runnables);
         }
+    }
+
+    public synchronized QueueSubmitResult submitQueue(VkSubmitInfo submitInfo, long fence) {
+        return new QueueSubmitResult(vkQueueSubmit(vkQueue, submitInfo, fence));
     }
 
     public void submitQueueAsync(VkCommandBuffer commandBuffer, Runnable onComplete) {

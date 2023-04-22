@@ -35,6 +35,8 @@ public class DescriptorPool {
 
             device.executeMethod(() -> vkCreateDescriptorPool(device.device, poolInfo, null, longBuffer), "Failed to create descriptor pool, %s");
             this.descriptorPool = longBuffer.get(0);
+
+
         }
     }
 

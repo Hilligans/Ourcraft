@@ -38,7 +38,7 @@ public class VulkanBuffer {
             VkMemoryAllocateInfo allocInfo = VkMemoryAllocateInfo.calloc(memoryStack);
             allocInfo.sType(VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO);
             allocInfo.allocationSize(memRequirements.size());
-            allocInfo.memoryTypeIndex(device.physicalDevice.findMemoryType(memRequirements.memoryTypeBits(), properties));
+            allocInfo.memoryTypeIndex(device.findMemoryType(memRequirements.memoryTypeBits(), properties));
 
             LongBuffer mem = MemoryStack.stackCallocLong(1);
 

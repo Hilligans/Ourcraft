@@ -86,8 +86,9 @@ public class VulkanWindow extends RenderWindow {
         vertexShader.set(Ourcraft.position_RGB);
 
         SingleUseCommandBuffer buf = device.queueFamilyManager.getSingleCommandPool(false, false, true, false);
-        buffer = new VertexBuffer(device, new float[] {0.0f, -0.8f, 1.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, -0.5f, 0.5f, 1.0f,  1.0f, 0.0f, 1.0f}, buf.getCommandBuffer());
-        buf.endAndSubmit();
+        CommandBuffer commandBuffer = new CommandBuffer(buf.getBuffer());
+        buffer = new VertexBuffer(device, new float[] {0.0f, -0.8f, 1.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, -0.5f, 0.5f, 1.0f,  1.0f, 0.0f, 1.0f}, commandBuffer);
+        buf.endAndSubmit(commandBuffer.onCompletion);
 
         fragmentShader = new Shader(device,ShaderCompiler.compileShader(fragment, "shader.glsl", VK_SHADER_STAGE_FRAGMENT_BIT),VK_SHADER_STAGE_FRAGMENT_BIT);
         graphicsPipeline = new GraphicsPipeline(device, null);
@@ -105,7 +106,7 @@ public class VulkanWindow extends RenderWindow {
     }
 
     public VulkanWindow selectFamily() {
-        graphicsFamily = device.queueFamilyManager.getQueueFamily(true,false,false,true);
+        graphicsFamily = device.queueFamilyManager.getQueueFamily(true,true,true,true);
         if(graphicsFamily == null) {
             device.vulkanInstance.exit("No queue family found");
         }

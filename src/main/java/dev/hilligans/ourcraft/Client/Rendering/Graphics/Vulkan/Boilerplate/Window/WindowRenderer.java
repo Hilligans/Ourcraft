@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window;
 
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Pipeline.VertexBuffer;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Queue;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Semaphore;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanGraphicsContext;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanWindow;
@@ -88,11 +89,12 @@ public class WindowRenderer {
         }
     }
 
-    public void render(VkCommandBuffer... commandBuffers) {
+    public void render(Queue queue, VkCommandBuffer... commandBuffers) {
         try (MemoryStack memoryStack = MemoryStack.stackPush()) {
+
             Semaphore renderSemaphore = vulkanWindow.frameManager.getRenderSemaphore();
             Semaphore imageSemaphore = vulkanWindow.frameManager.getImageSemaphore();
-            VkSubmitInfo submitInfo = VkSubmitInfo.calloc().sType(VK_STRUCTURE_TYPE_SUBMIT_INFO).waitSemaphoreCount(1).pWaitSemaphores(imageSemaphore.get(memoryStack));
+            /*VkSubmitInfo submitInfo = VkSubmitInfo.calloc().sType(VK_STRUCTURE_TYPE_SUBMIT_INFO).waitSemaphoreCount(1).pWaitSemaphores(imageSemaphore.get(memoryStack));
             submitInfo.pWaitDstStageMask(memoryStack.ints(VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT));
             PointerBuffer bufferPointers = memoryStack.mallocPointer(commandBuffers.length);
             for(int x = 0; x < commandBuffers.length; x++) {
@@ -101,11 +103,15 @@ public class WindowRenderer {
             submitInfo.pCommandBuffers(bufferPointers);
             submitInfo.pSignalSemaphores(renderSemaphore.get(memoryStack));
 
+             */
+
             vkResetFences(vulkanWindow.device.device, vulkanWindow.frameManager.getFencePointer());
 
-            if(vkQueueSubmit(vulkanWindow.graphicsFamily.getQueue(0).vkQueue, submitInfo, vulkanWindow.frameManager.getFencePointer()) != VK_SUCCESS) {
-                vulkanWindow.device.vulkanInstance.exit("Failed to submit to queue");
-            }
+            queue.submitQueue(vulkanWindow.frameManager.getFencePointer(), renderSemaphore.get(memoryStack), imageSemaphore.get(memoryStack), memoryStack.ints(VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT), commandBuffers);
+
+        //    if(vkQueueSubmit(vulkanWindow.graphicsFamily.getQueue(0).vkQueue, submitInfo, vulkanWindow.frameManager.getFencePointer()) != VK_SUCCESS) {
+        //        vulkanWindow.device.vulkanInstance.exit("Failed to submit to queue");
+        //    }
         }
     }
 
