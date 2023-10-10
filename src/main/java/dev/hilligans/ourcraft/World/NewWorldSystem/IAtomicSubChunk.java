@@ -1,4 +1,4 @@
-package dev.hilligans.ourcraft.Server.Concurrent;
+package dev.hilligans.ourcraft.World.NewWorldSystem;
 
 import dev.hilligans.ourcraft.Block.BlockState.IBlockState;
 import dev.hilligans.ourcraft.World.NewWorldSystem.ISubChunk;

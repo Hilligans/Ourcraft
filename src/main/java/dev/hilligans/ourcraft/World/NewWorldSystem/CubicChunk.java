@@ -2,10 +2,12 @@ package dev.hilligans.ourcraft.World.NewWorldSystem;
 
 import dev.hilligans.ourcraft.Block.BlockState.IBlockState;
 import dev.hilligans.ourcraft.Block.Blocks;
+import dev.hilligans.ourcraft.Data.Other.ChunkPos;
+import dev.hilligans.ourcraft.Server.Concurrent.Lock;
 
 import java.util.function.Consumer;
 
-public class CubicChunk implements IChunk {
+public class CubicChunk implements IAtomicChunk {
 
     public int size;
     public int x;
@@ -81,6 +83,40 @@ public class CubicChunk implements IChunk {
             subChunks[index] = subChunk;
         }
         subChunk.setBlockState((int) (x & 15), (int) (y & 15), (int) (z & 15), blockState);
+    }
+
+    @Override
+    public void setBlockStateAtomic(Lock lock, long x, long y, long z, IBlockState blockState) {
+        if(!lock.hasLock(new ChunkPos(this.x, this.y, this.z))) {
+            int index = getIndex(x & 31, y & 31, z & 31);
+            synchronized (this) {
+                ISubChunk subChunk = subChunks[index];
+                if(subChunk instanceof IAtomicSubChunk atomicSubChunk) {
+                    atomicSubChunk.setBlockStateAtomic((int) (x & 15), (int) (y & 15), (int) (z & 15), blockState);
+                    return;
+                }
+            }
+            lock.acquire(new ChunkPos(this.x, this.y, this.z));
+        }
+        setBlockState(x, y, z, blockState);
+    }
+
+    @Override
+    public boolean swapBlockStateAtomic(Lock lock, long x, long y, long z, IBlockState expected, IBlockState to) {
+        if(!lock.hasLock(new ChunkPos(this.x, this.y, this.z))) {
+            int index = getIndex(x & 31, y & 31, z & 31);
+            synchronized (this) {
+                ISubChunk subChunk = subChunks[index];
+                if(subChunk instanceof IAtomicSubChunk atomicSubChunk) {
+                    return atomicSubChunk.swapBlockStateAtomic((int) (x & 15), (int) (y & 15), (int) (z & 15), expected, to);
+                }
+            }
+            lock.acquire(new ChunkPos(this.x, this.y, this.z));
+        }
+        if(getBlockState1(x, y, z) == expected) {
+            setBlockState(x, y, z, to);
+        }
+        return true;
     }
 
     @Override

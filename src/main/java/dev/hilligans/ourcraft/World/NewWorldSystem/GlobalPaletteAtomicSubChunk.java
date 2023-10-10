@@ -1,7 +1,6 @@
 package dev.hilligans.ourcraft.World.NewWorldSystem;
 
 import dev.hilligans.ourcraft.Block.BlockState.IBlockState;
-import dev.hilligans.ourcraft.Server.Concurrent.IAtomicSubChunk;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;

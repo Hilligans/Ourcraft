@@ -32,7 +32,7 @@ import java.util.function.Consumer;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.glGetBufferSubData;
 
-public class Chunk implements IMeshSource, IChunk {
+public class Chunk implements IChunk {
 
     public ArrayList<SubChunk> chunks = new ArrayList<>();
 
@@ -80,14 +80,6 @@ public class Chunk implements IMeshSource, IChunk {
         }
     }
 
-    public int getTotalVertices() {
-        int vertices = 0;
-        for(SubChunk subChunk : chunks) {
-            vertices += subChunk.verticesCount;
-        }
-        return vertices;
-    }
-
     public void scheduleTick(BlockPos pos, int time) {
         if(world.isServer()) {
             long futureTime = ((ServerWorld)world).server.getTime() + time;
@@ -101,40 +93,6 @@ public class Chunk implements IMeshSource, IChunk {
         for(SubChunk subChunk : chunks) {
             subChunk.world = world;
         }
-    }
-
-    ///TODO fix
-    public void build(IGraphicsEngine<?,?,?> graphicsEngine) {
-        if(solidMesh.id != -1) {
-            graphicsEngine.getDefaultImpl().destroyMesh(null,null,solidMesh.id);
-        }
-        PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
-        for(int x = 0; x < 16; x++) {
-            for(int y = 0; y < 256; y++) {
-                for(int z = 0; z < 16; z++) {
-                    BlockState block = getBlockState(x,y,z);
-                    for(int a = 0; a < 6; a++) {
-                        if(block.getBlock() != Blocks.AIR) {
-                            BlockState blockState = getBlockState(new BlockPos(x, y, z).add(Block.getBlockPos(block.getBlock().getSide(block,a))));
-                            if ((blockState.getBlock().blockProperties.transparent && (Settings.renderSameTransparent || block.getBlock() != blockState.getBlock())) || block.getBlock().blockProperties.alwaysRender) {
-                                block.getBlock().addVertices(primitiveBuilder,a,1.0f,block,new BlockPos(x + this.x * 16,y,z + this.z * 16),x,z);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        int id = (int) graphicsEngine.getDefaultImpl().createMesh(null,null,primitiveBuilder.toVertexMesh().setVertexFormat("position_color_texture"));
-        solidMesh.set(id,primitiveBuilder.indices.size());
-    }
-
-    public void destroy() {
-        for(SubChunk subChunk : chunks) {
-            subChunk.destroy();
-        }
-        blockTicks.clear();
-        entities.clear();
-        dataProviders.clear();
     }
 
     public void destroyMap(int newId) {
@@ -222,8 +180,6 @@ public class Chunk implements IMeshSource, IChunk {
     public int interpolate(int height, int xHeight, int zHeight) {
         return Math.round(((float)height + xHeight + zHeight) / 3);
     }
-
-    private final double size = 400;
 
     public Biome getBiome1(int x, int z) {
         return world.biomeMap.getBiome(x,z);
@@ -316,13 +272,6 @@ public class Chunk implements IMeshSource, IChunk {
         int pos = (int) (y >> 4);
         SubChunk subChunk = chunks.get(pos);
         return subChunk.getBlock((int) (x & 15), (int) (y & 15), (int) (z & 15));
-    }
-
-    public BlockState getBlockStateChecked(int x, int y, int z) {
-        if(x > 15 || x < 0 || z > 15 || z < 0) {
-            return world.getBlockState(x,y,z);
-        }
-        return getBlockState(x,y,z);
     }
 
     public BlockState getBlockState(BlockPos blockPos) {
@@ -437,14 +386,6 @@ public class Chunk implements IMeshSource, IChunk {
         return chunks.get(pos);
     }
 
-    public MeshHolder getSolidMesh() {
-        return solidMesh;
-    }
-
-    public MeshHolder getTranslucentMesh() {
-        return translucentMesh;
-    }
-
     @Override
     public String toString() {
         return "Chunk{" +
@@ -452,14 +393,6 @@ public class Chunk implements IMeshSource, IChunk {
                 ", x=" + x +
                 ", z=" + z +
                 '}';
-    }
-
-    @Override
-    public VertexMesh buildMesh(Client client) {
-
-        VertexMesh vertexMesh = new VertexMesh("position_texture_globalColor");
-
-        return null;
     }
 }
 

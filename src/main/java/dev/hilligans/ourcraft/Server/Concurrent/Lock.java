@@ -41,11 +41,36 @@ public class Lock {
         }
     }
 
+    public boolean hasLock(ChunkPos chunkPos) {
+        if(!hasAllLocks) {
+            return false;
+        }
+        for(ChunkPos chunkPos1 : chunkPositions) {
+            if(chunkPos1.equals(chunkPos)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean hasAllLocks() {
         return hasAllLocks;
     }
 
     public void acquire(long... positions) {}
+
+    public void acquire(ChunkPos chunkPos) {
+        for(ChunkPos chunkPos1 : chunkPositions) {
+            if(chunkPos1.equals(chunkPos)) {
+                acquire();
+                return;
+            }
+        }
+        ChunkPos[] chunkPosList = new ChunkPos[chunkPositions.length + 1];
+        System.arraycopy(chunkPositions,0, chunkPosList, 0, chunkPositions.length);
+        chunkPosList[chunkPositions.length] = chunkPos;
+        this.chunkPositions = chunkPosList;
+    }
 
     public void acquire() {
         chunkLocker.acquire(this);
