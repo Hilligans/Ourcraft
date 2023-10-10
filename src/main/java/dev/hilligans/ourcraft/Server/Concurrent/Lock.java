@@ -12,7 +12,7 @@ public class Lock {
 
     public boolean hasAllLocks = false;
 
-    public AtomicBoolean myLock = new AtomicBoolean(true);
+    public volatile AtomicBoolean myLock = new AtomicBoolean(true);
     public Thread thread;
     public ChunkLocker chunkLocker;
     ChunkPos[] chunkPositions;
