@@ -12,15 +12,9 @@ public class ChunkLocker {
 
     public IThreeDContainer<ChunkLock> chunkLocks = new EmptyContainer<>();
 
-    public int regionSize;
-
-    public ChunkLocker(int regionSize) {
-        this.regionSize = regionSize;
-    }
-
     public void release(Lock lock) {
         HashSet<Lock> locks = new HashSet<>();
-        lock.releaseLock();
+        lock.myLock.set(false);
         for(ChunkLock chunkLock : lock.chunkLocks) {
             locks.addAll(chunkLock.waitingLocks);
         }

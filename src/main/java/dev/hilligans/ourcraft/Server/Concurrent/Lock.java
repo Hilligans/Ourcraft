@@ -22,10 +22,11 @@ public class Lock {
     public AtomicInteger notifications = new AtomicInteger();
 
 
-    public Lock(ChunkPos... positions) {
+    public Lock(ChunkLocker chunkLocker, ChunkPos... positions) {
         this.chunkPositions = positions;
         Arrays.sort(this.chunkPositions, Comparator.comparingLong((ChunkPos o) -> o.chunkX).thenComparingLong(o -> o.chunkY).thenComparingLong(o -> o.chunkZ));
         chunkLocks = new ChunkLock[chunkPositions.length];
+        this.chunkLocker = chunkLocker;
     }
 
     public void notifyOfUnlock() {
@@ -40,19 +41,17 @@ public class Lock {
         }
     }
 
-    public void releaseLock() {
-        myLock.set(false);
-    }
-
     public boolean hasAllLocks() {
         return hasAllLocks;
     }
 
-
     public void acquire(long... positions) {}
 
-    public void acquire() {}
+    public void acquire() {
+        chunkLocker.acquire(this);
+    }
 
-    public void release() {}
-
+    public void release() {
+        chunkLocker.release(this);
+    }
 }

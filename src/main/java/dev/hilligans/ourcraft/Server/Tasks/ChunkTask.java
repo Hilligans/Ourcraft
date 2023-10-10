@@ -18,6 +18,11 @@ public class ChunkTask extends TickingBase {
 
     @Override
     public void tick() {
-        chunkLocker.acquire(new Lock(new ChunkPos(chunk.getX(), chunk.getY(), chunk.getZ())));
+        //we make the lock with all the chunk positions we want
+        Lock lock = new Lock(chunkLocker, new ChunkPos(chunk.getX(), chunk.getY(), chunk.getZ()));
+        //we can then acquire it when we need it
+        lock.acquire();
+        //and release it when we no longer need it
+        lock.release();
     }
 }
