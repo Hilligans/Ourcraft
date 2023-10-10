@@ -39,6 +39,7 @@ public class ChunkLocker {
             lock.parked = true;
             lock.notifications.set(-1);
             LockSupport.park(this);
+            //when we finally get unparked we are guaranteed to have gotten out lock
             lock.notifications.set(-2);
             for (ChunkLock chunkLock : lock.chunkLocks) {
                 chunkLock.waitingLocks.remove(lock);
@@ -81,6 +82,7 @@ public class ChunkLocker {
             }
         }
         lock.myLock = atomicBoolean;
+        lock.hasAllLocks = true;
         return true;
     }
 }
