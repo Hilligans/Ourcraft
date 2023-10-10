@@ -9,9 +9,9 @@ public interface ISubChunk {
 
     int getHeight();
 
-    IBlockState getBlockState(long x, long y, long z);
+    IBlockState getBlockState(int x, int y, int z);
 
-    IBlockState setBlockState(long x, long y, long z, IBlockState blockState);
+    IBlockState setBlockState(int x, int y, int z, IBlockState blockState);
 
     boolean isEmpty();
 

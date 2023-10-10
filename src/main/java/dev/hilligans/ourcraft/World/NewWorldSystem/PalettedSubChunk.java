@@ -20,12 +20,12 @@ public class PalettedSubChunk implements ISubChunk {
     }
 
     @Override
-    public IBlockState getBlockState(long x, long y, long z) {
+    public IBlockState getBlockState(int x, int y, int z) {
         return null;
     }
 
     @Override
-    public IBlockState setBlockState(long x, long y, long z, IBlockState blockState) {
+    public IBlockState setBlockState(int x, int y, int z, IBlockState blockState) {
         return null;
     }
 

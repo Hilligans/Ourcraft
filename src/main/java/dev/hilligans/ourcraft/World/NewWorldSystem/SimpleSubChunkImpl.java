@@ -26,7 +26,7 @@ public class SimpleSubChunkImpl implements ISubChunk {
     }
 
     @Override
-    public IBlockState getBlockState(long x, long y, long z) {
+    public IBlockState getBlockState(int x, int y, int z) {
         if(blockStates == null) {
             return Blocks.AIR.getDefaultState1();
         }
@@ -40,7 +40,7 @@ public class SimpleSubChunkImpl implements ISubChunk {
     }
 
     @Override
-    public IBlockState setBlockState(long x, long y, long z, IBlockState blockState) {
+    public IBlockState setBlockState(int x, int y, int z, IBlockState blockState) {
         if(blockStates == null) {
             if(blockState.getBlock() != Blocks.AIR) {
                 blockStates = new IBlockState[width * height * width];

@@ -1,12 +1,20 @@
 package dev.hilligans.ourcraft;
 
+import dev.hilligans.ourcraft.Block.Blocks;
 import dev.hilligans.ourcraft.Client.Client;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.hilligans.ourcraft.Util.ArgumentContainer;
 import dev.hilligans.ourcraft.Util.Side;
+import dev.hilligans.ourcraft.World.NewWorldSystem.GlobalPaletteAtomicSubChunk;
+import org.lwjgl.system.MemoryUtil;
+import sun.misc.Unsafe;
 
 import java.io.IOException;
+import java.lang.invoke.VarHandle;
+import java.lang.reflect.Field;
 import java.util.concurrent.locks.LockSupport;
+
+import static java.lang.StringTemplate.STR;
 
 public class ClientMain {
 
@@ -47,6 +55,38 @@ public class ClientMain {
             client.setGraphicsEngine(gameInstance.GRAPHICS_ENGINES.get(graphicsEngine));
         }
         client.startClient();
+    }
+
+    private static sun.misc.Unsafe getUnsafeInstance() {
+        java.lang.reflect.Field[] fields = sun.misc.Unsafe.class.getDeclaredFields();
+
+        /*
+        Different runtimes use different names for the Unsafe singleton,
+        so we cannot use .getDeclaredField and we scan instead. For example:
+
+        Oracle: theUnsafe
+        PERC : m_unsafe_instance
+        Android: THE_ONE
+        */
+        for (java.lang.reflect.Field field : fields) {
+            if (!field.getType().equals(sun.misc.Unsafe.class)) {
+                continue;
+            }
+
+            int modifiers = field.getModifiers();
+            if (!(java.lang.reflect.Modifier.isStatic(modifiers) && java.lang.reflect.Modifier.isFinal(modifiers))) {
+                continue;
+            }
+
+            try {
+                field.setAccessible(true);
+                return (sun.misc.Unsafe)field.get(null);
+            } catch (Exception ignored) {
+            }
+            break;
+        }
+
+        throw new UnsupportedOperationException("LWJGL requires sun.misc.Unsafe to be available.");
     }
 
     public static int getWindowX() {

@@ -64,7 +64,7 @@ public class CubicChunk implements IChunk {
         if(subChunks[index] == null) {
             return Blocks.AIR.getDefaultState1();
         }
-        return subChunks[index].getBlockState(x & 15, y & 15, z & 15);
+        return subChunks[index].getBlockState((int) (x & 15), (int) (y & 15), (int) (z & 15));
     }
 
     @Override
@@ -80,7 +80,7 @@ public class CubicChunk implements IChunk {
             subChunk = new GlobalPaletteImpl(16,16);
             subChunks[index] = subChunk;
         }
-        subChunk.setBlockState(x & 15, y & 15, z & 15, blockState);
+        subChunk.setBlockState((int) (x & 15), (int) (y & 15), (int) (z & 15), blockState);
     }
 
     @Override

@@ -80,4 +80,13 @@ public class NewBlockState implements IBlockState {
         this.blockStateReferenceID = val;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "NewBlockState{" +
+                "blockStateReferenceID=" + blockStateReferenceID +
+                ", blockData=" + blockData +
+                ", block=" + block +
+                '}';
+    }
 }
