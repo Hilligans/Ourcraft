@@ -10,8 +10,6 @@ public class EmptyContainer<T> implements IThreeDContainer<T> {
 
     public Long2ObjectOpenHashMap<Int2ObjectOpenHashMap<T>> container = new Long2ObjectOpenHashMap<>();
 
-
-
     @Override
     public synchronized T getChunk(long x, long y, long z) {
         Int2ObjectOpenHashMap<T> c = container.get(to(x,y));

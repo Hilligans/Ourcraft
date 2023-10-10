@@ -4,9 +4,6 @@ import dev.hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.hilligans.ourcraft.ModHandler.Events.Server.ServerTickEvent;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Ourcraft;
-import dev.hilligans.ourcraft.Server.TickEngine.IGameProcessor;
-import dev.hilligans.ourcraft.Server.TickEngine.TickEngineParts.TE2GameProcessor;
-import dev.hilligans.ourcraft.Server.TickEngine.TickEngineSettings;
 import dev.hilligans.ourcraft.World.World;
 
 import java.util.Collection;
@@ -34,7 +31,7 @@ public interface IServer {
 
     class Server implements Runnable {
         public IServer server;
-        public IGameProcessor gameProcessor = new TE2GameProcessor(new TickEngineSettings());
+        //public IGameProcessor gameProcessor = new TE2GameProcessor(new TickEngineSettings());
         public Server(IServer server) {
             this.server = server;
         }
@@ -42,7 +39,7 @@ public interface IServer {
         public void run() {
             server.setTime(server.getTime() + 1);
             Ourcraft.GAME_INSTANCE.EVENT_BUS.postEvent(new ServerTickEvent(server));
-            gameProcessor.tickServer(server);
+           // gameProcessor.tickServer(server);
             for(World world : server.getWorlds()) {
                 world.tick();
             }

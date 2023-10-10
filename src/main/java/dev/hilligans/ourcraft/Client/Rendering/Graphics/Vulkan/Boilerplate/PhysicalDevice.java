@@ -18,6 +18,7 @@ public class PhysicalDevice {
     public VulkanInstance vulkanInstance;
     public VkPhysicalDeviceProperties properties = VkPhysicalDeviceProperties.calloc();
     public VkPhysicalDeviceFeatures deviceFeatures = VkPhysicalDeviceFeatures.calloc();
+    public VkPhysicalDeviceLimits deviceLimits;
     public VkSurfaceCapabilitiesKHR surfaceCapabilities;
     public IntBuffer presentModes;
     public VkSurfaceFormatKHR.Buffer surfaceFormats;
@@ -28,6 +29,7 @@ public class PhysicalDevice {
         this.physicalDevice = physicalDevice;
         this.vulkanInstance = vulkanInstance;
         vkGetPhysicalDeviceProperties(physicalDevice, properties);
+        this.deviceLimits = properties.limits();
         this.logicalDevice = createDevice();
     }
 

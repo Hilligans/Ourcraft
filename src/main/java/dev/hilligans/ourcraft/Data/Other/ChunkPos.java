@@ -2,11 +2,13 @@ package dev.hilligans.ourcraft.Data.Other;
 
 public class ChunkPos {
 
-    int chunkX;
-    int chunkZ;
+    public long chunkX;
+    public long chunkY;
+    public long chunkZ;
 
-    public ChunkPos(int chunkX, int chunkZ) {
+    public ChunkPos(long chunkX, long chunkY, long chunkZ) {
         this.chunkX = chunkX;
+        this.chunkY = chunkY;
         this.chunkZ = chunkZ;
     }
 

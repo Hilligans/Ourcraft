@@ -42,66 +42,6 @@ public class TextureLocation {
         return null;
     }
 
-    public void reload() {
-
-    }
-
-
-
-
-
-
-
-    public static BufferedImage loadImage(String path) {
-        BufferedImage img = cachedImages.get(path);
-        if(img != null) {
-            return img;
-        }
-        try {
-            File file = new File(WorldTextureManager.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-            ZipFile zipFile = new ZipFile(file);
-            ZipEntry zipEntry = zipFile.getEntry("images/" + path);
-            if (zipEntry != null) {
-                return ImageIO.read(zipFile.getInputStream(zipEntry));
-            }
-        } catch (Exception ignored) {}
-
-        InputStream url = ClientMain.class.getResourceAsStream("/images/" + path);
-        if(url != null) {
-            try {
-                return ImageIO.read(url);
-            } catch (IOException ignored) {}
-        }
-        return getDefaultImage();
-    }
-
-    public static BufferedImage loadImage(String path, String source) {
-        if(source.equals("")) {
-            return loadImage(path);
-        }
-        Triplet<Class<?>,String,Boolean> type = Ourcraft.GAME_INSTANCE.MOD_LOADER.mainClasses.get(source);
-        String filePath = type.getTypeB();
-        if(type.getTypeC()) {
-            if (filePath != null) {
-                try {
-                    ZipFile zipFile = new ZipFile(filePath);
-                    ZipEntry zipEntry = zipFile.getEntry("images/" + path);
-                    if (zipEntry != null) {
-                        return ImageIO.read(zipFile.getInputStream(zipEntry));
-                    }
-                } catch (Exception ignored) {}
-            }
-        } else {
-            File file = new File("target/classes/Images/" + path);
-            if(file.exists()) {
-                try {
-                    return ImageIO.read(file);
-                } catch (Exception ignored) {}
-            }
-        }
-        return loadImage(path);
-    }
-
     public static BufferedImage getDefaultImage() {
         BufferedImage img = new BufferedImage(2, 2, BufferedImage.TYPE_INT_ARGB);
         img.setRGB(0, 0, Color.GREEN.getRGB());

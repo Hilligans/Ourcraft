@@ -56,7 +56,7 @@ public class ServerPlayerData {
 
     public static ServerPlayerData loadOrCreatePlayer(PlayerEntity playerEntity, String id) {
         CompoundNBTTag tag = WorldLoader.loadTag(path + id + ".dat");
-        if(tag == null) {
+            if(tag == null) {
             return new ServerPlayerData(playerEntity,id);
         } else {
             //System.out.println("asdaw");

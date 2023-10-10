@@ -13,9 +13,12 @@ public class VulkanBuffer {
     public LogicalDevice device;
     public long buffer;
     public long memory;
+    public long offset;
     public int size;
 
-    public VulkanBuffer(LogicalDevice device, int size, int usage, int properties) {
+    public int properties;
+
+    public VulkanBuffer(LogicalDevice device, int size, int usage, int properties, boolean singleUseResource) {
         this.size = size;
         this.device = device;
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
@@ -38,7 +41,7 @@ public class VulkanBuffer {
             VkMemoryAllocateInfo allocInfo = VkMemoryAllocateInfo.calloc(memoryStack);
             allocInfo.sType(VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO);
             allocInfo.allocationSize(memRequirements.size());
-            allocInfo.memoryTypeIndex(device.findMemoryType(memRequirements.memoryTypeBits(), properties));
+            allocInfo.memoryTypeIndex(findMemoryType(memRequirements.memoryTypeBits(), properties));
 
             LongBuffer mem = MemoryStack.stackCallocLong(1);
 
@@ -47,18 +50,46 @@ public class VulkanBuffer {
             }
             memory = mem.get(0);
             vkBindBufferMemory(device.device, buffer, memory, 0);
+
         }
     }
+
+    public VulkanBuffer(long size, long buffer, long memoryRegion, long offset) {
+        this.size = (int) size;
+        this.buffer = buffer;
+        this.memory = memoryRegion;
+        this.offset = offset;
+    }
+
 
     public void copyTo(VkCommandBuffer commandBuffer, VulkanBuffer destBuffer) {
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             VkBufferCopy copyRegion = VkBufferCopy.calloc(memoryStack);
             copyRegion.size(size);
+            copyRegion.srcOffset(offset);
+            copyRegion.dstOffset(destBuffer.offset);
             VkBufferCopy.Buffer buf = VkBufferCopy.calloc(1, memoryStack);
             buf.put(0, copyRegion);
             vkCmdCopyBuffer(commandBuffer, buffer, destBuffer.buffer, buf);
         }
     }
+
+    public int findMemoryType(int filter, int properties) {
+        try(MemoryStack memoryStack = MemoryStack.stackPush()) {
+            VkPhysicalDeviceMemoryProperties memProperties = VkPhysicalDeviceMemoryProperties.calloc(memoryStack);
+            vkGetPhysicalDeviceMemoryProperties(device.physicalDevice.physicalDevice, memProperties);
+
+            for (int i = 0; i < memProperties.memoryTypeCount(); i++) {
+                if ((filter & (1 << i)) != 0 && (memProperties.memoryTypes(i).propertyFlags() & properties) == properties) {
+                    this.properties = memProperties.memoryTypes(i).propertyFlags();
+                    return i;
+                }
+            }
+            device.vulkanInstance.exit("Failed to find memory");
+        }
+        return -1;
+    }
+
 
     public void free() {
         vkDestroyBuffer(device.device, buffer, null);

@@ -171,15 +171,6 @@ public class PrimitiveBuilder {
         return new int[]{VAO,VBO,EBO};
     }
 
-    public void draw(MatrixStack matrixStack) {
-        id = VAOManager.createVAO(this, GL_STATIC_DRAW);
-        GL30.glBindVertexArray(id);
-        matrixStack.push();
-        matrixStack.applyTransformation(shader.shader);
-        glDrawElements(type, indices.size(), GL_UNSIGNED_INT, 0);
-        matrixStack.pop();
-        VAOManager.destroyBuffer(id);
-    }
 
     public static int id = -1;
 

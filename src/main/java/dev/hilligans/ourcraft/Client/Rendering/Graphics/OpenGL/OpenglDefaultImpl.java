@@ -46,17 +46,6 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     @Override
     public void drawMesh(OpenGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
         Tuple<Integer, Integer> data = meshData.get((int)meshID);
-       /* if(texture != boundTexture) {
-            GL20.glBindTexture((Integer) textureTypes.get((int)texture), (int)texture);
-            boundTexture = texture;
-        }
-        if(program != boundProgram){
-            GL20.glUseProgram((int) program);
-            boundProgram = program;
-        }
-
-        */
-
         if(data == null) {
             return;
         }
@@ -87,7 +76,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         int stride = mesh.vertexFormat.getStride();
         int pointer = 0;
         for(VertexFormat.VertexPart part : mesh.vertexFormat.parts) {
-            glVertexAttribPointer(x,part.primitiveCount, getGLPrimitive(part.primitiveType),part.normalized,stride,pointer);
+            glVertexAttribPointer(x, part.primitiveCount, getGLPrimitive(part.primitiveType), part.normalized, stride, pointer);
             glEnableVertexAttribArray(x);
             pointer += part.getSize();
             x++;
@@ -154,19 +143,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
         glDisable(GL_DEPTH_TEST);
-      /*  if(texture != boundTexture) {
-            // GL20.glBindTexture(textureTypes.get(texture), texture);
-            if (texture != 0) {
-                GL20.glBindTexture(GL_TEXTURE_2D, (int)texture);
-                boundTexture = texture;
-            }
-        }
-        if(program != boundProgram){
-            GL20.glUseProgram((int)program);
-            boundProgram = program;
-        }
 
-       */
         int VAO = glGenVertexArrays();
         int VBO = glGenBuffers();
         int EBO = glGenBuffers();

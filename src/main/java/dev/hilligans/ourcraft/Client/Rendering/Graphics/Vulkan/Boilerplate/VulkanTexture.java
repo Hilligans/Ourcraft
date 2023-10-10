@@ -26,7 +26,7 @@ public class VulkanTexture {
     public VulkanTexture(LogicalDevice device, Image img) {
         this.device = device;
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
-            VulkanBuffer buffer = new VulkanBuffer(device, img.getSize(), VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+            VulkanBuffer buffer = new VulkanBuffer(device, img.getSize(), VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, false);
             PointerBuffer pos = memoryStack.mallocPointer(1);
             vkMapMemory(device.device, buffer.memory, 0, img.getSize(), 0, pos);
             this.texture = MemoryUtil.memByteBuffer(pos.get(0), img.getSize()).put(img.buffer);
@@ -61,7 +61,7 @@ public class VulkanTexture {
         this.device = device;
         int size = width * height * format;
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
-            VulkanBuffer stagingBuffer = new VulkanBuffer(device, size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+            VulkanBuffer stagingBuffer = new VulkanBuffer(device, size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, false);
             PointerBuffer pos = memoryStack.mallocPointer(1);
             vkMapMemory(device.device, stagingBuffer.memory, 0, size, 0, pos);
             this.texture = MemoryUtil.memByteBuffer(pos.get(0), size).put(byteBuffer);

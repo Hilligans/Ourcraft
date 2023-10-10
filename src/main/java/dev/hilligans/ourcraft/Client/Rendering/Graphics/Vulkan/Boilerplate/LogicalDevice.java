@@ -2,29 +2,26 @@ package dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate;
 
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.Boilerplate.Window.VertexBufferManager;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanEngineException;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanMemoryManager;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Vulkan.VulkanWindow;
 import dev.hilligans.ourcraft.Util.NamedThreadFactory;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.*;
 
-import java.nio.LongBuffer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-import static dev.hilligans.ourcraft.Client.Rendering.Widgets.FolderWidget.size;
-import static org.lwjgl.vulkan.EXTMemoryBudget.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT;
 import static org.lwjgl.vulkan.VK10.*;
-import static org.lwjgl.vulkan.VK11.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2;
-import static org.lwjgl.vulkan.VK11.vkGetPhysicalDeviceMemoryProperties2;
 
 public class LogicalDevice {
 
     public PhysicalDevice physicalDevice;
     public VulkanInstance vulkanInstance;
+    public VulkanMemoryManager memoryManager;
     public VkDevice device;
     public VulkanQueueFamilyManager queueFamilyManager;
     public VkDeviceQueueCreateInfo.Buffer buffer;
@@ -35,6 +32,7 @@ public class LogicalDevice {
     public LogicalDevice(PhysicalDevice physicalDevice) {
         this.vulkanInstance = physicalDevice.vulkanInstance;
         this.physicalDevice = physicalDevice;
+        memoryManager = new VulkanMemoryManager(this);
         getMemoryAllocations();
 
         queueFamilyManager = new VulkanQueueFamilyManager(this);
@@ -108,7 +106,7 @@ public class LogicalDevice {
     }
 
     public VulkanBuffer allocateBuffer(int size, int usage, int properties) {
-        return new VulkanBuffer(this, size, usage, properties);
+        return new VulkanBuffer(this, size, usage, properties, false);
     }
 
     public int findMemoryType(int filter, int properties) {
