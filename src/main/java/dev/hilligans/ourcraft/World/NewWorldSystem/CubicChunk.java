@@ -5,9 +5,16 @@ import dev.hilligans.ourcraft.Block.Blocks;
 import dev.hilligans.ourcraft.Data.Other.ChunkPos;
 import dev.hilligans.ourcraft.Server.Concurrent.Lock;
 
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
+import java.util.ArrayList;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class CubicChunk implements IAtomicChunk {
+
+    static final VarHandle ARRAY_HANDLE = MethodHandles.arrayElementVarHandle(ISubChunk[].class);
 
     public int size;
     public int x;
@@ -79,8 +86,14 @@ public class CubicChunk implements IAtomicChunk {
         int index = getIndex(x & 31, y & 31, z & 31);
         ISubChunk subChunk = subChunks[index];
         if(subChunk == null) {
-            subChunk = new GlobalPaletteImpl(16,16);
+            subChunk = new GlobalPaletteAtomicSubChunk();
             subChunks[index] = subChunk;
+        }
+        ISubChunk repl = subChunk.canInsertOrGetNext(blockState);
+        if(repl != null) {
+            repl.setBlockState((int) (x & 15), (int) (y & 15), (int) (z & 15), blockState);
+            subChunks[index] = repl;
+            return;
         }
         subChunk.setBlockState((int) (x & 15), (int) (y & 15), (int) (z & 15), blockState);
     }
@@ -89,16 +102,28 @@ public class CubicChunk implements IAtomicChunk {
     public void setBlockStateAtomic(Lock lock, long x, long y, long z, IBlockState blockState) {
         if(!lock.hasLock(new ChunkPos(this.x, this.y, this.z))) {
             int index = getIndex(x & 31, y & 31, z & 31);
-            synchronized (this) {
-                ISubChunk subChunk = subChunks[index];
+            ISubChunk subChunk;
+            do {
+                subChunk = (ISubChunk) ARRAY_HANDLE.getVolatile(subChunks, index);
                 if(subChunk instanceof IAtomicSubChunk atomicSubChunk) {
-                    atomicSubChunk.setBlockStateAtomic((int) (x & 15), (int) (y & 15), (int) (z & 15), blockState);
+                    ISubChunk newChunk = subChunk.canInsertOrGetNext(blockState);
+                    if(newChunk != null) {
+                        newChunk.setBlockState((int) (x & 15), (int) (y & 15), (int) (z & 15), blockState);
+                        if(ARRAY_HANDLE.weakCompareAndSet(subChunks, index, subChunk, newChunk)) {
+                            return;
+                        }
+                    } else {
+                        atomicSubChunk.setBlockStateAtomic((int) (x & 15), (int) (y & 15), (int) (z & 15), blockState);
+                    }
+                } else {
+                    lock.acquire(new ChunkPos(this.x, this.y, this.z));
+                    setBlockState(x, y, z, blockState);
                     return;
                 }
-            }
-            lock.acquire(new ChunkPos(this.x, this.y, this.z));
+            } while(ARRAY_HANDLE.getVolatile(subChunks, index) != subChunk);
+        } else {
+            setBlockState(x, y, z, blockState);
         }
-        setBlockState(x, y, z, blockState);
     }
 
     @Override
@@ -115,8 +140,23 @@ public class CubicChunk implements IAtomicChunk {
         }
         if(getBlockState1(x, y, z) == expected) {
             setBlockState(x, y, z, to);
+            return true;
         }
-        return true;
+        return false;
+    }
+
+    @Override
+    public void replaceAtomic(UnaryOperator<ISubChunk> replacer) {
+        if(subChunks != null) {
+            for(int x = 0; x < subChunks.length; x++) {
+                ISubChunk subChunk;
+                ISubChunk newSubChunk;
+                do {
+                    subChunk = (ISubChunk) ARRAY_HANDLE.getVolatile(subChunks, x);
+                    newSubChunk = replacer.apply(subChunk);
+                } while (ARRAY_HANDLE.weakCompareAndSet(subChunks, x, subChunk, newSubChunk));
+            }
+        }
     }
 
     @Override
@@ -137,6 +177,11 @@ public class CubicChunk implements IAtomicChunk {
     }
 
     @Override
+    public int getSubChunkCount() {
+        return subChunks.length;
+    }
+
+    @Override
     public void forEach(Consumer<ISubChunk> consumer) {
         if(subChunks != null) {
             for(ISubChunk subChunk : subChunks) {
@@ -146,14 +191,21 @@ public class CubicChunk implements IAtomicChunk {
     }
 
     @Override
+    public void replace(UnaryOperator<ISubChunk> replacer) {
+        if(subChunks != null) {
+            for(int x = 0; x < subChunks.length; x++) {
+                subChunks[x] = replacer.apply(subChunks[x]);
+            }
+        }
+    }
+
+    @Override
     public void setDirty(boolean value) {
-        int D = 1;
+        short D = 1;
         if(value) {
-           // System.out.println(flags);
             flags |= D;
-           // System.out.println(flags);
         } else {
-            flags &=~D;
+            flags &= (short) ~D;
         }
     }
 

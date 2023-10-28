@@ -2,11 +2,14 @@ package dev.hilligans.ourcraft.World.NewWorldSystem;
 
 import dev.hilligans.ourcraft.Block.BlockState.IBlockState;
 import dev.hilligans.ourcraft.Data.Other.BlockPos;
+import dev.hilligans.ourcraft.Data.Other.ChunkPos;
 import dev.hilligans.ourcraft.Data.Other.IBoundingBox;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public interface IChunk extends IBoundingBox {
 
@@ -29,6 +32,18 @@ public interface IChunk extends IBoundingBox {
         return getZ() * getWidth();
     }
 
+    default long getBlockMaxX() {
+        return getBlockX() + getWidth() - 1;
+    }
+
+    default long getBlockMaxY() {
+        return getBlockY() + getHeight() - 1;
+    }
+
+    default long getBlockMaxZ() {
+        return getBlockZ() + getWidth() - 1;
+    }
+
     default int getYOffset() {
         return 0;
     }
@@ -47,6 +62,10 @@ public interface IChunk extends IBoundingBox {
 
     default BlockPos getChunkBlockPos(BlockPos dest) {
         return dest.set((int)getChunkXBlockPos(),(int)getChunkYBlockPos(),(int)getChunkZBlockPos());
+    }
+
+    default ChunkPos getChunkPos() {
+        return new ChunkPos(getX(), getY(), getZ());
     }
 
     IBlockState getBlockState1(long x, long y, long z);
@@ -68,7 +87,11 @@ public interface IChunk extends IBoundingBox {
      * This method can run on the chunk itself acting like a single subchunk.
      */
 
+    int getSubChunkCount();
+
     void forEach(Consumer<ISubChunk> consumer);
+
+    void replace(UnaryOperator<ISubChunk> replacer);
 
     void setDirty(boolean value);
 

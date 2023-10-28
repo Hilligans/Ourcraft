@@ -15,5 +15,11 @@ public interface ISubChunk {
 
     boolean isEmpty();
 
+    /**
+     * @param blockState the block to insert
+     * @return null if can be inserted or a new subchunk if must be replaced
+     */
+    ISubChunk canInsertOrGetNext(IBlockState blockState);
+
     default void free(@Nullable IWorld world) {}
 }

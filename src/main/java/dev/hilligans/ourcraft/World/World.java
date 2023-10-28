@@ -67,23 +67,8 @@ public abstract class World {
         return chunkContainer.getChunk(x,z);
     }
 
-    public void scheduleTick(BlockPos pos, int time) {
-        if(isServer()) {
-
-        }
-    }
-
     public void removeChunk(int x, int z) {
         chunkContainer.removeChunk(x,z);
-    }
-
-    public Chunk getOrGenerateChunk(int x, int z) {
-        Chunk chunk = getChunk(x,z);
-        if(chunk == null) {
-            generateChunk(x,z);
-        }
-        chunk = getChunk(x,z);
-        return chunk;
     }
 
     public void generateChunk(int x, int z) {
@@ -192,13 +177,7 @@ public abstract class World {
     }
 
 
-    ConcurrentLinkedQueue<ClientWorld.XZHolder> requestedChunks = new ConcurrentLinkedQueue<>();
     public HashSet<Long> set = new HashSet<>();
-
-    public void setChunk(Chunk chunk) {
-        set.remove((long) chunk.x | (long) chunk.z << 32);
-        putChunk(chunk.x, chunk.z, chunk);
-    }
 
     public void setChunk(Chunk chunk, int x, int z) {
         chunk.setWorld(this);

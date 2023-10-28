@@ -6,6 +6,9 @@ import dev.hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
 import dev.hilligans.ourcraft.Network.Packet.Server.SSendChunkPacket;
 import dev.hilligans.ourcraft.Server.MultiPlayerServer;
 
+import java.util.concurrent.Future;
+import java.util.function.Consumer;
+
 public interface IServerWorld extends IWorld {
 
     BlockPos getWorldSpawn(BoundingBox boundingBox);
@@ -14,6 +17,9 @@ public interface IServerWorld extends IWorld {
 
     MultiPlayerServer getServer();
 
+    void queuePostTickEvent(Future<Consumer<IServerWorld>> runnableFuture);
+
+    void processPostTickEvents(Future<Consumer<IServerWorld>> runnableFuture);
 
     default void sendChunksToPlayer(int playerX, int playerY, int playerZ, ServerPlayerData serverPlayerData) {
         int chunkWidth = getChunkContainer().getChunkWidth();

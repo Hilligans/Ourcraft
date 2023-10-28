@@ -3,6 +3,8 @@ package dev.hilligans.ourcraft.Network;
 import dev.hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.hilligans.ourcraft.Network.Packet.AuthServerPackets.*;
 import dev.hilligans.ourcraft.Network.Packet.Client.*;
+import dev.hilligans.ourcraft.Network.Packet.NewSystem.Client.SSendChunk;
+import dev.hilligans.ourcraft.Network.Packet.NewSystem.Client.SSendWorldSystemFormat;
 import dev.hilligans.ourcraft.Network.Packet.Server.*;
 
 public class Protocols {
@@ -46,6 +48,11 @@ public class Protocols {
         modContent.registerPacket("Auth", CGetToken::new);
         modContent.registerPacket("Auth", CTokenValid::new);
         modContent.registerPacket("Auth", CLogin::new);
+
+        modContent.registerPacket("World", SSendWorldSystemFormat::new);
+        modContent.registerPacket("World", SSendChunk::new);
+
+
     }
 
 }

@@ -10,12 +10,19 @@ import dev.hilligans.ourcraft.World.WorldGen.IWorldHeightBuilder;
 import dev.hilligans.planets.world.PlanetFeaturePlacerHelper;
 import org.joml.Random;
 
-public class ServerCubicWorld extends CubicWorld implements IServerWorld {
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Future;
+import java.util.function.Consumer;
+
+public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
 
     public MultiPlayerServer multiPlayerServer;
     public IWorldHeightBuilder worldHeightBuilder;
     public IWorldGenerator worldGenerator;
     public final int widthBits = 5;
+
+    public ConcurrentLinkedQueue<Future<Consumer<IServerWorld>>> postTickFutures = new ConcurrentLinkedQueue<>();
+
 
     public ServerCubicWorld(int id, String worldName, int radius, IWorldHeightBuilder worldHeightBuilder) {
         super(id, worldName, radius);
@@ -872,5 +879,10 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorld {
     @Override
     public IWorldGenerator getWorldGenerator() {
         return worldGenerator;
+    }
+
+    @Override
+    public ConcurrentLinkedQueue<Future<Consumer<IServerWorld>>> getPostTickQueue() {
+        return postTickFutures;
     }
 }

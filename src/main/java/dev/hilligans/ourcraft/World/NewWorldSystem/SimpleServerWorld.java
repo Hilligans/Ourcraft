@@ -8,11 +8,16 @@ import dev.hilligans.ourcraft.Data.Other.BoundingBox;
 import dev.hilligans.ourcraft.Server.MultiPlayerServer;
 
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Future;
+import java.util.function.Consumer;
 
-public class SimpleServerWorld extends SimpleWorld implements IServerWorld, IMethodResult, IFeaturePlacerHelper {
+public class SimpleServerWorld extends SimpleWorld implements IServerWorldBase, IMethodResult, IFeaturePlacerHelper {
 
     public MultiPlayerServer server;
     public BlockPos featurePlacerPosition = new BlockPos(0, 0, 0);
+
+    public ConcurrentLinkedQueue<Future<Consumer<IServerWorld>>> postTickFutures = new ConcurrentLinkedQueue<>();
 
     public SimpleServerWorld(int id, String name) {
         super(id, name);
@@ -40,6 +45,11 @@ public class SimpleServerWorld extends SimpleWorld implements IServerWorld, IMet
             }
         }
         return chunk;
+    }
+
+    @Override
+    public ConcurrentLinkedQueue<Future<Consumer<IServerWorld>>> getPostTickQueue() {
+        return postTickFutures;
     }
 
     @Override

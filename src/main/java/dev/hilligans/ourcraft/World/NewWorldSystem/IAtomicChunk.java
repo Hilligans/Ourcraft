@@ -3,6 +3,9 @@ package dev.hilligans.ourcraft.World.NewWorldSystem;
 import dev.hilligans.ourcraft.Block.BlockState.IBlockState;
 import dev.hilligans.ourcraft.Server.Concurrent.Lock;
 
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
+
 public interface IAtomicChunk extends IChunk {
 
 
@@ -25,4 +28,5 @@ public interface IAtomicChunk extends IChunk {
      */
     boolean swapBlockStateAtomic(Lock lock, long x, long y, long z, IBlockState expected, IBlockState to);
 
+    void replaceAtomic(UnaryOperator<ISubChunk> replacer);
 }

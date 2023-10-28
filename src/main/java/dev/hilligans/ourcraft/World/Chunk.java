@@ -28,6 +28,8 @@ import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.glGetBufferSubData;
@@ -236,7 +238,17 @@ public class Chunk implements IChunk {
     }
 
     @Override
+    public int getSubChunkCount() {
+        return 0;
+    }
+
+    @Override
     public void forEach(Consumer<ISubChunk> consumer) {
+
+    }
+
+    @Override
+    public void replace(UnaryOperator<ISubChunk> replacer) {
 
     }
 

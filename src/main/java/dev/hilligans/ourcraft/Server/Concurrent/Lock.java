@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.LockSupport;
 
-public class Lock {
+public class Lock implements AutoCloseable {
 
     public boolean hasAllLocks = false;
 
@@ -59,17 +59,18 @@ public class Lock {
 
     public void acquire(long... positions) {}
 
-    public void acquire(ChunkPos chunkPos) {
+    public Lock acquire(ChunkPos chunkPos) {
         for(ChunkPos chunkPos1 : chunkPositions) {
             if(chunkPos1.equals(chunkPos)) {
                 acquire();
-                return;
+                return this;
             }
         }
         ChunkPos[] chunkPosList = new ChunkPos[chunkPositions.length + 1];
         System.arraycopy(chunkPositions,0, chunkPosList, 0, chunkPositions.length);
         chunkPosList[chunkPositions.length] = chunkPos;
         this.chunkPositions = chunkPosList;
+        return this;
     }
 
     public void acquire() {
@@ -78,5 +79,10 @@ public class Lock {
 
     public void release() {
         chunkLocker.release(this);
+    }
+
+    @Override
+    public void close() {
+        release();
     }
 }

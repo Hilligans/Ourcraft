@@ -66,37 +66,9 @@ public class ClientWorld extends World {
             }
         } else {
 
-            /*if(Settings.asyncChunkBuilding) {
-                while(!queuedChunks.isEmpty()) {
-                    SubChunk subChunk = queuedChunks.poll();
-                    ClientUtil.chunkBuilder.submit(() -> {
-                        PrimitiveBuilder primitiveBuilder = subChunk.getMeshBuilder();
-                        asyncChunkQueue.add(new Tuple<>(primitiveBuilder,subChunk));
-                    });
-                }
-
-                while(!asyncChunkQueue.isEmpty()) {
-                    Tuple<PrimitiveBuilder,SubChunk> type = asyncChunkQueue.poll();
-                    type.getTypeB().verticesCount = type.getTypeA().indices.size();
-                    type.getTypeB().id = VAOManager.createVAO(type.getTypeA());
-                }
-            } else {
-                buildChunks(12);
-            }
-            purgeTime++;
-
-             */
         }
 
     }
-
-
-    public void setChunk(Chunk chunk) {
-        super.setChunk(chunk);
-        miniMap.update(chunk.x,chunk.z);
-    }
-
-
 
     int purgeTime = 0;
 
@@ -132,12 +104,6 @@ public class ClientWorld extends World {
            }
            chunk.id = -1;
         });
-    }
-
-
-    public void requestChunk(int x, int z) {
-        client.sendPacket(new CRequestChunkPacket(x, z));
-        set.add((long)x | (long) z << 32);
     }
 
     public void playSound(SoundBuffer soundBuffer, Vector3d pos) {

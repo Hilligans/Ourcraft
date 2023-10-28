@@ -62,4 +62,9 @@ public class GlobalPaletteImpl implements ISubChunk {
     public boolean isEmpty() {
         return blockStates == null;
     }
+
+    @Override
+    public ISubChunk canInsertOrGetNext(IBlockState blockState) {
+        return null;
+    }
 }

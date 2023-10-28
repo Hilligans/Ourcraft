@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.Server.Concurrent;
 
+import dev.hilligans.ourcraft.World.NewWorldSystem.IWorld;
 import dev.hilligans.ourcraft.World.World;
 
 public abstract class TickingBase implements ITickableTask {
@@ -8,7 +9,7 @@ public abstract class TickingBase implements ITickableTask {
     public ParkerUnparker parkerUnparker;
     public Thread owner;
 
-    public World world;
+    public IWorld world;
     public ChunkLocker chunkLocker;
 
 
@@ -18,7 +19,7 @@ public abstract class TickingBase implements ITickableTask {
     }
 
     @Override
-    public void start(World world, ChunkLocker chunkLocker) {
+    public void start(IWorld world, ChunkLocker chunkLocker) {
         this.world = world;
         this.chunkLocker = chunkLocker;
         owner = Thread.startVirtualThread(this);

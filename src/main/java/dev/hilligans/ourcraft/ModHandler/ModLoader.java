@@ -37,6 +37,7 @@ public class ModLoader {
     }
 
     public void loadDefaultMods() {
+        //System.out.println("Java " + System.getProperty("java.version"));
         loadAllMods(new File("mods/"));
         if(true) {
             loadClasses(new File("target/classes/"), "");

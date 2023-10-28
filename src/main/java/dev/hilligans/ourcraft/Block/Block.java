@@ -3,7 +3,8 @@ package dev.hilligans.ourcraft.Block;
 import dev.hilligans.ourcraft.Block.BlockState.BlockStateBuilder;
 import dev.hilligans.ourcraft.Block.BlockState.IBlockState;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.IPrimitiveBuilder;
-import dev.hilligans.ourcraft.World.NewWorldSystem.IMethodResult;
+import dev.hilligans.ourcraft.Server.Concurrent.Lock;
+import dev.hilligans.ourcraft.World.NewWorldSystem.*;
 import dev.hilligans.ourcraft.Client.MatrixStack;
 import dev.hilligans.ourcraft.Client.Rendering.NewRenderer.PrimitiveBuilder;
 import dev.hilligans.ourcraft.Client.Rendering.NewRenderer.TextAtlas;
@@ -26,7 +27,6 @@ import dev.hilligans.ourcraft.Util.Registry.IRegistryElement;
 import dev.hilligans.ourcraft.Util.Side;
 import dev.hilligans.ourcraft.World.DataProvider;
 import dev.hilligans.ourcraft.World.DataProviders.ShortBlockState;
-import dev.hilligans.ourcraft.World.NewWorldSystem.IWorld;
 import dev.hilligans.ourcraft.World.World;
 import dev.hilligans.ourcraft.Block.BlockState.IBlockStateTable;
 import org.joml.Vector3d;
@@ -231,6 +231,20 @@ public class Block implements IRegistryElement {
 
     public IBlockState randomTick(IMethodResult result, IBlockState state, IWorld world, BlockPos pos, Random random) {
         return null;
+    }
+
+    public void randomTick(Lock lock, IMethodResult methodResult, IBlockState state, IChunk chunk, IWorld world, BlockPos pos, Random random) {
+        IBlockState newState = randomTick(methodResult, state, world, pos, random);
+        if(newState != null) {
+            if(chunk instanceof IAtomicChunk atomicChunk) {
+                atomicChunk.setBlockStateAtomic(lock, pos.x, pos.y, pos.z, newState);
+            } else {
+                if(!lock.hasLock(chunk.getChunkPos())) {
+                    lock.acquire(chunk.getChunkPos());
+                }
+                chunk.setBlockState(pos.x, pos.y, pos.z, newState);
+            }
+        }
     }
 
     //TODO add break source

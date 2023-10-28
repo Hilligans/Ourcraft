@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.World.NewWorldSystem;
 
 import dev.hilligans.ourcraft.Block.BlockState.IBlockState;
+import dev.hilligans.ourcraft.Ourcraft;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
@@ -8,9 +9,9 @@ import java.util.ArrayList;
 
 public class GlobalPaletteAtomicSubChunk implements IAtomicSubChunk {
 
-    static final VarHandle ARRAY_HANDLE = MethodHandles.arrayElementVarHandle(int[].class);
+    static final VarHandle ARRAY_HANDLE = MethodHandles.arrayElementVarHandle(short[].class);
     public ArrayList<IBlockState> blockStates;
-    public int[] blocks = new int[16 * 16 * 16 / 4];
+    public short[] blocks = new short[16 * 16 * 16];
 
     public GlobalPaletteAtomicSubChunk(ArrayList<IBlockState> blockStates) {
         this.blockStates = blockStates;
@@ -19,6 +20,9 @@ public class GlobalPaletteAtomicSubChunk implements IAtomicSubChunk {
         }
     }
 
+    public GlobalPaletteAtomicSubChunk() {
+        this(Ourcraft.GAME_INSTANCE.BLOCK_STATES);
+    }
 
     @Override
     public int getWidth() {
@@ -32,57 +36,54 @@ public class GlobalPaletteAtomicSubChunk implements IAtomicSubChunk {
 
     @Override
     public IBlockState getBlockState(int x, int y, int z) {
-        return blockStates.get((blocks[getIndex(x, y, z)] >> 16 * (z & 0b11)) & 0xFFFF);
+        return blockStates.get((blocks[getIndex(x, y, z)]));
     }
 
     @Override
     public IBlockState setBlockState(int x, int y, int z, IBlockState blockState) {
-        int shift = 16 * (z & 0b11);
-        int id = blockState.getBlockStateID() << shift;
-        int and = 0xFFFF << shift;
-        int index = getIndex(x, y, z);
-        int v = blocks[index];
-        blocks[index] = v & and | id;
-        return blockStates.get((v >> shift) & 0xFFFF);
+        int id = blockState.getBlockStateID();
+        blocks[getIndex(x, y, z)] = (short) id;
+        return blockStates.get(id);
     }
 
     @Override
     public IBlockState setBlockStateAtomic(int x, int y, int z, IBlockState blockState) {
-        int shift = 16 * (z & 0b11);
-        int id = blockState.getBlockStateID() << shift;
-        int and = 0xFFFF << shift;
+        int id = blockState.getBlockStateID();
         int index = getIndex(x, y, z);
         int v;
         do {
             v = (int) ARRAY_HANDLE.getVolatile(blocks, index);
-        } while (!ARRAY_HANDLE.weakCompareAndSet(blocks, index, v, v & and | id));
+        } while (!ARRAY_HANDLE.weakCompareAndSet(blocks, index, v, id));
 
-        return blockStates.get((v >> shift) & 0xFFFF);
+        return blockStates.get(v);
     }
 
     @Override
     public boolean swapBlockStateAtomic(int x, int y, int z, IBlockState expected, IBlockState to) {
-        int shift = 16 * (z & 0b11);
-        int newID = to.getBlockStateID() << shift;
-        int oldID = expected.getBlockStateID() << shift;
-        int and = 0xFFFF << shift;
+        int newID = to.getBlockStateID();
+        int oldID = expected.getBlockStateID();
         int index = getIndex(x, y, z);
         int v;
         do {
             v = (int) ARRAY_HANDLE.getVolatile(blocks, index);
-            if((v & and) != oldID) {
+            if(v != oldID) {
                 return false;
             }
-        } while (!ARRAY_HANDLE.weakCompareAndSet(blocks, index, v, v & and | newID));
+        } while (!ARRAY_HANDLE.weakCompareAndSet(blocks, index, v, newID));
         return true;
     }
 
     public static int getIndex(int x, int y, int z) {
-        return ((x * 16) + y) * 4 + (z >> 2);
+        return ((x * 16) + y) * 16 + z;
     }
 
     @Override
     public boolean isEmpty() {
         return false;
+    }
+
+    @Override
+    public ISubChunk canInsertOrGetNext(IBlockState blockState) {
+        return null;
     }
 }

@@ -158,6 +158,17 @@
             <artifactId>annotations</artifactId>
             <version>23.0.0</version>
         </dependency>
+
+
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-assimp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-assimp</artifactId>
+            <classifier>${lwjgl.natives}</classifier>
+        </dependency>
     </dependencies>
 
 

@@ -4,6 +4,8 @@ import dev.hilligans.ourcraft.Block.BlockState.IBlockState;
 import dev.hilligans.ourcraft.Block.Blocks;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class ClassicChunk implements IChunk {
 
@@ -96,9 +98,23 @@ public class ClassicChunk implements IChunk {
     }
 
     @Override
+    public int getSubChunkCount() {
+        return 0;
+    }
+
+    @Override
     public void forEach(Consumer<ISubChunk> consumer) {
         for(ISubChunk subChunk : chunks) {
             consumer.accept(subChunk);
+        }
+    }
+
+    @Override
+    public void replace(UnaryOperator<ISubChunk> replacer) {
+        if(chunks != null) {
+            for(int x = 0; x < chunks.length; x++) {
+                chunks[x] = replacer.apply(chunks[x]);
+            }
         }
     }
 
