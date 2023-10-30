@@ -52,7 +52,7 @@ public class JoinScreen extends ScreenBase {
             world.worldBuilders.add( new OreBuilder("stone", Blocks.GRASS,Blocks.STONE).setFrequency(20));
 
             client.multiPlayerServer = new MultiPlayerServer();
-            client.multiPlayerServer.addWorld(0,world);
+            //client.multiPlayerServer.addWorld(0,world);
             ServerMain.server = client.multiPlayerServer;
             int port = 0;
             try {

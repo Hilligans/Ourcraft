@@ -58,38 +58,6 @@ public class ClientMain {
         client.startClient();
     }
 
-    private static sun.misc.Unsafe getUnsafeInstance() {
-        java.lang.reflect.Field[] fields = sun.misc.Unsafe.class.getDeclaredFields();
-
-        /*
-        Different runtimes use different names for the Unsafe singleton,
-        so we cannot use .getDeclaredField and we scan instead. For example:
-
-        Oracle: theUnsafe
-        PERC : m_unsafe_instance
-        Android: THE_ONE
-        */
-        for (java.lang.reflect.Field field : fields) {
-            if (!field.getType().equals(sun.misc.Unsafe.class)) {
-                continue;
-            }
-
-            int modifiers = field.getModifiers();
-            if (!(java.lang.reflect.Modifier.isStatic(modifiers) && java.lang.reflect.Modifier.isFinal(modifiers))) {
-                continue;
-            }
-
-            try {
-                field.setAccessible(true);
-                return (sun.misc.Unsafe)field.get(null);
-            } catch (Exception ignored) {
-            }
-            break;
-        }
-
-        throw new UnsupportedOperationException("LWJGL requires sun.misc.Unsafe to be available.");
-    }
-
     public static int getWindowX() {
         return client == null ? 0 : client.windowX;
     }

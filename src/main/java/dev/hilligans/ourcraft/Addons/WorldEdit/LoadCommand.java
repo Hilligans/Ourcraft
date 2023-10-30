@@ -14,6 +14,7 @@ public class LoadCommand extends WorldEditCommand {
 
     @Override
     public Object handle(CommandExecutor executor, String[] args) {
+        /*
         if(executor instanceof EntityExecutor entityExecutor) {
             World world = executor.getWorld();
             Tuple<BlockPos,BlockPos> pos = worldEditData.setPositions.getOrDefault(entityExecutor.entity.id,null);
@@ -40,5 +41,8 @@ public class LoadCommand extends WorldEditCommand {
             }
         }
         return "Not an entity";
+
+         */
+        return null;
     }
 }

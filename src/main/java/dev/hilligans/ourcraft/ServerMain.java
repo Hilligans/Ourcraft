@@ -36,11 +36,11 @@ public class ServerMain {
 
     public static void server(GameInstance gameInstance) {
 
-        ServerWorld world = new ServerWorld(gameInstance);
-        world.worldBuilders.add(new OreBuilder("ore", Blocks.GRASS,Blocks.STONE).setFrequency(20));
+        //ServerWorld world = new ServerWorld(gameInstance);
+        //world.worldBuilders.add(new OreBuilder("ore", Blocks.GRASS,Blocks.STONE).setFrequency(20));
 
         server = new MultiPlayerServer();
-        server.addWorld(0,world);
+        //server.addWorld(0,world);
         //server.addWorld(new SimpleServerWorld(0, "server_world"));
         IServerWorld world1 = new ServerCubicWorld(0, "planet", 64, new PlanetWorldHeightBuilder(new IWorldHeightBuilder[]{
                 new SimpleHeightBuilder(),

@@ -82,10 +82,6 @@ public class PlayerEntity extends LivingEntity {
         return ServerNetworkHandler.playerData.get(id);
     }
 
-    public void kick(String message) {
-        //ServerNetworkHandler.
-    }
-
     @Override
     public void render(MatrixStack matrixStack) {
         if(textureId == -1) {

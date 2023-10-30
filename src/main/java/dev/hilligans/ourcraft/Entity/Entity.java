@@ -12,6 +12,7 @@ import dev.hilligans.ourcraft.Network.PacketData;
 import dev.hilligans.ourcraft.Data.Other.BlockPos;
 import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.Util.EntityPosition;
+import dev.hilligans.ourcraft.World.NewWorldSystem.IWorld;
 import dev.hilligans.ourcraft.World.World;
 import dev.hilligans.ourcraft.Util.Settings;
 import org.joml.Vector2f;
@@ -38,7 +39,7 @@ public abstract class Entity {
 
     float slowAmount = 0.9f;
     public boolean onGround = true;
-    public World world;
+    public IWorld world;
 
     public Entity(int id) {
         this.id = id;
@@ -70,12 +71,17 @@ public abstract class Entity {
         setWorld();
     }
 
+    public Entity setWorld(IWorld world) {
+        this.world = world;
+        return this;
+    }
+
     private void setWorld() {
-        if(Settings.isServer) {
-            world = ServerMain.getWorld(dimension);
-        } else {
-            world = ClientMain.getClient().clientWorld;
-        }
+        //if(Settings.isServer) {
+        //    world = ServerMain.getWorld(dimension);
+        //} else {
+        //    world = ClientMain.getClient().clientWorld;
+        //}
     }
 
     public Entity setPos(double x, double y, double z) {
@@ -113,7 +119,7 @@ public abstract class Entity {
         return this;
     }
 
-    public World getWorld() {
+    public IWorld getWorld() {
         return world;
     }
 

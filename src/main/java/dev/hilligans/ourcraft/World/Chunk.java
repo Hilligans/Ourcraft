@@ -46,9 +46,6 @@ public class Chunk implements IChunk {
     public Long2ObjectOpenHashMap<ArrayList<BlockPos>> blockTicks = new Long2ObjectOpenHashMap<>();
     public Short2IntOpenHashMap heightMap = new Short2IntOpenHashMap();
 
-    public MeshHolder solidMesh = new MeshHolder();
-    public MeshHolder translucentMesh = new MeshHolder();
-
     public boolean needsSaving = false;
 
 
@@ -82,13 +79,13 @@ public class Chunk implements IChunk {
         }
     }
 
-    public void scheduleTick(BlockPos pos, int time) {
-        if(world.isServer()) {
-            long futureTime = ((ServerWorld)world).server.getTime() + time;
-            ArrayList<BlockPos> list = blockTicks.computeIfAbsent(futureTime, k -> new ArrayList<>());
-            list.add(pos);
-        }
-    }
+   // public void scheduleTick(BlockPos pos, int time) {
+   //     if(world.isServer()) {
+   //         long futureTime = ((ServerWorld)world).server.getTime() + time;
+   //         ArrayList<BlockPos> list = blockTicks.computeIfAbsent(futureTime, k -> new ArrayList<>());
+   //         list.add(pos);
+   //     }
+   // }
 
     public void setWorld(World world) {
         this.world = world;
@@ -177,10 +174,6 @@ public class Chunk implements IChunk {
 
     public int interpolate(int height, int xHeight) {
         return Math.round(((float)height + xHeight) / 2);
-    }
-
-    public int interpolate(int height, int xHeight, int zHeight) {
-        return Math.round(((float)height + xHeight + zHeight) / 3);
     }
 
     public Biome getBiome1(int x, int z) {
@@ -384,15 +377,6 @@ public class Chunk implements IChunk {
     }
 
     public int id = -1;
-
-    public void fastSet(int[] vals) {
-        for(int x = 0; x < 16; x++) {
-            if(chunks.get(x).vals == null) {
-                chunks.get(x).vals = new int[16 * 16 * 16];
-            }
-            System.arraycopy(vals,0,chunks.get(x).vals,0,4096);
-        }
-    }
 
     public SubChunk getSubChunk(int pos) {
         return chunks.get(pos);

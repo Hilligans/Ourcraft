@@ -120,6 +120,7 @@ public class ChunkLoader {
     }
 
 
+    /*
     public static Chunk createChunk2(int X, int Z, CompoundNBTTag compoundTag) {
         Chunk chunk = new Chunk(X, Z, null);
         try {
@@ -152,6 +153,8 @@ public class ChunkLoader {
         }
         return chunk;
     }
+
+     */
 
     public static Chunk createChunk3(int X, int Z, CompoundNBTTag compoundTag, Level level) {
         Chunk chunk = new Chunk(X, Z, null);

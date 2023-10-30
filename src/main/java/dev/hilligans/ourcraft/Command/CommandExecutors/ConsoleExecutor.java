@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.Command.CommandExecutors;
 
+import dev.hilligans.ourcraft.World.NewWorldSystem.IWorld;
 import dev.hilligans.ourcraft.World.World;
 import dev.hilligans.ourcraft.Server.IServer;
 
@@ -32,7 +33,8 @@ public class ConsoleExecutor implements CommandExecutor {
     }
 
     @Override
-    public World getWorld() {
-        return multiPlayerServer.getDefaultWorld();
+    public IWorld getWorld() {
+        return null;
+       // return multiPlayerServer.getDefaultWorld();
     }
 }

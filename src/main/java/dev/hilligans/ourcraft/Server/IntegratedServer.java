@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.Command.CommandExecutors.ConsoleExecutor;
 import dev.hilligans.ourcraft.Command.Commands;
 import dev.hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.hilligans.ourcraft.Network.PacketBase;
+import dev.hilligans.ourcraft.World.NewWorldSystem.IServerWorld;
 import dev.hilligans.ourcraft.World.ServerWorld;
 import dev.hilligans.ourcraft.World.World;
 import dev.hilligans.ourcraft.Util.ConsoleReader;
@@ -27,7 +28,7 @@ public class IntegratedServer implements IServer {
         ConsoleReader consoleReader = new ConsoleReader(this::executeCommand);
     }
 
-    @Override
+    /*@Override
     public void addWorld(int id, World world) {
         ((ServerWorld)world).server = this;
         world.generateChunk(0,0);
@@ -38,15 +39,11 @@ public class IntegratedServer implements IServer {
         }
         worlds.put(id,world);
     }
+     */
 
     @Override
-    public World getWorld(int id) {
-        return worlds.get(id);
-    }
+    public void addWorld(IServerWorld world) {
 
-    @Override
-    public Collection<World> getWorlds() {
-        return worlds.values();
     }
 
     @Override

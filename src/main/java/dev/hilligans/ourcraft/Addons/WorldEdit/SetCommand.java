@@ -6,6 +6,7 @@ import dev.hilligans.ourcraft.Command.CommandExecutors.EntityExecutor;
 import dev.hilligans.ourcraft.Data.Other.BlockPos;
 import dev.hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.hilligans.ourcraft.Util.DaisyChain;
+import dev.hilligans.ourcraft.World.NewWorldSystem.IWorld;
 import dev.hilligans.ourcraft.World.SubChunk;
 import dev.hilligans.ourcraft.World.World;
 
@@ -20,7 +21,7 @@ public class SetCommand extends WorldEditCommand {
     @Override
     public Object handle(CommandExecutor executor, String[] args) {
         if(executor instanceof EntityExecutor entityExecutor) {
-            World world = executor.getWorld();
+            IWorld world = executor.getWorld();
             Tuple<BlockPos,BlockPos> pos = worldEditData.setPositions.getOrDefault(entityExecutor.entity.id,null);
             if(pos == null || !pos.has()) {
                 return "No Position Set";
@@ -46,7 +47,7 @@ public class SetCommand extends WorldEditCommand {
                     for(int y = f.minY(s); y < f.maxY(s); y += 16) {
                         for(int z = f.minZ(s); z < f.maxZ(s); z += 16) {
                             try {
-                                daisyChain.add(world.ensureLoaded(x >> 4, z >> 4).getSubChunk(y >> 4));
+                               // daisyChain.add(world.ensureLoaded(x >> 4, z >> 4).getSubChunk(y >> 4));
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 System.out.println(new BlockPos(x,y,z));

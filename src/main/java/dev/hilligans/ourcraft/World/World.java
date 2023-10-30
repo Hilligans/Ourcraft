@@ -31,7 +31,6 @@ public abstract class World {
 
     public Int2ObjectOpenHashMap<Entity> entities = new Int2ObjectOpenHashMap<>();
     public ConcurrentLinkedQueue<BlockChange> blockChanges = new ConcurrentLinkedQueue<>();
-    public int dimensionId = 1;
 
     public GameInstance gameInstance;
 

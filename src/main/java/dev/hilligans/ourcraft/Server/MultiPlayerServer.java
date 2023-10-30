@@ -55,17 +55,6 @@ public class MultiPlayerServer implements IServer {
         }
     }
 
-    public void addWorld(int id, World world) {
-        ((ServerWorld)world).server = this;
-        world.generateChunk(0,0);
-        for(int x = -Settings.renderDistance; x < Settings.renderDistance; x++) {
-            for(int z = -Settings.renderDistance; z < Settings.renderDistance; z++) {
-                world.generateChunk( x,z);
-            }
-        }
-        worlds.put(id,world);
-    }
-
     public void addWorld(IServerWorld world) {
         world.setServer(this);
         for(int x = -Settings.renderDistance; x < Settings.renderDistance; x++) {
@@ -74,16 +63,6 @@ public class MultiPlayerServer implements IServer {
             }
         }
         newWorlds.put(world.getID(), world);
-    }
-
-    @Override
-    public World getWorld(int id) {
-        return worlds.get(id);
-    }
-
-    @Override
-    public Collection<World> getWorlds() {
-        return worlds.values();
     }
 
     @Override
@@ -101,10 +80,6 @@ public class MultiPlayerServer implements IServer {
             command = "/" + command;
         }
         return Commands.executeCommand(command,new ConsoleExecutor(this));
-    }
-
-    public World getDefaultWorld() {
-        return worlds.values().iterator().next();
     }
 
     public void sendPacket(PacketBase packetBase) {

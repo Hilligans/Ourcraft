@@ -154,7 +154,7 @@ public abstract class WorldCamera implements ICamera {
    //     moveMatrix.setRow(oldComp, column1.mul(ss, ss, ss));
    //     moveMatrix.setRow(comp, column2.mul(-ss, -ss, -ss));
 
-        //pitch += (Math.cos(yaw) > 0 ? 1f : -1f) * -direction;
+      //  pitch += (Math.cos(yaw) > 0 ? 1f : -1f) * -direction;
 
         //pitch += -direction;
         //pitch += x > 0 ? (3.1415f / 2f) : -(3.1415f / 2f);

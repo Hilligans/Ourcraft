@@ -6,7 +6,6 @@ public abstract class PacketBase {
 
     public ChannelHandlerContext ctx;
 
-
     public int packetId;
 
     public PacketBase(int id) {

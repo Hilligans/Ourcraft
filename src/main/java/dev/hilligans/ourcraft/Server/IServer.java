@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.hilligans.ourcraft.ModHandler.Events.Server.ServerTickEvent;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Ourcraft;
+import dev.hilligans.ourcraft.World.NewWorldSystem.IServerWorld;
 import dev.hilligans.ourcraft.World.World;
 
 import java.util.Collection;
@@ -11,11 +12,7 @@ import java.util.Collection;
 public interface IServer {
 
 
-    void addWorld(int id, World world);
-
-    World getWorld(int id);
-
-    Collection<World> getWorlds();
+    void addWorld(IServerWorld world);
 
     long getTime();
 
@@ -23,7 +20,6 @@ public interface IServer {
 
     Object executeCommand(String command);
 
-    World getDefaultWorld();
 
     void sendPacket(PacketBase packetBase);
 
@@ -40,9 +36,9 @@ public interface IServer {
             server.setTime(server.getTime() + 1);
             Ourcraft.GAME_INSTANCE.EVENT_BUS.postEvent(new ServerTickEvent(server));
            // gameProcessor.tickServer(server);
-            for(World world : server.getWorlds()) {
-                world.tick();
-            }
+            //for(World world : server.getWorlds()) {
+            //    world.tick();
+            //}
         }
     }
 }

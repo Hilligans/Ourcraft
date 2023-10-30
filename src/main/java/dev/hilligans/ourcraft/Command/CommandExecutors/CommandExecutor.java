@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.Command.CommandExecutors;
 
+import dev.hilligans.ourcraft.World.NewWorldSystem.IWorld;
 import dev.hilligans.ourcraft.World.World;
 import dev.hilligans.ourcraft.Server.IServer;
 
@@ -13,5 +14,5 @@ public interface CommandExecutor {
 
      IServer getServer();
 
-     World getWorld();
+     IWorld getWorld();
 }

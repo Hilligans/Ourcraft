@@ -139,7 +139,7 @@ public class Client {
         authNetwork.sendPacket(new CGetToken(playerData.userName, playerData.login_token));
         RenderWindow window = graphicsEngine.startEngine();
         window.setClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        soundEngine.init();
+        soundEngine.init(window.getCamera());
         soundEngine.setAttenuationModel(AL11.AL_LINEAR_DISTANCE_CLAMPED);
         registerKeyHandlers();
 
@@ -160,36 +160,6 @@ public class Client {
             soundBuffer.cleanup();
         }
     }
-
-/*    public void draw(RenderWindow window, MatrixStack matrixStack, MatrixStack screenStack) {
-        gameInstance.EVENT_BUS.postEvent(new RenderStartEvent(matrixStack,screenStack,this));
-        if(renderWorld && !gameInstance.REBUILDING.get()) {
-            gameInstance.EVENT_BUS.postEvent(new RenderWorldEvent(matrixStack,screenStack,this));
-            rendering = true;
-            clientWorld.tick();
-           // graphicsEngine.renderWorld(matrixStack,clientWorld);
-
-            BlockPos pos = clientWorld.traceBlockToBreak(Camera.pos.x, Camera.pos.y + Camera.playerBoundingBox.eyeHeight, Camera.pos.z, Camera.pitch, Camera.yaw);
-            BlockState blockState = null;
-            if (pos != null) {
-                blockState = clientWorld.getBlockState(pos);
-                int id = blockState.getBlock().blockProperties.blockShape.generateOutline(clientWorld, pos);
-                //glUseProgram(shaderManager.lineShader);
-                GL30.glBindVertexArray(id);
-                matrixStack.push();
-                //matrixStack.translateMinusOffset(pos.x, pos.y, pos.z);
-                matrixStack.applyTransformation(shaderManager.lineShader);
-                GLRenderer.glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, 0);
-                matrixStack.pop();
-                VAOManager.destroyBuffer(id);
-            }
-        }
-        gameInstance.EVENT_BUS.postEvent(new RenderEndEvent(matrixStack,screenStack,this));
-    }
-
- */
-
-    public int chunks = 0;
 
     public void closeScreen() {
         if(!playerData.heldStack.isEmpty()) {
@@ -312,8 +282,6 @@ public class Client {
                             }
                         }
                     }
-                } else {
-
                 }
             }
         },GLFW_KEY_Q);
@@ -394,24 +362,6 @@ public class Client {
 
     public static long timeSinceLastDraw = 0;
     public static float drawTime = 1000f * 1000000 / Settings.maxFps;
-
-    public void processInput(long window) {
-        /*if(screen == null) {
-            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS);
-               // Camera.strafeLeft();
-            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS);
-               // Camera.strafeRight();
-            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS);
-               // Camera.moveForeWard();
-            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS);
-               // Camera.moveBackWard();
-            if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS);
-               // Camera.moveUp();
-            if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS);
-                //Camera.moveDown();
-        }
-         */
-    }
 
     public void sendPacket(PacketBase packetBase) {
          network.sendPacket(packetBase);

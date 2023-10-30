@@ -25,8 +25,8 @@ public class PlayerMovementThread implements Runnable {
                 Camera.sprinting = true;
             }
             Camera.sprintTimeout = 0;
-            ClientMain.getClient().processInput(window);
-            Camera.tick();
+           // ClientMain.getClient().processInput(window);
+            //Camera.tick();
         }
     }
 }

@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.Client.Audio;
 
 import dev.hilligans.ourcraft.Client.Camera;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.ICamera;
 import dev.hilligans.ourcraft.GameInstance;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
@@ -30,12 +31,14 @@ public class SoundEngine {
 
     public final ArrayList<SoundSource> sounds = new ArrayList<>();
     public GameInstance gameInstance;
+    public ICamera camera;
 
     public SoundEngine(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
     }
 
-    public void init() {
+    public void init(ICamera camera) {
+        this.camera = camera;
         this.device = alcOpenDevice((ByteBuffer) null);
         if (device == NULL) {
             throw new IllegalStateException("Failed to open the default OpenAL device.");
@@ -48,12 +51,11 @@ public class SoundEngine {
         alcMakeContextCurrent(context);
         AL.createCapabilities(deviceCaps);
 
-        listener = new SoundListener(Camera.pos.get(new Vector3f()));
+        listener = new SoundListener(camera.getPosition().get(new Vector3f()));
 
         for(SoundBuffer soundBuffer : gameInstance.SOUNDS.ELEMENTS) {
             soundBuffer.soundCategory.sounds.add(soundBuffer);
         }
-
     }
 
     public void tick() {
@@ -94,10 +96,8 @@ public class SoundEngine {
     }
 
     public void updateListenerPosition() {
-        listener.setPosition(Camera.pos.get(new Vector3f()));
-        Vector3f up = new Vector3f(0,0,-1);
-        Vector3f at = Camera.getLookVector().get(new Vector3f());
-        listener.setOrientation(at, up);
+        listener.setPosition(camera.getPosition());
+        listener.setOrientation(camera.getLookVector(), camera.cameraUp());
     }
 
     public void setAttenuationModel(int model) {
@@ -116,7 +116,4 @@ public class SoundEngine {
             alcCloseDevice(device);
         }
     }
-
-
-
 }
