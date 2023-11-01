@@ -7,7 +7,6 @@ import dev.hilligans.ourcraft.Item.ItemStack;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.Tag.CompoundNBTTag;
 import dev.hilligans.ourcraft.Tag.NBTTag;
-import dev.hilligans.ourcraft.WorldSave.IEncodeable;
 import dev.hilligans.ourcraft.WorldSave.WorldLoader;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -16,9 +15,6 @@ import org.joml.Vector4f;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
 
 public class ByteArray {
 
@@ -546,23 +542,5 @@ public class ByteArray {
 
     public void writeEightBytePosition(EightBytePosition eightBytePosition) {
         writeLong(eightBytePosition.encode());
-    }
-
-    public void write(List<IEncodeable> list) {
-        writeVarInt(list.size());
-        for(IEncodeable encodeable : list) {
-            encodeable.write(this);
-        }
-    }
-
-    public <T extends IEncodeable> List<T> read(Supplier<T> encodeableSupplier) {
-        int size = readVarInt();
-        ArrayList<T> list = new ArrayList<>(size);
-        for(int x = 0; x < size; x++) {
-            T encodable = encodeableSupplier.get();
-            encodable.read(this);
-            list.add(encodable);
-        }
-        return list;
     }
 }

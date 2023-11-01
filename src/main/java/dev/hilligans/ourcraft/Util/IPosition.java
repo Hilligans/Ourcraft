@@ -28,7 +28,7 @@ public interface IPosition {
     }
 
     void write(CompoundNBTTag tag);
-    void write(ByteArray byteArray);
+    void write(IByteArray byteArray);
 
     boolean isInteger();
 }

@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.Network;
 
-import dev.hilligans.ourcraft.Util.ByteArray;
+import dev.hilligans.ourcraft.Util.NettyByteArray;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -8,7 +8,7 @@ import io.netty.channel.ChannelHandlerContext;
 import java.nio.ByteBuffer;
 import java.util.zip.Deflater;
 
-public class PacketData extends ByteArray {
+public class PacketData extends NettyByteArray {
 
 
     public ChannelHandlerContext ctx;
@@ -29,19 +29,19 @@ public class PacketData extends ByteArray {
         byteBuf = Unpooled.buffer();
         byteBuf.writeBytes(bytes);
         packetId = byteBuf.readShort();
-        size = bytes.length;
+        index = bytes.length;
     }
 
     public PacketData(byte[] bytes) {
         byteBuf = Unpooled.buffer();
         byteBuf.writeBytes(bytes);
-        size = bytes.length;
+        index = bytes.length;
     }
 
     public PacketData(ByteBuf byteBuf) {
         packetId =  byteBuf.readShort();
         byteBuf.readBytes(packetId);
-        size = byteBuf.readableBytes();
+        index = byteBuf.readableBytes();
     }
 
     public PacketData(ByteBuffer buffer, int packetWidth) {
@@ -49,15 +49,15 @@ public class PacketData extends ByteArray {
     }
 
     public void writeToByteBuf(ByteBuf byteBuf, int packetWidth, boolean compressed) {
-        byteBuf.writeInt(size + 4 + packetWidth);
+        byteBuf.writeInt(index + 4 + packetWidth);
         if (compressed) {
             Deflater compressor = new Deflater();
             ByteBuffer buffer;
             if (packetWidth == 1) {
-                buffer = this.byteBuf.nioBuffer(1, this.size);
+                buffer = this.byteBuf.nioBuffer(1, this.index);
                 buffer.put(0, (byte) packetId);
             } else {
-                buffer = this.byteBuf.nioBuffer(2, this.size);
+                buffer = this.byteBuf.nioBuffer(2, this.index);
                 buffer.putShort(0, packetId);
             }
             compressor.setInput(buffer);

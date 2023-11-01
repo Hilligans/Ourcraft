@@ -121,8 +121,8 @@ public class GameInstance {
     public void build(IGraphicsEngine<?,?,?> graphicsEngine, GraphicsContext graphicsContext) {
         for(Registry<?> registry : REGISTRIES.ELEMENTS) {
             for(Object o : registry.ELEMENTS) {
-                if(o instanceof IRegistryElement) {
-                    ((IRegistryElement) o).loadGraphics(graphicsEngine, graphicsContext);
+                if(o instanceof IRegistryElement registryElement) {
+                    registryElement.loadGraphics(graphicsEngine, graphicsContext);
                 }
             }
         }
@@ -131,8 +131,8 @@ public class GameInstance {
     public void cleanupGraphics(IGraphicsEngine<?,?,?> graphicsEngine, GraphicsContext graphicsContext) {
         for(Registry<?> registry : REGISTRIES.ELEMENTS) {
             for(Object o : registry.ELEMENTS) {
-                if(o instanceof IRegistryElement) {
-                    ((IRegistryElement) o).cleanupGraphics(graphicsEngine, graphicsContext);
+                if(o instanceof IRegistryElement registryElement) {
+                    registryElement.cleanupGraphics(graphicsEngine, graphicsContext);
                 }
             }
         }
@@ -366,6 +366,14 @@ public class GameInstance {
         for(int x = 0; x < names.length; x++) {
             register(names[x], objects[x]);
         }
+    }
+
+    public boolean replace(String registryName, String resource, IRegistryElement registryElement) {
+        Registry<?> registry = REGISTRIES.get(registryName);
+        if(registry == null) {
+            return false;
+        }
+        return registry.replace(resource, registryElement);
     }
 
     public ByteBuffer getResource(ResourceLocation resourceLocation) {

@@ -18,7 +18,7 @@ public class SAccountPacket extends PacketBase {
 
     @Override
     public void decode(PacketData packetData) {
-        response = packetData.readString();
+        response = packetData.readUTF16();
     }
 
     @Override

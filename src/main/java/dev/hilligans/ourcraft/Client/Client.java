@@ -271,6 +271,7 @@ public class Client {
             public void onPress() {
                 if(screen != null) {
                     if(playerData.openContainer != null) {
+                        /*
                         Slot slot = playerData.openContainer.getSlotAt((int)Camera.newX,(int)Camera.newY);
                         if(slot != null) {
                             if(KeyHandler.keyPressed[GLFW_KEY_LEFT_CONTROL]) {
@@ -281,6 +282,8 @@ public class Client {
                                 sendPacket(new CDropItem(slot.id,(byte)1));
                             }
                         }
+
+                         */
                     }
                 }
             }

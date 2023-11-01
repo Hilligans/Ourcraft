@@ -3,14 +3,13 @@ package dev.hilligans.ourcraft.Network;
 import dev.hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.hilligans.ourcraft.Network.Packet.AuthServerPackets.*;
 import dev.hilligans.ourcraft.Network.Packet.Client.*;
-import dev.hilligans.ourcraft.Network.Packet.NewSystem.Client.SSendChunk;
-import dev.hilligans.ourcraft.Network.Packet.NewSystem.Client.SSendWorldSystemFormat;
+import dev.hilligans.ourcraft.Network.Packet.NewSystem.Server.SSendChunk;
+import dev.hilligans.ourcraft.Network.Packet.NewSystem.Server.SSendWorldSystemFormat;
 import dev.hilligans.ourcraft.Network.Packet.Server.*;
 
 public class Protocols {
 
     public static void register(ModContent modContent) {
-
         modContent.registerPacket(CRequestChunkPacket::new);
         modContent.registerPacket(SSendChunkPacket::new);
         modContent.registerPacket(CSendBlockChanges::new);

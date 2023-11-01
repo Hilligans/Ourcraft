@@ -37,15 +37,15 @@ public class CHandshakePacket extends PacketBase {
     @Override
     public void encode(PacketData packetData) {
         packetData.writeInt(Settings.gameVersion);
-        packetData.writeString(ClientMain.getClient().playerData.userName);
-        packetData.writeString(ClientMain.getClient().playerData.authToken);
+        packetData.writeUTF16(ClientMain.getClient().playerData.userName);
+        packetData.writeUTF16(ClientMain.getClient().playerData.authToken);
     }
 
     @Override
     public void decode(PacketData packetData) {
         id = packetData.readInt();
-        name = packetData.readString();
-        authToken = packetData.readString();
+        name = packetData.readUTF16();
+        authToken = packetData.readUTF16();
     }
 
     @Override

@@ -24,10 +24,10 @@ public class CTokenValid extends PacketBase {
 
     @Override
     public void encode(PacketData packetData) {
-        packetData.writeString(username);
-        packetData.writeString(token);
-        packetData.writeString(ip);
-        packetData.writeString(tempId);
+        packetData.writeUTF16(username);
+        packetData.writeUTF16(token);
+        packetData.writeUTF16(ip);
+        packetData.writeUTF16(tempId);
     }
 
     @Override

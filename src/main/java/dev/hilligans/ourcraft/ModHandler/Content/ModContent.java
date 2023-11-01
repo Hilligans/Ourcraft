@@ -25,6 +25,7 @@ import dev.hilligans.ourcraft.Network.Protocol;
 import dev.hilligans.ourcraft.Resource.RegistryLoaders.RegistryLoader;
 import dev.hilligans.ourcraft.Resource.Loaders.ResourceLoader;
 import dev.hilligans.ourcraft.Util.ByteArray;
+import dev.hilligans.ourcraft.Util.IByteArray;
 import dev.hilligans.ourcraft.Util.Settings;
 import dev.hilligans.ourcraft.Util.Util;
 import dev.hilligans.ourcraft.World.Feature;
@@ -89,17 +90,17 @@ public class ModContent {
         this.gameInstance = gameInstance;
     }
 
-    public ModContent(ByteArray packetData, GameInstance gameInstance) {
+    public ModContent(IByteArray packetData, GameInstance gameInstance) {
         this.gameInstance = gameInstance;
         readData(packetData);
         if(Settings.cacheDownloadedMods) {
             if(Settings.storeServerModsIndividually) {
                 String ip = ClientMain.getClient().serverIP.replace(':','_');
                 if(!ip.equals("")) {
-                    WorldLoader.write("mod_cache/servers/" + ip + "/" + getModID() + "-" + version + ".dat",packetData.toByteBuffer());
+                   // WorldLoader.write("mod_cache/servers/" + ip + "/" + getModID() + "-" + version + ".dat",packetData.toByteBuffer());
                 }
             } else {
-                WorldLoader.write("mod_cache/mods/" + getModID() + "-" + version + ".dat",packetData.toByteBuffer());
+               // WorldLoader.write("mod_cache/mods/" + getModID() + "-" + version + ".dat",packetData.toByteBuffer());
             }
         }
     }
@@ -309,13 +310,14 @@ public class ModContent {
         this.shaders.addAll(Arrays.asList(shaderSources));
     }
 
-    public void putData(ByteArray byteArray) {
+    public void putData(IByteArray byteArray) {
         byteArray.writeInt(version);
-        byteArray.writeString(getModID());
-        byteArray.writeString(description);
-        byteArray.writeString(Util.toString(authors));
-        byteArray.writeString(Util.toString(getDependencies()));
+        byteArray.writeUTF16(getModID());
+        byteArray.writeUTF16(description);
+        byteArray.writeUTF16(Util.toString(authors));
+        byteArray.writeUTF16(Util.toString(getDependencies()));
         byteArray.writeInt(models.size());
+        /*
         for(IModel iModel : models) {
             byteArray.writeString(iModel.getPath());
             byteArray.writeString(iModel.getModel());
@@ -351,22 +353,25 @@ public class ModContent {
             byteArray.writeString(item.name);
             byteArray.writeString(item.itemProperties.getJsonObject().toString());
         }
+
+         */
     }
 
-    public void readData(ByteArray byteArray) {
+    public void readData(IByteArray byteArray) {
         version = byteArray.readInt();
-        modID = byteArray.readString();
-        description = byteArray.readString();
-        byteArray.readString();
-        byteArray.readString();
+        modID = byteArray.readUTF16();
+        description = byteArray.readUTF16();
+        byteArray.readUTF16();
+        byteArray.readUTF16();
         int size = byteArray.readInt();
         for(int x = 0; x < size; x++) {
-            byteArray.readString();
-            byteArray.readString();
+            byteArray.readUTF16();
+            byteArray.readUTF16();
         }
+        /*
         size = byteArray.readInt();
         for(int x = 0; x < size; x++) {
-            textures.add(new Texture(byteArray.readString(), byteArray.readImage()));
+            textures.add(new Texture(byteArray.readUTF16(), byteArray.readImage()));
         }
         size = byteArray.readInt();
         for(int x = 0; x < size; x++) {
@@ -394,6 +399,8 @@ public class ModContent {
             String name = byteArray.readString();
             items.add(ItemProperties.loadProperties(new JSONObject(byteArray.readString())).getItem(name,this));
         }
+
+         */
     }
 
     public String[] getDependencies() {

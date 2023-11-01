@@ -1,21 +1,11 @@
 package dev.hilligans.ourcraft;
 
-import dev.hilligans.ourcraft.Block.Blocks;
 import dev.hilligans.ourcraft.Client.Client;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.hilligans.ourcraft.Util.ArgumentContainer;
 import dev.hilligans.ourcraft.Util.Side;
-import dev.hilligans.ourcraft.World.NewWorldSystem.GlobalPaletteAtomicSubChunk;
-import org.lwjgl.system.MemoryUtil;
-import sun.misc.Unsafe;
 
 import java.io.IOException;
-import java.lang.invoke.VarHandle;
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.concurrent.locks.LockSupport;
-
-import static java.lang.StringTemplate.STR;
 
 public class ClientMain {
 

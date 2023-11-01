@@ -36,7 +36,7 @@ public class EntityPosition implements IPosition {
         chunkHeight = (short) (val >> 16);
     }
 
-    public EntityPosition(ByteArray byteArray) {
+    public EntityPosition(IByteArray byteArray) {
         chunkX = byteArray.readInt();
         chunkY = byteArray.readInt();
         chunkZ = byteArray.readInt();
@@ -186,7 +186,7 @@ public class EntityPosition implements IPosition {
     }
 
     @Override
-    public void write(ByteArray byteArray) {
+    public void write(IByteArray byteArray) {
         byteArray.writeInt(chunkX);
         byteArray.writeInt(chunkY);
         byteArray.writeInt(chunkZ);

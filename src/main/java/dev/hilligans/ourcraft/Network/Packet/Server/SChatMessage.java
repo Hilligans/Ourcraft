@@ -19,12 +19,12 @@ public class SChatMessage extends PacketBase {
 
     @Override
     public void encode(PacketData packetData) {
-        packetData.writeString(message);
+        packetData.writeUTF16(message);
     }
 
     @Override
     public void decode(PacketData packetData) {
-        message = packetData.readString();
+        message = packetData.readUTF16();
 
     }
 

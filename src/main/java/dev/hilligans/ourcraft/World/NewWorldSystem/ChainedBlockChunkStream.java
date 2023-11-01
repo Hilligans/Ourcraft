@@ -2,6 +2,8 @@ package dev.hilligans.ourcraft.World.NewWorldSystem;
 
 import dev.hilligans.ourcraft.Block.BlockState.IBlockState;
 import dev.hilligans.ourcraft.Util.ByteArray;
+import dev.hilligans.ourcraft.Util.IByteArray;
+import dev.hilligans.ourcraft.Util.NettyByteArray;
 import io.netty.buffer.ByteBuf;
 
 public class ChainedBlockChunkStream extends ChunkStream {
@@ -13,8 +15,8 @@ public class ChainedBlockChunkStream extends ChunkStream {
 
     @Override
     public IChunk fillChunk(ByteBuf buffer, int position, IChunk chunk) {
-        ByteArray array = new ByteArray(buffer);
-        array.size = position;
+        NettyByteArray array = new NettyByteArray(buffer);
+        array.setReaderIndex(position);
         long xx = array.readVarInt();
         long yy = array.readVarInt();
         long zz = array.readVarInt();
@@ -50,10 +52,11 @@ public class ChainedBlockChunkStream extends ChunkStream {
 
     @Override
     public int fillBuffer(ByteBuf buffer, int position, IChunk chunk) {
-        ByteArray array = new ByteArray(buffer);
-        array.size = position;
-        array.byteBuf.resetReaderIndex();
-        array.byteBuf.resetWriterIndex();
+        IByteArray array = new NettyByteArray(buffer);
+        array.setReaderIndex(position);
+      //  array.size = position;
+       // array.byteBuf.resetReaderIndex();
+       // array.byteBuf.resetWriterIndex();
         array.writeVarInt((int) chunk.getBlockX());
         array.writeVarInt((int) chunk.getBlockY());
         array.writeVarInt((int) chunk.getBlockZ());
@@ -81,6 +84,6 @@ public class ChainedBlockChunkStream extends ChunkStream {
         array.writeVarInt(length);
         array.writeVarInt(blockState);
         chunk.setDirty(true);
-        return array.size;
+        return (int) array.length();
     }
 }

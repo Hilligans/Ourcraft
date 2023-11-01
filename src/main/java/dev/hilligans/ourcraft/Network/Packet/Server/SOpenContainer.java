@@ -28,7 +28,7 @@ public class SOpenContainer extends PacketBase {
         packetData.writeInt(uniqueId);
         packetData.writeShort((short) container.slots.size());
         for(Slot slot : container.slots) {
-            packetData.writeItemStack(slot.getContents());
+           // packetData.writeItemStack(slot.getContents());
         }
     }
 
@@ -38,8 +38,8 @@ public class SOpenContainer extends PacketBase {
         container.uniqueId = packetData.readInt();
         int slotCount = packetData.readShort();
         for(int x = 0; x < slotCount; x++) {
-            ItemStack itemStack = packetData.readItemStack();
-            container.getSlot(x).setContents(itemStack);
+            //ItemStack itemStack = packetData.readItemStack();
+          //  container.getSlot(x).setContents(itemStack);
         }
     }
 

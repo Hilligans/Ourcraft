@@ -34,7 +34,4 @@ public class Camera {
 
     public static BoundingBox playerBoundingBox = new BoundingBox(-0.35f,-1.9f,-0.35f,0.35f,0.0f,0.35f, -0.15f);
 
-    public static double newX = (float)ClientMain.getWindowX() / 2;
-    public static double newY = (float)ClientMain.getWindowY() / 2;
-
 }

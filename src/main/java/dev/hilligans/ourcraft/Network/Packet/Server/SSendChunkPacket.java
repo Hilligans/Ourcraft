@@ -36,8 +36,8 @@ public class SSendChunkPacket extends PacketBase {
     public void encode(PacketData packetData) {
         try {
             //System.out.println(buf.limit());
-            int pos = Ourcraft.chainedChunkStream.fillBuffer(packetData.byteBuf, packetData.size, newChunk);
-            packetData.size = pos;
+            int pos = Ourcraft.chainedChunkStream.fillBuffer(packetData.byteBuf, (int)packetData.length(), newChunk);
+            packetData.setReaderIndex(pos);
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -118,7 +118,7 @@ public class SSendChunkPacket extends PacketBase {
         //IChunk chunk = new ClassicChunk(ClientMain.getClient().newClientWorld,256,0,0);
         IChunk chunk = new CubicChunk(ClientMain.getClient().newClientWorld,32,0,0, 0);
         try {
-            Ourcraft.chainedChunkStream.fillChunk(packetData.byteBuf, packetData.size, chunk);
+            Ourcraft.chainedChunkStream.fillChunk(packetData.byteBuf, (int)packetData.length(), chunk);
         } catch (Exception e) {
             e.printStackTrace();
         }

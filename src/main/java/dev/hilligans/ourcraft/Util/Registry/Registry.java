@@ -66,6 +66,24 @@ public class Registry<T> {
         put(name,(T)element);
     }
 
+    public boolean replace(String name, Object object) {
+        if(!canPut(object)) {
+            throw new RegistryException("Failed to register object replacement, object " + object.getClass() + " is not an instance of " + classType, this);
+        }
+        if(!MAPPED_ELEMENTS.containsKey(name)) {
+            return false;
+        }
+        T newElem = (T)object;
+        T oldElem = MAPPED_ELEMENTS.replace(name, newElem);
+        for(int x = 0; x < ELEMENTS.size(); x++) {
+            if(ELEMENTS.get(x) == oldElem) {
+                ELEMENTS.set(x, newElem);
+                return true;
+            }
+        }
+        return false;
+    }
+
     public T remove(String name) {
         T element = MAPPED_ELEMENTS.remove(name);
         for(int x = 0; x < ELEMENTS.size(); x++) {

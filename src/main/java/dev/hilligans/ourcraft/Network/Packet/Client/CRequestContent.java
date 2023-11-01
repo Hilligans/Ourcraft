@@ -31,7 +31,7 @@ public class CRequestContent extends PacketBase {
     public void encode(PacketData packetData) {
         packetData.writeInt(mods.size());
         for(String string : mods) {
-            packetData.writeString(string);
+            packetData.writeUTF16(string);
         }
     }
 
@@ -40,7 +40,7 @@ public class CRequestContent extends PacketBase {
         int length = packetData.readInt();
         mods = new ArrayList<>();
         for(int x = 0; x < length; x++) {
-            mods.add(packetData.readString());
+            mods.add(packetData.readUTF16());
         }
     }
 

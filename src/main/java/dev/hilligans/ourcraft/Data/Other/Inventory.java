@@ -82,7 +82,7 @@ public class Inventory implements IInventory {
         packetData.writeInt(age);
         packetData.writeInt(items.length);
         for (ItemStack item : items) {
-            packetData.writeItemStack(item);
+            //packetData.writeItemStack(item);
         }
     }
 
@@ -91,7 +91,7 @@ public class Inventory implements IInventory {
         if(age > this.age) {
             int size = packetData.readInt();
             for (int x = 0; x < size; x++) {
-                items[x] = packetData.readItemStack();
+               // items[x] = packetData.readItemStack();
               /*  if(!items[x].isEmpty()) {
                     if(items[x].item instanceof BlockItem) {
                         System.out.println(((BlockItem) items[x].item).block);

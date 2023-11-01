@@ -1,4 +1,4 @@
-package dev.hilligans.ourcraft.Network.Packet.NewSystem.Client;
+package dev.hilligans.ourcraft.Network.Packet.NewSystem.Server;
 
 import dev.hilligans.ourcraft.Network.IClientPacketHandler;
 import dev.hilligans.ourcraft.Network.PacketBase;

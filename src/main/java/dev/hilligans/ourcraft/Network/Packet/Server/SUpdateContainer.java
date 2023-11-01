@@ -42,7 +42,7 @@ public class SUpdateContainer extends PacketBase {
             packetData.writeInt(val);
         } else {
             packetData.writeShort(slot);
-            packetData.writeItemStack(itemStack);
+          //  packetData.writeItemStack(itemStack);
         }
         packetData.writeInt(containerId);
     }
@@ -55,7 +55,7 @@ public class SUpdateContainer extends PacketBase {
             val = packetData.readInt();
         } else {
             slot = packetData.readShort();
-            itemStack = packetData.readItemStack();
+           // itemStack = packetData.readItemStack();
         }
         containerId = packetData.readInt();
     }
