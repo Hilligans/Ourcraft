@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.Data.Other;
 
 import dev.hilligans.ourcraft.Item.ItemStack;
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.PacketData;
 import dev.hilligans.ourcraft.Data.Other.Server.IInventoryChanged;
 
@@ -78,7 +79,7 @@ public class Inventory implements IInventory {
     }
 
 
-    public void writeData(PacketData packetData) {
+    public void writeData(IPacketByteArray packetData) {
         packetData.writeInt(age);
         packetData.writeInt(items.length);
         for (ItemStack item : items) {
@@ -86,7 +87,7 @@ public class Inventory implements IInventory {
         }
     }
 
-    public void readData(PacketData packetData) {
+    public void readData(IPacketByteArray packetData) {
         int age = packetData.readInt();
         if(age > this.age) {
             int size = packetData.readInt();

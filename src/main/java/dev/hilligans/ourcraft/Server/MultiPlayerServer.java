@@ -12,6 +12,7 @@ import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Network.ServerNetwork;
 import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
 import dev.hilligans.ourcraft.Ourcraft;
+import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.World.NewWorldSystem.IServerWorld;
 import dev.hilligans.ourcraft.World.NewWorldSystem.IWorld;
 import dev.hilligans.ourcraft.World.ServerWorld;
@@ -47,7 +48,7 @@ public class MultiPlayerServer implements IServer {
         executorService1.scheduleAtFixedRate(new PlayerHandler(this), 0, 10, TimeUnit.MILLISECONDS);
         ConsoleReader consoleReader = new ConsoleReader(this::executeCommand);
 
-        ServerNetwork serverNetwork = new ServerNetwork(gameInstance.PROTOCOLS.get("Play"));
+        ServerNetwork serverNetwork = new ServerNetwork(gameInstance.PROTOCOLS.get("Play")).debug(ServerMain.argumentContainer.getBoolean("--packetTrace", false));
         try {
             serverNetwork.startServer(port);
         } catch (Exception e) {

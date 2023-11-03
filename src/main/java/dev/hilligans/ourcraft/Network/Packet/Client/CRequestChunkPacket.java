@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.Network.Packet.Client;
 
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.Packet.Server.SSendChunkPacket;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.ServerMain;
@@ -23,14 +24,14 @@ public class CRequestChunkPacket extends PacketBase {
     }
 
     @Override
-    public void encode(PacketData packetData) {
+    public void encode(IPacketByteArray packetData) {
         packetData.writeInt(ChunkX);
         packetData.writeInt(ChunkZ);
 
     }
 
     @Override
-    public void decode(PacketData packetData) {
+    public void decode(IPacketByteArray packetData) {
         ChunkX = packetData.readInt();
         ChunkZ = packetData.readInt();
     }

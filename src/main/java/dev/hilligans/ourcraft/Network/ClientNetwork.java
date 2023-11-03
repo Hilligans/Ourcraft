@@ -47,6 +47,12 @@ public class ClientNetwork extends Network {
     }
 
     @Override
+    public ClientNetwork debug(boolean debug) {
+        super.debug(debug);
+        return this;
+    }
+
+    @Override
     public void sendPacket(PacketBase packetBase) {
         if(networkHandler != null && ((ClientNetworkHandler)networkHandler).enabled) {
             packetBase.packetId = sendProtocol.packetMap.get(packetBase.getClass());

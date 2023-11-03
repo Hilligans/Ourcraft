@@ -10,7 +10,7 @@ import dev.hilligans.ourcraft.Client.Rendering.Widgets.ServerSelectorWidget;
 import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.Client.Rendering.ScreenBase;
 import dev.hilligans.ourcraft.Client.Rendering.Widgets.Button;
-import dev.hilligans.ourcraft.Network.ServerNetworkInit;
+import dev.hilligans.ourcraft.Network.PortUtil;
 import dev.hilligans.ourcraft.Server.MultiPlayerServer;
 import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.Util.Settings;
@@ -56,7 +56,7 @@ public class JoinScreen extends ScreenBase {
             ServerMain.server = client.multiPlayerServer;
             int port = 0;
             try {
-                port = ServerNetworkInit.getOpenPort();
+                port = PortUtil.getOpenPort();
             } catch (Exception e) {
                 e.printStackTrace();
                 return;

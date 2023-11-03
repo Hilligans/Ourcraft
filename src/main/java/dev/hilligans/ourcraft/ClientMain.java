@@ -31,7 +31,7 @@ public class ClientMain {
 
         if(argumentContainer.getBoolean("--integratedServer", false)) {
             try {
-                Thread thread = new Thread(() -> ServerMain.server(gameInstance));
+                Thread thread = new Thread(() -> ServerMain.server(gameInstance, argumentContainer));
                 thread.setName("Server-Thread");
                 thread.start();
             } catch (Exception e) {
@@ -39,7 +39,7 @@ public class ClientMain {
             }
         }
 
-        client = new Client(gameInstance);
+        client = new Client(gameInstance, argumentContainer);
         String graphicsEngine = argumentContainer.getString("--graphicsEngine", null);
         if(graphicsEngine != null) {
             System.out.println(graphicsEngine);

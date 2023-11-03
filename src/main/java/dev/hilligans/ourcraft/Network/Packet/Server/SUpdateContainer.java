@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.Network.Packet.Server;
 
 import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.Item.ItemStack;
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Network.PacketData;
 
@@ -35,7 +36,7 @@ public class SUpdateContainer extends PacketBase {
     }
 
     @Override
-    public void encode(PacketData packetData) {
+    public void encode(IPacketByteArray packetData) {
         packetData.writeBoolean(trackInt);
         if(trackInt) {
             packetData.writeShort(integerId);
@@ -48,7 +49,7 @@ public class SUpdateContainer extends PacketBase {
     }
 
     @Override
-    public void decode(PacketData packetData) {
+    public void decode(IPacketByteArray packetData) {
         trackInt = packetData.readBoolean();
         if(trackInt) {
             integerId = packetData.readShort();

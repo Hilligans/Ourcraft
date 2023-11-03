@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.Network.Packet.Client;
 
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Network.PacketData;
 import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
@@ -21,13 +22,13 @@ public class CModifyStack extends PacketBase {
     }
 
     @Override
-    public void encode(PacketData packetData) {
+    public void encode(IPacketByteArray packetData) {
         packetData.writeShort(slot);
         packetData.writeByte(mode);
     }
 
     @Override
-    public void decode(PacketData packetData) {
+    public void decode(IPacketByteArray packetData) {
         slot = packetData.readShort();
         mode = packetData.readByte();
     }

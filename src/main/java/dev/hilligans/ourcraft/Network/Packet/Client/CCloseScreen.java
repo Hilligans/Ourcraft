@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.Network.Packet.Client;
 
 import dev.hilligans.ourcraft.Container.Containers.InventoryContainer;
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Network.PacketData;
 import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
@@ -20,12 +21,12 @@ public class CCloseScreen extends PacketBase {
     }
 
     @Override
-    public void encode(PacketData packetData) {
+    public void encode(IPacketByteArray packetData) {
         packetData.writeBoolean(newScreen);
     }
 
     @Override
-    public void decode(PacketData packetData) {
+    public void decode(IPacketByteArray packetData) {
         newScreen = packetData.readBoolean();
     }
 

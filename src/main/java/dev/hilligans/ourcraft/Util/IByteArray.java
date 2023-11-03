@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.Tag.INBTTag;
 import dev.hilligans.ourcraft.WorldSave.IEncodeable;
 
 import java.lang.foreign.MemorySegment;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -40,8 +41,12 @@ public interface IByteArray extends INBTTag {
     float readFloat();
     double readDouble();
 
-    String readUTF8();
-    String readUTF16();
+    default String readUTF8() {
+        return new String(readBytes(), StandardCharsets.UTF_8);
+    }
+    default String readUTF16() {
+        return new String(readBytes(), StandardCharsets.UTF_16);
+    }
 
     default int readVarInt() {
         int numRead = 0;
@@ -243,8 +248,12 @@ public interface IByteArray extends INBTTag {
     void writeFloat(float val);
     void writeDouble(double val);
 
-    void writeUTF8(String val);
-    void writeUTF16(String val);
+    default void writeUTF8(String val) {
+        writeBytes(val.getBytes(StandardCharsets.UTF_8));
+    }
+    default void writeUTF16(String val) {
+        writeBytes(val.getBytes(StandardCharsets.UTF_16));
+    }
 
     default void writeVarInt(int value) {
         while (true) {

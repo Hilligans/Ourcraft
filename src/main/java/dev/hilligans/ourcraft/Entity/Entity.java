@@ -7,6 +7,7 @@ import dev.hilligans.ourcraft.Client.MatrixStack;
 import dev.hilligans.ourcraft.Data.Other.BoundingBox;
 import dev.hilligans.ourcraft.Entity.Entities.ItemEntity;
 import dev.hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.Packet.Server.SUpdateEntityPacket;
 import dev.hilligans.ourcraft.Network.PacketData;
 import dev.hilligans.ourcraft.Data.Other.BlockPos;
@@ -62,7 +63,7 @@ public abstract class Entity {
         setWorld();
     }
 
-    public Entity(PacketData packetData) {
+    public Entity(IPacketByteArray packetData) {
         position = new EntityPosition(packetData);
         pitch = packetData.readFloat();
         yaw = packetData.readFloat();
@@ -123,7 +124,7 @@ public abstract class Entity {
         return world;
     }
 
-    public void writeData(PacketData packetData) {
+    public void writeData(IPacketByteArray packetData) {
         packetData.writeInt(type);
         position.write(packetData);
         packetData.writeFloat(pitch);

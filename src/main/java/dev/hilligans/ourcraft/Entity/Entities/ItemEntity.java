@@ -11,6 +11,7 @@ import dev.hilligans.ourcraft.Entity.Entity;
 import dev.hilligans.ourcraft.Item.BlockItem;
 import dev.hilligans.ourcraft.Item.Item;
 import dev.hilligans.ourcraft.Item.ItemStack;
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.PacketData;
 import dev.hilligans.ourcraft.Ourcraft;
 
@@ -46,7 +47,7 @@ public class ItemEntity extends Entity {
         pickupDelay = 40;
     }
 
-    public ItemEntity(PacketData packetData) {
+    public ItemEntity(IPacketByteArray packetData) {
         super(packetData);
         type = 1;
         Item item = Ourcraft.GAME_INSTANCE.getItem(packetData.readInt());
@@ -72,7 +73,7 @@ public class ItemEntity extends Entity {
     }
 
     @Override
-    public void writeData(PacketData packetData) {
+    public void writeData(IPacketByteArray packetData) {
         super.writeData(packetData);
         packetData.writeInt(itemStack.item.id);
     }

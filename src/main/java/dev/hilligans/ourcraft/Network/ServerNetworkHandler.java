@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.Network;
 
 import dev.hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
+import dev.hilligans.ourcraft.Network.Debug.PacketTraceByteArray;
 import dev.hilligans.ourcraft.Network.Packet.Client.CHandshakePacket;
 import dev.hilligans.ourcraft.Network.Packet.Server.SChatMessage;
 import dev.hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
@@ -18,7 +19,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketData> {
+public class  ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByteArray> {
 
     static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     static ArrayList<ChannelId> channelIds = new ArrayList<>();
@@ -29,6 +30,7 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketDat
     public static Int2ObjectOpenHashMap<ServerPlayerData> playerData = new Int2ObjectOpenHashMap<>();
 
     public ServerNetwork network;
+    public static boolean debug = false;
 
     public ServerNetworkHandler(ServerNetwork network) {
         this.network = network;
@@ -65,7 +67,7 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketDat
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, PacketData msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, IPacketByteArray msg) throws Exception {
         PacketBase packetBase = msg.createPacket(network.receiveProtocol);
         if(!(packetBase instanceof CHandshakePacket)) {
             if (mappedId.getOrDefault(ctx.channel().id(), Integer.MIN_VALUE) == Integer.MIN_VALUE) {
@@ -89,17 +91,25 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketDat
                 x--;
                 continue;
             }
-            channel.writeAndFlush(new PacketData(packetBase));
+            sendPacket(packetBase, channel);
+        }
+    }
+
+    public static ChannelFuture sendPacket(PacketBase packetBase, Channel channel) {
+        if(debug) {
+            return channel.writeAndFlush(new PacketTraceByteArray(packetBase));
+        } else {
+            return channel.writeAndFlush(new PacketByteArray(packetBase));
         }
     }
 
     public static ChannelFuture sendPacket(PacketBase packetBase, ChannelHandlerContext ctx) {
-        return ctx.channel().writeAndFlush(new PacketData(packetBase));
+        return sendPacket(packetBase, ctx.channel());
     }
 
     public static void sendPacketClose(PacketBase packetBase, ChannelHandlerContext ctx) {
         try {
-        ctx.channel().writeAndFlush(new PacketData(packetBase)).addListeners((ChannelFutureListener) future -> {
+        sendPacket(packetBase, ctx).addListeners((ChannelFutureListener) future -> {
             if (ctx.channel().isOpen()) {
                 ctx.channel().close().awaitUninterruptibly(100);
             }
@@ -108,11 +118,11 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketDat
     }
 
     public static void sendPacket(PacketBase packetBase, PlayerEntity playerEntity) {
-        channels.find(mappedChannels.get(playerEntity.id)).writeAndFlush(new PacketData(packetBase));
+        sendPacket(packetBase, channels.find(mappedChannels.get(playerEntity.id)));
     }
 
     public static void sendPacket(PacketBase packetBase, ChannelId channelId) {
-        channels.find(channelId).writeAndFlush(new PacketData(packetBase));
+        sendPacket(packetBase, channels.find(channelId));
     }
 
     public static void sendPacket(PacketBase packetBase, int channelId) {
@@ -120,7 +130,7 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketDat
         if(channelId1 != null) {
             Channel channel = channels.find(channelId1);
             if (channel != null) {
-                channel.writeAndFlush(new PacketData(packetBase));
+                sendPacket(packetBase, channel);
             }
         }
     }
@@ -134,7 +144,7 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<PacketDat
                 continue;
             }
             if(!channel.id().equals(ctx.channel().id())) {
-                channel.writeAndFlush(new PacketData(packetBase));
+                sendPacket(packetBase, channel);
             }
         }
     }

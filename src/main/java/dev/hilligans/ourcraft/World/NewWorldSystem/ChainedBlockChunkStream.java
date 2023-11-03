@@ -1,9 +1,8 @@
 package dev.hilligans.ourcraft.World.NewWorldSystem;
 
 import dev.hilligans.ourcraft.Block.BlockState.IBlockState;
-import dev.hilligans.ourcraft.Util.ByteArray;
 import dev.hilligans.ourcraft.Util.IByteArray;
-import dev.hilligans.ourcraft.Util.NettyByteArray;
+import dev.hilligans.ourcraft.Network.PacketByteArray;
 import io.netty.buffer.ByteBuf;
 
 public class ChainedBlockChunkStream extends ChunkStream {
@@ -15,7 +14,7 @@ public class ChainedBlockChunkStream extends ChunkStream {
 
     @Override
     public IChunk fillChunk(ByteBuf buffer, int position, IChunk chunk) {
-        NettyByteArray array = new NettyByteArray(buffer);
+        PacketByteArray array = new PacketByteArray(buffer);
         array.setReaderIndex(position);
         long xx = array.readVarInt();
         long yy = array.readVarInt();
@@ -52,7 +51,7 @@ public class ChainedBlockChunkStream extends ChunkStream {
 
     @Override
     public int fillBuffer(ByteBuf buffer, int position, IChunk chunk) {
-        IByteArray array = new NettyByteArray(buffer);
+        IByteArray array = new PacketByteArray(buffer);
         array.setReaderIndex(position);
       //  array.size = position;
        // array.byteBuf.resetReaderIndex();

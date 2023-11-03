@@ -1,12 +1,15 @@
 package dev.hilligans.ourcraft.Network;
 
+import dev.hilligans.ourcraft.Network.Debug.PacketTrace;
+import dev.hilligans.ourcraft.Network.Debug.PacketTracePacketDecoder;
+import dev.hilligans.ourcraft.Network.Debug.PacketTracePacketEncoder;
 import io.netty.channel.*;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.ssl.SslContext;
 
 public class Network extends ChannelInitializer<SocketChannel> {
 
-    public SimpleChannelInboundHandler<PacketData> networkHandler;
+    public SimpleChannelInboundHandler<IPacketByteArray> networkHandler;
     public SslContext sslCtx;
     public ChannelPipeline channelPipeline;
 
@@ -14,6 +17,7 @@ public class Network extends ChannelInitializer<SocketChannel> {
     public Protocol receiveProtocol;
     public int packetIdWidth;
     public boolean compressed;
+    public boolean debug = false;
 
 
     public Network(Protocol protocol) {
@@ -32,12 +36,22 @@ public class Network extends ChannelInitializer<SocketChannel> {
     }
 
     @Override
-    protected void initChannel(SocketChannel ch) throws Exception {
+    protected void initChannel(SocketChannel ch) {
         ChannelPipeline pipeline = ch.pipeline();
         pipeline.addLast(sslCtx.newHandler(ch.alloc()));
-        pipeline.addLast(new PacketEncoder(packetIdWidth,compressed));
-        pipeline.addLast(new PacketDecoder(packetIdWidth,compressed));
+        if(debug) {
+            pipeline.addLast(new PacketEncoder(packetIdWidth, compressed));
+            pipeline.addLast(new PacketDecoder(packetIdWidth, compressed));
+        } else {
+            pipeline.addLast(new PacketTracePacketEncoder(packetIdWidth, compressed, PacketTrace.PACKET_TRACE));
+            pipeline.addLast(new PacketTracePacketDecoder(packetIdWidth, compressed, PacketTrace.PACKET_TRACE));
+        }
         pipeline.addLast(networkHandler);
+    }
+
+    public Network debug(boolean debug) {
+        this.debug = debug;
+        return this;
     }
 
     public void sendPacket(PacketBase packetBase) {}

@@ -1,9 +1,6 @@
 package dev.hilligans.ourcraft.Network.Packet.NewSystem.Server;
 
-import dev.hilligans.ourcraft.Network.IClientPacketHandler;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketBaseNew;
-import dev.hilligans.ourcraft.Network.PacketData;
+import dev.hilligans.ourcraft.Network.*;
 
 public class SSendWorldSystemFormat extends PacketBaseNew<IClientPacketHandler> {
 
@@ -12,14 +9,14 @@ public class SSendWorldSystemFormat extends PacketBaseNew<IClientPacketHandler> 
     int chunkHeight;
 
     @Override
-    public void encode(PacketData packetData) {
+    public void encode(IPacketByteArray packetData) {
         packetData.writeUTF8(worldName);
         packetData.writeVarInt(chunkWidth);
         packetData.writeVarInt(chunkHeight);
     }
 
     @Override
-    public void decode(PacketData packetData) {
+    public void decode(IPacketByteArray packetData) {
         this.worldName = packetData.readUTF8();
         this.chunkWidth = packetData.readVarInt();
         this.chunkHeight = packetData.readVarInt();

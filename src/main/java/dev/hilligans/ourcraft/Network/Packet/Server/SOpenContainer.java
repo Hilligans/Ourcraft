@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.Container.Container;
 import dev.hilligans.ourcraft.Container.Slot;
 import dev.hilligans.ourcraft.Item.ItemStack;
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Network.PacketData;
 
@@ -23,7 +24,7 @@ public class SOpenContainer extends PacketBase {
     }
 
     @Override
-    public void encode(PacketData packetData) {
+    public void encode(IPacketByteArray packetData) {
         packetData.writeShort((short) container.type);
         packetData.writeInt(uniqueId);
         packetData.writeShort((short) container.slots.size());
@@ -33,7 +34,7 @@ public class SOpenContainer extends PacketBase {
     }
 
     @Override
-    public void decode(PacketData packetData) {
+    public void decode(IPacketByteArray packetData) {
         container = Container.getContainer(packetData.readShort());
         container.uniqueId = packetData.readInt();
         int slotCount = packetData.readShort();

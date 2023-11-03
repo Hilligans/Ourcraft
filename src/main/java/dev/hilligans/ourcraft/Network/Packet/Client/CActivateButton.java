@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.Client.Rendering.Widgets.Button;
 import dev.hilligans.ourcraft.Client.Rendering.Widgets.Widget;
 import dev.hilligans.ourcraft.Container.Container;
 import dev.hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Network.PacketData;
 import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
@@ -22,12 +23,12 @@ public class CActivateButton extends PacketBase {
     }
 
     @Override
-    public void encode(PacketData packetData) {
+    public void encode(IPacketByteArray packetData) {
         packetData.writeShort(button);
     }
 
     @Override
-    public void decode(PacketData packetData) {
+    public void decode(IPacketByteArray packetData) {
         button = packetData.readShort();
     }
 

@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.Network.Packet;
 
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Network.PacketData;
 
@@ -10,10 +11,10 @@ public class InvalidFormatPacket extends PacketBase {
     }
 
     @Override
-    public void encode(PacketData packetData) {}
+    public void encode(IPacketByteArray packetData) {}
 
     @Override
-    public void decode(PacketData packetData) {}
+    public void decode(IPacketByteArray packetData) {}
 
     @Override
     public void handle() {

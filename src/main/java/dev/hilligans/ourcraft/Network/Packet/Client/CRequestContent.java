@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
 import dev.hilligans.ourcraft.Entity.Entity;
 import dev.hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.hilligans.ourcraft.ModHandler.Content.ModContent;
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Network.PacketData;
 import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
@@ -28,7 +29,7 @@ public class CRequestContent extends PacketBase {
     }
 
     @Override
-    public void encode(PacketData packetData) {
+    public void encode(IPacketByteArray packetData) {
         packetData.writeInt(mods.size());
         for(String string : mods) {
             packetData.writeUTF16(string);
@@ -36,7 +37,7 @@ public class CRequestContent extends PacketBase {
     }
 
     @Override
-    public void decode(PacketData packetData) {
+    public void decode(IPacketByteArray packetData) {
         int length = packetData.readInt();
         mods = new ArrayList<>();
         for(int x = 0; x < length; x++) {

@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.Network.Packet.Client;
 
 import dev.hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
 import dev.hilligans.ourcraft.Entity.Entity;
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.Packet.Server.SUpdateEntityPacket;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Network.PacketData;
@@ -32,7 +33,7 @@ public class CUpdatePlayerPacket extends PacketBase {
     }
 
     @Override
-    public void encode(PacketData packetData) {
+    public void encode(IPacketByteArray packetData) {
         packetData.writeDouble(x);
         packetData.writeDouble(y);
         packetData.writeDouble(z);
@@ -42,7 +43,7 @@ public class CUpdatePlayerPacket extends PacketBase {
     }
 
     @Override
-    public void decode(PacketData packetData) {
+    public void decode(IPacketByteArray packetData) {
         x = packetData.readDouble();
         y = packetData.readDouble();
         z = packetData.readDouble();

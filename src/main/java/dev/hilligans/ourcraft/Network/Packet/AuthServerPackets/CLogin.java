@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.Network.Packet.AuthServerPackets;
 
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Network.PacketData;
 
@@ -22,14 +23,14 @@ public class CLogin extends PacketBase {
     }
 
     @Override
-    public void encode(PacketData packetData) {
+    public void encode(IPacketByteArray packetData) {
         packetData.writeString(username);
         packetData.writeString(password);
         packetData.writeString(email);
     }
 
     @Override
-    public void decode(PacketData packetData) {
+    public void decode(IPacketByteArray packetData) {
 
     }
 

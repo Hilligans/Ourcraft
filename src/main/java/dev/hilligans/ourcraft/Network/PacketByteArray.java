@@ -1,30 +1,49 @@
-package dev.hilligans.ourcraft.Util;
+package dev.hilligans.ourcraft.Network;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.Unpooled;
 import io.netty.buffer.UnpooledHeapByteBuf;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.ByteProcessor;
 
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
-public class NettyByteArray implements IByteArray {
+public class PacketByteArray implements IPacketByteArray {
 
     public ByteBuf byteBuf;
+    public int packetID;
     public int index = 0;
+    ChannelHandlerContext ctx;
 
-    public NettyByteArray(ByteBuf byteBuf) {
+    public PacketByteArray(ByteBuf byteBuf) {
         this.byteBuf = byteBuf;
         this.index = byteBuf.readableBytes();
     }
 
-    public NettyByteArray(int size) {
-        byteBuf = new UnpooledHeapByteBuf(ByteBufAllocator.DEFAULT, size, size);
+    public PacketByteArray(PacketBase packetBase) {
+        byteBuf = Unpooled.buffer();
+        packetID = (short) packetBase.packetId;
+        packetBase.encode(this);
     }
 
-    public NettyByteArray() {
+    public PacketByteArray(byte[] bytes, int packetWidth) {
+        byteBuf = Unpooled.buffer();
+        byteBuf.writeBytes(bytes);
+        if(packetWidth == 2) {
+            packetID = byteBuf.readShort();
+        } else if(packetWidth == 1) {
+            packetID = byteBuf.readByte();
+        } else if(packetWidth == 4) {
+            packetID = byteBuf.readInt();
+        } else {
+            throw new RuntimeException("Unknown packet id width: " + packetWidth);
+        }
+        index = bytes.length;
+    }
+
+    public PacketByteArray() {
     }
 
     @Override
@@ -101,20 +120,6 @@ public class NettyByteArray implements IByteArray {
     }
 
     @Override
-    public String readUTF8() {
-        return byteBuf.readCharSequence(readVarInt(), StandardCharsets.UTF_8).toString();
-    }
-
-    @Override
-    public String readUTF16() {
-        int length = readVarInt();
-        System.out.print("read length:" + length + " ");
-        String s = byteBuf.readCharSequence(length, StandardCharsets.UTF_16).toString();
-        System.out.println(s);
-        return s;
-    }
-
-    @Override
     public void writeByte(byte val) {
         index += 1;
         byteBuf.writeByte(val);
@@ -146,16 +151,22 @@ public class NettyByteArray implements IByteArray {
     }
 
     @Override
-    public void writeUTF8(String val) {
-        writeVarInt(val.length());
-        byteBuf.writeCharSequence(val, StandardCharsets.UTF_8);
+    public ByteBuf getByteBuf() {
+        return byteBuf;
     }
 
     @Override
-    public void writeUTF16(String val) {
-        int length = val.length();
-        System.out.println("Length:" + length + " " + val);
-        writeVarInt(val.length());
-        byteBuf.writeCharSequence(val, StandardCharsets.UTF_16);
+    public int getPacketID() {
+        return packetID;
+    }
+
+    @Override
+    public void setOwner(ChannelHandlerContext ctx) {
+        this.ctx = ctx;
+    }
+
+    @Override
+    public ChannelHandlerContext getOwner() {
+        return ctx;
     }
 }

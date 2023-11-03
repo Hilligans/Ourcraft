@@ -1,10 +1,7 @@
 package dev.hilligans.ourcraft.Network.Packet.NewSystem.Server;
 
 import dev.hilligans.ourcraft.ClientMain;
-import dev.hilligans.ourcraft.Network.IClientPacketHandler;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketBaseNew;
-import dev.hilligans.ourcraft.Network.PacketData;
+import dev.hilligans.ourcraft.Network.*;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.World.Chunk;
 import dev.hilligans.ourcraft.World.NewWorldSystem.CubicChunk;
@@ -26,9 +23,9 @@ public class SSendChunk extends PacketBaseNew<IClientPacketHandler> {
     }
 
     @Override
-    public void encode(PacketData packetData) {
+    public void encode(IPacketByteArray packetData) {
         try {
-            int pos = Ourcraft.chainedChunkStream.fillBuffer(packetData.byteBuf, (int)packetData.readerIndex(), newChunk);
+            int pos = Ourcraft.chainedChunkStream.fillBuffer(packetData.getByteBuf(), (int)packetData.readerIndex(), newChunk);
             packetData.setReaderIndex(pos);
         } catch (Exception e) {
             e.printStackTrace();
@@ -37,10 +34,10 @@ public class SSendChunk extends PacketBaseNew<IClientPacketHandler> {
 
 
     @Override
-    public void decode(PacketData packetData) {
+    public void decode(IPacketByteArray packetData) {
         newChunk = new CubicChunk(ClientMain.getClient().newClientWorld,32,0,0, 0);
         try {
-            Ourcraft.chainedChunkStream.fillChunk(packetData.byteBuf, (int)packetData.readerIndex(), newChunk);
+            Ourcraft.chainedChunkStream.fillChunk(packetData.getByteBuf(), (int)packetData.readerIndex(), newChunk);
         } catch (Exception e) {
             e.printStackTrace();
         }

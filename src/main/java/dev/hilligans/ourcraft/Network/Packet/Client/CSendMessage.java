@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.Network.Packet.Client;
 import dev.hilligans.ourcraft.Command.CommandExecutors.EntityExecutor;
 import dev.hilligans.ourcraft.Command.CommandHandler;
 import dev.hilligans.ourcraft.Command.Commands;
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.Packet.Server.SChatMessage;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Network.PacketData;
@@ -24,12 +25,12 @@ public class CSendMessage extends PacketBase {
 
 
     @Override
-    public void encode(PacketData packetData) {
+    public void encode(IPacketByteArray packetData) {
         packetData.writeUTF16(message);
     }
 
     @Override
-    public void decode(PacketData packetData) {
+    public void decode(IPacketByteArray packetData) {
         message = packetData.readUTF16();
     }
 

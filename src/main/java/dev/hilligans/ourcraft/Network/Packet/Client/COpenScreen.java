@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.Client.Rendering.ContainerScreen;
 import dev.hilligans.ourcraft.Client.Rendering.Screen;
 import dev.hilligans.ourcraft.Container.Containers.CreativeContainer;
 import dev.hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.Packet.Server.SOpenContainer;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Network.PacketData;
@@ -28,13 +29,13 @@ public class COpenScreen extends PacketBase {
     }
 
     @Override
-    public void encode(PacketData packetData) {
+    public void encode(IPacketByteArray packetData) {
         packetData.writeShort(id);
         packetData.writeBoolean(containerScreen);
     }
 
     @Override
-    public void decode(PacketData packetData) {
+    public void decode(IPacketByteArray packetData) {
         id = packetData.readShort();
         containerScreen = packetData.readBoolean();
     }

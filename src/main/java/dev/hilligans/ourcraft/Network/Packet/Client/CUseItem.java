@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.Network.Packet.Client;
 import dev.hilligans.ourcraft.Data.Other.BlockStates.BlockState;
 import dev.hilligans.ourcraft.Data.Other.BlockPos;
 import dev.hilligans.ourcraft.Item.ItemStack;
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Network.PacketData;
 import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
@@ -24,12 +25,12 @@ public class CUseItem extends PacketBase {
 
 
     @Override
-    public void encode(PacketData packetData) {
+    public void encode(IPacketByteArray packetData) {
         packetData.writeByte(slot);
     }
 
     @Override
-    public void decode(PacketData packetData) {
+    public void decode(IPacketByteArray packetData) {
         slot = packetData.readByte();
     }
 

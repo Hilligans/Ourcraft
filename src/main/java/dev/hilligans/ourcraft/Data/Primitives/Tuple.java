@@ -26,4 +26,8 @@ public class Tuple<T,Q> {
         return typeA != null && typeB != null;
     }
 
+    @Override
+    public String toString() {
+        return "<" + typeA + "," + typeB + ">";
+    }
 }

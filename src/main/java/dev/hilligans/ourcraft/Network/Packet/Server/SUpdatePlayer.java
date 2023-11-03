@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.Network.Packet.Server;
 
 import dev.hilligans.ourcraft.Client.Camera;
 import dev.hilligans.ourcraft.ClientMain;
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Network.PacketData;
 
@@ -28,7 +29,7 @@ public class SUpdatePlayer extends PacketBase {
 
 
     @Override
-    public void encode(PacketData packetData) {
+    public void encode(IPacketByteArray packetData) {
         packetData.writeFloat(x);
         packetData.writeFloat(y);
         packetData.writeFloat(z);
@@ -37,7 +38,7 @@ public class SUpdatePlayer extends PacketBase {
     }
 
     @Override
-    public void decode(PacketData packetData) {
+    public void decode(IPacketByteArray packetData) {
         x = packetData.readFloat();
         y = packetData.readFloat();
         z = packetData.readFloat();

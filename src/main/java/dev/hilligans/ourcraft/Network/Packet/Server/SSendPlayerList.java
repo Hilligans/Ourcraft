@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.Network.Packet.Server;
 
 import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.Data.Other.PlayerList;
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Network.PacketData;
 
@@ -29,7 +30,7 @@ public class SSendPlayerList extends PacketBase {
     }
 
     @Override
-    public void encode(PacketData packetData) {
+    public void encode(IPacketByteArray packetData) {
         packetData.writeByte(mode);
         packetData.writeShort((short) players.length);
         for(int x = 0; x < players.length; x++) {
@@ -39,7 +40,7 @@ public class SSendPlayerList extends PacketBase {
     }
 
     @Override
-    public void decode(PacketData packetData) {
+    public void decode(IPacketByteArray packetData) {
         mode = packetData.readByte();
         short length = packetData.readShort();
         players = new String[length];

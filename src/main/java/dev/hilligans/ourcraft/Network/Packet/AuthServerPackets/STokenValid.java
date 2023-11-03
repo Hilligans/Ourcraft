@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.Network.Packet.AuthServerPackets;
 
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.Packet.Client.CHandshakePacket;
 import dev.hilligans.ourcraft.Network.Packet.Server.SDisconnectPacket;
 import dev.hilligans.ourcraft.Network.PacketBase;
@@ -20,10 +21,10 @@ public class STokenValid extends PacketBase {
     }
 
     @Override
-    public void encode(PacketData packetData) {}
+    public void encode(IPacketByteArray packetData) {}
 
     @Override
-    public void decode(PacketData packetData) {
+    public void decode(IPacketByteArray packetData) {
         username = packetData.readString();
         uuid = packetData.readString();
         valid = packetData.readBoolean();

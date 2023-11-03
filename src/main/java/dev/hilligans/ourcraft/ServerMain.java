@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft;
 
 import dev.hilligans.ourcraft.Block.Blocks;
 import dev.hilligans.ourcraft.Server.MultiPlayerServer;
+import dev.hilligans.ourcraft.Util.ArgumentContainer;
 import dev.hilligans.ourcraft.Util.Profiler;
 import dev.hilligans.ourcraft.Util.Settings;
 import dev.hilligans.ourcraft.Util.Side;
@@ -23,6 +24,8 @@ public class ServerMain {
     //public static ServerWorld world;
 
     public static MultiPlayerServer server;
+    public static ArgumentContainer argumentContainer;
+
 
     public static void main(String[] args) {
         Settings.isServer = true;
@@ -31,10 +34,11 @@ public class ServerMain {
         gameInstance.side = Side.SERVER;
         gameInstance.loadContent();
 
-        server(gameInstance);
+        server(gameInstance, new ArgumentContainer(args));
     }
 
-    public static void server(GameInstance gameInstance) {
+    public static void server(GameInstance gameInstance, ArgumentContainer argumentContainer) {
+        ServerMain.argumentContainer = argumentContainer;
 
         //ServerWorld world = new ServerWorld(gameInstance);
         //world.worldBuilders.add(new OreBuilder("ore", Blocks.GRASS,Blocks.STONE).setFrequency(20));

@@ -14,9 +14,9 @@ public abstract class PacketBase {
 
     public PacketBase() {}
 
-    public abstract void encode(PacketData packetData);
+    public abstract void encode(IPacketByteArray packetData);
 
-    public abstract void decode(PacketData packetData);
+    public abstract void decode(IPacketByteArray packetData);
 
     public abstract void handle();
 }

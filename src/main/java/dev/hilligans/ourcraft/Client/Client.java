@@ -33,6 +33,7 @@ import dev.hilligans.ourcraft.Client.Audio.SoundBuffer;
 import dev.hilligans.ourcraft.Client.Audio.SoundEngine;
 import dev.hilligans.ourcraft.Resource.ResourceManager;
 import dev.hilligans.ourcraft.Tag.CompoundNBTTag;
+import dev.hilligans.ourcraft.Util.ArgumentContainer;
 import dev.hilligans.ourcraft.Util.Logger;
 import dev.hilligans.ourcraft.World.NewWorldSystem.CubicWorld;
 import dev.hilligans.ourcraft.World.NewWorldSystem.IWorld;
@@ -99,13 +100,15 @@ public class Client {
 
     public int renderDistance = 12;
     public int renderYDistance = 8;
+    public ArgumentContainer argumentContainer;
 
-    public Client(GameInstance gameInstance) {
+    public Client(GameInstance gameInstance, ArgumentContainer argumentContainer) {
         this.gameInstance = gameInstance;
         logger = gameInstance.LOGGER.withKey("client");
         graphicsEngine = gameInstance.GRAPHICS_ENGINES.get("ourcraft:openglEngine");
         ((OpenGLEngine)graphicsEngine).client = this;
         soundEngine = new SoundEngine(gameInstance);
+        this.argumentContainer = argumentContainer;
     }
 
     public Client setGraphicsEngine(IGraphicsEngine<?,?,?> graphicsEngine) {
@@ -120,7 +123,7 @@ public class Client {
     }
 
     public void startClient() {
-        network = new ClientNetwork(gameInstance.PROTOCOLS.get("Play"));
+        network = new ClientNetwork(gameInstance.PROTOCOLS.get("Play")).debug(argumentContainer.getBoolean("--packetTrace", false));
         authNetwork = new ClientNetwork(gameInstance.PROTOCOLS.get("Auth"));
 
         CompoundNBTTag tag = WorldLoader.loadTag("clientData.dat");

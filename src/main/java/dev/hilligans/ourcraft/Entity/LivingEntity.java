@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.Entity;
 
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.PacketData;
 
 public abstract class LivingEntity extends Entity {
@@ -18,7 +19,7 @@ public abstract class LivingEntity extends Entity {
         move();
     }
 
-    public LivingEntity(PacketData packetData) {
+    public LivingEntity(IPacketByteArray packetData) {
         super(packetData);
     }
 

@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.Network.Packet.Server;
 
 import dev.hilligans.ourcraft.ClientMain;
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.Packet.Client.CRequestContent;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Network.PacketData;
@@ -26,7 +27,7 @@ public class SHandshakePacket extends PacketBase {
     }
 
     @Override
-    public void encode(PacketData packetData) {
+    public void encode(IPacketByteArray packetData) {
         packetData.writeInt(playerId);
         String[] mods = Ourcraft.GAME_INSTANCE.CONTENT_PACK.getModList();
         packetData.writeInt(mods.length);
@@ -36,7 +37,7 @@ public class SHandshakePacket extends PacketBase {
     }
 
     @Override
-    public void decode(PacketData packetData) {
+    public void decode(IPacketByteArray packetData) {
         playerId = packetData.readInt();
         int length = packetData.readInt();
         mods = new String[length];
@@ -62,7 +63,8 @@ public class SHandshakePacket extends PacketBase {
             }
         }
         if(neededMods.size() != 0) {
-            ctx.channel().writeAndFlush(new PacketData(new CRequestContent(neededMods)));
+
+          //  ctx.channel().writeAndFlush(new PacketData(new CRequestContent(neededMods)));
         } else if(mods.length != 0) {
             Ourcraft.GAME_INSTANCE.CONTENT_PACK.generateData();
         }

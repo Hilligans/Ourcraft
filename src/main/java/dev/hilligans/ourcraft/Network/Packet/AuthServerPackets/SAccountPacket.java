@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.Network.Packet.AuthServerPackets;
 
 import dev.hilligans.ourcraft.Client.Rendering.Screens.AccountCreationScreen;
 import dev.hilligans.ourcraft.ClientMain;
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Network.PacketData;
 
@@ -14,10 +15,10 @@ public class SAccountPacket extends PacketBase {
     }
 
     @Override
-    public void encode(PacketData packetData) {}
+    public void encode(IPacketByteArray packetData) {}
 
     @Override
-    public void decode(PacketData packetData) {
+    public void decode(IPacketByteArray packetData) {
         response = packetData.readUTF16();
     }
 

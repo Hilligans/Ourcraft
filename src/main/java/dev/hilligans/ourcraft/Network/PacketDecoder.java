@@ -38,8 +38,8 @@ public class PacketDecoder extends ByteToMessageDecoder {
                 }
                 byte[] bytes = new byte[dataLength - 4];
                 in.readBytes(bytes);
-                PacketData packetData = new PacketData(bytes, packetWidth);
-                packetData.ctx = ctx;
+                IPacketByteArray packetData = new PacketByteArray(bytes, packetWidth);
+                packetData.setOwner(ctx);
                 out.add(packetData);
                 in.markReaderIndex();
             }

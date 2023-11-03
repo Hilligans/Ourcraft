@@ -5,6 +5,7 @@ import dev.hilligans.ourcraft.Block.Blocks;
 import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.Data.Other.BlockPos;
 import dev.hilligans.ourcraft.Data.Other.BlockStates.DataBlockState;
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Network.PacketData;
 import dev.hilligans.ourcraft.World.ClientWorld;
@@ -43,7 +44,7 @@ public class SSendBlockChanges extends PacketBase {
     }
 
     @Override
-    public void encode(PacketData packetData) {
+    public void encode(IPacketByteArray packetData) {
         packetData.writeInt(x);
         packetData.writeInt(y);
         packetData.writeInt(z);
@@ -52,7 +53,7 @@ public class SSendBlockChanges extends PacketBase {
     }
 
     @Override
-    public void decode(PacketData packetData) {
+    public void decode(IPacketByteArray packetData) {
         x = packetData.readInt();
         y = packetData.readInt();
         z = packetData.readInt();

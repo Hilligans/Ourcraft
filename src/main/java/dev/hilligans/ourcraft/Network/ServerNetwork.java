@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.Network;
 
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.ServerMain;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -20,6 +21,7 @@ public class ServerNetwork extends Network {
 
     public void startServer(String port) throws Exception {
         networkHandler = new ServerNetworkHandler(this);
+        ServerNetworkHandler.debug = ServerMain.argumentContainer.getBoolean("--tracePacket", false);
 
         final int PORT = Integer.parseInt(System.getProperty("port", port));
 
@@ -39,5 +41,11 @@ public class ServerNetwork extends Network {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
+    }
+
+    @Override
+    public ServerNetwork debug(boolean debug) {
+        super.debug(debug);
+        return this;
     }
 }

@@ -124,7 +124,7 @@ public class ModContent {
         ByteBuffer buffer = WorldLoader.readBuffer("mod_cache/" + (Settings.storeServerModsIndividually ? "servers/" + ClientMain.getClient().serverIP.replace(':','_') + "/" : "mods/") + name + ".dat");
         if(buffer != null) {
             ModContent modContent = new ModContent("", gameInstance);
-            modContent.readData(new PacketData(buffer,2));
+            //modContent.readData(new PacketData(buffer,2));
             return modContent;
         }
         return null;

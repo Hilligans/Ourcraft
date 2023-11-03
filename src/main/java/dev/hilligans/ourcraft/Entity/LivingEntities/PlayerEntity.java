@@ -8,6 +8,7 @@ import dev.hilligans.ourcraft.Entity.Entities.ItemEntity;
 import dev.hilligans.ourcraft.Entity.Entity;
 import dev.hilligans.ourcraft.Entity.LivingEntity;
 import dev.hilligans.ourcraft.Item.ItemStack;
+import dev.hilligans.ourcraft.Network.IPacketByteArray;
 import dev.hilligans.ourcraft.Network.Packet.Server.SUpdateInventory;
 import dev.hilligans.ourcraft.Network.PacketData;
 import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
@@ -43,7 +44,7 @@ public class PlayerEntity extends LivingEntity {
         inventory = new Inventory(Settings.playerInventorySize);
     }
 
-    public PlayerEntity(PacketData packetData) {
+    public PlayerEntity(IPacketByteArray packetData) {
         super(packetData);
         boundingBox =  new BoundingBox(-0.35f,-1.9f,-0.35f,0.35f,0.0f,0.35f, -0.15f);
     }

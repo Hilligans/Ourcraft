@@ -32,7 +32,7 @@ public class ClientNetworkHandler extends NetworkHandler {
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, PacketData msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, IPacketByteArray msg) throws Exception {
         PacketBase packetBase = msg.createPacket(network.receiveProtocol);
         packetBase.handle();
     }
