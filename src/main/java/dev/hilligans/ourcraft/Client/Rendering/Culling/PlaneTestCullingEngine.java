@@ -2,7 +2,7 @@ package dev.hilligans.ourcraft.Client.Rendering.Culling;
 
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.ICamera;
 import dev.hilligans.ourcraft.Data.Other.BoundingBox;
-import dev.hilligans.ourcraft.World.Chunk;
+import dev.hilligans.ourcraft.World.NewWorldSystem.IChunk;
 import dev.hilligans.ourcraft.World.NewWorldSystem.IWorld;
 import dev.hilligans.ourcraft.World.SubChunk;
 import org.joml.Vector3d;
@@ -20,7 +20,7 @@ public class PlaneTestCullingEngine extends CullingEngine {
     }
 
     @Override
-    public boolean shouldRenderChunk(Chunk chunk, ICamera camera) {
+    public boolean shouldRenderChunk(IChunk chunk, ICamera camera) {
         if(building) {
             return true;
         }

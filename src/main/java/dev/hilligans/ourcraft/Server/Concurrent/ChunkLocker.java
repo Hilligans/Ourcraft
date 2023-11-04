@@ -12,6 +12,10 @@ public class ChunkLocker {
 
     public IThreeDContainer<ChunkLock> chunkLocks = new EmptyContainer<>();
 
+    public ChunkLocker() {
+
+    }
+
     public void release(Lock lock) {
         HashSet<Lock> locks = new HashSet<>();
         lock.myLock.set(false);

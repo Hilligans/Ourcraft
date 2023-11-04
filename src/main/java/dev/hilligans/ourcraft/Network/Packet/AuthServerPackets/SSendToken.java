@@ -1,11 +1,9 @@
 package dev.hilligans.ourcraft.Network.Packet.AuthServerPackets;
 
 import dev.hilligans.ourcraft.ClientMain;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
+import dev.hilligans.ourcraft.Network.*;
 
-public class SSendToken extends PacketBase {
+public class SSendToken extends PacketBaseNew<IClientPacketHandler> {
 
     String token;
     public SSendToken() {
@@ -22,8 +20,8 @@ public class SSendToken extends PacketBase {
     }
 
     @Override
-    public void handle() {
-        ClientMain.getClient().playerData.valid_account = true;
-        ClientMain.getClient().playerData.authToken = token;
+    public void handle(IClientPacketHandler clientPacketHandler) {
+        clientPacketHandler.getClient().playerData.valid_account = true;
+        clientPacketHandler.getClient().playerData.authToken = token;
     }
 }

@@ -24,6 +24,7 @@ import dev.hilligans.ourcraft.Item.ItemStack;
 import dev.hilligans.ourcraft.ModHandler.Events.Client.ClientStartRenderingEvent;
 import dev.hilligans.ourcraft.ModHandler.Events.Client.OpenScreenEvent;
 import dev.hilligans.ourcraft.Network.ClientNetwork;
+import dev.hilligans.ourcraft.Network.IClientPacketHandler;
 import dev.hilligans.ourcraft.Network.Packet.AuthServerPackets.CGetToken;
 import dev.hilligans.ourcraft.Network.Packet.Client.CCloseScreen;
 import dev.hilligans.ourcraft.Network.Packet.Client.CDropItem;
@@ -50,7 +51,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class Client {
+public class Client implements IClientPacketHandler {
 
     public long window;
 
@@ -232,6 +233,7 @@ public class Client {
 
     public void registerKeyHandlers() {
 
+        /*
         KeyHandler.register(new KeyPress() {
             @Override
             public void onPress() {
@@ -246,6 +248,7 @@ public class Client {
                 clientWorld.reloadChunks();
             }
         },KeyHandler.GLFW_KEY_F8);
+         */
 
         KeyHandler.register(new KeyPress() {
             @Override
@@ -403,5 +406,15 @@ public class Client {
 
     public long getRenderTime() {
          return renderTime;
+    }
+
+    @Override
+    public Client getClient() {
+        return this;
+    }
+
+    @Override
+    public IWorld getWorld() {
+        return newClientWorld;
     }
 }

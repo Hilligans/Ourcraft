@@ -1,5 +1,7 @@
 package dev.hilligans.ourcraft.World.NewWorldSystem;
 
+import dev.hilligans.ourcraft.Entity.Entity;
+
 public class NewClientWorld implements IWorld {
 
     public String name;
@@ -38,7 +40,27 @@ public class NewClientWorld implements IWorld {
     }
 
     @Override
+    public int getChunkWidth() {
+        return 0;
+    }
+
+    @Override
+    public int getChunkHeight() {
+        return 0;
+    }
+
+    @Override
     public IThreeDChunkContainer getChunkContainer() {
+        return null;
+    }
+
+    @Override
+    public void addEntity(Entity entity) {
+
+    }
+
+    @Override
+    public Entity removeEntity(long l1, long l2) {
         return null;
     }
 }

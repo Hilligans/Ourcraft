@@ -1,7 +1,6 @@
 package dev.hilligans.ourcraft.Server.Concurrent;
 
 import dev.hilligans.ourcraft.World.NewWorldSystem.IWorld;
-import dev.hilligans.ourcraft.World.World;
 
 public abstract class TickingBase implements ITickableTask {
 

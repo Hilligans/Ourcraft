@@ -7,22 +7,21 @@ import java.util.function.Consumer;
 public interface IServerWorldBase extends IServerWorld {
 
     @Override
-    default void queuePostTickEvent(Future<Consumer<IServerWorld>> future) {
-        getPostTickQueue().add(future);
+    default void queuePostTickEvent(Consumer<IServerWorld> consumer) {
+        getPostTickQueue().add(consumer);
     }
 
     @Override
-    default void processPostTickEvents(Future<Consumer<IServerWorld>> runnableFuture) {
-        ConcurrentLinkedQueue<Future<Consumer<IServerWorld>>> futures = getPostTickQueue();
+    default void processPostTickEvents() {
+        ConcurrentLinkedQueue<Consumer<IServerWorld>> futures = getPostTickQueue();
         while (!futures.isEmpty()) {
             try {
-                futures.remove().get().accept(this);
+                futures.remove().accept(this);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    ConcurrentLinkedQueue<Future<Consumer<IServerWorld>>> getPostTickQueue();
-
+    ConcurrentLinkedQueue<Consumer<IServerWorld>> getPostTickQueue();
 }

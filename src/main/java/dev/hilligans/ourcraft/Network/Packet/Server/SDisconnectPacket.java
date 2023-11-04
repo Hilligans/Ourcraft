@@ -2,11 +2,9 @@ package dev.hilligans.ourcraft.Network.Packet.Server;
 
 import dev.hilligans.ourcraft.Client.Rendering.Screens.DisconnectScreen;
 import dev.hilligans.ourcraft.ClientMain;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
+import dev.hilligans.ourcraft.Network.*;
 
-public class SDisconnectPacket extends PacketBase {
+public class SDisconnectPacket extends PacketBaseNew<IClientPacketHandler> {
 
     public SDisconnectPacket() {
         super(22);
@@ -30,7 +28,7 @@ public class SDisconnectPacket extends PacketBase {
     }
 
     @Override
-    public void handle() {
-        ClientMain.getClient().openScreen(new DisconnectScreen(ClientMain.getClient(),disconnectReason));
+    public void handle(IClientPacketHandler clientPacketHandler) {
+        clientPacketHandler.getClient().openScreen(new DisconnectScreen(clientPacketHandler.getClient(),disconnectReason));
     }
 }

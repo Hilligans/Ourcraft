@@ -37,6 +37,15 @@ public class CubicChunk implements IAtomicChunk {
         this.subChunks = new ISubChunk[width * width * width];
     }
 
+    public CubicChunk(int size, int x, int y, int z) {
+        this.size = size;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        int width = size >> 4;
+        this.subChunks = new ISubChunk[width * width * width];
+    }
+
 
     @Override
     public int getWidth() {
@@ -61,6 +70,14 @@ public class CubicChunk implements IAtomicChunk {
     @Override
     public long getZ() {
         return z;
+    }
+
+    @Override
+    public ISubChunk get(long blockX, long blockY, long blockZ) {
+        if(subChunks == null) {
+            return null;
+        }
+        return subChunks[getIndex(x & 31, y & 31, z & 31)];
     }
 
     @Override
@@ -169,6 +186,12 @@ public class CubicChunk implements IAtomicChunk {
     @Override
     public IWorld getWorld() {
         return world;
+    }
+
+    @Override
+    public IChunk setWorld(IWorld world) {
+        this.world = world;
+        return this;
     }
 
     @Override

@@ -206,6 +206,11 @@ public class Chunk implements IChunk {
     }
 
     @Override
+    public ISubChunk get(long blockX, long blockY, long blockZ) {
+        return null;
+    }
+
+    @Override
     public IBlockState getBlockState1(long x, long y, long z) {
         return null;
     }
@@ -223,6 +228,11 @@ public class Chunk implements IChunk {
     @Override
     public IWorld getWorld() {
         return null;
+    }
+
+    @Override
+    public IChunk setWorld(IWorld world) {
+        return this;
     }
 
     @Override

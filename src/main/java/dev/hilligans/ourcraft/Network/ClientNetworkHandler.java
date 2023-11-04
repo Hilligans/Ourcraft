@@ -18,7 +18,7 @@ public class ClientNetworkHandler extends NetworkHandler {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        network.client.sendPacket(new CHandshakePacket());
+        network.client.sendPacket(new CHandshakePacket(network.client.playerData.userName, network.client.playerData.authToken));
         network.client.renderWorld = true;
     }
 
@@ -27,20 +27,24 @@ public class ClientNetworkHandler extends NetworkHandler {
         System.out.println("DISCONNECTED FROM SERVER");
         network.client.renderWorld = false;
         network.client.valid = false;
-        network.client.clientWorld = new ClientWorld(network.client);
+        //network.client.clientWorld = new ClientWorld(network.client);
         super.channelInactive(ctx);
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, IPacketByteArray msg) throws Exception {
         PacketBase packetBase = msg.createPacket(network.receiveProtocol);
-        packetBase.handle();
+        if(packetBase instanceof PacketBaseNew<?> packetBaseNew) {
+            packetBaseNew.handle(network.client);
+        } else {
+            packetBase.handle();
+        }
     }
 
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         ctx.close();
         cause.printStackTrace();
-        network.client.clientWorld = new ClientWorld(network.client);
+        //network.client.clientWorld = new ClientWorld(network.client);
         network.client.openScreen(new DisconnectScreen(network.client,cause.getMessage()));
     }
 

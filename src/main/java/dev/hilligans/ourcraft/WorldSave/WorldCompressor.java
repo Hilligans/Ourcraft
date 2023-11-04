@@ -64,22 +64,6 @@ public class WorldCompressor {
         return vals;
     }
 
-    public static Chunk createChunkFromCompressedStream(BitArray stream) {
-        stream.flip();
-        System.out.println("Unique blocks " + stream.read(16));
-        System.out.println("paletteSize " + stream.read(6));
-        System.out.println("maxChain " + stream.read(6));
-
-
-
-        return null;
-    }
-
-    public static int readVal(String input, int offset, int length) {
-        String s = input.substring(offset,offset + length);
-        return Integer.valueOf(s,2);
-    }
-
     private static int getBitCount(int count) {
         return (int) Math.ceil(Math.log(count) / Math.log(2));
     }

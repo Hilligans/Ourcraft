@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.Client.Rendering.Culling;
 
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.ICamera;
 import dev.hilligans.ourcraft.World.Chunk;
+import dev.hilligans.ourcraft.World.NewWorldSystem.IChunk;
 import dev.hilligans.ourcraft.World.NewWorldSystem.IWorld;
 
 public abstract class CullingEngine {
@@ -12,6 +13,6 @@ public abstract class CullingEngine {
         this.world = world;
     }
 
-    public abstract boolean shouldRenderChunk(Chunk chunk, ICamera camera);
+    public abstract boolean shouldRenderChunk(IChunk chunk, ICamera camera);
 
 }

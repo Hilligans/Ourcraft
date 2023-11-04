@@ -114,7 +114,6 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
 
         client.screen = new JoinScreen(client);
         client.screen.setWindow(renderWindow);
-        client.clientWorld = new ClientWorld(client);
 
         glfwWindowHint(GLFW_SAMPLES, 4);
         glEnable(GL_BLEND);

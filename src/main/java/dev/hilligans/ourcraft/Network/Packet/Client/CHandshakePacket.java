@@ -5,12 +5,9 @@ import dev.hilligans.ourcraft.Data.Other.BlockPos;
 import dev.hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.hilligans.ourcraft.Entity.Entity;
 import dev.hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
+import dev.hilligans.ourcraft.Network.*;
 import dev.hilligans.ourcraft.Network.Packet.AuthServerPackets.CTokenValid;
 import dev.hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
-import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
 import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.Util.Settings;
 import dev.hilligans.ourcraft.Network.Packet.Server.SChatMessage;
@@ -24,22 +21,30 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 
-public class CHandshakePacket extends PacketBase {
+public class CHandshakePacket extends PacketBaseNew<IServerPacketHandler> {
 
     public int id;
     public String name;
     public String authToken;
     public long version;
 
+    public String username;
+
     public CHandshakePacket() {
         super(5);
+    }
+
+    public CHandshakePacket(String username, String authToken) {
+        super(5);
+        this.username = username;
+        this.authToken = authToken;
     }
 
     @Override
     public void encode(IPacketByteArray packetData) {
         packetData.writeInt(Settings.gameVersion);
-        packetData.writeUTF16(ClientMain.getClient().playerData.userName);
-        packetData.writeUTF16(ClientMain.getClient().playerData.authToken);
+        packetData.writeUTF16(username);
+        packetData.writeUTF16(authToken);
     }
 
     @Override
@@ -50,14 +55,15 @@ public class CHandshakePacket extends PacketBase {
     }
 
     @Override
-    public void handle() {
+    public void handle(IServerPacketHandler serverPacketHandler) {
         if(id == Settings.gameVersion) {
             if(ServerNetworkHandler.nameToChannel.get(name) == null || !Settings.forceDifferentName) {
                 if (Settings.isOnlineServer) {
-                    String token = getToken(16);
-                    ServerMain.getServer().waitingPlayers.put(ctx, this);
-                    ServerMain.getServer().playerQueue.put(token, new Tuple<>(ctx, System.currentTimeMillis() + 5000));
-                    ClientMain.getClient().authNetwork.sendPacket(new CTokenValid(name, authToken, ((InetSocketAddress) ctx.channel().remoteAddress()).getAddress().getHostAddress(), token));
+                   throw new RuntimeException("reimplement");
+                    // String token = getToken(16);
+                   // ServerMain.getServer().waitingPlayers.put(ctx, this);
+                   // ServerMain.getServer().playerQueue.put(token, new Tuple<>(ctx, System.currentTimeMillis() + 5000));
+                   // ClientMain.getClient().authNetwork.sendPacket(new CTokenValid(name, authToken, ((InetSocketAddress) ctx.channel().remoteAddress()).getAddress().getHostAddress(), token));
                 } else {
                     handlePlayer(name, version, ctx, name);
                 }
@@ -75,14 +81,15 @@ public class CHandshakePacket extends PacketBase {
        // BlockPos spawn = ServerMain.getWorld(0).getWorldSpawn(Settings.playerBoundingBox);
         BlockPos spawn = new BlockPos(0, 100, 0);
         PlayerEntity playerEntity = new PlayerEntity(spawn.x,spawn.y,spawn.z,playerId);
-        ServerPlayerData serverPlayerData = ServerPlayerData.loadOrCreatePlayer(playerEntity,identifier);
+        ServerPlayerData serverPlayerData = ServerPlayerData.loadOrCreatePlayer(playerEntity,identifier, ServerMain.getServer());
+
 
         ServerNetworkHandler.playerData.put(playerId, serverPlayerData);
         ServerNetworkHandler.mappedChannels.put(playerId,ctx.channel().id());
         ServerNetworkHandler.mappedId.put(ctx.channel().id(),playerId);
         ServerNetworkHandler.mappedName.put(ctx.channel().id(),name);
         ServerNetworkHandler.nameToChannel.put(name, ctx.channel().id());
-        //ServerMain.getWorld(serverPlayerData.getDimension()).addEntity(playerEntity);
+        serverPlayerData.getWorld().addEntity(playerEntity);
         ServerNetworkHandler.sendPacket(new SHandshakePacket(playerId),ctx);
         ServerMain.getServer().newWorlds.get(0).sendChunksToPlayer((int) playerEntity.getX(), (int) playerEntity.getY(), (int) playerEntity.getZ(), serverPlayerData);
         ServerMain.getServer().sendPacket(new SChatMessage(name + " has joined the game"));

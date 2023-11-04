@@ -1,12 +1,11 @@
 package dev.hilligans.ourcraft.Network.Packet.Server;
 
+import dev.hilligans.ourcraft.Client.Client;
 import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.Item.ItemStack;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
+import dev.hilligans.ourcraft.Network.*;
 
-public class SUpdateContainer extends PacketBase {
+public class SUpdateContainer extends PacketBaseNew<IClientPacketHandler> {
 
     short slot;
     ItemStack itemStack;
@@ -62,13 +61,14 @@ public class SUpdateContainer extends PacketBase {
     }
 
     @Override
-    public void handle() {
-        if(ClientMain.getClient().playerData.openContainer != null) {
-            if(ClientMain.getClient().playerData.openContainer.uniqueId == containerId) {
+    public void handle(IClientPacketHandler clientPacketHandler) {
+        Client client = clientPacketHandler.getClient();
+        if(client.playerData.openContainer != null) {
+            if(client.playerData.openContainer.uniqueId == containerId) {
                 if(trackInt) {
-                    ClientMain.getClient().playerData.openContainer.setInt(integerId,val);
+                    client.playerData.openContainer.setInt(integerId,val);
                 } else {
-                    ClientMain.getClient().playerData.openContainer.getSlot(slot).setContents(itemStack);
+                    client.playerData.openContainer.getSlot(slot).setContents(itemStack);
                 }
             }
         }

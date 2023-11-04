@@ -1,11 +1,10 @@
 package dev.hilligans.ourcraft.Network.Packet.AuthServerPackets;
 
+import dev.hilligans.ourcraft.Client.Client;
 import dev.hilligans.ourcraft.ClientMain;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
+import dev.hilligans.ourcraft.Network.*;
 
-public class SSendLoginToken extends PacketBase {
+public class SSendLoginToken extends PacketBaseNew<IClientPacketHandler> {
 
     String token;
 
@@ -22,9 +21,10 @@ public class SSendLoginToken extends PacketBase {
     }
 
     @Override
-    public void handle() {
-        ClientMain.getClient().playerData.login_token = token;
-        ClientMain.getClient().saveUsernameAndPassword();
-        ClientMain.getClient().authNetwork.sendPacket(new CGetToken(ClientMain.getClient().playerData.userName,token));
+    public void handle(IClientPacketHandler clientPacketHandler) {
+        Client client = clientPacketHandler.getClient();
+        client.playerData.login_token = token;
+        client.saveUsernameAndPassword();
+        client.authNetwork.sendPacket(new CGetToken(client.playerData.userName,token));
     }
 }

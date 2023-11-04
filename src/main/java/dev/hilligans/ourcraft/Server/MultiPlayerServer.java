@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.Server;
 
 import dev.hilligans.ourcraft.Command.CommandExecutors.ConsoleExecutor;
 import dev.hilligans.ourcraft.Command.Commands;
+import dev.hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
 import dev.hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.hilligans.ourcraft.GameInstance;
@@ -64,6 +65,11 @@ public class MultiPlayerServer implements IServer {
             }
         }
         newWorlds.put(world.getID(), world);
+    }
+
+    @Override
+    public IServerWorld getWorld(ServerPlayerData serverPlayerData) {
+        return newWorlds.get(serverPlayerData.getDimension());
     }
 
     @Override

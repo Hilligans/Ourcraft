@@ -1,18 +1,17 @@
 package dev.hilligans.ourcraft.Server;
 
+import dev.hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
 import dev.hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.hilligans.ourcraft.ModHandler.Events.Server.ServerTickEvent;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.World.NewWorldSystem.IServerWorld;
-import dev.hilligans.ourcraft.World.World;
-
-import java.util.Collection;
 
 public interface IServer {
 
 
     void addWorld(IServerWorld world);
+    IServerWorld getWorld(ServerPlayerData serverPlayerData);
 
     long getTime();
 

@@ -2,11 +2,9 @@ package dev.hilligans.ourcraft.Network.Packet.Server;
 
 import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.Entity.Entity;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
+import dev.hilligans.ourcraft.Network.*;
 
-public class SCreateEntityPacket extends PacketBase {
+public class SCreateEntityPacket extends PacketBaseNew<IClientPacketHandler> {
 
     int entityType;
 
@@ -34,7 +32,7 @@ public class SCreateEntityPacket extends PacketBase {
     }
 
     @Override
-    public void handle() {
-        ClientMain.getClient().clientWorld.addEntity(entity);
+    public void handle(IClientPacketHandler clientPacketHandler) {
+        clientPacketHandler.getClient().newClientWorld.addEntity(entity);
     }
 }

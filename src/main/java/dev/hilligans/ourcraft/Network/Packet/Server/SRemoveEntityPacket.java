@@ -1,11 +1,9 @@
 package dev.hilligans.ourcraft.Network.Packet.Server;
 
 import dev.hilligans.ourcraft.ClientMain;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
+import dev.hilligans.ourcraft.Network.*;
 
-public class SRemoveEntityPacket extends PacketBase {
+public class SRemoveEntityPacket extends PacketBaseNew<IClientPacketHandler> {
 
     int id;
 
@@ -29,7 +27,7 @@ public class SRemoveEntityPacket extends PacketBase {
     }
 
     @Override
-    public void handle() {
-        ClientMain.getClient().clientWorld.entities.remove(id);
+    public void handle(IClientPacketHandler clientPacketHandler) {
+        clientPacketHandler.getClient().newClientWorld.removeEntity(id, 0);
     }
 }

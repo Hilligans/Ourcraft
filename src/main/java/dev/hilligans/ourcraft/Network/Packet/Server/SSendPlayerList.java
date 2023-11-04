@@ -2,11 +2,9 @@ package dev.hilligans.ourcraft.Network.Packet.Server;
 
 import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.Data.Other.PlayerList;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
+import dev.hilligans.ourcraft.Network.*;
 
-public class SSendPlayerList extends PacketBase {
+public class SSendPlayerList extends PacketBaseNew<IClientPacketHandler> {
 
     byte mode;
     String[] players;
@@ -52,13 +50,13 @@ public class SSendPlayerList extends PacketBase {
     }
 
     @Override
-    public void handle() {
+    public void handle(IClientPacketHandler clientPacketHandler) {
         if(mode == 0) {
-            ClientMain.getClient().playerList = new PlayerList(players,playerIds);
+            clientPacketHandler.getClient().playerList = new PlayerList(players,playerIds);
         } else if(mode == 1) {
-            ClientMain.getClient().playerList.addPlayers(players,playerIds);
+            clientPacketHandler.getClient().playerList.addPlayers(players,playerIds);
         } else {
-            ClientMain.getClient().playerList.removePlayers(players,playerIds);
+            clientPacketHandler.getClient().playerList.removePlayers(players,playerIds);
         }
     }
 }

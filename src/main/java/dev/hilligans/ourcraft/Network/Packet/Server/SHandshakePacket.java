@@ -1,10 +1,9 @@
 package dev.hilligans.ourcraft.Network.Packet.Server;
 
+import dev.hilligans.ourcraft.Client.Client;
 import dev.hilligans.ourcraft.ClientMain;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
+import dev.hilligans.ourcraft.Network.*;
 import dev.hilligans.ourcraft.Network.Packet.Client.CRequestContent;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.Util.Settings;
 
@@ -12,7 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class SHandshakePacket extends PacketBase {
+public class SHandshakePacket extends PacketBaseNew<IClientPacketHandler> {
 
     public int playerId;
     public String[] mods;
@@ -47,15 +46,16 @@ public class SHandshakePacket extends PacketBase {
     }
 
     @Override
-    public void handle() {
-        ClientMain.getClient().playerId = playerId;
-        ClientMain.getClient().valid = true;
+    public void handle(IClientPacketHandler clientPacketHandler) {
+        Client client = clientPacketHandler.getClient();
+        client.playerId = playerId;
+        client.valid = true;
 
         ArrayList<String> localMods = new ArrayList<>(Arrays.asList(Ourcraft.GAME_INSTANCE.CONTENT_PACK.getModList()));
         ArrayList<String> neededMods = new ArrayList<>();
         for(String string : mods) {
             if(!localMods.contains(string)) {
-                if(!new File("mod_cache/" + (Settings.storeServerModsIndividually ? "servers/" + ClientMain.getClient().serverIP.replace(':','_') + "/" : "mods/") + string.replace(":::","-") + ".dat").exists()) {
+                if(!new File("mod_cache/" + (Settings.storeServerModsIndividually ? "servers/" + client.serverIP.replace(':','_') + "/" : "mods/") + string.replace(":::","-") + ".dat").exists()) {
                     neededMods.add(string);
                 } else {
                     Ourcraft.GAME_INSTANCE.CONTENT_PACK.loadCachedMod(string.replace(":::","-"));

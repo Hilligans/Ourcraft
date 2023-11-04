@@ -4,11 +4,9 @@ import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.Container.Container;
 import dev.hilligans.ourcraft.Container.Slot;
 import dev.hilligans.ourcraft.Item.ItemStack;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
+import dev.hilligans.ourcraft.Network.*;
 
-public class SOpenContainer extends PacketBase {
+public class SOpenContainer extends PacketBaseNew<IClientPacketHandler> {
 
     Container container;
     int uniqueId;
@@ -45,9 +43,9 @@ public class SOpenContainer extends PacketBase {
     }
 
     @Override
-    public void handle() {
+    public void handle(IClientPacketHandler clientPacketHandler) {
         if(container != null) {
-            ClientMain.getClient().openScreen(container);
+            clientPacketHandler.getClient().openScreen(container);
         }
     }
 }

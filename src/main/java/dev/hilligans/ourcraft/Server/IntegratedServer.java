@@ -2,13 +2,12 @@ package dev.hilligans.ourcraft.Server;
 
 import dev.hilligans.ourcraft.Command.CommandExecutors.ConsoleExecutor;
 import dev.hilligans.ourcraft.Command.Commands;
+import dev.hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
 import dev.hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.hilligans.ourcraft.Network.PacketBase;
 import dev.hilligans.ourcraft.World.NewWorldSystem.IServerWorld;
-import dev.hilligans.ourcraft.World.ServerWorld;
 import dev.hilligans.ourcraft.World.World;
 import dev.hilligans.ourcraft.Util.ConsoleReader;
-import dev.hilligans.ourcraft.Util.Settings;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import java.util.Collection;
@@ -47,6 +46,11 @@ public class IntegratedServer implements IServer {
     }
 
     @Override
+    public IServerWorld getWorld(ServerPlayerData serverPlayerData) {
+        return null;
+    }
+
+    @Override
     public long getTime() {
         return time;
     }
@@ -61,10 +65,6 @@ public class IntegratedServer implements IServer {
             command = "/" + command;
         }
         return Commands.executeCommand(command,new ConsoleExecutor(this));
-    }
-
-    public World getDefaultWorld() {
-        return worlds.values().iterator().next();
     }
 
     @Override

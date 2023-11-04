@@ -50,6 +50,7 @@ public class WorldRenderTask extends RenderTaskSource {
             public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack, float delta) {
                 int a = 0;
 
+
                 IWorld world = client.newClientWorld;
                 //engine.getDefaultImpl().setState(window, graphicsContext, new PipelineState().setDepth(true));
                 Vector3d pos = window.camera.getSavedPosition();

@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.Data.Other.BlockPos;
 import dev.hilligans.ourcraft.Data.Other.BoundingBox;
 import dev.hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
 import dev.hilligans.ourcraft.Network.Packet.Server.SSendChunkPacket;
+import dev.hilligans.ourcraft.Server.Concurrent.ChunkLocker;
 import dev.hilligans.ourcraft.Server.MultiPlayerServer;
 
 import java.util.concurrent.Future;
@@ -17,9 +18,10 @@ public interface IServerWorld extends IWorld {
 
     MultiPlayerServer getServer();
 
-    void queuePostTickEvent(Future<Consumer<IServerWorld>> runnableFuture);
+    void queuePostTickEvent(Consumer<IServerWorld> consumer);
 
-    void processPostTickEvents(Future<Consumer<IServerWorld>> runnableFuture);
+
+    void processPostTickEvents();
 
     default void sendChunksToPlayer(int playerX, int playerY, int playerZ, ServerPlayerData serverPlayerData) {
         int chunkWidth = getChunkContainer().getChunkWidth();
@@ -61,4 +63,6 @@ public interface IServerWorld extends IWorld {
     default void generateWorld() {}
 
     IWorldGenerator getWorldGenerator();
+
+    ChunkLocker getChunkLocker();
 }

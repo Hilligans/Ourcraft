@@ -35,7 +35,7 @@ public class SSendChunk extends PacketBaseNew<IClientPacketHandler> {
 
     @Override
     public void decode(IPacketByteArray packetData) {
-        newChunk = new CubicChunk(ClientMain.getClient().newClientWorld,32,0,0, 0);
+        newChunk = new CubicChunk(32,0,0, 0);
         try {
             Ourcraft.chainedChunkStream.fillChunk(packetData.getByteBuf(), (int)packetData.readerIndex(), newChunk);
         } catch (Exception e) {
@@ -45,6 +45,6 @@ public class SSendChunk extends PacketBaseNew<IClientPacketHandler> {
 
     @Override
     public void handle(IClientPacketHandler iClientPacketHandler) {
-        iClientPacketHandler.getWorld().setChunk(newChunk.getBlockX(), newChunk.getBlockY(),  newChunk.getBlockZ(), newChunk);
+        iClientPacketHandler.getWorld().setChunk(newChunk.getBlockX(), newChunk.getBlockY(),  newChunk.getBlockZ(), newChunk.setWorld(iClientPacketHandler.getWorld()));
     }
 }

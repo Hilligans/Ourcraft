@@ -2,14 +2,13 @@ package dev.hilligans.ourcraft.Network.Packet.Client;
 
 import dev.hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
 import dev.hilligans.ourcraft.Entity.Entity;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
+import dev.hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
+import dev.hilligans.ourcraft.Network.*;
 import dev.hilligans.ourcraft.Network.Packet.Server.SUpdateEntityPacket;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
-import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
+import dev.hilligans.ourcraft.Server.IServer;
 import dev.hilligans.ourcraft.ServerMain;
 
-public class CUpdatePlayerPacket extends PacketBase {
+public class CUpdatePlayerPacket extends PacketBaseNew<IServerPacketHandler> {
 
     double x;
     double y;
@@ -57,11 +56,26 @@ public class CUpdatePlayerPacket extends PacketBase {
         ServerPlayerData data = ServerNetworkHandler.getPlayerData(ctx);
         if(data != null) {
             int dim = data.getDimension();
+
             Entity entity = ServerMain.getWorld(dim).entities.get(playerId);
             if (entity != null) {
                 entity.setPos((float)x, (float)y, (float)z).setRot(pitch, yaw);
                 ServerMain.getServer().sendPacket(new SUpdateEntityPacket((float)x, (float)y, (float)z, pitch, yaw, playerId));
                 ServerMain.getServer().newWorlds.get(0).sendChunksToPlayer((int) x, (int) y, (int) z, data);
+            }
+        }
+    }
+
+    @Override
+    public void handle(IServerPacketHandler iServerPacketHandler) {
+        ServerPlayerData data = iServerPacketHandler.getServerPlayerData();
+        if(data != null) {
+            PlayerEntity entity = data.playerEntity;
+            if (entity != null) {
+                entity.setPos((float)x, (float)y, (float)z).setRot(pitch, yaw);
+                IServer server = data.getServer();
+                server.sendPacket(new SUpdateEntityPacket((float)x, (float)y, (float)z, pitch, yaw, playerId));
+                iServerPacketHandler.getWorld().sendChunksToPlayer((int) x, (int) y, (int) z, data);
             }
         }
     }

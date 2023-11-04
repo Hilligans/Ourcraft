@@ -12,12 +12,12 @@ public class ChunkPos {
         this.chunkZ = chunkZ;
     }
 
-    public ChunkPos(BlockPos pos) {
-
+    public ChunkPos(BlockPos pos, int width, int height) {
+        this(pos.x / width, pos.y / height, pos.z / width);
     }
 
-    public ChunkPos(int x, int y, int z) {
-
+    public ChunkPos(long blockX, long blockY, long blockZ, int width, int height) {
+        this(blockX / width, blockY / height, blockZ / width);
     }
 
     public long toLong() {

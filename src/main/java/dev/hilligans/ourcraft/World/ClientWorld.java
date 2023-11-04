@@ -26,17 +26,13 @@ public class ClientWorld extends World {
 
     public ConcurrentLinkedQueue<SubChunk> queuedChunks = new ConcurrentLinkedQueue<>();
 
-    public ConcurrentLinkedQueue<Tuple<PrimitiveBuilder, SubChunk>> asyncChunkQueue = new ConcurrentLinkedQueue<>();
-
-
-    public int chunkCount = 0;
     public MiniMap miniMap = new MiniMap(this);
 
     public Client client;
 
     public ClientWorld(Client client) {
         super(client.gameInstance);
-        getChunk(0,0);
+        //getChunk(0,0);
         this.client = client;
     }
 

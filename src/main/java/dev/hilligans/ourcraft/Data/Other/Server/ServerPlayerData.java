@@ -8,14 +8,20 @@ import dev.hilligans.ourcraft.Entity.Entities.ItemEntity;
 import dev.hilligans.ourcraft.Entity.Entity;
 import dev.hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.hilligans.ourcraft.Item.ItemStack;
+import dev.hilligans.ourcraft.Network.IServerPacketHandler;
 import dev.hilligans.ourcraft.Ourcraft;
+import dev.hilligans.ourcraft.Server.IServer;
 import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.Tag.CompoundNBTTag;
 import dev.hilligans.ourcraft.Util.EntityPosition;
 import dev.hilligans.ourcraft.Util.Settings;
+import dev.hilligans.ourcraft.World.NewWorldSystem.IServerWorld;
+import dev.hilligans.ourcraft.World.NewWorldSystem.IWorld;
 import dev.hilligans.ourcraft.WorldSave.WorldLoader;
 
-public class ServerPlayerData {
+public class ServerPlayerData implements IServerPacketHandler {
+
+    IServer server;
 
     public PlayerEntity playerEntity;
     public ItemStack heldStack = ItemStack.emptyStack();
@@ -54,13 +60,17 @@ public class ServerPlayerData {
         openContainer = new InventoryContainer(playerInventory).setPlayerId(playerEntity.id);
     }
 
-    public static ServerPlayerData loadOrCreatePlayer(PlayerEntity playerEntity, String id) {
+    public ServerPlayerData setServer(IServer server) {
+        this.server = server;
+        return this;
+    }
+
+    public static ServerPlayerData loadOrCreatePlayer(PlayerEntity playerEntity, String id, IServer server) {
         CompoundNBTTag tag = WorldLoader.loadTag(path + id + ".dat");
             if(tag == null) {
-            return new ServerPlayerData(playerEntity,id);
+            return new ServerPlayerData(playerEntity,id).setServer(server);
         } else {
-            //System.out.println("asdaw");
-            return new ServerPlayerData(playerEntity,id,tag);
+            return new ServerPlayerData(playerEntity,id,tag).setServer(server);
         }
     }
 
@@ -162,4 +172,18 @@ public class ServerPlayerData {
         openContainer.closeContainer();
     }
 
+    @Override
+    public IServer getServer() {
+        return server;
+    }
+
+    @Override
+    public IServerWorld getWorld() {
+        return server.getWorld(this);
+    }
+
+    @Override
+    public ServerPlayerData getServerPlayerData() {
+        return this;
+    }
 }

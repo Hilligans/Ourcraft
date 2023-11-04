@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.World.NewWorldSystem;
 import dev.hilligans.ourcraft.Block.Blocks;
 import dev.hilligans.ourcraft.Data.Other.BlockPos;
 import dev.hilligans.ourcraft.Data.Other.BoundingBox;
+import dev.hilligans.ourcraft.Server.Concurrent.ChunkLocker;
 import dev.hilligans.ourcraft.Server.MultiPlayerServer;
 import dev.hilligans.ourcraft.Util.Noises.PerlinNoise;
 import dev.hilligans.ourcraft.World.Features.TreeFeature;
@@ -20,8 +21,10 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
     public IWorldHeightBuilder worldHeightBuilder;
     public IWorldGenerator worldGenerator;
     public final int widthBits = 5;
+    public ChunkLocker chunkLocker = new ChunkLocker();
 
-    public ConcurrentLinkedQueue<Future<Consumer<IServerWorld>>> postTickFutures = new ConcurrentLinkedQueue<>();
+
+    public ConcurrentLinkedQueue<Consumer<IServerWorld>> postTickFutures = new ConcurrentLinkedQueue<>();
 
 
     public ServerCubicWorld(int id, String worldName, int radius, IWorldHeightBuilder worldHeightBuilder) {
@@ -882,7 +885,12 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
     }
 
     @Override
-    public ConcurrentLinkedQueue<Future<Consumer<IServerWorld>>> getPostTickQueue() {
+    public ChunkLocker getChunkLocker() {
+        return chunkLocker;
+    }
+
+    @Override
+    public ConcurrentLinkedQueue<Consumer<IServerWorld>> getPostTickQueue() {
         return postTickFutures;
     }
 }

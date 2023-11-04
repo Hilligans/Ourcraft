@@ -2,11 +2,9 @@ package dev.hilligans.ourcraft.Network.Packet.Server;
 
 import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.Entity.Entity;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
+import dev.hilligans.ourcraft.Network.*;
 
-public class SUpdateEntityPacket extends PacketBase {
+public class SUpdateEntityPacket extends PacketBaseNew<IClientPacketHandler> {
 
     float x;
     float y;
@@ -54,9 +52,9 @@ public class SUpdateEntityPacket extends PacketBase {
     }
 
     @Override
-    public void handle() {
-        if(id != ClientMain.getClient().playerId) {
-            Entity entity = ClientMain.getClient().clientWorld.entities.get(id);
+    public void handle(IClientPacketHandler clientPacketHandler) {
+        if(id != clientPacketHandler.getClient().playerId) {
+            Entity entity = clientPacketHandler.getClient().clientWorld.entities.get(id);
             if(entity != null) {
                 entity.setPos(x,y,z).setRot(pitch,yaw);
             }

@@ -5,6 +5,7 @@ import dev.hilligans.ourcraft.Block.BlockState.IBlockState;
 import dev.hilligans.ourcraft.Block.Blocks;
 import dev.hilligans.ourcraft.Data.Other.BlockPos;
 import dev.hilligans.ourcraft.Data.Other.BoundingBox;
+import dev.hilligans.ourcraft.Server.Concurrent.ChunkLocker;
 import dev.hilligans.ourcraft.Server.MultiPlayerServer;
 
 import java.util.Random;
@@ -17,7 +18,7 @@ public class SimpleServerWorld extends SimpleWorld implements IServerWorldBase, 
     public MultiPlayerServer server;
     public BlockPos featurePlacerPosition = new BlockPos(0, 0, 0);
 
-    public ConcurrentLinkedQueue<Future<Consumer<IServerWorld>>> postTickFutures = new ConcurrentLinkedQueue<>();
+    public ConcurrentLinkedQueue<Consumer<IServerWorld>> postTickFutures = new ConcurrentLinkedQueue<>();
 
     public SimpleServerWorld(int id, String name) {
         super(id, name);
@@ -48,7 +49,7 @@ public class SimpleServerWorld extends SimpleWorld implements IServerWorldBase, 
     }
 
     @Override
-    public ConcurrentLinkedQueue<Future<Consumer<IServerWorld>>> getPostTickQueue() {
+    public ConcurrentLinkedQueue<Consumer<IServerWorld>> getPostTickQueue() {
         return postTickFutures;
     }
 
@@ -79,6 +80,11 @@ public class SimpleServerWorld extends SimpleWorld implements IServerWorldBase, 
 
     @Override
     public IWorldGenerator getWorldGenerator() {
+        return null;
+    }
+
+    @Override
+    public ChunkLocker getChunkLocker() {
         return null;
     }
 

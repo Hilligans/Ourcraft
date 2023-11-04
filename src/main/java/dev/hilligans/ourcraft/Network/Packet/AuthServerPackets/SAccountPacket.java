@@ -2,11 +2,9 @@ package dev.hilligans.ourcraft.Network.Packet.AuthServerPackets;
 
 import dev.hilligans.ourcraft.Client.Rendering.Screens.AccountCreationScreen;
 import dev.hilligans.ourcraft.ClientMain;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
+import dev.hilligans.ourcraft.Network.*;
 
-public class SAccountPacket extends PacketBase {
+public class SAccountPacket extends PacketBaseNew<IClientPacketHandler> {
 
     String response;
 
@@ -23,10 +21,10 @@ public class SAccountPacket extends PacketBase {
     }
 
     @Override
-    public void handle() {
+    public void handle(IClientPacketHandler clientPacketHandler) {
         System.out.println(response);
-        if(ClientMain.getClient().screen instanceof AccountCreationScreen) {
-            ((AccountCreationScreen) ClientMain.getClient().screen).debug = response;
+        if(clientPacketHandler.getClient().screen instanceof AccountCreationScreen) {
+            ((AccountCreationScreen) clientPacketHandler.getClient().screen).debug = response;
         }
     }
 }

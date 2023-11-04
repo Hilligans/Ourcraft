@@ -2,11 +2,9 @@ package dev.hilligans.ourcraft.Network.Packet.Server;
 
 import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.Data.Other.Inventory;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
+import dev.hilligans.ourcraft.Network.*;
 
-public class SUpdateInventory extends PacketBase {
+public class SUpdateInventory extends PacketBaseNew<IClientPacketHandler> {
 
     Inventory inventory;
 
@@ -32,7 +30,7 @@ public class SUpdateInventory extends PacketBase {
     }
 
     @Override
-    public void handle() {
-        ClientMain.getClient().playerData.inventory.readData(packetData);
+    public void handle(IClientPacketHandler clientPacketHandler) {
+        clientPacketHandler.getClient().playerData.inventory.readData(packetData);
     }
 }

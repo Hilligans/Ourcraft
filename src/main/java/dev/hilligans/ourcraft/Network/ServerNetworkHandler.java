@@ -75,7 +75,15 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketBy
                 return;
             }
         }
-        packetBase.handle();
+        try {
+            if (packetBase instanceof PacketBaseNew<?> packetBaseNew) {
+                packetBaseNew.handle(getPlayerData(ctx));
+            } else {
+                packetBase.handle();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {

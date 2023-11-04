@@ -1,11 +1,10 @@
 package dev.hilligans.ourcraft.Network.Packet.Server;
 
+import dev.hilligans.ourcraft.Client.Client;
 import dev.hilligans.ourcraft.ClientMain;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
+import dev.hilligans.ourcraft.Network.*;
 
-public class SSetGameMode extends PacketBase {
+public class SSetGameMode extends PacketBaseNew<IClientPacketHandler> {
 
     int id;
 
@@ -29,15 +28,16 @@ public class SSetGameMode extends PacketBase {
     }
 
     @Override
-    public void handle() {
+    public void handle(IClientPacketHandler clientPacketHandler) {
+        Client client = clientPacketHandler.getClient();
         if(id == 0) {
-            ClientMain.getClient().playerData.flying = false;
-            ClientMain.getClient().playerData.creative = false;
-            ClientMain.getClient().playerData.spectator = false;
+            client.playerData.flying = false;
+            client.playerData.creative = false;
+            client.playerData.spectator = false;
         } else {
-            ClientMain.getClient().playerData.creative = true;
-            ClientMain.getClient().playerData.flying = true;
-            ClientMain.getClient().playerData.spectator = true;
+            client.playerData.creative = true;
+            client.playerData.flying = true;
+            client.playerData.spectator = true;
         }
     }
 }

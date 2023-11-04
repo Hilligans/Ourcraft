@@ -95,7 +95,8 @@ public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWin
 
         client.screen = new JoinScreen(client);
         client.screen.setWindow(renderWindow);
-        client.clientWorld = new ClientWorld(client);
+       //
+        // client.clientWorld = new ClientWorld(client);
 
         glfwWindowHint(GLFW_SAMPLES, 4);
         glEnable(GL_BLEND);

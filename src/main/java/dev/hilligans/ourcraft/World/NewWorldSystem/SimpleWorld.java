@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.World.NewWorldSystem;
 
 import dev.hilligans.ourcraft.Block.BlockState.IBlockState;
 import dev.hilligans.ourcraft.Data.Other.BlockPos;
+import dev.hilligans.ourcraft.Entity.Entity;
 
 import java.util.Random;
 
@@ -87,7 +88,27 @@ public class SimpleWorld implements IWorld {
     }
 
     @Override
+    public int getChunkWidth() {
+        return 16;
+    }
+
+    @Override
+    public int getChunkHeight() {
+        return 256;
+    }
+
+    @Override
     public IThreeDChunkContainer getChunkContainer() {
         return chunkContainer;
+    }
+
+    @Override
+    public void addEntity(Entity entity) {
+
+    }
+
+    @Override
+    public Entity removeEntity(long l1, long l2) {
+        return null;
     }
 }

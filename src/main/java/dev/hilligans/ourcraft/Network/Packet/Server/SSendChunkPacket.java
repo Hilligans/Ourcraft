@@ -1,19 +1,16 @@
 package dev.hilligans.ourcraft.Network.Packet.Server;
 
 import dev.hilligans.ourcraft.ClientMain;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
+import dev.hilligans.ourcraft.Network.*;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.World.Chunk;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
 import dev.hilligans.ourcraft.World.NewWorldSystem.ClassicChunk;
 import dev.hilligans.ourcraft.World.NewWorldSystem.CubicChunk;
 import dev.hilligans.ourcraft.World.NewWorldSystem.IChunk;
 
-public class SSendChunkPacket extends PacketBase {
+public class SSendChunkPacket extends PacketBaseNew<IClientPacketHandler> {
 
     public byte mode;
-    public Chunk chunk;
     public IChunk newChunk;
 
     public SSendChunkPacket() {
@@ -21,11 +18,6 @@ public class SSendChunkPacket extends PacketBase {
         mode = 0;
     }
 
-    public SSendChunkPacket(Chunk chunk) {
-        this();
-        mode = 0;
-        this.chunk = chunk;
-    }
 
     public SSendChunkPacket(IChunk chunk) {
         this();
@@ -117,15 +109,14 @@ public class SSendChunkPacket extends PacketBase {
     @Override
     public void decode(IPacketByteArray packetData) {
         //IChunk chunk = new ClassicChunk(ClientMain.getClient().newClientWorld,256,0,0);
-        IChunk chunk = new CubicChunk(ClientMain.getClient().newClientWorld,32,0,0, 0);
+        newChunk = new CubicChunk(32,0,0, 0);
         try {
-            Ourcraft.chainedChunkStream.fillChunk(packetData.getByteBuf(), (int)packetData.length(), chunk);
+            Ourcraft.chainedChunkStream.fillChunk(packetData.getByteBuf(), (int)packetData.length(), newChunk);
         } catch (Exception e) {
             e.printStackTrace();
         }
         //System.out.println("Received " + chunk.getX() + " " + chunk.getY() + " " + chunk.getZ());
         //System.out.println(chunk.getBlockState1(0,0,0).getBlock().getName());
-        ClientMain.getClient().newClientWorld.setChunk(chunk.getBlockX(), chunk.getBlockY(),  chunk.getBlockZ(), chunk);
         //System.out.println(ClientMain.getClient().newClientWorld.getChunk(chunk.getBlockX(), chunk.getBlockY(),  chunk.getBlockZ()));
         /*
         try {
@@ -199,8 +190,9 @@ public class SSendChunkPacket extends PacketBase {
     }
 
     @Override
-    public void handle() {
+    public void handle(IClientPacketHandler clientPacketHandler) {
         try {
+            clientPacketHandler.getWorld().setChunk(newChunk.getBlockX(), newChunk.getBlockY(),  newChunk.getBlockZ(), newChunk.setWorld(clientPacketHandler.getWorld()));
             //chunk.world.setChunk(chunk);
             //System.out.println(chunk.x + ":" + chunk.z);
         } catch (Exception ignored) {

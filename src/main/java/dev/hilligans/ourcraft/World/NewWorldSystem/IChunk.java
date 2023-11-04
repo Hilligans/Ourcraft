@@ -64,6 +64,8 @@ public interface IChunk extends IBoundingBox {
         return dest.set((int)getChunkXBlockPos(),(int)getChunkYBlockPos(),(int)getChunkZBlockPos());
     }
 
+    ISubChunk get(long blockX, long blockY, long blockZ);
+
     default ChunkPos getChunkPos() {
         return new ChunkPos(getX(), getY(), getZ());
     }
@@ -79,6 +81,8 @@ public interface IChunk extends IBoundingBox {
     void setChunkPosition(long x, long y, long z);
 
     IWorld getWorld();
+
+    IChunk setWorld(IWorld world);
 
     boolean isEmpty();
 

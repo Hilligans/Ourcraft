@@ -37,8 +37,6 @@ public abstract class World {
     long seed = 1342;
 
     public int chunkCount = 0;
-    Noise noise = new Noise(seed);
-    Noise biomes = new Noise(new Random(seed).nextInt());
 
     public BiomeNoise biomeMap;
 

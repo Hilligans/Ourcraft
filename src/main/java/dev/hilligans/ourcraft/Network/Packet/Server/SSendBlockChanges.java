@@ -5,12 +5,10 @@ import dev.hilligans.ourcraft.Block.Blocks;
 import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.Data.Other.BlockPos;
 import dev.hilligans.ourcraft.Data.Other.BlockStates.DataBlockState;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
+import dev.hilligans.ourcraft.Network.*;
 import dev.hilligans.ourcraft.World.ClientWorld;
 
-public class SSendBlockChanges extends PacketBase {
+public class SSendBlockChanges extends PacketBaseNew<IClientPacketHandler> {
     int x;
     int y;
     int z;
@@ -63,7 +61,7 @@ public class SSendBlockChanges extends PacketBase {
 
 
     @Override
-    public void handle() {
-        ClientMain.getClient().clientWorld.blockChanges.add(new ClientWorld.BlockChange(x,y,z, Blocks.getBlockWithID(blockId).getStateWithData(blockData)));
+    public void handle(IClientPacketHandler clientPacketHandler) {
+        clientPacketHandler.getClient().clientWorld.blockChanges.add(new ClientWorld.BlockChange(x,y,z, Blocks.getBlockWithID(blockId).getStateWithData(blockData)));
     }
 }
