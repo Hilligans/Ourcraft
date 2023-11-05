@@ -4,18 +4,14 @@ import dev.hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
 import dev.hilligans.ourcraft.Entity.Entity;
 import dev.hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.hilligans.ourcraft.ModHandler.Content.ModContent;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
-import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
+import dev.hilligans.ourcraft.Network.*;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.Network.Packet.Server.*;
-import io.netty.channel.ChannelId;
 
 import java.util.ArrayList;
 
-public class CRequestContent extends PacketBase {
+public class CRequestContent extends PacketBaseNew<IServerPacketHandler> {
 
     ArrayList<String> mods;
 
@@ -46,36 +42,36 @@ public class CRequestContent extends PacketBase {
     }
 
     @Override
-    public void handle() {
+    public void handle(IServerPacketHandler serverPacketHandler) {
         for(String string : mods) {
             ModContent modContent = Ourcraft.GAME_INSTANCE.CONTENT_PACK.mods.get(string.split(":::")[0]);
-            ServerNetworkHandler.sendPacket(new SSendModContentPacket(modContent), ctx);
+            serverPacketHandler.sendPacket(new SSendModContentPacket(modContent), ctx);
         }
 
-        ServerPlayerData serverPlayerData = ServerNetworkHandler.getPlayerData(ctx);
+        ServerPlayerData serverPlayerData = serverPacketHandler.getServerPlayerData();
         PlayerEntity playerEntity = serverPlayerData.playerEntity;
 
-        int size = ServerNetworkHandler.mappedChannels.size();
+        int size = serverPacketHandler.getServerNetworkHandler().mappedPlayerData.size();
         String[] players = new String[size];
         int[] ids = new int[size];
         int x = 0;
-        for(ChannelId channelId1 : ServerNetworkHandler.mappedChannels.values()) {
-            players[x] = ServerNetworkHandler.mappedName.get(channelId1);
-            ids[x] = ServerNetworkHandler.mappedId.get(channelId1);
+        for(ServerPlayerData playerData : serverPacketHandler.getServerNetworkHandler().mappedPlayerData.values()) {
+            players[x] = playerData.getPlayerName();
+            ids[x] = (int) playerData.getPlayerID().l1;
             x++;
         }
-        ServerMain.getServer().sendPacket(new SSendPlayerList(players,ids));
+        serverPacketHandler.getServer().sendPacket(new SSendPlayerList(players,ids));
         for(Entity entity : ServerMain.getWorld(serverPlayerData.getDimension()).entities.values()) {
-            ServerNetworkHandler.sendPacket(new SCreateEntityPacket(entity),ctx);
+            serverPacketHandler.sendPacket(new SCreateEntityPacket(entity),ctx);
         }
-        ServerNetworkHandler.sendPacket(new SUpdatePlayer((float) playerEntity.getX(), (float) playerEntity.getY(), (float) playerEntity.getZ(),0,0),ctx);
+        serverPacketHandler.sendPacket(new SUpdatePlayer((float) playerEntity.getX(), (float) playerEntity.getY(), (float) playerEntity.getZ(),0,0),ctx);
         serverPlayerData.playerInventory.age++;
 
     //    if(version != ServerSidedData.getInstance().version) {
        //     ServerSidedData.getInstance().sendDataToClient(ctx);
       //  }
 
-        ServerNetworkHandler.sendPacket(new SUpdateInventory(serverPlayerData.playerInventory),ctx);
+        serverPacketHandler.sendPacket(new SUpdateInventory(serverPlayerData.playerInventory),ctx);
 
 
     }

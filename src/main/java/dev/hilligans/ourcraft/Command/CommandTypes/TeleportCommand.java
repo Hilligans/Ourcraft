@@ -19,7 +19,7 @@ public class TeleportCommand extends CommandHandler {
     @Override
     public String handle(CommandExecutor executor, String[] args) {
         if(args.length >= 4) {
-            PlayerEntity playerEntity = ServerNetworkHandler.getPlayerEntity(args[0]);
+            PlayerEntity playerEntity = executor.getServer().getServerNetworkHandler().getPlayerEntity(args[0]);
             if(playerEntity != null) {
                 float x = Float.parseFloat(args[1]);
                 float y = Float.parseFloat(args[2]);

@@ -6,18 +6,10 @@ import dev.hilligans.ourcraft.Command.CommandExecutors.EntityExecutor;
 import dev.hilligans.ourcraft.Data.Other.BlockPos;
 import dev.hilligans.ourcraft.Data.Primitives.Tuple;
 import dev.hilligans.ourcraft.Server.Concurrent.Lock;
-import dev.hilligans.ourcraft.Util.DaisyChain;
 import dev.hilligans.ourcraft.World.Modifications.SetBlock.SetSingleModification;
 import dev.hilligans.ourcraft.World.NewWorldSystem.IChunk;
 import dev.hilligans.ourcraft.World.NewWorldSystem.IServerWorld;
-import dev.hilligans.ourcraft.World.NewWorldSystem.ISubChunk;
 import dev.hilligans.ourcraft.World.NewWorldSystem.IWorld;
-import dev.hilligans.ourcraft.World.SubChunk;
-import dev.hilligans.ourcraft.World.World;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class SetCommand extends WorldEditCommand {
 
@@ -38,19 +30,12 @@ public class SetCommand extends WorldEditCommand {
             if(args.length == 0) {
                 return "No Block Provided";
             }
-            DaisyChain<SubChunk> daisyChain = new DaisyChain<>();
-
-
 
             try {
                 int val = Integer.parseInt(args[0]);
 
                 Block b = modContent.gameInstance.getBlockWithID(val);
                 long time = System.currentTimeMillis();
-                int blockNum = b.id << 16 | 65535;
-                CompletableFuture<Object> future =  runThread(daisyChain,blockNum);
-                CompletableFuture<Object> future1 = runThread(daisyChain,blockNum);
-
                 BlockPos f = pos.getTypeA();
                 BlockPos s = pos.typeB;
 
@@ -68,22 +53,6 @@ public class SetCommand extends WorldEditCommand {
                         }
                     });
                 }
-
-                for(int x = f.minX(s); x < f.maxX(s); x += 16) {
-                    for(int y = f.minY(s); y < f.maxY(s); y += 16) {
-                        for(int z = f.minZ(s); z < f.maxZ(s); z += 16) {
-                            try {
-                               // daisyChain.add(world.ensureLoaded(x >> 4, z >> 4).getSubChunk(y >> 4));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                System.out.println(new BlockPos(x,y,z));
-                            }
-                        }
-                    }
-                }
-                daisyChain.complete = true;
-                future.get();
-                future1.get();
                 return "Placed " + f.createBoundingBox(s).getVolume() + " Blocks in " + (System.currentTimeMillis() - time) + " Milliseconds";
 
             } catch (Exception e) {
@@ -92,36 +61,5 @@ public class SetCommand extends WorldEditCommand {
             }
         }
         return "Not an entity";
-    }
-
-    public CompletableFuture<Object> runThread(DaisyChain<SubChunk> daisyChain, int block) {
-        return new CompletableFuture<>().completeAsync(() -> {
-            try {
-                SubChunk copyChunk = get(daisyChain);
-                for (int x = 0; x < 4096; x++) {
-                    copyChunk.vals[x] = block;
-                }
-                while (!daisyChain.isEmpty() || !daisyChain.isComplete()) {
-                    SubChunk subChunk = daisyChain.get();
-                    if (subChunk != null) {
-                        if (subChunk.vals == null) {
-                            subChunk.vals = new int[4096];
-                            subChunk.empty = false;
-                        }
-                        System.arraycopy(copyChunk.vals, 0, subChunk.vals, 0, 4096);
-                    }
-                }
-                System.out.println("Done");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return false;
-        });
-    }
-
-    private static SubChunk get(DaisyChain<SubChunk> daisyChain) {
-        while (daisyChain.isEmpty()) {}
-        SubChunk copyChunk = daisyChain.get();
-        return copyChunk == null ? get(daisyChain) : copyChunk;
     }
 }

@@ -6,7 +6,6 @@ import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.ICamera;
 import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.Network.Packet.Client.CUpdatePlayerPacket;
 import dev.hilligans.ourcraft.Util.Ray;
-import dev.hilligans.ourcraft.World.Chunk;
 import dev.hilligans.ourcraft.World.NewWorldSystem.IWorld;
 import dev.hilligans.ourcraft.World.World;
 import org.joml.*;
@@ -15,7 +14,7 @@ import java.lang.Math;
 
 public abstract class WorldCamera implements ICamera {
 
-    public Vector3d pos = new Vector3d(1, Chunk.terrain + 5, 0);
+    public Vector3d pos = new Vector3d(1, 64 + 5, 0);
    // public double x;
    // public double y = Chunk.terrain + 5;
   //  public double z;

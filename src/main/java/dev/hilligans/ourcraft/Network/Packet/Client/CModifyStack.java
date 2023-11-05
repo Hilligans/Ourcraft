@@ -1,12 +1,9 @@
 package dev.hilligans.ourcraft.Network.Packet.Client;
 
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
-import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
+import dev.hilligans.ourcraft.Network.*;
 import dev.hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
 
-public class CModifyStack extends PacketBase {
+public class CModifyStack extends PacketBaseNew<IServerPacketHandler> {
 
     byte mode;
     short slot;
@@ -34,8 +31,8 @@ public class CModifyStack extends PacketBase {
     }
 
     @Override
-    public void handle() {
-        ServerPlayerData serverPlayerData = ServerNetworkHandler.playerData.get(ServerNetworkHandler.mappedId.get(ctx.channel().id()));
+    public void handle(IServerPacketHandler serverPacketHandler) {
+        ServerPlayerData serverPlayerData = serverPacketHandler.getServerPlayerData();
         if(serverPlayerData != null) {
             if (mode == 0) {
                 serverPlayerData.swapStack(slot);

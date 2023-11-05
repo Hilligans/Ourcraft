@@ -4,13 +4,10 @@ import dev.hilligans.ourcraft.Client.Rendering.ContainerScreen;
 import dev.hilligans.ourcraft.Client.Rendering.Screen;
 import dev.hilligans.ourcraft.Container.Containers.CreativeContainer;
 import dev.hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
+import dev.hilligans.ourcraft.Network.*;
 import dev.hilligans.ourcraft.Network.Packet.Server.SOpenContainer;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
-import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
 
-public class COpenScreen extends PacketBase {
+public class COpenScreen extends PacketBaseNew<IServerPacketHandler> {
 
     boolean containerScreen;
     short id;
@@ -41,13 +38,13 @@ public class COpenScreen extends PacketBase {
     }
 
     @Override
-    public void handle() {
+    public void handle(IServerPacketHandler packetHandler) {
         if(id == 2) {
-            ServerPlayerData serverPlayerData = ServerNetworkHandler.getPlayerData(ctx);
+            ServerPlayerData serverPlayerData = packetHandler.getServerPlayerData();
             if(serverPlayerData != null && serverPlayerData.isCreative) {
                 CreativeContainer creativeContainer = new CreativeContainer(serverPlayerData.playerInventory,CreativeContainer.createInventory());
                 serverPlayerData.openContainer(creativeContainer);
-                ServerNetworkHandler.sendPacket(new SOpenContainer(creativeContainer), ctx);
+                packetHandler.sendPacket(new SOpenContainer(creativeContainer), ctx);
             }
         }
     }

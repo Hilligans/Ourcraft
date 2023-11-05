@@ -3,14 +3,11 @@ package dev.hilligans.ourcraft.Network.Packet.Client;
 import dev.hilligans.ourcraft.Data.Other.BlockStates.BlockState;
 import dev.hilligans.ourcraft.Data.Other.BlockPos;
 import dev.hilligans.ourcraft.Item.ItemStack;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
-import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
+import dev.hilligans.ourcraft.Network.*;
 import dev.hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
 import dev.hilligans.ourcraft.ServerMain;
 
-public class CUseItem extends PacketBase {
+public class CUseItem extends PacketBaseNew<IServerPacketHandler> {
 
     byte slot;
 
@@ -35,11 +32,11 @@ public class CUseItem extends PacketBase {
     }
 
     @Override
-    public void handle() {
+    public void handle(IServerPacketHandler serverPacketHandler) {
 
         if(slot >= 0 && slot < 9) {
-            int dim = ServerNetworkHandler.getPlayerData(ctx).getDimension();
-            ServerPlayerData serverPlayerData = ServerNetworkHandler.getPlayerData(ctx);
+            int dim = serverPacketHandler.getServerPlayerData().getDimension();
+            ServerPlayerData serverPlayerData = serverPacketHandler.getServerPlayerData();
             if(serverPlayerData != null) {
                 BlockPos blockPos = ServerMain.getWorld(dim).traceBlockToBreak(serverPlayerData.playerEntity.getX(), serverPlayerData.playerEntity.getY() + serverPlayerData.playerEntity.boundingBox.eyeHeight, serverPlayerData.playerEntity.getZ(), serverPlayerData.playerEntity.pitch, serverPlayerData.playerEntity.yaw);
                 if (blockPos != null) {

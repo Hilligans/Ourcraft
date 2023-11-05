@@ -4,12 +4,9 @@ import dev.hilligans.ourcraft.Client.Rendering.Widgets.Button;
 import dev.hilligans.ourcraft.Client.Rendering.Widgets.Widget;
 import dev.hilligans.ourcraft.Container.Container;
 import dev.hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
-import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
+import dev.hilligans.ourcraft.Network.*;
 
-public class CActivateButton extends PacketBase {
+public class CActivateButton extends PacketBaseNew<IServerPacketHandler> {
 
     short button;
 
@@ -33,8 +30,8 @@ public class CActivateButton extends PacketBase {
     }
 
     @Override
-    public void handle() {
-        ServerPlayerData serverPlayerData = ServerNetworkHandler.playerData.get(ServerNetworkHandler.mappedId.get(ctx.channel().id()));
+    public void handle(IServerPacketHandler serverPacketHandler) {
+        ServerPlayerData serverPlayerData = serverPacketHandler.getServerPlayerData();
         Container container = serverPlayerData.openContainer;
         if(container.widgets.size() > button) {
             Widget widget = container.widgets.get(button);

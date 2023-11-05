@@ -1,11 +1,8 @@
 package dev.hilligans.ourcraft.Network.Packet.Client;
 
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
-import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
+import dev.hilligans.ourcraft.Network.*;
 
-public class CDropItem extends PacketBase {
+public class CDropItem extends PacketBaseNew<IServerPacketHandler> {
 
     short slot;
     byte count;
@@ -33,7 +30,7 @@ public class CDropItem extends PacketBase {
     }
 
     @Override
-    public void handle() {
-        ServerNetworkHandler.getPlayerData(ctx).dropItem(slot,count);
+    public void handle(IServerPacketHandler serverPacketHandler) {
+        serverPacketHandler.getServerPlayerData().dropItem(slot,count);
     }
 }

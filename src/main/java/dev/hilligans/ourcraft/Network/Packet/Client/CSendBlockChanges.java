@@ -1,18 +1,15 @@
 package dev.hilligans.ourcraft.Network.Packet.Client;
 
 import dev.hilligans.ourcraft.Block.Block;
+import dev.hilligans.ourcraft.Block.BlockState.IBlockState;
 import dev.hilligans.ourcraft.Data.Other.BlockPos;
 import dev.hilligans.ourcraft.Entity.Entities.ItemEntity;
 import dev.hilligans.ourcraft.Entity.Entity;
 import dev.hilligans.ourcraft.Block.Blocks;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
-import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
+import dev.hilligans.ourcraft.Network.*;
 import dev.hilligans.ourcraft.ServerMain;
-import dev.hilligans.ourcraft.Data.Other.BlockStates.BlockState;
 
-public class CSendBlockChanges extends PacketBase {
+public class CSendBlockChanges extends PacketBaseNew<IServerPacketHandler> {
 
     int x;
     int y;
@@ -48,17 +45,17 @@ public class CSendBlockChanges extends PacketBase {
     }
 
     @Override
-    public void handle() {
-        int dim = ServerNetworkHandler.getPlayerData(ctx).getDimension();
-        BlockState oldState = ServerMain.getWorld(dim).getBlockState(x,y,z);
-        BlockState newBlock = Blocks.getBlockWithID(blockId).getDefaultState();
-        ServerMain.getWorld(dim).setBlockState(x,y,z,newBlock);
+    public void handle(IServerPacketHandler serverPacketHandler) {
+        int dim = serverPacketHandler.getServerPlayerData().getDimension();
+        IBlockState oldState = serverPacketHandler.getWorld().getBlockState(x,y,z);
+        IBlockState newBlock = Blocks.getBlockWithID(blockId).getDefaultState1();
+        serverPacketHandler.getWorld().setBlockState(x,y,z,newBlock);
         newBlock.getBlock().onPlace(ServerMain.getWorld(dim), new BlockPos(x,y,z));
         Block droppedBlock = oldState.getBlock().droppedBlock;
         if(droppedBlock != Blocks.AIR) {
-            if (ServerMain.getWorld(dim).getBlockState(x, y, z).getBlock() == Blocks.AIR) {
+            if (serverPacketHandler.getWorld().getBlockState(x, y, z).getBlock() == Blocks.AIR) {
                 ItemEntity itemEntity = new ItemEntity(x + 0.5f, y + 1, z + 0.5f, Entity.getNewId(), droppedBlock);
-                ServerMain.getWorld(dim).addEntity(itemEntity);
+                serverPacketHandler.getWorld().addEntity(itemEntity);
             }
         }
         //ServerNetworkHandler.sendPacket(new SSendBlockChanges(x,y,z,newBlock));

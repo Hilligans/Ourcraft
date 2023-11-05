@@ -7,15 +7,12 @@ import dev.hilligans.ourcraft.Client.MatrixStack;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.RenderWindow;
 import dev.hilligans.ourcraft.Client.Rendering.Textures;
 import dev.hilligans.ourcraft.Client.Rendering.Widgets.ServerSelectorWidget;
-import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.Client.Rendering.ScreenBase;
 import dev.hilligans.ourcraft.Client.Rendering.Widgets.Button;
 import dev.hilligans.ourcraft.Network.PortUtil;
 import dev.hilligans.ourcraft.Server.MultiPlayerServer;
 import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.Util.Settings;
-import dev.hilligans.ourcraft.World.Builders.OreBuilder;
-import dev.hilligans.ourcraft.World.ServerWorld;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_H;
 public class JoinScreen extends ScreenBase {
@@ -48,8 +45,8 @@ public class JoinScreen extends ScreenBase {
         addWidget(new Button(500, 200, 200, 50, "menu.create_account", () -> client.openScreen(new AccountCreationScreen(client))));
         addWidget(new Button(500, 300, 200, 50, "menu.log_in", () -> client.openScreen(new LoginScreen(client))));
         addWidget(new Button(500,400,200,50,"menu.singleplayer", () -> {
-            ServerWorld world = new ServerWorld(ClientMain.gameInstance);
-            world.worldBuilders.add( new OreBuilder("stone", Blocks.GRASS,Blocks.STONE).setFrequency(20));
+            //ServerWorld world = new ServerWorld(ClientMain.gameInstance);
+            //world.worldBuilders.add( new OreBuilder("stone", Blocks.GRASS,Blocks.STONE).setFrequency(20));
 
             client.multiPlayerServer = new MultiPlayerServer();
             //client.multiPlayerServer.addWorld(0,world);

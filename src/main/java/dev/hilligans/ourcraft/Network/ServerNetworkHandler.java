@@ -6,7 +6,8 @@ import dev.hilligans.ourcraft.Network.Packet.Client.CHandshakePacket;
 import dev.hilligans.ourcraft.Network.Packet.Server.SChatMessage;
 import dev.hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
 import dev.hilligans.ourcraft.Network.Packet.Server.SSendPlayerList;
-import dev.hilligans.ourcraft.ServerMain;
+import dev.hilligans.ourcraft.Server.IServer;
+import dev.hilligans.ourcraft.World.NewWorldSystem.IServerWorld;
 import io.netty.channel.*;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
@@ -19,21 +20,21 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class  ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByteArray> {
+public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByteArray> implements IServerPacketHandler {
 
     static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-    static ArrayList<ChannelId> channelIds = new ArrayList<>();
-    public static HashMap<ChannelId,Integer> mappedId = new HashMap<>();
-    public static HashMap<ChannelId,String> mappedName = new HashMap<>();
-    public static HashMap<String, ChannelId> nameToChannel = new HashMap<>();
-    public static Int2ObjectOpenHashMap<ChannelId> mappedChannels = new Int2ObjectOpenHashMap<>();
-    public static Int2ObjectOpenHashMap<ServerPlayerData> playerData = new Int2ObjectOpenHashMap<>();
+    public ArrayList<ChannelId> channelIds = new ArrayList<>();
+    public HashMap<ChannelId, ServerPlayerData> mappedPlayerData = new HashMap<>();
+    public HashMap<String, ServerPlayerData> nameToPlayerData = new HashMap<>();
 
     public ServerNetwork network;
     public static boolean debug = false;
 
-    public ServerNetworkHandler(ServerNetwork network) {
+    public IServer server;
+
+    public ServerNetworkHandler(ServerNetwork network, IServer server) {
         this.network = network;
+        this.server = server;
     }
 
     @Override
@@ -52,17 +53,16 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketBy
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        int id = mappedId.getOrDefault(ctx.channel().id(),-1);
-        if(id != -1) {
-            int dim = ServerNetworkHandler.getPlayerData(ctx).getDimension();
-            ServerMain.getWorld(dim).removeEntity(id);
-            mappedChannels.remove(id);
-            playerData.remove(id).close();
+        //TODO handle unloading
+        ServerPlayerData serverPlayerData = mappedPlayerData.remove(ctx.channel().id());
+        if(serverPlayerData != null) {
+            serverPlayerData.handleDisconnect();
+            serverPlayerData.close();
+            sendPacket(new SSendPlayerList(serverPlayerData.getPlayerName(), (int) serverPlayerData.getPlayerID().l1,false));
+            sendPacket(new SChatMessage(serverPlayerData.getPlayerName() + " has left the game"));
         }
+       // mappedChannels.remove(id);
         channelIds.remove(ctx.channel().id());
-        sendPacket(new SSendPlayerList(mappedName.get(ctx.channel().id()),id,false));
-        sendPacket(new SChatMessage(mappedName.get(ctx.channel().id()) + " has left the game"));
-        nameToChannel.remove(mappedName.remove(ctx.channel().id()));
         super.channelInactive(ctx);
     }
 
@@ -70,14 +70,19 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketBy
     protected void channelRead0(ChannelHandlerContext ctx, IPacketByteArray msg) throws Exception {
         PacketBase packetBase = msg.createPacket(network.receiveProtocol);
         if(!(packetBase instanceof CHandshakePacket)) {
-            if (mappedId.getOrDefault(ctx.channel().id(), Integer.MIN_VALUE) == Integer.MIN_VALUE) {
+            if(mappedPlayerData.get(ctx.channel().id()) == null) {
                 ctx.close();
                 return;
             }
         }
         try {
             if (packetBase instanceof PacketBaseNew<?> packetBaseNew) {
-                packetBaseNew.handle(getPlayerData(ctx));
+                ServerPlayerData serverPlayerData = mappedPlayerData.get(ctx.channel().id());
+                if(serverPlayerData == null) {
+                    packetBaseNew.handle(this);
+                } else  {
+                    packetBaseNew.handle(serverPlayerData);
+                }
             } else {
                 packetBase.handle();
             }
@@ -91,7 +96,7 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketBy
         ctx.close();
     }
 
-    public static void sendPacket(PacketBase packetBase) {
+    public void sendPacket(PacketBase packetBase) {
         for(int x = 0; x < channelIds.size(); x++) {
             Channel channel = channels.find(channelIds.get(x));
             if(channel == null) {
@@ -111,13 +116,17 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketBy
         }
     }
 
-    public static ChannelFuture sendPacket(PacketBase packetBase, ChannelHandlerContext ctx) {
+    public ChannelFuture sendPacket(PacketBase packetBase, ChannelHandlerContext ctx) {
+        return sendPacket(packetBase, ctx.channel());
+    }
+
+    public static ChannelFuture sendPacket1(PacketBase packetBase, ChannelHandlerContext ctx) {
         return sendPacket(packetBase, ctx.channel());
     }
 
     public static void sendPacketClose(PacketBase packetBase, ChannelHandlerContext ctx) {
         try {
-        sendPacket(packetBase, ctx).addListeners((ChannelFutureListener) future -> {
+        sendPacket1(packetBase, ctx).addListeners((ChannelFutureListener) future -> {
             if (ctx.channel().isOpen()) {
                 ctx.channel().close().awaitUninterruptibly(100);
             }
@@ -125,25 +134,15 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketBy
         } catch (Exception ignored) {}
     }
 
-    public static void sendPacket(PacketBase packetBase, PlayerEntity playerEntity) {
-        sendPacket(packetBase, channels.find(mappedChannels.get(playerEntity.id)));
+    public void sendPacket(PacketBase packetBase, PlayerEntity playerEntity) {
+        sendPacket(packetBase, playerEntity.getPlayerData().getChannelId());
     }
 
-    public static void sendPacket(PacketBase packetBase, ChannelId channelId) {
+    public void sendPacket(PacketBase packetBase, ChannelId channelId) {
         sendPacket(packetBase, channels.find(channelId));
     }
 
-    public static void sendPacket(PacketBase packetBase, int channelId) {
-        ChannelId channelId1 = mappedChannels.get(channelId);
-        if(channelId1 != null) {
-            Channel channel = channels.find(channelId1);
-            if (channel != null) {
-                sendPacket(packetBase, channel);
-            }
-        }
-    }
-
-    public static void sendPacketExcept(PacketBase packetBase, ChannelHandlerContext ctx) {
+    public void sendPacketExcept(PacketBase packetBase, ChannelHandlerContext ctx) {
         for(int x = 0; x < channelIds.size(); x++) {
             Channel channel = channels.find(channelIds.get(x));
             if(channel == null) {
@@ -157,21 +156,36 @@ public class  ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketBy
         }
     }
 
-    public static ServerPlayerData getPlayerData(ChannelHandlerContext ctx) {
-        return playerData.get(mappedId.get(ctx.channel().id()));
-    }
-
-    public static PlayerEntity getPlayerEntity(String name) {
-        ChannelId channelId = nameToChannel.get(name);
-        if(channelId != null) {
-            int id = mappedId.getOrDefault(channelId,Integer.MIN_VALUE);
-            if(id != Integer.MIN_VALUE) {
-                ServerPlayerData serverPlayerData = playerData.get(id);
-                if(serverPlayerData != null) {
-                    return serverPlayerData.playerEntity;
-                }
-            }
+    public PlayerEntity getPlayerEntity(String name) {
+        ServerPlayerData serverPlayerData = nameToPlayerData.get(name);
+        if(serverPlayerData != null) {
+            return serverPlayerData.getPlayerEntity();
         }
         return null;
+    }
+
+    @Override
+    public IServerWorld getWorld() {
+        throw new IllegalStateException("Player data has not been loaded yet in the networking sequence");
+    }
+
+    @Override
+    public ServerPlayerData getServerPlayerData() {
+        throw new IllegalStateException("Player data has not been loaded yet in the networking sequence");
+    }
+
+    @Override
+    public PlayerEntity getPlayerEntity() {
+        throw new IllegalStateException("Player data has not been loaded yet in the networking sequence");
+    }
+
+    @Override
+    public IServer getServer() {
+        return server;
+    }
+
+    @Override
+    public ServerNetworkHandler getServerNetworkHandler() {
+        return this;
     }
 }

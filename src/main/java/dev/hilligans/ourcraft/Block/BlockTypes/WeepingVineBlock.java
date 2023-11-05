@@ -23,12 +23,12 @@ public class WeepingVineBlock extends PlantBlock {
         }
     }
 
-    @Override
-    public void randomTick(World world, BlockPos pos) {
-        if(world.getBlockState(pos.add(0,1,0)).getBlock() != Blocks.WEEPING_VINE) {
-            world.setBlockState(pos, Blocks.WEEPING_VINE.getDefaultState());
-        }
-    }
+   // @Override
+   // public void randomTick(World world, BlockPos pos) {
+   //     if(world.getBlockState(pos.add(0,1,0)).getBlock() != Blocks.WEEPING_VINE) {
+   //         world.setBlockState(pos, Blocks.WEEPING_VINE.getDefaultState());
+   //     }
+   // }
 
 
 }

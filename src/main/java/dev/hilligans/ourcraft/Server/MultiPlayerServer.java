@@ -15,8 +15,6 @@ import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.World.NewWorldSystem.IServerWorld;
-import dev.hilligans.ourcraft.World.NewWorldSystem.IWorld;
-import dev.hilligans.ourcraft.World.ServerWorld;
 import dev.hilligans.ourcraft.World.World;
 import dev.hilligans.ourcraft.Util.ConsoleReader;
 import dev.hilligans.ourcraft.Util.NamedThreadFactory;
@@ -39,6 +37,7 @@ public class MultiPlayerServer implements IServer {
     public HashMap<ChannelHandlerContext, CHandshakePacket> waitingPlayers = new HashMap<>();
     public HashMap<String, Tuple<ChannelHandlerContext,Long>> playerQueue = new HashMap<>();
     public GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
+    public ServerNetwork serverNetwork;
 
     public void startServer(String port) {
         gameInstance.EVENT_BUS.postEvent(new MultiPlayerServerStartEvent(this,port));
@@ -49,7 +48,7 @@ public class MultiPlayerServer implements IServer {
         executorService1.scheduleAtFixedRate(new PlayerHandler(this), 0, 10, TimeUnit.MILLISECONDS);
         ConsoleReader consoleReader = new ConsoleReader(this::executeCommand);
 
-        ServerNetwork serverNetwork = new ServerNetwork(gameInstance.PROTOCOLS.get("Play")).debug(ServerMain.argumentContainer.getBoolean("--packetTrace", false));
+        serverNetwork = new ServerNetwork(gameInstance.PROTOCOLS.get("Play"), this).debug(ServerMain.argumentContainer.getBoolean("--packetTrace", false));
         try {
             serverNetwork.startServer(port);
         } catch (Exception e) {
@@ -89,12 +88,17 @@ public class MultiPlayerServer implements IServer {
         return Commands.executeCommand(command,new ConsoleExecutor(this));
     }
 
+    @Override
+    public ServerNetworkHandler getServerNetworkHandler() {
+        return (ServerNetworkHandler) serverNetwork.networkHandler;
+    }
+
     public void sendPacket(PacketBase packetBase) {
-        ServerNetworkHandler.sendPacket(packetBase);
+        getServerNetworkHandler().sendPacket(packetBase);
     }
 
     public void sendPacket(PacketBase packetBase, PlayerEntity playerEntity) {
-        ServerNetworkHandler.sendPacket(packetBase,playerEntity);
+        getServerNetworkHandler().sendPacket(packetBase,playerEntity);
     }
 
     static class PlayerHandler implements Runnable {

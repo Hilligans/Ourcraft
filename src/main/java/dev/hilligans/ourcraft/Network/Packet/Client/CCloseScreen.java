@@ -1,13 +1,10 @@
 package dev.hilligans.ourcraft.Network.Packet.Client;
 
 import dev.hilligans.ourcraft.Container.Containers.InventoryContainer;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
-import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
+import dev.hilligans.ourcraft.Network.*;
 import dev.hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
 
-public class CCloseScreen extends PacketBase {
+public class CCloseScreen extends PacketBaseNew<IServerPacketHandler> {
 
     boolean newScreen = false;
 
@@ -31,9 +28,9 @@ public class CCloseScreen extends PacketBase {
     }
 
     @Override
-    public void handle() {
+    public void handle(IServerPacketHandler serverPacketHandler) {
         if(!newScreen) {
-            ServerPlayerData serverPlayerData = ServerNetworkHandler.getPlayerData(ctx);
+            ServerPlayerData serverPlayerData = serverPacketHandler.getServerPlayerData();
             if (serverPlayerData != null) {
                 serverPlayerData.openContainer(new InventoryContainer(serverPlayerData.playerInventory));
             }

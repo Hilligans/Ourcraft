@@ -1,15 +1,12 @@
 package dev.hilligans.ourcraft.Network.Packet.AuthServerPackets;
 
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
+import dev.hilligans.ourcraft.Network.*;
 import dev.hilligans.ourcraft.Network.Packet.Client.CHandshakePacket;
 import dev.hilligans.ourcraft.Network.Packet.Server.SDisconnectPacket;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
-import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
 import dev.hilligans.ourcraft.ServerMain;
 import io.netty.channel.ChannelHandlerContext;
 
-public class STokenValid extends PacketBase {
+public class STokenValid extends PacketBaseNew<IServerPacketHandler> {
 
     String username;
     String uuid;
@@ -32,14 +29,14 @@ public class STokenValid extends PacketBase {
     }
 
     @Override
-    public void handle() {
+    public void handle(IServerPacketHandler serverPacketHandler) {
         ChannelHandlerContext oldCtx = ServerMain.getServer().playerQueue.get(tempid).typeA;
         CHandshakePacket packet = ServerMain.getServer().waitingPlayers.get(oldCtx);
         ServerMain.getServer().waitingPlayers.remove(oldCtx);
         ServerMain.getServer().playerQueue.remove(tempid);
         //System.out.println(this.toString());
         if(valid) {
-            CHandshakePacket.handlePlayer(packet.name, packet.version, oldCtx, uuid);
+           // CHandshakePacket.handlePlayer(packet.name, packet.version, oldCtx, uuid);
         } else {
             ServerNetworkHandler.sendPacketClose(new SDisconnectPacket("Could not authorize you account"),oldCtx);
         }

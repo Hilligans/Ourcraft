@@ -62,11 +62,12 @@ public abstract class Container {
         return this;
     }
 
-    public void trackInt(int slot, int val) {
+    /*public void trackInt(int slot, int val) {
         if(setInt(slot,val)) {
             ServerNetworkHandler.sendPacket(new SUpdateContainer((short) slot, val, uniqueId), channelId);
         }
     }
+     */
 
     public boolean setInt(int slot, int val) {
         while(slot >= trackedIntegers.size()) {

@@ -1,18 +1,11 @@
 package dev.hilligans.ourcraft.WorldSave;
 
-import dev.hilligans.ourcraft.Data.Other.BlockStates.BlockState;
-import dev.hilligans.ourcraft.Data.Primitives.Tuple;
-import dev.hilligans.ourcraft.World.Chunk;
-import dev.hilligans.ourcraft.Util.BitArray;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class WorldCompressor {
 
 
 
 
+    /*
     public static ArrayList<Long> asCompressedStream(Chunk chunk) {
         ArrayList<Long> vals = new ArrayList<>();
         try {
@@ -63,6 +56,8 @@ public class WorldCompressor {
         }
         return vals;
     }
+
+     */
 
     private static int getBitCount(int count) {
         return (int) Math.ceil(Math.log(count) / Math.log(2));

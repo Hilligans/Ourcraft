@@ -43,7 +43,7 @@ public class Chunk implements IChunk {
     public Short2ObjectOpenHashMap<DataProvider> dataProviders = new Short2ObjectOpenHashMap<>();
 
     public Int2ObjectOpenHashMap<Entity> entities = new Int2ObjectOpenHashMap<>();
-    public Long2ObjectOpenHashMap<ArrayList<BlockPos>> blockTicks = new Long2ObjectOpenHashMap<>();
+    //public Long2ObjectOpenHashMap<ArrayList<BlockPos>> blockTicks = new Long2ObjectOpenHashMap<>();
     public Short2IntOpenHashMap heightMap = new Short2IntOpenHashMap();
 
     public boolean needsSaving = false;
@@ -56,18 +56,8 @@ public class Chunk implements IChunk {
 
     public boolean populated = false;
 
-    public Chunk(int x, int z, World world) {
-        this.world = world;
-        this.x = x;
-        this.z = z;
-
-        for(int a = 0; a < Settings.chunkHeight; a++) {
-            SubChunk subChunk = new SubChunk(world,this.x * 16,a * 16, this.z * 16);
-            chunks.add(subChunk);
-        }
-    }
-
     public void tick() {
+        /*
         if(world.isServer()) {
             ArrayList<BlockPos> list = blockTicks.get(((ServerWorld) world).server.getTime());
             if(list != null) {
@@ -77,6 +67,8 @@ public class Chunk implements IChunk {
                 }
             }
         }
+
+         */
     }
 
    // public void scheduleTick(BlockPos pos, int time) {
@@ -99,71 +91,6 @@ public class Chunk implements IChunk {
             VAOManager.destroyBuffer(id);
         }
         this.id = newId;
-    }
-
-    public void generate() {
-        for(int x = 0; x < 16; x++) {
-            for(int z = 0; z < 16; z++) {
-                int offset = getBlockHeight(x + this.x * 16,z + this.z * 16);
-                offset = interpolate(offset,getBlockHeight(x + 1 + this.x * 16, z + 1 + this.z * 16));
-                Biome biome = getBiome1(x + this.x * 16,z + this.z * 16);
-
-                for(int y = 0; y < Settings.chunkHeight * 16; y++) {
-                    if(y + 5 < offset) {
-                        setBlockState(x,y,z,Blocks.STONE.getDefaultState());
-                    } else if(y < offset) {
-                        setBlockState(x,y,z, biome.underBlock.getDefaultState());
-                    }  else if(y == offset) {
-                        setBlockState(x,y,z, biome.surfaceBlock.getDefaultState());
-                    }
-                    if(y == 0) {
-                        setBlockState(x,0,z,Blocks.BEDROCK.getDefaultState());
-                    }
-                }
-            }
-        }
-/*
-        for(int x = 0; x < 16; x++) {
-            for(int y = 0; y < Settings.chunkHeight * 16; y++) {
-                for(int z = 0; z < 16; z++) {
-                   double val = world.noise.smoothNoise(0.1 * (x + this.x * 16),0.1 * y,0.1 * (z + this.z * 16));
-                   if(val > 0.2 && y != 0) {
-                       setBlockState(x,y,z,Blocks.AIR.getDefaultState());
-                       if(getBlockState(x,y - 1,z).getBlock() == Blocks.DIRT) {
-                           setBlockState(x,y - 1,z,Blocks.AIR.getDefaultState());
-                       }
-                   }
-                }
-            }
-        }
-
- */
-        Chunk[] chunks = world.getChunksAround(x,z,0);
-        for(Chunk chunk : chunks) {
-            if(chunk != null) {
-                chunk.populate();
-            }
-        }
-    }
-
-    public void populate() {
-        if(!populated) {
-            Chunk[] chunks = world.getChunksAround(x,z,0);
-            for (Chunk chunk : chunks) {
-                if (chunk == null) {
-                    return;
-                }
-            }
-            populated = true;
-
-            for(WorldBuilder worldBuilder : world.worldBuilders) {
-                worldBuilder.build(this);
-            }
-
-            for(WorldBuilder worldBuilder : getBiome1(world.random.nextInt(16) + x * 16,world.random.nextInt(16) + z * 16).worldBuilders) {
-                    worldBuilder.build(this);
-            }
-        }
     }
 
     public int getBlockHeight(int x, int z) {

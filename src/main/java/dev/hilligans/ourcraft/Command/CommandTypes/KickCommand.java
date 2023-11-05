@@ -14,7 +14,7 @@ public class KickCommand extends CommandHandler {
 
     @Override
     public Object handle(CommandExecutor executor, String[] args) {
-        PlayerEntity playerEntity = ServerNetworkHandler.getPlayerEntity(args[0]);
+        PlayerEntity playerEntity = executor.getServer().getServerNetworkHandler().getPlayerEntity(args[0]);
         if(playerEntity != null) {
           //  playerEntity.
         }

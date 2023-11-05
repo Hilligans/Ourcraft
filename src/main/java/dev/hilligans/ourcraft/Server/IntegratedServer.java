@@ -5,12 +5,10 @@ import dev.hilligans.ourcraft.Command.Commands;
 import dev.hilligans.ourcraft.Data.Other.Server.ServerPlayerData;
 import dev.hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.hilligans.ourcraft.Network.PacketBase;
+import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
 import dev.hilligans.ourcraft.World.NewWorldSystem.IServerWorld;
-import dev.hilligans.ourcraft.World.World;
 import dev.hilligans.ourcraft.Util.ConsoleReader;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
-import java.util.Collection;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -18,8 +16,6 @@ import java.util.concurrent.TimeUnit;
 public class IntegratedServer implements IServer {
 
     public long time = 0;
-    public Int2ObjectOpenHashMap<World> worlds = new Int2ObjectOpenHashMap<>();
-
     public void startServer( ) {
         Server server = new Server(this);
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
@@ -65,6 +61,11 @@ public class IntegratedServer implements IServer {
             command = "/" + command;
         }
         return Commands.executeCommand(command,new ConsoleExecutor(this));
+    }
+
+    @Override
+    public ServerNetworkHandler getServerNetworkHandler() {
+        return null;
     }
 
     @Override

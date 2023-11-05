@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.Network;
 
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.Server.IServer;
 import dev.hilligans.ourcraft.ServerMain;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.EventLoopGroup;
@@ -14,13 +15,15 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
 public class ServerNetwork extends Network {
 
     public GameInstance gameInstance;
+    public IServer server;
 
-    public ServerNetwork(Protocol protocol) {
+    public ServerNetwork(Protocol protocol, IServer server) {
         super(protocol);
+        this.server = server;
     }
 
     public void startServer(String port) throws Exception {
-        networkHandler = new ServerNetworkHandler(this);
+        networkHandler = new ServerNetworkHandler(this, server);
         ServerNetworkHandler.debug = ServerMain.argumentContainer.getBoolean("--tracePacket", false);
 
         final int PORT = Integer.parseInt(System.getProperty("port", port));

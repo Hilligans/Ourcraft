@@ -1,7 +1,5 @@
 package dev.hilligans.ourcraft.WorldSave;
 
-import dev.hilligans.ourcraft.Block.Block;
-import dev.hilligans.ourcraft.Block.Blocks;
 import dev.hilligans.ourcraft.Data.Other.BlockStates.BlockState;
 import dev.hilligans.ourcraft.Data.Other.BlockStates.DataBlockState;
 import dev.hilligans.ourcraft.Data.Primitives.Tuple;
@@ -25,9 +23,9 @@ public class ChunkLoader {
 
     public static HashMap<String, CompoundNBTTag> loadedGroups = new HashMap<>();
     public static HashMap<String,Level> levels = new HashMap<>();
-    public static HashMap<String, CompoundNBTTag> loadedData = new HashMap<>();
+   // public static HashMap<String, CompoundNBTTag> loadedData = new HashMap<>();
 
-    public static Level level = new Level();
+   // public static Level level = new Level();
 
 
     public static CompoundNBTTag createTag(Chunk chunk) {
@@ -156,6 +154,7 @@ public class ChunkLoader {
 
      */
 
+    /*
     public static Chunk createChunk3(int X, int Z, CompoundNBTTag compoundTag, Level level) {
         Chunk chunk = new Chunk(X, Z, null);
         try {
@@ -189,6 +188,8 @@ public class ChunkLoader {
         }
         return chunk;
     }
+
+     */
 
     public static IChunk loadChunk(IChunk chunk, CompoundNBTTag tag, Level level) {
 
@@ -301,6 +302,7 @@ public class ChunkLoader {
         return WorldLoader.loadTag(getPathToChunk(x,z));
     }
 
+    /*
     public static synchronized Chunk readChunk(int x, int z) {
         CompoundNBTTag compoundTag = fetchChunk(x,z);
         if(compoundTag != null) {
@@ -309,12 +311,17 @@ public class ChunkLoader {
         return null;
     }
 
+     */
+
+    /*
     public static synchronized void readWriteChunk(Chunk chunk) {
         readChunk(chunk.x,chunk.z);
         CompoundNBTTag compoundTag = ChunkLoader.createTag3(chunk,fetchLevel(chunk.x,chunk.z));
         putTag(chunk.x,chunk.z,compoundTag);
         finishSave1();
     }
+
+     */
 
     public static void writeChunk(Chunk chunk) {
         CompoundNBTTag compoundTag = ChunkLoader.createTag3(chunk,fetchLevel(chunk.x,chunk.z));

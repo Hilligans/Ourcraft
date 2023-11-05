@@ -26,8 +26,6 @@ public class ClientWorld extends World {
 
     public ConcurrentLinkedQueue<SubChunk> queuedChunks = new ConcurrentLinkedQueue<>();
 
-    public MiniMap miniMap = new MiniMap(this);
-
     public Client client;
 
     public ClientWorld(Client client) {
@@ -58,7 +56,7 @@ public class ClientWorld extends World {
         if(purgeTime > 100) {
             purgeTime = 0;
             if(Settings.destroyChunkDistance != -1) {
-                purgeChunks(Settings.destroyChunkDistance + 2);
+                //purgeChunks(Settings.destroyChunkDistance + 2);
             }
         } else {
 
@@ -68,6 +66,7 @@ public class ClientWorld extends World {
 
     int purgeTime = 0;
 
+    /*
     public void purgeChunks(int distance) {
         int cameraX = (int) Camera.pos.x >> 4;
         int cameraZ = (int)Camera.pos.z >> 4;
@@ -86,21 +85,10 @@ public class ClientWorld extends World {
         }
     }
 
+     */
+
     public int vertices = 0;
     public int count = 0;
-
-    public void reloadChunks() {
-        chunkContainer.forEach(chunk -> {
-           if(chunk.id != -1 && chunk.id != -2 && chunk.id != -3) {
-               VAOManager.destroyBuffer(chunk.id);
-           }
-           for (SubChunk subChunk : chunk.chunks) {
-               subChunk.destroy();
-               subChunk.id = -2;
-           }
-           chunk.id = -1;
-        });
-    }
 
     public void playSound(SoundBuffer soundBuffer, Vector3d pos) {
         if(Settings.sounds) {
@@ -160,16 +148,4 @@ public class ClientWorld extends World {
     public void removeEntity(int id) {
         entities.remove(id).destroy();
     }
-
-    static class XZHolder {
-        public int x;
-        public int z;
-
-        public XZHolder(int x, int z) {
-            this.x = x;
-            this.z = z;
-        }
-    }
-
-
 }

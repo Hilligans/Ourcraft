@@ -95,8 +95,8 @@ public class Slot implements IInventoryChanged {
     @Override
     public void onChange(int slot, IInventory inventory) {
         ItemStack itemStack = getContents();
-
-        ServerNetworkHandler.sendPacket(new SUpdateContainer(id,getContents(), container.uniqueId),container.channelId);
+        //TODO fix
+      //  ServerNetworkHandler.sendPacket(new SUpdateContainer(id,getContents(), container.uniqueId),container.channelId);
     }
 
     public Slot copy() {

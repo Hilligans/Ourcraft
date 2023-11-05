@@ -1,14 +1,10 @@
 package dev.hilligans.ourcraft.Network.Packet.Client;
 
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
+import dev.hilligans.ourcraft.Network.*;
 import dev.hilligans.ourcraft.Network.Packet.Server.SSendChunkPacket;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.ServerMain;
-import dev.hilligans.ourcraft.Network.PacketData;
-import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
 import dev.hilligans.ourcraft.World.NewWorldSystem.IChunk;
 
-public class CRequestChunkPacket extends PacketBase {
+public class CRequestChunkPacket extends PacketBaseNew<IServerPacketHandler> {
 
     public int ChunkX;
     public int ChunkZ;
@@ -37,20 +33,20 @@ public class CRequestChunkPacket extends PacketBase {
     }
 
     @Override
-    public void handle() {
+    public void handle(IServerPacketHandler serverPacketHandler) {
         try {
 
             //System.out.println(ChunkX + ":" + ChunkZ);
-            int dim = ServerNetworkHandler.getPlayerData(ctx).getDimension();
+            int dim =serverPacketHandler.getServerPlayerData().getDimension();
           /*  Chunk chunk = ServerMain.getWorld(dim).getOrGenerateChunk(ChunkX, ChunkZ);
             ServerMain.getWorld(dim).generateChunk(ChunkX + 1, ChunkZ);
             ServerMain.getWorld(dim).generateChunk(ChunkX - 1, ChunkZ);
             ServerMain.getWorld(dim).generateChunk(ChunkX, ChunkZ + 1);
             ServerMain.getWorld(dim).generateChunk(ChunkX, ChunkZ - 1);
            */
-            IChunk chunk = ServerMain.getServer().newWorlds.get(dim).getChunkNonNull(ChunkX * 16L,0, ChunkZ * 16L);
+            IChunk chunk = serverPacketHandler.getWorld().getChunkNonNull(ChunkX * 16L,0, ChunkZ * 16L);
             if (chunk != null) {
-                ServerNetworkHandler.sendPacket(new SSendChunkPacket(chunk), ctx);
+                serverPacketHandler.sendPacket(new SSendChunkPacket(chunk), ctx);
             }
         } catch (Exception ignored) {
             ignored.printStackTrace();

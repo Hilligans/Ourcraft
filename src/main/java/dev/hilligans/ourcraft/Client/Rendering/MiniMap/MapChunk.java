@@ -1,21 +1,5 @@
 package dev.hilligans.ourcraft.Client.Rendering.MiniMap;
 
-import dev.hilligans.ourcraft.Block.Block;
-import dev.hilligans.ourcraft.Data.Other.BlockPos;
-import dev.hilligans.ourcraft.Tag.CompoundNBTTag;
-import dev.hilligans.ourcraft.Tag.IntegerArrayNBTTag;
-import dev.hilligans.ourcraft.World.Chunk;
-import dev.hilligans.ourcraft.WorldSave.WorldLoader;
-
-import java.awt.*;
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL15.glDeleteBuffers;
-import static org.lwjgl.opengl.GL30.glGenerateMipmap;
-
 public class MapChunk {
 /*
     int x;

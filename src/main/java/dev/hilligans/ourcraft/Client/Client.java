@@ -58,7 +58,6 @@ public class Client implements IClientPacketHandler {
     public boolean mouseLocked = false;
 
     public int playerId;
-    public ConcurrentLinkedQueue<Integer> unloadQueue = new ConcurrentLinkedQueue<>();
 
     public int windowX = 1600;
     public int windowY = 800;
@@ -102,6 +101,7 @@ public class Client implements IClientPacketHandler {
     public int renderDistance = 12;
     public int renderYDistance = 8;
     public ArgumentContainer argumentContainer;
+    public ChatMessages chatMessages = new ChatMessages();
 
     public Client(GameInstance gameInstance, ArgumentContainer argumentContainer) {
         this.gameInstance = gameInstance;

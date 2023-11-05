@@ -36,6 +36,8 @@ public class PlayerEntity extends LivingEntity {
     public static int imageId;
 
     public BoundingBox itemPickupBox = new BoundingBox(-1.3f,-1.9f,-1.3f,1.3f,0.0f,1.3f);
+    public ServerPlayerData serverPlayerData;
+
 
     public PlayerEntity(float x, float y, float z,int id) {
         super(x,y,z,id,20);
@@ -79,8 +81,13 @@ public class PlayerEntity extends LivingEntity {
         return new Vector3d((float) (Math.cos(yaw) * Math.cos(pitch)),(float)(Math.sin(pitch)),(float)(Math.sin(yaw) * Math.cos(pitch)));
     }
 
+    public PlayerEntity setPlayerData(ServerPlayerData serverPlayerData) {
+        this.serverPlayerData = serverPlayerData;
+        return this;
+    }
+
     public ServerPlayerData getPlayerData() {
-        return ServerNetworkHandler.playerData.get(id);
+        return serverPlayerData;
     }
 
     @Override

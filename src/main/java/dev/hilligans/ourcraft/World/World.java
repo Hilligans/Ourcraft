@@ -14,7 +14,6 @@ import dev.hilligans.ourcraft.Network.Packet.Server.SSendBlockChanges;
 import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.World.Builders.WorldBuilder;
 import dev.hilligans.ourcraft.Util.Noises.BiomeNoise;
-import dev.hilligans.ourcraft.Util.Noises.Noise;
 import dev.hilligans.ourcraft.Util.Noises.SimplexNoise;
 import dev.hilligans.ourcraft.Util.Settings;
 import dev.hilligans.ourcraft.World.NewWorldSystem.IChunkContainer;
@@ -64,37 +63,9 @@ public abstract class World {
         return chunkContainer.getChunk(x,z);
     }
 
-    public void removeChunk(int x, int z) {
-        chunkContainer.removeChunk(x,z);
-    }
-
-    public void generateChunk(int x, int z) {
-        if(getChunk(x,z) == null) {
-            Chunk chunk = new Chunk(x,z,this);
-            putChunk(x,z,chunk);
-            chunk.generate();
-        }
-    }
-
-    public Chunk ensureLoaded(int x, int z) {
-        generateChunk(x,z);
-        return getChunk(x,z);
-    }
-
     public void putChunk(int x, int z, Chunk chunk) {
         chunkCount += chunkContainer.setChunk(x,z,chunk) == null ? 1 : 0;
     }
-
-    public boolean isInBounds(int playerX, int playerZ, long pos, int distance) {
-        int x = (int)(pos);
-        int z = (int)(pos >> 32);
-        return Math.abs(playerX - x) < distance || Math.abs(playerZ - z) < distance;
-    }
-
-    public void unloadChunk(int x, int z) {
-        removeChunk(x,z);
-    }
-
     public BlockState getBlockState(int x, int y, int z) {
         Chunk chunk = getChunk(x >> 4,z >> 4);
         if(chunk == null) {

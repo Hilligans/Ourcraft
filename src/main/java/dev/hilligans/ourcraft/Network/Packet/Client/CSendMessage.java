@@ -3,14 +3,11 @@ package dev.hilligans.ourcraft.Network.Packet.Client;
 import dev.hilligans.ourcraft.Command.CommandExecutors.EntityExecutor;
 import dev.hilligans.ourcraft.Command.CommandHandler;
 import dev.hilligans.ourcraft.Command.Commands;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
+import dev.hilligans.ourcraft.Network.*;
 import dev.hilligans.ourcraft.Network.Packet.Server.SChatMessage;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
-import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
 import dev.hilligans.ourcraft.ServerMain;
 
-public class CSendMessage extends PacketBase {
+public class CSendMessage extends PacketBaseNew<IServerPacketHandler> {
 
     public String message;
 
@@ -35,16 +32,16 @@ public class CSendMessage extends PacketBase {
     }
 
     @Override
-    public void handle() {
+    public void handle(IServerPacketHandler serverPacketHandler) {
         if(!message.equals("")) {
-            String name = ServerNetworkHandler.mappedName.get(ctx.channel().id());
+            String name = serverPacketHandler.getServerPlayerData().getPlayerName();
             String[] args = message.split(" ");
             if (args.length != 0) {
                 CommandHandler commandHandler = Commands.commands.get(args[0]);
                 if (commandHandler != null) {
                     String[] args1 = new String[args.length - 1];
                     System.arraycopy(args,1,args1,0,args1.length);
-                    ServerMain.getServer().sendPacket(new SChatMessage((String) commandHandler.handle(new EntityExecutor(ServerNetworkHandler.getPlayerData(ctx).playerEntity),args1)));
+                    ServerMain.getServer().sendPacket(new SChatMessage((String) commandHandler.handle(new EntityExecutor(serverPacketHandler.getPlayerEntity()),args1)));
                     return;
                 }
             }

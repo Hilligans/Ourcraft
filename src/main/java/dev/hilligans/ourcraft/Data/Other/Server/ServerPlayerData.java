@@ -4,11 +4,13 @@ import dev.hilligans.ourcraft.Container.Container;
 import dev.hilligans.ourcraft.Container.Containers.InventoryContainer;
 import dev.hilligans.ourcraft.Container.Slot;
 import dev.hilligans.ourcraft.Data.Other.Inventory;
+import dev.hilligans.ourcraft.Data.UUID;
 import dev.hilligans.ourcraft.Entity.Entities.ItemEntity;
 import dev.hilligans.ourcraft.Entity.Entity;
 import dev.hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.hilligans.ourcraft.Item.ItemStack;
 import dev.hilligans.ourcraft.Network.IServerPacketHandler;
+import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.Server.IServer;
 import dev.hilligans.ourcraft.ServerMain;
@@ -18,6 +20,7 @@ import dev.hilligans.ourcraft.Util.Settings;
 import dev.hilligans.ourcraft.World.NewWorldSystem.IServerWorld;
 import dev.hilligans.ourcraft.World.NewWorldSystem.IWorld;
 import dev.hilligans.ourcraft.WorldSave.WorldLoader;
+import io.netty.channel.ChannelId;
 
 public class ServerPlayerData implements IServerPacketHandler {
 
@@ -37,6 +40,10 @@ public class ServerPlayerData implements IServerPacketHandler {
 
     public int renderDistance = 6;
     public int renderYDistance = 4;
+    public ServerNetworkHandler serverNetworkHandler;
+    public String playerName;
+    public UUID playerID;
+    public ChannelId channelId;
 
     public ServerPlayerData(PlayerEntity playerEntity, String id) {
         this.playerEntity = playerEntity;
@@ -49,7 +56,6 @@ public class ServerPlayerData implements IServerPacketHandler {
         playerInventory.setItem(3,new ItemStack(Ourcraft.GAME_INSTANCE.getItem("stair"), (byte)63));
         playerInventory.setItem(4,new ItemStack(Ourcraft.GAME_INSTANCE.getItem("grass_plant"), (byte)63));
         playerInventory.setItem(5,new ItemStack(Ourcraft.GAME_INSTANCE.getItem("blue"),(byte)63));
-
     }
 
     public ServerPlayerData(PlayerEntity playerEntity, String id, CompoundNBTTag tag) {
@@ -65,12 +71,45 @@ public class ServerPlayerData implements IServerPacketHandler {
         return this;
     }
 
-    public static ServerPlayerData loadOrCreatePlayer(PlayerEntity playerEntity, String id, IServer server) {
+    public ServerPlayerData setNetworkHandler(ServerNetworkHandler serverNetworkHandler) {
+        this.serverNetworkHandler = serverNetworkHandler;
+        return this;
+    }
+
+    public ServerPlayerData setName(String name) {
+        this.playerName = name;
+        return this;
+    }
+
+    public ServerPlayerData setPlayerID(UUID id) {
+        this.playerID = id;
+        return this;
+    }
+
+    public UUID getPlayerID() {
+        return playerID;
+    }
+
+    public ServerPlayerData setChannelID(ChannelId channelId) {
+        this.channelId = channelId;
+        return this;
+    }
+
+    public ChannelId getChannelId() {
+        return channelId;
+    }
+
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public static ServerPlayerData loadOrCreatePlayer(PlayerEntity playerEntity, String id) {
         CompoundNBTTag tag = WorldLoader.loadTag(path + id + ".dat");
             if(tag == null) {
-            return new ServerPlayerData(playerEntity,id).setServer(server);
+            return new ServerPlayerData(playerEntity,id);
         } else {
-            return new ServerPlayerData(playerEntity,id,tag).setServer(server);
+            return new ServerPlayerData(playerEntity,id,tag);
         }
     }
 
@@ -185,5 +224,15 @@ public class ServerPlayerData implements IServerPacketHandler {
     @Override
     public ServerPlayerData getServerPlayerData() {
         return this;
+    }
+
+    @Override
+    public PlayerEntity getPlayerEntity() {
+        return playerEntity;
+    }
+
+    @Override
+    public ServerNetworkHandler getServerNetworkHandler() {
+        return null;
     }
 }

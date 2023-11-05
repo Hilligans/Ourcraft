@@ -94,11 +94,7 @@ public class Block implements IRegistryElement {
 
     public void onUpdate(World world, BlockPos blockPos) {}
 
-    public void tickBlock(World world, BlockPos blockPos) {}
-
     public void tick(World world, BlockPos pos) {}
-
-    public void randomTick(World world, BlockPos pos) {}
 
     //TODO fix
     /*

@@ -1,27 +1,17 @@
 package dev.hilligans.ourcraft.World;
 
-import dev.hilligans.ourcraft.Client.Rendering.NewRenderer.GLRenderer;
-import dev.hilligans.ourcraft.Client.Rendering.World.Managers.ShaderManager;
 import dev.hilligans.ourcraft.Data.Other.BlockStates.BlockState;
 import dev.hilligans.ourcraft.Block.Blocks;
-import dev.hilligans.ourcraft.Client.MatrixStack;
 import dev.hilligans.ourcraft.Client.Rendering.World.Managers.VAOManager;
 import dev.hilligans.ourcraft.Data.Other.BlockPos;
 import dev.hilligans.ourcraft.Data.Other.BlockStates.DataBlockState;
 import dev.hilligans.ourcraft.World.DataProviders.ShortBlockState;
-import org.lwjgl.opengl.GL30;
 
 import java.util.Arrays;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.glDeleteBuffers;
-import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
-import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 
 public class SubChunk {
 
     public int id = -2;
-    int verticesCount = -1;
     World world;
     public long y;
     public long x;
@@ -106,29 +96,6 @@ public class SubChunk {
 
     public void updateBlock(BlockPos pos) {
         getBlock(pos.x & 15,pos.y & 15,pos.z & 15).getBlock().onUpdate(world,pos);
-    }
-
-    public void renderMesh(MatrixStack matrixStack) {
-
-        if (id == -2) {
-            if (world instanceof ClientWorld) {
-                ((ClientWorld) world).queuedChunks.add(this);
-                id = -3;
-            } else {
-                id = -1;
-            }
-        }
-        if (id == -1) {
-           // createMesh1();
-        }
-
-        if (verticesCount != 0) {
-            GL30.glBindVertexArray(id);
-            matrixStack.push();
-            matrixStack.applyTransformation(ShaderManager.worldShader.shader);
-            GLRenderer.glDrawElements(GL_TRIANGLES, verticesCount, GL_UNSIGNED_INT, 0);
-            matrixStack.pop();
-        }
     }
 
     public void set(int block) {

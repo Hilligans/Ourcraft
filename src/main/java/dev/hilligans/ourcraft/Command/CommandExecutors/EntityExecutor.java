@@ -2,8 +2,7 @@ package dev.hilligans.ourcraft.Command.CommandExecutors;
 
 import dev.hilligans.ourcraft.Entity.Entity;
 import dev.hilligans.ourcraft.World.NewWorldSystem.IWorld;
-import dev.hilligans.ourcraft.World.ServerWorld;
-import dev.hilligans.ourcraft.World.World;
+import dev.hilligans.ourcraft.World.NewWorldSystem.ServerCubicWorld;
 import dev.hilligans.ourcraft.Server.IServer;
 
 public class EntityExecutor implements CommandExecutor {
@@ -32,8 +31,8 @@ public class EntityExecutor implements CommandExecutor {
     @Override
     public IServer getServer() {
         IWorld world = entity.world;
-        if(world instanceof ServerWorld serverWorld) {
-            return serverWorld.server;
+        if(world instanceof ServerCubicWorld serverWorld) {
+            return serverWorld.getServer();
         }
         return null;
     }
