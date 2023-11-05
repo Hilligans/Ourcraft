@@ -5,7 +5,6 @@ import dev.hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.hilligans.ourcraft.Network.Debug.PacketTraceByteArray;
 import dev.hilligans.ourcraft.Server.IServer;
 import dev.hilligans.ourcraft.World.NewWorldSystem.IServerWorld;
-import dev.hilligans.ourcraft.World.NewWorldSystem.IWorld;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -43,5 +42,9 @@ public interface IServerPacketHandler extends IPacketHandler {
         } else {
             return ctx.channel().writeAndFlush(new PacketByteArray(packetBase));
         }
+    }
+    
+    default void sendPacket(PacketBase packetBase) {
+        getServerNetworkHandler().sendPacketInternal(packetBase);
     }
 }

@@ -22,7 +22,6 @@ import dev.hilligans.ourcraft.Util.Settings;
 import io.netty.channel.ChannelHandlerContext;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -94,7 +93,7 @@ public class MultiPlayerServer implements IServer {
     }
 
     public void sendPacket(PacketBase packetBase) {
-        getServerNetworkHandler().sendPacket(packetBase);
+        getServerNetworkHandler().sendPacketInternal(packetBase);
     }
 
     public void sendPacket(PacketBase packetBase, PlayerEntity playerEntity) {

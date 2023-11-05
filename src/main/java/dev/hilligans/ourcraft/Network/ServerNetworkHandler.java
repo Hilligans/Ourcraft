@@ -15,7 +15,6 @@ import io.netty.handler.ssl.SslHandler;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import io.netty.util.concurrent.GlobalEventExecutor;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,8 +57,8 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
         if(serverPlayerData != null) {
             serverPlayerData.handleDisconnect();
             serverPlayerData.close();
-            sendPacket(new SSendPlayerList(serverPlayerData.getPlayerName(), (int) serverPlayerData.getPlayerID().l1,false));
-            sendPacket(new SChatMessage(serverPlayerData.getPlayerName() + " has left the game"));
+            sendPacketInternal(new SSendPlayerList(serverPlayerData.getPlayerName(), (int) serverPlayerData.getPlayerID().l1,false));
+            sendPacketInternal(new SChatMessage(serverPlayerData.getPlayerName() + " has left the game"));
         }
        // mappedChannels.remove(id);
         channelIds.remove(ctx.channel().id());
@@ -96,7 +95,7 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
         ctx.close();
     }
 
-    public void sendPacket(PacketBase packetBase) {
+    public void sendPacketInternal(PacketBase packetBase) {
         for(int x = 0; x < channelIds.size(); x++) {
             Channel channel = channels.find(channelIds.get(x));
             if(channel == null) {

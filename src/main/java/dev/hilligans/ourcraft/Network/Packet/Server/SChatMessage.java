@@ -1,11 +1,10 @@
 package dev.hilligans.ourcraft.Network.Packet.Server;
 
 import dev.hilligans.ourcraft.Client.ChatWindow;
-import dev.hilligans.ourcraft.Network.IPacketByteArray;
-import dev.hilligans.ourcraft.Network.PacketBase;
-import dev.hilligans.ourcraft.Network.PacketData;
+import dev.hilligans.ourcraft.Client.Client;
+import dev.hilligans.ourcraft.Network.*;
 
-public class SChatMessage extends PacketBase {
+public class SChatMessage extends PacketBaseNew<IClientPacketHandler> {
 
     String message;
 
@@ -30,7 +29,8 @@ public class SChatMessage extends PacketBase {
     }
 
     @Override
-    public void handle() {
-        ChatWindow.addMessage(message);
+    public void handle(IClientPacketHandler clientPacketHandler) {
+        Client client = clientPacketHandler.getClient();
+        client.chatMessages.addMessage(message);
     }
 }

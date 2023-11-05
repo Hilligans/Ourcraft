@@ -8,6 +8,7 @@ import dev.hilligans.ourcraft.Entity.LivingEntities.PlayerEntity;
 import dev.hilligans.ourcraft.Network.Packet.Server.SUpdateEntityPacket;
 import dev.hilligans.ourcraft.Network.Packet.Server.SUpdatePlayer;
 import dev.hilligans.ourcraft.Network.ServerNetworkHandler;
+import dev.hilligans.ourcraft.Server.IServer;
 import dev.hilligans.ourcraft.ServerMain;
 
 public class TeleportCommand extends CommandHandler {
@@ -18,6 +19,7 @@ public class TeleportCommand extends CommandHandler {
 
     @Override
     public String handle(CommandExecutor executor, String[] args) {
+        IServer server = executor.getServer();
         if(args.length >= 4) {
             PlayerEntity playerEntity = executor.getServer().getServerNetworkHandler().getPlayerEntity(args[0]);
             if(playerEntity != null) {
@@ -25,8 +27,8 @@ public class TeleportCommand extends CommandHandler {
                 float y = Float.parseFloat(args[2]);
                 float z = Float.parseFloat(args[3]);
                 playerEntity.setPos(x,y,z);
-                ServerMain.getServer().sendPacket(new SUpdateEntityPacket(x,y,z,playerEntity.pitch,playerEntity.yaw,playerEntity.id));
-                ServerMain.getServer().sendPacket(new SUpdatePlayer(x,y,z,playerEntity.pitch,playerEntity.yaw),playerEntity);
+                server.sendPacket(new SUpdateEntityPacket(x,y,z,playerEntity.pitch,playerEntity.yaw,playerEntity.id));
+                server.sendPacket(new SUpdatePlayer(x,y,z,playerEntity.pitch,playerEntity.yaw),playerEntity);
             } else {
                 return "no player found with name " + args[0];
             }
@@ -38,17 +40,15 @@ public class TeleportCommand extends CommandHandler {
                     float y = Float.parseFloat(args[1]);
                     float z = Float.parseFloat(args[2]);
                     entity.setPos(x,y,z);
-                    ServerMain.getServer().sendPacket(new SUpdateEntityPacket(x, y, z, entity.pitch, entity.yaw, entity.id));
+                    server.sendPacket(new SUpdateEntityPacket(x, y, z, entity.pitch, entity.yaw, entity.id));
 
                     if (entity instanceof PlayerEntity) {
-                        ServerMain.getServer().sendPacket(new SUpdatePlayer(x, y, z, entity.pitch, entity.yaw), (PlayerEntity) entity);
+                        server.sendPacket(new SUpdatePlayer(x, y, z, entity.pitch, entity.yaw), (PlayerEntity) entity);
                     }
                 }
 
             } catch (Exception ignored) {}
         }
-
-
         return "";
     }
 }

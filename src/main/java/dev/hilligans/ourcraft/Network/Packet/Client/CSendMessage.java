@@ -41,12 +41,12 @@ public class CSendMessage extends PacketBaseNew<IServerPacketHandler> {
                 if (commandHandler != null) {
                     String[] args1 = new String[args.length - 1];
                     System.arraycopy(args,1,args1,0,args1.length);
-                    ServerMain.getServer().sendPacket(new SChatMessage((String) commandHandler.handle(new EntityExecutor(serverPacketHandler.getPlayerEntity()),args1)));
+                    serverPacketHandler.sendPacket(new SChatMessage((String) commandHandler.handle(new EntityExecutor(serverPacketHandler.getPlayerEntity()),args1)));
                     return;
                 }
             }
             System.out.println(name + ": " + message);
-            ServerMain.getServer().sendPacket(new SChatMessage(name + ": " + message));
+            serverPacketHandler.sendPacket(new SChatMessage(name + ": " + message));
         }
     }
 

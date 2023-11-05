@@ -13,6 +13,7 @@ import dev.hilligans.ourcraft.Client.Input.RepeatingInput;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.FixedFunctionGL.FixedFunctionGLEngine;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Implementations.WorldCamera;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.OpenGL.OpenGLEngine;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.Tasks.ChatRenderTask;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Tasks.GUIRenderTask;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Tasks.WorldRenderTask;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.Tasks.WorldTransparentRenderTask;
@@ -138,13 +139,16 @@ public class Ourcraft {
                     .setPipelineState(new PipelineState().setDepth(true)));
             view.registerRenderTarget(new RenderTarget("translucent_world_renderer", "ourcraft:new_world_pipeline").afterTarget("particle_renderer", "ourcraft")
                     .setPipelineState(new PipelineState().setDepth(true)));
-            view.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:new_world_pipeline").afterTarget("translucent_world_renderer", "ourcraft")
+            view.registerRenderTarget(new RenderTarget("chat_renderer", "ourcraft:new_world_pipeline").afterTarget("translucent_world_renderer", "ourcraft")
+                    .setPipelineState(new PipelineState()));
+            view.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:new_world_pipeline").afterTarget("chat_renderer", "ourcraft")
                     .setPipelineState(new PipelineState()));
 
+
             view.registerRenderTask(new GUIRenderTask());
-            //view.registerRenderTask(new WorldRenderTask());
             view.registerRenderTask(new WorldRenderTask());
             view.registerRenderTask(new WorldTransparentRenderTask());
+            view.registerRenderTask(new ChatRenderTask());
 
             view.registerVertexFormat(position_texture_color, position_color_texture, position_texture_globalColor, position_texture, position_texture_animatedWrap_shortenedColor, position_color);
 
