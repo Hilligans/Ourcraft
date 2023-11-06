@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.Client.Rendering.Graphics;
 import dev.hilligans.ourcraft.Client.Client;
 import dev.hilligans.ourcraft.Client.MatrixStack;
 import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.GraphicsContext;
+import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.ModHandler.Content.ModContent;
 import dev.hilligans.ourcraft.Util.Registry.IRegistryElement;
@@ -56,10 +57,13 @@ public class RenderPipeline implements IRegistryElement {
 
     public void build(RenderWindow window) {
         this.window = window;
+    }
+
+    public void buildTargets(IGraphicsEngine<?, ?, ?> graphicsEngine) {
         for(RenderTarget renderTarget : renderTargets) {
             for (RenderTaskSource renderTaskSource : modContent.getGameInstance().RENDER_TASK.ELEMENTS) {
                 if(renderTaskSource.renderTargetName.equals(renderTarget.getIdentifierName())) {
-                    renderTasks.add(renderTaskSource.getTask(window.getGraphicsEngine().getIdentifierName()));
+                    renderTasks.add(renderTaskSource.getTask(graphicsEngine.getIdentifierName()));
                 }
             }
         }

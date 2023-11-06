@@ -34,6 +34,7 @@ public class ContentPack {
     public HashMap<String, Boolean> loadedMods = new HashMap<>();
     public HashMap<String, String> modStates = new HashMap<>();
     public HashMap<String, Boolean> shouldLoad = new HashMap<>();
+
     public ContentPack(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
         gameInstance.EVENT_BUS.register(t -> {

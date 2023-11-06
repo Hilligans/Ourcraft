@@ -126,6 +126,9 @@ public class GameInstance {
                 }
             }
         }
+        for(RenderPipeline renderPipeline : RENDER_PIPELINES.ELEMENTS) {
+            renderPipeline.buildTargets(graphicsEngine);
+        }
     }
 
     public void cleanupGraphics(IGraphicsEngine<?,?,?> graphicsEngine, GraphicsContext graphicsContext) {

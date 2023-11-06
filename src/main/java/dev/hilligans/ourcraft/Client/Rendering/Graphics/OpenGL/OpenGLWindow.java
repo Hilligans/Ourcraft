@@ -59,6 +59,7 @@ public class OpenGLWindow extends RenderWindow {
 
     @Override
     public void swapBuffers() {
+        super.swapBuffers();
         glfwSwapInterval(0);
         glfwSwapBuffers(window);
         client.rendering = false;

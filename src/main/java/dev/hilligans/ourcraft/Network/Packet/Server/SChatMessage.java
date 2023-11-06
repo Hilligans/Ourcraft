@@ -1,6 +1,5 @@
 package dev.hilligans.ourcraft.Network.Packet.Server;
 
-import dev.hilligans.ourcraft.Client.ChatWindow;
 import dev.hilligans.ourcraft.Client.Client;
 import dev.hilligans.ourcraft.Network.*;
 
@@ -25,7 +24,6 @@ public class SChatMessage extends PacketBaseNew<IClientPacketHandler> {
     @Override
     public void decode(IPacketByteArray packetData) {
         message = packetData.readUTF16();
-
     }
 
     @Override

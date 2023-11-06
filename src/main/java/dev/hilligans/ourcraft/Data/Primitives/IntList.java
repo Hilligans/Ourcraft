@@ -1,6 +1,5 @@
 package dev.hilligans.ourcraft.Data.Primitives;
 
-import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.IntBuffer;

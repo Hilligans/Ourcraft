@@ -16,6 +16,7 @@ public class Input implements IRegistryElement {
     public String key;
     public String modID;
     public int[] keyBinds;
+    public String[] pipelines = new String[]{};
 
     public ArrayList<String> boundKey = new ArrayList<>(1);
 
@@ -46,6 +47,11 @@ public class Input implements IRegistryElement {
 
     public void removeBind(int index) {
         boundKey.remove(index);
+    }
+
+    public Input onlyWithPipelines(String... pipelines) {
+        this.pipelines = pipelines;
+        return this;
     }
 
     @Override

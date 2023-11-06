@@ -145,6 +145,12 @@ public class Ourcraft {
                     .setPipelineState(new PipelineState()));
 
 
+            view.registerRenderPipelines(new RenderPipeline("menu_pipeline"));
+
+            view.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:menu_pipeline")
+                    .setPipelineState(new PipelineState()));
+
+
             view.registerRenderTask(new GUIRenderTask());
             view.registerRenderTask(new WorldRenderTask());
             view.registerRenderTask(new WorldTransparentRenderTask());
@@ -217,22 +223,22 @@ public class Ourcraft {
             });
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_W,
-                    (window, strength) -> window.getCamera().moveForward(5f * strength)));
+                    (window, strength) -> window.getCamera().moveForward(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_A,
-                    (window, strength) -> window.getCamera().moveLeft(5f * strength)));
+                    (window, strength) -> window.getCamera().moveLeft(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_S,
-                    (window, strength) -> window.getCamera().moveBackward(5f * strength)));
+                    (window, strength) -> window.getCamera().moveBackward(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_D,
-                    (window, strength) -> window.getCamera().moveRight(5f * strength)));
+                    (window, strength) -> window.getCamera().moveRight(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_SPACE,
-                    (window, strength) -> window.getCamera().moveUp(5f * strength)));
+                    (window, strength) -> window.getCamera().moveUp(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_LEFT_SHIFT,
-                    (window, strength) -> window.getCamera().moveUp(-5f * strength)));
+                    (window, strength) -> window.getCamera().moveUp(-5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_DOWN,
                     (window, strength) -> window.getCamera().addRotation(0.1f * strength, 0)));

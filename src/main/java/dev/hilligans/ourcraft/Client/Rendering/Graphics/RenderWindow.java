@@ -25,6 +25,8 @@ public abstract class RenderWindow {
     public Logger logger;
     public InputHandler inputHandler;
 
+    public String queuedPipeline;
+
     public double mouseX;
     public double mouseY;
 
@@ -36,7 +38,7 @@ public abstract class RenderWindow {
                 logger = log.withKey("window");
             }
         }
-        setRenderPipeline("ourcraft:new_world_pipeline");
+        setRenderPipeline("ourcraft:menu_pipeline");
         camera = new PlayerCamera();
     }
 
@@ -53,11 +55,19 @@ public abstract class RenderWindow {
     }
 
     public void setRenderPipeline(RenderPipeline renderPipeline) {
+        if(renderPipeline == null) {
+            throw new NullPointerException();
+        }
         this.renderPipeline = renderPipeline;
+        this.renderPipeline.build(this);
     }
 
     public void setRenderPipeline(String name) {
-        this.renderPipeline = graphicsEngine.getGameInstance().RENDER_PIPELINES.get(name);
+        setRenderPipeline(graphicsEngine.getGameInstance().RENDER_PIPELINES.get(name));
+    }
+
+    public void queueRenderPipeline(String name) {
+        this.queuedPipeline = name;
     }
 
     public abstract long getWindowID();
@@ -66,7 +76,12 @@ public abstract class RenderWindow {
 
     public abstract boolean shouldClose();
 
-    public abstract void swapBuffers();
+    public void swapBuffers() {
+        if(queuedPipeline != null) {
+            setRenderPipeline(queuedPipeline);
+            queuedPipeline = null;
+        }
+    }
 
     public abstract Client getClient();
 
