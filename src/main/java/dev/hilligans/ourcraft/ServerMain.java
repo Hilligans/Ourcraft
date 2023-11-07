@@ -1,13 +1,13 @@
 package dev.hilligans.ourcraft;
 
-import dev.hilligans.ourcraft.Server.MultiPlayerServer;
-import dev.hilligans.ourcraft.Util.ArgumentContainer;
-import dev.hilligans.ourcraft.Util.Profiler;
-import dev.hilligans.ourcraft.Util.Settings;
-import dev.hilligans.ourcraft.Util.Side;
-import dev.hilligans.ourcraft.World.NewWorldSystem.*;
-import dev.hilligans.ourcraft.World.World;
-import dev.hilligans.ourcraft.World.WorldGen.IWorldHeightBuilder;
+import dev.hilligans.ourcraft.server.MultiPlayerServer;
+import dev.hilligans.ourcraft.util.ArgumentContainer;
+import dev.hilligans.ourcraft.util.Profiler;
+import dev.hilligans.ourcraft.util.Settings;
+import dev.hilligans.ourcraft.util.Side;
+import dev.hilligans.ourcraft.world.newworldsystem.*;
+import dev.hilligans.ourcraft.world.World;
+import dev.hilligans.ourcraft.world.gen.IWorldHeightBuilder;
 import dev.hilligans.planets.gen.PlanetWorldHeightBuilder;
 
 import java.io.BufferedReader;

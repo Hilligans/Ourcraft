@@ -1,0 +1,33 @@
+package dev.hilligans.ourcraft.data.primitives;
+
+public class Tuple<T,Q> {
+
+    public T typeA;
+    public Q typeB;
+
+    public Tuple(T typeA, Q typeB) {
+        this.typeA = typeA;
+        this.typeB = typeB;
+    }
+
+    public Tuple() {
+
+    }
+
+    public T getTypeA() {
+        return typeA;
+    }
+
+    public Q getTypeB() {
+        return typeB;
+    }
+
+    public boolean has() {
+        return typeA != null && typeB != null;
+    }
+
+    @Override
+    public String toString() {
+        return "<" + typeA + "," + typeB + ">";
+    }
+}

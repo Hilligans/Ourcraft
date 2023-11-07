@@ -1,9 +1,9 @@
 package dev.hilligans.ourcraft;
 
-import dev.hilligans.ourcraft.Client.Client;
-import dev.hilligans.ourcraft.Client.Rendering.Graphics.API.IGraphicsEngine;
-import dev.hilligans.ourcraft.Util.ArgumentContainer;
-import dev.hilligans.ourcraft.Util.Side;
+import dev.hilligans.ourcraft.client.Client;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
+import dev.hilligans.ourcraft.util.ArgumentContainer;
+import dev.hilligans.ourcraft.util.Side;
 
 import java.io.IOException;
 

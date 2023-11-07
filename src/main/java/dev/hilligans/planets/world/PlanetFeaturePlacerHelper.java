@@ -1,13 +1,12 @@
 package dev.hilligans.planets.world;
 
-import dev.hilligans.ourcraft.Block.BlockState.IBlockState;
-import dev.hilligans.ourcraft.Data.Other.BlockPos;
-import dev.hilligans.ourcraft.World.NewWorldSystem.IFeaturePlacerHelper;
-import dev.hilligans.ourcraft.World.NewWorldSystem.IWorld;
+import dev.hilligans.ourcraft.block.blockstate.IBlockState;
+import dev.hilligans.ourcraft.data.other.BlockPos;
+import dev.hilligans.ourcraft.world.newworldsystem.IFeaturePlacerHelper;
+import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 import org.joml.*;
 
 import java.lang.Math;
-import java.util.Arrays;
 
 public class PlanetFeaturePlacerHelper implements IFeaturePlacerHelper {
 

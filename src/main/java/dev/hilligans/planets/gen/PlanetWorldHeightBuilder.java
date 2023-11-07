@@ -1,14 +1,7 @@
 package dev.hilligans.planets.gen;
 
-import dev.hilligans.ourcraft.Util.Math.Vector3fi;
-import dev.hilligans.ourcraft.Util.Noises.KenPerlinNoise;
-import dev.hilligans.ourcraft.Util.Noises.Noise;
-import dev.hilligans.ourcraft.Util.Noises.PerlinNoise;
-import dev.hilligans.ourcraft.Util.Noises.SimplexNoise;
-import dev.hilligans.ourcraft.World.WorldGen.IWorldHeightBuilder;
+import dev.hilligans.ourcraft.world.gen.IWorldHeightBuilder;
 import org.joml.Math;
-import org.joml.Vector3d;
-import org.joml.Vector3f;
 
 import java.util.Random;
 
