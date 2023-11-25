@@ -140,12 +140,7 @@ public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWin
     }
 
     @Override
-    public String getIdentifierName() {
-        return "ourcraft:fixedFunctionOpenglEngine";
-    }
-
-    @Override
-    public String getUniqueName() {
-        return "graphicsEngine.ourcraft.fixedFunctionOpenglEngine";
+    public String getResourceOwner() {
+        return "ourcraft";
     }
 }

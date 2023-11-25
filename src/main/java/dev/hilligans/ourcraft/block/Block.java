@@ -326,13 +326,13 @@ public class Block implements IRegistryElement {
     }
 
     @Override
-    public String getIdentifierName() {
-        return modId + ":" + name;
+    public String getResourceOwner() {
+        return modId;
     }
 
     @Override
-    public String getUniqueName() {
-        return "block." + modId + "." + name;
+    public String getResourceType() {
+        return "block";
     }
 
     @Override

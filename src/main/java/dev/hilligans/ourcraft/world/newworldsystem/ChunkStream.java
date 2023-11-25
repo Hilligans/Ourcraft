@@ -25,13 +25,13 @@ public abstract class ChunkStream implements IRegistryElement {
     }
 
     @Override
-    public String getIdentifierName() {
-        return modContent.getModID() + ":" + name;
+    public String getResourceOwner() {
+        return modContent.getModID();
     }
 
     @Override
-    public String getUniqueName() {
-        return "chunk_stream." + modContent.getModID() + "." + name;
+    public String getResourceType() {
+        return "chunk_stream";
     }
 
     @Override

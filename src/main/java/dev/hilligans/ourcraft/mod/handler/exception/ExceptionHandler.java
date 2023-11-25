@@ -27,4 +27,9 @@ public abstract class ExceptionHandler<T extends Exception> implements IRegistry
     public void load(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
     }
+
+    @Override
+    public String getResourceType() {
+        return "exception_handler";
+    }
 }

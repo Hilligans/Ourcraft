@@ -8,20 +8,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-public class Registry<T> {
+public class Registry<T extends IRegistryElement> implements IRegistryElement {
 
     public HashMap<String,T> MAPPED_ELEMENTS = new HashMap<>();
     public ArrayList<T> ELEMENTS = new ArrayList<>();
     public GameInstance gameInstance;
     public Class<?> classType;
+    public String registryType;
 
-    public Registry(GameInstance gameInstance) {
-        this.gameInstance = gameInstance;
-    }
-
-    public Registry(GameInstance gameInstance, Class<?> classType) {
+    public Registry(GameInstance gameInstance, Class<?> classType, String registryType) {
         this.gameInstance = gameInstance;
         this.classType = classType;
+        this.registryType = registryType;
     }
 
     public void clear() {
@@ -38,13 +36,20 @@ public class Registry<T> {
     }
 
     public void put(String name, T element) {
+        if(!registryType.equals(element.getResourceType())) {
+            throw new RegistryException("Failed to add elements to registry, " + element.getResourceType() + " does not match type of this registry of " + registryType, this);
+        }
         if(gameInstance.EVENT_BUS.postEvent(new RegisterEvent<>(this,name,element)).shouldRun()) {
-            if(element instanceof IRegistryElement) {
-                ((IRegistryElement) element).setUniqueID(getUniqueID());
+            if(element != null) {
+                element.setUniqueID(getUniqueID());
             }
             MAPPED_ELEMENTS.put(name, element);
             ELEMENTS.add(element);
         }
+    }
+
+    public void put(T element) {
+        put(element.getIdentifierName(), element);
     }
 
     public void put(Identifier identifier, T element) {
@@ -53,11 +58,11 @@ public class Registry<T> {
 
     public void putAll(T[] types) {
         if(types.length != 0) {
-            if(!(types[0] instanceof IRegistryElement)) {
+            if(types[0] == null) {
                 throw new RegistryException("Failed to add elements to registry, " + types[0].getClass() + " does not implement the IRegistryElement class.", this);
             }
             for(T t : types) {
-                put(((IRegistryElement)t).getIdentifierName(), t);
+                put(t.getIdentifierName(), t);
             }
         }
     }
@@ -120,5 +125,20 @@ public class Registry<T> {
 
     public int getUniqueID() {
         return ELEMENTS.size();
+    }
+
+    @Override
+    public String getResourceName() {
+        return registryType;
+    }
+
+    @Override
+    public String getResourceOwner() {
+        return "ourcraft";
+    }
+
+    @Override
+    public String getResourceType() {
+        return "registry";
     }
 }

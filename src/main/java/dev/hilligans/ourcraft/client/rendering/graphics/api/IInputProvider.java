@@ -19,4 +19,9 @@ public interface IInputProvider extends IRegistryElement {
     void tick();
 
     String getButtonName(int button, int extra);
+
+    @Override
+    default String getResourceType() {
+        return "input_handler";
+    }
 }

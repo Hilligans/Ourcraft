@@ -165,13 +165,13 @@ public class Item implements IRecipeComponent, IRegistryElement {
     }
 
     @Override
-    public String getIdentifierName() {
-        return modID + ":" + name;
+    public String getResourceOwner() {
+        return modID;
     }
 
     @Override
-    public String getUniqueName() {
-        return "item." + modID + "." + name;
+    public String getResourceType() {
+        return "item";
     }
 
     @Override

@@ -1,15 +1,17 @@
 package dev.hilligans.ourcraft.network;
 
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.network.packet.InvalidFormatPacket;
 import dev.hilligans.ourcraft.Ourcraft;
+import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import it.unimi.dsi.fastutil.ints.Int2BooleanOpenHashMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
-public class Protocol {
+public class Protocol implements IRegistryElement {
 
     public String protocolName;
 
@@ -18,6 +20,7 @@ public class Protocol {
     public Int2BooleanOpenHashMap requiredIds = new Int2BooleanOpenHashMap();
     public boolean compressed;
     public GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
+    public ModContent source;
 
     public void register(Supplier<PacketBase> packet) {
         register(new PacketFetcher(packets.size(),packet));
@@ -94,5 +97,25 @@ public class Protocol {
                 ", packetMap=" + packetMap +
                 ", requiredIds=" + requiredIds +
                 '}';
+    }
+
+    @Override
+    public void assignModContent(ModContent source) {
+        this.source = source;
+    }
+
+    @Override
+    public String getResourceName() {
+        return protocolName;
+    }
+
+    @Override
+    public String getResourceOwner() {
+        return source.getModID();
+    }
+
+    @Override
+    public String getResourceType() {
+        return "protocol";
     }
 }

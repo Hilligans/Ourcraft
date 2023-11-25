@@ -117,15 +117,14 @@ public class Texture implements IRegistryElement {
     }
 
     @Override
-    public String getIdentifierName() {
-        return source.getModID() + ":" + path;
+    public String getResourceOwner() {
+        return source.getModID();
     }
 
     @Override
-    public String getUniqueName() {
-        return "texture." + source.getModID() + "." + path;
+    public String getResourceType() {
+        return "texture";
     }
-
     @Override
     public void assignModContent(ModContent modContent) {
         this.source = modContent;

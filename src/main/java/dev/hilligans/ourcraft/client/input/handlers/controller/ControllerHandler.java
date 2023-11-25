@@ -181,12 +181,7 @@ public class ControllerHandler implements IInputProvider {
     }
 
     @Override
-    public String getIdentifierName() {
-        return "ourcraft:" + getResourceName();
-    }
-
-    @Override
-    public String getUniqueName() {
-        return "input_handler.ourcraft." + getResourceName();
+    public String getResourceOwner() {
+        return "ourcraft";
     }
 }

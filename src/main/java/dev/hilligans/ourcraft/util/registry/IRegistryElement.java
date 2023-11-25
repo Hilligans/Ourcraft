@@ -15,11 +15,17 @@ public interface IRegistryElement {
 
     String getResourceName();
 
+    String getResourceOwner();
+
+    String getResourceType();
+
     default String getIdentifierName() {
-        return "ourcraft:" + getResourceName();
+        return getResourceOwner() + ":" + getResourceName();
     }
 
-    String getUniqueName();
+    default String getUniqueName() {
+        return getResourceType() + "." + getResourceOwner() + "." + getIdentifierName();
+    }
 
     default ResourceLocation getResourceLocation(ModContent modContent) {
         return new ResourceLocation(getResourceName(),modContent);

@@ -44,16 +44,11 @@ public class LoaderExceptionHandler extends ExceptionHandler<Exception> {
 
     @Override
     public String getResourceName() {
-        return null;
+        return "loaderExceptionHandler";
     }
 
     @Override
-    public String getIdentifierName() {
-        return super.getIdentifierName();
-    }
-
-    @Override
-    public String getUniqueName() {
-        return null;
+    public String getResourceOwner() {
+        return "ourcraft";
     }
 }

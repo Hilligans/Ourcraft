@@ -32,13 +32,13 @@ public class Feature implements IRegistryElement {
     }
 
     @Override
-    public String getIdentifierName() {
-        return modContent.getModID() + ':' + featureName;
+    public String getResourceOwner() {
+        return modContent.getModID();
     }
 
     @Override
-    public String getUniqueName() {
-        return "feature." + modContent.getModID() + "." + featureName;
+    public String getResourceType() {
+        return "feature";
     }
 
     public ArrayList<Block> getBlockList() {

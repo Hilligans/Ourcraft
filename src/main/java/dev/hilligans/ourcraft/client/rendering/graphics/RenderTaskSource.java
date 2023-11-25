@@ -48,12 +48,12 @@ public abstract class RenderTaskSource implements IRegistryElement {
     }
 
     @Override
-    public String getIdentifierName() {
-        return source.modID + ":" + name;
+    public String getResourceOwner() {
+        return source.modID;
     }
 
     @Override
-    public String getUniqueName() {
-        return "render_task." + source.modID + "." + name;
+    public String getResourceType() {
+        return "render_task";
     }
 }

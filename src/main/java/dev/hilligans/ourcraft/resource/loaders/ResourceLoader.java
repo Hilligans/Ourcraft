@@ -1,21 +1,24 @@
 package dev.hilligans.ourcraft.resource.loaders;
 
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.resource.ResourceLocation;
 import dev.hilligans.ourcraft.tag.CompoundNBTTag;
 import dev.hilligans.ourcraft.save.WorldLoader;
+import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public abstract class ResourceLoader<T> {
+public abstract class ResourceLoader<T> implements IRegistryElement {
 
     public String name;
     public String category;
     public GameInstance gameInstance;
     public ArrayList<String> fileTypes = new ArrayList<>();
+    public ModContent source;
 
     public ResourceLoader(String name, String category) {
         this.name = name;
@@ -79,5 +82,25 @@ public abstract class ResourceLoader<T> {
         byteBuffer.limit(byteBuffer.position());
         byteBuffer.reset();
         return byteBuffer;
+    }
+
+    @Override
+    public void assignModContent(ModContent modContent) {
+        this.source = modContent;
+    }
+
+    @Override
+    public String getResourceName() {
+        return name;
+    }
+
+    @Override
+    public String getResourceOwner() {
+        return source.getModID();
+    }
+
+    @Override
+    public String getResourceType() {
+        return "resource_loader";
     }
 }

@@ -131,12 +131,7 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
     }
 
     @Override
-    public String getIdentifierName() {
-        return "ourcraft:vulkanEngine";
-    }
-
-    @Override
-    public String getUniqueName() {
-        return "graphicsEngine.ourcraft.vulkanEngine";
+    public String getResourceOwner() {
+        return "ourcraft";
     }
 }

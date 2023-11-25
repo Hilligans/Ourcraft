@@ -174,12 +174,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
     }
 
     @Override
-    public String getIdentifierName() {
-        return "ourcraft:openglEngine";
-    }
-
-    @Override
-    public String getUniqueName() {
-        return "graphicsEngine.ourcraft.openglEngine";
+    public String getResourceOwner() {
+        return "ourcraft";
     }
 }

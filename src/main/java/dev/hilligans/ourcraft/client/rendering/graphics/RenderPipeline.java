@@ -89,12 +89,12 @@ public class RenderPipeline implements IRegistryElement {
     }
 
     @Override
-    public String getIdentifierName() {
-        return modContent.getModID() + ":" + name;
+    public String getResourceOwner() {
+        return modContent.getModID();
     }
 
     @Override
-    public String getUniqueName() {
-        return "block." + modContent.getModID() + "." + name;
+    public String getResourceType() {
+        return "render_pipeline";
     }
 }

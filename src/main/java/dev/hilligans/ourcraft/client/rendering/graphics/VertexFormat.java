@@ -55,13 +55,13 @@ public class VertexFormat implements IRegistryElement {
     }
 
     @Override
-    public String getIdentifierName() {
-        return modID + ":" + formatName;
+    public String getResourceOwner() {
+        return modID;
     }
 
     @Override
-    public String getUniqueName() {
-        return "vertex_format." + modID + "." + formatName;
+    public String getResourceType() {
+        return "vertex_format";
     }
 
     public static final int

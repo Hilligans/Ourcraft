@@ -79,30 +79,29 @@ public class GameInstance {
     public GameInstance() {
         gameInstanceUniversalID = getNewGameInstanceUniversalID();
 
-        REGISTRIES.put("ouracrft:blocks", BLOCKS);
-        REGISTRIES.put("ourcraft:items", ITEMS);
-        REGISTRIES.put("ourcraft:biomes", BIOMES);
-        REGISTRIES.put("ourcraft:tags", TAGS);
-        REGISTRIES.put("ourcraft:recipes", RECIPES);
-        REGISTRIES.put("ourcraft:recipe_views", RECIPE_VIEWS);
-        REGISTRIES.put("ourcraft:graphics_engines", GRAPHICS_ENGINES);
-        REGISTRIES.put("ourcraft:settings", SETTINGS);
-        REGISTRIES.put("ourcraft:protocols", PROTOCOLS);
-        REGISTRIES.put("ourcraft:commands", COMMANDS);
-        REGISTRIES.put("ourcraft:resource_loaders", RESOURCE_LOADERS);
-        REGISTRIES.put("ourcraft:sounds", SOUNDS);
-        REGISTRIES.put("ourcraft:entities", ENTITIES);
-        REGISTRIES.put("ourcraft:tool_materials", TOOL_MATERIALS);
-        REGISTRIES.put("ourcraft:screen_builders", SCREEN_BUILDERS);
-        REGISTRIES.put("ourcraft:features", FEATURES);
-        REGISTRIES.put("ourcraft:render_targets", RENDER_TARGETS);
-        REGISTRIES.put("ourcraft:render_pipeline", RENDER_PIPELINES);
-        REGISTRIES.put("ourcraft:render_task", RENDER_TASK);
-        REGISTRIES.put("ourcraft:key_binds", KEY_BINDS);
-        REGISTRIES.put("ourcraft:vertex_formats", VERTEX_FORMATS);
-        REGISTRIES.put("ourcraft:input_handler_providers", INPUT_HANDLER_PROVIDERS);
-        REGISTRIES.put("ourcraft:textures", TEXTURES);
-        REGISTRIES.put("ourcraft:shaders", SHADERS);
+        REGISTRIES.put(BLOCKS);
+        REGISTRIES.put(ITEMS);
+        REGISTRIES.put(BIOMES);
+        REGISTRIES.put(TAGS);
+        REGISTRIES.put(RECIPES);
+        REGISTRIES.put(RECIPE_VIEWS);
+        REGISTRIES.put(GRAPHICS_ENGINES);
+        REGISTRIES.put(SETTINGS);
+        REGISTRIES.put(PROTOCOLS);
+        REGISTRIES.put(COMMANDS);
+        REGISTRIES.put(RESOURCE_LOADERS);
+        REGISTRIES.put(SOUNDS);
+        REGISTRIES.put(TOOL_MATERIALS);
+        REGISTRIES.put(SCREEN_BUILDERS);
+        REGISTRIES.put(FEATURES);
+        REGISTRIES.put(RENDER_TARGETS);
+        REGISTRIES.put(RENDER_PIPELINES);
+        REGISTRIES.put(RENDER_TASK);
+        REGISTRIES.put(KEY_BINDS);
+        REGISTRIES.put(VERTEX_FORMATS);
+        REGISTRIES.put(INPUT_HANDLER_PROVIDERS);
+        REGISTRIES.put(TEXTURES);
+        REGISTRIES.put(SHADERS);
     }
 
     public void loadContent() {
@@ -143,33 +142,32 @@ public class GameInstance {
 
     public String path = System.getProperty("user.dir");
 
-    public final Registry<Registry<?>> REGISTRIES = new Registry<>(this);
+    public final Registry<Registry<?>> REGISTRIES = new Registry<>(this, Registry.class, "registry");
 
-    public final Registry<Block> BLOCKS = new Registry<>(this, Block.class);
-    public final Registry<Item> ITEMS = new Registry<>(this, Item.class);
-    public final Registry<Biome> BIOMES = new Registry<>(this, Biome.class);
-    public final Registry<Tag> TAGS = new Registry<>(this, Tag.class);
-    public final Registry<IRecipe<?>> RECIPES = new Registry<>(this, IRecipe.class);
-    public final Registry<RecipeView<?>> RECIPE_VIEWS = new Registry<>(this, RecipeView.class);
-    public final Registry<IGraphicsEngine<?,?,?>> GRAPHICS_ENGINES = new Registry<>(this, IGraphicsEngine.class);
-    public final Registry<CommandHandler> COMMANDS = new Registry<>(this, CommandHandler.class);
-    public final Registry<Protocol> PROTOCOLS = new Registry<>(this, Protocol.class);
-    public final Registry<Setting> SETTINGS = new Registry<>(this, Setting.class);
-    public final Registry<ResourceLoader<?>> RESOURCE_LOADERS = new Registry<>(this, ResourceLoader.class);
-    public final Registry<SoundBuffer> SOUNDS = new Registry<>(this, SoundBuffer.class);
-    public final Registry<EntityFetcher> ENTITIES = new Registry<>(this, EntityFetcher.class);
-    public final Registry<ToolLevel> TOOL_MATERIALS = new Registry<>(this, ToolLevel.class);
-    public final Registry<RegistryLoader> DATA_LOADERS = new Registry<>(this, RegistryLoader.class);
-    public final Registry<ScreenBuilder> SCREEN_BUILDERS = new Registry<>(this, ScreenBuilder.class);
-    public final Registry<Feature> FEATURES = new Registry<>(this, Feature.class);
-    public final Registry<RenderTarget> RENDER_TARGETS = new Registry<>(this, RenderTarget.class);
-    public final Registry<RenderPipeline> RENDER_PIPELINES = new Registry<>(this, RenderPipeline.class);
-    public final Registry<RenderTaskSource> RENDER_TASK = new Registry<>(this, RenderTaskSource.class);
-    public final Registry<Input> KEY_BINDS = new Registry<>(this, Input.class);
-    public final Registry<VertexFormat> VERTEX_FORMATS = new Registry<>(this, VertexFormat.class);
-    public final Registry<InputHandlerProvider> INPUT_HANDLER_PROVIDERS = new Registry<>(this, InputHandlerProvider.class);
-    public final Registry<Texture> TEXTURES = new Registry<>(this, Texture.class);
-    public final Registry<ShaderSource> SHADERS = new Registry<>(this, ShaderSource.class);
+    public final Registry<Block> BLOCKS = new Registry<>(this, Block.class, "block");
+    public final Registry<Item> ITEMS = new Registry<>(this, Item.class, "item");
+    public final Registry<Biome> BIOMES = new Registry<>(this, Biome.class, "biome");
+    public final Registry<Tag> TAGS = new Registry<>(this, Tag.class, "tag");
+    public final Registry<IRecipe<?>> RECIPES = new Registry<>(this, IRecipe.class, "recipe");
+    public final Registry<RecipeView<?>> RECIPE_VIEWS = new Registry<>(this, RecipeView.class, "recipe_view");
+    public final Registry<IGraphicsEngine<?,?,?>> GRAPHICS_ENGINES = new Registry<>(this, IGraphicsEngine.class, "graphics_engine");
+    public final Registry<CommandHandler> COMMANDS = new Registry<>(this, CommandHandler.class, "command");
+    public final Registry<Protocol> PROTOCOLS = new Registry<>(this, Protocol.class, "protocol");
+    public final Registry<Setting> SETTINGS = new Registry<>(this, Setting.class, "setting");
+    public final Registry<ResourceLoader<?>> RESOURCE_LOADERS = new Registry<>(this, ResourceLoader.class, "resource_loader");
+    public final Registry<SoundBuffer> SOUNDS = new Registry<>(this, SoundBuffer.class, "sound");
+    public final Registry<ToolLevel> TOOL_MATERIALS = new Registry<>(this, ToolLevel.class, "tool_level");
+    public final Registry<RegistryLoader> DATA_LOADERS = new Registry<>(this, RegistryLoader.class, "registry_loader");
+    public final Registry<ScreenBuilder> SCREEN_BUILDERS = new Registry<>(this, ScreenBuilder.class, "screen");
+    public final Registry<Feature> FEATURES = new Registry<>(this, Feature.class, "feature");
+    public final Registry<RenderTarget> RENDER_TARGETS = new Registry<>(this, RenderTarget.class, "render_target");
+    public final Registry<RenderPipeline> RENDER_PIPELINES = new Registry<>(this, RenderPipeline.class, "render_pipeline");
+    public final Registry<RenderTaskSource> RENDER_TASK = new Registry<>(this, RenderTaskSource.class, "render_task");
+    public final Registry<Input> KEY_BINDS = new Registry<>(this, Input.class, "key_bind");
+    public final Registry<VertexFormat> VERTEX_FORMATS = new Registry<>(this, VertexFormat.class, "vertex_format");
+    public final Registry<InputHandlerProvider> INPUT_HANDLER_PROVIDERS = new Registry<>(this, InputHandlerProvider.class, "input");
+    public final Registry<Texture> TEXTURES = new Registry<>(this, Texture.class, "texture");
+    public final Registry<ShaderSource> SHADERS = new Registry<>(this, ShaderSource.class, "shader");
     public ArrayList<IBlockState> BLOCK_STATES;
 
     public void buildBlockStates() {
@@ -255,16 +253,6 @@ public class GameInstance {
     public void registerSound(SoundBuffer... soundBuffers) {
         for(SoundBuffer soundBuffer : soundBuffers) {
             SOUNDS.put(soundBuffer.file, soundBuffer);
-        }
-    }
-
-    public void registerEntity(EntityFetcher entityFetcher) {
-        //ENTITIES.put(entityFetcher.);
-    }
-
-    public void registerEntities(EntityFetcher... entityFetchers) {
-        for(EntityFetcher entityFetcher : entityFetchers) {
-            registerEntity(entityFetcher);
         }
     }
 

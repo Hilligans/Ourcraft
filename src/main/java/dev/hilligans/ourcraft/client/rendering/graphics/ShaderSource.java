@@ -63,13 +63,13 @@ public class ShaderSource implements IRegistryElement {
     }
 
     @Override
-    public String getIdentifierName() {
-        return modContent.getModID() + ":" + name;
+    public String getResourceOwner() {
+        return modContent.getModID();
     }
 
     @Override
-    public String getUniqueName() {
-        return "shader." + modContent.getModID() + "." + name;
+    public String getResourceType() {
+        return "shader";
     }
 
     @Override

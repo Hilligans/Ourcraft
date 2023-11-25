@@ -60,13 +60,13 @@ public class Input implements IRegistryElement {
     }
 
     @Override
-    public String getIdentifierName() {
-        return modID + ":" + key;
+    public String getResourceOwner() {
+        return modID;
     }
 
     @Override
-    public String getUniqueName() {
-        return "key_bind." + modID + "." + key;
+    public String getResourceType() {
+        return "key_bind";
     }
 
     public void setModContent(ModContent modContent) {

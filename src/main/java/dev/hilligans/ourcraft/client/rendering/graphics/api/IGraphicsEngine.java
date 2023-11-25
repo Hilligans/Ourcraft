@@ -78,4 +78,9 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
     @Override
     default void cleanup() {
     }
+
+    @Override
+    default String getResourceType() {
+        return "graphics_engine";
+    }
 }

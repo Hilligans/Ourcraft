@@ -55,12 +55,12 @@ public abstract class CommandHandler implements IRegistryElement {
     }
 
     @Override
-    public String getIdentifierName() {
-        return modContent.getModID() + ":" + command;
+    public String getResourceOwner() {
+        return modContent.getModID();
     }
 
     @Override
-    public String getUniqueName() {
-        return "command." + modContent.getModID() + "." + command;
+    public String getResourceType() {
+        return "command";
     }
 }
