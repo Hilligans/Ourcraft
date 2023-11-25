@@ -40,7 +40,7 @@ public class WFCStructureBuilder implements IStructureBuilder {
         public WFCPlaceOnTopSegment addPlaceOnTopSegment() {
             WFCPlaceOnTopSegment segment = new WFCPlaceOnTopSegment();
 
-            return this;
+            return null;
         }
     }
 }
