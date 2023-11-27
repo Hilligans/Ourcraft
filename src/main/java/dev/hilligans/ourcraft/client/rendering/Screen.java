@@ -1,11 +1,18 @@
 package dev.hilligans.ourcraft.client.rendering;
 
+import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 
 public interface Screen {
 
     void setWindow(RenderWindow renderWindow);
+
+    RenderWindow getWindow();
+
+    default Client getClient() {
+        return getWindow().getClient();
+    }
 
     default void render(RenderWindow window, MatrixStack matrixStack) {}
 

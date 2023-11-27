@@ -10,8 +10,7 @@ import dev.hilligans.ourcraft.util.Settings;
 
 public class ChestScreen extends ContainerScreen<ChestContainer> {
 
-    public ChestScreen(Client client) {
-        super(client);
+    public ChestScreen() {
     }
 
     @Override

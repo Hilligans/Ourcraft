@@ -12,10 +12,6 @@ import dev.hilligans.ourcraft.util.Settings;
 
 public class InventoryScreen extends ContainerScreen<InventoryContainer> {
 
-    public InventoryScreen(Client client) {
-        super(client);
-    }
-
     @Override
     public InventoryContainer getContainer() {
         return new InventoryContainer();

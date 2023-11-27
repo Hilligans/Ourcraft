@@ -12,7 +12,7 @@ public class CraftingTableContainer extends Container implements CraftingContain
     }
 
     @Override
-    public ContainerScreen<?> getContainerScreen(Client client) {
+    public ContainerScreen<?> getContainerScreen() {
         return null;
     }
 

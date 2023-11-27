@@ -57,8 +57,8 @@ public class CreativeContainer extends Container {
     }
 
     @Override
-    public ContainerScreen<?> getContainerScreen(Client client) {
-        return new CreativeInventoryScreen(client);
+    public ContainerScreen<?> getContainerScreen() {
+        return new CreativeInventoryScreen();
     }
 
     public static IInventory createInventory() {

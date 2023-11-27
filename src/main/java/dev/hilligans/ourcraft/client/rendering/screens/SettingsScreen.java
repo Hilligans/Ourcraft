@@ -11,8 +11,7 @@ import dev.hilligans.ourcraft.util.Settings;
 
 public class SettingsScreen extends ScreenBase {
 
-    public SettingsScreen(Client client) {
-        super(client);
+    public SettingsScreen() {
     }
 
     @Override
@@ -31,8 +30,8 @@ public class SettingsScreen extends ScreenBase {
                 //client.shaderManager.colorShader = client.shaderManager.opaqueColorShader;
             }
         }));
-        addWidget(new Button(300, 50, 200, 40, "settings.sound_options", () -> client.openScreen(new VolumeScreen(client))));
-        addWidget(new Button(300,100,200,40,"settings.languages",() -> client.openScreen(new LanguageScreen(client))));
-        addWidget(new Button(300,150,200,40,"Settings.advanced_settings",() -> client.openScreen(new AdvancedSettingsScreen(client))));
+        addWidget(new Button(300, 50, 200, 40, "settings.sound_options", () -> getClient().openScreen(new VolumeScreen())));
+        addWidget(new Button(300,100,200,40,"settings.languages",() -> getClient().openScreen(new LanguageScreen())));
+        addWidget(new Button(300,150,200,40,"Settings.advanced_settings",() -> getClient().openScreen(new AdvancedSettingsScreen())));
     }
 }

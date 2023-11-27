@@ -25,7 +25,7 @@ public class BotActions {
     }
 
     public BotActionResult openInventory(BotInstance botInstance) {
-        botInstance.client.openScreen(new InventoryScreen(botInstance.client));
+        botInstance.client.openScreen(new InventoryScreen());
         return BotActionResult.SUCCESS;
     }
 

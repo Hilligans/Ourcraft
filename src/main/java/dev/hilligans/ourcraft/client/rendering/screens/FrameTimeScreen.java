@@ -6,8 +6,7 @@ import dev.hilligans.ourcraft.client.rendering.widgets.FrameTimeWidget;
 
 public class FrameTimeScreen extends ScreenBase {
 
-    public FrameTimeScreen(Client client) {
-        super(client);
+    public FrameTimeScreen() {
         addWidget(new FrameTimeWidget(100,100,400,400,4));
     }
 }

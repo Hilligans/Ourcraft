@@ -19,12 +19,11 @@ public class JoinScreen extends ScreenBase {
     public ServerSelectorWidget selected;
     Button play;
 
-    public JoinScreen(Client client) {
-        super(client);
+    public JoinScreen() {
         registerKeyPress(new KeyPress() {
             @Override
             public void onPress() {
-                client.openScreen(new TagEditorScreen(client));
+                getClient().openScreen(new TagEditorScreen());
             }
         }, GLFW_KEY_H);
     }
@@ -32,6 +31,8 @@ public class JoinScreen extends ScreenBase {
     @Override
     public void buildContentForWindow(RenderWindow window) {
         int windowY = (int) window.getWindowHeight();
+
+        Client client = getClient();
 
         play = new Button(100, windowY / 2 + 100, 200, 50, "menu.join", () -> {
             if(selected != null) {
@@ -41,8 +42,8 @@ public class JoinScreen extends ScreenBase {
         addWidget(play);
         addWidget(new ServerSelectorWidget(100,300,200,80,"localhost","25588",this));
         addWidget(new ServerSelectorWidget(100,400,200,80,"198.100.150.46","25588",this));
-        addWidget(new Button(500, 200, 200, 50, "menu.create_account", () -> client.openScreen(new AccountCreationScreen(client))));
-        addWidget(new Button(500, 300, 200, 50, "menu.log_in", () -> client.openScreen(new LoginScreen(client))));
+        addWidget(new Button(500, 200, 200, 50, "menu.create_account", () -> client.openScreen(new AccountCreationScreen())));
+        addWidget(new Button(500, 300, 200, 50, "menu.log_in", () -> client.openScreen(new LoginScreen())));
         addWidget(new Button(500,400,200,50,"menu.singleplayer", () -> {
             //ServerWorld world = new ServerWorld(ClientMain.gameInstance);
             //world.worldBuilders.add( new OreBuilder("stone", Blocks.GRASS,Blocks.STONE).setFrequency(20));
@@ -87,12 +88,11 @@ public class JoinScreen extends ScreenBase {
     @Override
     public void drawScreen(RenderWindow window, MatrixStack matrixStack) {
         super.drawScreen(window, matrixStack);
-        if(client.playerData.valid_account) {
-            window.getStringRenderer().drawStringInternal(window, matrixStack,client.playerData.userName, (int) (Settings.guiSize * 8), (int) (1 * Settings.guiSize),0.5f);
+        if(getClient().playerData.valid_account) {
+            window.getStringRenderer().drawStringInternal(window, matrixStack,getClient().playerData.userName, (int) (Settings.guiSize * 8), (int) (1 * Settings.guiSize),0.5f);
             Textures.CHECK_MARK.drawTexture(window, matrixStack,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
         } else {
             Textures.X_MARK.drawTexture(window, matrixStack,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
         }
     }
-
 }

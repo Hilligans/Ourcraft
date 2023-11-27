@@ -33,7 +33,7 @@ public class SlabBlockContainer extends Container {
     }
 
     @Override
-    public ContainerScreen<?> getContainerScreen(Client client) {
+    public ContainerScreen<?> getContainerScreen() {
         return null;
     }
 }

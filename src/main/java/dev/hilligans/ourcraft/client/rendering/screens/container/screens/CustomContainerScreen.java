@@ -8,10 +8,6 @@ import dev.hilligans.ourcraft.container.Container;
 
 public abstract class CustomContainerScreen extends ContainerScreen<Container> {
 
-    public CustomContainerScreen(Client client) {
-        super(client);
-    }
-
     @Override
     public abstract void drawScreen(RenderWindow window, MatrixStack matrixStack);
 

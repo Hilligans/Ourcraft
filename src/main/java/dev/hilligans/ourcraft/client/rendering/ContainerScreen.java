@@ -22,8 +22,8 @@ public abstract class ContainerScreen<T extends Container> extends ScreenBase {
 
     public abstract T getContainer();
 
-    public ContainerScreen(Client client) {
-        super(client);
+
+    public ContainerScreen() {
     }
 
     public RecipeHelper recipeHelper = new RecipeHelper(Ourcraft.GAME_INSTANCE);
@@ -40,6 +40,7 @@ public abstract class ContainerScreen<T extends Container> extends ScreenBase {
         super.mouseClick(x, y, mouseButton);
 
         Slot slot = container.getSlotAt(x,y);
+        Client client = getClient();
         if(slot != null) {
             if(mouseButton == GLFW_MOUSE_BUTTON_1) {
                 ItemStack oldStack = client.playerData.heldStack.copy();

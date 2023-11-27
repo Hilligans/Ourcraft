@@ -132,7 +132,7 @@ public abstract class Container {
     }
 
 
-    public abstract ContainerScreen<?> getContainerScreen(Client client);
+    public abstract ContainerScreen<?> getContainerScreen();
 
     public void closeContainer() {
         for(Slot slot : slots) {

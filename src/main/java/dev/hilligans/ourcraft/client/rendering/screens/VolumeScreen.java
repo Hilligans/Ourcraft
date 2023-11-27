@@ -8,14 +8,10 @@ import dev.hilligans.ourcraft.client.rendering.widgets.SliderWidget;
 
 public class VolumeScreen extends ScreenBase {
 
-    public VolumeScreen(Client client) {
-        super(client);
-    }
-
     @Override
     public void buildContentForWindow(RenderWindow window) {
-        int windowX = (int) window.getWindowWidth();
-        int windowY = (int) window.getWindowHeight();
+        int windowX = window.getWindowWidth();
+        int windowY = window.getWindowHeight();
         addWidget(new SliderWidget("Master", windowX / 16, 50, windowX / 16 * 14, 40, 0, 100,(int)(SoundCategory.MASTER.volume * 100), value -> SoundCategory.MASTER.setVolume(value / 100f)));
         for(int x = 1; x < SoundCategory.soundCategories.size(); x++) {
             SoundCategory soundCategory = SoundCategory.soundCategories.get(x);

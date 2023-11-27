@@ -33,11 +33,13 @@ public class ServerSelectorWidget extends Widget {
 
     public void joinServer() {
         try {
-            screenBase.client.network.joinServer(ip,port, ClientMain.getClient());
-            screenBase.client.closeScreen();
-            screenBase.client.serverIP = ip + ":" + port;
+
+
+            screenBase.getClient().network.joinServer(ip,port, ClientMain.getClient());
+            screenBase.getClient().closeScreen();
+            screenBase.getClient().serverIP = ip + ":" + port;
             screenBase.window.queueRenderPipeline("ourcraft:new_world_pipeline");
-            screenBase.client.openScreen(new LoadingScreen(screenBase.client));
+            screenBase.getClient().openScreen(new LoadingScreen());
         } catch (Exception e) {
             e.printStackTrace();
         }

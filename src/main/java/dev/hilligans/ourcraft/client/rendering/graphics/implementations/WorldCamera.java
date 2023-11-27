@@ -63,14 +63,14 @@ public abstract class WorldCamera implements ICamera {
         moveVector.set(x, y, z).mul(moveMatrix);
         pos.add(moveVector);
 
-        IWorld world1 = ClientMain.getClient().newClientWorld;
+        IWorld world1 = getWindow().getClient().newClientWorld;
 
         Vector3f gravityVector = (Vector3f) world1.getGravityVector(pos.get(new Vector3f()).get(new Vector3f()));
         if(!this.gravityVector.get(new Vector3f()).mul(moveMatrix).equals(gravityVector)) {
             updateCameraForGravity(gravityVector);
         }
 
-        ClientMain.getClient().sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,pitch,yaw,ClientMain.getClient().playerId));
+        getWindow().getClient().sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,pitch,yaw,ClientMain.getClient().playerId));
     }
 
     public void updateCameraForGravity(Vector3fc newVector) {
@@ -349,5 +349,4 @@ public abstract class WorldCamera implements ICamera {
             default -> 1;
         };
     }
-
 }

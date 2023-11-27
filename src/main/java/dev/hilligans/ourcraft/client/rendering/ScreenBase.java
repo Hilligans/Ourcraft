@@ -20,13 +20,13 @@ public abstract class ScreenBase implements Screen {
     public ArrayList<CharPress> charPresses = new ArrayList<>();
     public ArrayList<KeyPress> keyPresses = new ArrayList<>();
 
-    public Client client;
+    //public Client client;
     public ShaderSource defaultShader;
 
     public ScreenBase() {}
 
     public ScreenBase(Client client) {
-        this.client = client;
+        //this.client = client;
     }
 
     public RenderWindow window;
@@ -64,7 +64,7 @@ public abstract class ScreenBase implements Screen {
         for(KeyPress keyPress : keyPresses) {
             KeyHandler.remove(keyPress);
         }
-        client.sendPacket(new CCloseScreen(replaced));
+        getClient().sendPacket(new CCloseScreen(replaced));
     }
 
     @Override

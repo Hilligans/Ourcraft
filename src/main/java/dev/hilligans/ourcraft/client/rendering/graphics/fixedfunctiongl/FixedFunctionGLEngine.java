@@ -92,7 +92,7 @@ public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWin
 
         setupStringRenderer("");
 
-        client.screen = new JoinScreen(client);
+        client.screen = new JoinScreen();
         client.screen.setWindow(renderWindow);
        //
         // client.clientWorld = new ClientWorld(client);

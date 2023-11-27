@@ -18,7 +18,6 @@ public class ModListScreen extends ScreenBase implements SelectorScreen {
     ToggleWidget toggleWidget;
 
     public ModListScreen(Client client) {
-        super(client);
         addWidget(folder);
         for(String string : client.gameInstance.CONTENT_PACK.mods.keySet()) {
             folder.addWidget(new SelectorWidget(0,0,200,50,string,this));
@@ -39,7 +38,7 @@ public class ModListScreen extends ScreenBase implements SelectorScreen {
     public void drawScreen(RenderWindow window, MatrixStack matrixStack) {
         super.drawScreen(window, matrixStack);
         if(selectorWidget != null) {
-            ModContent modContent = client.gameInstance.CONTENT_PACK.mods.get(selectorWidget.name);
+            ModContent modContent = getClient().gameInstance.CONTENT_PACK.mods.get(selectorWidget.name);
             window.getStringRenderer().drawStringInternal(window, matrixStack,new String[]{modContent.getModID() + "Version: " + modContent.version, "Dependencies: " + Util.toString(modContent.getDependencies()), " ", modContent.description},350,100,0.5f);
         }
     }

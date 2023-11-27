@@ -206,12 +206,12 @@ public class Ourcraft {
                     Client client = renderWindow.getClient();
                     if (client.renderWorld) {
                         if (client.screen == null) {
-                            client.openScreen(new EscapeScreen(client));
+                            client.openScreen(new EscapeScreen());
                         } else {
                             client.closeScreen();
                         }
                     } else {
-                        client.openScreen(new JoinScreen(client));
+                        client.openScreen(new JoinScreen());
                     }
                 }
             });
@@ -281,7 +281,7 @@ public class Ourcraft {
                 @Override
                 public void press(RenderWindow renderWindow, float strength) {
                     Client client = renderWindow.getClient();
-                    client.openScreen(new TagEditorScreen(client));
+                    client.openScreen(new TagEditorScreen());
                 }
             });
 
@@ -289,7 +289,7 @@ public class Ourcraft {
                 @Override
                 public void press(RenderWindow renderWindow, float strength) {
                     Client client = renderWindow.getClient();
-                    client.openScreen(new FrameTimeScreen(client));
+                    client.openScreen(new FrameTimeScreen());
                 }
             });
 

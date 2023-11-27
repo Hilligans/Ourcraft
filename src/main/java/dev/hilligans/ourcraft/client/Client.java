@@ -205,7 +205,7 @@ public class Client implements IClientPacketHandler {
     public void openScreen(Container container) {
 
         //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        ContainerScreen<?> containerScreen = container.getContainerScreen(this);
+        ContainerScreen<?> containerScreen = container.getContainerScreen();
         gameInstance.EVENT_BUS.postEvent(new OpenScreenEvent(containerScreen,screen));
         if(screen != null) {
             screen.close(true);
@@ -257,9 +257,9 @@ public class Client implements IClientPacketHandler {
             public void onPress() {
                 if(screen == null) {
                     if(playerData.creative) {
-                        openScreen(new CreativeInventoryScreen(client));
+                        openScreen(new CreativeInventoryScreen());
                     } else {
-                        openScreen(new InventoryScreen(client));
+                        openScreen(new InventoryScreen());
                     }
                 } else if(screen instanceof ContainerScreen) {
                     closeScreen();

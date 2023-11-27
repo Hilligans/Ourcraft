@@ -38,7 +38,7 @@ public class ScreenBuilder implements IRegistryElement {
     }
 
     public Screen get(Client client) {
-        return new ScreenBase(client) {
+        return new ScreenBase() {
             int width;
             int height;
 

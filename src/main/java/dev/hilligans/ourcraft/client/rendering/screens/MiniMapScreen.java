@@ -15,7 +15,6 @@ public class MiniMapScreen extends ScreenBase {
     MiniMap miniMap;
 
     public MiniMapScreen(Client client, MiniMap miniMap) {
-        super(client);
         this.miniMap = miniMap;
     }
 

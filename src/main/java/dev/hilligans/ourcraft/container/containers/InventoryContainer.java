@@ -29,8 +29,7 @@ public class InventoryContainer extends Container {
     }
 
     @Override
-    public ContainerScreen<?> getContainerScreen(Client client) {
-        return new InventoryScreen(client);
+    public ContainerScreen<?> getContainerScreen() {
+        return new InventoryScreen();
     }
-
 }

@@ -85,7 +85,7 @@ public class ClientWorld extends World {
 
     public void playSound(SoundBuffer soundBuffer, Vector3d pos) {
         if(Settings.sounds) {
-            ClientMain.getClient().soundEngine.addSound(soundBuffer,pos);
+            client.soundEngine.addSound(soundBuffer,pos);
         }
     }
 

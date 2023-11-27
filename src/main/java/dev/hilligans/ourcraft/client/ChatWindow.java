@@ -17,12 +17,6 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class ChatWindow implements Screen {
 
-    private static final int MESSAGE_LENGTH = 5000;
-
-    public static ArrayList<Tuple<String,Long>> messages = new ArrayList<>();
-
-    public static final int maxMessageCount = 20;
-
     public static ArrayList<String> sentMessages = new ArrayList<>();
     public static int messageIndex = -1;
 
@@ -167,6 +161,11 @@ public class ChatWindow implements Screen {
     @Override
     public void setWindow(RenderWindow renderWindow) {
 
+    }
+
+    @Override
+    public RenderWindow getWindow() {
+        return null;
     }
 
     @Override

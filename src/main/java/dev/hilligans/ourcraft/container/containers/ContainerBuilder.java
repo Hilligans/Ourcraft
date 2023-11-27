@@ -36,8 +36,8 @@ public class ContainerBuilder implements ContainerFetcher {
         Inventory inventory = new Inventory(slots.length);
         Container container = new Container(id,inventory) {
             @Override
-            public ContainerScreen<?> getContainerScreen(Client client) {
-                return new CustomContainerScreen(null) {
+            public ContainerScreen<?> getContainerScreen() {
+                return new CustomContainerScreen() {
                     @Override
                     public void drawScreen(RenderWindow window, MatrixStack matrixStack) {
                        // Texture texture1 = Textures.getTexture(textureName);

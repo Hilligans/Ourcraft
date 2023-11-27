@@ -108,7 +108,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         }, 0);
 
 
-        client.screen = new JoinScreen(client);
+        client.screen = new JoinScreen();
         client.screen.setWindow(renderWindow);
 
         glfwWindowHint(GLFW_SAMPLES, 4);

@@ -9,9 +9,6 @@ import dev.hilligans.ourcraft.container.containers.CreativeContainer;
 import dev.hilligans.ourcraft.util.Settings;
 
 public class CreativeInventoryScreen extends ContainerScreen<CreativeContainer> {
-    public CreativeInventoryScreen(Client client) {
-        super(client);
-    }
 
     @Override
     public CreativeContainer getContainer() {

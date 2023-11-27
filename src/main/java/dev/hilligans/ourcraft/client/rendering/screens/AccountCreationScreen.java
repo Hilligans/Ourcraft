@@ -18,19 +18,18 @@ public class AccountCreationScreen extends ScreenBase {
     InputField email = new InputField(100,400,200,100,"Email");
     InputField token = new InputField(100,550,200,100,"Email Token");
 
-    public AccountCreationScreen(Client client) {
-        super(client);
+    public AccountCreationScreen() {
         addWidget(username);
         addWidget(password);
         addWidget(email);
         addWidget(token);
 
         addWidget(new Button(500, 200, 200, 50, "Create Account", () -> {
-            client.playerData.email = email.string;
+            getClient().playerData.email = email.string;
             String passwordVal = Ourcraft.hashString(password.string, email.string);
-            client.playerData.userName = username.string;
-            client.saveUsernameAndPassword();
-            client.authNetwork.sendPacket(new CCreateAccount(username.string,passwordVal,email.string,token.string));
+            getClient().playerData.userName = username.string;
+            getClient().saveUsernameAndPassword();
+            getClient().authNetwork.sendPacket(new CCreateAccount(username.string,passwordVal,email.string,token.string));
         }));
 
     }

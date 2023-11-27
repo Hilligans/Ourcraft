@@ -19,8 +19,7 @@ public class TagEditorScreen extends ScreenBase {
     public FolderWidget folderWidget;
     public IntegerWrapper yOffset;
 
-    public TagEditorScreen(Client client) {
-        super(client);
+    public TagEditorScreen() {
         folderWidget = new FolderWidget(100,100,100,40,"Data");
         folderWidget.minY = 100 + FolderWidget.spacing;
         addWidget(folderWidget);
@@ -39,7 +38,7 @@ public class TagEditorScreen extends ScreenBase {
             }
             @Override
             public void cancel() {
-                client.openScreen(new JoinScreen(client));
+                getClient().openScreen(new JoinScreen());
             }
         })));
         addWidget(new Button(100, 0, 100, 40, "Save", () -> WorldLoader.save(compoundTag,filePath)));

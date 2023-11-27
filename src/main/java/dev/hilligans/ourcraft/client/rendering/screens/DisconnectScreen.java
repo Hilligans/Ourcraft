@@ -13,15 +13,14 @@ public class DisconnectScreen extends ScreenBase {
     String message;
 
     public DisconnectScreen(Client client, String message) {
-        super(client);
         this.message = message;
     }
 
     @Override
     public void buildContentForWindow(RenderWindow window) {
-        int windowX = (int) window.getWindowWidth();
-        int windowY = (int) window.getWindowHeight();
-        addWidget(new Button(windowX / 2 - 100, (int) (windowY / 2 + Settings.guiSize * 58), 200, 50, "menu.main_menu", () -> ClientMain.getClient().openScreen(new JoinScreen(client))));
+        int windowX = window.getWindowWidth();
+        int windowY = window.getWindowHeight();
+        addWidget(new Button(windowX / 2 - 100, (int) (windowY / 2 + Settings.guiSize * 58), 200, 50, "menu.main_menu", () -> getClient().openScreen(new JoinScreen())));
     }
 
     @Override

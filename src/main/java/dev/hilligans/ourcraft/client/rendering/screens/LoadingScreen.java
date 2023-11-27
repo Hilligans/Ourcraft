@@ -7,8 +7,7 @@ import dev.hilligans.ourcraft.client.rendering.ScreenBase;
 
 public class LoadingScreen extends ScreenBase {
 
-    public LoadingScreen(Client client) {
-        super(client);
+    public LoadingScreen() {
     }
 
     @Override
