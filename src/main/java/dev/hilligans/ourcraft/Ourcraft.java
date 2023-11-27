@@ -10,6 +10,7 @@ import dev.hilligans.ourcraft.client.input.handler.providers.KeyPressHandlerProv
 import dev.hilligans.ourcraft.client.input.handler.providers.MouseHandlerProvider;
 import dev.hilligans.ourcraft.client.input.Input;
 import dev.hilligans.ourcraft.client.input.RepeatingInput;
+import dev.hilligans.ourcraft.client.input.handlers.MouseHandler;
 import dev.hilligans.ourcraft.client.rendering.graphics.fixedfunctiongl.FixedFunctionGLEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.implementations.WorldCamera;
 import dev.hilligans.ourcraft.client.rendering.graphics.opengl.OpenGLEngine;
@@ -52,6 +53,7 @@ import java.nio.DoubleBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.BiConsumer;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -187,7 +189,7 @@ public class Ourcraft {
         Protocols.register(modContent);
 
         if (modContent.getGameInstance().side.equals(Side.CLIENT)) {
-            modContent.registerKeybinds(new Input("ourcraft:mouse_button_handler::0") {
+            modContent.registerKeybinds(new Input("ourcraft:mouse_handler::0") {
                 @Override
                 public void press(RenderWindow renderWindow, float strength) {
                     Client client = renderWindow.getClient();
@@ -220,7 +222,23 @@ public class Ourcraft {
                     Client client = renderWindow.getClient();
                     client.playerData.f3 = !client.playerData.f3;
                 }
-            });
+            }.onlyWithPipelines("ourcraft:new_world_pipeline"));
+
+            modContent.registerKeybinds(new Input("ourcraft:mouse_handler::" + MouseHandler.MOUSE_X) {
+                                            @Override
+                                            public void press(RenderWindow window, float strength) {
+                                                window.getCamera().addRotation(0, strength/100);
+                                                GLFW.glfwSetCursorPos(window.getWindowID(), window.getWindowWidth()/2,window.getWindowHeight()/2);
+                                            }
+                                        }.onlyWithPipelines("ourcraft:new_world_pipeline"));
+
+            modContent.registerKeybinds(new Input("ourcraft:mouse_handler::" + MouseHandler.MOUSE_Y) {
+                @Override
+                public void press(RenderWindow window, float strength) {
+                    window.getCamera().addRotation(-strength/100,0);
+                    GLFW.glfwSetCursorPos(window.getWindowID(), window.getWindowWidth()/2,window.getWindowHeight()/2);
+                }
+            }.onlyWithPipelines("ourcraft:new_world_pipeline"));
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_W,
                     (window, strength) -> window.getCamera().moveForward(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));

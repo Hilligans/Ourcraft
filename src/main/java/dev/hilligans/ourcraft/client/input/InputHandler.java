@@ -66,7 +66,9 @@ public class InputHandler {
             ArrayList<Input> inputs = this.inputs[input];
             if(inputs != null) {
                 for(Input input1 : inputs) {
-                    input1.process(this,input,mode,window,action);
+                    if(input1.canInput(window.renderPipeline.getIdentifierName())) {
+                        input1.process(this, input, mode, window, action, strength);
+                    }
                 }
             }
         }
@@ -90,7 +92,9 @@ public class InputHandler {
             if(strength != 0) {
                 ArrayList<Input> inputs1 = repeatingInputs[val];
                 for (Input input : inputs1) {
-                    input.repeat(window,strength * deltaTime);
+                    if(input.canInput(window.renderPipeline.getIdentifierName())) {
+                        input.repeat(window, strength * deltaTime);
+                    }
                 }
             }
         }

@@ -16,7 +16,7 @@ public class Input implements IRegistryElement {
     public String key;
     public String modID;
     public int[] keyBinds;
-    public String[] pipelines = new String[]{};
+    public String[] pipelines = null;
 
     public ArrayList<String> boundKey = new ArrayList<>(1);
 
@@ -31,6 +31,18 @@ public class Input implements IRegistryElement {
     public Input(String defaultBind, boolean repeating) {
         bind(defaultBind);
         this.repeating = repeating;
+    }
+
+    public boolean canInput(String pipeline) {
+        if(pipelines == null) {
+            return true;
+        }
+        for(String s : pipelines) {
+            if(pipeline.equals(s)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void press(RenderWindow renderWindow, float strength) {}
@@ -78,10 +90,10 @@ public class Input implements IRegistryElement {
         return displayName;
     }
 
-    public void process(InputHandler inputHandler, int input, float mode, RenderWindow window, int action) {
+    public void process(InputHandler inputHandler, int input, float mode, RenderWindow window, int action, float strength) {
         //TODO fix
         if(action == GLFW_PRESS) {
-            press(window, mode);
+            press(window, strength);
         }
     }
 
