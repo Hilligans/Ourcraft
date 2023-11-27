@@ -48,12 +48,12 @@ public class SplitWindow extends RenderWindow {
     }
 
     @Override
-    public float getWindowWidth() {
+    public int getWindowWidth() {
         return 0;
     }
 
     @Override
-    public float getWindowHeight() {
+    public int getWindowHeight() {
         return 0;
     }
 

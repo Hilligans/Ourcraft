@@ -51,8 +51,8 @@ public class ScreenShot {
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(0,0,1920,1080);
-        client.windowX = 1920;
-        client.windowY = 1080;
+       // client.windowX = 1920;
+       // client.windowY = 1080;
 
         writeImage(bufferedImage);
     }

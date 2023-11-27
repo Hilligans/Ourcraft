@@ -47,12 +47,4 @@ public class ClientMain {
         }
         client.startClient();
     }
-
-    public static int getWindowX() {
-        return client == null ? 0 : client.windowX;
-    }
-
-    public static int getWindowY() {
-        return client == null ? 0 : client.windowY;
-    }
 }

@@ -28,15 +28,15 @@ public class GUIRenderTask extends RenderTaskSource {
 
                 if (client.playerData.f3) {
                   //  stringRenderer.drawStringInternal(window,screenStack,"1",0,0,0.5f);
-                    stringRenderer.drawStringInternal(window, screenStack, "FPS:" + window.frameTracker.getFPS(), client.windowX / 2, 29, 0.5f);
+                    stringRenderer.drawStringInternal(window, screenStack, "FPS:" + window.frameTracker.getFPS(), window.getWindowWidth() / 2, 29, 0.5f);
                   /*  stringRenderer.drawStringInternal(window, screenStack, "Biome:" + client.clientWorld.biomeMap.getBiome((int) Camera.pos.x, (int) Camera.pos.z).name, client.windowX / 2, 58, 0.5f);
                     stringRenderer.drawStringInternal(window, screenStack, "VelY:" + Camera.velY, client.windowX / 2, 87, 0.5f);
                     Runtime runtime = Runtime.getRuntime();
                     long usedMB = (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024;
                     stringRenderer.drawStringInternal(window, screenStack, "Memory:" + usedMB + "MB", client.windowX / 2, 126, 0.5f);
                     */
-                    stringRenderer.drawStringInternal(window, screenStack, "Pitch:" + Math.toDegrees(window.camera.getPitch()), client.windowX / 2, 155, 0.5f);
-                    stringRenderer.drawStringInternal(window, screenStack, "Yaw:" + Math.toDegrees(window.camera.getYaw()), client.windowX / 2, 184, 0.5f);
+                    stringRenderer.drawStringInternal(window, screenStack, "Pitch:" + Math.toDegrees(window.camera.getPitch()), window.getWindowWidth() / 2, 155, 0.5f);
+                    stringRenderer.drawStringInternal(window, screenStack, "Yaw:" + Math.toDegrees(window.camera.getYaw()), window.getWindowWidth() / 2, 184, 0.5f);
                     /*
                     stringRenderer.drawStringInternal(window, screenStack, "Sounds:" + client.soundEngine.sounds.size(), client.windowX / 2, 213, 0.5f);
                     stringRenderer.drawStringInternal(window, screenStack, "Render Calls:" + GLRenderer.drawCalls, client.windowX / 2, 242, 0.5f);
@@ -48,9 +48,9 @@ public class GUIRenderTask extends RenderTaskSource {
                     stringRenderer.drawStringInternal(window, screenStack, "Chunks:" + client.chunks, client.windowX / 2, 329, 0.5f);
 
                    */
-                    stringRenderer.drawStringInternal(window,screenStack, "X:" + client.rWindow.camera.getCameraPos().x, client.windowX / 2, 358,0.5f);
-                    stringRenderer.drawStringInternal(window,screenStack, "Y:" + client.rWindow.camera.getCameraPos().y, client.windowX / 2, 387,0.5f);
-                    stringRenderer.drawStringInternal(window,screenStack, "Z:" + client.rWindow.camera.getCameraPos().z, client.windowX / 2, 416,0.5f);
+                    stringRenderer.drawStringInternal(window,screenStack, "X:" + client.rWindow.camera.getCameraPos().x, window.getWindowWidth() / 2, 358,0.5f);
+                    stringRenderer.drawStringInternal(window,screenStack, "Y:" + client.rWindow.camera.getCameraPos().y, window.getWindowWidth() / 2, 387,0.5f);
+                    stringRenderer.drawStringInternal(window,screenStack, "Z:" + client.rWindow.camera.getCameraPos().z, window.getWindowWidth() / 2, 416,0.5f);
                 }
               //  ItemStack stack = client.playerData.inventory.getItem(client.playerData.handSlot);
              //   if (stack != null && stack.item != null) {

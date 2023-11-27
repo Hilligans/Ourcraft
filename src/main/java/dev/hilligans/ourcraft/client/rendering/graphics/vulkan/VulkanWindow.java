@@ -217,12 +217,12 @@ public class VulkanWindow extends RenderWindow {
     }
 
     @Override
-    public float getWindowWidth() {
+    public int getWindowWidth() {
         return glfwWidth;
     }
 
     @Override
-    public float getWindowHeight() {
+    public int getWindowHeight() {
         return glfwHeight;
     }
 

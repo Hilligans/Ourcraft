@@ -110,12 +110,14 @@ public abstract class Container {
     }
 
     public void resize() {
-        int newX = (int)(ClientMain.getWindowX() / 2 - textureX * Settings.guiSize / 2);
-        int newY = (int)(ClientMain.getWindowY() / 2 - textureY * Settings.guiSize / 2);
-        for(Slot slot : slots) {
-            slot.x = (int)(newX + slot.startX * Settings.guiSize);
-            slot.y = (int)(newY + slot.startY * Settings.guiSize);
-        }
+        //TODO implement
+        //throw new RuntimeException("implement");
+        //int newX = (int)(ClientMain.getWindowX() / 2 - textureX * Settings.guiSize / 2);
+        //int newY = (int)(ClientMain.getWindowY() / 2 - textureY * Settings.guiSize / 2);
+        //for(Slot slot : slots) {
+        //    slot.x = (int)(newX + slot.startX * Settings.guiSize);
+        //    slot.y = (int)(newY + slot.startY * Settings.guiSize);
+        //}
     }
 
     public void addPlayerInventorySlots(int startX, int startY, IInventory inventory, int startIndex) {

@@ -94,7 +94,7 @@ public abstract class ScreenBase implements Screen {
     public void addWidget(Widget widget) {
         widgets.add(widget);
         widget.screenBase = this;
-        widget.onScreenResize(client.windowX,client.windowY);
+        widget.onScreenResize(window.getWindowWidth(),window.getWindowHeight());
     }
 
     @Override
@@ -105,6 +105,10 @@ public abstract class ScreenBase implements Screen {
             widget.addSource(renderWindow);
         }
         buildContentForWindow(renderWindow);
+    }
+
+    public RenderWindow getWindow() {
+        return window;
     }
 
     public void buildContentForWindow(RenderWindow window) {}

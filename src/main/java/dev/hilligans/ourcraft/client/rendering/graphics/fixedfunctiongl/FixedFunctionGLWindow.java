@@ -14,13 +14,13 @@ public class FixedFunctionGLWindow extends RenderWindow {
     public boolean shouldClose = false;
     public boolean mouseLocked = false;
     public boolean windowFocused = true;
-    public float width;
-    public float height;
+    public int width;
+    public int height;
 
     public FixedFunctionGLWindow(Client client, FixedFunctionGLEngine engine) {
         super(engine);
         this.camera = new FreeCamera(this);
-        window = glfwCreateWindow(client.windowX,client.windowY,"Ourcraft",NULL,NULL);
+        window = glfwCreateWindow(1920,1080,"Ourcraft",NULL,NULL);
         if(window == NULL) {
 
             glfwTerminate();
@@ -59,12 +59,12 @@ public class FixedFunctionGLWindow extends RenderWindow {
     }
 
     @Override
-    public float getWindowWidth() {
+    public int getWindowWidth() {
         return width;
     }
 
     @Override
-    public float getWindowHeight() {
+    public int getWindowHeight() {
         return height;
     }
 

@@ -55,8 +55,6 @@ public class Client implements IClientPacketHandler {
 
     public int playerId;
 
-    public int windowX = 1600;
-    public int windowY = 800;
     public boolean joinServer = true;
     public boolean valid = false;
     public boolean screenShot = false;
@@ -180,7 +178,8 @@ public class Client implements IClientPacketHandler {
     }
 
     public void openScreen(Screen screen1) {
-        screen1.setWindow(graphicsEngine.getWindows().get(0));
+        RenderWindow renderWindow = graphicsEngine.getWindows().get(0);
+        screen1.setWindow(renderWindow);
         gameInstance.EVENT_BUS.postEvent(new OpenScreenEvent(screen1,screen));
         //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         if(screen != null) {
@@ -199,7 +198,7 @@ public class Client implements IClientPacketHandler {
             }
             playerData.openContainer = container;
         }
-        screen1.resize(windowX,windowY);
+        screen1.resize(renderWindow.getWindowWidth(),renderWindow.getWindowHeight());
         sendPacket(new COpenScreen(screen1));
     }
 

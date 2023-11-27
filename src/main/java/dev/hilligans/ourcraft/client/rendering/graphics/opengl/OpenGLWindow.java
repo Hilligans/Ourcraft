@@ -18,8 +18,8 @@ public class OpenGLWindow extends RenderWindow {
     public boolean shouldClose = false;
     public boolean mouseLocked = false;
     public boolean windowFocused = true;
-    public float width;
-    public float height;
+    public int width;
+    public int height;
     public Vector4f clearColor = new Vector4f();
 
     public OpenGLWindow(Client client, OpenGLEngine engine, String name, int width, int height) {
@@ -78,12 +78,12 @@ public class OpenGLWindow extends RenderWindow {
     }
 
     @Override
-    public float getWindowWidth() {
+    public int getWindowWidth() {
         return width;
     }
 
     @Override
-    public float getWindowHeight() {
+    public int getWindowHeight() {
         return height;
     }
 
@@ -103,27 +103,9 @@ public class OpenGLWindow extends RenderWindow {
     }
 
     public void registerCallbacks() {
-        glfwSetCursorPosCallback(window, (window, xpos, ypos) -> {
-            mouseX = xpos;
-            mouseY = ypos;
-            if(mouseLocked) {
-                double halfWindowX = (double) getWindowWidth() / 2;
-                double halfWindowY = (double) getWindowHeight() / 2;
-
-                double deltaX = xpos - halfWindowX;
-                double deltaY = ypos - halfWindowY;
-
-                if(camera != null) {
-                 //   camera.addRotation((float) (deltaY / camera.getSensitivity()), (float) (deltaX / camera.getSensitivity()));
-                }
-                glfwSetCursorPos(window, halfWindowX, halfWindowY);
-            }
-        });
         glfwSetWindowSizeCallback(window, (window, w, h) -> {
             width = w;
             height = h;
-            client.windowX = w;
-            client.windowY = h;
             GL30.glViewport(0,0,w,h);
         });
 

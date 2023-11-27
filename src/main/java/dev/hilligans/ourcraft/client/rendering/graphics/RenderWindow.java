@@ -27,9 +27,6 @@ public abstract class RenderWindow {
 
     public String queuedPipeline;
 
-    public double mouseX;
-    public double mouseY;
-
     public RenderWindow(IGraphicsEngine<?,?,?> graphicsEngine) {
         this.graphicsEngine = graphicsEngine;
         if(graphicsEngine != null) {
@@ -89,9 +86,9 @@ public abstract class RenderWindow {
         return inputHandler;
     }
 
-    public abstract float getWindowWidth();
+    public abstract int getWindowWidth();
 
-    public abstract float getWindowHeight();
+    public abstract int getWindowHeight();
 
     public abstract boolean isWindowFocused();
 
@@ -102,7 +99,7 @@ public abstract class RenderWindow {
     }
 
     public float getAspectRatio() {
-        return getWindowWidth() / getWindowHeight();
+        return (float) getWindowWidth() / getWindowHeight();
     }
 
     public void setMouseCursor(Image image) {}
