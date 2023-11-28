@@ -32,6 +32,7 @@ public class NewBlockState implements IBlockState {
 
     public void build(int id) {
         map = new Object[builder.getSize()];
+        this.blockData = (short) id;
         int x = 0;
         for(IBlockStateType<?> stateType : builder.getStateTypes()) {
             int pos = Math.floorDiv(id, stateType.getCount());
@@ -73,6 +74,11 @@ public class NewBlockState implements IBlockState {
     @Override
     public int getBlockID() {
         return block.id;
+    }
+
+    @Override
+    public short getBlockStateIndex() {
+        return blockData;
     }
 
     @Override

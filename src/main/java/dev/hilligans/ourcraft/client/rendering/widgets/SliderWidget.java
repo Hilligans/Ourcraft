@@ -39,8 +39,8 @@ public class SliderWidget extends Widget {
     public void render(RenderWindow window, MatrixStack matrixStack, int xOffset, int yOffset) {
         super.render(window, matrixStack, xOffset, yOffset);
 
-        if(isFocused && ClientMain.getClient().mouseHandler.mousePressed) {
-            DoubleBuffer mousePos = ClientMain.getClient().getMousePos();
+        if(isFocused && window.getClient().mouseHandler.mousePressed) {
+            DoubleBuffer mousePos = window.getClient().getMousePos();
             if(isInBoundsX((int)mousePos.get(0))) {
                 activate((int)mousePos.get(0) - x, (int)mousePos.get(1) - y);
             } else if(mousePos.get(0) - x <= 0) {

@@ -1,5 +1,8 @@
 package dev.hilligans.ourcraft.data.other;
 
+import org.joml.Intersectionf;
+import org.joml.Vector2f;
+
 public interface IBoundingBox {
 
 
@@ -16,4 +19,6 @@ public interface IBoundingBox {
                 (maxY() > boundingBox.minY() && minY() < boundingBox.maxY()) &&
                 (maxZ() > boundingBox.minZ() && minZ() < boundingBox.maxZ());
     }
+
+    float intersectsRay(float x, float y, float z, float dirX, float dirY, float dirZ, Vector2f vector2f);
 }

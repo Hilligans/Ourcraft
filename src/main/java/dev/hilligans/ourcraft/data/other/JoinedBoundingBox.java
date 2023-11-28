@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.data.other;
 
+import org.joml.Vector2f;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 
@@ -37,6 +38,24 @@ public class JoinedBoundingBox extends BoundingBox {
             }
         }
         return false;
+    }
+
+    @Override
+    public float intersectsRay(float x, float y, float z, float dirX, float dirY, float dirZ, Vector2f vector2f) {
+        float max = Float.MAX_VALUE;
+        for(BoundingBox boundingBox : boundingBoxes) {
+            float res = boundingBox.intersectsRay(x, y, z, dirX, dirY, dirZ, vector2f);
+            if(res != -1) {
+                if(res < max) {
+                    max = res;
+                }
+            }
+        }
+        if(max == Float.MAX_VALUE) {
+            return -1;
+        }
+
+        return max;
     }
 
     @Override

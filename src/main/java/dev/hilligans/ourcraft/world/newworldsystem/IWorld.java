@@ -6,7 +6,10 @@ import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.ChunkPos;
 import dev.hilligans.ourcraft.entity.Entity;
 import dev.hilligans.ourcraft.util.Immutable;
+import dev.hilligans.ourcraft.util.MathUtil;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Intersectionf;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
@@ -65,6 +68,44 @@ public interface IWorld {
 
     default ChunkPos getConverted(long blockX, long blockY, long blockZ) {
         return new ChunkPos(blockX, blockY, blockZ, getChunkWidth(), getChunkHeight());
+    }
+
+    default IBlockState getIntersection(double startX, double startY, double startZ, float dirX, float dirY, float dirZ, float length) {
+        double X = startX + dirX * length;
+        double Y = startY + dirY * length;
+        double Z = startZ + dirZ * length;
+
+        long minX = MathUtil.floor(Math.min(X, startX));
+        long minY = MathUtil.floor(Math.min(Y, startY));
+        long minZ = MathUtil.floor(Math.min(Z, startZ));
+
+        long maxX = MathUtil.ceil(Math.max(X, startX));
+        long maxY = MathUtil.ceil(Math.max(Y, startY));
+        long mazZ = MathUtil.ceil(Math.max(Z, startZ));
+
+        Vector2f vector2f = new Vector2f();
+
+        IBlockState state = null;
+        float l = length + 1;
+
+        for(long x = minX; x < maxX; x++) {
+            for(long y = minY; y < maxY; y++) {
+                for(long z = minZ; z < mazZ; z++) {
+                    IBlockState blockState = getBlockState(x, y, z);
+                    float res = blockState.getBlock().getBoundingBox(blockState).intersectsRay((float) (x - startX), (float) (y - startY), (float) (z - startZ), dirX, dirY, dirZ, vector2f);
+                    if(res != -1) {
+                        if(res < l) {
+                            state = blockState;
+                            l = res;
+                        }
+                    }
+                }
+            }
+        }
+        if(l > length) {
+            return null;
+        }
+        return state;
     }
 
     Vector3f DOWN = new Vector3f(0,-1,0);

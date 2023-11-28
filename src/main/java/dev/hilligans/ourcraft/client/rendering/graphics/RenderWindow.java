@@ -86,6 +86,10 @@ public abstract class RenderWindow {
         return inputHandler;
     }
 
+    public abstract String getClipboardString();
+
+    public abstract void setMousePosition(int x, int y);
+
     public abstract int getWindowWidth();
 
     public abstract int getWindowHeight();

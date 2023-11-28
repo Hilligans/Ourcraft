@@ -6,6 +6,8 @@ import dev.hilligans.ourcraft.data.other.ChunkPos;
 import dev.hilligans.ourcraft.data.other.IBoundingBox;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Intersectionf;
+import org.joml.Vector2f;
 
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
@@ -148,5 +150,13 @@ public interface IChunk extends IBoundingBox {
     @Override
     default float maxZ() {
         return (getZ() + 1) * getWidth();
+    }
+
+    @Override
+    default float intersectsRay(float x, float y, float z, float dirX, float dirY, float dirZ, Vector2f vector2f) {
+        if (!Intersectionf.intersectRayAab(x, y, z, dirX, dirY, dirZ, minX(), minY(), minZ(), maxX(), maxY(), maxZ(), vector2f)) {
+            return -1;
+        }
+        return vector2f.x;
     }
 }

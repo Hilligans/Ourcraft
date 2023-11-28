@@ -37,11 +37,11 @@ public class SearchField extends Widget {
     @Override
     public void render(RenderWindow window, MatrixStack matrixStack, int xOffset, int yOffset) {
         super.render(window, matrixStack, xOffset, yOffset);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
+       // GL11.glDisable(GL11.GL_DEPTH_TEST);
        // Textures.SEARCH_BAR.drawTexture(matrixStack,x,y,width,height);
         window.getStringRenderer().drawStringTranslated(window, matrixStack, name, x, y, 0.5f);
         window.getStringRenderer().drawStringInternal(window, matrixStack, string,x,y + height / 2,0.5f);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
+       // GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 
     CharPress charPress = new CharPress() {

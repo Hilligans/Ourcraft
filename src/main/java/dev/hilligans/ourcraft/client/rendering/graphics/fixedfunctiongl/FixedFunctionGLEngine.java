@@ -86,7 +86,6 @@ public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWin
         GL.createCapabilities();
 
         client.glStarted = true;
-        client.shaderManager = new ShaderManager();
 
         glfwMakeContextCurrent(renderWindow.window);
 

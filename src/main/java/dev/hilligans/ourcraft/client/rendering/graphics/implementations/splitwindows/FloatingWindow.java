@@ -45,6 +45,16 @@ public class FloatingWindow extends RenderWindow {
     }
 
     @Override
+    public String getClipboardString() {
+        return null;
+    }
+
+    @Override
+    public void setMousePosition(int x, int y) {
+
+    }
+
+    @Override
     public int getWindowWidth() {
         return 0;
     }

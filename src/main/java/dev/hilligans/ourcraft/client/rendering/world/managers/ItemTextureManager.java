@@ -17,7 +17,7 @@ public class ItemTextureManager implements TextureManager {
 
     public void generate() {
         id = TextAtlas.instance.loadTextureId("Items/" + path,"Items/" + path.substring(0,path.length() - 4),"");
-        PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
+       // PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
     }
 
     @Override

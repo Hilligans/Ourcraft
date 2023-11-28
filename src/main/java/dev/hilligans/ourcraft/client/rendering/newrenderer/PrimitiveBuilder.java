@@ -21,13 +21,6 @@ public class PrimitiveBuilder {
     public int size = 0;
     public int count = 0;
 
-    public Shader shader;
-
-    public PrimitiveBuilder(int type, Shader shader) {
-        this.type = type;
-        this.shader = shader;
-    }
-
     public VertexFormat vertexFormat;
 
     public PrimitiveBuilder(VertexFormat vertexFormat) {
@@ -131,44 +124,8 @@ public class PrimitiveBuilder {
     }
 
     public int getCount() {
-        if(shader == null) {
-            return (vertexFormat.getStride() / 4);
-        } else {
-            return shader.shaderElementCount;
-        }
+        return (vertexFormat.getStride() / 4);
     }
-
-    public int[] createMesh() {
-        return createMesh(GL_STATIC_DRAW);
-    }
-
-    public int[] createMesh(int mode) {
-        float[] vertices = this.vertices.getElementData();
-        int[] indices = this.indices.getElementData();
-
-        int VAO = glGenVertexArrays();
-        int VBO = glGenBuffers();
-        int EBO = glGenBuffers();
-        glBindVertexArray(VAO);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, vertices, mode);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, mode);
-        int x = 0;
-        int pointer = 0;
-        for(Shader.ShaderElement shaderElement : shader.shaderElements) {
-            glVertexAttribPointer(x,shaderElement.count,shaderElement.type,shaderElement.normalised,shader.shaderElementCount * 4,pointer * 4);
-            glEnableVertexAttribArray(x);
-            x++;
-            pointer += shaderElement.count;
-        }
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        return new int[]{VAO,VBO,EBO};
-    }
-
-
-    public static int id = -1;
 
     public void rotate(float degrees, Vector3f vector) {
         rotate(degrees,vector,0);
@@ -177,19 +134,11 @@ public class PrimitiveBuilder {
     public void rotate(float degrees, Vector3f vector, int startPos) {
         Matrix3f matrix3f = new Matrix3f(1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f);
         matrix3f.rotate(degrees,vector);
-        for(int x = startPos; x < vertices.size(); x+=shader.shaderElementCount) {
+        for(int x = startPos; x < vertices.size(); x+=vertexFormat.getStride()) {
             Vector3f vector3f = new Vector3f(vertices.elementData[x],vertices.elementData[x] + 1, vertices.elementData[x] + 2).mul(matrix3f);
             vertices.elementData[x] = vector3f.x;
             vertices.elementData[x + 1] = vector3f.y;
             vertices.elementData[x + 2] = vector3f.z;
-        }
-    }
-
-    public void translate(float x, float y, float z, int startPos) {
-        for(int i = startPos; i < vertices.size(); i+=shader.shaderElementCount) {
-            vertices.elementData[i] += x;
-            vertices.elementData[i + 1] += y;
-            vertices.elementData[i + 2] += z;
         }
     }
 

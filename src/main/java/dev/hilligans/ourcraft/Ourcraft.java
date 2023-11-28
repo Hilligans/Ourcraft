@@ -227,7 +227,7 @@ public class Ourcraft {
             modContent.registerKeybinds(new Input("ourcraft:mouse_handler::" + MouseHandler.MOUSE_X) {
                                             @Override
                                             public void press(RenderWindow window, float strength) {
-                                                window.getCamera().addRotation(0, strength/100);
+                                                window.getCamera().addRotation(0, strength/400);
                                                 GLFW.glfwSetCursorPos(window.getWindowID(), window.getWindowWidth()/2,window.getWindowHeight()/2);
                                             }
                                         }.onlyWithPipelines("ourcraft:new_world_pipeline"));
@@ -235,7 +235,7 @@ public class Ourcraft {
             modContent.registerKeybinds(new Input("ourcraft:mouse_handler::" + MouseHandler.MOUSE_Y) {
                 @Override
                 public void press(RenderWindow window, float strength) {
-                    window.getCamera().addRotation(-strength/100,0);
+                    window.getCamera().addRotation(-strength/400,0);
                     GLFW.glfwSetCursorPos(window.getWindowID(), window.getWindowWidth()/2,window.getWindowHeight()/2);
                 }
             }.onlyWithPipelines("ourcraft:new_world_pipeline"));

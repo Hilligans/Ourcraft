@@ -46,6 +46,11 @@ public class BlockShape {
         return boundingBoxes.getOrDefault(val,defaultBoundingBox).duplicate();
     }
 
+    public BoundingBox getBoundingBox(IBlockState blockState) {
+        int val = blockState.getBlockStateIndex();
+        return boundingBoxes.getOrDefault(val,defaultBoundingBox).duplicate();
+    }
+
     public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset) {
         int rot = getRotation(blockState);
         if (rot != -1) {

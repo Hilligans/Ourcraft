@@ -68,7 +68,6 @@ public class Client implements IClientPacketHandler {
 
     public MouseHandler mouseHandler;
     public Screen screen;
-    public ShaderManager shaderManager;
     public SoundEngine soundEngine;
 
     public int texture;
@@ -178,7 +177,7 @@ public class Client implements IClientPacketHandler {
     }
 
     public void openScreen(Screen screen1) {
-        RenderWindow renderWindow = graphicsEngine.getWindows().get(0);
+        RenderWindow renderWindow = rWindow;
         screen1.setWindow(renderWindow);
         gameInstance.EVENT_BUS.postEvent(new OpenScreenEvent(screen1,screen));
         //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);

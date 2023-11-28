@@ -54,16 +54,6 @@ public class  VAOManager {
         return VAO;
     }
 
-    public static int createVAO(PrimitiveBuilder primitiveBuilder) {
-        return createVAO(primitiveBuilder,GL_STREAM_DRAW);
-    }
-
-    public static int createVAO(PrimitiveBuilder primitiveBuilder, int mode) {
-        int[] vals = primitiveBuilder.createMesh(mode);
-        buffers.put(vals[0],new Tuple<>(vals[1],vals[2]));
-        return vals[0];
-    }
-
     public static int createLine(float[] vertices, int[] indices) {
         int VAO = glGenVertexArrays();
         int VBO = glGenBuffers();

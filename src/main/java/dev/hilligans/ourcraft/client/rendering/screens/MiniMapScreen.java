@@ -25,7 +25,7 @@ public class MiniMapScreen extends ScreenBase {
     public void drawScreen(RenderWindow window, MatrixStack matrixStack) {
         super.drawScreen(window, matrixStack);
         if(MouseHandler.instance.mousePressed) {
-            DoubleBuffer mousePos = ClientMain.getClient().getMousePos();
+            DoubleBuffer mousePos = window.getClient().getMousePos();
             int x = (int) (mousePos.get(0) - mouseLastX);
             int y = (int) (mousePos.get(1) - mouseLastY);
             miniMap.addX(Math.round(x / getRatio(miniMap.zoom)));

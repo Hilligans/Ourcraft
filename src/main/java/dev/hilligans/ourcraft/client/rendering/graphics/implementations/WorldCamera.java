@@ -70,7 +70,7 @@ public abstract class WorldCamera implements ICamera {
             updateCameraForGravity(gravityVector);
         }
 
-        getWindow().getClient().sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,pitch,yaw,ClientMain.getClient().playerId));
+        getWindow().getClient().sendPacket(new CUpdatePlayerPacket(pos.x,pos.y,pos.z,pitch,yaw,getWindow().getClient().playerId));
     }
 
     public void updateCameraForGravity(Vector3fc newVector) {

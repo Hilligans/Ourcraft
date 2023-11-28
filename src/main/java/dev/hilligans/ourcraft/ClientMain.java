@@ -2,8 +2,12 @@ package dev.hilligans.ourcraft;
 
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
+import dev.hilligans.ourcraft.data.other.BoundingBox;
 import dev.hilligans.ourcraft.util.ArgumentContainer;
 import dev.hilligans.ourcraft.util.Side;
+import org.joml.Intersectionf;
+import org.joml.Math;
+import org.joml.Vector2f;
 
 import java.io.IOException;
 
@@ -28,6 +32,8 @@ public class ClientMain {
         gameInstance.handleArgs(args);
         gameInstance.side = Side.CLIENT;
         gameInstance.loadContent();
+
+        ;
 
         if(argumentContainer.getBoolean("--integratedServer", false)) {
             try {

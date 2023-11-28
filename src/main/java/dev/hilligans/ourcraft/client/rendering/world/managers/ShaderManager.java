@@ -1,46 +1,14 @@
 package dev.hilligans.ourcraft.client.rendering.world.managers;
 
-import dev.hilligans.ourcraft.client.rendering.newrenderer.Shader;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL41;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL20.glDeleteShader;
 import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
 public class ShaderManager {
-
-    //public int shaderProgram;
-    //public int colorShader;
-
-    public static Shader worldShader = new Shader(readShader("/Shaders/WorldVertexShader.glsl"),readShader("/Shaders/WorldFragmentShader.glsl")).addShaderElement(GL_FLOAT,3,false).addShaderElement(GL_FLOAT,4,false).addShaderElement(GL_FLOAT,2,false);
-    //  .addShaderElement(GL_FLOAT,1,false);
-    //public static Shader guiShader = new Shader(readShader("/Shaders/VertexShader.glsl"),readShader("/Shaders/FragmentShader.glsl")).addShaderElement(GL_FLOAT,3,false).addShaderElement(GL_FLOAT,2,false);
-
-    public ShaderManager() {
-        //shaderProgram = ShaderManager.registerShader(Util.shader,Util.fragmentShader1);
-        //colorShader = ShaderManager.registerShader(Util.coloredShader,Util.fragmentShader1);
-        //transparentColorShader = colorShader;
-        //opaqueColorShader = ShaderManager.registerShader(Util.coloredShader,Util.fragmentShader2);
-        //lineShader = ShaderManager.registerShader(Util.lineShader, Util.lineFragment);
-    }
-
-    public static String readShader(String source) {
-        StringBuilder stringBuilder = new StringBuilder();
-        InputStream stream = ShaderManager.class.getResourceAsStream(source);
-        if(stream == null) {
-            System.err.println("Cant read file " + source);
-            return "";
-        }
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        reader.lines().forEach(string -> stringBuilder.append(string).append("\n"));
-        return stringBuilder.toString() + "\n\0";
-    }
 
     public static int registerShader(String vertexShader, String fragmentShader) {
         int vertex =  GL30.glCreateShader(GL30.GL_VERTEX_SHADER);
@@ -150,6 +118,4 @@ public class ShaderManager {
         glDeleteShader(fragment);
         return shaderProgram;
     }
-
-
 }

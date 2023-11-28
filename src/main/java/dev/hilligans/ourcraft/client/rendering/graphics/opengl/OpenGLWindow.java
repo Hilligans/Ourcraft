@@ -78,6 +78,16 @@ public class OpenGLWindow extends RenderWindow {
     }
 
     @Override
+    public String getClipboardString() {
+        return glfwGetClipboardString(window);
+    }
+
+    @Override
+    public void setMousePosition(int x, int y) {
+        glfwSetCursorPos(window, x, y);
+    }
+
+    @Override
     public int getWindowWidth() {
         return width;
     }
@@ -112,6 +122,5 @@ public class OpenGLWindow extends RenderWindow {
         glfwSetWindowFocusCallback(window, (window, focused) -> windowFocused = focused);
         MouseHandler mouseHandler = new MouseHandler(client);
         glfwSetMouseButtonCallback(window, mouseHandler::invoke);
-        //inputHandler.add((IInputProvider) mouseHandler);
     }
 }

@@ -15,5 +15,4 @@ public class FreeCamera extends WorldCamera {
     public @NotNull RenderWindow getWindow() {
         return window;
     }
-
 }

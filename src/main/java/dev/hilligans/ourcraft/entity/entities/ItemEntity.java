@@ -110,6 +110,7 @@ public class ItemEntity extends Entity {
     }
 
     public void createMesh() {
+        /*
         PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
         if(block != null) {
             for (int x = 0; x < 6; x++) {
@@ -118,6 +119,8 @@ public class ItemEntity extends Entity {
             verticesCount = primitiveBuilder.indices.size();
             id = VAOManager.createVAO(primitiveBuilder);
         }
+
+         */
     }
 
 

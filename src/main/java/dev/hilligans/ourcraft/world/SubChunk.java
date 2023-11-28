@@ -94,10 +94,6 @@ public class SubChunk {
        }
     }
 
-    public void updateBlock(BlockPos pos) {
-        getBlock(pos.x & 15,pos.y & 15,pos.z & 15).getBlock().onUpdate(world,pos);
-    }
-
     public void set(int block) {
         for(int x = 0; x < 4096; x++) {
             vals[x] = block;

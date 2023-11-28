@@ -92,9 +92,6 @@ public class Block implements IRegistryElement {
 
     public void onBreak(World world, BlockPos blockPos) {}
 
-    public void onUpdate(World world, BlockPos blockPos) {}
-
-    public void tick(World world, BlockPos pos) {}
 
     //TODO fix
     /*
@@ -156,6 +153,10 @@ public class Block implements IRegistryElement {
 
     public BoundingBox getBoundingBox(World world, BlockPos pos) {
         return blockProperties.blockShape.getBoundingBox(world,pos);
+    }
+
+    public BoundingBox getBoundingBox(IBlockState blockState) {
+        return blockProperties.blockShape.getBoundingBox(blockState);
     }
 
     public void generateTextures(TextAtlas textAtlas) {

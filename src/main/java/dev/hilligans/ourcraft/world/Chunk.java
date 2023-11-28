@@ -258,14 +258,6 @@ public class Chunk implements IChunk {
         return heightMap.get((short)(((x & 0xF ) << 4) | (z  /*& 0xF */)));
     }
 
-    public void updateBlock(BlockPos pos) {
-        if(pos.y > Settings.chunkHeight * 16 || pos.y < 0) {
-            return;
-        }
-        int pos1 = pos.y >> 4;
-        chunks.get(pos1).updateBlock(pos);
-    }
-
     public ArrayList<Tuple<BlockState,Integer>> getBlockChainedList() {
         BlockState currentState = null;
         ArrayList<Tuple<BlockState,Integer>> values = new ArrayList<>();
@@ -287,25 +279,7 @@ public class Chunk implements IChunk {
         return values;
     }
 
-    public void setFromChainedList(ArrayList<Tuple<BlockState,Integer>> values) {
-        populated = true;
-        int offset = 0;
-        for(Tuple<BlockState, Integer> block : values) {
-            for(int i = 0; i < block.getTypeB(); i++) {
-                int x = offset & 15;
-                int y = offset >> 4 & 255;
-                int z = offset >> 12 & 15;
-                setBlockState(x,y,z,block.getTypeA().duplicate());
-                offset++;
-            }
-        }
-    }
-
     public int id = -1;
-
-    public SubChunk getSubChunk(int pos) {
-        return chunks.get(pos);
-    }
 
     @Override
     public String toString() {

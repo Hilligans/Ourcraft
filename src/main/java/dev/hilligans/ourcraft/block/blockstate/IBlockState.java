@@ -18,5 +18,7 @@ public interface IBlockState {
 
     int getBlockID();
 
+    short getBlockStateIndex();
+
     IBlockState setBlockStateID(int val);
 }

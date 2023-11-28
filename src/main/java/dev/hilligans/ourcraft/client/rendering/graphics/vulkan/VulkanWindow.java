@@ -217,6 +217,16 @@ public class VulkanWindow extends RenderWindow {
     }
 
     @Override
+    public String getClipboardString() {
+        return GLFW.glfwGetClipboardString(window);
+    }
+
+    @Override
+    public void setMousePosition(int x, int y) {
+        GLFW.glfwSetCursorPos(window, x, y);
+    }
+
+    @Override
     public int getWindowWidth() {
         return glfwWidth;
     }

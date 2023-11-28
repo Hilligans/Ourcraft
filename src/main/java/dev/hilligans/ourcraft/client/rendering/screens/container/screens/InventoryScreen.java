@@ -31,7 +31,7 @@ public class InventoryScreen extends ContainerScreen<InventoryContainer> {
        // Textures.HOTBAR.drawCenteredXTexture(matrixStack,startY, Settings.guiSize);
 
         for(int x = 0; x < 9; x++) {
-            ItemStack itemStack = ClientMain.getClient().playerData.inventory.getItem(x);
+            ItemStack itemStack = window.getClient().playerData.inventory.getItem(x);
             if(!itemStack.isEmpty()) {
                 itemStack.item.render(matrixStack,startX + x * width, startY, width / 2,itemStack);
             }

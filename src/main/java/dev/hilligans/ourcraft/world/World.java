@@ -110,20 +110,7 @@ public abstract class World {
         if (isServer()) {
             ServerMain.getServer().sendPacket(new SSendBlockChanges(x,y,z,blockState));
         }
-        updateBlock(new BlockPos(x,y,z));
-    }
-
-    private void updateBlock(BlockPos pos) {
-        for(int x = 0; x < 6; x++) {
-            BlockPos newPos = pos.add(Block.getBlockPos(x));
-            if(newPos.y >= Settings.minHeight  && newPos.y < Settings.maxHeight) {
-                Chunk chunk = getChunk(newPos.x >> 4, newPos.z >> 4);
-                if (chunk == null) {
-                    return;
-                }
-                chunk.updateBlock(newPos);
-            }
-        }
+        //updateBlock(new BlockPos(x,y,z));
     }
 
     public void spawnItemEntity(float x, float y, float z, ItemStack itemStack) {

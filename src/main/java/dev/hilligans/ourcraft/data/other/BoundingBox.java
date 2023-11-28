@@ -1,5 +1,7 @@
 package dev.hilligans.ourcraft.data.other;
 
+import org.joml.Intersectionf;
+import org.joml.Vector2f;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 
@@ -62,6 +64,17 @@ public class BoundingBox implements IBoundingBox {
 
     public boolean intersectVector(Vector3f vector3f, BlockPos source) {
         return intersectVector(new Vector3f(vector3f.x - source.x, vector3f.y - source.y, vector3f.z - source.z));
+    }
+
+    public float intersectsRay(float x, float y, float z, float dirX, float dirY, float dirZ) {
+        return intersectsRay(x, y, z, dirX, dirY, dirZ, new Vector2f());
+    }
+
+    public float intersectsRay(float x, float y, float z, float dirX, float dirY, float dirZ, Vector2f vector2f) {
+        if (!Intersectionf.intersectRayAab(x, y, z, dirX, dirY, dirZ, minX, minY, minZ, maxX, maxY, maxZ, vector2f)) {
+            return -1;
+        }
+        return vector2f.x;
     }
 
     public int getHitSide(Vector3f last) {
