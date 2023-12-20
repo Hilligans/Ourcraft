@@ -16,13 +16,11 @@ import dev.hilligans.ourcraft.client.rendering.Screen;
 import dev.hilligans.ourcraft.client.rendering.ScreenBuilder;
 import dev.hilligans.ourcraft.client.rendering.screens.container.screens.CreativeInventoryScreen;
 import dev.hilligans.ourcraft.client.rendering.screens.container.screens.InventoryScreen;
-import dev.hilligans.ourcraft.client.rendering.world.managers.ShaderManager;
 import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.container.Container;
 import dev.hilligans.ourcraft.data.other.PlayerList;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.item.ItemStack;
-import dev.hilligans.ourcraft.mod.handler.events.client.ClientStartRenderingEvent;
 import dev.hilligans.ourcraft.mod.handler.events.client.OpenScreenEvent;
 import dev.hilligans.ourcraft.network.ClientNetwork;
 import dev.hilligans.ourcraft.network.IClientPacketHandler;
@@ -148,7 +146,6 @@ public class Client implements IClientPacketHandler {
        // splitWindow.setRenderPipeline("ourcraft:split_window_pipeline");
        // splitWindow.addWindow(subWindow);
 
-        gameInstance.EVENT_BUS.postEvent(new ClientStartRenderingEvent());
         rWindow = window;
         System.err.println("Time to start running: " + (System.currentTimeMillis() - ClientMain.startTime));
         graphicsEngine.createRenderLoop(gameInstance, window).run();

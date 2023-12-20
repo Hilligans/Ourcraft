@@ -2,7 +2,6 @@ package dev.hilligans.ourcraft.client.input.key;
 
 import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.data.primitives.Tuple;
-import dev.hilligans.ourcraft.mod.handler.events.client.GLInitEvent;
 import it.unimi.dsi.fastutil.ints.Int2CharOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.lwjgl.glfw.GLFW;
@@ -117,10 +116,6 @@ public class KeyHandler {
                 }
             }
         });
-    }
-
-    private static void setCallback(GLInitEvent glInitEvent) {
-        setCallback(glInitEvent.window);
     }
 
     private static void putKeyAndKey(int id, char key) {

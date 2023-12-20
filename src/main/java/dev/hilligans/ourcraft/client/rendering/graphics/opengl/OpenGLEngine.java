@@ -5,11 +5,8 @@ import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsEngineBase;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.GLRenderer;
 import dev.hilligans.ourcraft.client.rendering.screens.JoinScreen;
-import dev.hilligans.ourcraft.client.rendering.world.managers.ShaderManager;
 import dev.hilligans.ourcraft.data.primitives.Tuple;
-import dev.hilligans.ourcraft.mod.handler.events.client.GLInitEvent;
 import dev.hilligans.ourcraft.util.Logger;
 import dev.hilligans.ourcraft.util.sections.ProfiledSection;
 import org.lwjgl.opengl.GL;
@@ -89,7 +86,6 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         GL.createCapabilities();
 
         client.glStarted = true;
-        client.gameInstance.EVENT_BUS.postEvent(new GLInitEvent(window));
         gameInstance.build(this, null);
 
         setupStringRenderer("");
