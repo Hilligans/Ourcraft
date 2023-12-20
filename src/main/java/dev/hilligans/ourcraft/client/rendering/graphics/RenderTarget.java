@@ -61,4 +61,15 @@ public class RenderTarget implements IRegistryElement {
     public String getResourceType() {
         return "render_target";
     }
+
+    @Override
+    public String toString() {
+        return "RenderTarget{" +
+                "renderPipeline='" + renderPipeline + '\'' +
+                ", name='" + name + '\'' +
+                ", after='" + after + '\'' +
+                ", before='" + before + '\'' +
+                ", targetedMod='" + targetedMod + '\'' +
+                '}';
+    }
 }

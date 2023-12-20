@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.client.rendering.graphics.opengl;
 
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
+import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsEngineBase;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.GLRenderer;
@@ -10,6 +11,7 @@ import dev.hilligans.ourcraft.client.rendering.world.managers.ShaderManager;
 import dev.hilligans.ourcraft.data.primitives.Tuple;
 import dev.hilligans.ourcraft.mod.handler.events.client.GLInitEvent;
 import dev.hilligans.ourcraft.util.Logger;
+import dev.hilligans.ourcraft.util.sections.ProfiledSection;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL43;
 import org.lwjgl.opengl.GLDebugMessageCallback;
@@ -33,8 +35,8 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
 
     public OpenglDefaultImpl engineImpl;
 
+    public boolean profiling = true;
 
-    public HashMap<String, Integer> programs = new HashMap<>();
 
     public OpenGLEngine() {
         engineImpl = new OpenglDefaultImpl(this);
@@ -48,28 +50,27 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
     public static OpenGLWindow renderWindow;
 
     @Override
-    public void render(OpenGLWindow window) {
-        client.mouseLocked = client.screen == null;
-        glGetError();
-        GLRenderer.resetFrame();
-        long currentTime = System.nanoTime();
-        if(currentTime - Client.timeSinceLastDraw < Client.drawTime) {
-            return;
-        }
-        window.frameTracker.count();
-        Client.timeSinceLastDraw = currentTime;
+    public void render(RenderWindow window, GraphicsContext graphicsContext) {
+        //client.mouseLocked = client.screen == null;
+        //glGetError();
+        //GLRenderer.resetFrame();
+        //long currentTime = System.nanoTime();
+        //if(currentTime - Client.timeSinceLastDraw < Client.drawTime) {
+        //    return;
+        //}
+        //window.frameTracker.count();
+        //Client.timeSinceLastDraw = currentTime;
 
         glClearColor(window.clearColor.x, window.clearColor.y, window.clearColor.z, window.clearColor.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         window.camera.tick();
         MatrixStack matrixStack = window.camera.getMatrix();
-        //matrixStack.applyColor();
-
         MatrixStack screenStack = window.camera.getScreenStack();
-        //screenStack.applyColor();
 
-        window.renderPipeline.render(client,matrixStack,screenStack, new GraphicsContext());
+        window.renderPipeline(client, matrixStack, screenStack, graphicsContext);
     }
+
+    public static int counter = 0;
 
 
 
@@ -132,10 +133,23 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         glfwTerminate();
     }
 
+    @Override
+    public GraphicsContext getContext() {
+        return new GraphicsContext();
+    }
+
 
     @Override
     public Logger getLogger() {
         return logger;
+    }
+
+    @Override
+    public GraphicsContext getGraphicsContext() {
+        if(profiling) {
+            return new GraphicsContext().setSection(new ProfiledSection());
+        }
+        return new GraphicsContext();
     }
 
     @Override

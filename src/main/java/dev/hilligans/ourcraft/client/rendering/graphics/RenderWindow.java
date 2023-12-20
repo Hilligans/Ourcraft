@@ -6,10 +6,12 @@ import dev.hilligans.ourcraft.client.input.InputHandlerProvider;
 import dev.hilligans.ourcraft.client.input.key.KeyPress;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.*;
+import dev.hilligans.ourcraft.client.rendering.graphics.implementations.FreeCamera;
 import dev.hilligans.ourcraft.client.rendering.graphics.implementations.PlayerCamera;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
 import dev.hilligans.ourcraft.client.rendering.world.StringRenderer;
 import dev.hilligans.ourcraft.util.Logger;
+import dev.hilligans.ourcraft.util.sections.ISection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
@@ -24,8 +26,9 @@ public abstract class RenderWindow {
     public IGraphicsEngine<?,?,?> graphicsEngine;
     public Logger logger;
     public InputHandler inputHandler;
-
+    public Client client;
     public String queuedPipeline;
+    public Vector4f clearColor = new Vector4f();
 
     public RenderWindow(IGraphicsEngine<?,?,?> graphicsEngine) {
         this.graphicsEngine = graphicsEngine;
@@ -36,18 +39,25 @@ public abstract class RenderWindow {
             }
         }
         setRenderPipeline("ourcraft:menu_pipeline");
-        camera = new PlayerCamera();
+        camera = new FreeCamera(this);
+    }
+
+    public void renderPipeline(Client client, MatrixStack worldStack, MatrixStack screenStack, GraphicsContext graphicsContext) {
+        renderPipeline.render(client, worldStack, screenStack, graphicsContext);
     }
 
     public void render(GraphicsContext graphicsContext, Client client, MatrixStack worldStack, MatrixStack screenStack) {
+        ISection section = graphicsContext.getSection();
         for(RenderTask renderTask : renderPipeline.renderTasks) {
-            PipelineState pipelineState = renderTask.getPipelineState();
-            graphicsContext.setPipelineState(false);
-            if(pipelineState != null) {
-                graphicsEngine.getDefaultImpl().setState(this, graphicsContext, pipelineState);
-                graphicsContext.setPipelineState(true);
+            try(var $ = section.startSection(renderTask.getIdentifierName())) {
+                PipelineState pipelineState = renderTask.getPipelineState();
+                graphicsContext.setPipelineState(false);
+                if (pipelineState != null) {
+                    graphicsEngine.getDefaultImpl().setState(graphicsContext, pipelineState);
+                    graphicsContext.setPipelineState(true);
+                }
+                renderTask.draw(this, graphicsContext, this.getGraphicsEngine(), client, worldStack, screenStack, 1);
             }
-            renderTask.draw(this, graphicsContext, this.getGraphicsEngine(), client, worldStack, screenStack, 1);
         }
     }
 
@@ -80,7 +90,13 @@ public abstract class RenderWindow {
         }
     }
 
-    public abstract Client getClient();
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public Client getClient() {
+        return client;
+    }
 
     public InputHandler getInputProvider() {
         return inputHandler;
@@ -110,9 +126,9 @@ public abstract class RenderWindow {
 
     public void setWindowName(String name) {}
 
-    public void setMousePosition(float x, float y) {}
-
-    public void setClearColor(float r, float g, float b, float a) {}
+    public void setClearColor(float r, float g, float b, float a) {
+        this.clearColor.set(r,g,b,a);
+    }
 
     public Image renderToImage() {
         return null;

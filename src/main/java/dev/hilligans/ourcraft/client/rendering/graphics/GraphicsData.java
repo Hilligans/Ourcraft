@@ -36,7 +36,7 @@ public class GraphicsData {
 
     ///TODO fix
     public void clearTextures() {
-        graphicsEngine.getDefaultImpl().destroyTexture(null,null,worldTexture);
+        graphicsEngine.getDefaultImpl().destroyTexture(null,worldTexture);
     }
 
     public int getWorldTexture() {

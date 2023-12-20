@@ -17,6 +17,7 @@ import dev.hilligans.ourcraft.client.rendering.VertexMesh;
 import dev.hilligans.ourcraft.resource.ResourceLocation;
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import org.joml.Vector4f;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;
@@ -53,7 +54,7 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
 
 
     @Override
-    public void drawMesh(VulkanWindow window, VulkanBaseGraphicsContext graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
+    public void drawMesh(VulkanBaseGraphicsContext graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
         System.out.println("Drawing");
 
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
@@ -68,7 +69,7 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     }
 
     @Override
-    public long createMesh(VulkanWindow window, VulkanBaseGraphicsContext graphicsContext, VertexMesh mesh) {
+    public long createMesh(VulkanBaseGraphicsContext graphicsContext, VertexMesh mesh) {
         VertexBuffer vertexBuffer = new VertexBuffer(graphicsContext.getDevice(), mesh.vertices, graphicsContext.getCommandBuffer());
         synchronized (vertexBuffers) {
             vertexBuffers.put(vertexBuffer.buffer.buffer, vertexBuffer);
@@ -85,7 +86,7 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     }
 
     @Override
-    public void destroyMesh(VulkanWindow window, VulkanBaseGraphicsContext graphicsContext, long mesh) {
+    public void destroyMesh(VulkanBaseGraphicsContext graphicsContext, long mesh) {
         synchronized (vertexBuffers) {
             vertexBuffers.remove(mesh).cleanup();
         }
@@ -99,7 +100,7 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     }
 
     @Override
-    public long createTexture(VulkanWindow window, VulkanBaseGraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format) {
+    public long createTexture(VulkanBaseGraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format) {
         VulkanTexture vulkanTexture = new VulkanTexture(graphicsContext.getCommandBuffer(), graphicsContext.getDevice(), buffer, width, height, format);
         synchronized (textures) {
             textures.put(vulkanTexture.image, vulkanTexture);
@@ -108,19 +109,19 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     }
 
     @Override
-    public void destroyTexture(VulkanWindow window, VulkanBaseGraphicsContext graphicsContext, long texture) {
+    public void destroyTexture(VulkanBaseGraphicsContext graphicsContext, long texture) {
         synchronized (textures) {
             textures.remove(texture).cleanup();
         }
     }
 
     @Override
-    public void drawAndDestroyMesh(VulkanWindow window, VulkanBaseGraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh) {
+    public void drawAndDestroyMesh(VulkanBaseGraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh) {
         System.out.println("DrawingANdDestroyed");
     }
 
     @Override
-    public void bindTexture(VulkanWindow window, VulkanBaseGraphicsContext gc, long texture) {
+    public void bindTexture(VulkanBaseGraphicsContext gc, long texture) {
         VulkanGraphicsContext graphicsContext = (VulkanGraphicsContext)gc;
         if (texture != graphicsContext.texture) {
 
@@ -128,7 +129,7 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     }
 
     @Override
-    public void bindPipeline(VulkanWindow window, VulkanBaseGraphicsContext gc, long pipeline) {
+    public void bindPipeline(VulkanBaseGraphicsContext gc, long pipeline) {
         VulkanGraphicsContext graphicsContext = (VulkanGraphicsContext)gc;
         if (pipeline != graphicsContext.program) {
             vkCmdBindPipeline(graphicsContext.getBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
@@ -140,7 +141,7 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     }
 
     @Override
-    public void setState(VulkanWindow window, VulkanBaseGraphicsContext graphicsContext, PipelineState state) {
+    public void setState(VulkanBaseGraphicsContext graphicsContext, PipelineState state) {
         if(graphicsContext.pipelineStateSet) {
             throw new VulkanEngineException("Graphics state was already set by the render task and cannot be reset inside the render task");
         }
@@ -203,6 +204,44 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
             throw new VulkanEngineException("Bound graphics pipeline is null");
         }
         vkCmdPushConstants(graphicsContext.getBuffer(), pipeline.layout.pipeline, VK_SHADER_STAGE_VERTEX_BIT, (int)index, data);
+    }
+
+    @Override
+    public long createFrameBuffer(VulkanBaseGraphicsContext graphicsContext, int width, int height) {
+        return 0;
+    }
+
+    @Override
+    public void destroyFrameBuffer(VulkanBaseGraphicsContext graphicsContext, long id) {
+
+    }
+
+    @Override
+    public void bindFrameBuffer(VulkanBaseGraphicsContext graphicsContext, long id) {
+
+    }
+
+    @Override
+    public long getBoundFBO(VulkanBaseGraphicsContext graphicsContext) {
+        throw new RuntimeException("");
+        //return 0;
+    }
+
+    @Override
+    public long getBoundTexture(VulkanBaseGraphicsContext gc) {
+        VulkanGraphicsContext graphicsContext = (VulkanGraphicsContext)gc;
+        return graphicsContext.texture;
+    }
+
+    @Override
+    public long getBoundProgram(VulkanBaseGraphicsContext gc) {
+        VulkanGraphicsContext graphicsContext = (VulkanGraphicsContext)gc;
+        return graphicsContext.program;
+    }
+
+    @Override
+    public void clearFBO(VulkanBaseGraphicsContext graphicsContext, Vector4f clearColor) {
+
     }
 
     public void submitShader(String path, String modID, LogicalDevice device, int bit) {

@@ -7,6 +7,8 @@ import dev.hilligans.ourcraft.client.input.key.MouseHandler;
 import dev.hilligans.ourcraft.client.rendering.ContainerScreen;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IInputProvider;
+import dev.hilligans.ourcraft.client.rendering.graphics.implementations.splitwindows.SplitWindow;
+import dev.hilligans.ourcraft.client.rendering.graphics.implementations.splitwindows.SubWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.opengl.OpenGLEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanEngine;
@@ -140,10 +142,16 @@ public class Client implements IClientPacketHandler {
         soundEngine.setAttenuationModel(AL11.AL_LINEAR_DISTANCE_CLAMPED);
         registerKeyHandlers();
 
+       // SplitWindow splitWindow = new SplitWindow(graphicsEngine, window);
+       // SubWindow subWindow = new SubWindow(graphicsEngine, splitWindow, window.getWindowWidth()/2, window.getWindowHeight()/2, graphicsEngine.getContext());
+       // subWindow.setRenderPipeline(window.renderPipeline);
+       // splitWindow.setRenderPipeline("ourcraft:split_window_pipeline");
+       // splitWindow.addWindow(subWindow);
+
         gameInstance.EVENT_BUS.postEvent(new ClientStartRenderingEvent());
         rWindow = window;
         System.err.println("Time to start running: " + (System.currentTimeMillis() - ClientMain.startTime));
-        graphicsEngine.createRenderLoop(gameInstance,window).run();
+        graphicsEngine.createRenderLoop(gameInstance, window).run();
         graphicsEngine.close();
         cleanUp();
         System.exit(1);

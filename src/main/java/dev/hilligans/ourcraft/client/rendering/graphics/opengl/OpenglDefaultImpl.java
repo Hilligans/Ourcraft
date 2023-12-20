@@ -15,6 +15,7 @@ import dev.hilligans.ourcraft.resource.ResourceLocation;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import org.joml.Vector4f;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL33;
 
@@ -31,19 +32,21 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     public OpenGLEngine engine;
 
     public Int2ObjectOpenHashMap<Tuple<Integer, Integer>> meshData = new Int2ObjectOpenHashMap<>();
-    public Int2IntOpenHashMap textureTypes = new Int2IntOpenHashMap();
+    public final Int2IntOpenHashMap textureTypes = new Int2IntOpenHashMap();
     public Int2LongOpenHashMap vertexArrayObjects = new Int2LongOpenHashMap();
     public Int2ObjectOpenHashMap<VertexMesh> meshReferences = new Int2ObjectOpenHashMap<>();
+    public final Int2IntOpenHashMap fbos = new Int2IntOpenHashMap();
 
     public long boundTexture = -1;
     public long boundProgram = -1;
+    public long boundFBO = 0;
 
     public OpenglDefaultImpl(OpenGLEngine engine) {
         this.engine = engine;
     }
 
     @Override
-    public void drawMesh(OpenGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
+    public void drawMesh(GraphicsContext graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
         Tuple<Integer, Integer> data = meshData.get((int)meshID);
         if(data == null) {
             return;
@@ -53,7 +56,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public long createMesh(OpenGLWindow window, GraphicsContext graphicsContext, VertexMesh mesh) {
+    public long createMesh(GraphicsContext graphicsContext, VertexMesh mesh) {
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
@@ -90,7 +93,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public void destroyMesh(OpenGLWindow window, GraphicsContext graphicsContext, long mesh) {
+    public void destroyMesh(GraphicsContext graphicsContext, long mesh) {
         long array = vertexArrayObjects.get((int)mesh);
         meshData.remove((int)mesh);
         if((int)array != 0) {
@@ -105,7 +108,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public long createTexture(OpenGLWindow window, GraphicsContext graphicsContext, Image image) {
+    public long createTexture(GraphicsContext graphicsContext, Image image) {
         int texture = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -118,7 +121,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public long createTexture(OpenGLWindow window, GraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format) {
+    public long createTexture(GraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format) {
         int texture = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -131,13 +134,13 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public void destroyTexture(OpenGLWindow window, GraphicsContext graphicsContext, long texture) {
+    public void destroyTexture(GraphicsContext graphicsContext, long texture) {
         glDeleteTextures((int)texture);
         textureTypes.remove((int)texture);
     }
 
     @Override
-    public void drawAndDestroyMesh(OpenGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh) {
+    public void drawAndDestroyMesh(GraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh) {
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
@@ -173,7 +176,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public void bindTexture(OpenGLWindow window, GraphicsContext graphicsContext, long texture) {
+    public void bindTexture(GraphicsContext graphicsContext, long texture) {
         if(texture != boundTexture) {
             GL20.glBindTexture(textureTypes.get((int)texture), (int)texture);
             boundTexture = texture;
@@ -181,7 +184,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public void bindPipeline(OpenGLWindow window, GraphicsContext graphicsContext, long pipeline) {
+    public void bindPipeline(GraphicsContext graphicsContext, long pipeline) {
         if(pipeline != boundProgram){
             GL20.glUseProgram((int) pipeline);
             boundProgram = pipeline;
@@ -189,7 +192,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public void setState(OpenGLWindow window, GraphicsContext graphicsContext, PipelineState state) {
+    public void setState(GraphicsContext graphicsContext, PipelineState state) {
         if(graphicsContext.pipelineStateSet) {
             throw new RuntimeException("Graphics state was already set by the render task and cannot be reset inside the render task");
         }
@@ -236,6 +239,74 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         } else {
             throw new RuntimeException();
         }
+    }
+
+    @Override
+    public long createFrameBuffer(GraphicsContext graphicsContext, int width, int height) {
+        int fbo = glGenFramebuffers();
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+        int texture = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, texture);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+        synchronized (fbos) {
+            fbos.put(fbo, texture);
+        }
+        synchronized (textureTypes) {
+            textureTypes.put(texture, GL_TEXTURE_2D);
+        }
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        return texture;
+    }
+
+    @Override
+    public void destroyFrameBuffer(GraphicsContext graphicsContext, long id) {
+        int fbo;
+        synchronized (fbos) {
+            fbo = fbos.remove((int) id);
+        }
+        synchronized (textureTypes) {
+            textureTypes.remove((int)fbo);
+        }
+        glDeleteTextures((int) id);
+        glDeleteFramebuffers(fbo);
+    }
+
+    @Override
+    public void bindFrameBuffer(GraphicsContext graphicsContext, long id) {
+        this.boundFBO = id;
+        if(id == 0) {
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        } else {
+            glBindFramebuffer(GL_FRAMEBUFFER, fbos.get((int)id));
+        }
+    }
+
+    @Override
+    public long getBoundFBO(GraphicsContext graphicsContext) {
+        return boundFBO;
+    }
+
+    @Override
+    public long getBoundTexture(GraphicsContext graphicsContext) {
+        return boundTexture;
+    }
+
+    @Override
+    public long getBoundProgram(GraphicsContext graphicsContext) {
+        return boundProgram;
+    }
+
+    @Override
+    public void clearFBO(GraphicsContext graphicsContext, Vector4f clearColor) {
+        glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
     @Override

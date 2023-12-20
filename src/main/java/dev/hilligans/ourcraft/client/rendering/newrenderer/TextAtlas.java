@@ -106,7 +106,7 @@ public class TextAtlas {
     public int upload(IGraphicsEngine<?,?,?> engine) {
         clear();
         assemble();
-        texture = (int) engine.getDefaultImpl().createTexture(null,null,image);
+        texture = (int) engine.getDefaultImpl().createTexture(null,image);
         return texture;
     }
 

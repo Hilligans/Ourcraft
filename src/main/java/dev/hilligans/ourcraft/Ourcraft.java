@@ -14,10 +14,7 @@ import dev.hilligans.ourcraft.client.input.handlers.MouseHandler;
 import dev.hilligans.ourcraft.client.rendering.graphics.fixedfunctiongl.FixedFunctionGLEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.implementations.WorldCamera;
 import dev.hilligans.ourcraft.client.rendering.graphics.opengl.OpenGLEngine;
-import dev.hilligans.ourcraft.client.rendering.graphics.tasks.ChatRenderTask;
-import dev.hilligans.ourcraft.client.rendering.graphics.tasks.GUIRenderTask;
-import dev.hilligans.ourcraft.client.rendering.graphics.tasks.WorldRenderTask;
-import dev.hilligans.ourcraft.client.rendering.graphics.tasks.WorldTransparentRenderTask;
+import dev.hilligans.ourcraft.client.rendering.graphics.tasks.*;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanEngine;
 import dev.hilligans.ourcraft.client.rendering.ScreenBuilder;
 import dev.hilligans.ourcraft.client.rendering.screens.EscapeScreen;
@@ -66,6 +63,14 @@ public class Ourcraft {
 
     public static String hashString(String password, String salt) {
         return new String(BCrypt.withDefaults().hash(12,"abcdefghjklmmopq".getBytes(), (password + salt).getBytes()), StandardCharsets.UTF_8);
+    }
+
+    public static long getTime() {
+        return System.nanoTime();
+    }
+
+    public static String getConvertedTime(long time) {
+        return String.format("%2.2fms", time/1000000f);
     }
 
     public static synchronized ResourceManager getResourceManager() {
@@ -148,8 +153,13 @@ public class Ourcraft {
 
 
             view.registerRenderPipelines(new RenderPipeline("menu_pipeline"));
+            view.registerRenderPipelines(new RenderPipeline("split_window_pipeline"));
+
 
             view.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:menu_pipeline")
+                    .setPipelineState(new PipelineState()));
+
+            view.registerRenderTarget(new RenderTarget("split_window_renderer", "ourcraft:split_window_pipeline")
                     .setPipelineState(new PipelineState()));
 
 
@@ -157,6 +167,8 @@ public class Ourcraft {
             view.registerRenderTask(new WorldRenderTask());
             view.registerRenderTask(new WorldTransparentRenderTask());
             view.registerRenderTask(new ChatRenderTask());
+            view.registerRenderTask(new SplitWindowRenderTask());
+
 
             view.registerVertexFormat(position_texture_color, position_color_texture, position_texture_globalColor, position_texture, position_texture_animatedWrap_shortenedColor, position_color);
 
@@ -228,7 +240,8 @@ public class Ourcraft {
                                             @Override
                                             public void press(RenderWindow window, float strength) {
                                                 window.getCamera().addRotation(0, strength/400);
-                                                GLFW.glfwSetCursorPos(window.getWindowID(), window.getWindowWidth()/2,window.getWindowHeight()/2);
+                                                window.setMousePosition(window.getWindowWidth()/2, window.getWindowHeight()/2);
+                                                //GLFW.glfwSetCursorPos(window.getWindowID(), window.getWindowWidth()/2,window.getWindowHeight()/2);
                                             }
                                         }.onlyWithPipelines("ourcraft:new_world_pipeline"));
 
@@ -236,7 +249,8 @@ public class Ourcraft {
                 @Override
                 public void press(RenderWindow window, float strength) {
                     window.getCamera().addRotation(-strength/400,0);
-                    GLFW.glfwSetCursorPos(window.getWindowID(), window.getWindowWidth()/2,window.getWindowHeight()/2);
+                    window.setMousePosition(window.getWindowWidth()/2, window.getWindowHeight()/2);
+                    //GLFW.glfwSetCursorPos(window.getWindowID(), window.getWindowWidth()/2,window.getWindowHeight()/2);
                 }
             }.onlyWithPipelines("ourcraft:new_world_pipeline"));
 

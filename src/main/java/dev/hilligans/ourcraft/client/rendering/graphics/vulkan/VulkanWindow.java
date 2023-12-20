@@ -53,7 +53,6 @@ public class VulkanWindow extends RenderWindow {
     public int glfwHeight;
     public WindowRenderer windowRenderer;
     public VulkanGraphicsContext context;
-    public Client client;
 
     public VkExtent2D extent2D = VkExtent2D.calloc();
 
@@ -204,11 +203,6 @@ public class VulkanWindow extends RenderWindow {
         windowRenderer.present(context.bufferIndex);
         glfwPollEvents();
         //startDrawing();
-    }
-
-    @Override
-    public Client getClient() {
-        return client;
     }
 
     @Override

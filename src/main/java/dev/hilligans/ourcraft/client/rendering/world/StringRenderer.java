@@ -118,9 +118,9 @@ public class StringRenderer {
                 }
                 PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
                 primitiveBuilder.translate(x - finalWidth / 2f,0,0);
-                impl.bindPipeline(window,null,shaderSource.program);
-                impl.bindTexture(window,null,textureAtlas.glTextureId);
-                impl.drawAndDestroyMesh(window,null,matrixStack,primitiveBuilder.toVertexMesh());
+                impl.bindPipeline(null,shaderSource.program);
+                impl.bindTexture(null,textureAtlas.glTextureId);
+                impl.drawAndDestroyMesh(null,matrixStack,primitiveBuilder.toVertexMesh());
 
             });
         } catch (Exception ignored) {
@@ -158,9 +158,9 @@ public class StringRenderer {
             primitiveBuilder.translate(1.0f,0,1.0f);
             IDefaultEngineImpl<?,?> impl = window.getEngineImpl();
             impl.uploadMatrix(null,matrixStack,shaderSource);
-            impl.bindPipeline(window,null,shaderSource.program);
-            impl.bindTexture(window,null,textureAtlas.glTextureId);
-            impl.drawAndDestroyMesh(window,null,matrixStack,primitiveBuilder.toVertexMesh());
+            impl.bindPipeline(null,shaderSource.program);
+            impl.bindTexture(null,textureAtlas.glTextureId);
+            impl.drawAndDestroyMesh(null,matrixStack,primitiveBuilder.toVertexMesh());
         });
     }
 
@@ -207,7 +207,7 @@ public class StringRenderer {
                 TextureAtlas textureAtlas = textureAtlases.get(val);
                 if(textureAtlas != null) {
                     Image image = textureAtlas.toImage();
-                    textureAtlas.glTextureId = (int) window.getEngineImpl().createTexture(window,null,image);
+                    textureAtlas.glTextureId = (int) window.getEngineImpl().createTexture(null,image);
                     texturesBuilt.put(val, (Boolean) true);
                 }
             }

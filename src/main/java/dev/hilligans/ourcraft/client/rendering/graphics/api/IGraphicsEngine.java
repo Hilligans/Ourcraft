@@ -3,12 +3,15 @@ package dev.hilligans.ourcraft.client.rendering.graphics.api;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.GraphicsData;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
+import dev.hilligans.ourcraft.client.rendering.graphics.opengl.OpenGLEngine;
+import dev.hilligans.ourcraft.client.rendering.graphics.opengl.OpenglDefaultImpl;
 import dev.hilligans.ourcraft.client.rendering.world.StringRenderer;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.mod.handler.events.client.RenderPostEvent;
 import dev.hilligans.ourcraft.mod.handler.events.client.RenderPreEvent;
 import dev.hilligans.ourcraft.util.Logger;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.ourcraft.util.sections.ISection;
 
 import java.util.ArrayList;
 
@@ -16,7 +19,7 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
 
     Q createWindow();
 
-    void render(Q window);
+    void render(RenderWindow window, GraphicsContext graphicsContext);
 
     void renderScreen(MatrixStack screenStack);
 
@@ -28,20 +31,32 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
 
     void close();
 
+    X getContext();
+
     ArrayList<Q> getWindows();
 
     GameInstance getGameInstance();
 
     Logger getLogger();
 
+    GraphicsContext getGraphicsContext();
+
     default Runnable createRenderLoop(GameInstance gameInstance, RenderWindow window) {
         return () -> {
             try {
-                while (!window.shouldClose()) {
-                    gameInstance.EVENT_BUS.postEvent(new RenderPreEvent());
-                    render((Q) window);
-                    gameInstance.EVENT_BUS.postEvent(new RenderPostEvent(window.getClient()));
-                    window.swapBuffers();
+                GraphicsContext graphicsContext = getGraphicsContext();
+                ISection section = graphicsContext.getSection();
+                try(var $0 = section.startSection("base")) {
+                    while (!window.shouldClose()) {
+                        try (var $1 = section.startSection("loop")) {
+                            try (var $2 = section.startSection("render")) {
+                                render(window, graphicsContext);
+                            }
+                            try (var $2 = section.startSection("swapBuffers")) {
+                                window.swapBuffers();
+                            }
+                        }
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -50,6 +65,7 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
             System.out.println("Closing");
         };
     }
+
 
     boolean isCompatible();
 
@@ -84,3 +100,5 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
         return "graphics_engine";
     }
 }
+
+

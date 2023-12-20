@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.client.rendering.graphics.fixedfunctiongl;
 
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
+import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsEngineBase;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.GLRenderer;
@@ -33,7 +34,7 @@ public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWin
     }
 
     @Override
-    public void render(FixedFunctionGLWindow window) {
+    public void render(RenderWindow window, GraphicsContext graphicsContext) {
 
         Client client = window.getClient();
         client.mouseLocked = client.screen == null;
@@ -69,7 +70,7 @@ public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWin
     @Override
     public FixedFunctionGLWindow setup() {
 
-        client = ClientMain.getClient();
+        //client = ClientMain.getClient();
 
 
 
@@ -112,9 +113,19 @@ public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWin
 
     }
 
+    @Override
+    public GraphicsContext getContext() {
+        return null;
+    }
+
 
     @Override
     public Logger getLogger() {
+        return null;
+    }
+
+    @Override
+    public GraphicsContext getGraphicsContext() {
         return null;
     }
 

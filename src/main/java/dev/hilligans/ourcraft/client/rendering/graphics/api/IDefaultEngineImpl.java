@@ -7,6 +7,7 @@ import dev.hilligans.ourcraft.client.rendering.graphics.ShaderSource;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
 import dev.hilligans.ourcraft.client.rendering.VertexMesh;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector4f;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;
@@ -19,66 +20,80 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
 
     default void cleanup() {}
 
-    void drawMesh(T window, Q graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length);
+    void drawMesh(Q graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length);
 
-    long createMesh(T window, Q graphicsContext, VertexMesh mesh);
+    long createMesh(Q graphicsContext, VertexMesh mesh);
 
-    void destroyMesh(T window, Q graphicsContext, long mesh);
+    void destroyMesh(Q graphicsContext, long mesh);
 
-    default long createTexture(T window, Q graphicsContext, Image image) {
-        return createTexture(window, graphicsContext, image.getBuffer(), image.getWidth(), image.getHeight(), image.format);
+    default long createTexture(Q graphicsContext, Image image) {
+        return createTexture(graphicsContext, image.getBuffer(), image.getWidth(), image.getHeight(), image.format);
     }
 
-    long createTexture(T window, Q graphicsContext, ByteBuffer buffer, int width, int height, int format);
+    long createTexture(Q graphicsContext, ByteBuffer buffer, int width, int height, int format);
 
-    void destroyTexture(T window, Q graphicsContext, long texture);
+    void destroyTexture(Q graphicsContext, long texture);
 
-    void drawAndDestroyMesh(T window, Q graphicsContext, MatrixStack matrixStack, VertexMesh mesh);
+    void drawAndDestroyMesh(Q graphicsContext, MatrixStack matrixStack, VertexMesh mesh);
 
-    void bindTexture(T window, Q graphicsContext, long texture);
+    void bindTexture(Q graphicsContext, long texture);
 
-    void bindPipeline(T window, Q graphicsContext, long pipeline);
+    void bindPipeline(Q graphicsContext, long pipeline);
 
-    void setState(T window, Q graphicsContext, PipelineState state);
+    void setState(Q graphicsContext, PipelineState state);
 
     long createProgram(Q graphicsContext, ShaderSource shaderSource);
 
     void uploadData(Q graphicsContext, FloatBuffer data, long index, String type, long program, ShaderSource shaderSource);
 
-    default void drawMesh(Object window, Object graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
-        drawMesh((T) window, (Q) graphicsContext, matrixStack, meshID, indicesIndex, length);
+    long createFrameBuffer(Q graphicsContext, int width, int height);
+
+    void destroyFrameBuffer(Q graphicsContext, long id);
+
+    void bindFrameBuffer(Q graphicsContext, long id);
+
+    long getBoundFBO(Q graphicsContext);
+
+    long getBoundTexture(Q graphicsContext);
+
+    long getBoundProgram(Q graphicsContext);
+
+    void clearFBO(Q graphicsContext, Vector4f clearColor);
+
+    default void drawMesh(Object graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
+        drawMesh((Q) graphicsContext, matrixStack, meshID, indicesIndex, length);
     }
 
-    default long createMesh(Object window, Object graphicsContext, VertexMesh mesh) {
-        return createMesh((T) window, (Q) graphicsContext, mesh);
+    default long createMesh(Object graphicsContext, VertexMesh mesh) {
+        return createMesh((Q) graphicsContext, mesh);
     }
 
-    default long createTexture(Object window, Object graphicsContext, Image image) {
-        return createTexture((T) window, (Q) graphicsContext, image);
+    default long createTexture(Object graphicsContext, Image image) {
+        return createTexture((Q) graphicsContext, image);
     }
 
-    default long createTexture(Object window, Object graphicsContext, ByteBuffer buffer, int width, int height, int format) {
-        return createTexture((T) window, (Q) graphicsContext, buffer, width, height, format);
+    default long createTexture(Object graphicsContext, ByteBuffer buffer, int width, int height, int format) {
+        return createTexture((Q) graphicsContext, buffer, width, height, format);
     }
 
-    default void destroyTexture(Object window, Object graphicsContext, long texture) {
-        destroyTexture((T) window, (Q) graphicsContext, texture);
+    default void destroyTexture(Object graphicsContext, long texture) {
+        destroyTexture((Q) graphicsContext, texture);
     }
 
-    default void drawAndDestroyMesh(Object window, Object graphicsContext, MatrixStack matrixStack, VertexMesh mesh) {
-        drawAndDestroyMesh((T) window, (Q) graphicsContext, matrixStack, mesh);
+    default void drawAndDestroyMesh(Object graphicsContext, MatrixStack matrixStack, VertexMesh mesh) {
+        drawAndDestroyMesh((Q) graphicsContext, matrixStack, mesh);
     }
 
-    default void bindTexture(Object window, Object graphicsContext, long texture) {
-        bindTexture((T) window, (Q) graphicsContext, texture);
+    default void bindTexture(Object graphicsContext, long texture) {
+        bindTexture((Q) graphicsContext, texture);
     }
 
-    default void bindPipeline(Object window, Object graphicsContext, long pipeline) {
-        bindPipeline((T) window, (Q) graphicsContext, pipeline);
+    default void bindPipeline(Object graphicsContext, long pipeline) {
+        bindPipeline((Q) graphicsContext, pipeline);
     }
 
-    default void setState(Object window, Object graphicsContext, PipelineState state) {
-        setState((T) window, (Q) graphicsContext, state);
+    default void setState(Object graphicsContext, PipelineState state) {
+        setState((Q) graphicsContext, state);
     }
 
     default long createProgram(Object graphicsContext, ShaderSource shaderSource) {
@@ -100,5 +115,33 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
             uploadData(context, memoryStack.floats(matrixStack.color.x, matrixStack.color.y, matrixStack.color.z, matrixStack.color.w), shaderSource.uniformIndexes[1], "4f", shaderSource.program, shaderSource);
             uploadData(context, matrixStack.matrix4f.get(memoryStack.mallocFloat(16)), shaderSource.uniformIndexes[0], "4fv", shaderSource.program, shaderSource);
         }
+    }
+
+    default long createFrameBuffer(Object graphicsContext, int width, int height) {
+        return createFrameBuffer((Q)graphicsContext, width, height);
+    }
+
+    default void destroyFrameBuffer(Object graphicsContext, long id) {
+        destroyFrameBuffer((Q)graphicsContext, id);
+    }
+
+    default void bindFrameBuffer(Object graphicsContext, long id) {
+        bindFrameBuffer((Q)graphicsContext, id);
+    }
+
+    default long getBoundFBO(Object graphicsContext) {
+        return getBoundFBO((Q)graphicsContext);
+    }
+
+    default long getBoundTexture(Object graphicsContext) {
+        return getBoundTexture((Q)graphicsContext);
+    }
+
+    default long getBoundProgram(Object graphicsContext) {
+        return getBoundProgram((Q)graphicsContext);
+    }
+
+    default void clearFBO(Object graphicsContext, Vector4f clearColor) {
+        clearFBO((Q)graphicsContext, clearColor);
     }
 }

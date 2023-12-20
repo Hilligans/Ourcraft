@@ -54,8 +54,8 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
                 //renderYDist = 1;
                 Vector3i playerChunkPos = new Vector3i((int) pos.x / chunkWidth, (int) pos.y / chunkHeight, (int) pos.z / chunkWidth);
                 if (client.renderWorld) {
-                    engine.getDefaultImpl().bindPipeline(window, graphicsContext, shaderSource.program);
-                    engine.getDefaultImpl().bindTexture(window, graphicsContext, engine.getGraphicsData().getWorldTexture());
+                    engine.getDefaultImpl().bindPipeline(graphicsContext, shaderSource.program);
+                    engine.getDefaultImpl().bindTexture(graphicsContext, engine.getGraphicsData().getWorldTexture());
                     for (int x = client.renderDistance - 1; x >= 0; x--) {
                         for (int y = renderYDist - 1; y >= 0; y--) {
                             for (int z = client.renderDistance - 1; z >= 0; z--) {
@@ -115,7 +115,7 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
         for (Tuple<IChunk, PrimitiveBuilder> tuple : primitiveBuilders) {
             asyncedChunks.remove(((tuple.getTypeA().getX()) << 32) | (tuple.getTypeA().getZ() & 0xffffffffL));
             tuple.typeB.setVertexFormat(shaderSource.vertexFormat);
-            int meshID = (int) window.getGraphicsEngine().getDefaultImpl().createMesh(window, graphicsContext, tuple.typeB.toVertexMesh());
+            int meshID = (int) window.getGraphicsEngine().getDefaultImpl().createMesh(graphicsContext, tuple.typeB.toVertexMesh());
             meshes.setChunk(tuple.getTypeA().getX(), tuple.getTypeA().getY(), tuple.getTypeA().getZ(), new MeshHolder().set(meshID, tuple.getTypeB().indices.size()));
             primitiveBuilders.remove(tuple);
         }
@@ -127,7 +127,7 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
                     matrixStack.translate(x * chunkWidth, y * chunkHeight, z * chunkWidth);
                     IDefaultEngineImpl<?,?> impl = engine.getDefaultImpl();
                     impl.uploadMatrix(graphicsContext, matrixStack, shaderSource);
-                    impl.drawMesh(window, graphicsContext, matrixStack, meshHolder.getId(), meshHolder.index, meshHolder.length);
+                    impl.drawMesh(graphicsContext, matrixStack, meshHolder.getId(), meshHolder.index, meshHolder.length);
                     matrixStack.pop();
                 }
             }
@@ -192,7 +192,7 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
     public void buildMesh(RenderWindow window, GraphicsContext graphicsContext, IChunk chunk) {
         PrimitiveBuilder primitiveBuilder = getPrimitiveBuilder(chunk);
         primitiveBuilder.setVertexFormat(shaderSource.vertexFormat);
-        int meshID = (int) window.getGraphicsEngine().getDefaultImpl().createMesh(window, graphicsContext, primitiveBuilder.toVertexMesh());
+        int meshID = (int) window.getGraphicsEngine().getDefaultImpl().createMesh(graphicsContext, primitiveBuilder.toVertexMesh());
         meshes.setChunk(chunk.getX(),chunk.getY(),chunk.getZ(),new MeshHolder().set(meshID,primitiveBuilder.indices.size()));
     }
 

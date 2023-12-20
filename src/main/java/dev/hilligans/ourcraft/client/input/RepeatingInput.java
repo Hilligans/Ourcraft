@@ -20,4 +20,9 @@ public class RepeatingInput extends Input {
     public void repeat(RenderWindow renderWindow, float strength) {
         consumer.accept(renderWindow,strength);
     }
+
+    @Override
+    public void press(RenderWindow renderWindow, float strength) {
+        consumer.accept(renderWindow,strength);
+    }
 }

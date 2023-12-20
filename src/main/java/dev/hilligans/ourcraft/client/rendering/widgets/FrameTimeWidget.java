@@ -58,8 +58,8 @@ public class FrameTimeWidget extends Widget {
       //  window.getEngineImpl().setState(window,null,new PipelineState().setDepth(false));
 
         IDefaultEngineImpl<?, ?> impl = window.getEngineImpl();
-        impl.bindPipeline(window, null, shaderSource.program);
-        impl.bindTexture(window, null, 0);
+        impl.bindPipeline(null, shaderSource.program);
+        impl.bindTexture(null, 0);
 
         //window.getEngineImpl().drawAndDestroyMesh(window,null,matrixStack,mesh,0,shaderSource.program);
         //window.getEngineImpl().drawAndDestroyMesh(window,null,matrixStack,mesh,0,shaderSource.program);

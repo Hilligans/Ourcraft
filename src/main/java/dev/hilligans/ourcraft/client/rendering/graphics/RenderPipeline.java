@@ -97,4 +97,14 @@ public class RenderPipeline implements IRegistryElement {
     public String getResourceType() {
         return "render_pipeline";
     }
+
+    @Override
+    public String toString() {
+        return "RenderPipeline{" +
+                "name='" + name + '\'' +
+                ", window=" + window +
+                ", renderTargets=" + renderTargets +
+                ", renderTasks=" + renderTasks +
+                '}';
+    }
 }

@@ -34,7 +34,7 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     public int meshPointer = 0;
 
     @Override
-    public void drawMesh(FixedFunctionGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
+    public void drawMesh(GraphicsContext graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
         VertexMesh mesh = meshes.get((int)meshID);
         VertexFormat format = mesh.vertexFormat;
         glBegin(format.primitiveType);
@@ -70,7 +70,7 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     }
 
     @Override
-    public long createMesh(FixedFunctionGLWindow window, GraphicsContext graphicsContext, VertexMesh mesh) {
+    public long createMesh(GraphicsContext graphicsContext, VertexMesh mesh) {
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
@@ -80,32 +80,32 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     }
 
     @Override
-    public void destroyMesh(FixedFunctionGLWindow window, GraphicsContext graphicsContext, long mesh) {
+    public void destroyMesh(GraphicsContext graphicsContext, long mesh) {
         meshes.remove((int)mesh);
     }
 
     @Override
-    public long createTexture(FixedFunctionGLWindow window, GraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format) {
+    public long createTexture(GraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format) {
         return 0;
     }
 
     @Override
-    public void destroyTexture(FixedFunctionGLWindow window, GraphicsContext graphicsContext, long texture) {
+    public void destroyTexture(GraphicsContext graphicsContext, long texture) {
 
     }
 
     @Override
-    public void bindTexture(FixedFunctionGLWindow window, GraphicsContext graphicsContext, long texture) {
+    public void bindTexture(GraphicsContext graphicsContext, long texture) {
 
     }
 
     @Override
-    public void bindPipeline(FixedFunctionGLWindow window, GraphicsContext graphicsContext, long pipeline) {
+    public void bindPipeline(GraphicsContext graphicsContext, long pipeline) {
 
     }
 
     @Override
-    public void drawAndDestroyMesh(FixedFunctionGLWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh) {
+    public void drawAndDestroyMesh(GraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh) {
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
@@ -147,7 +147,7 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     }
 
     @Override
-    public void setState(FixedFunctionGLWindow window, GraphicsContext graphicsContext, PipelineState state) {
+    public void setState(GraphicsContext graphicsContext, PipelineState state) {
 
     }
 
@@ -158,6 +158,41 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
 
     @Override
     public void uploadData(GraphicsContext graphicsContext, FloatBuffer data, long index, String type, long program, ShaderSource shaderSource) {
+
+    }
+
+    @Override
+    public long createFrameBuffer(GraphicsContext graphicsContext, int width, int height) {
+        return 0;
+    }
+
+    @Override
+    public void destroyFrameBuffer(GraphicsContext graphicsContext, long id) {
+
+    }
+
+    @Override
+    public void bindFrameBuffer(GraphicsContext graphicsContext, long id) {
+
+    }
+
+    @Override
+    public long getBoundFBO(GraphicsContext graphicsContext) {
+        return 0;
+    }
+
+    @Override
+    public long getBoundTexture(GraphicsContext graphicsContext) {
+        return 0;
+    }
+
+    @Override
+    public long getBoundProgram(GraphicsContext graphicsContext) {
+        return 0;
+    }
+
+    @Override
+    public void clearFBO(GraphicsContext graphicsContext, Vector4f clearColor) {
 
     }
 

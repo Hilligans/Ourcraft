@@ -14,13 +14,11 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class OpenGLWindow extends RenderWindow {
 
     public long window;
-    public Client client;
     public boolean shouldClose = false;
     public boolean mouseLocked = false;
     public boolean windowFocused = true;
     public int width;
     public int height;
-    public Vector4f clearColor = new Vector4f();
 
     public OpenGLWindow(Client client, OpenGLEngine engine, String name, int width, int height) {
         super(engine);
@@ -32,8 +30,8 @@ public class OpenGLWindow extends RenderWindow {
             //glfwTerminate();
             throw new RuntimeException("Failed to create window");
         }
-        glfwMakeContextCurrent(window);
         this.client = client;
+        glfwMakeContextCurrent(window);
         registerCallbacks();
     }
 
@@ -73,11 +71,6 @@ public class OpenGLWindow extends RenderWindow {
     }
 
     @Override
-    public Client getClient() {
-        return client;
-    }
-
-    @Override
     public String getClipboardString() {
         return glfwGetClipboardString(window);
     }
@@ -105,11 +98,6 @@ public class OpenGLWindow extends RenderWindow {
     @Override
     public String getWindowingName() {
         return "glfw";
-    }
-
-    @Override
-    public void setClearColor(float r, float g, float b, float a) {
-        this.clearColor.set(r,g,b,a);
     }
 
     public void registerCallbacks() {

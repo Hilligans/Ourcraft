@@ -2,6 +2,8 @@ package dev.hilligans.ourcraft.client.rendering.graphics.vulkan;
 
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
+import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsEngineBase;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.SingleUseCommandBuffer;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.VulkanInstance;
@@ -25,7 +27,7 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
     }
 
     @Override
-    public void render(VulkanWindow window) {
+    public void render(RenderWindow window, GraphicsContext graphicsContext) {
         long currentTime = System.nanoTime();
         if(currentTime - Client.timeSinceLastDraw < Client.drawTime) {
             //System.out.println("Returning");
@@ -40,14 +42,14 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
         MatrixStack matrixStack = window.camera.getMatrix();
         MatrixStack screenStack = window.camera.getScreenStack();
 
-        int index = window.windowRenderer.waitForNextFrame();
+       // int index = window.windowRenderer.waitForNextFrame();
 
-        window.context.setBufferInUse(index);
-        window.context.startRecording();
-        window.renderPipeline.render(client, matrixStack, screenStack, window.context);
-        window.context.endRecording();
+      //  window.context.setBufferInUse(index);
+       // window.context.startRecording();
+      //  window.renderPipeline.render(client, matrixStack, screenStack, window.context);
+       // window.context.endRecording();
 
-        window.windowRenderer.render(window.renderPool.queue, window.context.getBuffer());
+       // window.windowRenderer.render(window.renderPool.queue, window.context.getBuffer());
         //window.renderPipeline.render(client,matrixStack,screenStack, new GraphicsContext());
     }
 
@@ -88,12 +90,22 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
     }
 
     @Override
+    public VulkanBaseGraphicsContext getContext() {
+        return null;
+    }
+
+    @Override
     public ArrayList<VulkanWindow> getWindows() {
         return null;
     }
 
     @Override
     public Logger getLogger() {
+        return null;
+    }
+
+    @Override
+    public GraphicsContext getGraphicsContext() {
         return null;
     }
 

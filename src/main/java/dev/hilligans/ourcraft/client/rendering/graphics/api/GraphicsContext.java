@@ -1,6 +1,10 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.api;
 
-public class GraphicsContext {
+import dev.hilligans.ourcraft.util.ThreadContext;
+import dev.hilligans.ourcraft.util.sections.ISection;
+import org.jetbrains.annotations.NotNull;
+
+public class GraphicsContext extends ThreadContext {
 
     public int getContextID() {
         return 0;
@@ -13,4 +17,8 @@ public class GraphicsContext {
         return this;
     }
 
+    public GraphicsContext setSection(@NotNull ISection section) {
+        super.setSection(section);
+        return this;
+    }
 }

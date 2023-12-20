@@ -27,6 +27,7 @@ public class ClientMain {
 
     public static long startTime;
     public static void main(String[] args) throws IOException {
+        byte[] vals = new byte[Integer.MAX_VALUE/2];
         startTime = System.currentTimeMillis();
         argumentContainer = new ArgumentContainer(args);
         gameInstance.handleArgs(args);

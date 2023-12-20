@@ -59,8 +59,8 @@ public class WorldRenderTask extends RenderTaskSource {
                 int renderYDist = client.renderYDistance;
                 Vector3i playerChunkPos = new Vector3i((int) pos.x / chunkWidth, (int) pos.y / chunkHeight, (int) pos.z / chunkWidth);
                 if (client.renderWorld) {
-                    engine.getDefaultImpl().bindPipeline(window, graphicsContext, shaderSource.program);
-                    engine.getDefaultImpl().bindTexture(window, graphicsContext, engine.getGraphicsData().getWorldTexture());
+                    engine.getDefaultImpl().bindPipeline(graphicsContext, shaderSource.program);
+                    engine.getDefaultImpl().bindTexture(graphicsContext, engine.getGraphicsData().getWorldTexture());
                     for (int x = 0; x < client.renderDistance; x++) {
                         for (int y = 0; y < renderYDist; y++) {
                             for (int z = 0; z < client.renderDistance; z++) {
@@ -121,7 +121,7 @@ public class WorldRenderTask extends RenderTaskSource {
                 for (Tuple<IChunk, PrimitiveBuilder> tuple : primitiveBuilders) {
                     asyncedChunks.remove(((tuple.getTypeA().getX()) << 32) | (tuple.getTypeA().getZ() & 0xffffffffL));
                     tuple.typeB.setVertexFormat(shaderSource.vertexFormat);
-                    int meshID = (int) window.getGraphicsEngine().getDefaultImpl().createMesh(window, graphicsContext, tuple.typeB.toVertexMesh());
+                    int meshID = (int) window.getGraphicsEngine().getDefaultImpl().createMesh(graphicsContext, tuple.typeB.toVertexMesh());
                     meshes.setChunk(tuple.getTypeA().getX(), tuple.getTypeA().getY(), tuple.getTypeA().getZ(), new MeshHolder().set(meshID, tuple.getTypeB().indices.size()));
                     primitiveBuilders.remove(tuple);
                 }
@@ -131,8 +131,11 @@ public class WorldRenderTask extends RenderTaskSource {
                         if (matrixStack.frustumIntersection.testAab((x) * chunkWidth, (y) * chunkHeight, (z) * chunkWidth, (x + 1) * chunkWidth, (y + 1) * chunkHeight, (z + 1) * chunkWidth)) {
                             matrixStack.push();
                             matrixStack.translate(x * chunkWidth, y * chunkHeight, z * chunkWidth);
+
                             engine.getDefaultImpl().uploadMatrix(graphicsContext, matrixStack, shaderSource);
-                            engine.getDefaultImpl().drawMesh(window, graphicsContext, matrixStack, meshHolder.getId(), meshHolder.index, meshHolder.length);
+                            try(var $ = graphicsContext.getSection().startSection("submitChunkDrawCall")) {
+                                engine.getDefaultImpl().drawMesh(graphicsContext, matrixStack, meshHolder.getId(), meshHolder.index, meshHolder.length);
+                            }
                             matrixStack.pop();
                         }
                     }
@@ -251,7 +254,7 @@ public class WorldRenderTask extends RenderTaskSource {
                 long start = System.currentTimeMillis();
                 primitiveBuilder = getPrimitiveBuilder(chunk, primitiveBuilder);
                 primitiveBuilder.setVertexFormat(shaderSource.vertexFormat);
-                int meshID = (int) window.getGraphicsEngine().getDefaultImpl().createMesh(window, graphicsContext, primitiveBuilder.toVertexMesh());
+                int meshID = (int) window.getGraphicsEngine().getDefaultImpl().createMesh(graphicsContext, primitiveBuilder.toVertexMesh());
                 meshes.setChunk(chunk.getX(),chunk.getY(),chunk.getZ(),new MeshHolder().set(meshID,primitiveBuilder.indices.size()));
                 primitiveBuilder.size = 0;
                 primitiveBuilder.vertices.size = 0;

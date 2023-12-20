@@ -18,7 +18,6 @@ import dev.hilligans.ourcraft.command.CommandHandler;
 import dev.hilligans.ourcraft.container.Container;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
 import dev.hilligans.ourcraft.entity.Entity;
-import dev.hilligans.ourcraft.entity.EntityFetcher;
 import dev.hilligans.ourcraft.item.data.ToolLevel;
 import dev.hilligans.ourcraft.item.data.ToolLevelList;
 import dev.hilligans.ourcraft.item.Item;
@@ -37,13 +36,10 @@ import dev.hilligans.ourcraft.resource.ResourceLocation;
 import dev.hilligans.ourcraft.resource.ResourceManager;
 import dev.hilligans.ourcraft.resource.UniversalResourceLoader;
 import dev.hilligans.ourcraft.settings.Setting;
-import dev.hilligans.ourcraft.util.ArgumentContainer;
-import dev.hilligans.ourcraft.util.Logger;
-import dev.hilligans.ourcraft.util.NamedThreadFactory;
+import dev.hilligans.ourcraft.util.*;
 import dev.hilligans.ourcraft.recipe.IRecipe;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.util.registry.Registry;
-import dev.hilligans.ourcraft.util.Side;
 import dev.hilligans.ourcraft.world.Feature;
 
 import java.net.URL;
@@ -69,6 +65,7 @@ public class GameInstance {
     public final UniversalResourceLoader RESOURCE_LOADER = new UniversalResourceLoader();
     public final ArgumentContainer ARGUMENTS = new ArgumentContainer();
     public final DataLoader DATA_LOADER = new DataLoader();
+    public final ThreadProvider THREAD_PROVIDER = new ThreadProvider(this);
     //public final
     public Side side;
 

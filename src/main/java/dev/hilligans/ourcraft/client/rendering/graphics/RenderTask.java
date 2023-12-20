@@ -7,6 +7,8 @@ import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 
 public abstract class RenderTask {
 
+    protected String identifierName;
+
     public abstract void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack, float delta);
 
 
@@ -20,4 +22,12 @@ public abstract class RenderTask {
     public void close() {
     }
 
+    public RenderTask setNameIdentifierName(String name) {
+        this.identifierName = name;
+        return this;
+    }
+
+    public String getIdentifierName() {
+        return identifierName;
+    }
 }

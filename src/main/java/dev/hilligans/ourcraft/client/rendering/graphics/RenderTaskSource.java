@@ -26,7 +26,7 @@ public abstract class RenderTaskSource implements IRegistryElement {
     public abstract RenderTask getDefaultTask();
 
     public RenderTask getTask(String engineName) {
-        return getDefaultTask();
+        return getDefaultTask().setNameIdentifierName(getIdentifierName());
     }
 
     @Override

@@ -54,9 +54,9 @@ public class Texture implements IRegistryElement {
         mesh.addData(indices, vertices);
 
         //GL11.glDisable(GL11.GL_DEPTH_TEST);
-        defaultEngineImpl.bindPipeline(window, null, shaderSource.program);
-        defaultEngineImpl.bindTexture(window, null, textureId);
-        defaultEngineImpl.drawAndDestroyMesh(window,null,matrixStack,mesh);
+        defaultEngineImpl.bindPipeline(null, shaderSource.program);
+        defaultEngineImpl.bindTexture( null, textureId);
+        defaultEngineImpl.drawAndDestroyMesh(null,matrixStack,mesh);
     }
 
     public void drawTexture(RenderWindow window, MatrixStack matrixStack, int x, int y, int width, int height) {
@@ -145,12 +145,12 @@ public class Texture implements IRegistryElement {
     @Override
     public void loadGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
         IRegistryElement.super.loadGraphics(graphicsEngine, graphicsContext);
-        textureId = graphicsEngine.getDefaultImpl().createTexture(null, graphicsContext, texture);
+        textureId = graphicsEngine.getDefaultImpl().createTexture(graphicsContext, texture);
     }
 
     @Override
     public void cleanupGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
         IRegistryElement.super.cleanupGraphics(graphicsEngine, graphicsContext);
-        graphicsEngine.getDefaultImpl().destroyTexture(null, graphicsContext, textureId);
+        graphicsEngine.getDefaultImpl().destroyTexture(graphicsContext, textureId);
     }
 }
