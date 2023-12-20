@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.tasks;
 
+import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
@@ -10,6 +11,9 @@ import dev.hilligans.ourcraft.client.rendering.graphics.RenderTask;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderTaskSource;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.world.StringRenderer;
+import dev.hilligans.ourcraft.util.sections.ProfiledSection;
+
+import static dev.hilligans.ourcraft.util.FormattedString.FSTR;
 
 public class GUIRenderTask extends RenderTaskSource {
 
@@ -20,12 +24,16 @@ public class GUIRenderTask extends RenderTaskSource {
     @Override
     public RenderTask getDefaultTask() {
         return new RenderTask() {
+
+            public int counter = 0;
+            public ProfiledSection.StackFrame monitoredFrame;
+
             @Override
             public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?,?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack, float delta) {
                 IDefaultEngineImpl<?,?> impl = engine.getDefaultImpl();
 
                 StringRenderer stringRenderer = engine.getStringRenderer();
-
+                counter++;
                 if (client.playerData.f3) {
                   //  stringRenderer.drawStringInternal(window,screenStack,"1",0,0,0.5f);
                     stringRenderer.drawStringInternal(window, screenStack, "FPS:" + window.frameTracker.getFPS(), window.getWindowWidth() / 2, 29, 0.5f);
@@ -51,6 +59,17 @@ public class GUIRenderTask extends RenderTaskSource {
                     stringRenderer.drawStringInternal(window,screenStack, "X:" + client.rWindow.camera.getCameraPos().x, window.getWindowWidth() / 2, 358,0.5f);
                     stringRenderer.drawStringInternal(window,screenStack, "Y:" + client.rWindow.camera.getCameraPos().y, window.getWindowWidth() / 2, 387,0.5f);
                     stringRenderer.drawStringInternal(window,screenStack, "Z:" + client.rWindow.camera.getCameraPos().z, window.getWindowWidth() / 2, 416,0.5f);
+
+                    if(counter % 100 == 0) {
+                        counter = 0;
+                        if(graphicsContext.getSection() instanceof ProfiledSection profiledSection) {
+                            monitoredFrame = profiledSection.getMonitor();
+                        }
+                    }
+                    if(monitoredFrame != null) {
+                        //recursiveDraw(stringRenderer, window, screenStack, monitoredFrame, new int[]{0}, monitoredFrame.totalTime);
+                        recursiveDrawTimes(stringRenderer, window, screenStack, monitoredFrame, new int[]{0});
+                    }
                 }
               //  ItemStack stack = client.playerData.inventory.getItem(client.playerData.handSlot);
              //   if (stack != null && stack.item != null) {
@@ -74,6 +93,22 @@ public class GUIRenderTask extends RenderTaskSource {
                 //        }
                //     }
              //   }
+            }
+
+            public void recursiveDraw(StringRenderer stringRenderer, RenderWindow renderWindow, MatrixStack matrixStack, ProfiledSection.StackFrame stackFrame, int[] y, long time) {
+                stringRenderer.drawStringInternal(renderWindow, matrixStack, FSTR."\{stackFrame.getIndentLevel()}\{stackFrame.sectionName}: %2.2f%%\{(double)stackFrame.totalTime/time*100}\n", 0, y[0], 0.5f);
+                y[0] += 29;
+                for(ProfiledSection.StackFrame child : stackFrame.frames) {
+                    recursiveDraw(stringRenderer, renderWindow, matrixStack, child, y, time);
+                }
+            }
+
+            public void recursiveDrawTimes(StringRenderer stringRenderer, RenderWindow renderWindow, MatrixStack matrixStack, ProfiledSection.StackFrame stackFrame, int[] y) {
+                stringRenderer.drawStringInternal(renderWindow, matrixStack, STR."\{stackFrame.getIndentLevel()}\{stackFrame.sectionName}: \{Ourcraft.getConvertedTime(stackFrame.totalTime)}\n", 0, y[0], 0.5f);
+                y[0] += 29;
+                for(ProfiledSection.StackFrame child : stackFrame.frames) {
+                    recursiveDrawTimes(stringRenderer, renderWindow, matrixStack, child, y);
+                }
             }
 
             @Override

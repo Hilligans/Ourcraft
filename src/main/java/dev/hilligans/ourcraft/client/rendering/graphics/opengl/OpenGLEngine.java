@@ -48,6 +48,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
 
     @Override
     public void render(RenderWindow window, GraphicsContext graphicsContext) {
+        window.frameTracker.count();
         //client.mouseLocked = client.screen == null;
         //glGetError();
         //GLRenderer.resetFrame();
@@ -66,10 +67,6 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
 
         window.renderPipeline(client, matrixStack, screenStack, graphicsContext);
     }
-
-    public static int counter = 0;
-
-
 
     @Override
     public OpenGLWindow setup() {
@@ -143,7 +140,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
     @Override
     public GraphicsContext getGraphicsContext() {
         if(profiling) {
-            return new GraphicsContext().setSection(new ProfiledSection());
+            return new GraphicsContext().setSection(new ProfiledSection().setMonitorName("loop"));
         }
         return new GraphicsContext();
     }

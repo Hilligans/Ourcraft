@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.GLFW_REPEAT;
 
 public class Input implements IRegistryElement {
 
@@ -42,6 +43,7 @@ public class Input implements IRegistryElement {
                 return true;
             }
         }
+        //System.out.println(pipeline);
         return false;
     }
 
@@ -92,7 +94,7 @@ public class Input implements IRegistryElement {
 
     public void process(InputHandler inputHandler, int input, float mode, RenderWindow window, int action, float strength) {
         //TODO fix
-        if(action == GLFW_PRESS) {
+         if(action == GLFW_PRESS || action == GLFW_REPEAT) {
             press(window, strength);
         }
     }

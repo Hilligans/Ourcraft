@@ -1,8 +1,8 @@
 package dev.hilligans.ourcraft.util.sections;
 
 import dev.hilligans.ourcraft.Ourcraft;
-import dev.hilligans.ourcraft.util.FormattedString;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -11,12 +11,19 @@ import static dev.hilligans.ourcraft.util.FormattedString.FSTR;
 public class ProfiledSection implements ISection {
 
     protected final Stack<StackFrame> stackFrames = new Stack<>();
-    public StackFrame head;
+    public StackFrame monitor;
+    public StackFrame monitoredTotalTime;
+    public String monitorName;
 
     @Override
     public SectionView startSection(String name) {
         stackFrames.push(new StackFrame(name, Ourcraft.getTime()));
         return new SectionView(name, this);
+    }
+
+    public ProfiledSection setMonitorName(String name) {
+        this.monitorName = name;
+        return this;
     }
 
     @Override
@@ -28,34 +35,47 @@ public class ProfiledSection implements ISection {
         processFrame(stackFrame);
     }
 
+    public @Nullable StackFrame getMonitor() {
+        return monitor;
+    }
+
+    public @Nullable StackFrame getMonitoredTotalTime() {
+        return monitoredTotalTime;
+    }
+
     private void processFrame(StackFrame stackFrame) {
         stackFrame.setEndTime(Ourcraft.getTime());
         StackFrame lastFrame = stackFrames.empty() ? null : stackFrames.peek();
         if(lastFrame != null) {
             stackFrame.setParent(lastFrame);
             lastFrame.addFrame(stackFrame);
+        }
+        if(monitorName == null) {
+            if(lastFrame == null) {
+                monitor = stackFrame;
+            }
         } else {
-            head = stackFrame;
+            if(monitorName.equals(stackFrame.sectionName)) {
+                monitor = stackFrame;
+                if(lastFrame != null) {
+                    monitoredTotalTime = lastFrame.stackFrames.get(monitorName).copy();
+                }
+            }
         }
     }
 
     @Override
     public String toString() {
-        if(head == null) {
-            if(stackFrames.empty()) {
-                return "empty";
-            } else {
-                StackFrame f = stackFrames.peek().frames.get(0);
-                return f.toString1(f.totalTime);
-            }
+        if(monitor == null) {
+            return "empty";
         } else {
-            return head.toString();
+            return monitor.toString();
         }
     }
 
     public static class StackFrame {
         public final String sectionName;
-        public final long startTime;
+        public long startTime;
         public long endTime;
         public long totalTime;
         public StackFrame parent;
@@ -66,6 +86,12 @@ public class ProfiledSection implements ISection {
         public StackFrame(String sectionName, long startTime) {
             this.sectionName = sectionName;
             this.startTime = startTime;
+        }
+
+        public StackFrame(String sectionName, long totalTime, StackFrame parent) {
+            this.sectionName = sectionName;
+            this.totalTime = totalTime;
+            this.parent = parent;
         }
 
         public void setEndTime(long time) {
@@ -106,6 +132,16 @@ public class ProfiledSection implements ISection {
             frames.add(stackFrame);
         }
 
+        public StackFrame copy() {
+            StackFrame stackFrame = new StackFrame(sectionName, totalTime, parent);
+            for(StackFrame child : frames) {
+                child = child.copy();
+                stackFrame.frames.add(child);
+                stackFrame.stackFrames.put(child.sectionName, child);
+            }
+            return stackFrame;
+        }
+
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
@@ -116,7 +152,11 @@ public class ProfiledSection implements ISection {
             return builder.toString();
         }
 
-        public String toString1(long time) {
+        public String getPercentagesString() {
+            return toString1(totalTime);
+        }
+
+        String toString1(long time) {
             StringBuilder builder = new StringBuilder();
             builder.append(FSTR."\{getIndentLevel()}\{sectionName}: %2.2f%%\{(double)totalTime/time*100}\n");
             for(StackFrame frame : frames) {
