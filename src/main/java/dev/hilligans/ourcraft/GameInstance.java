@@ -11,9 +11,11 @@ import dev.hilligans.ourcraft.client.input.Input;
 import dev.hilligans.ourcraft.client.input.InputHandlerProvider;
 import dev.hilligans.ourcraft.client.rendering.graphics.*;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsElement;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.client.rendering.ScreenBuilder;
 import dev.hilligans.ourcraft.client.rendering.Texture;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.ILayoutEngine;
 import dev.hilligans.ourcraft.command.CommandHandler;
 import dev.hilligans.ourcraft.container.Container;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
@@ -99,6 +101,7 @@ public class GameInstance {
         REGISTRIES.put(INPUT_HANDLER_PROVIDERS);
         REGISTRIES.put(TEXTURES);
         REGISTRIES.put(SHADERS);
+        REGISTRIES.put(LAYOUT_ENGINES);
     }
 
     public void loadContent() {
@@ -117,8 +120,8 @@ public class GameInstance {
     public void build(IGraphicsEngine<?,?,?> graphicsEngine, GraphicsContext graphicsContext) {
         for(Registry<?> registry : REGISTRIES.ELEMENTS) {
             for(Object o : registry.ELEMENTS) {
-                if(o instanceof IRegistryElement registryElement) {
-                    registryElement.loadGraphics(graphicsEngine, graphicsContext);
+                if(o instanceof IGraphicsElement graphicsElement) {
+                    graphicsElement.load(this, graphicsEngine, graphicsContext);
                 }
             }
         }
@@ -130,8 +133,8 @@ public class GameInstance {
     public void cleanupGraphics(IGraphicsEngine<?,?,?> graphicsEngine, GraphicsContext graphicsContext) {
         for(Registry<?> registry : REGISTRIES.ELEMENTS) {
             for(Object o : registry.ELEMENTS) {
-                if(o instanceof IRegistryElement registryElement) {
-                    registryElement.cleanupGraphics(graphicsEngine, graphicsContext);
+                if(o instanceof IGraphicsElement graphicsElement) {
+                    graphicsElement.cleanup(this, graphicsEngine, graphicsContext);
                 }
             }
         }
@@ -165,6 +168,7 @@ public class GameInstance {
     public final Registry<InputHandlerProvider> INPUT_HANDLER_PROVIDERS = new Registry<>(this, InputHandlerProvider.class, "input");
     public final Registry<Texture> TEXTURES = new Registry<>(this, Texture.class, "texture");
     public final Registry<ShaderSource> SHADERS = new Registry<>(this, ShaderSource.class, "shader");
+    public final Registry<ILayoutEngine<?>> LAYOUT_ENGINES = new Registry<>(this, ILayoutEngine.class, "layout_engine");
     public ArrayList<IBlockState> BLOCK_STATES;
 
     public void buildBlockStates() {
@@ -325,6 +329,10 @@ public class GameInstance {
 
     public void registerShader(ShaderSource... shaderSources) {
         SHADERS.putAll(shaderSources);
+    }
+
+    public void registerLayoutEngine(ILayoutEngine<?>... layoutEngines) {
+        LAYOUT_ENGINES.putAll(layoutEngines);
     }
 
     public void register(String name, Object o) {

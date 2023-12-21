@@ -44,6 +44,8 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
 
     long createProgram(Q graphicsContext, ShaderSource shaderSource);
 
+    void destroyProgram(Q graphicsContext, long program);
+
     void uploadData(Q graphicsContext, FloatBuffer data, long index, String type, long program, ShaderSource shaderSource);
 
     long createFrameBuffer(Q graphicsContext, int width, int height);
@@ -98,6 +100,10 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
 
     default long createProgram(Object graphicsContext, ShaderSource shaderSource) {
         return createProgram((Q) graphicsContext, shaderSource);
+    }
+
+    default void destroyProgram(Object graphicsContext, long program) {
+        destroyProgram((Q)graphicsContext, program);
     }
 
     default void uploadData(Object graphicsContext, FloatBuffer data, long index, String type, long program, ShaderSource shaderSource) {

@@ -157,6 +157,11 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     }
 
     @Override
+    public void destroyProgram(GraphicsContext graphicsContext, long program) {
+
+    }
+
+    @Override
     public void uploadData(GraphicsContext graphicsContext, FloatBuffer data, long index, String type, long program, ShaderSource shaderSource) {
 
     }

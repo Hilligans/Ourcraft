@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import org.json.JSONArray;
@@ -43,7 +44,7 @@ public class ScreenBuilder implements IRegistryElement {
             int height;
 
             @Override
-            public void drawScreen(RenderWindow window, MatrixStack matrixStack) {
+            public void drawScreen(RenderWindow window, MatrixStack matrixStack, GraphicsContext graphicsContext) {
                 for(TextureElement textureElement : textures) {
                     int x = (int) (textureElement.position[0] * width);
                     int y = (int) (textureElement.position[1] * height);
@@ -56,7 +57,7 @@ public class ScreenBuilder implements IRegistryElement {
                     }
                    // textureElement.texture.drawTexture(matrixStack, x,y,widthX,heightY, textureElement.region[0], textureElement.region[1], textureElement.region[2], textureElement.region[3]);
                 }
-                super.drawScreen(window, matrixStack);
+                super.drawScreen(window, matrixStack, graphicsContext);
             }
 
             @Override

@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.widgets.Button;
 import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.util.Settings;
@@ -24,8 +25,8 @@ public class DisconnectScreen extends ScreenBase {
     }
 
     @Override
-    public void render(RenderWindow window, MatrixStack matrixStack) {
+    public void render(RenderWindow window, MatrixStack matrixStack, GraphicsContext graphicsContext) {
         window.getStringRenderer().drawCenteredStringTranslated(window, matrixStack,message == null ? "" : message, (int) ((window.getWindowHeight() + window.getStringRenderer().stringHeight) / 2),1.0f);
-        super.render(window, matrixStack);
+        super.render(window, matrixStack, graphicsContext);
     }
 }

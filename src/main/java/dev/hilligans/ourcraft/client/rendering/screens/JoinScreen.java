@@ -5,6 +5,7 @@ import dev.hilligans.ourcraft.client.input.key.KeyPress;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.Textures;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.widgets.ServerSelectorWidget;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
 import dev.hilligans.ourcraft.client.rendering.widgets.Button;
@@ -86,8 +87,8 @@ public class JoinScreen extends ScreenBase {
     }
 
     @Override
-    public void drawScreen(RenderWindow window, MatrixStack matrixStack) {
-        super.drawScreen(window, matrixStack);
+    public void drawScreen(RenderWindow window, MatrixStack matrixStack, GraphicsContext graphicsContext) {
+        super.drawScreen(window, matrixStack, graphicsContext);
         if(getClient().playerData.valid_account) {
             window.getStringRenderer().drawStringInternal(window, matrixStack,getClient().playerData.userName, (int) (Settings.guiSize * 8), (int) (1 * Settings.guiSize),0.5f);
             Textures.CHECK_MARK.drawTexture(window, matrixStack,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));

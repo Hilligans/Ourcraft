@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.client.rendering;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 
 public interface Screen {
 
@@ -14,7 +15,7 @@ public interface Screen {
         return getWindow().getClient();
     }
 
-    default void render(RenderWindow window, MatrixStack matrixStack) {}
+    default void render(RenderWindow window, MatrixStack matrixStack, GraphicsContext graphicsContext) {}
 
     default void close(boolean replaced) {}
 

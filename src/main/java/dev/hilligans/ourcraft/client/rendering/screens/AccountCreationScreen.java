@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.widgets.Button;
 import dev.hilligans.ourcraft.client.rendering.widgets.InputField;
 import dev.hilligans.ourcraft.network.packet.auth.CCreateAccount;
@@ -35,8 +36,8 @@ public class AccountCreationScreen extends ScreenBase {
     }
 
     @Override
-    public void drawScreen(RenderWindow window, MatrixStack matrixStack) {
-        super.drawScreen(window, matrixStack);
+    public void drawScreen(RenderWindow window, MatrixStack matrixStack, GraphicsContext graphicsContext) {
+        super.drawScreen(window, matrixStack, graphicsContext);
         window.getStringRenderer().drawStringInternal(window, matrixStack,debug,100,700,0.5f);
     }
 }

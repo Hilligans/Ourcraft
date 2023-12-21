@@ -6,6 +6,8 @@ import dev.hilligans.ourcraft.client.audio.SoundBuffer;
 import dev.hilligans.ourcraft.client.input.Input;
 import dev.hilligans.ourcraft.client.input.InputHandlerProvider;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.ILayout;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.ILayoutEngine;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.IModel;
 import dev.hilligans.ourcraft.client.rendering.ScreenBuilder;
 import dev.hilligans.ourcraft.client.rendering.Texture;
@@ -74,6 +76,7 @@ public class ModContent {
     public ArrayList<InputHandlerProvider> inputHandlerProviders = new ArrayList<>();
     public ArrayList<Input> keybinds = new ArrayList<>();
     public ArrayList<ShaderSource> shaders = new ArrayList<>();
+    public ArrayList<ILayoutEngine<?>> layoutEngines = new ArrayList<>();
 
     public HashMap<String, Protocol> protocols = new HashMap<>();
 
@@ -303,6 +306,13 @@ public class ModContent {
             shaderSource.assignModContent(this);
         }
         this.shaders.addAll(Arrays.asList(shaderSources));
+    }
+
+    public void registerLayoutEngine(ILayoutEngine<?>... layoutEngines) {
+        for(ILayoutEngine<?> layoutEngine : layoutEngines) {
+            layoutEngine.assignModContent(this);
+        }
+        this.layoutEngines.addAll(Arrays.asList(layoutEngines));
     }
 
     public void putData(IByteArray byteArray) {

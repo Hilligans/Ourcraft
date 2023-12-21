@@ -46,6 +46,12 @@ public class VertexMesh implements IAllocator<VertexMesh> {
         return this;
     }
 
+    public VertexMesh addData(ByteBuffer indices, ByteBuffer vertices) {
+        this.vertices = vertices.asFloatBuffer();
+        this.indices = indices.asIntBuffer();
+        return this;
+    }
+
     public VertexMesh setAllocator(IAllocator<VertexMesh> allocator) {
         this.allocator = allocator;
         return this;

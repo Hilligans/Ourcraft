@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.client.rendering;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IDefaultEngineImpl;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsElement;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.ShaderSource;
@@ -13,7 +14,7 @@ import dev.hilligans.ourcraft.resource.ResourceLocation;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.util.Settings;
 
-public class Texture implements IRegistryElement {
+public class Texture implements IRegistryElement, IGraphicsElement {
 
     public String path;
     public ModContent source;
@@ -31,13 +32,7 @@ public class Texture implements IRegistryElement {
     public Texture(String path) {
         this.path = path;
     }
-
-    public Texture(String path, Image texture) {
-        this.path = path;
-        width = texture.getWidth();
-        height = texture.getHeight();
-        this.texture = texture;
-    }
+    
 
     public void drawTexture(RenderWindow window, MatrixStack matrixStack, int x, int y, int width, int height, int startX, int startY, int endX, int endY) {
         IDefaultEngineImpl<?,?> defaultEngineImpl = window.getEngineImpl();
@@ -133,6 +128,10 @@ public class Texture implements IRegistryElement {
     @Override
     public void load(GameInstance gameInstance) {
         shaderSource = gameInstance.SHADERS.get("ourcraft:position_texture");
+    }
+
+    @Override
+    public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
         texture = (Image) gameInstance.RESOURCE_LOADER.getResource(new ResourceLocation(path,source.getModID()));
         if(texture == null) {
             System.err.println(path);
@@ -140,17 +139,12 @@ public class Texture implements IRegistryElement {
         }
         width = texture.getWidth();
         height = texture.getHeight();
-    }
 
-    @Override
-    public void loadGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
-        IRegistryElement.super.loadGraphics(graphicsEngine, graphicsContext);
         textureId = graphicsEngine.getDefaultImpl().createTexture(graphicsContext, texture);
     }
 
     @Override
-    public void cleanupGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
-        IRegistryElement.super.cleanupGraphics(graphicsEngine, graphicsContext);
+    public void cleanup(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
         graphicsEngine.getDefaultImpl().destroyTexture(graphicsContext, textureId);
     }
 }

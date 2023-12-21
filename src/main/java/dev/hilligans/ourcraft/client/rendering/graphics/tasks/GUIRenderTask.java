@@ -83,7 +83,7 @@ public class GUIRenderTask extends RenderTaskSource {
 
 
                 if (client.screen != null) {
-                    client.screen.render(window, screenStack);
+                    client.screen.render(window, screenStack, graphicsContext);
                   //  client.playerData.heldStack.renderStack(screenStack, (int) (Camera.newX - Settings.guiSize * 8), (int) (Camera.newY - Settings.guiSize * 8));
                 } //else {
                    // Textures.CURSOR.drawCenteredTexture(window, screenStack,1.0f);

@@ -39,7 +39,5 @@ public interface IRegistryElement {
         return new TagCollection();
     }
 
-    default void loadGraphics(IGraphicsEngine<?,?,?> graphicsEngine, GraphicsContext graphicsContext) {}
-
     default void cleanupGraphics(IGraphicsEngine<?,?,?> graphicsEngine, GraphicsContext graphicsContext) {}
 }

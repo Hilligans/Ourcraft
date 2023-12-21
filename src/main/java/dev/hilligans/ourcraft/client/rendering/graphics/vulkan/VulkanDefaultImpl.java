@@ -197,6 +197,11 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     }
 
     @Override
+    public void destroyProgram(VulkanBaseGraphicsContext graphicsContext, long program) {
+
+    }
+
+    @Override
     public void uploadData(VulkanBaseGraphicsContext gc, FloatBuffer data, long index, String type, long program, ShaderSource shaderSource) {
         VulkanGraphicsContext graphicsContext = (VulkanGraphicsContext)gc;
         GraphicsPipeline pipeline = graphicsContext.boundPipeline;

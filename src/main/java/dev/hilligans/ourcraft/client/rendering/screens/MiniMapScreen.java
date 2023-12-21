@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.input.key.MouseHandler;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.minimap.MiniMap;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
 import dev.hilligans.ourcraft.ClientMain;
@@ -22,8 +23,8 @@ public class MiniMapScreen extends ScreenBase {
     int mouseLastY = 0;
 
     @Override
-    public void drawScreen(RenderWindow window, MatrixStack matrixStack) {
-        super.drawScreen(window, matrixStack);
+    public void drawScreen(RenderWindow window, MatrixStack matrixStack, GraphicsContext graphicsContext) {
+        super.drawScreen(window, matrixStack, graphicsContext);
         if(MouseHandler.instance.mousePressed) {
             DoubleBuffer mousePos = window.getClient().getMousePos();
             int x = (int) (mousePos.get(0) - mouseLastX);

@@ -5,6 +5,7 @@ import dev.hilligans.ourcraft.client.audio.SoundBuffer;
 import dev.hilligans.ourcraft.client.input.Input;
 import dev.hilligans.ourcraft.client.input.InputHandlerProvider;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.ILayoutEngine;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.IModel;
 import dev.hilligans.ourcraft.client.rendering.ScreenBuilder;
 import dev.hilligans.ourcraft.client.rendering.Texture;
@@ -167,6 +168,9 @@ public class ContentPack {
                 }
                 for(ShaderSource shaderSource : mod.shaders) {
                     gameInstance.registerShader(shaderSource);
+                }
+                for(ILayoutEngine<?> layoutEngine : mod.layoutEngines) {
+                    gameInstance.registerLayoutEngine(layoutEngine);
                 }
             }
         }

@@ -227,6 +227,11 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
+    public void destroyProgram(GraphicsContext graphicsContext, long program) {
+        glDeleteShader((int)program);
+    }
+
+    @Override
     public void uploadData(GraphicsContext graphicsContext, FloatBuffer data, long index, String type, long program, ShaderSource shaderSource) {
         //if(program != boundProgram) {
             GL20.glUseProgram((int)program);

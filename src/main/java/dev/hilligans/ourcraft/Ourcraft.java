@@ -13,14 +13,12 @@ import dev.hilligans.ourcraft.client.input.RepeatingInput;
 import dev.hilligans.ourcraft.client.input.handlers.MouseHandler;
 import dev.hilligans.ourcraft.client.rendering.graphics.fixedfunctiongl.FixedFunctionGLEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.implementations.WorldCamera;
+import dev.hilligans.ourcraft.client.rendering.graphics.nuklear.NuklearLayoutEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.opengl.OpenGLEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.tasks.*;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanEngine;
 import dev.hilligans.ourcraft.client.rendering.ScreenBuilder;
-import dev.hilligans.ourcraft.client.rendering.screens.EscapeScreen;
-import dev.hilligans.ourcraft.client.rendering.screens.FrameTimeScreen;
-import dev.hilligans.ourcraft.client.rendering.screens.JoinScreen;
-import dev.hilligans.ourcraft.client.rendering.screens.TagEditorScreen;
+import dev.hilligans.ourcraft.client.rendering.screens.*;
 import dev.hilligans.ourcraft.client.rendering.Textures;
 import dev.hilligans.ourcraft.item.data.ToolLevel;
 import dev.hilligans.ourcraft.mod.handler.content.CoreExtensionView;
@@ -171,14 +169,17 @@ public class Ourcraft {
 
 
             view.registerVertexFormat(position_texture_color, position_color_texture, position_texture_globalColor, position_texture, position_texture_animatedWrap_shortenedColor, position_color);
-
+            view.registerVertexFormat(position2_texture_color);
 
 //            view.registerShader(new ShaderSource("world_shader","ourcraft:position_texture_color", "Shaders/WorldVertexShader.glsl","Shaders/WorldFragmentShader.glsl"));
             view.registerShader(new ShaderSource("world_shader", "ourcraft:position_color_texture", "Shaders/WorldVertexShader.glsl", "Shaders/WorldFragmentShader.glsl").withUniform("transform", "4fv").withUniform("color", "4f"));
             view.registerShader(new ShaderSource("position_color_shader", "ourcraft:position_color", "Shaders/WorldVertexColorShader.glsl", "Shaders/WorldFragmentShader.glsl").withUniform("transform", "4fv").withUniform("color", "4f"));
             view.registerShader(new ShaderSource("position_texture", "ourcraft:position_texture", "Shaders/PositionTexture.vsh", "Shaders/PositionTexture.fsh").withUniform("transform", "4fv").withUniform("color", "4f"));
+            view.registerShader(new ShaderSource("nk_shader", "position2_texture_color", "Shaders/NkVertexShader.glsl", "Shaders/NkFragmentShader.glsl").withUniform("transform", "4fv"));
 
             view.registerInputHandlerProviders(new ControllerHandlerProvider(), new KeyPressHandlerProvider(), new MouseHandlerProvider());
+
+            view.registerLayoutEngine(new NuklearLayoutEngine());
         }
     }
 
@@ -253,6 +254,14 @@ public class Ourcraft {
                     //GLFW.glfwSetCursorPos(window.getWindowID(), window.getWindowWidth()/2,window.getWindowHeight()/2);
                 }
             }.onlyWithPipelines("ourcraft:new_world_pipeline"));
+
+            modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_SEMICOLON) {
+                @Override
+                public void press(RenderWindow renderWindow, float strength) {
+                    super.press(renderWindow, strength);
+                    renderWindow.client.openScreen(new TestScreen());
+                }
+            });
 
             modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_W,
                     (window, strength) -> window.getCamera().moveForward(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
@@ -336,6 +345,11 @@ public class Ourcraft {
             .addPart("position", VertexFormat.FLOAT,3)
             .addPart("color", VertexFormat.FLOAT, 4)
             .addPart("texture", VertexFormat.FLOAT, 2);
+
+    public static final VertexFormat position2_texture_color = new VertexFormat("ourcraft", "position2_texture_color", VertexFormat.TRIANGLES)
+            .addPart("position2", VertexFormat.FLOAT, 2)
+            .addPart("texture", VertexFormat.FLOAT, 2)
+            .addPart("color", VertexFormat.FLOAT, 4);
 
     public static final VertexFormat position_texture_globalColor = new VertexFormat("oucraft", "position_texture_globalColor", VertexFormat.TRIANGLES)
             .addPart("position", VertexFormat.FLOAT, 3)

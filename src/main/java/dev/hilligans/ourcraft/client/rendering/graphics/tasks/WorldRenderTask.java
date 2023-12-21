@@ -303,9 +303,4 @@ public class WorldRenderTask extends RenderTaskSource {
         super.load(gameInstance);
         shaderSource = gameInstance.SHADERS.get("ourcraft:world_shader");
     }
-
-    @Override
-    public void loadGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
-        super.loadGraphics(graphicsEngine, graphicsContext);
-    }
 }

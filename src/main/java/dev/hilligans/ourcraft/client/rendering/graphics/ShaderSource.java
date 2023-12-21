@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.graphics;
 
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsElement;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
@@ -8,7 +9,7 @@ import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 
 import java.util.ArrayList;
 
-public class ShaderSource implements IRegistryElement {
+public class ShaderSource implements IRegistryElement, IGraphicsElement {
 
     public String format;
     public String name;
@@ -73,8 +74,7 @@ public class ShaderSource implements IRegistryElement {
     }
 
     @Override
-    public void loadGraphics(IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
-        System.err.println("LOADING");
+    public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
         program = (int) graphicsEngine.getDefaultImpl().createProgram(graphicsContext,this);
         /*
         if(uniformNames != null) {
@@ -86,6 +86,11 @@ public class ShaderSource implements IRegistryElement {
         }
 
          */
+    }
+
+    @Override
+    public void cleanup(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
+        graphicsEngine.getDefaultImpl().destroyProgram(graphicsContext, program);
     }
 
     @Override

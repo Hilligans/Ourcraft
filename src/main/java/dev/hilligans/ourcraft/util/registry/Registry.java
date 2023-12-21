@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.util.registry;
 
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.mod.handler.content.UnknownResourceException;
 import dev.hilligans.ourcraft.mod.handler.events.common.RegisterEvent;
 import dev.hilligans.ourcraft.mod.handler.Identifier;
 
@@ -33,6 +34,14 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
 
     public T get(String name) {
         return MAPPED_ELEMENTS.get(name);
+    }
+
+    public T getExcept(String name) {
+        T val = get(name);
+        if(val == null) {
+            throw new RuntimeException(STR."Unknown resource type \{name}, are you missing the modID?");
+        }
+        return val;
     }
 
     public void put(String name, T element) {

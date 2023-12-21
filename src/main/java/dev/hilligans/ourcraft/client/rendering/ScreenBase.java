@@ -7,6 +7,7 @@ import dev.hilligans.ourcraft.client.input.key.KeyPress;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.ShaderSource;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.widgets.Widget;
 import dev.hilligans.ourcraft.network.packet.client.CCloseScreen;
 
@@ -31,10 +32,10 @@ public abstract class ScreenBase implements Screen {
 
     public RenderWindow window;
 
-    public void drawScreen(RenderWindow window, MatrixStack matrixStack) {}
+    public void drawScreen(RenderWindow window, MatrixStack matrixStack, GraphicsContext graphicsContext) {}
 
-    public void render(RenderWindow window, MatrixStack matrixStack) {
-        drawScreen(window, matrixStack);
+    public void render(RenderWindow window, MatrixStack matrixStack, GraphicsContext graphicsContext) {
+        drawScreen(window, matrixStack, graphicsContext);
         for(Widget widget : widgets) {
             widget.render(window, matrixStack,0,0);
         }

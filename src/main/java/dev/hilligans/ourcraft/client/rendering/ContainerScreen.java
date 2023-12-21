@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.client.rendering;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.container.Container;
 import dev.hilligans.ourcraft.container.Slot;
 import dev.hilligans.ourcraft.item.ItemStack;
@@ -29,8 +30,8 @@ public abstract class ContainerScreen<T extends Container> extends ScreenBase {
     public RecipeHelper recipeHelper = new RecipeHelper(Ourcraft.GAME_INSTANCE);
 
     @Override
-    public void render(RenderWindow window, MatrixStack matrixStack) {
-        super.render(window, matrixStack);
+    public void render(RenderWindow window, MatrixStack matrixStack, GraphicsContext graphicsContext) {
+        super.render(window, matrixStack, graphicsContext);
         container.render(window, matrixStack);
 
     }
