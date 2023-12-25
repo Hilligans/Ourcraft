@@ -43,9 +43,9 @@ public class SplitWindow extends RenderWindow {
     }
 
     @Override
-    public void swapBuffers() {
-        super.swapBuffers();
-        baseWindow.swapBuffers();
+    public void swapBuffers(GraphicsContext graphicsContext) {
+        super.swapBuffers(graphicsContext);
+        baseWindow.swapBuffers(graphicsContext);
     }
 
     @Override

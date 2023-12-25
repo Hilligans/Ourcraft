@@ -62,6 +62,8 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
 
     void clearFBO(Q graphicsContext, Vector4f clearColor);
 
+    void setScissor(Q graphicsContext, int x, int y, int width, int height);
+
     default void drawMesh(Object graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
         drawMesh((Q) graphicsContext, matrixStack, meshID, indicesIndex, length);
     }
@@ -149,5 +151,13 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
 
     default void clearFBO(Object graphicsContext, Vector4f clearColor) {
         clearFBO((Q)graphicsContext, clearColor);
+    }
+
+    default void setScissor(Object graphicsContext, int x, int y, int width, int height) {
+        setScissor((Q)graphicsContext, x, y, width, height);
+    }
+
+    default void defaultScissor(Object graphicsContext, RenderWindow renderWindow) {
+        setScissor(graphicsContext, 0, 0, renderWindow.getWindowWidth(), renderWindow.getWindowHeight());
     }
 }

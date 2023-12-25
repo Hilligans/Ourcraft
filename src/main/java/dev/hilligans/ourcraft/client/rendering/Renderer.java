@@ -5,7 +5,6 @@ import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
 import dev.hilligans.ourcraft.item.ItemStack;
-import dev.hilligans.ourcraft.client.rendering.world.managers.TextureManager;
 import dev.hilligans.ourcraft.client.rendering.world.managers.VAOManager;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.util.Settings;
@@ -46,13 +45,14 @@ public class Renderer {
       */
     }
 
-    public static void renderItem(MatrixStack matrixStack, int x, int y, int size, TextureManager textureManager) {
+    public static void renderItem(MatrixStack matrixStack, int x, int y, int size) {
         size *= 2;
         size -= Settings.guiSize * 2;
         x += Settings.guiSize;
         y += Settings.guiSize;
         //matrixStack.applyTransformation(ClientMain.getClient().shaderManager.shaderProgram);
         //glUseProgram(ClientMain.getClient().shaderManager.shaderProgram);
+        /*
         glDisable(GL_DEPTH_TEST);
         int id = textureManager.getTextureId();
         float minX = TextAtlas.getMinX(id);
@@ -67,9 +67,12 @@ public class Renderer {
         glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
         VAOManager.destroyBuffer(vao);
         glEnable(GL_DEPTH_TEST);
+
+         */
     }
 
-    public static void renderItem(RenderWindow window, MatrixStack matrixStack, int x, int y, int size, TextureManager textureManager) {
+    public static void renderItem(RenderWindow window, MatrixStack matrixStack, int x, int y, int size) {
+        /*
         size *= 2;
         size -= Settings.guiSize * 2;
         x += Settings.guiSize;
@@ -85,5 +88,6 @@ public class Renderer {
         VertexMesh mesh = new VertexMesh(Ourcraft.position_color_texture);
         mesh.addData(indices, vertices);
         //window.getGraphicsEngine().getDefaultImpl().drawAndDestroyMesh(window, null, matrixStack, mesh, textureManager.getTextureId(), 0);
+         */
     }
 }

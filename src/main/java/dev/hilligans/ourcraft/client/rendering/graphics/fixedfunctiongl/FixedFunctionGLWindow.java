@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.fixedfunctiongl;
 
 import dev.hilligans.ourcraft.client.Client;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.implementations.FreeCamera;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 
@@ -46,7 +47,7 @@ public class FixedFunctionGLWindow extends RenderWindow {
     }
 
     @Override
-    public void swapBuffers() {
+    public void swapBuffers(GraphicsContext graphicsContext) {
         glfwSwapBuffers(window);
         client.rendering = false;
         glfwPollEvents();

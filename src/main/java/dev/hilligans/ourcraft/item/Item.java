@@ -119,7 +119,7 @@ public class Item implements IRecipeComponent, IRegistryElement {
     }
 
     public void addData(PrimitiveBuilder primitiveBuilder, float size) {
-        itemProperties.itemModel.addData(primitiveBuilder,itemProperties.itemTextureManager,0,size,null,0,0);
+        //itemProperties.itemModel.addData(primitiveBuilder,itemProperties.itemTextureManager,0,size,null,0,0);
     }
 
     public boolean onActivate(World world, PlayerEntity playerEntity) {

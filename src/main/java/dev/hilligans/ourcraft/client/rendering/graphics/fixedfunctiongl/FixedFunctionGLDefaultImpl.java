@@ -201,6 +201,11 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
 
     }
 
+    @Override
+    public void setScissor(GraphicsContext graphicsContext, int x, int y, int width, int height) {
+
+    }
+
     private int getGLPrimitive(int type) {
         return type + 0x1400;
     }

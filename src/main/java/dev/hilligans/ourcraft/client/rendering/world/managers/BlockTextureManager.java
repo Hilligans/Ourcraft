@@ -2,10 +2,9 @@ package dev.hilligans.ourcraft.client.rendering.world.managers;
 
 
 import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
-import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.Ourcraft;
 
-public class BlockTextureManager implements TextureManager {
+public class BlockTextureManager {
 
     public int[] textures = new int[6];
 
@@ -74,15 +73,5 @@ public class BlockTextureManager implements TextureManager {
         } else {
             return new String[]{location};
         }
-    }
-
-    @Override
-    public int getTextureId() {
-        return textures[0];
-    }
-
-    @Override
-    public int getTextureMap() {
-        return ClientMain.getClient().texture;
     }
 }

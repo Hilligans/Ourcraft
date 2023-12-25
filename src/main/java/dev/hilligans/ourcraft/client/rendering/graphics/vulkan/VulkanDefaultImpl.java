@@ -249,6 +249,11 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
 
     }
 
+    @Override
+    public void setScissor(VulkanBaseGraphicsContext graphicsContext, int x, int y, int width, int height) {
+        //vkCmdSetScissor();
+    }
+
     public void submitShader(String path, String modID, LogicalDevice device, int bit) {
         synchronized (shaderCache) {
             if(!shaderCache.containsKey(path)) {

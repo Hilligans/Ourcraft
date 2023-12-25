@@ -45,7 +45,7 @@ public class MultiPlayerServer implements IServer {
         executorService.scheduleAtFixedRate(server, 0, 40, TimeUnit.MILLISECONDS);
         ScheduledExecutorService executorService1 = Executors.newScheduledThreadPool(1, new NamedThreadFactory("server_player_handler"));
         executorService1.scheduleAtFixedRate(new PlayerHandler(this), 0, 10, TimeUnit.MILLISECONDS);
-        ConsoleReader consoleReader = new ConsoleReader(this::executeCommand);
+       // ConsoleReader consoleReader = new ConsoleReader(this::executeCommand);
 
         serverNetwork = new ServerNetwork(gameInstance.PROTOCOLS.get("Play"), this).debug(ServerMain.argumentContainer.getBoolean("--packetTrace", false));
         try {

@@ -2,7 +2,6 @@ package dev.hilligans.ourcraft.client.rendering.newrenderer;
 
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.client.rendering.world.managers.BlockTextureManager;
-import dev.hilligans.ourcraft.client.rendering.world.managers.TextureManager;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.save.WorldLoader;
 import org.joml.Vector3f;
@@ -118,16 +117,16 @@ public class BlockModel implements IModel {
     }
 
     @Override
-    public void addData(PrimitiveBuilder primitiveBuilder, TextureManager textureManager, int side, float size, Vector3f offset, int rotX, int rotY) {
+    public void addData(PrimitiveBuilder primitiveBuilder, BlockTextureManager textureManager, int side, float size, Vector3f offset, int rotX, int rotY) {
         rotX = 0;
         rotY = 0;
         float[] vertices = getVertices(side,rotX,rotY);
         int[] indices = this.indices[side];
         if(vertices != null) {
-            if(textureManager instanceof BlockTextureManager) {
+            if(textureManager != null) {
                 float color = getSideColor(side, rotX, rotY);
                 //float[] vals = new float[vertices.length];
-                int id = ((BlockTextureManager) textureManager).textures[side];
+                int id = textureManager.textures[side];
 
                 float startX = TextAtlas.getMinX(id);
                 float startY = TextAtlas.getMinY(id);

@@ -57,7 +57,7 @@ public class SplitWindowRenderTask extends RenderTaskSource {
                     engine.getDefaultImpl().bindPipeline(graphicsContext, shaderSource.program);
                     engine.getDefaultImpl().bindTexture(graphicsContext, subWindow.getTexture());
                     engine.getDefaultImpl().drawAndDestroyMesh(graphicsContext, screenStack, mesh);
-                    subWindow.swapBuffers();
+                    subWindow.swapBuffers(graphicsContext);
                 }
             }
         };

@@ -17,6 +17,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.nuklear.Nuklear.*;
+import static org.lwjgl.opengl.GL11.glScissor;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.*;
 
@@ -42,8 +43,6 @@ public class NuklearLayout implements ILayout {
         nk_init(ctx, ALLOCATOR, null);
         nk_buffer_init(cmds, ALLOCATOR, 1024);
         nk_style_set_font(ctx, engine.default_font);
-
-        layout(ctx, width, height);
         return this;
     }
 
@@ -51,7 +50,8 @@ public class NuklearLayout implements ILayout {
     public void drawLayout(RenderWindow renderWindow, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, MatrixStack matrixStack, Client client) {
         int AA = NK_ANTI_ALIASING_ON;
 
-        IDefaultEngineImpl<?,?> impl = engine.getDefaultImpl();
+        IDefaultEngineImpl<?, ?> impl = engine.getDefaultImpl();
+        layout(ctx, width, height);
 
         ByteBuffer vertices;
         ByteBuffer elements;
@@ -70,8 +70,8 @@ public class NuklearLayout implements ILayout {
                     .line_AA(AA);
 
             // setup buffers to load vertices and elements
-            NkBuffer vbuf = NkBuffer.malloc(stack);
-            NkBuffer ebuf = NkBuffer.malloc(stack);
+            NkBuffer vbuf = NkBuffer.calloc(stack);
+            NkBuffer ebuf = NkBuffer.calloc(stack);
 
             nk_buffer_init(vbuf, ALLOCATOR, 1024);
             nk_buffer_init(ebuf, ALLOCATOR, 1024);
@@ -93,39 +93,42 @@ public class NuklearLayout implements ILayout {
         } catch (Exception e) {
             throw new RuntimeException("Failed to render nk layout", e);
         }
-        if(vertices == null) {
+        if (vertices == null) {
             throw new NullPointerException("vertex buffer is null");
         }
-        if(elements == null) {
+        if (elements == null) {
             throw new NullPointerException("index buffer is null");
         }
         //glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
         //glUnmapBuffer(GL_ARRAY_BUFFER);
 
         VertexMesh vertexMesh = new VertexMesh(this.engine.vertexFormat).addData(elements, vertices);
+        vertexMesh.elementSize = 2;
         long mesh = impl.createMesh(graphicsContext, vertexMesh);
 
         // iterate over and execute each draw command
-        //float fb_scale_x = (float) display_width / (float) width;
-        //float fb_scale_y = (float) display_height / (float) height;
+        float fb_scale_x = (float) renderWindow.getWindowWidth() / (float) width;
+        float fb_scale_y = (float) renderWindow.getWindowHeight() / (float) height;
         long offset = NULL;
         for (NkDrawCommand cmd = nk__draw_begin(ctx, cmds); cmd != null; cmd = nk__draw_next(cmd, cmds, ctx)) {
             if (cmd.elem_count() == 0) {
                 continue;
             }
+            //System.out.println(cmd.elem_count());
             impl.bindTexture(graphicsContext, cmd.texture().id());
+            //glBindTexture(GL_TEXTURE_2D, cmd.texture().id());
+            NkRect rect = cmd.clip_rect();
+            int x = (int) (rect.x() * fb_scale_x);
+            int y = (int) ((height - (int) (rect.y() + rect.h())) * fb_scale_y);
+            int width = (int) (rect.w() * fb_scale_x);
+            int height = (int) (rect.h() * fb_scale_y);
+            impl.setScissor(graphicsContext, x, y, width, height);
             impl.drawMesh(graphicsContext, matrixStack, mesh, offset, cmd.elem_count());
 
-            //glBindTexture(GL_TEXTURE_2D, cmd.texture().id());
-            //glScissor(
-            //        (int) (cmd.clip_rect().x() * fb_scale_x),
-            //        (int) ((height - (int) (cmd.clip_rect().y() + cmd.clip_rect().h())) * fb_scale_y),
-            //        (int) (cmd.clip_rect().w() * fb_scale_x),
-            //        (int) (cmd.clip_rect().h() * fb_scale_y)
-            //);
             //glDrawElements(GL_TRIANGLES, cmd.elem_count(), GL_UNSIGNED_SHORT, offset);
-            offset += cmd.elem_count() * 2;
+            offset += cmd.elem_count() * 2L;
         }
+        impl.defaultScissor(graphicsContext, renderWindow);
         nk_clear(ctx);
         nk_buffer_clear(cmds);
     }
@@ -139,10 +142,9 @@ public class NuklearLayout implements ILayout {
                     "Demo",
                     nk_rect(x, y, 230, 250, rect),
                     NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE | NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE)) {
-                nk_label(ctx, "some rando text", NK_LEFT);
-            }
+              //  nk_label(ctx, "some rando text", NK_LEFT);
 
-            /*{
+
                 nk_layout_row_static(ctx, 30, 80, 1);
                 if (nk_button_label(ctx, "button")) {
                     System.out.println("button pressed");
@@ -175,7 +177,6 @@ public class NuklearLayout implements ILayout {
                 }
             }
 
-             */
             nk_end(ctx);
         }
     }

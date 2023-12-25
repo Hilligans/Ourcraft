@@ -29,6 +29,7 @@ public class ClientMain {
     public static void main(String[] args) throws IOException {
         startTime = System.currentTimeMillis();
         argumentContainer = new ArgumentContainer(args);
+        System.out.println(STR."Starting client with PID \{ProcessHandle.current().pid()}");
         gameInstance.handleArgs(args);
         gameInstance.side = Side.CLIENT;
         gameInstance.loadContent();

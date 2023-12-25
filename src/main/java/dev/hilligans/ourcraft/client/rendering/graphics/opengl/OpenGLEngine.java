@@ -8,7 +8,9 @@ import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsEngineBase;
 import dev.hilligans.ourcraft.client.rendering.screens.JoinScreen;
 import dev.hilligans.ourcraft.data.primitives.Tuple;
 import dev.hilligans.ourcraft.util.Logger;
+import dev.hilligans.ourcraft.util.sections.ISection;
 import dev.hilligans.ourcraft.util.sections.ProfiledSection;
+import dev.hilligans.ourcraft.util.sections.SteppingSection;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL43;
 import org.lwjgl.opengl.GLDebugMessageCallback;
@@ -142,7 +144,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         if(profiling) {
             return new GraphicsContext().setSection(new ProfiledSection().setMonitorName("loop"));
         }
-        return new GraphicsContext();
+        return new GraphicsContext().setSection(ISection.getSection(client.argumentContainer.getString("--clientSection", "empty")));
     }
 
     @Override

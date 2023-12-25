@@ -42,14 +42,12 @@ public class WorldRenderTask extends RenderTaskSource {
 
     @Override
     public RenderTask getDefaultTask() {
-
         IThreeDContainer<MeshHolder> meshes = new EmptyContainer<>();
 
         return new RenderTask() {
             @Override
             public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack, float delta) {
                 int a = 0;
-
 
                 IWorld world = client.newClientWorld;
                 //engine.getDefaultImpl().setState(window, graphicsContext, new PipelineState().setDepth(true));

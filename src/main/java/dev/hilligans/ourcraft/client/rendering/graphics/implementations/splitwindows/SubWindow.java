@@ -31,8 +31,8 @@ public class SubWindow extends RenderWindow {
     }
 
     @Override
-    public void swapBuffers() {
-        super.swapBuffers();
+    public void swapBuffers(GraphicsContext graphicsContext) {
+        super.swapBuffers(graphicsContext);
         long t = fbo1;
         fbo1 = fbo2;
         fbo2 = t;

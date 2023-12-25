@@ -22,6 +22,7 @@ public class VertexMesh implements IAllocator<VertexMesh> {
 
     public IntBuffer indices;
     public FloatBuffer vertices;
+    public int elementSize = 4;
     public IAllocator<VertexMesh> allocator;
 
 

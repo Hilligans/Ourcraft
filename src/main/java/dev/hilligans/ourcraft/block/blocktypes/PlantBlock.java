@@ -16,6 +16,6 @@ public class PlantBlock extends Block {
 
     @Override
     public void renderItem(MatrixStack matrixStack, int x, int y, int size, ItemStack itemStack) {
-        Renderer.renderItem(matrixStack,x,y,size,blockProperties.blockTextureManager);
+        Renderer.renderItem(matrixStack,x,y,size);
     }
 }

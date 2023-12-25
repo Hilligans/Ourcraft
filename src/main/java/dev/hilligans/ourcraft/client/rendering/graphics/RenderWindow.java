@@ -83,7 +83,7 @@ public abstract class RenderWindow {
 
     public abstract boolean shouldClose();
 
-    public void swapBuffers() {
+    public void swapBuffers(GraphicsContext graphicsContext) {
         if(queuedPipeline != null) {
             setRenderPipeline(queuedPipeline);
             queuedPipeline = null;

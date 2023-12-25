@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.implementations.splitwindows;
 
 import dev.hilligans.ourcraft.client.Client;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 
@@ -35,7 +36,7 @@ public class FloatingWindow extends RenderWindow {
     }
 
     @Override
-    public void swapBuffers() {
+    public void swapBuffers(GraphicsContext graphicsContext) {
 
     }
 

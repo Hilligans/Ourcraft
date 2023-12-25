@@ -1,11 +1,13 @@
 package dev.hilligans.ourcraft.client.rendering.graphics;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsElement;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 
-public abstract class RenderTask {
+public abstract class RenderTask implements IGraphicsElement {
 
     protected String identifierName;
 
@@ -30,4 +32,10 @@ public abstract class RenderTask {
     public String getIdentifierName() {
         return identifierName;
     }
+
+    @Override
+    public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {}
+
+    @Override
+    public void cleanup(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {}
 }

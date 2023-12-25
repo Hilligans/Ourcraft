@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.client.rendering.graphics.vulkan;
 
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.input.InputHandler;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.implementations.FreeCamera;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
@@ -199,7 +200,7 @@ public class VulkanWindow extends RenderWindow {
     }
 
     @Override
-    public void swapBuffers() {
+    public void swapBuffers(GraphicsContext graphicsContext) {
         windowRenderer.present(context.bufferIndex);
         glfwPollEvents();
         //startDrawing();

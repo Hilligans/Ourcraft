@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.client.rendering.graphics;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsElement;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
@@ -10,7 +11,7 @@ import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 
 import java.util.ArrayList;
 
-public class RenderPipeline implements IRegistryElement {
+public class RenderPipeline implements IRegistryElement, IGraphicsElement {
 
     public String name;
     public ModContent modContent;
@@ -106,5 +107,19 @@ public class RenderPipeline implements IRegistryElement {
                 ", renderTargets=" + renderTargets +
                 ", renderTasks=" + renderTasks +
                 '}';
+    }
+
+    @Override
+    public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
+        for(RenderTask renderTask : renderTasks) {
+            renderTask.load(gameInstance, graphicsEngine, graphicsContext);
+        }
+    }
+
+    @Override
+    public void cleanup(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
+        for(RenderTask renderTask : renderTasks) {
+            renderTask.cleanup(gameInstance, graphicsEngine, graphicsContext);
+        }
     }
 }

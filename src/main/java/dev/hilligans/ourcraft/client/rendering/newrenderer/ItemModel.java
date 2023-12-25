@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering.newrenderer;
 
-import dev.hilligans.ourcraft.client.rendering.world.managers.TextureManager;
+import dev.hilligans.ourcraft.client.rendering.world.managers.BlockTextureManager;
 import dev.hilligans.ourcraft.util.Settings;
 import org.joml.Vector3f;
 
@@ -31,8 +31,8 @@ public class ItemModel implements IModel {
     }
 
     @Override
-    public void addData(PrimitiveBuilder primitiveBuilder, TextureManager textureManager, int side, float size, Vector3f offset, int rotX, int rotY) {
-        int id = textureManager.getTextureId();
+    public void addData(PrimitiveBuilder primitiveBuilder, BlockTextureManager textureManager, int side, float size, Vector3f offset, int rotX, int rotY) {
+        //int id = textureManager.getTextureId();
        /* BufferedImage bufferedImage = TextAtlas.instance.register(new ImageLocation("Items/" + path,"purcraft"));
         float minX = TextAtlas.getMinX(id);
         float minY = TextAtlas.getMinY(id);

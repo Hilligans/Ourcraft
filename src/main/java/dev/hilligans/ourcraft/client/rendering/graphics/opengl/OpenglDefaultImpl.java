@@ -87,7 +87,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         mesh.destroy();
 
         meshReferences.put(VAO, mesh);
-        meshData.put(VAO, new Tuple<>(GL_TRIANGLES, GL_UNSIGNED_INT));
+        meshData.put(VAO, new Tuple<>(GL_TRIANGLES, mesh.elementSize == 4 ? GL_UNSIGNED_INT : GL_UNSIGNED_SHORT));
         vertexArrayObjects.put(VAO, ((long)VBO << 32) | (long)EBO);
         return VAO;
     }
@@ -312,6 +312,11 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     public void clearFBO(GraphicsContext graphicsContext, Vector4f clearColor) {
         glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
+    @Override
+    public void setScissor(GraphicsContext graphicsContext, int x, int y, int width, int height) {
+        glScissor(x, y, width, height);
     }
 
     @Override

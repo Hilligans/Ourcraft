@@ -49,7 +49,7 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
                                 render(window, graphicsContext);
                             }
                             try (var $2 = section.startSection("swapBuffers")) {
-                                window.swapBuffers();
+                                window.swapBuffers(graphicsContext);
                             }
                         }
                     }

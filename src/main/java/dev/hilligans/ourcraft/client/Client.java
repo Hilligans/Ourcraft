@@ -107,6 +107,7 @@ public class Client implements IClientPacketHandler {
 
     public Client setGraphicsEngine(IGraphicsEngine<?,?,?> graphicsEngine) {
         if(graphicsEngine != null) {
+
             this.graphicsEngine = graphicsEngine;
             if(graphicsEngine instanceof VulkanEngine engine) {
                 engine.client = this;

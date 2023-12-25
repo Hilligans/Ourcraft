@@ -16,7 +16,7 @@ public class ConsoleReader extends Thread {
     public void run() {
         Scanner scan = new Scanner(System.in);
         String line;
-        while(!(line = scan.nextLine()).equals(""+((char) 3))) {
+        while(!(line = scan.next()).equals(""+((char) 3))) {
             consoleEvent.accept(line);
         }
     }

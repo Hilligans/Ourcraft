@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.client.rendering.graphics.opengl;
 
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.input.key.MouseHandler;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.implementations.FreeCamera;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.ScreenShot;
@@ -56,10 +57,12 @@ public class OpenGLWindow extends RenderWindow {
     }
 
     @Override
-    public void swapBuffers() {
-        super.swapBuffers();
-        glfwSwapInterval(0);
-        glfwSwapBuffers(window);
+    public void swapBuffers(GraphicsContext graphicsContext) {
+        super.swapBuffers(graphicsContext);
+        try(var $ = graphicsContext.getSection().startSection("glfw_swap_buffers")) {
+            glfwSwapInterval(0);
+            glfwSwapBuffers(window);
+        }
         client.rendering = false;
         client.soundEngine.tick();
         if(client.screenShot) {
