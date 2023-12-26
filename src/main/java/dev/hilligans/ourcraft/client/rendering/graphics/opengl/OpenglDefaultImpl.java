@@ -29,13 +29,18 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, GraphicsContext> {
 
-    public OpenGLEngine engine;
+    public final OpenGLEngine engine;
 
-    public Int2ObjectOpenHashMap<Tuple<Integer, Integer>> meshData = new Int2ObjectOpenHashMap<>();
+    public final Int2ObjectOpenHashMap<Tuple<Integer, Integer>> meshData = new Int2ObjectOpenHashMap<>();
     public final Int2IntOpenHashMap textureTypes = new Int2IntOpenHashMap();
-    public Int2LongOpenHashMap vertexArrayObjects = new Int2LongOpenHashMap();
-    public Int2ObjectOpenHashMap<VertexMesh> meshReferences = new Int2ObjectOpenHashMap<>();
+    public final Int2LongOpenHashMap vertexArrayObjects = new Int2LongOpenHashMap();
+    public final Int2ObjectOpenHashMap<VertexMesh> meshReferences = new Int2ObjectOpenHashMap<>();
     public final Int2IntOpenHashMap fbos = new Int2IntOpenHashMap();
+
+    public final boolean trackingResourceAllocations = true;
+    public final Int2ObjectOpenHashMap<Exception> textureAllocationTracker = new Int2ObjectOpenHashMap<>();
+    public final Int2ObjectOpenHashMap<Exception> vertexArrayAllocationTracker = new Int2ObjectOpenHashMap<>();
+    public final Int2ObjectOpenHashMap<Exception> programAllocationTracker = new Int2ObjectOpenHashMap<>();
 
     public long boundTexture = -1;
     public long boundProgram = -1;
@@ -89,6 +94,9 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         meshReferences.put(VAO, mesh);
         meshData.put(VAO, new Tuple<>(GL_TRIANGLES, mesh.elementSize == 4 ? GL_UNSIGNED_INT : GL_UNSIGNED_SHORT));
         vertexArrayObjects.put(VAO, ((long)VBO << 32) | (long)EBO);
+        if(trackingResourceAllocations) {
+            vertexArrayAllocationTracker.put(VAO, new Exception());
+        }
         return VAO;
     }
 
@@ -101,6 +109,9 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         }
         glDeleteBuffers((int)(array >> 32));
         glDeleteBuffers((int)mesh);
+        if(trackingResourceAllocations) {
+            vertexArrayAllocationTracker.remove((int)mesh);
+        }
     }
 
     private int getGLPrimitive(int type) {
@@ -117,6 +128,9 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         glTexImage2D(GL_TEXTURE_2D, 0, format, image.width, image.height, 0, format, GL_UNSIGNED_BYTE, image.buffer);
         glGenerateMipmap(GL_TEXTURE_2D);
         textureTypes.put(texture, GL_TEXTURE_2D);
+        if(trackingResourceAllocations) {
+            textureAllocationTracker.put(texture, new Exception());
+        }
         return texture;
     }
 
@@ -130,6 +144,9 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, buffer);
         glGenerateMipmap(GL_TEXTURE_2D);
         textureTypes.put(texture, GL_TEXTURE_2D);
+        if(trackingResourceAllocations) {
+            textureAllocationTracker.put(texture, new Exception());
+        }
         return texture;
     }
 
@@ -137,6 +154,9 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     public void destroyTexture(GraphicsContext graphicsContext, long texture) {
         glDeleteTextures((int)texture);
         textureTypes.remove((int)texture);
+        if(trackingResourceAllocations) {
+            textureAllocationTracker.remove((int)texture);
+        }
     }
 
     @Override
@@ -222,13 +242,19 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
                 shaderSource.uniformIndexes[x] = glGetUniformLocation(shader, shaderSource.uniformNames.get(x));
             }
         }
+        if(trackingResourceAllocations) {
+            programAllocationTracker.put(shader, new Exception());
+        }
 
         return shader;
     }
 
     @Override
     public void destroyProgram(GraphicsContext graphicsContext, long program) {
-        glDeleteShader((int)program);
+        glDeleteProgram((int)program);
+        if(trackingResourceAllocations) {
+            programAllocationTracker.remove((int)program);
+        }
     }
 
     @Override
@@ -321,20 +347,23 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
 
     @Override
     public void close() {
+        if(trackingResourceAllocations) {
+            for(Exception e : vertexArrayAllocationTracker.values()) {
+                throw new VideoMemoryLeakException("Missing VAO deallocation allocated at:", e);
+            }
+            for(Exception e : textureAllocationTracker.values()) {
+                throw new VideoMemoryLeakException("Missing texture deallocation allocated at:", e);
+            }
+            for(Exception e : programAllocationTracker.values()) {
+                throw new VideoMemoryLeakException("Missing shader deallocation allocated at:", e);
+            }
+        }
+
+
         for(int texture : textureTypes.keySet()) {
             glDeleteTextures(texture);
         }
         textureTypes.clear();
-        /*
-        long array = vertexArrayObjects.get(mesh);
-        meshData.remove(mesh);
-        if((int)array != 0) {
-            glDeleteBuffers((int) array);
-        }
-        glDeleteBuffers((int)(array >> 32));
-        glDeleteBuffers(mesh);
-
-         */
     }
 
     VertexFormat[] cache = new VertexFormat[2];
@@ -357,5 +386,12 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         }
 
         throw new UnknownResourceException("Failed to find resource in the registry by name: " + name, engine.client.gameInstance.VERTEX_FORMATS, name, engine.getGameInstance().OURCRAFT);
+    }
+
+    public static class VideoMemoryLeakException extends RuntimeException {
+
+        public VideoMemoryLeakException(String message, Exception e) {
+            super(message, e);
+        }
     }
 }

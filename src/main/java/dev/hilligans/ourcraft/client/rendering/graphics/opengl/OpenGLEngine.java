@@ -35,6 +35,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
     public OpenglDefaultImpl engineImpl;
 
     public boolean profiling = true;
+    public boolean exceptOnMissingResourceCleanup = true;
 
 
     public OpenGLEngine() {
@@ -122,6 +123,9 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
 
     @Override
     public void close() {
+        gameInstance.cleanupGraphics(this, getGraphicsContext());
+        stringRenderer.close(engineImpl, getGraphicsContext());
+        engineImpl.close();
         glfwTerminate();
     }
 

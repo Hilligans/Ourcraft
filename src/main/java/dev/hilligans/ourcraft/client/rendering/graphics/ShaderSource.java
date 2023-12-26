@@ -90,7 +90,10 @@ public class ShaderSource implements IRegistryElement, IGraphicsElement {
 
     @Override
     public void cleanup(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
-        graphicsEngine.getDefaultImpl().destroyProgram(graphicsContext, program);
+        if(program != 0) {
+            graphicsEngine.getDefaultImpl().destroyProgram(graphicsContext, program);
+            program = 0;
+        }
     }
 
     @Override

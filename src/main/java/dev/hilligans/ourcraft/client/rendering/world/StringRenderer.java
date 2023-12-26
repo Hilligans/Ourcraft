@@ -2,10 +2,12 @@ package dev.hilligans.ourcraft.client.rendering.world;
 
 import dev.hilligans.ourcraft.client.lang.Languages;
 import dev.hilligans.ourcraft.client.MatrixStack;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.ShaderSource;
+import dev.hilligans.ourcraft.client.rendering.graphics.opengl.OpenglDefaultImpl;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.TextureAtlas;
@@ -247,6 +249,12 @@ public class StringRenderer {
         for(String string : strings) {
             drawStringInternal(window, matrixStack,string,x, (int) (y + scale * z * stringHeight),scale);
             z++;
+        }
+    }
+
+    public void close(IDefaultEngineImpl<?,?> impl, GraphicsContext graphicsContext) {
+        for(TextureAtlas textureAtlas : textureAtlases.values()) {
+            impl.destroyTexture(graphicsContext, textureAtlas.glTextureId);
         }
     }
 

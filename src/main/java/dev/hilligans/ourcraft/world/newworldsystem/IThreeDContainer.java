@@ -22,4 +22,5 @@ public interface IThreeDContainer<T> {
 
     void forEach(Consumer<T> consumer);
 
+    void clear();
 }

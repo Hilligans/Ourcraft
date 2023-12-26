@@ -72,6 +72,10 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
         return createMesh((Q) graphicsContext, mesh);
     }
 
+    default void destroyMesh(Object graphicsContext, long id) {
+        destroyMesh((Q)graphicsContext, id);
+    }
+
     default long createTexture(Object graphicsContext, Image image) {
         return createTexture((Q) graphicsContext, image);
     }

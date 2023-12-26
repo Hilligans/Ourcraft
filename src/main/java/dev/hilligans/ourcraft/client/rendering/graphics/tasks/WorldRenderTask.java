@@ -27,6 +27,7 @@ import org.joml.Vector3i;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 
 public class WorldRenderTask extends RenderTaskSource {
@@ -44,6 +45,7 @@ public class WorldRenderTask extends RenderTaskSource {
 
     @Override
     public RenderTask getDefaultTask() {
+
         IThreeDContainer<MeshHolder> meshes = new EmptyContainer<>();
 
         return new RenderTask() {
@@ -292,6 +294,13 @@ public class WorldRenderTask extends RenderTaskSource {
             }
 
              */
+
+            @Override
+            public void cleanup(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
+                super.cleanup(gameInstance, graphicsEngine, graphicsContext);
+                meshes.forEach(meshHolder -> graphicsEngine.getDefaultImpl().destroyMesh(graphicsContext, meshHolder.id));
+            }
+
             @Override
             public PipelineState getPipelineState() {
                 return new PipelineState().setDepth(true);

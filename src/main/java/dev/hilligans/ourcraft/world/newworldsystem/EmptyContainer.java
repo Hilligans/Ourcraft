@@ -50,6 +50,11 @@ public class EmptyContainer<T> implements IThreeDContainer<T> {
         container.forEach((aLong, tInt2ObjectOpenHashMap) -> tInt2ObjectOpenHashMap.forEach(biConsumer));
     }
 
+    @Override
+    public void clear() {
+        container.clear();
+    }
+
     public long to(long x, long y) {
         return ((y & 0xffffffffL) << 32) | (x & 0xffffffffL);
     }

@@ -128,6 +128,7 @@ public class NuklearLayout implements ILayout {
             //glDrawElements(GL_TRIANGLES, cmd.elem_count(), GL_UNSIGNED_SHORT, offset);
             offset += cmd.elem_count() * 2L;
         }
+        impl.destroyMesh(graphicsContext, mesh);
         impl.defaultScissor(graphicsContext, renderWindow);
         nk_clear(ctx);
         nk_buffer_clear(cmds);

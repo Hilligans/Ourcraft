@@ -26,6 +26,7 @@ import org.joml.Vector3i;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 public class WorldTransparentRenderTask extends RenderTaskSource {
 
@@ -39,12 +40,13 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
 
     public ExecutorService chunkBuilder = Executors.newFixedThreadPool(2);
 
-    public IThreeDContainer<MeshHolder> meshes = new EmptyContainer<>();
     TextAtlas textAtlas = new TextAtlas();
 
     @Override
     public RenderTask getDefaultTask() {
         return new RenderTask() {
+
+            public IThreeDContainer<MeshHolder> meshes = new EmptyContainer<>();
 
             @Override
             public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack, float delta) {
@@ -98,108 +100,113 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
             }
 
             @Override
+            public void cleanup(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
+                super.cleanup(gameInstance, graphicsEngine, graphicsContext);
+                meshes.forEach(meshHolder -> graphicsEngine.getDefaultImpl().destroyMesh(graphicsContext, meshHolder.id));
+                meshes.clear();
+            }
+
+            @Override
             public PipelineState getPipelineState() {
                 return new PipelineState().setDepth(true);
             }
+
+
+            MeshHolder getMesh(int x, int y, int z) {
+                return meshes.getChunk(x,y,z);
+            }
+            IChunk getChunk(int chunkX, int chunkY, int chunkZ, IWorld world) {
+                return world.getChunk((long) chunkX * world.getChunkContainer().getChunkWidth(), (long) chunkY * world.getChunkContainer().getChunkHeight(), (long) chunkZ * world.getChunkContainer().getChunkWidth());
+            }
+
+            public static int rebuildDistance = 4;
+
+            void drawChunk(RenderWindow window, GraphicsContext graphicsContext, Client client, IGraphicsEngine<?, ?,?> engine, MatrixStack matrixStack, Vector3i playerChunkPos, IWorld world, int x, int y, int z, int chunkWidth, int chunkHeight) {
+                MeshHolder meshHolder = getMesh(x, y, z);
+                for (Tuple<IChunk, PrimitiveBuilder> tuple : primitiveBuilders) {
+                    asyncedChunks.remove(((tuple.getTypeA().getX()) << 32) | (tuple.getTypeA().getZ() & 0xffffffffL));
+                    tuple.typeB.setVertexFormat(shaderSource.vertexFormat);
+                    int meshID = (int) window.getGraphicsEngine().getDefaultImpl().createMesh(graphicsContext, tuple.typeB.toVertexMesh());
+                    meshes.setChunk(tuple.getTypeA().getX(), tuple.getTypeA().getY(), tuple.getTypeA().getZ(), new MeshHolder().set(meshID, tuple.getTypeB().indices.size()));
+                    primitiveBuilders.remove(tuple);
+                }
+                if (meshHolder != null) {
+                    if (meshHolder.id != -1 && meshHolder.length != 0) {
+                        matrixStack.updateFrustum();
+                        if (matrixStack.frustumIntersection.testAab((x) * chunkWidth, (y) * chunkHeight, (z) * chunkWidth, (x + 1) * chunkWidth, (y + 1) * chunkHeight, (z + 1) * chunkWidth)) {
+                            matrixStack.push();
+                            matrixStack.translate(x * chunkWidth, y * chunkHeight, z * chunkWidth);
+                            IDefaultEngineImpl<?,?> impl = engine.getDefaultImpl();
+                            impl.uploadMatrix(graphicsContext, matrixStack, shaderSource);
+                            impl.drawMesh(graphicsContext, matrixStack, meshHolder.getId(), meshHolder.index, meshHolder.length);
+                            matrixStack.pop();
+                        }
+                    }
+                } else {
+                    IChunk chunk = getChunk(x, y, z, world);
+                    if (chunk != null) {
+                        if (chunk.isDirty()) {
+                            if (getChunk(x + 1, y, z, world) != null &&
+                                    getChunk(x - 1, y, z, world) != null &&
+                                    getChunk(x, y + 1, z, world) != null &&
+                                    getChunk(x, y - 1, z, world) != null &&
+                                    getChunk(x, y, z + 1, world) != null &&
+                                    getChunk(x, y, z - 1, world) != null) {
+                                if ((Math.abs(x - playerChunkPos.x) < rebuildDistance && Math.abs(y - playerChunkPos.y) < rebuildDistance && Math.abs(z - playerChunkPos.z) < rebuildDistance)) {
+                                    buildMesh(window, graphicsContext, chunk);
+                                    chunk.setDirty(false);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            public ConcurrentLinkedQueue<Tuple<IChunk, PrimitiveBuilder>> primitiveBuilders = new ConcurrentLinkedQueue<>();
+            Long2BooleanOpenHashMap asyncedChunks = new Long2BooleanOpenHashMap();
+
+            boolean putChunk(int chunkX, int chunkZ) {
+                if (!asyncedChunks.getOrDefault((((long) chunkX) << 32) | (chunkZ & 0xffffffffL), false)) {
+                    asyncedChunks.put((((long)chunkX) << 32) | (chunkZ & 0xffffffffL), true);
+                    return true;
+                }
+                return false;
+            }
+
+            public PrimitiveBuilder getPrimitiveBuilder(IChunk chunk) {
+                PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(shaderSource.vertexFormat);
+                BlockPos p = new BlockPos(0, 0, 0);
+                for(int x = 0; x < chunk.getWidth(); x++) {
+                    for(int y = chunk.getHeight() - 1; y >= 0; y--) {
+                        for(int z = 0; z < chunk.getWidth(); z++) {
+                            IBlockState block = chunk.getBlockState1(x,y,z);
+                            if(block.getBlock() != Blocks.AIR && block.getBlock().blockProperties.translucent) {
+                                for (int a = 0; a < 6; a++) {
+                                    p.set(x, y, z).add(Block.getBlockPosImmutable(block.getBlock().getSide(block, a)));
+                                    IBlockState newState;
+                                    if (!p.inRange(0, 0, 0, chunk.getWidth() - 1, chunk.getHeight() - 1, chunk.getWidth() - 1)) {
+                                        newState = chunk.getWorld().getBlockState(p.add(chunk.getBlockX(), chunk.getBlockY(), chunk.getBlockZ()));
+                                    } else {
+                                        newState = chunk.getBlockState1(p);
+                                    }
+                                    if (newState.getBlock() != block.getBlock()) {
+                                        block.getBlock().addVertices(textAtlas, primitiveBuilder, a, 1f, block, p.set(x, y, z), x, z);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return primitiveBuilder;
+            }
+
+            public void buildMesh(RenderWindow window, GraphicsContext graphicsContext, IChunk chunk) {
+                PrimitiveBuilder primitiveBuilder = getPrimitiveBuilder(chunk);
+                primitiveBuilder.setVertexFormat(shaderSource.vertexFormat);
+                int meshID = (int) window.getGraphicsEngine().getDefaultImpl().createMesh(graphicsContext, primitiveBuilder.toVertexMesh());
+                meshes.setChunk(chunk.getX(),chunk.getY(),chunk.getZ(),new MeshHolder().set(meshID,primitiveBuilder.indices.size()));
+            }
         };
-
-
-    }
-
-
-    MeshHolder getMesh(int x, int y, int z) {
-        return meshes.getChunk(x,y,z);
-    }
-    IChunk getChunk(int chunkX, int chunkY, int chunkZ, IWorld world) {
-        return world.getChunk((long) chunkX * world.getChunkContainer().getChunkWidth(), (long) chunkY * world.getChunkContainer().getChunkHeight(), (long) chunkZ * world.getChunkContainer().getChunkWidth());
-    }
-
-    public static int rebuildDistance = 4;
-
-    void drawChunk(RenderWindow window, GraphicsContext graphicsContext, Client client, IGraphicsEngine<?, ?,?> engine, MatrixStack matrixStack, Vector3i playerChunkPos, IWorld world, int x, int y, int z, int chunkWidth, int chunkHeight) {
-        MeshHolder meshHolder = getMesh(x, y, z);
-        for (Tuple<IChunk, PrimitiveBuilder> tuple : primitiveBuilders) {
-            asyncedChunks.remove(((tuple.getTypeA().getX()) << 32) | (tuple.getTypeA().getZ() & 0xffffffffL));
-            tuple.typeB.setVertexFormat(shaderSource.vertexFormat);
-            int meshID = (int) window.getGraphicsEngine().getDefaultImpl().createMesh(graphicsContext, tuple.typeB.toVertexMesh());
-            meshes.setChunk(tuple.getTypeA().getX(), tuple.getTypeA().getY(), tuple.getTypeA().getZ(), new MeshHolder().set(meshID, tuple.getTypeB().indices.size()));
-            primitiveBuilders.remove(tuple);
-        }
-        if (meshHolder != null) {
-            if (meshHolder.id != -1 && meshHolder.length != 0) {
-                matrixStack.updateFrustum();
-                if (matrixStack.frustumIntersection.testAab((x) * chunkWidth, (y) * chunkHeight, (z) * chunkWidth, (x + 1) * chunkWidth, (y + 1) * chunkHeight, (z + 1) * chunkWidth)) {
-                    matrixStack.push();
-                    matrixStack.translate(x * chunkWidth, y * chunkHeight, z * chunkWidth);
-                    IDefaultEngineImpl<?,?> impl = engine.getDefaultImpl();
-                    impl.uploadMatrix(graphicsContext, matrixStack, shaderSource);
-                    impl.drawMesh(graphicsContext, matrixStack, meshHolder.getId(), meshHolder.index, meshHolder.length);
-                    matrixStack.pop();
-                }
-            }
-        } else {
-            IChunk chunk = getChunk(x, y, z, world);
-            if (chunk != null) {
-                if (chunk.isDirty()) {
-                    if (getChunk(x + 1, y, z, world) != null &&
-                            getChunk(x - 1, y, z, world) != null &&
-                            getChunk(x, y + 1, z, world) != null &&
-                            getChunk(x, y - 1, z, world) != null &&
-                            getChunk(x, y, z + 1, world) != null &&
-                            getChunk(x, y, z - 1, world) != null) {
-                        if ((Math.abs(x - playerChunkPos.x) < rebuildDistance && Math.abs(y - playerChunkPos.y) < rebuildDistance && Math.abs(z - playerChunkPos.z) < rebuildDistance)) {
-                            buildMesh(window, graphicsContext, chunk);
-                            chunk.setDirty(false);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public ConcurrentLinkedQueue<Tuple<IChunk, PrimitiveBuilder>> primitiveBuilders = new ConcurrentLinkedQueue<>();
-    Long2BooleanOpenHashMap asyncedChunks = new Long2BooleanOpenHashMap();
-
-    boolean putChunk(int chunkX, int chunkZ) {
-        if (!asyncedChunks.getOrDefault((((long) chunkX) << 32) | (chunkZ & 0xffffffffL), false)) {
-            asyncedChunks.put((((long)chunkX) << 32) | (chunkZ & 0xffffffffL), true);
-            return true;
-        }
-        return false;
-    }
-
-    public PrimitiveBuilder getPrimitiveBuilder(IChunk chunk) {
-        PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(shaderSource.vertexFormat);
-        BlockPos p = new BlockPos(0, 0, 0);
-        for(int x = 0; x < chunk.getWidth(); x++) {
-            for(int y = chunk.getHeight() - 1; y >= 0; y--) {
-                for(int z = 0; z < chunk.getWidth(); z++) {
-                    IBlockState block = chunk.getBlockState1(x,y,z);
-                    if(block.getBlock() != Blocks.AIR && block.getBlock().blockProperties.translucent) {
-                        for (int a = 0; a < 6; a++) {
-                            p.set(x, y, z).add(Block.getBlockPosImmutable(block.getBlock().getSide(block, a)));
-                            IBlockState newState;
-                            if (!p.inRange(0, 0, 0, chunk.getWidth() - 1, chunk.getHeight() - 1, chunk.getWidth() - 1)) {
-                                newState = chunk.getWorld().getBlockState(p.add(chunk.getBlockX(), chunk.getBlockY(), chunk.getBlockZ()));
-                            } else {
-                                newState = chunk.getBlockState1(p);
-                            }
-                            if (newState.getBlock() != block.getBlock()) {
-                                block.getBlock().addVertices(textAtlas, primitiveBuilder, a, 1f, block, p.set(x, y, z), x, z);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return primitiveBuilder;
-    }
-
-    public void buildMesh(RenderWindow window, GraphicsContext graphicsContext, IChunk chunk) {
-        PrimitiveBuilder primitiveBuilder = getPrimitiveBuilder(chunk);
-        primitiveBuilder.setVertexFormat(shaderSource.vertexFormat);
-        int meshID = (int) window.getGraphicsEngine().getDefaultImpl().createMesh(graphicsContext, primitiveBuilder.toVertexMesh());
-        meshes.setChunk(chunk.getX(),chunk.getY(),chunk.getZ(),new MeshHolder().set(meshID,primitiveBuilder.indices.size()));
     }
 
     @Override

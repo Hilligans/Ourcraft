@@ -118,15 +118,15 @@ public class GameInstance {
     }
 
     public void build(IGraphicsEngine<?,?,?> graphicsEngine, GraphicsContext graphicsContext) {
+        for(RenderPipeline renderPipeline : RENDER_PIPELINES.ELEMENTS) {
+            renderPipeline.buildTargets(graphicsEngine);
+        }
         for(Registry<?> registry : REGISTRIES.ELEMENTS) {
             for(Object o : registry.ELEMENTS) {
                 if(o instanceof IGraphicsElement graphicsElement) {
                     graphicsElement.load(this, graphicsEngine, graphicsContext);
                 }
             }
-        }
-        for(RenderPipeline renderPipeline : RENDER_PIPELINES.ELEMENTS) {
-            renderPipeline.buildTargets(graphicsEngine);
         }
     }
 
