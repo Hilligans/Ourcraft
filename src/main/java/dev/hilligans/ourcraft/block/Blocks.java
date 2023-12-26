@@ -21,8 +21,6 @@ public class Blocks {
 
     public static final Block CHEST = new ChestBlock("chest",new BlockProperties().withTexture("flex_tape.png"));
 
-    public static final Block COLOR_BLOCK = new ColorBlock("color_block", new BlockProperties().withTexture("white.png"));
-
     public static final Block STAIR_BLOCK = new StairBlock("stair", new BlockProperties().withTexture("dirt.png"));
 
 

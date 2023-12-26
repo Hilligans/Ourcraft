@@ -39,7 +39,6 @@ import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 import dev.hilligans.ourcraft.save.WorldLoader;
 import dev.hilligans.ourcraft.server.MultiPlayerServer;
 import dev.hilligans.ourcraft.util.Settings;
-import dev.hilligans.ourcraft.world.ClientWorld;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL11;
 
@@ -75,8 +74,6 @@ public class Client implements IClientPacketHandler {
     public boolean refreshTexture = true;
 
     public ClientPlayerData playerData = new ClientPlayerData();
-    public ClientWorld clientWorld;
-
     //public IWorld newClientWorld = new SimpleWorld(0,"");
     public IWorld newClientWorld = new CubicWorld(0,"", 64);
 

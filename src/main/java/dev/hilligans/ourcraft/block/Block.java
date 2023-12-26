@@ -27,7 +27,6 @@ import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.util.Side;
 import dev.hilligans.ourcraft.world.DataProvider;
 import dev.hilligans.ourcraft.world.data.providers.ShortBlockState;
-import dev.hilligans.ourcraft.world.World;
 import dev.hilligans.ourcraft.block.blockstate.IBlockStateTable;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
@@ -84,13 +83,13 @@ public class Block implements IRegistryElement {
         return "block." + modId + "." + name;
     }
 
-    public boolean activateBlock(World world, PlayerEntity playerEntity, BlockPos pos) {
+    public boolean activateBlock(IWorld world, PlayerEntity playerEntity, BlockPos pos) {
         return false;
     }
 
-    public void onPlace(World world, BlockPos blockPos) {}
+    public void onPlace(IWorld world, BlockPos blockPos) {}
 
-    public void onBreak(World world, BlockPos blockPos) {}
+    public void onBreak(IWorld world, BlockPos blockPos) {}
 
 
     //TODO fix
@@ -103,10 +102,6 @@ public class Block implements IRegistryElement {
         }
     }
      */
-
-    public BlockState getDefaultState() {
-        return new BlockState(this);
-    }
 
     public boolean hasBlockState() {
         return blockProperties.blockStateSize != 0;
@@ -124,7 +119,8 @@ public class Block implements IRegistryElement {
     public BlockState getStateForPlacement(Vector3d playerPos, RayResult rayResult) {
         switch (blockProperties.placementMode) {
             default -> {
-                return getDefaultState();
+                return null;
+                //return getDefaultState();
             }
             case "slab" -> {
                 return new DataBlockState(this, new ShortBlockState((short) rayResult.side));
@@ -147,11 +143,11 @@ public class Block implements IRegistryElement {
         return modContent.gameInstance.getItem(getName());
     }
 
-    public boolean getAllowedMovement(Vector3d motion, Vector3d pos, BlockPos blockPos, BoundingBox boundingBox, World world) {
+    public boolean getAllowedMovement(Vector3d motion, Vector3d pos, BlockPos blockPos, BoundingBox boundingBox, IWorld world) {
         return blockProperties.canWalkThrough || !getBoundingBox(world, blockPos).intersectsBox(boundingBox, blockPos.get3d(), pos, motion.x, motion.y, motion.z);
     }
 
-    public BoundingBox getBoundingBox(World world, BlockPos pos) {
+    public BoundingBox getBoundingBox(IWorld world, BlockPos pos) {
         return blockProperties.blockShape.getBoundingBox(world,pos);
     }
 
@@ -252,11 +248,11 @@ public class Block implements IRegistryElement {
 
     //TODO add placing context
     public IBlockState getStateForPlacement() {
-        return getDefaultState1();
+        return getDefaultState();
     }
 
     //TODO pull state from table
-    public IBlockState getDefaultState1() {
+    public IBlockState getDefaultState() {
         return table.getBlockState(0);
     }
 

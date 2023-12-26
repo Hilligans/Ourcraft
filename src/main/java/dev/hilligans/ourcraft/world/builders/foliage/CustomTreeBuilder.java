@@ -154,7 +154,7 @@ public class CustomTreeBuilder extends SurfaceBuilder {
     public BlockPos buildBranch(BlockPos startPos, int length, Vector2d rotation, Block wood) {
         Ray ray = new Ray(rotation.x,rotation.y,1f);
         for(int x = 0; x < length; x++) {
-            world.setBlockMatches(ray.getNextBlock(x).add(startPos),wood.getDefaultState(),Blocks.AIR);
+            world.swapBlockState(ray.getNextBlock(x).add(startPos), Blocks.AIR.getDefaultState(), wood.getDefaultState());
         }
         return ray.getNextBlock(length).add(startPos);
     }

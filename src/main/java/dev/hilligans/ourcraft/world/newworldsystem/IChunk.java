@@ -77,6 +77,14 @@ public interface IChunk extends IBoundingBox {
         return getBlockState1(pos.getX(),pos.getY(),pos.getZ());
     }
 
+    default boolean swapBlockState(long x, long y, long z, IBlockState expected, IBlockState to) {
+        if(getBlockState1(x, y, z) == expected) {
+            setBlockState(x, y, z, to);
+            return true;
+        }
+        return false;
+    }
+
     void setBlockState(long x, long y, long z, IBlockState blockState);
 
     void setChunkPosition(long x, long y, long z);

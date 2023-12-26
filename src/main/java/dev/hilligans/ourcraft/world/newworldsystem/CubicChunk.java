@@ -81,12 +81,12 @@ public class CubicChunk implements IAtomicChunk {
     @Override
     public IBlockState getBlockState1(long x, long y, long z) {
         if(subChunks == null) {
-            return Blocks.AIR.getDefaultState1();
+            return Blocks.AIR.getDefaultState();
         }
         //TODO fix
         int index = getIndex(x & 31, y & 31, z & 31);
         if(subChunks[index] == null) {
-            return Blocks.AIR.getDefaultState1();
+            return Blocks.AIR.getDefaultState();
         }
         return subChunks[index].getBlockState((int) (x & 15), (int) (y & 15), (int) (z & 15));
     }

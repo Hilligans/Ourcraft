@@ -12,8 +12,8 @@ import dev.hilligans.ourcraft.data.other.ItemProperties;
 import dev.hilligans.ourcraft.data.other.RayResult;
 import dev.hilligans.ourcraft.entity.Entity;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
-import dev.hilligans.ourcraft.entity.LivingEntity;
-import dev.hilligans.ourcraft.world.World;
+import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
+import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 
@@ -27,12 +27,12 @@ public class BlockItem extends Item {
     }
 
     @Override
-    public boolean onActivate(World world, PlayerEntity playerEntity) {
-        RayResult rayResult;
-        if (world.isServer()) {
-            rayResult = world.traceBlock(playerEntity.getX(), playerEntity.getY() + playerEntity.boundingBox.eyeHeight, playerEntity.getZ(), playerEntity.pitch, playerEntity.yaw);
+    public boolean onActivate(IWorld world, PlayerEntity playerEntity) {
+        RayResult rayResult = null;
+        if (world instanceof IServerWorld) {
+         //   rayResult = world.traceBlock(playerEntity.getX(), playerEntity.getY() + playerEntity.boundingBox.eyeHeight, playerEntity.getZ(), playerEntity.pitch, playerEntity.yaw);
         } else {
-            rayResult = world.traceBlock(Camera.pos.x, Camera.pos.y + Camera.playerBoundingBox.eyeHeight, Camera.pos.z, Camera.pitch, Camera.yaw);
+         //   rayResult = world.traceBlock(Camera.pos.x, Camera.pos.y + Camera.playerBoundingBox.eyeHeight, Camera.pos.z, Camera.pitch, Camera.yaw);
         }
         if (rayResult == null || rayResult.side == -1) {
             return false;
@@ -44,6 +44,7 @@ public class BlockItem extends Item {
                 return false;
             }
         }
+        /*
         BlockState oldState = world.getBlockState(pos);
 
         BlockState blockState;
@@ -70,7 +71,9 @@ public class BlockItem extends Item {
             }
         }
 
-        block.onPlace(world,pos);
+         */
+
+        //block.onPlace(world,pos);
         return true;
     }
 
@@ -86,7 +89,7 @@ public class BlockItem extends Item {
     @Override
     public void addData(TextAtlas textAtlas, PrimitiveBuilder primitiveBuilder, float size) {
         for(int z = 0; z < 6; z++) {
-            block.addVertices(textAtlas, primitiveBuilder,z,size,block.getDefaultState(),new BlockPos(0,0,0),0,0);
+            //block.addVertices(textAtlas, primitiveBuilder,z,size,block.getDefaultState(),new BlockPos(0,0,0),0,0);
         }
         primitiveBuilder.translate(size / 3f,size / 1.3f,0);
         primitiveBuilder.rotate(0.785f,new Vector3f(0.5f,-1,0));

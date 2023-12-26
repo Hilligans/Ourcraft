@@ -1,18 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.minimap;
 
-import dev.hilligans.ourcraft.block.Block;
-import dev.hilligans.ourcraft.data.other.BlockPos;
-import dev.hilligans.ourcraft.world.Chunk;
-import dev.hilligans.ourcraft.world.World;
-
-import java.awt.*;
-import java.nio.ByteBuffer;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL30.glGenerateMipmap;
-
 public class GridChunk {
+    /*
     int x;
     int z;
 
@@ -152,4 +141,6 @@ public class GridChunk {
             }
         }
     }
+
+     */
 }

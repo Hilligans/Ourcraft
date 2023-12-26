@@ -111,7 +111,7 @@ public class OpenGLWindow extends RenderWindow {
         });
 
         glfwSetWindowFocusCallback(window, (window, focused) -> windowFocused = focused);
-        MouseHandler mouseHandler = new MouseHandler(client);
-        glfwSetMouseButtonCallback(window, mouseHandler::invoke);
+        //MouseHandler mouseHandler = new MouseHandler(client);
+        //glfwSetMouseButtonCallback(window, mouseHandler::invoke);
     }
 }

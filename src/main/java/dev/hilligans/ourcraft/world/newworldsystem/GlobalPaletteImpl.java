@@ -29,15 +29,15 @@ public class GlobalPaletteImpl implements ISubChunk {
     @Override
     public IBlockState getBlockState(int x, int y, int z) {
         if(blockStates == null) {
-            return Blocks.AIR.getDefaultState1();
+            return Blocks.AIR.getDefaultState();
         }
         try {
             short b = blockStates[((x * width + y) * height + z)];
-            return b == 0 ? Blocks.AIR.getDefaultState1() : Ourcraft.GAME_INSTANCE.BLOCK_STATES.get(b);
+            return b == 0 ? Blocks.AIR.getDefaultState() : Ourcraft.GAME_INSTANCE.BLOCK_STATES.get(b);
         } catch (Exception e) {
             // e.printStackTrace();
         }
-        return Blocks.AIR.getDefaultState1();
+        return Blocks.AIR.getDefaultState();
     }
 
     @Override

@@ -8,7 +8,6 @@ import dev.hilligans.ourcraft.tag.CompoundNBTTag;
 import dev.hilligans.ourcraft.tag.IntegerNBTTag;
 import dev.hilligans.ourcraft.tag.ListNBTTag;
 import dev.hilligans.ourcraft.tag.ShortNBTTag;
-import dev.hilligans.ourcraft.world.World;
 import dev.hilligans.ourcraft.save.WorldLoader;
 
 public class Structure {
@@ -25,9 +24,6 @@ public class Structure {
         this.width = width;
         this.height = height;
         this.length = length;
-    }
-
-    public void placeInWorld(World world, BlockPos pos, int rotation) {
     }
 
 
@@ -67,7 +63,8 @@ public class Structure {
                         listSpot++;
                         blockState = block.getStateWithData(blocks.tags.get(listSpot).val);
                     } else {
-                        blockState = block.getDefaultState();
+                        blockState = null;
+                       // blockState = block.getDefaultState();
                     }
                     structure.blocks[x][y][z] = blockState;
                     listSpot++;

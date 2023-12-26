@@ -12,7 +12,6 @@ import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.util.EntityPosition;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
-import dev.hilligans.ourcraft.world.World;
 import org.joml.Vector2f;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
@@ -155,7 +154,7 @@ public abstract class Entity {
         boolean couldMove = false;
         int x;
         for(x = 0; x < 7; x++) {
-            if(!getAllowedMovement(tryMovement(x,velX,velY,velZ),ServerMain.getWorld(dimension))) {
+            if(!getAllowedMovement(tryMovement(x,velX,velY,velZ),ServerMain.getServer().getWorld(null))) {
                 continue;
             }
             couldMove = true;
@@ -204,7 +203,7 @@ public abstract class Entity {
     }
 
 
-    public boolean getAllowedMovement(Vector3f motion, World world) {
+    public boolean getAllowedMovement(Vector3f motion, IWorld world) {
         BlockPos pos = new BlockPos(position);
         int X = (int) Math.ceil(Math.abs(motion.x)) + 1;
         int Y = (int) Math.ceil(Math.abs(motion.y)) + 1;

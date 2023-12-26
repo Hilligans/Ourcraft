@@ -5,7 +5,7 @@ import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.BlockProperties;
 import dev.hilligans.ourcraft.world.builders.foliage.CustomTreeBuilder;
-import dev.hilligans.ourcraft.world.World;
+import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 import org.joml.Vector2d;
 
 public class OakSapling extends Block {
@@ -32,7 +32,7 @@ public class OakSapling extends Block {
     };
 
     @Override
-    public void onPlace(World world, BlockPos blockPos) {
+    public void onPlace(IWorld world, BlockPos blockPos) {
         customTreeBuilder.setWorld(world).build(blockPos);
     }
 }

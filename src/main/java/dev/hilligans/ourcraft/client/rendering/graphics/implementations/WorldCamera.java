@@ -3,11 +3,9 @@ package dev.hilligans.ourcraft.client.rendering.graphics.implementations;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.ICamera;
-import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.network.packet.client.CUpdatePlayerPacket;
 import dev.hilligans.ourcraft.util.Ray;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
-import dev.hilligans.ourcraft.world.World;
 import org.joml.*;
 
 import java.lang.Math;
@@ -44,7 +42,7 @@ public abstract class WorldCamera implements ICamera {
     public float velY;
     public float velZ;
 
-    public World world;
+    public IWorld world;
 
     public float fov = 90;
 

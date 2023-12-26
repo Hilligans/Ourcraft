@@ -8,7 +8,6 @@ import dev.hilligans.ourcraft.entity.Entity;
 import dev.hilligans.ourcraft.util.Immutable;
 import dev.hilligans.ourcraft.util.MathUtil;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Intersectionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
@@ -28,7 +27,7 @@ public interface IWorld {
         if(chunk != null) {
             return chunk.getBlockState1(x, y, z);
         } else {
-            return Blocks.AIR.getDefaultState1();
+            return Blocks.AIR.getDefaultState();
         }
     }
 
@@ -43,6 +42,18 @@ public interface IWorld {
 
     default void setBlockState(BlockPos pos, IBlockState newState) {
         setBlockState(pos.getX(),pos.getY(),pos.getZ(),newState);
+    }
+
+    default boolean swapBlockState(long blockX, long blockY, long blockZ, IBlockState expected, IBlockState to) {
+        IChunk chunk = getChunk(blockX, blockY, blockZ);
+        if(chunk != null) {
+            return chunk.swapBlockState(blockX, blockY, blockZ, expected, to);
+        }
+        return false;
+    }
+
+    default boolean swapBlockState(BlockPos pos, IBlockState expected, IBlockState to) {
+        return swapBlockState(pos.getX(), pos.getY(), pos.getZ(), expected, to);
     }
 
     IChunk getChunk(long blockX, long blockY, long blockZ);

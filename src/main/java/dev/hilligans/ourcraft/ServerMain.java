@@ -6,7 +6,6 @@ import dev.hilligans.ourcraft.util.Profiler;
 import dev.hilligans.ourcraft.util.Settings;
 import dev.hilligans.ourcraft.util.Side;
 import dev.hilligans.ourcraft.world.newworldsystem.*;
-import dev.hilligans.ourcraft.world.World;
 import dev.hilligans.ourcraft.world.gen.IWorldHeightBuilder;
 import dev.hilligans.planets.gen.PlanetWorldHeightBuilder;
 
@@ -60,10 +59,6 @@ public class ServerMain {
 
     public static void newServer(GameInstance gameInstance) {
 
-    }
-
-    public static World getWorld(int id) {
-        return server.worlds.get(id);
     }
 
     public static MultiPlayerServer getServer() {

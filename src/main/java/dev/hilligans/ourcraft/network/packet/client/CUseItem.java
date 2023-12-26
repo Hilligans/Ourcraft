@@ -38,20 +38,25 @@ public class CUseItem extends PacketBaseNew<IServerPacketHandler> {
             int dim = serverPacketHandler.getServerPlayerData().getDimension();
             ServerPlayerData serverPlayerData = serverPacketHandler.getServerPlayerData();
             if(serverPlayerData != null) {
-                BlockPos blockPos = ServerMain.getWorld(dim).traceBlockToBreak(serverPlayerData.playerEntity.getX(), serverPlayerData.playerEntity.getY() + serverPlayerData.playerEntity.boundingBox.eyeHeight, serverPlayerData.playerEntity.getZ(), serverPlayerData.playerEntity.pitch, serverPlayerData.playerEntity.yaw);
+                //todo fix
+                BlockPos blockPos = null;
+                //BlockPos blockPos = ServerMain.getWorld(dim).traceBlockToBreak(serverPlayerData.playerEntity.getX(), serverPlayerData.playerEntity.getY() + serverPlayerData.playerEntity.boundingBox.eyeHeight, serverPlayerData.playerEntity.getZ(), serverPlayerData.playerEntity.pitch, serverPlayerData.playerEntity.yaw);
                 if (blockPos != null) {
+                    /*
                     BlockState blockState = ServerMain.getWorld(dim).getBlockState(blockPos);
-                    if (blockState != null && blockState.getBlock().activateBlock(ServerMain.getWorld(dim), serverPlayerData.playerEntity, blockPos)) {
+                    if (blockState != null && blockState.getBlock().activateBlock(serverPacketHandler.getWorld(), serverPlayerData.playerEntity, blockPos)) {
                         return;
                     }
                     ItemStack itemStack = serverPlayerData.playerInventory.getItem(slot);
                     if (!itemStack.isEmpty()) {
-                        if (itemStack.item.onActivate(ServerMain.getWorld(dim), serverPlayerData.playerEntity)) {
+                        if (itemStack.item.onActivate(serverPacketHandler.getWorld(), serverPlayerData.playerEntity)) {
                             if (!serverPlayerData.isCreative) {
                                 itemStack.removeCount(1);
                             }
                         }
                     }
+
+                     */
                 }
             }
         }

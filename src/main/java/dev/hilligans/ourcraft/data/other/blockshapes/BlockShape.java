@@ -11,7 +11,7 @@ import dev.hilligans.ourcraft.client.rendering.world.managers.VAOManager;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.BoundingBox;
 import dev.hilligans.ourcraft.GameInstance;
-import dev.hilligans.ourcraft.world.World;
+import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ShortOpenHashMap;
 import org.joml.Vector3f;
@@ -42,9 +42,9 @@ public class BlockShape {
         this.data = model;
     }
 
-    public BoundingBox getBoundingBox(World world, BlockPos pos) {
-        int val = world.getBlockState(pos).readData();
-        return boundingBoxes.getOrDefault(val,defaultBoundingBox).duplicate();
+    public BoundingBox getBoundingBox(IWorld world, BlockPos pos) {
+        //int val = world.getBlockState(pos).readData();
+        return boundingBoxes.getOrDefault(0,defaultBoundingBox).duplicate();
     }
 
     public BoundingBox getBoundingBox(IBlockState blockState) {
@@ -124,7 +124,7 @@ public class BlockShape {
         return -1;
     }
 
-    public int generateOutline(World world, BlockPos pos) {
+    public int generateOutline(IWorld world, BlockPos pos) {
         BoundingBox boundingBox = getBoundingBox(world, pos);
         boundingBox.minX -= 0.001f;
         boundingBox.minY -= 0.001f;

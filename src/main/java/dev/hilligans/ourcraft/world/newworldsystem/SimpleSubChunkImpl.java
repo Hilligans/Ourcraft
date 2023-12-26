@@ -28,15 +28,15 @@ public class SimpleSubChunkImpl implements ISubChunk {
     @Override
     public IBlockState getBlockState(int x, int y, int z) {
         if(blockStates == null) {
-            return Blocks.AIR.getDefaultState1();
+            return Blocks.AIR.getDefaultState();
         }
         try {
             IBlockState b =  blockStates[(int) ((x * width + y) * height + z)];
-            return b == null ? Blocks.AIR.getDefaultState1() : b;
+            return b == null ? Blocks.AIR.getDefaultState() : b;
         } catch (Exception e) {
            // e.printStackTrace();
         }
-        return Blocks.AIR.getDefaultState1();
+        return Blocks.AIR.getDefaultState();
     }
 
     @Override

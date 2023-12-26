@@ -73,7 +73,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {
                 for (int z = -radius; z <= radius; z++) {
-                    setBlockState(x, y, z, Blocks.STONE.getDefaultState1());
+                    setBlockState(x, y, z, Blocks.STONE.getDefaultState());
                 }
             }
         }
@@ -85,10 +85,10 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
             for (int b = -radius; b <= radius; b++) {
                 int height = worldHeightBuilder.getWorldHeight(a, b, radius + 1);
                 for (int c = 0; c < height; c++) {
-                    setBlockState(a, b, radius + c, Blocks.STONE.getDefaultState1());
+                    setBlockState(a, b, radius + c, Blocks.STONE.getDefaultState());
                 }
                 for (int c = height; c <= 0; c++) {
-                    setBlockState(a, b, radius + c, Blocks.AIR.getDefaultState1());
+                    setBlockState(a, b, radius + c, Blocks.AIR.getDefaultState());
                 }
                 if (a == radius) {
                     int h = height;
@@ -97,7 +97,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(a + ptr, b, radius + 1 + ptr);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(a + ptr, b, radius + c, Blocks.STONE.getDefaultState1());
+                            setBlockState(a + ptr, b, radius + c, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(a + ptr, b, radius + h - 1);
                     }
@@ -109,7 +109,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(a, b + ptr, radius + 1 + ptr);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(a, b + ptr, radius + c, Blocks.STONE.getDefaultState1());
+                            setBlockState(a, b + ptr, radius + c, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(a, b + ptr, radius + h - 1);
                     }
@@ -121,7 +121,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(a - ptr, b, radius + 1 + ptr);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(a - ptr, b, radius + c, Blocks.STONE.getDefaultState1());
+                            setBlockState(a - ptr, b, radius + c, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(a - ptr, b, radius + h - 1);
                     }
@@ -133,7 +133,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(a, b - ptr, radius + 1 + ptr);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(a, b - ptr, radius + c, Blocks.STONE.getDefaultState1());
+                            setBlockState(a, b - ptr, radius + c, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(a, b - ptr, radius + h - 1);
                     }
@@ -148,7 +148,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(a + width, b + length, radius + 1 + Math.max(length, width));
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(a + width, b + length, radius + c, Blocks.STONE.getDefaultState1());
+                                setBlockState(a + width, b + length, radius + c, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(a + width, b + length, radius + h - 1);
                         }
@@ -164,7 +164,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(a + width, b - length, radius + 1 + Math.max(length, width));
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(a + width, b - length, radius + c, Blocks.STONE.getDefaultState1());
+                                setBlockState(a + width, b - length, radius + c, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(a + width, b - length, radius + h - 1);
                         }
@@ -180,7 +180,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(a - width, b + length, radius + 1 + Math.max(length, width));
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(a - width, b + length, radius + c, Blocks.STONE.getDefaultState1());
+                                setBlockState(a - width, b + length, radius + c, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(a - width, b + length, radius + h - 1);
                         }
@@ -196,7 +196,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(a - width, b - length, radius + 1 + Math.max(length, width));
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(a - width, b - length, radius + c, Blocks.STONE.getDefaultState1());
+                                setBlockState(a - width, b - length, radius + c, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(a - width, b - length, radius + h - 1);
                         }
@@ -206,10 +206,10 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
 
                 height = worldHeightBuilder.getWorldHeight(a, b, -radius - 1);
                 for (int c = 0; c < height; c++) {
-                    setBlockState(a, b, -radius - c, Blocks.STONE.getDefaultState1());
+                    setBlockState(a, b, -radius - c, Blocks.STONE.getDefaultState());
                 }
                 for (int c = height; c <= 0; c++) {
-                    setBlockState(a, b, -radius - c, Blocks.AIR.getDefaultState1());
+                    setBlockState(a, b, -radius - c, Blocks.AIR.getDefaultState());
                 }
                 if (a == radius) {
                     int h = height;
@@ -218,7 +218,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(a + ptr, b, -radius - 1 - ptr);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(a + ptr, b, -radius - c, Blocks.STONE.getDefaultState1());
+                            setBlockState(a + ptr, b, -radius - c, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(a + ptr, b, -radius - h + 1);
                     }
@@ -230,7 +230,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(a, b + ptr, -radius - 1 - ptr);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(a, b + ptr, -radius - c, Blocks.STONE.getDefaultState1());
+                            setBlockState(a, b + ptr, -radius - c, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(a, b + ptr, -radius - h + 1);
                     }
@@ -242,7 +242,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(a - ptr, b, -radius - 1 - ptr);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(a - ptr, b, -radius - c, Blocks.STONE.getDefaultState1());
+                            setBlockState(a - ptr, b, -radius - c, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(a - ptr, b, -radius - h + 1);
                     }
@@ -254,7 +254,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(a, b - ptr, -radius - 1 - ptr);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(a, b - ptr, -radius - c, Blocks.STONE.getDefaultState1());
+                            setBlockState(a, b - ptr, -radius - c, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(a, b - ptr, -radius - h + 1);
                     }
@@ -269,7 +269,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(a + width, b + length, -radius - 1 - Math.max(length, width));
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(a + width, b + length, -radius - c, Blocks.STONE.getDefaultState1());
+                                setBlockState(a + width, b + length, -radius - c, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(a + width, b + length, -radius - h + 1);
                         }
@@ -285,7 +285,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(a + width, b - length, -radius - 1 - Math.max(length, width));
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(a + width, b - length, -radius - c, Blocks.STONE.getDefaultState1());
+                                setBlockState(a + width, b - length, -radius - c, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(a + width, b - length, -radius - h + 1);
                         }
@@ -301,7 +301,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(a - width, b + length, -radius - 1 - Math.max(length, width));
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(a - width, b + length, -radius - c, Blocks.STONE.getDefaultState1());
+                                setBlockState(a - width, b + length, -radius - c, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(a - width, b + length, -radius - h + 1);
                         }
@@ -317,7 +317,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(a - width, b - length, -radius - 1 - Math.max(length, width));
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(a - width, b - length, -radius - c, Blocks.STONE.getDefaultState1());
+                                setBlockState(a - width, b - length, -radius - c, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(a - width, b - length, -radius - h + 1);
                         }
@@ -327,10 +327,10 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
 
                 height = worldHeightBuilder.getWorldHeight(a, radius + 1, b);
                 for (int c = 0; c < height; c++) {
-                    setBlockState(a, radius + c, b, Blocks.STONE.getDefaultState1());
+                    setBlockState(a, radius + c, b, Blocks.STONE.getDefaultState());
                 }
                 for (int c = height; c <= 0; c++) {
-                    setBlockState(a, radius + c, b, Blocks.AIR.getDefaultState1());
+                    setBlockState(a, radius + c, b, Blocks.AIR.getDefaultState());
                 }
 
                 if (a == radius) {
@@ -340,7 +340,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(a + ptr, radius + 1 + ptr, b);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(a + ptr, radius + c, b, Blocks.STONE.getDefaultState1());
+                            setBlockState(a + ptr, radius + c, b, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(a + ptr, radius + h - 1, b);
                     }
@@ -352,7 +352,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(a, radius + 1 + ptr, b + ptr);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(a, radius + c, b + ptr, Blocks.STONE.getDefaultState1());
+                            setBlockState(a, radius + c, b + ptr, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(a, radius + h - 1, b + ptr);
                     }
@@ -364,7 +364,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(a - ptr, radius + 1 + ptr, b);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(a - ptr, radius + c, b, Blocks.STONE.getDefaultState1());
+                            setBlockState(a - ptr, radius + c, b, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(a - ptr, radius + h - 1, b);
                     }
@@ -376,7 +376,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(a, radius + 1 + ptr, b - ptr);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(a, radius + c, b - ptr, Blocks.STONE.getDefaultState1());
+                            setBlockState(a, radius + c, b - ptr, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(a, radius + h - 1, b - ptr);
                     }
@@ -391,7 +391,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(a + width, radius + 1 + Math.max(length, width), b + length);
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(a + width, radius + c, b + length, Blocks.STONE.getDefaultState1());
+                                setBlockState(a + width, radius + c, b + length, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(a + width, radius + h - 1, b + length);
                         }
@@ -407,7 +407,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(a + width, radius + 1 + Math.max(length, width), b - length);
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(a + width, radius + c, b - length, Blocks.STONE.getDefaultState1());
+                                setBlockState(a + width, radius + c, b - length, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(a + width, radius + h - 1, b - length);
                         }
@@ -423,7 +423,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(a - width, radius + 1 + Math.max(length, width), b + length);
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(a - width, radius + c, b + length, Blocks.STONE.getDefaultState1());
+                                setBlockState(a - width, radius + c, b + length, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(a - width, radius + h - 1, b + length);
                         }
@@ -439,7 +439,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(a - width, radius + 1 + Math.max(length, width), b - length);
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(a - width, radius + c, b - length, Blocks.STONE.getDefaultState1());
+                                setBlockState(a - width, radius + c, b - length, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(a - width, radius + h - 1, b - length);
                         }
@@ -449,10 +449,10 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
 
                 height = worldHeightBuilder.getWorldHeight(a, -radius - 1, b);
                 for (int c = 0; c < height; c++) {
-                    setBlockState(a, -radius - c, b, Blocks.STONE.getDefaultState1());
+                    setBlockState(a, -radius - c, b, Blocks.STONE.getDefaultState());
                 }
                 for (int c = height; c <= 0; c++) {
-                    setBlockState(a, -radius - c, b, Blocks.AIR.getDefaultState1());
+                    setBlockState(a, -radius - c, b, Blocks.AIR.getDefaultState());
                 }
                 if (a == radius) {
                     int h = height;
@@ -461,7 +461,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(a + ptr, -radius - 1 - ptr, b);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(a + ptr, -radius - c, b, Blocks.STONE.getDefaultState1());
+                            setBlockState(a + ptr, -radius - c, b, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(a + ptr, -radius - h + 1, b);
                     }
@@ -473,7 +473,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(a, -radius - 1 - ptr, b + ptr);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(a, -radius - c, b + ptr, Blocks.STONE.getDefaultState1());
+                            setBlockState(a, -radius - c, b + ptr, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(a, -radius - h + 1, b + ptr);
                     }
@@ -485,7 +485,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(a - ptr, -radius - 1 - ptr, b);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(a - ptr, -radius - c, b, Blocks.STONE.getDefaultState1());
+                            setBlockState(a - ptr, -radius - c, b, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(a - ptr, -radius - h + 1, b);
                     }
@@ -497,7 +497,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(a, -radius - 1 - ptr, b - ptr);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(a, -radius - c, b - ptr, Blocks.STONE.getDefaultState1());
+                            setBlockState(a, -radius - c, b - ptr, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(a, -radius - h + 1, b - ptr);
                     }
@@ -512,7 +512,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(a + width, -radius - 1 - Math.max(length, width), b + length);
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(a + width, -radius - c, b + length, Blocks.STONE.getDefaultState1());
+                                setBlockState(a + width, -radius - c, b + length, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(a + width, -radius - h + 1, b + length);
                         }
@@ -528,7 +528,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(a + width, -radius - 1 - Math.max(length, width), b - length);
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(a + width, -radius - c, b - length, Blocks.STONE.getDefaultState1());
+                                setBlockState(a + width, -radius - c, b - length, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(a + width, -radius - h + 1, b - length);
                         }
@@ -544,7 +544,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(a - width, -radius - 1 - Math.max(length, width), b + length);
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(a - width, -radius - c, b + length, Blocks.STONE.getDefaultState1());
+                                setBlockState(a - width, -radius - c, b + length, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(a - width, -radius - h + 1, b + length);
                         }
@@ -560,7 +560,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(a - width, -radius - 1 - Math.max(length, width), b - length);
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(a - width, -radius - c, b - length, Blocks.STONE.getDefaultState1());
+                                setBlockState(a - width, -radius - c, b - length, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(a + width, -radius - h + 1, b - length);
                         }
@@ -570,10 +570,10 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
 
                 height = worldHeightBuilder.getWorldHeight(radius + 1, a, b);
                 for (int c = 0; c < height; c++) {
-                    setBlockState(radius + c, a, b, Blocks.STONE.getDefaultState1());
+                    setBlockState(radius + c, a, b, Blocks.STONE.getDefaultState());
                 }
                 for (int c = height; c <= 0; c++) {
-                    setBlockState(radius + c, a, b, Blocks.AIR.getDefaultState1());
+                    setBlockState(radius + c, a, b, Blocks.AIR.getDefaultState());
                 }
                 if (a == radius) {
                     int h = height;
@@ -582,7 +582,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(radius + 1 + ptr, a + ptr, b);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(radius + c, a + ptr, b, Blocks.STONE.getDefaultState1());
+                            setBlockState(radius + c, a + ptr, b, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(radius + h - 1, a + ptr, b);
                     }
@@ -594,7 +594,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(radius + 1 + ptr, a, b + ptr);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(radius + c, a, b + ptr, Blocks.STONE.getDefaultState1());
+                            setBlockState(radius + c, a, b + ptr, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(radius + h - 1, a, b + ptr);
                     }
@@ -606,7 +606,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(radius + 1 + ptr, a - ptr, b);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(radius + c, a - ptr, b, Blocks.STONE.getDefaultState1());
+                            setBlockState(radius + c, a - ptr, b, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(radius + h - 1, a - ptr, b);
                     }
@@ -618,7 +618,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(radius + 1 + ptr, a, b - ptr);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(radius + c, a, b - ptr, Blocks.STONE.getDefaultState1());
+                            setBlockState(radius + c, a, b - ptr, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(radius + h - 1, a, b - ptr);
                     }
@@ -633,7 +633,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(radius + 1 + Math.max(length, width), a + width, b + length);
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(radius + c, a + width, b + length, Blocks.STONE.getDefaultState1());
+                                setBlockState(radius + c, a + width, b + length, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(radius + h - 1, a + width, b + length);
                         }
@@ -649,7 +649,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(radius + 1 + Math.max(length, width), a + width, b - length);
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(radius + c, a + width, b - length, Blocks.STONE.getDefaultState1());
+                                setBlockState(radius + c, a + width, b - length, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(radius + h - 1, a + width, b - length);
                         }
@@ -665,7 +665,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(radius + 1 + Math.max(length, width), a - width, b + length);
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(radius + c, a - width, b + length, Blocks.STONE.getDefaultState1());
+                                setBlockState(radius + c, a - width, b + length, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(radius + h - 1, a - width, b + length);
                         }
@@ -681,7 +681,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(radius + 1 + Math.max(length, width), a - width, b - length);
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(radius + c, a - width, b - length, Blocks.STONE.getDefaultState1());
+                                setBlockState(radius + c, a - width, b - length, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(radius + h - 1, a - width, b - length);
                         }
@@ -691,10 +691,10 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
 
                 height = worldHeightBuilder.getWorldHeight(-radius - 1, a, b);
                 for (int c = 0; c < height; c++) {
-                    setBlockState(-radius - c, a, b, Blocks.STONE.getDefaultState1());
+                    setBlockState(-radius - c, a, b, Blocks.STONE.getDefaultState());
                 }
                 for (int c = height; c <= 0; c++) {
-                    setBlockState(-radius - c, a, b, Blocks.AIR.getDefaultState1());
+                    setBlockState(-radius - c, a, b, Blocks.AIR.getDefaultState());
                 }
 
                 if (a == radius) {
@@ -704,7 +704,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(-radius - 1 - ptr, a + ptr, b);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(-radius - c, a + ptr, b, Blocks.STONE.getDefaultState1());
+                            setBlockState(-radius - c, a + ptr, b, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(-radius - h + 1, a + ptr, b);
                     }
@@ -716,7 +716,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(-radius - 1 - ptr, a, b + ptr);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(-radius - c, a, b + ptr, Blocks.STONE.getDefaultState1());
+                            setBlockState(-radius - c, a, b + ptr, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(-radius - h + 1, a, b + ptr);
                     }
@@ -728,7 +728,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(-radius - 1 - ptr, a - ptr, b);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(-radius - c, a - ptr, b, Blocks.STONE.getDefaultState1());
+                            setBlockState(-radius - c, a - ptr, b, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(-radius - h + 1, a - ptr, b);
                     }
@@ -740,7 +740,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                         ptr++;
                         h = worldHeightBuilder.getWorldHeight(-radius - 1 - ptr, a, b - ptr);
                         for (int c = ptr; c < h; c++) {
-                            setBlockState(-radius - c, a, b - ptr, Blocks.STONE.getDefaultState1());
+                            setBlockState(-radius - c, a, b - ptr, Blocks.STONE.getDefaultState());
                         }
                         boundingBox.resizeForPoint(-radius - h + 1, a, b - ptr);
                     }
@@ -756,7 +756,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(-radius - 1 - Math.max(length, width), a + width, b + length);
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(-radius - c, a + width, b + length, Blocks.STONE.getDefaultState1());
+                                setBlockState(-radius - c, a + width, b + length, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(-radius - h + 1, a + width, b + length);
                         }
@@ -772,7 +772,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(-radius - 1 - Math.max(length, width), a + width, b - length);
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(-radius - c, a + width, b - length, Blocks.STONE.getDefaultState1());
+                                setBlockState(-radius - c, a + width, b - length, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(-radius - h + 1, a + width, b - length);
                         }
@@ -788,7 +788,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(-radius - 1 - Math.max(length, width), a - width, b + length);
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(-radius - c, a - width, b + length, Blocks.STONE.getDefaultState1());
+                                setBlockState(-radius - c, a - width, b + length, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(-radius - h + 1, a - width, b + length);
                         }
@@ -804,7 +804,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                             length++;
                             h = worldHeightBuilder.getWorldHeight(-radius - 1 - Math.max(length, width), a - width, b - length);
                             for (int c = Math.max(length, width); c < h; c++) {
-                                setBlockState(-radius - c, a - width, b - length, Blocks.STONE.getDefaultState1());
+                                setBlockState(-radius - c, a - width, b - length, Blocks.STONE.getDefaultState());
                             }
                             boundingBox.resizeForPoint(-radius - h + 1, a - width, b - length);
                         }
@@ -823,7 +823,7 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
                     boolean zRad = z < water_radius && z > -water_radius;
                     if((zRad && yRad && xRad)) {
                         if (getBlockState(x, y, z).getBlock() == Blocks.AIR) {
-                            setBlockState(x, y, z, Blocks.WATER.getDefaultState1());
+                            setBlockState(x, y, z, Blocks.WATER.getDefaultState());
                         }
                     }
                 }

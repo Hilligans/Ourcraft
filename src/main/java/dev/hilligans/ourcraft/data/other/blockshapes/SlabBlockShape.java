@@ -7,7 +7,7 @@ import dev.hilligans.ourcraft.client.rendering.world.managers.BlockTextureManage
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.BoundingBox;
 import dev.hilligans.ourcraft.data.other.blockstates.DataBlockState;
-import dev.hilligans.ourcraft.world.World;
+import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 import org.joml.Vector3f;
 
 public class SlabBlockShape extends BlockShape {
@@ -49,7 +49,7 @@ public class SlabBlockShape extends BlockShape {
     }
 
     @Override
-    public BoundingBox getBoundingBox(World world, BlockPos pos) {
+    public BoundingBox getBoundingBox(IWorld world, BlockPos pos) {
         switch (((DataBlockState)world.getBlockState(pos)).readData()) {
             case 5:
                 return new BoundingBox(0, 0, 0, 1f, 0.5f, 1f);

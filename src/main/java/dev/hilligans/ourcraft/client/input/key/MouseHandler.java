@@ -40,6 +40,7 @@ public class MouseHandler {
     }
 
     public void onPress() {
+        /*
         if (client.screen == null) {
             if (button == GLFW_MOUSE_BUTTON_1) {
                 BlockPos pos = client.clientWorld.traceBlockToBreak(Camera.pos.x, Camera.pos.y + Camera.playerBoundingBox.eyeHeight, Camera.pos.z, Camera.pitch, Camera.yaw);
@@ -74,5 +75,7 @@ public class MouseHandler {
             DoubleBuffer doubleBuffer = client.getMousePos();
             client.screen.mouseClick((int) doubleBuffer.get(0), (int) doubleBuffer.get(1), button);
         }
+
+         */
     }
 }

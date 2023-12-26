@@ -1,15 +1,15 @@
 package dev.hilligans.ourcraft.world.builders;
 
 import dev.hilligans.ourcraft.data.other.BlockPos;
-import dev.hilligans.ourcraft.world.Chunk;
 import dev.hilligans.ourcraft.world.Feature;
-import dev.hilligans.ourcraft.world.World;
+import dev.hilligans.ourcraft.world.newworldsystem.IChunk;
+import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 
 import java.util.Random;
 
 public abstract class WorldBuilder extends Feature {
 
-    public World world;
+    public IWorld world;
     public int frequency = 1;
     public int chance = 1;
 
@@ -20,9 +20,9 @@ public abstract class WorldBuilder extends Feature {
     }
 
 
-    public WorldBuilder setWorld(World world) {
+    public WorldBuilder setWorld(IWorld world) {
         this.world = world;
-        random = world.random;
+        random = new Random();
         return this;
     }
 
@@ -36,7 +36,8 @@ public abstract class WorldBuilder extends Feature {
         return this;
     }
 
-    public void build(Chunk chunk) {
+    public void build(IChunk chunk) {
+        /*
         world = chunk.world;
         random = world.random;
         for(int a = 0; a < frequency; a++) {
@@ -46,6 +47,8 @@ public abstract class WorldBuilder extends Feature {
                 build(x + chunk.x * 16, z + chunk.z * 16);
             }
         }
+
+         */
     }
 
     public abstract void build(int x, int z);

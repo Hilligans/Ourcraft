@@ -54,7 +54,7 @@ public class SimpleChunkGenerator implements IWorldGenerator {
             for(long y = chunk.getChunkYBlockPos(); y < terrainMin; y++) {
                 for(int x = 0; x < chunk.getWidth(); x++) {
                     for(int z = 0; z < chunk.getWidth(); z++) {
-                        chunk.setBlockState(x,y,z, Blocks.STONE.getDefaultState1());
+                        chunk.setBlockState(x,y,z, Blocks.STONE.getDefaultState());
                     }
                 }
             }

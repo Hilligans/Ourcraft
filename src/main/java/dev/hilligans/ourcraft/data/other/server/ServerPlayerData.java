@@ -182,10 +182,10 @@ public class ServerPlayerData implements IServerPacketHandler {
         if(slot == -1) {
             if(!heldStack.isEmpty()) {
                 if(count == -1 || count >= heldStack.count) {
-                    ServerMain.getWorld(getDimension()).addEntity(new ItemEntity(playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), Entity.getNewId(), heldStack).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
+                   // ServerMain.getWorld(getDimension()).addEntity(new ItemEntity(playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), Entity.getNewId(), heldStack).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
                     heldStack = ItemStack.emptyStack();
                 } else {
-                    ServerMain.getWorld(getDimension()).addEntity(new ItemEntity(playerEntity.getX(),playerEntity.getY(),playerEntity.getZ(),Entity.getNewId(),new ItemStack(heldStack.item,count)).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
+                   // ServerMain.getWorld(getDimension()).addEntity(new ItemEntity(playerEntity.getX(),playerEntity.getY(),playerEntity.getZ(),Entity.getNewId(),new ItemStack(heldStack.item,count)).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
                     heldStack.count -= count;
                 }
             }
@@ -194,10 +194,10 @@ public class ServerPlayerData implements IServerPacketHandler {
             if(itemSlot != null) {
                 if(!itemSlot.getContents().isEmpty()) {
                     if(count == -1 || count >= itemSlot.getContents().count) {
-                        ServerMain.getWorld(getDimension()).addEntity(new ItemEntity(playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), Entity.getNewId(), itemSlot.getContents()).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
+                      //  ServerMain.getWorld(getDimension()).addEntity(new ItemEntity(playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), Entity.getNewId(), itemSlot.getContents()).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
                         itemSlot.setContents(ItemStack.emptyStack());
                     } else {
-                        ServerMain.getWorld(getDimension()).addEntity(new ItemEntity(playerEntity.getX(),playerEntity.getY(),playerEntity.getZ(),Entity.getNewId(),new ItemStack(itemSlot.getContents().item,count)).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
+                     //   ServerMain.getWorld(getDimension()).addEntity(new ItemEntity(playerEntity.getX(),playerEntity.getY(),playerEntity.getZ(),Entity.getNewId(),new ItemStack(itemSlot.getContents().item,count)).setVel(playerEntity.getForeWard().mul(-0.5f).add(0, 0.25f, 0)));
                         itemSlot.getContents().count -= count;
                     }
                 }

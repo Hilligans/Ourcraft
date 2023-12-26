@@ -7,7 +7,6 @@ import dev.hilligans.ourcraft.entity.entities.ItemEntity;
 import dev.hilligans.ourcraft.entity.Entity;
 import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.network.*;
-import dev.hilligans.ourcraft.ServerMain;
 
 public class CSendBlockChanges extends PacketBaseNew<IServerPacketHandler> {
 
@@ -48,9 +47,10 @@ public class CSendBlockChanges extends PacketBaseNew<IServerPacketHandler> {
     public void handle(IServerPacketHandler serverPacketHandler) {
         int dim = serverPacketHandler.getServerPlayerData().getDimension();
         IBlockState oldState = serverPacketHandler.getWorld().getBlockState(x,y,z);
-        IBlockState newBlock = Blocks.getBlockWithID(blockId).getDefaultState1();
+        IBlockState newBlock = Blocks.getBlockWithID(blockId).getDefaultState();
         serverPacketHandler.getWorld().setBlockState(x,y,z,newBlock);
-        newBlock.getBlock().onPlace(ServerMain.getWorld(dim), new BlockPos(x,y,z));
+        newBlock.getBlock().onPlace(serverPacketHandler.getWorld(), new BlockPos(x, y, z));
+        //newBlock.getBlock().onPlace(ServerMain.getWorld(dim), new BlockPos(x,y,z));
         Block droppedBlock = oldState.getBlock().droppedBlock;
         if(droppedBlock != Blocks.AIR) {
             if (serverPacketHandler.getWorld().getBlockState(x, y, z).getBlock() == Blocks.AIR) {

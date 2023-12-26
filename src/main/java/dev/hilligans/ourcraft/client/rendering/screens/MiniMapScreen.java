@@ -5,18 +5,15 @@ import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.input.key.MouseHandler;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
-import dev.hilligans.ourcraft.client.rendering.minimap.MiniMap;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
-import dev.hilligans.ourcraft.ClientMain;
 
 import java.nio.DoubleBuffer;
 
 public class MiniMapScreen extends ScreenBase {
 
-    MiniMap miniMap;
+    //MiniMap miniMap;
 
-    public MiniMapScreen(Client client, MiniMap miniMap) {
-        this.miniMap = miniMap;
+    public MiniMapScreen(Client client) {
     }
 
     int mouseLastX = 0;
@@ -29,13 +26,13 @@ public class MiniMapScreen extends ScreenBase {
             DoubleBuffer mousePos = window.getClient().getMousePos();
             int x = (int) (mousePos.get(0) - mouseLastX);
             int y = (int) (mousePos.get(1) - mouseLastY);
-            miniMap.addX(Math.round(x / getRatio(miniMap.zoom)));
-            miniMap.addY(Math.round(y / getRatio(miniMap.zoom)));
+           // miniMap.addX(Math.round(x / getRatio(miniMap.zoom)));
+           // miniMap.addY(Math.round(y / getRatio(miniMap.zoom)));
 
             mouseLastX = (int) mousePos.get(0);
             mouseLastY = (int) mousePos.get(1);
         }
-        miniMap.draw(matrixStack,miniMap.lastX, miniMap.lastY,0,0, (int) window.getWindowWidth(), (int) window.getWindowHeight());
+       // miniMap.draw(matrixStack,miniMap.lastX, miniMap.lastY,0,0, (int) window.getWindowWidth(), (int) window.getWindowHeight());
     }
 
     @Override
@@ -48,7 +45,7 @@ public class MiniMapScreen extends ScreenBase {
     @Override
     public void mouseScroll(int x, int y, float amount) {
         super.mouseScroll(x, y, amount);
-        miniMap.zoom = (int) Math.max(Math.min(miniMap.zoom + amount * 10, 1000),10);
+       // miniMap.zoom = (int) Math.max(Math.min(miniMap.zoom + amount * 10, 1000),10);
     }
 
     public float getRatio(int size) {

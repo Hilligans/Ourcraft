@@ -15,7 +15,6 @@ import dev.hilligans.ourcraft.network.ServerNetworkHandler;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
-import dev.hilligans.ourcraft.world.World;
 import dev.hilligans.ourcraft.util.ConsoleReader;
 import dev.hilligans.ourcraft.util.NamedThreadFactory;
 import dev.hilligans.ourcraft.util.Settings;
@@ -31,7 +30,6 @@ public class MultiPlayerServer implements IServer {
 
     public long time = 0;
 
-    public Int2ObjectOpenHashMap<World> worlds = new Int2ObjectOpenHashMap<>();
     public Int2ObjectOpenHashMap<IServerWorld> newWorlds = new Int2ObjectOpenHashMap<>();
     public HashMap<ChannelHandlerContext, CHandshakePacket> waitingPlayers = new HashMap<>();
     public HashMap<String, Tuple<ChannelHandlerContext,Long>> playerQueue = new HashMap<>();

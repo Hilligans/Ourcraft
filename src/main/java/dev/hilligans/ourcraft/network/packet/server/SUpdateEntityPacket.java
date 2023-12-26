@@ -53,10 +53,14 @@ public class SUpdateEntityPacket extends PacketBaseNew<IClientPacketHandler> {
     @Override
     public void handle(IClientPacketHandler clientPacketHandler) {
         if(id != clientPacketHandler.getClient().playerId) {
+            //todo implement
+            /*
             Entity entity = clientPacketHandler.getClient().clientWorld.entities.get(id);
             if(entity != null) {
                 entity.setPos(x,y,z).setRot(pitch,yaw);
             }
+
+             */
         }
     }
 }

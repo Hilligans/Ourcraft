@@ -53,6 +53,7 @@ public class PlayerEntity extends LivingEntity {
     public void tick() {
         boolean updateInventory = false;
 
+        /*
         for(Entity entity : ServerMain.getWorld(dimension).entities.values()) {
             if(entity instanceof ItemEntity) {
                 if (entity.boundingBox.intersectsBox(itemPickupBox, new Vector3d(entity.getX(), entity.getY(), entity.getZ()), new Vector3d(getX(), getY(), getZ()))) {
@@ -69,6 +70,7 @@ public class PlayerEntity extends LivingEntity {
                 }
             }
         }
+         */
         if(updateInventory) {
             inventory.age++;
             ServerMain.getServer().sendPacket(new SUpdateInventory(inventory),this);

@@ -19,10 +19,12 @@ public class StairBlock extends Block {
         return true;
     }
 
+    /*
     @Override
     public BlockState getDefaultState() {
         return new DataBlockState(this, new ShortBlockState((short)0));
     }
+     */
 
     @Override
     public BlockState getStateWithData(short data) {

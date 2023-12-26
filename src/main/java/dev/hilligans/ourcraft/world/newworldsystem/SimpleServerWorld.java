@@ -30,12 +30,12 @@ public class SimpleServerWorld extends SimpleWorld implements IServerWorldBase, 
             for(int y = 0; y < chunk.getHeight(); y++) {
                 for(int z = 0; z < 16; z++) {
                     if(y < 60) {
-                        chunk.setBlockState(x, y, z, Blocks.STONE.getDefaultState1());
+                        chunk.setBlockState(x, y, z, Blocks.STONE.getDefaultState());
                     } else {
                         if(y % 2 == 0) {
-                            chunk.setBlockState(x, y, z, Blocks.RED.getDefaultState1());
+                            chunk.setBlockState(x, y, z, Blocks.RED.getDefaultState());
                         } else {
-                            chunk.setBlockState(x, y, z, Blocks.AIR.getDefaultState1());
+                            chunk.setBlockState(x, y, z, Blocks.AIR.getDefaultState());
                         }
                     }
 

@@ -1,11 +1,12 @@
 package dev.hilligans.ourcraft.client.rendering.minimap;
 
 import dev.hilligans.ourcraft.client.MatrixStack;
-import dev.hilligans.ourcraft.world.ClientWorld;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+
 
 public class MiniMap {
 
+    /*
     public ClientWorld clientWorld;
     public int lastX = 0;
     public int lastY = 0;
@@ -39,7 +40,7 @@ public class MiniMap {
 
     //TODO fix
     public void draw(MatrixStack matrixStack, int chunkX, int chunkZ, int x, int y, int windowWidth, int windowHeight) {
-       /*
+
         GL11.glDisable(GL11.GL_DEPTH_TEST);
 
         int size = zoom;
@@ -69,7 +70,7 @@ public class MiniMap {
         //Textures.SHORT_ICON.drawTexture(matrixStack,getX((int) blockPos.getChunkX(),size,x,windowWidth), getZ((int) blockPos.getChunkZ(),size,y,windowHeight),10,10);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
 
-        */
+
     }
 
     public int getX(int chunkX, int size, int x, int windowWidth) {
@@ -93,6 +94,6 @@ public class MiniMap {
         microZ -= extra * 256f / 16;
         lastY -= extra;
     }
-
+    */
 
 }

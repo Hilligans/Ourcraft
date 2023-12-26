@@ -43,7 +43,7 @@ public class SetCommand extends WorldEditCommand {
                     serverWorld.queuePostTickEvent(serverWorld1 -> {
                         BlockPos min = new BlockPos(f.minX(s), f.minY(s), f.minZ(s));
                         BlockPos max = new BlockPos(f.maxX(s), f.maxY(s), f.maxZ(s));
-                        SetSingleModification modification = new SetSingleModification(min, max, b.getDefaultState1());
+                        SetSingleModification modification = new SetSingleModification(min, max, b.getDefaultState());
                         try(Lock l = new Lock(serverWorld1.getChunkLocker())) {
                             for(IChunk chunk : serverWorld1.getChunks(min, max)) {
                                 if(chunk != null) {

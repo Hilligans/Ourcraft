@@ -10,7 +10,8 @@ import dev.hilligans.ourcraft.network.packet.server.SOpenContainer;
 import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.world.DataProvider;
 import dev.hilligans.ourcraft.world.data.providers.ChestDataProvider;
-import dev.hilligans.ourcraft.world.World;
+import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
+import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 
 public class ChestBlock extends Block {
 
@@ -20,15 +21,16 @@ public class ChestBlock extends Block {
     }
 
     @Override
-    public void onPlace(World world, BlockPos blockPos) {
+    public void onPlace(IWorld world, BlockPos blockPos) {
         super.onPlace(world, blockPos);
-        world.setDataProvider(blockPos, new ChestDataProvider());
+        //world.setDataProvider(blockPos, new ChestDataProvider());
     }
 
     @Override
-    public boolean activateBlock(World world, PlayerEntity playerEntity, BlockPos pos) {
-        if(world.isServer()) {
-            ChestDataProvider chestDataProvider = (ChestDataProvider) world.getDataProvider(pos);
+    public boolean activateBlock(IWorld world, PlayerEntity playerEntity, BlockPos pos) {
+        if(world instanceof IServerWorld) {
+            ChestDataProvider chestDataProvider = null;
+            //ChestDataProvider chestDataProvider = (ChestDataProvider) world.getDataProvider(pos);
             ChestContainer container = (ChestContainer) new ChestContainer(chestDataProvider.inventory,playerEntity.getPlayerData().playerInventory).setPlayerId(playerEntity.id);
             playerEntity.getPlayerData().openContainer(container);
             ServerMain.getServer().sendPacket(new SOpenContainer(container), playerEntity);
@@ -37,14 +39,17 @@ public class ChestBlock extends Block {
     }
 
     @Override
-    public void onBreak(World world, BlockPos blockPos) {
+    public void onBreak(IWorld world, BlockPos blockPos) {
         super.onBreak(world, blockPos);
-        if(world.isServer()) {
+        if(world instanceof IServerWorld) {
+            /*
             Inventory inventory = ((ChestDataProvider) world.getDataProvider(blockPos)).inventory;
             world.setDataProvider(blockPos, null);
             for (int x = 0; x < inventory.getSize(); x++) {
                 world.spawnItemEntity(blockPos.x + 0.5f, blockPos.y + 0.5f, blockPos.z + 0.5f, inventory.getItem(x));
             }
+
+             */
         }
     }
 

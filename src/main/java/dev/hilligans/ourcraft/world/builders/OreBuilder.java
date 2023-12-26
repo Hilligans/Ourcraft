@@ -29,7 +29,7 @@ public class OreBuilder extends RandomBuilder {
 
     public void replaceIfValid(BlockPos pos) {
         if(allowedBlocks.get(world.getBlockState(pos).getBlock().id)) {
-            world.setBlockState(pos,ore.getDefaultState());
+            world.setBlockState(pos, ore.getDefaultState());
         }
     }
 

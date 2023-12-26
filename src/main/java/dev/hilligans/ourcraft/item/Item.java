@@ -13,7 +13,7 @@ import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.recipe.IRecipeComponent;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.util.Side;
-import dev.hilligans.ourcraft.world.World;
+import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 
 public class Item implements IRecipeComponent, IRegistryElement {
 
@@ -123,7 +123,7 @@ public class Item implements IRecipeComponent, IRegistryElement {
         //itemProperties.itemModel.addData(primitiveBuilder,itemProperties.itemTextureManager,0,size,null,0,0);
     }
 
-    public boolean onActivate(World world, PlayerEntity playerEntity) {
+    public boolean onActivate(IWorld world, PlayerEntity playerEntity) {
         return true;
     }
 
