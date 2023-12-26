@@ -16,7 +16,7 @@ public class ItemTextureManager {
     }
 
     public void generate() {
-        id = TextAtlas.instance.loadTextureId("Items/" + path,"Items/" + path.substring(0,path.length() - 4),"");
+       // id = TextAtlas.instance.loadTextureId("Items/" + path,"Items/" + path.substring(0,path.length() - 4),"");
        // PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(GL_TRIANGLES, ShaderManager.worldShader);
     }
 }

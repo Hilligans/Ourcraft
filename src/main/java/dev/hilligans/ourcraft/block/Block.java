@@ -163,8 +163,8 @@ public class Block implements IRegistryElement {
         blockProperties.blockTextureManager.generate(textAtlas);
     }
 
-    public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockPos blockPos, int x, int z) {
-        blockProperties.blockShape. addVertices(primitiveBuilder,side,size,blockState,blockProperties.blockTextureManager, new BlockPos(x,blockPos.y,z).get3f());
+    public void addVertices(TextAtlas textAtlas, PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockPos blockPos, int x, int z) {
+        blockProperties.blockShape. addVertices(textAtlas, primitiveBuilder,side,size,blockState,blockProperties.blockTextureManager, new BlockPos(x,blockPos.y,z).get3f());
     }
 
     public int getSide(BlockState blockState, int side) {
@@ -260,8 +260,8 @@ public class Block implements IRegistryElement {
         return table.getBlockState(0);
     }
 
-    public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, IBlockState blockState, BlockPos blockPos, int x, int z) {
-        blockProperties.blockShape.addVertices(primitiveBuilder,side,size,blockState,blockProperties.blockTextureManager,new Vector3f(), x,blockPos.y,z);
+    public void addVertices(TextAtlas textAtlas, PrimitiveBuilder primitiveBuilder, int side, float size, IBlockState blockState, BlockPos blockPos, int x, int z) {
+        blockProperties.blockShape.addVertices(textAtlas, primitiveBuilder,side,size,blockState,blockProperties.blockTextureManager,new Vector3f(), x,blockPos.y,z);
     }
 
     public void addVertices(IPrimitiveBuilder primitiveBuilder, int side, float size, IBlockState blockState, BlockPos blockPos, int offsetX, int offsetY, int offsetZ) {

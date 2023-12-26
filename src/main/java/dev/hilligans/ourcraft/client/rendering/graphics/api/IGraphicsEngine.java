@@ -1,7 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.api;
 
 import dev.hilligans.ourcraft.client.MatrixStack;
-import dev.hilligans.ourcraft.client.rendering.graphics.GraphicsData;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.world.StringRenderer;
 import dev.hilligans.ourcraft.GameInstance;
@@ -78,8 +77,6 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
     void setupStringRenderer(String defaultLanguage);
 
     int getProgram(String name);
-
-    GraphicsData getGraphicsData();
 
     default RenderWindow startEngine() {
         RenderWindow window = setup();

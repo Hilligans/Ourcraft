@@ -10,6 +10,7 @@ import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.client.rendering.MeshHolder;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
+import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.primitives.Tuple;
 import dev.hilligans.ourcraft.GameInstance;
@@ -39,12 +40,14 @@ public class WorldRenderTask extends RenderTaskSource {
     public CullingEngine cullingEngine;
 
     public ExecutorService chunkBuilder = Executors.newFixedThreadPool(2);
+    TextAtlas textAtlas = new TextAtlas();
 
     @Override
     public RenderTask getDefaultTask() {
         IThreeDContainer<MeshHolder> meshes = new EmptyContainer<>();
 
         return new RenderTask() {
+
             @Override
             public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack, float delta) {
                 int a = 0;
@@ -58,7 +61,7 @@ public class WorldRenderTask extends RenderTaskSource {
                 Vector3i playerChunkPos = new Vector3i((int) pos.x / chunkWidth, (int) pos.y / chunkHeight, (int) pos.z / chunkWidth);
                 if (client.renderWorld) {
                     engine.getDefaultImpl().bindPipeline(graphicsContext, shaderSource.program);
-                    engine.getDefaultImpl().bindTexture(graphicsContext, engine.getGraphicsData().getWorldTexture());
+                    engine.getDefaultImpl().bindTexture(graphicsContext, textAtlas.texture);
                     for (int x = 0; x < client.renderDistance; x++) {
                         for (int y = 0; y < renderYDist; y++) {
                             for (int z = 0; z < client.renderDistance; z++) {
@@ -237,7 +240,7 @@ public class WorldRenderTask extends RenderTaskSource {
                                         newState = chunk.getBlockState1(p);
                                     }
                                     if (newState.getBlock().blockProperties.transparent && (Settings.renderSameTransparent || block.getBlock() != newState.getBlock()) || block.getBlock().blockProperties.alwaysRender || newState.getBlock().blockProperties.translucent) {
-                                        block.getBlock().addVertices(primitiveBuilder, a, 1f, block, p.set(x, y, z), x, z);
+                                        block.getBlock().addVertices(textAtlas, primitiveBuilder, a, 1f, block, p.set(x, y, z), x, z);
                                     }
                                 }
                             }
@@ -294,6 +297,21 @@ public class WorldRenderTask extends RenderTaskSource {
                 return new PipelineState().setDepth(true);
             }
         };
+    }
+
+    @Override
+    public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
+        for(Block block : gameInstance.getBlocks()) {
+            if(!block.blockProperties.translucent) {
+                block.generateTextures(textAtlas);
+            }
+        }
+        textAtlas.upload(graphicsEngine);
+    }
+
+    @Override
+    public void cleanup(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
+        graphicsEngine.getDefaultImpl().destroyTexture(graphicsContext, textAtlas.texture);
     }
 
     @Override

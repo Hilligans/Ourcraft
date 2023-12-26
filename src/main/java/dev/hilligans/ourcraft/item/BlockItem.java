@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.item;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
+import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
 import dev.hilligans.ourcraft.data.other.blockstates.BlockState;
 import dev.hilligans.ourcraft.client.Camera;
 import dev.hilligans.ourcraft.client.MatrixStack;
@@ -83,9 +84,9 @@ public class BlockItem extends Item {
     }
 
     @Override
-    public void addData(PrimitiveBuilder primitiveBuilder, float size) {
+    public void addData(TextAtlas textAtlas, PrimitiveBuilder primitiveBuilder, float size) {
         for(int z = 0; z < 6; z++) {
-            block.addVertices(primitiveBuilder,z,size,block.getDefaultState(),new BlockPos(0,0,0),0,0);
+            block.addVertices(textAtlas, primitiveBuilder,z,size,block.getDefaultState(),new BlockPos(0,0,0),0,0);
         }
         primitiveBuilder.translate(size / 3f,size / 1.3f,0);
         primitiveBuilder.rotate(0.785f,new Vector3f(0.5f,-1,0));

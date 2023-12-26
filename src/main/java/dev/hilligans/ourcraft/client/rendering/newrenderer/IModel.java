@@ -14,7 +14,7 @@ public interface IModel {
     default int[] getIndices(int side, int rotX, int rotY) {
         return getIndices(side);
     }
-    void addData(PrimitiveBuilder primitiveBuilder, BlockTextureManager textureManager, int side, float size, Vector3f offset, int rotX, int rotY);
+    void addData(TextAtlas textAtlas, PrimitiveBuilder primitiveBuilder, BlockTextureManager textureManager, int side, float size, Vector3f offset, int rotX, int rotY);
 
     String getModel();
     String getPath();

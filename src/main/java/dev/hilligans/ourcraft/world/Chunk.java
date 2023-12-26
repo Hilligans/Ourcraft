@@ -67,12 +67,6 @@ public class Chunk implements IChunk {
    //     }
    // }
 
-    public void setWorld(World world) {
-        this.world = world;
-        for(SubChunk subChunk : chunks) {
-            subChunk.world = world;
-        }
-    }
 
     public void destroyMap(int newId) {
         if(id != -1 && id != -2 && id != -3) {

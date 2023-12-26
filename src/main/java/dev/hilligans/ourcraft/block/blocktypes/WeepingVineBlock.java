@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.block.blocktypes;
 
 import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
+import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.BlockProperties;
 import dev.hilligans.ourcraft.data.other.blockstates.BlockState;
@@ -13,11 +14,11 @@ public class WeepingVineBlock extends PlantBlock {
     }
 
     @Override
-    public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockPos blockPos, int x, int z) {
+    public void addVertices(TextAtlas textAtlas, PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockPos blockPos, int x, int z) {
         long seed = ((long)blockPos.x) | ((long)blockPos.z << 32);
         Random random = new Random(seed);
         for(int a = 0; a < 3; a++) {
-            blockProperties.blockShape.addVertices(primitiveBuilder,side,size,blockState,blockProperties.blockTextureManager, new BlockPos(x,blockPos.y,z).get3f(),random.nextFloat() - 0.5f, 0,random.nextFloat() - 0.5f);
+            blockProperties.blockShape.addVertices(textAtlas, primitiveBuilder,side,size,blockState,blockProperties.blockTextureManager, new BlockPos(x,blockPos.y,z).get3f(),random.nextFloat() - 0.5f, 0,random.nextFloat() - 0.5f);
         }
     }
 

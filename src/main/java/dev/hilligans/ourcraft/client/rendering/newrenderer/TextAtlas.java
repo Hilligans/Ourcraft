@@ -170,22 +170,20 @@ public class TextAtlas {
         return register(new ImageLocation("Images/" + path,source));
     }
 
-    public static TextAtlas instance = new TextAtlas();
-
-    public static float getMinX(int id) {
-        return (get(id,16)) / (float)instance.size;
+    public float getMinX(int id) {
+        return (get(id,16)) / (float)size;
     }
-    public static float getMaxX(int id) {
-        return (get(id,16) + get(id,32)) / (float)instance.size;
+    public float getMaxX(int id) {
+        return (get(id,16) + get(id,32)) / (float)size;
     }
-    public static float getMinY(int id) {
-        return (get(id,0)) / (float)instance.size;
+    public float getMinY(int id) {
+        return (get(id,0)) / (float)size;
     }
-    public static float getMaxY(int id) {
-        return (get(id,0) + get(id,32)) / (float)instance.size;
+    public float getMaxY(int id) {
+        return (get(id,0) + get(id,32)) / (float)size;
     }
 
-    public static int get(int id, int shift) {
-        return (short)(instance.ids.get(id) >> shift);
+    public int get(int id, int shift) {
+        return (short)(ids.get(id) >> shift);
     }
 }

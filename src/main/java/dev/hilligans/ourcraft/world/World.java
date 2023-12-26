@@ -34,9 +34,6 @@ public abstract class World {
     public GameInstance gameInstance;
 
     long seed = 1342;
-
-    public int chunkCount = 0;
-
     public BiomeNoise biomeMap;
 
 
@@ -44,9 +41,6 @@ public abstract class World {
 
     public Random random;
     public IChunkContainer chunkContainer = new ChunkContainer();
-
-
-    public ArrayList<WorldBuilder> worldBuilders = new ArrayList<>();
 
     public World(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
@@ -63,9 +57,6 @@ public abstract class World {
         return chunkContainer.getChunk(x,z);
     }
 
-    public void putChunk(int x, int z, Chunk chunk) {
-        chunkCount += chunkContainer.setChunk(x,z,chunk) == null ? 1 : 0;
-    }
     public BlockState getBlockState(int x, int y, int z) {
         Chunk chunk = getChunk(x >> 4,z >> 4);
         if(chunk == null) {
@@ -129,16 +120,6 @@ public abstract class World {
     }
 
     public void tick() {
-    }
-
-
-    public HashSet<Long> set = new HashSet<>();
-
-    public void setChunk(Chunk chunk, int x, int z) {
-        chunk.setWorld(this);
-        chunk.x = x;
-        chunk.z = z;
-        putChunk(x,z,chunk);
     }
 
     public static final double stepCount = 0.01;

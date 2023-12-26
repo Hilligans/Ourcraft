@@ -20,22 +20,22 @@ public class SlabBlockShape extends BlockShape {
     public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset) {
         switch (((DataBlockState)blockState).readData()) {
             case 4:
-                data.addData(primitiveBuilder,blockTextureManager,side,size,offset,2,0);
+               // data.addData(primitiveBuilder,blockTextureManager,side,size,offset,2,0);
                 break;
             case 1:
-                data.addData(primitiveBuilder,blockTextureManager,side,size,offset,1,0);
+             //   data.addData(primitiveBuilder,blockTextureManager,side,size,offset,1,0);
                 break;
             case 0:
-                data.addData(primitiveBuilder,blockTextureManager,side,size,offset,1,2);
+             //   data.addData(primitiveBuilder,blockTextureManager,side,size,offset,1,2);
                 break;
             case 2:
-                data.addData(primitiveBuilder,blockTextureManager,side,size,offset,1,1);
+             //   data.addData(primitiveBuilder,blockTextureManager,side,size,offset,1,1);
                 break;
             case 3:
-                data.addData(primitiveBuilder,blockTextureManager,side,size,offset,3,1);
+               // data.addData(primitiveBuilder,blockTextureManager,side,size,offset,3,1);
                 break;
             default:
-                data.addData(primitiveBuilder,blockTextureManager,side,size,offset,0,0);
+               // data.addData(primitiveBuilder,blockTextureManager,side,size,offset,0,0);
                 break;
         }
     }

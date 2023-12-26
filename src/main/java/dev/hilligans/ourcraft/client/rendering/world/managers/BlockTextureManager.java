@@ -8,7 +8,6 @@ public class BlockTextureManager {
 
     public int[] textures = new int[6];
 
-    public int texture;
 
     public String[] textureNames;
     public String location;

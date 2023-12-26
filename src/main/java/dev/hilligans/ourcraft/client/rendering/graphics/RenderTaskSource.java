@@ -1,13 +1,16 @@
 package dev.hilligans.ourcraft.client.rendering.graphics;
 
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsElement;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.mod.handler.content.UnknownResourceException;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 
 import java.util.HashMap;
 
-public abstract class RenderTaskSource implements IRegistryElement {
+public abstract class RenderTaskSource implements IRegistryElement, IGraphicsElement {
 
     public HashMap<String, RenderTask> tasks = new HashMap<>();
     public RenderTask defaultTask;
@@ -55,5 +58,13 @@ public abstract class RenderTaskSource implements IRegistryElement {
     @Override
     public String getResourceType() {
         return "render_task";
+    }
+
+    @Override
+    public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
+    }
+
+    @Override
+    public void cleanup(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
     }
 }

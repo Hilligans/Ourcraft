@@ -17,8 +17,6 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class ClientWorld extends World {
 
-    public ConcurrentLinkedQueue<SubChunk> queuedChunks = new ConcurrentLinkedQueue<>();
-
     public Client client;
 
     public ClientWorld(Client client) {

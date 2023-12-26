@@ -117,7 +117,7 @@ public class BlockModel implements IModel {
     }
 
     @Override
-    public void addData(PrimitiveBuilder primitiveBuilder, BlockTextureManager textureManager, int side, float size, Vector3f offset, int rotX, int rotY) {
+    public void addData(TextAtlas textAtlas, PrimitiveBuilder primitiveBuilder, BlockTextureManager textureManager, int side, float size, Vector3f offset, int rotX, int rotY) {
         rotX = 0;
         rotY = 0;
         float[] vertices = getVertices(side,rotX,rotY);
@@ -128,10 +128,10 @@ public class BlockModel implements IModel {
                 //float[] vals = new float[vertices.length];
                 int id = textureManager.textures[side];
 
-                float startX = TextAtlas.getMinX(id);
-                float startY = TextAtlas.getMinY(id);
-                float offsetX = TextAtlas.getMaxX(id) - startX;
-                float offsetY = TextAtlas.getMaxY(id) - startY;
+                float startX = textAtlas.getMinX(id);
+                float startY = textAtlas.getMinY(id);
+                float offsetX = textAtlas.getMaxX(id) - startX;
+                float offsetY = textAtlas.getMaxY(id) - startY;
 
                 primitiveBuilder.ensureCapacity(vertices.length, indices.length);
 

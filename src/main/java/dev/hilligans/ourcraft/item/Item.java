@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.item;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
+import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
 import dev.hilligans.ourcraft.data.descriptors.TagCollection;
 import dev.hilligans.ourcraft.data.other.ItemProperties;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
@@ -118,7 +119,7 @@ public class Item implements IRecipeComponent, IRegistryElement {
         */
     }
 
-    public void addData(PrimitiveBuilder primitiveBuilder, float size) {
+    public void addData(TextAtlas textAtlas, PrimitiveBuilder primitiveBuilder, float size) {
         //itemProperties.itemModel.addData(primitiveBuilder,itemProperties.itemTextureManager,0,size,null,0,0);
     }
 

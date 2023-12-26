@@ -1,6 +1,5 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.api;
 
-import dev.hilligans.ourcraft.client.rendering.graphics.GraphicsData;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.world.StringRenderer;
 import dev.hilligans.ourcraft.GameInstance;
@@ -11,13 +10,11 @@ public abstract class GraphicsEngineBase<Q extends RenderWindow,V extends IDefau
 
     public StringRenderer stringRenderer;
     public ArrayList<Q> windows = new ArrayList<>();
-    public GraphicsData graphicsData;
 
     public GameInstance gameInstance;
 
 
     public GraphicsEngineBase() {
-        graphicsData = new GraphicsData(this);
     }
 
     @Override
@@ -34,11 +31,6 @@ public abstract class GraphicsEngineBase<Q extends RenderWindow,V extends IDefau
     @Override
     public ArrayList<Q> getWindows() {
         return windows;
-    }
-
-    @Override
-    public GraphicsData getGraphicsData() {
-        return graphicsData;
     }
 
     @Override

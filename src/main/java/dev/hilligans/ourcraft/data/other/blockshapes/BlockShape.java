@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.BlockModel;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
+import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
 import dev.hilligans.ourcraft.data.other.blockstates.BlockState;
 import dev.hilligans.ourcraft.client.rendering.world.managers.BlockTextureManager;
 import dev.hilligans.ourcraft.client.rendering.world.managers.VAOManager;
@@ -51,30 +52,30 @@ public class BlockShape {
         return boundingBoxes.getOrDefault(val,defaultBoundingBox).duplicate();
     }
 
-    public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset) {
+    public void addVertices(TextAtlas textAtlas, PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset) {
         int rot = getRotation(blockState);
         if (rot != -1) {
-            getModel(blockState).addData(primitiveBuilder,blockTextureManager,side,size,offset,rot & 3,(rot & 12) >> 2);
+            getModel(blockState).addData(textAtlas, primitiveBuilder,blockTextureManager,side,size,offset,rot & 3,(rot & 12) >> 2);
         } else {
-            getModel(blockState).addData(primitiveBuilder, blockTextureManager, side, size, offset, 0, 0);
+            getModel(blockState).addData(textAtlas, primitiveBuilder, blockTextureManager, side, size, offset, 0, 0);
         }
     }
 
-    public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset, float offsetX, float offsetY, float offsetZ) {
+    public void addVertices(TextAtlas textAtlas, PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset, float offsetX, float offsetY, float offsetZ) {
         int rot = getRotation(blockState);
         if (rot != -1) {
-            getModel(blockState).addData(primitiveBuilder,blockTextureManager,side,size,offset.add(offsetX,offsetY,offsetZ),rot & 3,(rot & 12) >> 2);
+            getModel(blockState).addData(textAtlas, primitiveBuilder,blockTextureManager,side,size,offset.add(offsetX,offsetY,offsetZ),rot & 3,(rot & 12) >> 2);
         } else {
-            getModel(blockState).addData(primitiveBuilder, blockTextureManager, side, size, offset.add(offsetX, offsetY, offsetZ), 0, 0);
+            getModel(blockState).addData(textAtlas, primitiveBuilder, blockTextureManager, side, size, offset.add(offsetX, offsetY, offsetZ), 0, 0);
         }
     }
 
-    public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, IBlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset, float offsetX, float offsetY, float offsetZ) {
+    public void addVertices(TextAtlas textAtlas, PrimitiveBuilder primitiveBuilder, int side, float size, IBlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset, float offsetX, float offsetY, float offsetZ) {
         int rot = blockState.getBlock().getRotation(blockState);
         if (rot != -1) {
-            getModel(blockState).addData(primitiveBuilder,blockTextureManager,side,size,offset.add(offsetX,offsetY,offsetZ),rot & 3,(rot & 12) >> 2);
+            getModel(blockState).addData(textAtlas, primitiveBuilder,blockTextureManager,side,size,offset.add(offsetX,offsetY,offsetZ),rot & 3,(rot & 12) >> 2);
         } else {
-            getModel(blockState).addData(primitiveBuilder, blockTextureManager, side, size, offset.add(offsetX, offsetY, offsetZ), 0, 0);
+            getModel(blockState).addData(textAtlas, primitiveBuilder, blockTextureManager, side, size, offset.add(offsetX, offsetY, offsetZ), 0, 0);
         }
     }
 
