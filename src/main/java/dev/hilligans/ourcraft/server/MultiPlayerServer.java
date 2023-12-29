@@ -107,6 +107,13 @@ public class MultiPlayerServer implements IServer {
         return gameInstance;
     }
 
+    @Override
+    public void stop() {
+        if(serverNetwork != null) {
+            serverNetwork.close();
+        }
+    }
+
     static class PlayerHandler implements Runnable {
 
         MultiPlayerServer server;

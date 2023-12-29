@@ -85,4 +85,9 @@ public class IntegratedServer implements IServer {
     public GameInstance getGameInstance() {
         return null;
     }
+
+    @Override
+    public void stop() {
+
+    }
 }

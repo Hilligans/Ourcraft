@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft;
 
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
+import dev.hilligans.ourcraft.client.rendering.newrenderer.TextureAtlas;
 import dev.hilligans.ourcraft.data.other.BoundingBox;
 import dev.hilligans.ourcraft.util.ArgumentContainer;
 import dev.hilligans.ourcraft.util.Side;
@@ -44,14 +45,19 @@ public class ClientMain {
         }
 
         Client client = new Client(gameInstance, argumentContainer);
-        Client client1 = new Client(gameInstance, argumentContainer);
+       // Client client1 = new Client(gameInstance, argumentContainer);
         String graphicsEngine = argumentContainer.getString("--graphicsEngine", null);
         if(graphicsEngine != null) {
             System.out.println(graphicsEngine);
             client.setGraphicsEngine(gameInstance.GRAPHICS_ENGINES.get(graphicsEngine));
-            client1.setGraphicsEngine(gameInstance.GRAPHICS_ENGINES.get(graphicsEngine));
+          //  client1.setGraphicsEngine(gameInstance.GRAPHICS_ENGINES.get(graphicsEngine));
         }
-        client1.setupClient();
+        //client1.setupClient();
         client.startClient();
+        Ourcraft.EXECUTOR.shutdownNow();
+        TextureAtlas.EXECUTOR.shutdownNow();
+        if(argumentContainer.getBoolean("--integratedServer", false)) {
+            ServerMain.getServer().stop();
+        }
     }
 }

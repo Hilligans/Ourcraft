@@ -61,7 +61,7 @@ public class NuklearLayout implements ILayout {
                     .vertex_layout(VERTEX_LAYOUT)
                     .vertex_size(20)
                     .vertex_alignment(4)
-                    .null_texture(this.engine.null_texture)
+                    .tex_null(this.engine.null_texture)
                     .circle_segment_count(22)
                     .curve_segment_count(22)
                     .arc_segment_count(22)

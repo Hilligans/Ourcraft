@@ -23,6 +23,7 @@ public abstract class RenderWindow {
 
     public FrameTracker frameTracker = new FrameTracker();
     public RenderPipeline renderPipeline;
+    public PipelineInstance pipelineInstance;
 
     public ICamera camera;
     public IGraphicsEngine<?,?,?> graphicsEngine;
@@ -54,7 +55,7 @@ public abstract class RenderWindow {
 
     public void render(GraphicsContext graphicsContext, Client client, MatrixStack worldStack, MatrixStack screenStack) {
         ISection section = graphicsContext.getSection();
-        for(RenderTask renderTask : renderPipeline.renderTasks) {
+        for(RenderTask renderTask : pipelineInstance.tasks) {
             try(var $ = section.startSection(renderTask.getIdentifierName())) {
                 PipelineState pipelineState = renderTask.getPipelineState();
                 graphicsContext.setPipelineState(false);
@@ -72,7 +73,8 @@ public abstract class RenderWindow {
             throw new NullPointerException();
         }
         this.renderPipeline = renderPipeline;
-        this.renderPipeline.build(this);
+        this.pipelineInstance = this.renderPipeline.buildTargets(graphicsEngine);
+        this.pipelineInstance.load(graphicsEngine.getGameInstance(), graphicsEngine, graphicsEngine.getGraphicsContext());
     }
 
     public void setRenderPipeline(String name) {

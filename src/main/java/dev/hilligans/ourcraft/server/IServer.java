@@ -29,6 +29,8 @@ public interface IServer {
 
     GameInstance getGameInstance();
 
+    void stop();
+
     class Server implements Runnable {
         public IServer server;
         //public IGameProcessor gameProcessor = new TE2GameProcessor(new TickEngineSettings());

@@ -11,10 +11,13 @@ public class FileLoader {
     public static void openFile(String acceptedFiles, String defaultPath, HandleFile handleFile) {
         PointerBuffer outPath = memAllocPointer(1);
         try {
+            /*
             checkResult(
                     NFD_OpenDialog(acceptedFiles, defaultPath, outPath),
                     outPath, handleFile
-            );
+
+             */
+            //);
         } finally {
             memFree(outPath);
         }
@@ -24,7 +27,7 @@ public class FileLoader {
         switch (result) {
             case NFD_OKAY:
                 handleFile.success(path);
-                nNFD_Free(path.get(0));
+                //nNFD_Free(path.get(0));
                 break;
             case NFD_CANCEL:
                 handleFile.cancel();

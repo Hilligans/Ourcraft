@@ -133,7 +133,13 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
     @Override
     public void close() {
         gameInstance.cleanupGraphics(this, getGraphicsContext());
+        for(RenderWindow renderWindow : windows) {
+            if(renderWindow.pipelineInstance != null) {
+                renderWindow.pipelineInstance.cleanup(getGameInstance(), this, getGraphicsContext());
+            }
+        }
         stringRenderer.close(engineImpl, getGraphicsContext());
+
         engineImpl.close();
         glfwTerminate();
     }

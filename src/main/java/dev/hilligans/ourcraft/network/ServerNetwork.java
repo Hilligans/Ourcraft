@@ -17,6 +17,9 @@ public class ServerNetwork extends Network {
     public GameInstance gameInstance;
     public IServer server;
 
+    EventLoopGroup bossGroup;
+    EventLoopGroup workerGroup;
+
     public ServerNetwork(Protocol protocol, IServer server) {
         super(protocol);
         this.server = server;
@@ -30,8 +33,8 @@ public class ServerNetwork extends Network {
 
         SelfSignedCertificate ssc = new SelfSignedCertificate();
         sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
-        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        bossGroup = new NioEventLoopGroup(1);
+        workerGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
@@ -50,5 +53,14 @@ public class ServerNetwork extends Network {
     public ServerNetwork debug(boolean debug) {
         super.debug(debug);
         return this;
+    }
+
+    public void close() {
+        if(bossGroup != null) {
+            bossGroup.shutdownGracefully();
+        }
+        if(workerGroup != null) {
+            workerGroup.shutdownGracefully();
+        }
     }
 }

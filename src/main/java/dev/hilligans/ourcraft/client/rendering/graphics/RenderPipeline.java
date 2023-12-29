@@ -18,7 +18,6 @@ public class RenderPipeline implements IRegistryElement, IGraphicsElement {
    // public RenderWindow window;
 
     public ArrayList<RenderTarget> renderTargets = new ArrayList<>();
-    public ArrayList<RenderTask> renderTasks = new ArrayList<>();
 
     public RenderPipeline(String name) {
         this.name = name;
@@ -60,14 +59,16 @@ public class RenderPipeline implements IRegistryElement, IGraphicsElement {
         //this.window = window;
     }
 
-    public void buildTargets(IGraphicsEngine<?, ?, ?> graphicsEngine) {
+    public PipelineInstance buildTargets(IGraphicsEngine<?, ?, ?> graphicsEngine) {
+        ArrayList<RenderTask> tasks = new ArrayList<>();
         for(RenderTarget renderTarget : renderTargets) {
             for (RenderTaskSource renderTaskSource : modContent.getGameInstance().RENDER_TASK.ELEMENTS) {
                 if(renderTaskSource.renderTargetName.equals(renderTarget.getIdentifierName())) {
-                    renderTasks.add(renderTaskSource.getTask(graphicsEngine.getIdentifierName()));
+                    tasks.add(renderTaskSource.getTask(graphicsEngine.getIdentifierName()));
                 }
             }
         }
+        return new PipelineInstance(this, tasks);
     }
 
     @Override
@@ -105,21 +106,14 @@ public class RenderPipeline implements IRegistryElement, IGraphicsElement {
                 "name='" + name + '\'' +
                // ", window=" + window +
                 ", renderTargets=" + renderTargets +
-                ", renderTasks=" + renderTasks +
                 '}';
     }
 
     @Override
     public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
-        for(RenderTask renderTask : renderTasks) {
-            renderTask.load(gameInstance, graphicsEngine, graphicsContext);
-        }
     }
 
     @Override
     public void cleanup(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
-        for(RenderTask renderTask : renderTasks) {
-            renderTask.cleanup(gameInstance, graphicsEngine, graphicsContext);
-        }
     }
 }
