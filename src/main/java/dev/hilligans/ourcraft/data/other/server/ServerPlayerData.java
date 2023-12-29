@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.data.other.server;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.container.Container;
 import dev.hilligans.ourcraft.container.containers.InventoryContainer;
 import dev.hilligans.ourcraft.container.Slot;
@@ -44,17 +45,17 @@ public class ServerPlayerData implements IServerPacketHandler {
     public UUID playerID;
     public ChannelId channelId;
 
-    public ServerPlayerData(PlayerEntity playerEntity, String id) {
+    public ServerPlayerData(GameInstance gameInstance, PlayerEntity playerEntity, String id) {
         this.playerEntity = playerEntity;
         this.id = id;
         playerInventory = playerEntity.inventory;
         openContainer = new InventoryContainer(playerInventory).setPlayerId(playerEntity.id);
-        playerInventory.setItem(0,new ItemStack(Ourcraft.GAME_INSTANCE.getItem("chest"), (byte)2));
-        playerInventory.setItem(1,new ItemStack(Ourcraft.GAME_INSTANCE.getItem("slab"), (byte)10));
-        playerInventory.setItem(2,new ItemStack(Ourcraft.GAME_INSTANCE.getItem("weeping_vine"), (byte)64));
-        playerInventory.setItem(3,new ItemStack(Ourcraft.GAME_INSTANCE.getItem("stair"), (byte)63));
-        playerInventory.setItem(4,new ItemStack(Ourcraft.GAME_INSTANCE.getItem("grass_plant"), (byte)63));
-        playerInventory.setItem(5,new ItemStack(Ourcraft.GAME_INSTANCE.getItem("blue"),(byte)63));
+        playerInventory.setItem(0,new ItemStack(gameInstance.getItem("chest"), (byte)2));
+        playerInventory.setItem(1,new ItemStack(gameInstance.getItem("slab"), (byte)10));
+        playerInventory.setItem(2,new ItemStack(gameInstance.getItem("weeping_vine"), (byte)64));
+        playerInventory.setItem(3,new ItemStack(gameInstance.getItem("stair"), (byte)63));
+        playerInventory.setItem(4,new ItemStack(gameInstance.getItem("grass_plant"), (byte)63));
+        playerInventory.setItem(5,new ItemStack(gameInstance.getItem("blue"),(byte)63));
     }
 
     public ServerPlayerData(PlayerEntity playerEntity, String id, CompoundNBTTag tag) {
@@ -103,10 +104,10 @@ public class ServerPlayerData implements IServerPacketHandler {
         return playerName;
     }
 
-    public static ServerPlayerData loadOrCreatePlayer(PlayerEntity playerEntity, String id) {
+    public static ServerPlayerData loadOrCreatePlayer(GameInstance gameInstance, PlayerEntity playerEntity, String id) {
         CompoundNBTTag tag = WorldLoader.loadTag(path + id + ".dat");
             if(tag == null) {
-            return new ServerPlayerData(playerEntity,id);
+            return new ServerPlayerData(gameInstance, playerEntity,id);
         } else {
             return new ServerPlayerData(playerEntity,id,tag);
         }

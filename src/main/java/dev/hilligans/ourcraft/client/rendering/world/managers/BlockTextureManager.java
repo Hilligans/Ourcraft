@@ -55,9 +55,9 @@ public class BlockTextureManager {
         if(location != null) {
             for(int x = 0; x < 6; x++) {
                 if(textureNames != null) {
-                    colors[x] = Ourcraft.getResourceManager().getColor("Blocks/" + (textureNames[x] == null ? location : textureNames[x]));
+                    colors[x] = textAtlas.gameInstance.RESOURCE_MANAGER.getColor("Blocks/" + (textureNames[x] == null ? location : textureNames[x]));
                 } else {
-                    colors[x] = Ourcraft.getResourceManager().getColor("Blocks/" + location);
+                    colors[x] = textAtlas.gameInstance.RESOURCE_MANAGER.getColor("Blocks/" + location);
                 }
             }
         }

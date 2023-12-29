@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.world.newworldsystem;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.data.other.BlockPos;
@@ -17,7 +18,7 @@ import java.util.Iterator;
 public interface IWorld {
 
     String getName();
-    
+
     int getID();
 
     void tick();
@@ -139,6 +140,8 @@ public interface IWorld {
     default Iterable<IChunk> getChunks(BlockPos min, BlockPos max) {
         return getChunks(min.getX(), min.getY(), min.getZ(), max.getX(), max.getY(), max.getZ());
     }
+
+    GameInstance getGameInstance();
 
     default Iterable<IChunk> getChunks(long minX, long minY, long minZ, long maxX, long maxY, long maxZ) {
         return new Iterable<>() {

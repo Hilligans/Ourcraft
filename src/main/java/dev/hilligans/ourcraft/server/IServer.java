@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.server;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.mod.handler.events.server.ServerTickEvent;
@@ -25,6 +26,8 @@ public interface IServer {
     void sendPacket(PacketBase packetBase);
 
     void sendPacket(PacketBase packetBase, PlayerEntity playerEntity);
+
+    GameInstance getGameInstance();
 
     class Server implements Runnable {
         public IServer server;

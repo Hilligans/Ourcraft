@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.server;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.command.executors.ConsoleExecutor;
 import dev.hilligans.ourcraft.command.Commands;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
@@ -78,5 +79,10 @@ public class IntegratedServer implements IServer {
     @Override
     public void sendPacket(PacketBase packetBase, PlayerEntity playerEntity) {
         sendPacket(packetBase);
+    }
+
+    @Override
+    public GameInstance getGameInstance() {
+        return null;
     }
 }

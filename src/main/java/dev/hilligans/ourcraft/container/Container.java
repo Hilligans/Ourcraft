@@ -83,7 +83,7 @@ public abstract class Container {
 
     public void addWidget(Widget widget) {
         if(widget instanceof Button && !Settings.isServer) {
-            ((Button) widget).buttonAction = () -> ClientMain.getClient().sendPacket(new CActivateButton(widgets.size()));
+         //   ((Button) widget).buttonAction = () -> ClientMain.getClient().sendPacket(new CActivateButton(widgets.size()));
         }
         widgets.add(widget);
     }
@@ -97,7 +97,7 @@ public abstract class Container {
         for(Slot slot : slots) {
             slot.render(matrixStack);
         }
-        DoubleBuffer mousePos = ClientMain.getClient().getMousePos();
+        DoubleBuffer mousePos = window.getClient().getMousePos();
         Slot slot = getSlotAt((int)mousePos.get(0),(int)mousePos.get(1));
         if(slot != null && !slot.getContents().isEmpty()) {
             window.getStringRenderer().drawStringWithBackgroundTranslated(window, matrixStack,slot.getContents().item.getName(),(int)mousePos.get(0) + 16,(int)mousePos.get(1),0.5f);
@@ -185,11 +185,11 @@ public abstract class Container {
 
     public static final ArrayList<ContainerFetcher> CONTAINERS = new ArrayList<>();
 
-    public static Container getContainer(int slot) {
+    public static Container getContainer(int slot, Client client) {
         if(slot >= CONTAINERS.size()) {
             return null;
         } else {
-            return CONTAINERS.get(slot).getContainer();
+            return CONTAINERS.get(slot).getContainer(client);
         }
     }
 

@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.world.newworldsystem;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.BoundingBox;
@@ -26,8 +27,8 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
     public ConcurrentLinkedQueue<Consumer<IServerWorld>> postTickFutures = new ConcurrentLinkedQueue<>();
 
 
-    public ServerCubicWorld(int id, String worldName, int radius, IWorldHeightBuilder worldHeightBuilder) {
-        super(id, worldName, radius);
+    public ServerCubicWorld(GameInstance gameInstance, int id, String worldName, int radius, IWorldHeightBuilder worldHeightBuilder) {
+        super(gameInstance, id, worldName, radius);
         this.worldHeightBuilder = worldHeightBuilder;
     }
 

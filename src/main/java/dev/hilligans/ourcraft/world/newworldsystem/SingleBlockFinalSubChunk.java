@@ -31,12 +31,12 @@ public class SingleBlockFinalSubChunk implements IAtomicSubChunk {
     }
 
     @Override
-    public IBlockState getBlockState(int x, int y, int z) {
+    public IBlockState getBlockState(IWorld world, int x, int y, int z) {
         return blockState;
     }
 
     @Override
-    public IBlockState setBlockState(int x, int y, int z, IBlockState blockState) {
+    public IBlockState setBlockState(IWorld world, int x, int y, int z, IBlockState blockState) {
         if(CHECKED && blockState != this.blockState) {
             throw new EngineImplementationException("canInsertOrGetNext will always return a new subchunk when states dont match so a blockstate set should never be attempted here");
         }

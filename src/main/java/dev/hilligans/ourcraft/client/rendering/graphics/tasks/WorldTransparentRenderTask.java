@@ -40,7 +40,7 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
 
     public ExecutorService chunkBuilder = Executors.newFixedThreadPool(2);
 
-    TextAtlas textAtlas = new TextAtlas();
+    TextAtlas textAtlas;
 
     @Override
     public RenderTask getDefaultTask() {
@@ -217,6 +217,7 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
 
     @Override
     public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
+        textAtlas = new TextAtlas(gameInstance);
         for(Block block : gameInstance.getBlocks()) {
             if(block.blockProperties.translucent) {
                 block.generateTextures(textAtlas);

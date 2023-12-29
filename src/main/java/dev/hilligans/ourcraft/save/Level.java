@@ -35,9 +35,9 @@ public class Level {
         return blocks.get(name).getTypeA();
     }
 
-    public Block getBlock(int id) {
-        return Ourcraft.GAME_INSTANCE.BLOCKS.MAPPED_ELEMENTS.getOrDefault(idToNames.get(id),Blocks.AIR);
-    }
+   // public Block getBlock(int id) {
+   //     return Ourcraft.GAME_INSTANCE.BLOCKS.MAPPED_ELEMENTS.getOrDefault(idToNames.get(id),Blocks.AIR);
+    //}
 
     public int ensureHasBlock(Block block) {
         if(blocks.get(block.getName()) == null) {

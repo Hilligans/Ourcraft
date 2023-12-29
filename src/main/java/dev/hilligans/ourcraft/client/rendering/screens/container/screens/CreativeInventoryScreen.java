@@ -13,7 +13,7 @@ public class CreativeInventoryScreen extends ContainerScreen<CreativeContainer> 
 
     @Override
     public CreativeContainer getContainer() {
-        return new CreativeContainer();
+        return new CreativeContainer(getClient());
     }
 
     @Override

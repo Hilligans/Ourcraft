@@ -49,9 +49,9 @@ public class JoinScreen extends ScreenBase {
             //ServerWorld world = new ServerWorld(ClientMain.gameInstance);
             //world.worldBuilders.add( new OreBuilder("stone", Blocks.GRASS,Blocks.STONE).setFrequency(20));
 
-            client.multiPlayerServer = new MultiPlayerServer();
+          //  client.multiPlayerServer = new MultiPlayerServer();
             //client.multiPlayerServer.addWorld(0,world);
-            ServerMain.server = client.multiPlayerServer;
+        //    ServerMain.server = client.multiPlayerServer;
             int port = 0;
             try {
                 port = PortUtil.getOpenPort();
@@ -60,9 +60,10 @@ public class JoinScreen extends ScreenBase {
                 return;
             }
             String portString = port + "";
-            Thread thread = new Thread(() -> client.multiPlayerServer.startServer(portString));
-            thread.setName("client_networking");
-            thread.start();
+          //  Thread thread = new Thread(() -> client.multiPlayerServer.startServer(portString));
+          //  thread.setName("client_networking");
+          //  thread.setDaemon(true);
+          //  thread.start();
             this.portString = portString;
         }));
 

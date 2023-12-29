@@ -49,7 +49,7 @@ public class PlaneTestCullingEngine extends CullingEngine {
         for(int x = 0; x < 16; x++) {
             for(int y = 0; y < 16; y++) {
                 for(int z = 0; z < 16; z++) {
-                    if(chunk.getBlockState(x,y,z).getBlock().blockProperties.transparent) {
+                    if(chunk.getBlockState(null, x,y,z).getBlock().blockProperties.transparent) {
                         vals[x][y] |= 1 << z;
                         recursivelyCheck(chunk,vals,x,y,z);
                         if(checkFace(vals,0,true,false,false) && checkFace(vals,15,true,false,false)) {
@@ -100,37 +100,37 @@ public class PlaneTestCullingEngine extends CullingEngine {
 
     public static void recursivelyCheck(ISubChunk chunk, short[][] vals, int x, int y, int z) {
         boolean posZ = false, negZ = false, posX = false, negX = false, posY = false, negY = false;
-        if(z != 15 && chunk.getBlockState(x,y,z + 1).getBlock().blockProperties.transparent) {
+        if(z != 15 && chunk.getBlockState(null, x,y,z + 1).getBlock().blockProperties.transparent) {
             if ((vals[x][y] & (1 << z + 1)) == 0) {
                 vals[x][y] |= 1 << z + 1;
                 posZ = true;
             }
         }
-        if(z != 0 && chunk.getBlockState(x,y,z - 1).getBlock().blockProperties.transparent) {
+        if(z != 0 && chunk.getBlockState(null, x,y,z - 1).getBlock().blockProperties.transparent) {
             if ((vals[x][y] & (1 << z - 1)) == 0) {
                 vals[x][y] |= 1 << z - 1;
                 negZ = true;
             }
         }
-        if(x != 15 && chunk.getBlockState(x + 1,y,z).getBlock().blockProperties.transparent) {
+        if(x != 15 && chunk.getBlockState(null, x + 1,y,z).getBlock().blockProperties.transparent) {
             if ((vals[x + 1][y] & (1 << z)) == 0) {
                 vals[x + 1][y] |= 1 << z;
                 posX = true;
             }
         }
-        if(x != 0 && chunk.getBlockState(x - 1,y,z).getBlock().blockProperties.transparent) {
+        if(x != 0 && chunk.getBlockState(null, x - 1,y,z).getBlock().blockProperties.transparent) {
             if ((vals[x - 1][y] & (1 << z)) == 0) {
                 vals[x - 1][y] |= 1 << z;
                 negX = true;
             }
         }
-        if(y != 15 && chunk.getBlockState(x,y + 1,z).getBlock().blockProperties.transparent) {
+        if(y != 15 && chunk.getBlockState(null, x,y + 1,z).getBlock().blockProperties.transparent) {
             if ((vals[x][y + 1] & (1 << z)) == 0) {
                 vals[x][y + 1] |= 1 << z;
                 posY = true;
             }
         }
-        if(y != 0 && chunk.getBlockState(x,y - 1,z).getBlock().blockProperties.transparent) {
+        if(y != 0 && chunk.getBlockState(null, x,y - 1,z).getBlock().blockProperties.transparent) {
             if ((vals[x][y - 1] & (1 << z)) == 0) {
                 vals[x][y - 1] |= 1 << z;
                 negY = true;

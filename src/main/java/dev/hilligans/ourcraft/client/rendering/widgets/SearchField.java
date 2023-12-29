@@ -51,7 +51,7 @@ public class SearchField extends Widget {
                 if(key == 'v' && KeyHandler.keyPressed[GLFW.GLFW_KEY_LEFT_CONTROL]) {
                     try {
                         //System.out.println("adding clipboard");
-                        string += GLFW.glfwGetClipboardString(ClientMain.getClient().window);
+                        //string += GLFW.glfwGetClipboardString(ClientMain.getClient().window);
                         //string += Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
                     } catch (Exception ignored) {
                         ignored.printStackTrace();

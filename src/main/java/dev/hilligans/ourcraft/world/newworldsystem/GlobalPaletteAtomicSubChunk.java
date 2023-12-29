@@ -35,12 +35,12 @@ public class GlobalPaletteAtomicSubChunk implements IAtomicSubChunk {
     }
 
     @Override
-    public IBlockState getBlockState(int x, int y, int z) {
+    public IBlockState getBlockState(IWorld world, int x, int y, int z) {
         return blockStates.get((blocks[getIndex(x, y, z)]));
     }
 
     @Override
-    public IBlockState setBlockState(int x, int y, int z, IBlockState blockState) {
+    public IBlockState setBlockState(IWorld world, int x, int y, int z, IBlockState blockState) {
         int id = blockState.getBlockStateID();
         blocks[getIndex(x, y, z)] = (short) id;
         return blockStates.get(id);

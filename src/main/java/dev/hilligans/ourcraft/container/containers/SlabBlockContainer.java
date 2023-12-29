@@ -10,8 +10,8 @@ import dev.hilligans.ourcraft.data.other.JoinedInventory;
 
 public class SlabBlockContainer extends Container {
 
-    public SlabBlockContainer() {
-        this(new Inventory(3), ClientMain.getClient().playerData.inventory);
+    public SlabBlockContainer(Client client) {
+        this(new Inventory(3), client.playerData.inventory);
     }
 
     public SlabBlockContainer(Inventory inventory, Inventory playerInventory) {

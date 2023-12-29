@@ -25,12 +25,12 @@ public class SSendModContentPacket extends PacketBase {
 
     @Override
     public void decode(IPacketByteArray packetData) {
-        modContent = new ModContent(packetData, Ourcraft.GAME_INSTANCE);
+        //modContent = new ModContent(packetData, Ourcraft.GAME_INSTANCE);
     }
 
     @Override
     public void handle() {
-        Ourcraft.GAME_INSTANCE.CONTENT_PACK.putMod(modContent);
-        Ourcraft.GAME_INSTANCE.CONTENT_PACK.generateData();
+        //Ourcraft.GAME_INSTANCE.CONTENT_PACK.putMod(modContent);
+        //Ourcraft.GAME_INSTANCE.CONTENT_PACK.generateData();
     }
 }

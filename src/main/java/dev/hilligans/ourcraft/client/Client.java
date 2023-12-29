@@ -14,6 +14,7 @@ import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanEngine;
 import dev.hilligans.ourcraft.client.rendering.Screen;
 import dev.hilligans.ourcraft.client.rendering.ScreenBuilder;
+import dev.hilligans.ourcraft.client.rendering.screens.JoinScreen;
 import dev.hilligans.ourcraft.client.rendering.screens.container.screens.CreativeInventoryScreen;
 import dev.hilligans.ourcraft.client.rendering.screens.container.screens.InventoryScreen;
 import dev.hilligans.ourcraft.ClientMain;
@@ -69,13 +70,9 @@ public class Client implements IClientPacketHandler {
     public Screen screen;
     public SoundEngine soundEngine;
 
-    public int texture;
-
-    public boolean refreshTexture = true;
-
     public ClientPlayerData playerData = new ClientPlayerData();
     //public IWorld newClientWorld = new SimpleWorld(0,"");
-    public IWorld newClientWorld = new CubicWorld(0,"", 64);
+    public IWorld newClientWorld;
 
     public MultiPlayerServer multiPlayerServer;
     public boolean rendering = false;
@@ -95,6 +92,7 @@ public class Client implements IClientPacketHandler {
 
     public Client(GameInstance gameInstance, ArgumentContainer argumentContainer) {
         this.gameInstance = gameInstance;
+        this.newClientWorld = new CubicWorld(gameInstance, 0,"", 64);
         logger = gameInstance.LOGGER.withKey("client");
         graphicsEngine = gameInstance.GRAPHICS_ENGINES.get("ourcraft:openglEngine");
         ((OpenGLEngine)graphicsEngine).client = this;
@@ -114,9 +112,9 @@ public class Client implements IClientPacketHandler {
         return this;
     }
 
-    public void startClient() {
+    public void setupClient() {
         network = new ClientNetwork(gameInstance.PROTOCOLS.get("Play")).debug(argumentContainer.getBoolean("--packetTrace", false));
-        authNetwork = new ClientNetwork(gameInstance.PROTOCOLS.get("Auth"));
+        /*authNetwork = new ClientNetwork(gameInstance.PROTOCOLS.get("Auth"));
 
         CompoundNBTTag tag = WorldLoader.loadTag("clientData.dat");
         if(tag != null) {
@@ -126,30 +124,43 @@ public class Client implements IClientPacketHandler {
                 } catch (Exception e) {}
             });
             thread.setName("authenticate");
+            thread.setDaemon(true);
             thread.start();
         }
         if(tag != null) {
             readUsernameAndPassword(tag);
         }
         authNetwork.sendPacket(new CGetToken(playerData.userName, playerData.login_token));
-        RenderWindow window = graphicsEngine.startEngine();
-        window.setClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        soundEngine.init(window.getCamera());
-        soundEngine.setAttenuationModel(AL11.AL_LINEAR_DISTANCE_CLAMPED);
-        registerKeyHandlers();
+         */
 
-       // SplitWindow splitWindow = new SplitWindow(graphicsEngine, window);
-       // SubWindow subWindow = new SubWindow(graphicsEngine, splitWindow, window.getWindowWidth()/2, window.getWindowHeight()/2, graphicsEngine.getContext());
-       // subWindow.setRenderPipeline(window.renderPipeline);
-       // splitWindow.setRenderPipeline("ourcraft:split_window_pipeline");
-       // splitWindow.addWindow(subWindow);
+        RenderWindow window = graphicsEngine.startEngine();
+        window.setClient(this);
+        client.screen = new JoinScreen();
+        client.screen.setWindow(window);
+
+        window.setClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        if(soundEngine.camera == null) {
+            soundEngine.init(window.getCamera());
+            soundEngine.setAttenuationModel(AL11.AL_LINEAR_DISTANCE_CLAMPED);
+        }
+        //registerKeyHandlers();
+
+        // SplitWindow splitWindow = new SplitWindow(graphicsEngine, window);
+        // SubWindow subWindow = new SubWindow(graphicsEngine, splitWindow, window.getWindowWidth()/2, window.getWindowHeight()/2, graphicsEngine.getContext());
+        // subWindow.setRenderPipeline(window.renderPipeline);
+        // splitWindow.setRenderPipeline("ourcraft:split_window_pipeline");
+        // splitWindow.addWindow(subWindow);
 
         rWindow = window;
+    }
+
+    public void startClient() {
+        setupClient();
+
         System.err.println("Time to start running: " + (System.currentTimeMillis() - ClientMain.startTime));
-        graphicsEngine.createRenderLoop(gameInstance, window).run();
+        graphicsEngine.createRenderLoop(gameInstance, rWindow).run();
         graphicsEngine.close();
         cleanUp();
-        System.exit(1);
     }
 
     public RenderWindow rWindow;
@@ -413,5 +424,10 @@ public class Client implements IClientPacketHandler {
     @Override
     public IWorld getWorld() {
         return newClientWorld;
+    }
+
+    @Override
+    public GameInstance getGameInstance() {
+        return gameInstance;
     }
 }

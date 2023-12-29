@@ -88,7 +88,7 @@ public class CubicChunk implements IAtomicChunk {
         if(subChunks[index] == null) {
             return Blocks.AIR.getDefaultState();
         }
-        return subChunks[index].getBlockState((int) (x & 15), (int) (y & 15), (int) (z & 15));
+        return subChunks[index].getBlockState(world, (int) (x & 15), (int) (y & 15), (int) (z & 15));
     }
 
     @Override
@@ -106,11 +106,11 @@ public class CubicChunk implements IAtomicChunk {
         }
         ISubChunk repl = subChunk.canInsertOrGetNext(blockState);
         if(repl != null) {
-            repl.setBlockState((int) (x & 15), (int) (y & 15), (int) (z & 15), blockState);
+            repl.setBlockState(world, (int) (x & 15), (int) (y & 15), (int) (z & 15), blockState);
             subChunks[index] = repl;
             return;
         }
-        subChunk.setBlockState((int) (x & 15), (int) (y & 15), (int) (z & 15), blockState);
+        subChunk.setBlockState(world, (int) (x & 15), (int) (y & 15), (int) (z & 15), blockState);
     }
 
     @Override
@@ -123,7 +123,7 @@ public class CubicChunk implements IAtomicChunk {
                 if(subChunk instanceof IAtomicSubChunk atomicSubChunk) {
                     ISubChunk newChunk = subChunk.canInsertOrGetNext(blockState);
                     if(newChunk != null) {
-                        newChunk.setBlockState((int) (x & 15), (int) (y & 15), (int) (z & 15), blockState);
+                        newChunk.setBlockState(world, (int) (x & 15), (int) (y & 15), (int) (z & 15), blockState);
                         if(ARRAY_HANDLE.weakCompareAndSet(subChunks, index, subChunk, newChunk)) {
                             return;
                         }

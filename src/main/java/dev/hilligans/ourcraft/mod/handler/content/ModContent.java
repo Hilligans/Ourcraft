@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.mod.handler.content;
 
 import dev.hilligans.ourcraft.biome.Biome;
 import dev.hilligans.ourcraft.block.Block;
+import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.audio.SoundBuffer;
 import dev.hilligans.ourcraft.client.input.Input;
 import dev.hilligans.ourcraft.client.input.InputHandlerProvider;
@@ -93,10 +94,10 @@ public class ModContent {
         readData(packetData);
         if(Settings.cacheDownloadedMods) {
             if(Settings.storeServerModsIndividually) {
-                String ip = ClientMain.getClient().serverIP.replace(':','_');
-                if(!ip.equals("")) {
+                //String ip = ClientMain.getClient().serverIP.replace(':','_');
+                //if(!ip.equals("")) {
                    // WorldLoader.write("mod_cache/servers/" + ip + "/" + getModID() + "-" + version + ".dat",packetData.toByteBuffer());
-                }
+                //}
             } else {
                // WorldLoader.write("mod_cache/mods/" + getModID() + "-" + version + ".dat",packetData.toByteBuffer());
             }
@@ -118,8 +119,8 @@ public class ModContent {
         return this;
     }
 
-    public static ModContent readLocal(String name,GameInstance gameInstance) {
-        ByteBuffer buffer = WorldLoader.readBuffer("mod_cache/" + (Settings.storeServerModsIndividually ? "servers/" + ClientMain.getClient().serverIP.replace(':','_') + "/" : "mods/") + name + ".dat");
+    public static ModContent readLocal(String name, GameInstance gameInstance, Client client) {
+        ByteBuffer buffer = WorldLoader.readBuffer("mod_cache/" + (Settings.storeServerModsIndividually ? "servers/" + client.serverIP.replace(':','_') + "/" : "mods/") + name + ".dat");
         if(buffer != null) {
             ModContent modContent = new ModContent("", gameInstance);
             //modContent.readData(new PacketData(buffer,2));

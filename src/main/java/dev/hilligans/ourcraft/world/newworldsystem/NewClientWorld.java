@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.world.newworldsystem;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.entity.Entity;
 
 public class NewClientWorld implements IWorld {
@@ -61,6 +62,11 @@ public class NewClientWorld implements IWorld {
 
     @Override
     public Entity removeEntity(long l1, long l2) {
+        return null;
+    }
+
+    @Override
+    public GameInstance getGameInstance() {
         return null;
     }
 }

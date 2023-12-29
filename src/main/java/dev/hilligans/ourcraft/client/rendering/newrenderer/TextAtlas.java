@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering.newrenderer;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.resource.ResourceLocation;
@@ -19,6 +20,7 @@ public class TextAtlas {
     public int size = 32;
     public int minWidth = 16;
     public ExecutorService executorService;
+    public GameInstance gameInstance;
 
     public ArrayList<ImageLocation> images = new ArrayList<>();
     public Int2LongOpenHashMap ids = new Int2LongOpenHashMap();
@@ -30,7 +32,8 @@ public class TextAtlas {
     public int texture;
     int id = 0;
 
-    public TextAtlas() {
+    public TextAtlas(GameInstance gameInstance) {
+        this.gameInstance = gameInstance;
         image = new Image(size, size);
     }
 
@@ -60,7 +63,7 @@ public class TextAtlas {
         return ((long) (short) size << 32) | ((short)x << 16) | (short) y;
     }
 
-    public void assemble() {
+    public void assemble(GameInstance gameInstance) {
         long start = System.currentTimeMillis();
 
         executorService = Executors.newFixedThreadPool(4,new NamedThreadFactory("texture_atlas_builder"));
@@ -72,7 +75,7 @@ public class TextAtlas {
                 long spot = -1;
                 try (MemoryStack stack = MemoryStack.stackPush()) {
                     try {
-                        tempImage = (Image) Ourcraft.GAME_INSTANCE.RESOURCE_LOADER.getResource(new ResourceLocation(imageLocation.path, imageLocation.modId));
+                        tempImage = (Image) gameInstance.RESOURCE_LOADER.getResource(new ResourceLocation(imageLocation.path, imageLocation.modId));
                         if (tempImage == null) {
                             System.out.println(new ResourceLocation(imageLocation.path, imageLocation.modId).toIdentifier());
                             return;
@@ -105,7 +108,7 @@ public class TextAtlas {
 
     public int upload(IGraphicsEngine<?,?,?> engine) {
         clear();
-        assemble();
+        assemble(engine.getGameInstance());
         texture = (int) engine.getDefaultImpl().createTexture(null,image);
         return texture;
     }

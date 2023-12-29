@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.mod.handler.content;
 
 import dev.hilligans.ourcraft.block.Block;
+import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.audio.SoundBuffer;
 import dev.hilligans.ourcraft.client.input.Input;
 import dev.hilligans.ourcraft.client.input.InputHandlerProvider;
@@ -13,7 +14,6 @@ import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.data.primitives.Triplet;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.item.Item;
-import dev.hilligans.ourcraft.mod.handler.events.client.RenderEndEvent;
 import dev.hilligans.ourcraft.network.Protocol;
 import dev.hilligans.ourcraft.resource.registry.loaders.RegistryLoader;
 import dev.hilligans.ourcraft.resource.loaders.ResourceLoader;
@@ -38,12 +38,14 @@ public class ContentPack {
 
     public ContentPack(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
-        gameInstance.EVENT_BUS.register(t -> {
+       /* gameInstance.EVENT_BUS.register(t -> {
             if(waiting) {
                 waiting = false;
                 rebuild();
             }
         }, RenderEndEvent.class);
+
+        */
     }
 
     public void load() {
@@ -53,16 +55,16 @@ public class ContentPack {
         }
     }
 
-    private boolean waiting = false;
+    //private boolean waiting = false;
 
     public void generateData() {
         gameInstance.REBUILDING.set(true);
         ///TODO Could potentially rebuild when rendering but very unlikely
-       if(!Settings.isServer && !(ClientMain.getClient() == null || ClientMain.getClient().rendering)) {
-           waiting = true;
-       } else {
+       //if(!Settings.isServer && !(ClientMain.getClient() == null || ClientMain.getClient().rendering)) {
+       //    waiting = true;
+       //} else {
            rebuild();
-       }
+       //}
     }
 
     public void registerModContent(ModContent modContent) {
@@ -90,11 +92,6 @@ public class ContentPack {
     public boolean built = false;
 
     private void rebuild() {
-        if(!Settings.isServer) {
-            if(ClientMain.getClient() != null) {
-                ClientMain.getClient().refreshTexture = true;
-            }
-        }
         gameInstance.clear();
         gameInstance.RESOURCE_MANAGER.clearData();
 
@@ -234,8 +231,8 @@ public class ContentPack {
         }
     }
 
-    public void loadCachedMod(String name) {
-        ModContent modContent = ModContent.readLocal(name,gameInstance);
+    public void loadCachedMod(String name, Client client) {
+        ModContent modContent = ModContent.readLocal(name,gameInstance, client);
         if(modContent != null) {
             putMod(modContent);
         }

@@ -16,7 +16,7 @@ public class ChestScreen extends ContainerScreen<ChestContainer> {
 
     @Override
     public ChestContainer getContainer() {
-        return new ChestContainer();
+        return new ChestContainer(getClient());
     }
 
     @Override

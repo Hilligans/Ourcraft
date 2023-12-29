@@ -33,8 +33,12 @@ public class MultiPlayerServer implements IServer {
     public Int2ObjectOpenHashMap<IServerWorld> newWorlds = new Int2ObjectOpenHashMap<>();
     public HashMap<ChannelHandlerContext, CHandshakePacket> waitingPlayers = new HashMap<>();
     public HashMap<String, Tuple<ChannelHandlerContext,Long>> playerQueue = new HashMap<>();
-    public GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
+    public GameInstance gameInstance;
     public ServerNetwork serverNetwork;
+
+    public MultiPlayerServer(GameInstance gameInstance) {
+        this.gameInstance = gameInstance;
+    }
 
     public void startServer(String port) {
         gameInstance.EVENT_BUS.postEvent(new MultiPlayerServerStartEvent(this,port));
@@ -96,6 +100,11 @@ public class MultiPlayerServer implements IServer {
 
     public void sendPacket(PacketBase packetBase, PlayerEntity playerEntity) {
         getServerNetworkHandler().sendPacket(packetBase,playerEntity);
+    }
+
+    @Override
+    public GameInstance getGameInstance() {
+        return gameInstance;
     }
 
     static class PlayerHandler implements Runnable {

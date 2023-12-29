@@ -42,7 +42,7 @@ public class COpenScreen extends PacketBaseNew<IServerPacketHandler> {
         if(id == 2) {
             ServerPlayerData serverPlayerData = packetHandler.getServerPlayerData();
             if(serverPlayerData != null && serverPlayerData.isCreative) {
-                CreativeContainer creativeContainer = new CreativeContainer(serverPlayerData.playerInventory,CreativeContainer.createInventory());
+                CreativeContainer creativeContainer = new CreativeContainer(serverPlayerData.playerInventory,CreativeContainer.createInventory(packetHandler.getGameInstance()));
                 serverPlayerData.openContainer(creativeContainer);
                 packetHandler.sendPacket(new SOpenContainer(creativeContainer), ctx);
             }

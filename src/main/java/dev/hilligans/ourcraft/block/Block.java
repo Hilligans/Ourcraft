@@ -298,7 +298,7 @@ public class Block implements IRegistryElement {
     @Override
     public void load(GameInstance gameInstance) {
         if(blockProperties.path != null && blockProperties.fromFile) {
-            JSONObject jsonObject = (JSONObject) Ourcraft.GAME_INSTANCE.RESOURCE_LOADER.getResource(new ResourceLocation(blockProperties.path, modId));
+            JSONObject jsonObject = (JSONObject) gameInstance.RESOURCE_LOADER.getResource(new ResourceLocation(blockProperties.path, modId));
             if(jsonObject != null) {
                 if (overrides != null) {
                     BlockProperties.recursivelyOverride(jsonObject, overrides);

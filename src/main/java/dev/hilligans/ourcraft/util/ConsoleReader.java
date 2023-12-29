@@ -9,6 +9,7 @@ public class ConsoleReader extends Thread {
 
     public ConsoleReader(Consumer<String> consoleEvent) {
         this.consoleEvent = consoleEvent;
+        setDaemon(true);
         this.start();
     }
 

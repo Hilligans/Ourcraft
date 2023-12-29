@@ -27,7 +27,6 @@ public class ResourceManager {
     public HashMap<String, ArrayList<IModel>> models = new HashMap<>();
 
     public ArrayList<URLClassLoader> classLoaders = new ArrayList<>();
-    public GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
 
     public void setLanguageFile(String languageFile) {
         Languages.switchingLanguage.set(true);
@@ -86,6 +85,7 @@ public class ResourceManager {
         return ResourceManager.class.getResourceAsStream(path);
     }
 
+    /*
     public static void reload() {
         for(String string : Ourcraft.GAME_INSTANCE.CONTENT_PACK.mods.keySet()) {
             if(!Ourcraft.GAME_INSTANCE.CONTENT_PACK.mods.get(string).isJar) {
@@ -98,6 +98,8 @@ public class ResourceManager {
             }
         }
     }
+
+     */
 
     public void clearData() {
         textures.clear();

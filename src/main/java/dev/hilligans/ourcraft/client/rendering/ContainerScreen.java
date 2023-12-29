@@ -27,7 +27,7 @@ public abstract class ContainerScreen<T extends Container> extends ScreenBase {
     public ContainerScreen() {
     }
 
-    public RecipeHelper recipeHelper = new RecipeHelper(Ourcraft.GAME_INSTANCE);
+    //public RecipeHelper recipeHelper = new RecipeHelper(Ourcraft.GAME_INSTANCE);
 
     @Override
     public void render(RenderWindow window, MatrixStack matrixStack, GraphicsContext graphicsContext) {

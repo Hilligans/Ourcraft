@@ -77,7 +77,7 @@ public class CHandshakePacket extends PacketBaseNew<IServerPacketHandler> {
         BlockPos spawn = new BlockPos(0, 100, 0);
         PlayerEntity playerEntity = new PlayerEntity(spawn.x,spawn.y,spawn.z,playerId);
 
-        ServerPlayerData serverPlayerData = ServerPlayerData.loadOrCreatePlayer(playerEntity,identifier);
+        ServerPlayerData serverPlayerData = ServerPlayerData.loadOrCreatePlayer(serverPacketHandler.getGameInstance(), playerEntity,identifier);
         playerEntity.setPlayerData(serverPlayerData);
         serverPlayerData.setServer(serverPacketHandler.getServer()).setNetworkHandler(serverPacketHandler.getServerNetworkHandler()).setName(name);
         serverPlayerData.setPlayerID(new UUID(playerId, 0)).setChannelID(ctx.channel().id());
@@ -87,7 +87,7 @@ public class CHandshakePacket extends PacketBaseNew<IServerPacketHandler> {
         serverPacketHandler.getServerNetworkHandler().nameToPlayerData.put(name, serverPlayerData);
         //ServerNetworkHandler.playerData.put(playerId, serverPlayerData);
         serverPlayerData.getWorld().addEntity(playerEntity);
-        serverPacketHandler.sendPacket(new SHandshakePacket(playerId),ctx);
+        serverPacketHandler.sendPacket(new SHandshakePacket(playerId, serverPacketHandler.getGameInstance()),ctx);
         serverPlayerData.getWorld().sendChunksToPlayer((int) playerEntity.getX(), (int) playerEntity.getY(), (int) playerEntity.getZ(), serverPlayerData);
         serverPlayerData.getServer().sendPacket(new SChatMessage(name + " has joined the game"));
         //ServerMain.getServer().sendPacket(new SUpdatePlayer(serverPlayerData.));

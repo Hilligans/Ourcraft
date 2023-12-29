@@ -17,6 +17,8 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public abstract class RenderWindow {
 
     public FrameTracker frameTracker = new FrameTracker();
@@ -29,6 +31,9 @@ public abstract class RenderWindow {
     public Client client;
     public String queuedPipeline;
     public Vector4f clearColor = new Vector4f();
+    public String windowName;
+
+    public static AtomicInteger windowID = new AtomicInteger();
 
     public RenderWindow(IGraphicsEngine<?,?,?> graphicsEngine) {
         this.graphicsEngine = graphicsEngine;
@@ -40,6 +45,7 @@ public abstract class RenderWindow {
         }
         setRenderPipeline("ourcraft:menu_pipeline");
         camera = new FreeCamera(this);
+        this.windowName = STR."window \{windowID.getAndIncrement()}";
     }
 
     public void renderPipeline(Client client, MatrixStack worldStack, MatrixStack screenStack, GraphicsContext graphicsContext) {
@@ -56,7 +62,7 @@ public abstract class RenderWindow {
                     graphicsEngine.getDefaultImpl().setState(graphicsContext, pipelineState);
                     graphicsContext.setPipelineState(true);
                 }
-                renderTask.draw(this, graphicsContext, this.getGraphicsEngine(), client, worldStack, screenStack, 1);
+                renderTask.draw(this, graphicsContext, this.getGraphicsEngine(), getClient(), worldStack, screenStack, 1);
             }
         }
     }
@@ -113,6 +119,10 @@ public abstract class RenderWindow {
     public abstract boolean isWindowFocused();
 
     public abstract String getWindowingName();
+
+    public String getWindowName() {
+        return windowName;
+    }
 
     public Logger getLogger() {
         return logger;

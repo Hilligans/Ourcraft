@@ -13,12 +13,7 @@ import java.io.IOException;
 
 public class ClientMain {
 
-    public static Client client;
-
-    public static Client getClient() {
-        return client;
-    }
-    public static GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
+    //public static GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
 
     public static ArgumentContainer argumentContainer;
 
@@ -29,7 +24,10 @@ public class ClientMain {
     public static void main(String[] args) throws IOException {
         startTime = System.currentTimeMillis();
         argumentContainer = new ArgumentContainer(args);
+
         System.out.println(STR."Starting client with PID \{ProcessHandle.current().pid()}");
+
+        GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
         gameInstance.handleArgs(args);
         gameInstance.side = Side.CLIENT;
         gameInstance.loadContent();
@@ -38,18 +36,22 @@ public class ClientMain {
             try {
                 Thread thread = new Thread(() -> ServerMain.server(gameInstance, argumentContainer));
                 thread.setName("Server-Thread");
+                thread.setDaemon(true);
                 thread.start();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        client = new Client(gameInstance, argumentContainer);
+        Client client = new Client(gameInstance, argumentContainer);
+        Client client1 = new Client(gameInstance, argumentContainer);
         String graphicsEngine = argumentContainer.getString("--graphicsEngine", null);
         if(graphicsEngine != null) {
             System.out.println(graphicsEngine);
             client.setGraphicsEngine(gameInstance.GRAPHICS_ENGINES.get(graphicsEngine));
+            client1.setGraphicsEngine(gameInstance.GRAPHICS_ENGINES.get(graphicsEngine));
         }
+        client1.setupClient();
         client.startClient();
     }
 }

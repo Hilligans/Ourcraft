@@ -15,7 +15,7 @@ public class RenderPipeline implements IRegistryElement, IGraphicsElement {
 
     public String name;
     public ModContent modContent;
-    public RenderWindow window;
+   // public RenderWindow window;
 
     public ArrayList<RenderTarget> renderTargets = new ArrayList<>();
     public ArrayList<RenderTask> renderTasks = new ArrayList<>();
@@ -25,7 +25,7 @@ public class RenderPipeline implements IRegistryElement, IGraphicsElement {
     }
 
     public void render(Client client, MatrixStack worldStack, MatrixStack screenStack, GraphicsContext graphicsContext) {
-        window.render(graphicsContext, client, worldStack, screenStack);
+        client.rWindow.render(graphicsContext, client, worldStack, screenStack);
     }
 
     public void addRenderTarget(RenderTarget renderTarget) {
@@ -57,7 +57,7 @@ public class RenderPipeline implements IRegistryElement, IGraphicsElement {
     }
 
     public void build(RenderWindow window) {
-        this.window = window;
+        //this.window = window;
     }
 
     public void buildTargets(IGraphicsEngine<?, ?, ?> graphicsEngine) {
@@ -103,7 +103,7 @@ public class RenderPipeline implements IRegistryElement, IGraphicsElement {
     public String toString() {
         return "RenderPipeline{" +
                 "name='" + name + '\'' +
-                ", window=" + window +
+               // ", window=" + window +
                 ", renderTargets=" + renderTargets +
                 ", renderTasks=" + renderTasks +
                 '}';

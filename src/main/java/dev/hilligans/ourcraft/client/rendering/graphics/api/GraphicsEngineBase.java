@@ -12,6 +12,7 @@ public abstract class GraphicsEngineBase<Q extends RenderWindow,V extends IDefau
     public ArrayList<Q> windows = new ArrayList<>();
 
     public GameInstance gameInstance;
+    public boolean running = false;
 
 
     public GraphicsEngineBase() {
@@ -31,6 +32,11 @@ public abstract class GraphicsEngineBase<Q extends RenderWindow,V extends IDefau
     @Override
     public ArrayList<Q> getWindows() {
         return windows;
+    }
+
+    @Override
+    public boolean isRunning() {
+        return running;
     }
 
     @Override

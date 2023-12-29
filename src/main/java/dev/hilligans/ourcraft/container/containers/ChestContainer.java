@@ -11,8 +11,8 @@ import dev.hilligans.ourcraft.data.other.JoinedInventory;
 
 public class ChestContainer extends Container {
 
-    public ChestContainer() {
-        this(new Inventory(27), ClientMain.getClient().playerData.inventory);
+    public ChestContainer(Client client) {
+        this(new Inventory(27), client.playerData.inventory);
     }
 
     public ChestContainer(Inventory inventory, Inventory playerInventory) {

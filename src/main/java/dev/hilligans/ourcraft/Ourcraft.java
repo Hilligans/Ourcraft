@@ -326,7 +326,6 @@ public class Ourcraft {
                 }
             });
         }
-        Ourcraft.getResourceManager().gameInstance = modContent.gameInstance;
     }
 
     public static DoubleBuffer getMousePos(long window) {

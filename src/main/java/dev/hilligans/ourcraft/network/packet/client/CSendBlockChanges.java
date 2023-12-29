@@ -54,7 +54,7 @@ public class CSendBlockChanges extends PacketBaseNew<IServerPacketHandler> {
         Block droppedBlock = oldState.getBlock().droppedBlock;
         if(droppedBlock != Blocks.AIR) {
             if (serverPacketHandler.getWorld().getBlockState(x, y, z).getBlock() == Blocks.AIR) {
-                ItemEntity itemEntity = new ItemEntity(x + 0.5f, y + 1, z + 0.5f, Entity.getNewId(), droppedBlock);
+                ItemEntity itemEntity = new ItemEntity(serverPacketHandler.getWorld(), x + 0.5f, y + 1, z + 0.5f, Entity.getNewId(), droppedBlock);
                 serverPacketHandler.getWorld().addEntity(itemEntity);
             }
         }

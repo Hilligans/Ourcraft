@@ -44,8 +44,8 @@ public class CRequestContent extends PacketBaseNew<IServerPacketHandler> {
     @Override
     public void handle(IServerPacketHandler serverPacketHandler) {
         for(String string : mods) {
-            ModContent modContent = Ourcraft.GAME_INSTANCE.CONTENT_PACK.mods.get(string.split(":::")[0]);
-            serverPacketHandler.sendPacket(new SSendModContentPacket(modContent), ctx);
+            ModContent modContent = serverPacketHandler.getGameInstance().CONTENT_PACK.mods.get(string.split(":::")[0]);
+            //serverPacketHandler.sendPacket(new SSendModContentPacket(modContent), ctx);
         }
 
         ServerPlayerData serverPlayerData = serverPacketHandler.getServerPlayerData();

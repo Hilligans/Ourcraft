@@ -33,7 +33,7 @@ public class ContainerBuilder implements ContainerFetcher {
 
 
     @Override
-    public Container getContainer() {
+    public Container getContainer(Client client) {
         Inventory inventory = new Inventory(slots.length);
         Container container = new Container(id,inventory) {
             @Override

@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.container.containers;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.rendering.ContainerScreen;
 import dev.hilligans.ourcraft.client.rendering.screens.container.screens.CreativeInventoryScreen;
@@ -16,8 +17,8 @@ import dev.hilligans.ourcraft.Ourcraft;
 
 public class CreativeContainer extends Container {
 
-    public CreativeContainer() {
-        this(ClientMain.getClient().playerData.inventory,new Inventory(Math.max(Ourcraft.GAME_INSTANCE.ITEMS.ELEMENTS.size(),54)));
+    public CreativeContainer(Client client) {
+        this(client.playerData.inventory,new Inventory(Math.max(client.getGameInstance().ITEMS.ELEMENTS.size(),54)));
     }
 
     public CreativeContainer(IInventory playerInventory, IInventory creativeInventory) {
@@ -61,10 +62,10 @@ public class CreativeContainer extends Container {
         return new CreativeInventoryScreen();
     }
 
-    public static IInventory createInventory() {
-        Inventory inventory = new Inventory(Math.max(Ourcraft.GAME_INSTANCE.ITEMS.ELEMENTS.size() ,54));
+    public static IInventory createInventory(GameInstance gameInstance) {
+        Inventory inventory = new Inventory(Math.max(gameInstance.ITEMS.ELEMENTS.size() ,54));
         int x = 0;
-        for(Item item : Ourcraft.GAME_INSTANCE.ITEMS.ELEMENTS) {
+        for(Item item : gameInstance.ITEMS.ELEMENTS) {
             if(!(item instanceof BlockItem) || !((BlockItem) item).block.blockProperties.airBlock) {
                 inventory.setItem(x, new ItemStack(item, (byte) 1));
                 x++;

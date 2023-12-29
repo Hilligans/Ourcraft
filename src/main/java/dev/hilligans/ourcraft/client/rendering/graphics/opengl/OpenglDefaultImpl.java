@@ -41,6 +41,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     public final Int2ObjectOpenHashMap<Exception> textureAllocationTracker = new Int2ObjectOpenHashMap<>();
     public final Int2ObjectOpenHashMap<Exception> vertexArrayAllocationTracker = new Int2ObjectOpenHashMap<>();
     public final Int2ObjectOpenHashMap<Exception> programAllocationTracker = new Int2ObjectOpenHashMap<>();
+    public final Int2ObjectOpenHashMap<Exception> fboAllocationTracker = new Int2ObjectOpenHashMap<>();
 
     public long boundTexture = -1;
     public long boundProgram = -1;
@@ -287,12 +288,15 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
 
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
         synchronized (fbos) {
-            fbos.put(fbo, texture);
+            fbos.put(texture, fbo);
         }
         synchronized (textureTypes) {
             textureTypes.put(texture, GL_TEXTURE_2D);
         }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        if(trackingResourceAllocations) {
+            fboAllocationTracker.put(fbo, new Exception());
+        }
         return texture;
     }
 
@@ -303,7 +307,10 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
             fbo = fbos.remove((int) id);
         }
         synchronized (textureTypes) {
-            textureTypes.remove((int)fbo);
+            textureTypes.remove((int)id);
+        }
+        if(trackingResourceAllocations) {
+            fboAllocationTracker.remove(fbo);
         }
         glDeleteTextures((int) id);
         glDeleteFramebuffers(fbo);
@@ -315,7 +322,8 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         if(id == 0) {
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         } else {
-            glBindFramebuffer(GL_FRAMEBUFFER, fbos.get((int)id));
+            int fbo = fbos.get((int)id);
+            glBindFramebuffer(GL_FRAMEBUFFER, fbos.get(fbo));
         }
     }
 
@@ -357,6 +365,9 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
             for(Exception e : programAllocationTracker.values()) {
                 throw new VideoMemoryLeakException("Missing shader deallocation allocated at:", e);
             }
+            for(Exception e : fboAllocationTracker.values()) {
+                throw new VideoMemoryLeakException("Missing FBO deallocation allocated at:", e);
+            }
         }
 
 
@@ -378,14 +389,14 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
             cache[1] = f;
             return cache[0];
         }
-        for(VertexFormat vertexFormat : engine.client.gameInstance.VERTEX_FORMATS.ELEMENTS) {
+        for(VertexFormat vertexFormat : engine.getGameInstance().VERTEX_FORMATS.ELEMENTS) {
             if(vertexFormat.formatName.equals(name)) {
                 cache[1] = vertexFormat;
                 return vertexFormat;
             }
         }
 
-        throw new UnknownResourceException("Failed to find resource in the registry by name: " + name, engine.client.gameInstance.VERTEX_FORMATS, name, engine.getGameInstance().OURCRAFT);
+        throw new UnknownResourceException("Failed to find resource in the registry by name: " + name, engine.getGameInstance().VERTEX_FORMATS, name, engine.getGameInstance().OURCRAFT);
     }
 
     public static class VideoMemoryLeakException extends RuntimeException {

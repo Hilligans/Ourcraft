@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.network;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.network.debug.PacketTraceByteArray;
@@ -31,6 +32,10 @@ public interface IServerPacketHandler extends IPacketHandler {
     IServer getServer();
 
     ServerNetworkHandler getServerNetworkHandler();
+
+    default GameInstance getGameInstance() {
+        return getServer().getGameInstance();
+    }
 
     default void handleDisconnect() {
         getWorld().removeEntity(getPlayerEntity().id, 0);

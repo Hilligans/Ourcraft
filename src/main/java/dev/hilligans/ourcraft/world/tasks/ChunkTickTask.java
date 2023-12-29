@@ -40,7 +40,7 @@ public class ChunkTickTask extends TickingBase implements IMethodResult {
                     pos /= width;
                     int y = pos % height;
                     int x = pos / width;
-                    IBlockState blockState = iSubChunk.getBlockState(x, y, z);
+                    IBlockState blockState = iSubChunk.getBlockState(world, x, y, z);
                     blockState.getBlock().randomTick(lock, instance, blockState, chunk, world, new BlockPos(x, y, z), random);
                 }
             }

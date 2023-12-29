@@ -10,8 +10,8 @@ import dev.hilligans.ourcraft.data.other.Inventory;
 
 public class InventoryContainer extends Container {
 
-    public InventoryContainer() {
-        this(ClientMain.getClient().playerData.inventory);
+    public InventoryContainer(Client client) {
+        this(client.playerData.inventory);
     }
 
     public InventoryContainer(Inventory inventory) {

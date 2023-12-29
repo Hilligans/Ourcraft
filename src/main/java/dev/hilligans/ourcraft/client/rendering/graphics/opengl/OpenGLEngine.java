@@ -44,10 +44,23 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
 
     @Override
     public OpenGLWindow createWindow() {
+        OpenGLWindow renderWindow = new OpenGLWindow(this, "Ourcraft 1", 1600, 800, windows.get(0).window);
+        renderWindow.setRenderPipeline(gameInstance.ARGUMENTS.getString("--renderPipeline", "ourcraft:menu_pipeline"));
+        windows.add(renderWindow);
+        renderWindow.setup();
+        GL.createCapabilities();
+
+        glEnable(GL_DEBUG_OUTPUT);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
+        glFrontFace(GL_CW);
+        glEnable(GL_PROGRAM_POINT_SIZE);
+
         return renderWindow;
     }
-
-    public static OpenGLWindow renderWindow;
 
     @Override
     public void render(RenderWindow window, GraphicsContext graphicsContext) {
@@ -68,27 +81,25 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         MatrixStack matrixStack = window.camera.getMatrix();
         MatrixStack screenStack = window.camera.getScreenStack();
 
-        window.renderPipeline(client, matrixStack, screenStack, graphicsContext);
+        window.renderPipeline(window.getClient(), matrixStack, screenStack, graphicsContext);
     }
 
     @Override
     public OpenGLWindow setup() {
+        running = true;
         System.setProperty("java.awt.headless", "true");
 
-        glfwInit();
+        if(!glfwInit()) {
+            throw new RuntimeException("Failed to create window");
+        }
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        renderWindow = new OpenGLWindow(client, this, "Ourcraft", 1600, 800);
+        OpenGLWindow renderWindow = new OpenGLWindow( this, "Ourcraft", 1600, 800, 0);
         renderWindow.setRenderPipeline(gameInstance.ARGUMENTS.getString("--renderPipeline", "ourcraft:menu_pipeline"));
         windows.add(renderWindow);
         renderWindow.setup();
         GL.createCapabilities();
-
-        client.glStarted = true;
-        gameInstance.build(this, null);
-
-        setupStringRenderer("");
 
         glEnable(GL_DEBUG_OUTPUT);
 
@@ -102,10 +113,8 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
                 }
             }
         }, 0);
-
-
-        client.screen = new JoinScreen();
-        client.screen.setWindow(renderWindow);
+        gameInstance.build(this, null);
+        setupStringRenderer("");
 
         glfwWindowHint(GLFW_SAMPLES, 4);
         glEnable(GL_BLEND);

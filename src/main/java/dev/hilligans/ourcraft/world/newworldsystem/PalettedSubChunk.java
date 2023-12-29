@@ -33,12 +33,12 @@ public class PalettedSubChunk implements IAtomicSubChunk {
     }
 
     @Override
-    public IBlockState getBlockState(int x, int y, int z) {
+    public IBlockState getBlockState(IWorld world, int x, int y, int z) {
         return null;
     }
 
     @Override
-    public IBlockState setBlockState(int x, int y, int z, IBlockState blockState) {
+    public IBlockState setBlockState(IWorld world, int x, int y, int z, IBlockState blockState) {
         return null;
     }
 

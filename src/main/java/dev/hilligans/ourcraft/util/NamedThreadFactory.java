@@ -23,7 +23,7 @@ public class NamedThreadFactory implements ThreadFactory {
                 namePrefix + threadNumber.getAndIncrement(),
                 0);
         if (t.isDaemon())
-            t.setDaemon(false);
+            t.setDaemon(true);
         if (t.getPriority() != Thread.NORM_PRIORITY)
             t.setPriority(Thread.NORM_PRIORITY);
         return t;

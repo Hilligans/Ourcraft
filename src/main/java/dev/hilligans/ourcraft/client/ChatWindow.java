@@ -24,6 +24,8 @@ public class ChatWindow implements Screen {
 
     static boolean typing;
 
+    public RenderWindow renderWindow;
+
     public ChatWindow() {
         messageIndex = -1;
     }
@@ -33,6 +35,7 @@ public class ChatWindow implements Screen {
         string = message;
     }
 
+    /*
     static {
         KeyHandler.register(new KeyPress() {
             @Override
@@ -154,18 +157,20 @@ public class ChatWindow implements Screen {
         });
     }
 
+     */
+
     public static String getString() {
         return messageIndex == -1 ? string : sentMessages.size() > messageIndex ? sentMessages.get(sentMessages.size() - messageIndex - 1) : "";
     }
 
     @Override
     public void setWindow(RenderWindow renderWindow) {
-
+        this.renderWindow = renderWindow;
     }
 
     @Override
     public RenderWindow getWindow() {
-        return null;
+        return this.renderWindow;
     }
 
     @Override

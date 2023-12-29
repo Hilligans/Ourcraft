@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.world.newworldsystem;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.entity.Entity;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.joml.Vector3f;
@@ -10,10 +11,12 @@ public class CubicWorld implements IWorld {
     public int radius;
     public String worldName;
     public int id;
+    public GameInstance gameInstance;
     public final IThreeDChunkContainer chunkContainer = new CubicChunkContainer(32, 32);
     public Int2ObjectOpenHashMap<Entity> entities = new Int2ObjectOpenHashMap<>();
 
-    public CubicWorld(int id, String worldName, int radius) {
+    public CubicWorld(GameInstance gameInstance, int id, String worldName, int radius) {
+        this.gameInstance = gameInstance;
         this.radius = radius;
         this.worldName = worldName;
         this.id = id;
@@ -78,5 +81,10 @@ public class CubicWorld implements IWorld {
     @Override
     public Entity removeEntity(long l1, long l2) {
         return entities.remove((int)l1);
+    }
+
+    @Override
+    public GameInstance getGameInstance() {
+        return gameInstance;
     }
 }

@@ -6,6 +6,9 @@ import dev.hilligans.ourcraft.network.*;
 
 public class SOpenContainer extends PacketBaseNew<IClientPacketHandler> {
 
+
+    public short containerID;
+    public int uniqueID;
     Container container;
     int uniqueId;
 
@@ -31,8 +34,9 @@ public class SOpenContainer extends PacketBaseNew<IClientPacketHandler> {
 
     @Override
     public void decode(IPacketByteArray packetData) {
-        container = Container.getContainer(packetData.readShort());
-        container.uniqueId = packetData.readInt();
+        containerID = packetData.readShort();
+       // container = Container.getContainer(packetData.readShort(), packetData.);
+        uniqueId = packetData.readInt();
         int slotCount = packetData.readShort();
         for(int x = 0; x < slotCount; x++) {
             //ItemStack itemStack = packetData.readItemStack();
@@ -42,7 +46,9 @@ public class SOpenContainer extends PacketBaseNew<IClientPacketHandler> {
 
     @Override
     public void handle(IClientPacketHandler clientPacketHandler) {
+        container = Container.getContainer(containerID, clientPacketHandler.getClient());
         if(container != null) {
+            container.uniqueId = uniqueId;
             clientPacketHandler.getClient().openScreen(container);
         }
     }

@@ -36,19 +36,30 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
 
     GraphicsContext getGraphicsContext();
 
-    default Runnable createRenderLoop(GameInstance gameInstance, RenderWindow window) {
+    boolean isRunning();
+
+    default Runnable createRenderLoop(GameInstance gameInstance, RenderWindow w) {
         return () -> {
             try {
                 GraphicsContext graphicsContext = getGraphicsContext();
                 ISection section = graphicsContext.getSection();
                 try(var $0 = section.startSection("base")) {
-                    while (!window.shouldClose()) {
-                        try (var $1 = section.startSection("loop")) {
-                            try (var $2 = section.startSection("render")) {
-                                render(window, graphicsContext);
-                            }
-                            try (var $2 = section.startSection("swapBuffers")) {
-                                window.swapBuffers(graphicsContext);
+                    out: {
+                        while (true) {
+                            try (var $1 = section.startSection("loop")) {
+                                for (RenderWindow window : getWindows()) {
+                                    if (window.shouldClose()) {
+                                        break out;
+                                    }
+                                    try (var $9 = section.startSection(window.getWindowName())) {
+                                        try (var $2 = section.startSection("render")) {
+                                            render(window, graphicsContext);
+                                        }
+                                        try (var $2 = section.startSection("swapBuffers")) {
+                                            window.swapBuffers(graphicsContext);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -79,9 +90,11 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
     int getProgram(String name);
 
     default RenderWindow startEngine() {
-        RenderWindow window = setup();
-        //getGameInstance().build(this);
-        return window;
+        if(!isRunning()) {
+            return setup();
+        } else {
+            return createWindow();
+        }
     }
 
     @Override

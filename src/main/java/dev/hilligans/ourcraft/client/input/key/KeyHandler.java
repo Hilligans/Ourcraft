@@ -94,11 +94,14 @@ public class KeyHandler {
     }
 
     private static char getChar(int id) {
-        if(glfwGetKey(ClientMain.getClient().window,GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(ClientMain.getClient().window,GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS) {
+      /*  if(glfwGetKey(ClientMain.getClient().window,GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(ClientMain.getClient().window,GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS) {
             return shiftMappedKeys.getOrDefault(id,mappedKeys.getOrDefault(id,Character.MIN_VALUE));
         } else {
             return mappedKeys.getOrDefault(id,Character.MIN_VALUE);
         }
+
+       */
+        throw new RuntimeException();
     }
 
     private static void setCallback(long window) {
@@ -128,11 +131,11 @@ public class KeyHandler {
     }
 
     static {
-        if(ClientMain.getClient().glStarted) {
+       // if(ClientMain.getClient().glStarted) {
             //setCallback(ClientMain.getClient().window);
-        } else {
+       // } else {
            // Ourcraft.GAME_INSTANCE.EVENT_BUS.register(GLInitEvent.class,KeyHandler::setCallback);
-        }
+       // }
 
         mappedKeys.put(32,' ');
         mappedKeys.put(39, '\'');

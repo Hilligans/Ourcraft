@@ -68,7 +68,7 @@ public class ClassicChunk implements IChunk {
         if(subChunk == null) {
             return Blocks.AIR.getDefaultState();
         }
-        return subChunk.getBlockState((int) (x % 15), (int) (y % 15), (int) (z % 15));
+        return subChunk.getBlockState(world, (int) (x % 15), (int) (y % 15), (int) (z % 15));
     }
 
     @Override
@@ -80,7 +80,7 @@ public class ClassicChunk implements IChunk {
             }
             subChunk = chunks[(int) (y >> 4)] = new SimpleSubChunkImpl(16,16);
         }
-        if(subChunk.setBlockState((int) (x % 15), (int)(y % 15), (int) (z % 15),blockState) != blockState) {
+        if(subChunk.setBlockState(world, (int) (x % 15), (int)(y % 15), (int) (z % 15),blockState) != blockState) {
             dirty = true;
         }
     }
