@@ -93,7 +93,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         mesh.destroy();
 
         meshReferences.put(VAO, mesh);
-        meshData.put(VAO, new Tuple<>(GL_TRIANGLES, mesh.elementSize == 4 ? GL_UNSIGNED_INT : GL_UNSIGNED_SHORT));
+        meshData.put(VAO, new Tuple<>(mesh.vertexFormat.primitiveType, mesh.elementSize == 4 ? GL_UNSIGNED_INT : GL_UNSIGNED_SHORT));
         vertexArrayObjects.put(VAO, ((long)VBO << 32) | (long)EBO);
         if(trackingResourceAllocations) {
             vertexArrayAllocationTracker.put(VAO, new Exception());

@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.server.IServer;
 import dev.hilligans.ourcraft.ServerMain;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -19,6 +20,7 @@ public class ServerNetwork extends Network {
 
     EventLoopGroup bossGroup;
     EventLoopGroup workerGroup;
+    ChannelFuture channelFuture;
 
     public ServerNetwork(Protocol protocol, IServer server) {
         super(protocol);
@@ -42,7 +44,8 @@ public class ServerNetwork extends Network {
                     .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(this);
 
-            b.bind(PORT).sync().channel().closeFuture().sync();
+            channelFuture = b.bind(PORT).sync();
+            channelFuture.channel().closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
@@ -61,6 +64,11 @@ public class ServerNetwork extends Network {
         }
         if(workerGroup != null) {
             workerGroup.shutdownGracefully();
+        }
+        try {
+            channelFuture.channel().closeFuture().sync();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

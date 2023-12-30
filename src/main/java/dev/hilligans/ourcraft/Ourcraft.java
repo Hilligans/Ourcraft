@@ -121,22 +121,10 @@ public class Ourcraft {
             view.registerGraphicsEngine(new OpenGLEngine());
             view.registerGraphicsEngine(new FixedFunctionGLEngine());
 
-            view.registerRenderPipelines(new RenderPipeline("world_pipeline"));
-
-            view.registerRenderTarget(new RenderTarget("solid_world_renderer", "ourcraft:world_pipeline")
-                    .setPipelineState(new PipelineState().setDepth(true)));
-            view.registerRenderTarget(new RenderTarget("entity_renderer", "ourcraft:world_pipeline").afterTarget("solid_world_renderer", "ourcraft")
-                    .setPipelineState(new PipelineState().setDepth(true)));
-            view.registerRenderTarget(new RenderTarget("particle_renderer", "ourcraft:world_pipeline").afterTarget("entity_renderer", "ourcraft")
-                    .setPipelineState(new PipelineState().setDepth(true)));
-            view.registerRenderTarget(new RenderTarget("translucent_world_renderer", "ourcraft:world_pipeline").afterTarget("particle_renderer", "ourcraft")
-                    .setPipelineState(new PipelineState().setDepth(true)));
-            view.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:world_pipeline").afterTarget("translucent_world_renderer", "ourcraft")
-                    .setPipelineState(new PipelineState()));
-
             view.registerRenderPipelines(new RenderPipeline("new_world_pipeline"));
-
-            view.registerRenderTarget(new RenderTarget("new_solid_world_renderer", "ourcraft:new_world_pipeline")
+            view.registerRenderTarget(new RenderTarget("debug_world_renderer", "ourcraft:new_world_pipeline")
+                    .setPipelineState(new PipelineState().setDepth(false)));
+            view.registerRenderTarget(new RenderTarget("new_solid_world_renderer", "ourcraft:new_world_pipeline").afterTarget("debug_world_renderer", "ourcraft")
                     .setPipelineState(new PipelineState().setDepth(true)));
             view.registerRenderTarget(new RenderTarget("entity_renderer", "ourcraft:new_world_pipeline").afterTarget("new_solid_world_renderer", "ourcraft")
                     .setPipelineState(new PipelineState().setDepth(true)));
@@ -166,15 +154,17 @@ public class Ourcraft {
             view.registerRenderTask(new WorldTransparentRenderTask());
             view.registerRenderTask(new ChatRenderTask());
             view.registerRenderTask(new SplitWindowRenderTask());
+            view.registerRenderTask(new ChunkDebugRenderTask());
 
 
             view.registerVertexFormat(position_texture_color, position_color_texture, position_texture_globalColor, position_texture, position_texture_animatedWrap_shortenedColor, position_color);
-            view.registerVertexFormat(position2_texture_color);
+            view.registerVertexFormat(position2_texture_color, position_color_lines);
 
 //            view.registerShader(new ShaderSource("world_shader","ourcraft:position_texture_color", "Shaders/WorldVertexShader.glsl","Shaders/WorldFragmentShader.glsl"));
             view.registerShader(new ShaderSource("world_shader", "ourcraft:position_color_texture", "Shaders/WorldVertexShader.glsl", "Shaders/WorldFragmentShader.glsl").withUniform("transform", "4fv").withUniform("color", "4f"));
             view.registerShader(new ShaderSource("position_color_shader", "ourcraft:position_color", "Shaders/WorldVertexColorShader.glsl", "Shaders/WorldFragmentShader.glsl").withUniform("transform", "4fv").withUniform("color", "4f"));
             view.registerShader(new ShaderSource("position_texture", "ourcraft:position_texture", "Shaders/PositionTexture.vsh", "Shaders/PositionTexture.fsh").withUniform("transform", "4fv").withUniform("color", "4f"));
+            view.registerShader(new ShaderSource("position_color_lines_shader", "ourcraft:position_color_lines", "Shaders/WorldVertexColorShader.glsl", "Shaders/WorldFragmentColorShader.glsl").withUniform("transform", "4fv").withUniform("color", "4f"));
             view.registerShader(new ShaderSource("nk_shader", "position2_texture_color", "Shaders/NkVertexShader.glsl", "Shaders/NkFragmentShader.glsl").withUniform("transform", "4fv"));
 
             view.registerInputHandlerProviders(new ControllerHandlerProvider(), new KeyPressHandlerProvider(), new MouseHandlerProvider());
@@ -260,6 +250,14 @@ public class Ourcraft {
                 public void press(RenderWindow renderWindow, float strength) {
                     super.press(renderWindow, strength);
                     renderWindow.client.openScreen(new TestScreen());
+                }
+            });
+
+            modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_F8){
+                @Override
+                public void press(RenderWindow renderWindow, float strength) {
+                    super.press(renderWindow, strength);
+                    renderWindow.getClient().getPlayerData().debugChunkRendering = !renderWindow.getClient().getPlayerData().debugChunkRendering;
                 }
             });
 
@@ -366,6 +364,10 @@ public class Ourcraft {
             .addPart("globalColor", VertexFormat.UNSIGNED_INT, 1);
 
     public static final VertexFormat position_color = new VertexFormat("ourcraft", "position_color", VertexFormat.TRIANGLES)
+            .addPart("position", VertexFormat.FLOAT, 3)
+            .addPart("color", VertexFormat.FLOAT, 4);
+
+    public static final VertexFormat position_color_lines = new VertexFormat("ourcraft", "position_color_lines", VertexFormat.LINES)
             .addPart("position", VertexFormat.FLOAT, 3)
             .addPart("color", VertexFormat.FLOAT, 4);
 

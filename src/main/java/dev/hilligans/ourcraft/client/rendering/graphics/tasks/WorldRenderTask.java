@@ -60,10 +60,11 @@ public class WorldRenderTask extends RenderTaskSource {
                 int chunkWidth = world.getChunkContainer().getChunkWidth();
                 int chunkHeight = world.getChunkContainer().getChunkHeight();
                 int renderYDist = client.renderYDistance;
-                Vector3i playerChunkPos = new Vector3i((int) pos.x / chunkWidth, (int) pos.y / chunkHeight, (int) pos.z / chunkWidth);
+                Vector3i playerChunkPos = new Vector3i(Math.floorDiv((int)pos.x, chunkWidth), Math.floorDiv((int)pos.y, chunkHeight), Math.floorDiv((int)pos.z, chunkWidth));
                 if (client.renderWorld) {
                     engine.getDefaultImpl().bindPipeline(graphicsContext, shaderSource.program);
                     engine.getDefaultImpl().bindTexture(graphicsContext, textAtlas.texture);
+
                     for (int x = 0; x < client.renderDistance; x++) {
                         for (int y = 0; y < renderYDist; y++) {
                             for (int z = 0; z < client.renderDistance; z++) {

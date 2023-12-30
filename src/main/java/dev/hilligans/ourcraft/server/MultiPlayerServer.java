@@ -35,6 +35,9 @@ public class MultiPlayerServer implements IServer {
     public HashMap<String, Tuple<ChannelHandlerContext,Long>> playerQueue = new HashMap<>();
     public GameInstance gameInstance;
     public ServerNetwork serverNetwork;
+    public boolean running = true;
+    public ScheduledExecutorService tick;
+    public ScheduledExecutorService playerHandler;
 
     public MultiPlayerServer(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
@@ -43,10 +46,10 @@ public class MultiPlayerServer implements IServer {
     public void startServer(String port) {
         gameInstance.EVENT_BUS.postEvent(new MultiPlayerServerStartEvent(this,port));
         Server server = new Server(this);
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1, new NamedThreadFactory("server_tick"));
-        executorService.scheduleAtFixedRate(server, 0, 40, TimeUnit.MILLISECONDS);
-        ScheduledExecutorService executorService1 = Executors.newScheduledThreadPool(1, new NamedThreadFactory("server_player_handler"));
-        executorService1.scheduleAtFixedRate(new PlayerHandler(this), 0, 10, TimeUnit.MILLISECONDS);
+        tick = Executors.newScheduledThreadPool(1, new NamedThreadFactory("server_tick"));
+        tick.scheduleAtFixedRate(server, 0, 40, TimeUnit.MILLISECONDS);
+        playerHandler = Executors.newScheduledThreadPool(1, new NamedThreadFactory("server_player_handler"));
+        playerHandler.scheduleAtFixedRate(new PlayerHandler(this), 0, 10, TimeUnit.MILLISECONDS);
        // ConsoleReader consoleReader = new ConsoleReader(this::executeCommand);
 
         serverNetwork = new ServerNetwork(gameInstance.PROTOCOLS.get("Play"), this).debug(ServerMain.argumentContainer.getBoolean("--packetTrace", false));
@@ -109,6 +112,9 @@ public class MultiPlayerServer implements IServer {
 
     @Override
     public void stop() {
+        running = false;
+        tick.shutdownNow();
+        playerHandler.shutdownNow();
         if(serverNetwork != null) {
             serverNetwork.close();
         }

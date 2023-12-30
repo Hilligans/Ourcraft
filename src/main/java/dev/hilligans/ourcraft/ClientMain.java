@@ -33,12 +33,13 @@ public class ClientMain {
         gameInstance.side = Side.CLIENT;
         gameInstance.loadContent();
 
+        Thread serverThread = null;
         if(argumentContainer.getBoolean("--integratedServer", false)) {
             try {
-                Thread thread = new Thread(() -> ServerMain.server(gameInstance, argumentContainer));
-                thread.setName("Server-Thread");
-                thread.setDaemon(true);
-                thread.start();
+                serverThread = new Thread(() -> ServerMain.server(gameInstance, argumentContainer));
+                serverThread.setName("Server-Thread");
+                serverThread.setDaemon(true);
+                serverThread.start();
             } catch (Exception e) {
                 e.printStackTrace();
             }

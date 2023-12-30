@@ -5,5 +5,5 @@ void main() {
    if(rgba.a < 0.1) {
        discard;
    }
-   FragColor = texColor * rgba;
+   FragColor = rgba;
 }

@@ -416,6 +416,10 @@ public class Client implements IClientPacketHandler {
          return renderTime;
     }
 
+    public ClientPlayerData getPlayerData() {
+        return playerData;
+    }
+
     @Override
     public Client getClient() {
         return this;

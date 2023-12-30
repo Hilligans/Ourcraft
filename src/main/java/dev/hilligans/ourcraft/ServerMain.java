@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft;
 
+import dev.hilligans.ourcraft.server.IServer;
 import dev.hilligans.ourcraft.server.MultiPlayerServer;
 import dev.hilligans.ourcraft.util.ArgumentContainer;
 import dev.hilligans.ourcraft.util.Profiler;
@@ -33,7 +34,7 @@ public class ServerMain {
         server(gameInstance, new ArgumentContainer(args));
     }
 
-    public static void server(GameInstance gameInstance, ArgumentContainer argumentContainer) {
+    public static IServer server(GameInstance gameInstance, ArgumentContainer argumentContainer) {
         ServerMain.argumentContainer = argumentContainer;
 
         //ServerWorld world = new ServerWorld(gameInstance);
@@ -55,6 +56,7 @@ public class ServerMain {
         server.addWorld(world1);
         System.out.println("starting server");
         server.startServer("25588");
+        return server;
     }
 
     public static void newServer(GameInstance gameInstance) {

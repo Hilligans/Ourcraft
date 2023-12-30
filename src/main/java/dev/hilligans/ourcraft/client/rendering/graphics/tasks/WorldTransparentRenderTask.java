@@ -57,7 +57,7 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
                 int chunkHeight = world.getChunkContainer().getChunkHeight();
                 int renderYDist = client.renderYDistance;
                 //renderYDist = 1;
-                Vector3i playerChunkPos = new Vector3i((int) pos.x / chunkWidth, (int) pos.y / chunkHeight, (int) pos.z / chunkWidth);
+                Vector3i playerChunkPos = new Vector3i(Math.floorDiv((int)pos.x, chunkWidth), Math.floorDiv((int)pos.y, chunkHeight), Math.floorDiv((int)pos.z, chunkWidth));
                 if (client.renderWorld) {
                     engine.getDefaultImpl().bindPipeline(graphicsContext, shaderSource.program);
                     engine.getDefaultImpl().bindTexture(graphicsContext, textAtlas.texture);

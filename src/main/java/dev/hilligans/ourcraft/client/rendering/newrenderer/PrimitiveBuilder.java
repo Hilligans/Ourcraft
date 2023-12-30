@@ -1,12 +1,16 @@
 package dev.hilligans.ourcraft.client.rendering.newrenderer;
 
+import dev.hilligans.ourcraft.client.rendering.graphics.ShaderSource;
 import dev.hilligans.ourcraft.client.rendering.graphics.VertexFormat;
 import dev.hilligans.ourcraft.client.rendering.VertexMesh;
+import dev.hilligans.ourcraft.data.other.BoundingBox;
 import dev.hilligans.ourcraft.data.primitives.FloatList;
 import dev.hilligans.ourcraft.data.primitives.IntList;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+
+import java.util.function.Consumer;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -25,6 +29,10 @@ public class PrimitiveBuilder {
 
     public PrimitiveBuilder(VertexFormat vertexFormat) {
         this.vertexFormat = vertexFormat;
+    }
+
+    public PrimitiveBuilder(ShaderSource shaderSource) {
+        this(shaderSource.vertexFormat);
     }
 
     public PrimitiveBuilder setVertexFormat(VertexFormat vertexFormat) {
@@ -58,11 +66,16 @@ public class PrimitiveBuilder {
         size++;
     }
 
-    public void add(int[] indices) {
+    public void add(int... indices) {
         int count = sizeVal;
         for(int index : indices) {
             this.indices.add(index + count);
         }
+    }
+
+    public int addIndex(float... vals) {
+        vertices.add(vals);
+        return this.size++;
     }
 
     public int sizeVal = 0;
@@ -88,6 +101,18 @@ public class PrimitiveBuilder {
                 minX,maxY,z,minTexX,maxTexY,
                 maxX,minY,z,maxTexX,minTexY,
                 maxX,maxY,z,maxTexX,maxTexY);
+    }
+
+    public void addBoundingBox(BoundingBox boundingBox, Consumer<FloatList> extraData) {
+        float[] vertices = new float[]{boundingBox.minX, boundingBox.minY, boundingBox.minZ, boundingBox.maxX, boundingBox.minY, boundingBox.minZ, boundingBox.maxX, boundingBox.minY, boundingBox.maxZ, boundingBox.minX, boundingBox.minY, boundingBox.maxZ, boundingBox.minX, boundingBox.maxY, boundingBox.minZ, boundingBox.maxX, boundingBox.maxY, boundingBox.minZ, boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ, boundingBox.minX, boundingBox.maxY, boundingBox.maxZ,};
+        int s = this.size;
+        this.size += 12;
+        for(int x = 0; x < vertices.length; x+=3) {
+            this.vertices.add(vertices[x], vertices[x+1], vertices[x+2]);
+            extraData.accept(this.vertices);
+        }
+        this.indices.add(s+0,s+1,s+1,s+2,s+2,s+3,s+3,s+0,s+0,s+4,s+1,s+5,s+2,s+6,s+3,s+7,s+4,s+5,s+5,s+6,s+6,s+7,s+7,s+4);
+        //int[] indices = new int[]{0,1,1,2,2,3,3,0,0,4,1,5,2,6,3,7,4,5,5,6,6,7,7,4};
     }
 
     public void addQuadIndices() {
