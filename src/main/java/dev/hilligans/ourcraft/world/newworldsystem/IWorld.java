@@ -137,6 +137,25 @@ public interface IWorld {
 
     Entity removeEntity(long l1, long l2);
 
+    default void markDirtyAround(long blockX, long blockY, long blockZ) {
+        int width = getChunkWidth();
+        int height = getChunkHeight();
+        IChunk chunk = getChunk(blockX + width, blockY, blockZ);
+        if(chunk != null) {chunk.setDirty(true);}
+        chunk = getChunk(blockX - width, blockY, blockZ);
+        if(chunk != null) {chunk.setDirty(true);}
+
+        chunk = getChunk(blockX, blockY + height, blockZ);
+        if(chunk != null) {chunk.setDirty(true);}
+        chunk = getChunk(blockX, blockY - height, blockZ);
+        if(chunk != null) {chunk.setDirty(true);}
+
+        chunk = getChunk(blockX, blockY, blockZ + width);
+        if(chunk != null) {chunk.setDirty(true);}
+        chunk = getChunk(blockX, blockY, blockZ - width);
+        if(chunk != null) {chunk.setDirty(true);}
+    }
+
     default Iterable<IChunk> getChunks(BlockPos min, BlockPos max) {
         return getChunks(min.getX(), min.getY(), min.getZ(), max.getX(), max.getY(), max.getZ());
     }

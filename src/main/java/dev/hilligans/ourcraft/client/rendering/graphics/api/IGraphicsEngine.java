@@ -52,6 +52,9 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
                                         break out;
                                     }
                                     try (var $9 = section.startSection(window.getWindowName())) {
+                                        try (var $2 = section.startSection("tick")) {
+                                            window.getClient().tick(graphicsContext);
+                                        }
                                         try (var $2 = section.startSection("render")) {
                                             render(window, graphicsContext);
                                         }

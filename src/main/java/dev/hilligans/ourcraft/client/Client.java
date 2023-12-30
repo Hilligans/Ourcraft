@@ -35,6 +35,8 @@ import dev.hilligans.ourcraft.client.audio.SoundEngine;
 import dev.hilligans.ourcraft.tag.CompoundNBTTag;
 import dev.hilligans.ourcraft.util.ArgumentContainer;
 import dev.hilligans.ourcraft.util.Logger;
+import dev.hilligans.ourcraft.util.ThreadContext;
+import dev.hilligans.ourcraft.world.newworldsystem.ClientCubicWorld;
 import dev.hilligans.ourcraft.world.newworldsystem.CubicWorld;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 import dev.hilligans.ourcraft.save.WorldLoader;
@@ -92,7 +94,7 @@ public class Client implements IClientPacketHandler {
 
     public Client(GameInstance gameInstance, ArgumentContainer argumentContainer) {
         this.gameInstance = gameInstance;
-        this.newClientWorld = new CubicWorld(gameInstance, 0,"", 64);
+        this.newClientWorld = new ClientCubicWorld(gameInstance, 0,"", 64);
         logger = gameInstance.LOGGER.withKey("client");
         graphicsEngine = gameInstance.GRAPHICS_ENGINES.get("ourcraft:openglEngine");
         ((OpenGLEngine)graphicsEngine).client = this;
@@ -161,6 +163,15 @@ public class Client implements IClientPacketHandler {
         graphicsEngine.createRenderLoop(gameInstance, rWindow).run();
         graphicsEngine.close();
         cleanUp();
+    }
+
+    public void tick(ThreadContext threadContext) {
+        try(var $0 = threadContext.getSection().startSection("tick_world")) {
+            newClientWorld.tick();
+        }
+        try(var $0 = threadContext.getSection().startSection("process_packets")) {
+            network.processPackets();
+        }
     }
 
     public RenderWindow rWindow;

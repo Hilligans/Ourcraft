@@ -190,8 +190,7 @@ public class SSendChunkPacket extends PacketBaseNew<IClientPacketHandler> {
     public void handle(IClientPacketHandler clientPacketHandler) {
         try {
             clientPacketHandler.getWorld().setChunk(newChunk.getBlockX(), newChunk.getBlockY(),  newChunk.getBlockZ(), newChunk.setWorld(clientPacketHandler.getWorld()));
-            //chunk.world.setChunk(chunk);
-            //System.out.println(chunk.x + ":" + chunk.z);
+            clientPacketHandler.getWorld().markDirtyAround(newChunk.getBlockX(), newChunk.getBlockY(), newChunk.getBlockZ());
         } catch (Exception ignored) {
             ignored.printStackTrace();
         }

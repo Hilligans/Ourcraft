@@ -122,7 +122,6 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
             public static int rebuildDistance = 4;
 
             void drawChunk(RenderWindow window, GraphicsContext graphicsContext, Client client, IGraphicsEngine<?, ?,?> engine, MatrixStack matrixStack, Vector3i playerChunkPos, IWorld world, int x, int y, int z, int chunkWidth, int chunkHeight) {
-                MeshHolder meshHolder = getMesh(x, y, z);
                 for (Tuple<IChunk, PrimitiveBuilder> tuple : primitiveBuilders) {
                     asyncedChunks.remove(((tuple.getTypeA().getX()) << 32) | (tuple.getTypeA().getZ() & 0xffffffffL));
                     tuple.typeB.setVertexFormat(shaderSource.vertexFormat);
@@ -130,32 +129,32 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
                     meshes.setChunk(tuple.getTypeA().getX(), tuple.getTypeA().getY(), tuple.getTypeA().getZ(), new MeshHolder().set(meshID, tuple.getTypeB().indices.size()));
                     primitiveBuilders.remove(tuple);
                 }
-                if (meshHolder != null) {
-                    if (meshHolder.id != -1 && meshHolder.length != 0) {
-                        matrixStack.updateFrustum();
-                        if (matrixStack.frustumIntersection.testAab((x) * chunkWidth, (y) * chunkHeight, (z) * chunkWidth, (x + 1) * chunkWidth, (y + 1) * chunkHeight, (z + 1) * chunkWidth)) {
-                            matrixStack.push();
-                            matrixStack.translate(x * chunkWidth, y * chunkHeight, z * chunkWidth);
-                            IDefaultEngineImpl<?,?> impl = engine.getDefaultImpl();
-                            impl.uploadMatrix(graphicsContext, matrixStack, shaderSource);
-                            impl.drawMesh(graphicsContext, matrixStack, meshHolder.getId(), meshHolder.index, meshHolder.length);
-                            matrixStack.pop();
+                IChunk chunk = getChunk(x, y, z, world);
+                if (chunk != null) {
+                    MeshHolder meshHolder = getMesh(x, y, z);
+                    if(chunk.isDirty() || meshHolder == null) {
+                        /*if (getChunk(x + 1, y, z, world) != null &&
+                                getChunk(x - 1, y, z, world) != null &&
+                                getChunk(x, y + 1, z, world) != null &&
+                                getChunk(x, y - 1, z, world) != null &&
+                                getChunk(x, y, z + 1, world) != null &&
+                                getChunk(x, y, z - 1, world) != null) {
+
+                         */
+                        if ((Math.abs(x - playerChunkPos.x) < rebuildDistance && Math.abs(y - playerChunkPos.y) < rebuildDistance && Math.abs(z - playerChunkPos.z) < rebuildDistance)) {
+                            buildMesh(window, graphicsContext, chunk);
                         }
                     }
-                } else {
-                    IChunk chunk = getChunk(x, y, z, world);
-                    if (chunk != null) {
-                        if (chunk.isDirty()) {
-                            if (getChunk(x + 1, y, z, world) != null &&
-                                    getChunk(x - 1, y, z, world) != null &&
-                                    getChunk(x, y + 1, z, world) != null &&
-                                    getChunk(x, y - 1, z, world) != null &&
-                                    getChunk(x, y, z + 1, world) != null &&
-                                    getChunk(x, y, z - 1, world) != null) {
-                                if ((Math.abs(x - playerChunkPos.x) < rebuildDistance && Math.abs(y - playerChunkPos.y) < rebuildDistance && Math.abs(z - playerChunkPos.z) < rebuildDistance)) {
-                                    buildMesh(window, graphicsContext, chunk);
-                                    chunk.setDirty(false);
-                                }
+                    if (meshHolder != null) {
+                        if (meshHolder.id != -1 && meshHolder.length != 0) {
+                            matrixStack.updateFrustum();
+                            if (matrixStack.frustumIntersection.testAab((x) * chunkWidth, (y) * chunkHeight, (z) * chunkWidth, (x + 1) * chunkWidth, (y + 1) * chunkHeight, (z + 1) * chunkWidth)) {
+                                matrixStack.push();
+                                matrixStack.translate(x * chunkWidth, y * chunkHeight, z * chunkWidth);
+                                IDefaultEngineImpl<?,?> impl = engine.getDefaultImpl();
+                                impl.uploadMatrix(graphicsContext, matrixStack, shaderSource);
+                                impl.drawMesh(graphicsContext, matrixStack, meshHolder.getId(), meshHolder.index, meshHolder.length);
+                                matrixStack.pop();
                             }
                         }
                     }

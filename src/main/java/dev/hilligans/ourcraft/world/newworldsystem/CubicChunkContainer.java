@@ -26,7 +26,9 @@ public class CubicChunkContainer extends EmptyContainer<IChunk> implements IThre
             return null;
         }
         chunk = c.getOrDefault((int)z, null);
-        cachedChunk = chunk;
+        if(chunk != null) {
+            cachedChunk = chunk;
+        }
         return chunk;
     }
 

@@ -4,11 +4,15 @@ import dev.hilligans.ourcraft.client.rendering.screens.DisconnectScreen;
 import dev.hilligans.ourcraft.network.packet.client.CHandshakePacket;
 import io.netty.channel.*;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
+
 public class ClientNetworkHandler extends NetworkHandler {
 
     public static ClientNetworkHandler clientNetworkHandler;
 
     public ClientNetwork network;
+    public ConcurrentLinkedQueue<PacketBase> packets = new ConcurrentLinkedQueue<>();
 
     public ClientNetworkHandler(ClientNetwork network) {
         this.network = network;
@@ -33,11 +37,7 @@ public class ClientNetworkHandler extends NetworkHandler {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, IPacketByteArray msg) throws Exception {
         PacketBase packetBase = msg.createPacket(network.receiveProtocol);
-        if(packetBase instanceof PacketBaseNew<?> packetBaseNew) {
-            packetBaseNew.handle(network.client);
-        } else {
-            packetBase.handle();
-        }
+        packets.add(packetBase);
     }
 
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
@@ -47,4 +47,14 @@ public class ClientNetworkHandler extends NetworkHandler {
         network.client.openScreen(new DisconnectScreen(network.client,cause.getMessage()));
     }
 
+    public void processPackets() {
+        PacketBase packetBase;
+        while((packetBase = packets.poll()) != null) {
+            if(packetBase instanceof PacketBaseNew<?> packetBaseNew) {
+                packetBaseNew.handle(network.client);
+            } else {
+                packetBase.handle();
+            }
+        }
+    }
 }

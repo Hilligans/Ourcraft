@@ -54,8 +54,8 @@ public class CubicWorld implements IWorld {
 
     @Override
     public void setChunk(long blockX, long blockY, long blockZ, IChunk chunk) {
-        chunkContainer.setChunk(blockX >> 5, blockY >> 5, blockZ >> 5, chunk);
         chunk.setDirty(true);
+        chunkContainer.setChunk(blockX >> 5, blockY >> 5, blockZ >> 5, chunk);
     }
 
     @Override

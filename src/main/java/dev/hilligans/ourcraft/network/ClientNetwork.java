@@ -30,7 +30,6 @@ public class ClientNetwork extends Network {
         this.gameInstance = client.gameInstance;
 
         networkHandler = new ClientNetworkHandler(this);
-        ClientNetworkHandler.clientNetworkHandler = (ClientNetworkHandler) networkHandler;
 
         final String HOST = System.getProperty("host", ip);
         final int PORT = Integer.parseInt(System.getProperty("port", port));
@@ -71,5 +70,11 @@ public class ClientNetwork extends Network {
     @Override
     public void sendPacketDirect(PacketBase packetBase) {
         ((ClientNetworkHandler)networkHandler).sendPacket(packetBase);
+    }
+
+    public void processPackets() {
+        if(networkHandler != null) {
+            ((ClientNetworkHandler) networkHandler).processPackets();
+        }
     }
 }
