@@ -1,17 +1,15 @@
 package dev.hilligans.ourcraft.client.rendering.screens;
 
 import dev.hilligans.ourcraft.client.Client;
-import dev.hilligans.ourcraft.client.input.key.KeyPress;
 import dev.hilligans.ourcraft.client.MatrixStack;
-import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
-import dev.hilligans.ourcraft.client.rendering.Textures;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
-import dev.hilligans.ourcraft.client.rendering.widgets.ServerSelectorWidget;
+import dev.hilligans.ourcraft.client.input.key.KeyPress;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
+import dev.hilligans.ourcraft.client.rendering.Textures;
+import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.widgets.Button;
+import dev.hilligans.ourcraft.client.rendering.widgets.ServerSelectorWidget;
 import dev.hilligans.ourcraft.network.PortUtil;
-import dev.hilligans.ourcraft.server.MultiPlayerServer;
-import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.util.Settings;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_H;

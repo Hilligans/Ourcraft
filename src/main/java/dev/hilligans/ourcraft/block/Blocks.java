@@ -1,8 +1,8 @@
 package dev.hilligans.ourcraft.block;
 
+import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.block.blocktypes.*;
 import dev.hilligans.ourcraft.data.other.BlockProperties;
-import dev.hilligans.ourcraft.Ourcraft;
 
 public class Blocks {
 

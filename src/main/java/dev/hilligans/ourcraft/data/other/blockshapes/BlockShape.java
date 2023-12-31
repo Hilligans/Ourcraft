@@ -1,16 +1,16 @@
 package dev.hilligans.ourcraft.data.other.blockshapes;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.BlockModel;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
-import dev.hilligans.ourcraft.data.other.blockstates.BlockState;
 import dev.hilligans.ourcraft.client.rendering.world.managers.BlockTextureManager;
 import dev.hilligans.ourcraft.client.rendering.world.managers.VAOManager;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.BoundingBox;
-import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.data.other.blockstates.BlockState;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ShortOpenHashMap;

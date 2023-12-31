@@ -60,5 +60,6 @@ public class ClientMain {
         if(argumentContainer.getBoolean("--integratedServer", false)) {
             ServerMain.getServer().stop();
         }
+        System.exit(0);
     }
 }

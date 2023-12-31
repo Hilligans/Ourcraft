@@ -1,8 +1,8 @@
 package dev.hilligans.ourcraft.biome;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.Blocks;
-import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.world.builders.WorldBuilder;

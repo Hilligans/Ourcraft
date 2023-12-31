@@ -47,8 +47,5 @@ public class SUpdatePlayer extends PacketBaseNew<IClientPacketHandler> {
     public void handle(IClientPacketHandler clientPacketHandler) {
         clientPacketHandler.getClient().rWindow.camera.setPosition(x,y,z);
         clientPacketHandler.getClient().rWindow.camera.setRotation(pitch,yaw);
-        Camera.pos.set(x,y,z);
-        Camera.pitch = pitch;
-        Camera.yaw = yaw;
     }
 }

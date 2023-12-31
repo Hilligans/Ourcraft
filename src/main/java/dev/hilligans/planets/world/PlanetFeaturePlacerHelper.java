@@ -4,9 +4,9 @@ import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.world.newworldsystem.IFeaturePlacerHelper;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
-import org.joml.*;
-
-import java.lang.Math;
+import org.joml.Matrix3d;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
 
 public class PlanetFeaturePlacerHelper implements IFeaturePlacerHelper {
 

@@ -1,13 +1,11 @@
 package dev.hilligans.ourcraft.client.rendering.widgets;
 
+import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.input.key.CharPress;
 import dev.hilligans.ourcraft.client.input.key.KeyHandler;
 import dev.hilligans.ourcraft.client.input.key.KeyPress;
-import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
-import dev.hilligans.ourcraft.ClientMain;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
 
 public class SearchField extends Widget {
 

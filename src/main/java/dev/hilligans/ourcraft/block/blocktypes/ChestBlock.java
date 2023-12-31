@@ -1,13 +1,12 @@
 package dev.hilligans.ourcraft.block.blocktypes;
 
+import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.container.containers.ChestContainer;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.BlockProperties;
-import dev.hilligans.ourcraft.data.other.Inventory;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.network.packet.server.SOpenContainer;
-import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.world.DataProvider;
 import dev.hilligans.ourcraft.world.data.providers.ChestDataProvider;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;

@@ -1,8 +1,8 @@
 package dev.hilligans.ourcraft.addons.bot;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.data.other.Inventory;
-import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.util.EntityPosition;
 
 public class BotInstance {

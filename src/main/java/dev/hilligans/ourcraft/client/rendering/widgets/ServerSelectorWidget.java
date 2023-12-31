@@ -1,11 +1,10 @@
 package dev.hilligans.ourcraft.client.rendering.widgets;
 
 import dev.hilligans.ourcraft.client.MatrixStack;
+import dev.hilligans.ourcraft.client.rendering.Textures;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.screens.JoinScreen;
 import dev.hilligans.ourcraft.client.rendering.screens.LoadingScreen;
-import dev.hilligans.ourcraft.client.rendering.Textures;
-import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.util.Settings;
 
 public class ServerSelectorWidget extends Widget {

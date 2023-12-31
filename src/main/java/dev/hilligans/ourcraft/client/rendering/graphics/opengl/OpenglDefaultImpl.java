@@ -198,6 +198,9 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
 
     @Override
     public void bindTexture(GraphicsContext graphicsContext, long texture) {
+        if(texture == 0) {
+            throw new NullPointerException();
+        }
         if(texture != boundTexture) {
             GL20.glBindTexture(textureTypes.get((int)texture), (int)texture);
             boundTexture = texture;

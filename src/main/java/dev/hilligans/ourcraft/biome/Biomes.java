@@ -1,9 +1,9 @@
 package dev.hilligans.ourcraft.biome;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.BlockTemplate;
-import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.util.CurvedRay;
 import dev.hilligans.ourcraft.util.CurvedRayEngine;
 import dev.hilligans.ourcraft.world.builders.foliage.CactusBuilder;

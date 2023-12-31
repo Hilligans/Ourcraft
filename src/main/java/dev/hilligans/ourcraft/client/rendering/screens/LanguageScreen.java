@@ -1,10 +1,9 @@
 package dev.hilligans.ourcraft.client.rendering.screens;
 
-import dev.hilligans.ourcraft.client.Client;
-import dev.hilligans.ourcraft.client.lang.Languages;
 import dev.hilligans.ourcraft.client.MatrixStack;
-import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
+import dev.hilligans.ourcraft.client.lang.Languages;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
+import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.widgets.*;
 
 public class LanguageScreen extends ScreenBase implements SelectorScreen {

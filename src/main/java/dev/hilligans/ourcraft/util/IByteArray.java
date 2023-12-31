@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.util;
 
-import dev.hilligans.ourcraft.tag.INBTTag;
 import dev.hilligans.ourcraft.save.IEncodeable;
+import dev.hilligans.ourcraft.tag.INBTTag;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;

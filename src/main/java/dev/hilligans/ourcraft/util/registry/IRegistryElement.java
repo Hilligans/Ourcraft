@@ -1,9 +1,9 @@
 package dev.hilligans.ourcraft.util.registry;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.data.descriptors.TagCollection;
-import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.resource.ResourceLocation;
 

@@ -1,8 +1,8 @@
 package dev.hilligans.ourcraft.util.math;
 
-import org.joml.*;
 import org.joml.Math;
 import org.joml.Runtime;
+import org.joml.*;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;

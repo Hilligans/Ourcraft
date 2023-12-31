@@ -202,8 +202,11 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
             public void buildMesh(RenderWindow window, GraphicsContext graphicsContext, IChunk chunk) {
                 PrimitiveBuilder primitiveBuilder = getPrimitiveBuilder(chunk);
                 primitiveBuilder.setVertexFormat(shaderSource.vertexFormat);
-                int meshID = (int) window.getGraphicsEngine().getDefaultImpl().createMesh(graphicsContext, primitiveBuilder.toVertexMesh());
-                meshes.setChunk(chunk.getX(),chunk.getY(),chunk.getZ(),new MeshHolder().set(meshID,primitiveBuilder.indices.size()));
+                long meshID = window.getGraphicsEngine().getDefaultImpl().createMesh(graphicsContext, primitiveBuilder.toVertexMesh());
+                MeshHolder meshHolder = meshes.setChunk(chunk.getX(),chunk.getY(),chunk.getZ(),new MeshHolder().set(meshID,primitiveBuilder.indices.size()));
+                if(meshHolder != null) {
+                    window.getGraphicsEngine().getDefaultImpl().destroyMesh(graphicsContext, meshHolder.id);
+                }
             }
         };
     }

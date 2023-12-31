@@ -1,6 +1,5 @@
 package dev.hilligans.ourcraft.data.other;
 
-import org.joml.Intersectionf;
 import org.joml.Vector2f;
 
 public interface IBoundingBox {

@@ -1,10 +1,10 @@
 package dev.hilligans.ourcraft.block.blocktypes;
 
 import dev.hilligans.ourcraft.block.Block;
+import dev.hilligans.ourcraft.data.other.BlockProperties;
 import dev.hilligans.ourcraft.data.other.blockshapes.StairBlockShape;
 import dev.hilligans.ourcraft.data.other.blockstates.BlockState;
 import dev.hilligans.ourcraft.data.other.blockstates.DataBlockState;
-import dev.hilligans.ourcraft.data.other.BlockProperties;
 import dev.hilligans.ourcraft.world.data.providers.ShortBlockState;
 
 public class StairBlock extends Block {

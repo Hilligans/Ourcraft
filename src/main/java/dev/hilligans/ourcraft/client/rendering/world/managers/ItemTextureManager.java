@@ -1,10 +1,5 @@
 package dev.hilligans.ourcraft.client.rendering.world.managers;
 
-import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
-
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-
 public class ItemTextureManager {
 
     public int id;

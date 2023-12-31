@@ -1,11 +1,10 @@
 package dev.hilligans.ourcraft.client.rendering.screens;
 
-import dev.hilligans.ourcraft.client.Client;
+import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
 import dev.hilligans.ourcraft.client.rendering.widgets.Button;
 import dev.hilligans.ourcraft.client.rendering.widgets.InputField;
 import dev.hilligans.ourcraft.network.packet.auth.CLogin;
-import dev.hilligans.ourcraft.Ourcraft;
 
 public class LoginScreen extends ScreenBase {
 

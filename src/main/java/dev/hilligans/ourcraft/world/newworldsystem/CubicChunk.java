@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.world.newworldsystem;
 
-import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.ourcraft.block.Blocks;
+import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.ourcraft.data.other.ChunkPos;
 import dev.hilligans.ourcraft.server.concurrent.Lock;
 

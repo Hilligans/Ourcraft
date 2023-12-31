@@ -1,7 +1,7 @@
 package dev.hilligans.planets.gen;
 
-import dev.hilligans.ourcraft.world.newworldsystem.*;
 import dev.hilligans.ourcraft.world.gen.IWorldHeightBuilder;
+import dev.hilligans.ourcraft.world.newworldsystem.*;
 
 public class PlanetWorldGenerator implements IWorldGenerator {
 

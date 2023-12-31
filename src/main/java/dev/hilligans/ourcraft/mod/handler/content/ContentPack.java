@@ -1,27 +1,25 @@
 package dev.hilligans.ourcraft.mod.handler.content;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.audio.SoundBuffer;
 import dev.hilligans.ourcraft.client.input.Input;
 import dev.hilligans.ourcraft.client.input.InputHandlerProvider;
+import dev.hilligans.ourcraft.client.rendering.ScreenBuilder;
+import dev.hilligans.ourcraft.client.rendering.Texture;
+import dev.hilligans.ourcraft.client.rendering.graphics.*;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.ILayoutEngine;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.IModel;
-import dev.hilligans.ourcraft.client.rendering.ScreenBuilder;
-import dev.hilligans.ourcraft.client.rendering.Texture;
-import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.data.primitives.Triplet;
-import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.item.Item;
 import dev.hilligans.ourcraft.network.Protocol;
-import dev.hilligans.ourcraft.resource.registry.loaders.RegistryLoader;
 import dev.hilligans.ourcraft.resource.loaders.ResourceLoader;
+import dev.hilligans.ourcraft.resource.registry.loaders.RegistryLoader;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.util.registry.Registry;
-import dev.hilligans.ourcraft.util.Settings;
 import dev.hilligans.ourcraft.world.Feature;
-import dev.hilligans.ourcraft.client.rendering.graphics.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;

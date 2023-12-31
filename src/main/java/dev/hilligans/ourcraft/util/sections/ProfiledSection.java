@@ -4,7 +4,9 @@ import dev.hilligans.ourcraft.Ourcraft;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Stack;
 
 import static dev.hilligans.ourcraft.util.FormattedString.FSTR;
 

@@ -1,13 +1,12 @@
 package dev.hilligans.ourcraft.client.rendering.screens;
 
-import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
 import dev.hilligans.ourcraft.client.rendering.widgets.Button;
 import dev.hilligans.ourcraft.client.rendering.widgets.FolderWidget;
 import dev.hilligans.ourcraft.data.primitives.IntegerWrapper;
-import dev.hilligans.ourcraft.tag.CompoundNBTTag;
 import dev.hilligans.ourcraft.save.FileLoader;
 import dev.hilligans.ourcraft.save.WorldLoader;
+import dev.hilligans.ourcraft.tag.CompoundNBTTag;
 import org.lwjgl.PointerBuffer;
 
 public class TagEditorScreen extends ScreenBase {

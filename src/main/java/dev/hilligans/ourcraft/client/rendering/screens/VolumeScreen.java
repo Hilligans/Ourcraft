@@ -1,9 +1,8 @@
 package dev.hilligans.ourcraft.client.rendering.screens;
 
 import dev.hilligans.ourcraft.client.audio.SoundCategory;
-import dev.hilligans.ourcraft.client.Client;
-import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
+import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.widgets.SliderWidget;
 
 public class VolumeScreen extends ScreenBase {

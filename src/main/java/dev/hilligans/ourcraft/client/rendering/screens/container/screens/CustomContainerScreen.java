@@ -1,6 +1,5 @@
 package dev.hilligans.ourcraft.client.rendering.screens.container.screens;
 
-import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.ContainerScreen;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;

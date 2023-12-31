@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.client.input;
 
-import dev.hilligans.ourcraft.client.rendering.graphics.api.IInputProvider;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IInputProvider;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import it.unimi.dsi.fastutil.ints.IntArrayList;

@@ -3,7 +3,6 @@ package dev.hilligans.ourcraft.util.sections;
 import dev.hilligans.ourcraft.util.ConsoleReader;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 
 public class SteppingSection implements ISection {
 

@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.tag;
 
-import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.ourcraft.Ourcraft;
+import dev.hilligans.ourcraft.item.ItemStack;
 
 import java.nio.ByteBuffer;
 import java.util.Collection;

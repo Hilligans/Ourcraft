@@ -1,13 +1,13 @@
 package dev.hilligans.ourcraft.data.other;
 
-import dev.hilligans.ourcraft.client.rendering.newrenderer.ItemModel;
+import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.IModel;
+import dev.hilligans.ourcraft.client.rendering.newrenderer.ItemModel;
 import dev.hilligans.ourcraft.client.rendering.world.managers.ItemTextureManager;
 import dev.hilligans.ourcraft.data.descriptors.TagCollection;
 import dev.hilligans.ourcraft.item.BlockItem;
 import dev.hilligans.ourcraft.item.Item;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
-import dev.hilligans.ourcraft.Ourcraft;
 import org.json.JSONObject;
 
 public class ItemProperties {

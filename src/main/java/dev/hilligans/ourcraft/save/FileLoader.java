@@ -4,7 +4,8 @@ import org.lwjgl.PointerBuffer;
 
 import static org.lwjgl.system.MemoryUtil.memAllocPointer;
 import static org.lwjgl.system.MemoryUtil.memFree;
-import static org.lwjgl.util.nfd.NativeFileDialog.*;
+import static org.lwjgl.util.nfd.NativeFileDialog.NFD_CANCEL;
+import static org.lwjgl.util.nfd.NativeFileDialog.NFD_OKAY;
 
 public class FileLoader {
 

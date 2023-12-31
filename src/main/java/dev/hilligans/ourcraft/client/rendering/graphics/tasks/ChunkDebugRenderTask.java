@@ -1,28 +1,19 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.tasks;
 
-import dev.hilligans.ourcraft.client.Camera;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.*;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.ICamera;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
 import dev.hilligans.ourcraft.data.other.BoundingBox;
-import dev.hilligans.ourcraft.data.primitives.FloatList;
 import dev.hilligans.ourcraft.util.Loops;
-import dev.hilligans.ourcraft.util.TriConsumer;
 import dev.hilligans.ourcraft.world.newworldsystem.IChunk;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 import org.joml.Vector3d;
-import org.joml.Vector3f;
 import org.joml.Vector3i;
-import org.joml.Vector4f;
-
-import java.awt.*;
-import java.util.function.Consumer;
 
 public class ChunkDebugRenderTask extends RenderTaskSource {
 

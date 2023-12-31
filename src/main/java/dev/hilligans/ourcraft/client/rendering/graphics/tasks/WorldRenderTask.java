@@ -125,26 +125,28 @@ public class WorldRenderTask extends RenderTaskSource {
                     primitiveBuilders.remove(tuple);
                 }
 
-                IChunk chunk = getChunk(x, y, z, world);
-                if (chunk != null) {
-                    MeshHolder meshHolder = getMesh(x, y, z);
-                    if (chunk.isDirty() || meshHolder == null) {
-                        if ((Math.abs(x - playerChunkPos.x) < rebuildDistance && Math.abs(y - playerChunkPos.y) < rebuildDistance && Math.abs(z - playerChunkPos.z) < rebuildDistance)) {
-                            buildMesh(window, graphicsContext, chunk);
+                try (var $$ = graphicsContext.getSection().startSection("draw_chunk")) {
+                    IChunk chunk = getChunk(x, y, z, world);
+                    if (chunk != null) {
+                        MeshHolder meshHolder = getMesh(x, y, z);
+                        if (chunk.isDirty() || meshHolder == null) {
+                            if ((Math.abs(x - playerChunkPos.x) < rebuildDistance && Math.abs(y - playerChunkPos.y) < rebuildDistance && Math.abs(z - playerChunkPos.z) < rebuildDistance)) {
+                                buildMesh(window, graphicsContext, chunk);
+                            }
                         }
-                    }
-                    if (meshHolder != null) {
-                        if (meshHolder.id != -1 && meshHolder.length != 0) {
-                            matrixStack.updateFrustum();
-                            if (matrixStack.frustumIntersection.testAab((x) * chunkWidth, (y) * chunkHeight, (z) * chunkWidth, (x + 1) * chunkWidth, (y + 1) * chunkHeight, (z + 1) * chunkWidth)) {
-                                matrixStack.push();
-                                matrixStack.translate(x * chunkWidth, y * chunkHeight, z * chunkWidth);
+                        if (meshHolder != null) {
+                            if (meshHolder.id != -1 && meshHolder.length != 0) {
+                                matrixStack.updateFrustum();
+                                if (matrixStack.frustumIntersection.testAab((x) * chunkWidth, (y) * chunkHeight, (z) * chunkWidth, (x + 1) * chunkWidth, (y + 1) * chunkHeight, (z + 1) * chunkWidth)) {
+                                    matrixStack.push();
+                                    matrixStack.translate(x * chunkWidth, y * chunkHeight, z * chunkWidth);
 
-                                engine.getDefaultImpl().uploadMatrix(graphicsContext, matrixStack, shaderSource);
-                                try (var $ = graphicsContext.getSection().startSection("submitChunkDrawCall")) {
-                                    engine.getDefaultImpl().drawMesh(graphicsContext, matrixStack, meshHolder.getId(), meshHolder.index, meshHolder.length);
+                                    engine.getDefaultImpl().uploadMatrix(graphicsContext, matrixStack, shaderSource);
+                                    try (var $ = graphicsContext.getSection().startSection("submitChunkDrawCall")) {
+                                        engine.getDefaultImpl().drawMesh(graphicsContext, matrixStack, meshHolder.getId(), meshHolder.index, meshHolder.length);
+                                    }
+                                    matrixStack.pop();
                                 }
-                                matrixStack.pop();
                             }
                         }
                     }
@@ -185,11 +187,19 @@ public class WorldRenderTask extends RenderTaskSource {
             public void buildMesh(RenderWindow window, GraphicsContext graphicsContext, IChunk chunk) {
                 primitiveBuilder = getPrimitiveBuilder(chunk, primitiveBuilder);
                 primitiveBuilder.setVertexFormat(shaderSource.vertexFormat);
-                int meshID = (int) window.getGraphicsEngine().getDefaultImpl().createMesh(graphicsContext, primitiveBuilder.toVertexMesh());
-                meshes.setChunk(chunk.getX(),chunk.getY(),chunk.getZ(),new MeshHolder().set(meshID,primitiveBuilder.indices.size()));
+                long meshID = window.getGraphicsEngine().getDefaultImpl().createMesh(graphicsContext, primitiveBuilder.toVertexMesh());
+                MeshHolder old = meshes.setChunk(chunk.getX(),chunk.getY(),chunk.getZ(),new MeshHolder().set(meshID,primitiveBuilder.indices.size()));
+                if(old != null) {
+                    window.getGraphicsEngine().getDefaultImpl().destroyMesh(graphicsContext, old.id);
+                }
                 primitiveBuilder.size = 0;
                 primitiveBuilder.vertices.size = 0;
                 primitiveBuilder.indices.size = 0;
+            }
+
+            @Override
+            public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
+                super.load(gameInstance, graphicsEngine, graphicsContext);
             }
 
             @Override

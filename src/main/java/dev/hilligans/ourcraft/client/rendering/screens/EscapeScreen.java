@@ -1,6 +1,5 @@
 package dev.hilligans.ourcraft.client.rendering.screens;
 
-import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
 import dev.hilligans.ourcraft.client.rendering.widgets.Button;
 

@@ -1,6 +1,5 @@
 package dev.hilligans.ourcraft.client.input.key;
 
-import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.data.primitives.Tuple;
 import it.unimi.dsi.fastutil.ints.Int2CharOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -9,7 +8,8 @@ import org.lwjgl.glfw.GLFWKeyCallback;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
 public class KeyHandler {
 

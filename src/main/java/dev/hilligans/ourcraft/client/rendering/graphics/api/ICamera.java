@@ -3,9 +3,10 @@ package dev.hilligans.ourcraft.client.rendering.graphics.api;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import org.jetbrains.annotations.NotNull;
-import org.joml.*;
-
-import java.lang.Math;
+import org.joml.Matrix4d;
+import org.joml.Vector2f;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
 
 public interface ICamera {
 

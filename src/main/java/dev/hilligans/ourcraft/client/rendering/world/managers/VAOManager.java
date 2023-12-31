@@ -1,6 +1,5 @@
 package dev.hilligans.ourcraft.client.rendering.world.managers;
 
-import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
 import dev.hilligans.ourcraft.data.primitives.Tuple;
 
 import java.util.HashMap;

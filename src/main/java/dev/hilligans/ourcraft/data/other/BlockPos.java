@@ -1,9 +1,9 @@
 package dev.hilligans.ourcraft.data.other;
 
 import dev.hilligans.ourcraft.util.IPosition;
-import org.joml.*;
-
-import java.lang.Math;
+import org.joml.Matrix3f;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
 
 public class BlockPos {
 

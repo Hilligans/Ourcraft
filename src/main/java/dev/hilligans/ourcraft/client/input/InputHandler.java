@@ -1,8 +1,8 @@
 package dev.hilligans.ourcraft.client.input;
 
-import dev.hilligans.ourcraft.client.rendering.graphics.api.IInputProvider;
-import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IInputProvider;
 import dev.hilligans.ourcraft.util.Logger;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 

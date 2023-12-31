@@ -2,13 +2,13 @@ package dev.hilligans.ourcraft.block.bl;
 
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.blockstate.BlockStateBuilder;
+import dev.hilligans.ourcraft.block.blockstate.BlockStateTypes;
 import dev.hilligans.ourcraft.block.blockstate.IBlockState;
+import dev.hilligans.ourcraft.block.blockstate.IntegerStateType;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.BlockProperties;
 import dev.hilligans.ourcraft.world.newworldsystem.IMethodResult;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
-import dev.hilligans.ourcraft.block.blockstate.BlockStateTypes;
-import dev.hilligans.ourcraft.block.blockstate.IntegerStateType;
 
 import java.util.ArrayList;
 import java.util.Random;

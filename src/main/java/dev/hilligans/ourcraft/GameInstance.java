@@ -71,7 +71,7 @@ public class GameInstance {
     //public final
     public Side side;
 
-    public int gameInstanceUniversalID = -1;
+    public int gameInstanceUniversalID;
 
     public final ToolLevelList MATERIAL_LIST = new ToolLevelList();
 

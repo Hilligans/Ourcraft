@@ -1,17 +1,9 @@
 package dev.hilligans.ourcraft.client.input.key;
 
-import dev.hilligans.ourcraft.block.Blocks;
-import dev.hilligans.ourcraft.client.Camera;
 import dev.hilligans.ourcraft.client.Client;
-import dev.hilligans.ourcraft.data.other.BlockPos;
-import dev.hilligans.ourcraft.data.other.blockstates.BlockState;
-import dev.hilligans.ourcraft.item.ItemStack;
-import dev.hilligans.ourcraft.network.packet.client.CSendBlockChanges;
-import dev.hilligans.ourcraft.network.packet.client.CUseItem;
 
-import java.nio.DoubleBuffer;
-
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
 public class MouseHandler {
 

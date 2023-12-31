@@ -1,8 +1,8 @@
 package dev.hilligans.ourcraft.client.input.handlers.controller;
 
 import dev.hilligans.ourcraft.client.input.InputHandler;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.IInputProvider;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IInputProvider;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWGamepadState;

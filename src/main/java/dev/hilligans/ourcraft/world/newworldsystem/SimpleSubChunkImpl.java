@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.world.newworldsystem;
 
-import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.ourcraft.block.Blocks;
+import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 
 public class SimpleSubChunkImpl implements ISubChunk {
 

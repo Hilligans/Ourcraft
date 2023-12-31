@@ -1,8 +1,8 @@
 package dev.hilligans.ourcraft.client.rendering.widgets;
 
 import dev.hilligans.ourcraft.client.MatrixStack;
-import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.Textures;
+import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 
 public class Button extends Widget {
 

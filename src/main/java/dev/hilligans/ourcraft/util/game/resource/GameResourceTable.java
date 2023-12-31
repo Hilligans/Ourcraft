@@ -1,9 +1,9 @@
 package dev.hilligans.ourcraft.util.game.resource;
 
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.Blocks;
-import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.instance.TagCache;
 import dev.hilligans.ourcraft.item.Item;
 import dev.hilligans.ourcraft.world.Feature;

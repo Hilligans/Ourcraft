@@ -2,24 +2,20 @@ package dev.hilligans.ourcraft.data.other.server;
 
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.container.Container;
-import dev.hilligans.ourcraft.container.containers.InventoryContainer;
 import dev.hilligans.ourcraft.container.Slot;
-import dev.hilligans.ourcraft.data.other.Inventory;
+import dev.hilligans.ourcraft.container.containers.InventoryContainer;
 import dev.hilligans.ourcraft.data.UUID;
-import dev.hilligans.ourcraft.entity.entities.ItemEntity;
-import dev.hilligans.ourcraft.entity.Entity;
+import dev.hilligans.ourcraft.data.other.Inventory;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.ourcraft.network.IServerPacketHandler;
 import dev.hilligans.ourcraft.network.ServerNetworkHandler;
-import dev.hilligans.ourcraft.Ourcraft;
+import dev.hilligans.ourcraft.save.WorldLoader;
 import dev.hilligans.ourcraft.server.IServer;
-import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.tag.CompoundNBTTag;
 import dev.hilligans.ourcraft.util.EntityPosition;
 import dev.hilligans.ourcraft.util.Settings;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
-import dev.hilligans.ourcraft.save.WorldLoader;
 import io.netty.channel.ChannelId;
 
 public class ServerPlayerData implements IServerPacketHandler {

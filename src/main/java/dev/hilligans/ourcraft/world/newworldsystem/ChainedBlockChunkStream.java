@@ -1,8 +1,8 @@
 package dev.hilligans.ourcraft.world.newworldsystem;
 
 import dev.hilligans.ourcraft.block.blockstate.IBlockState;
-import dev.hilligans.ourcraft.util.IByteArray;
 import dev.hilligans.ourcraft.network.PacketByteArray;
+import dev.hilligans.ourcraft.util.IByteArray;
 import io.netty.buffer.ByteBuf;
 
 public class ChainedBlockChunkStream extends ChunkStream {

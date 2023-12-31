@@ -1,7 +1,5 @@
 package dev.hilligans.ourcraft.world.structure;
 
-import java.util.ArrayList;
-
 public class WFCStructureBuilder implements IStructureBuilder {
 
 

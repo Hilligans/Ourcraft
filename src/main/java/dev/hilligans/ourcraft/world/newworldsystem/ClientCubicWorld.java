@@ -2,8 +2,6 @@ package dev.hilligans.ourcraft.world.newworldsystem;
 
 import dev.hilligans.ourcraft.GameInstance;
 
-import java.util.function.Consumer;
-
 public class ClientCubicWorld extends CubicWorld {
     public ClientCubicWorld(GameInstance gameInstance, int id, String worldName, int radius) {
         super(gameInstance, id, worldName, radius);

@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.world.newworldsystem;
 
-import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.ourcraft.Ourcraft;
+import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;

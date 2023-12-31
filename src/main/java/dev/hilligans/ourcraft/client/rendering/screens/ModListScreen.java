@@ -2,14 +2,14 @@ package dev.hilligans.ourcraft.client.rendering.screens;
 
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
-import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
+import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
-import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.client.rendering.widgets.InvisibleFolder;
 import dev.hilligans.ourcraft.client.rendering.widgets.SelectorScreen;
 import dev.hilligans.ourcraft.client.rendering.widgets.SelectorWidget;
 import dev.hilligans.ourcraft.client.rendering.widgets.ToggleWidget;
+import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.util.Util;
 
 public class ModListScreen extends ScreenBase implements SelectorScreen {

@@ -1,9 +1,8 @@
 package dev.hilligans.ourcraft.client.rendering.widgets;
 
-import dev.hilligans.ourcraft.client.lang.Languages;
 import dev.hilligans.ourcraft.client.MatrixStack;
+import dev.hilligans.ourcraft.client.lang.Languages;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
-import dev.hilligans.ourcraft.ClientMain;
 import org.lwjgl.opengl.GL11;
 
 import java.nio.DoubleBuffer;

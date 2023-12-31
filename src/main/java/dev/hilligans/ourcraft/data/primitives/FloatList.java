@@ -4,7 +4,10 @@ package dev.hilligans.ourcraft.data.primitives;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.ConcurrentModificationException;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class FloatList {

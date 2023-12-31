@@ -5,7 +5,6 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL41;
 
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL20.glDeleteShader;
 import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
 public class ShaderManager {

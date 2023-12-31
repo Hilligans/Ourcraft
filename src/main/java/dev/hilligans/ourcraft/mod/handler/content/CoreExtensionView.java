@@ -1,11 +1,11 @@
 package dev.hilligans.ourcraft.mod.handler.content;
 
-import dev.hilligans.ourcraft.client.input.InputHandlerProvider;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.client.input.InputHandlerProvider;
+import dev.hilligans.ourcraft.client.rendering.graphics.*;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.ILayoutEngine;
 import dev.hilligans.ourcraft.resource.registry.loaders.RegistryLoader;
-import dev.hilligans.ourcraft.client.rendering.graphics.*;
 
 public class CoreExtensionView implements RegistrationView {
 

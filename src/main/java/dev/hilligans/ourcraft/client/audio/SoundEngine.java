@@ -1,21 +1,19 @@
 package dev.hilligans.ourcraft.client.audio;
 
-import dev.hilligans.ourcraft.client.rendering.graphics.api.ICamera;
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.ICamera;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
 
-
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
+import static org.lwjgl.openal.AL10.alDistanceModel;
 import static org.lwjgl.openal.ALC10.*;
-import static org.lwjgl.openal.AL10.*;
-
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class SoundEngine {

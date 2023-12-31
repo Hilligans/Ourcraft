@@ -1,8 +1,8 @@
 package dev.hilligans.ourcraft.mod.handler;
 
 import dev.hilligans.ourcraft.GameInstance;
-import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.data.primitives.Triplet;
+import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.resource.dataloader.FolderResourceDirectory;
 import dev.hilligans.ourcraft.resource.dataloader.ResourceDirectory;
 import dev.hilligans.ourcraft.resource.dataloader.ZipResourceDirectory;

@@ -4,8 +4,8 @@ import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.BoundingBox;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.ourcraft.network.packet.server.SSendChunkPacket;
-import dev.hilligans.ourcraft.server.concurrent.ChunkLocker;
 import dev.hilligans.ourcraft.server.MultiPlayerServer;
+import dev.hilligans.ourcraft.server.concurrent.ChunkLocker;
 
 import java.util.function.Consumer;
 

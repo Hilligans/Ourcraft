@@ -1,20 +1,19 @@
 package dev.hilligans.ourcraft.client.rendering.world;
 
-import dev.hilligans.ourcraft.client.lang.Languages;
+import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.client.MatrixStack;
+import dev.hilligans.ourcraft.client.lang.Languages;
+import dev.hilligans.ourcraft.client.rendering.Textures;
+import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
+import dev.hilligans.ourcraft.client.rendering.graphics.ShaderSource;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
-import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
-import dev.hilligans.ourcraft.client.rendering.graphics.ShaderSource;
-import dev.hilligans.ourcraft.client.rendering.graphics.opengl.OpenglDefaultImpl;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.TextureAtlas;
-import dev.hilligans.ourcraft.client.rendering.Textures;
 import dev.hilligans.ourcraft.client.rendering.world.managers.WorldTextureManager;
 import dev.hilligans.ourcraft.data.primitives.IntList;
-import dev.hilligans.ourcraft.Ourcraft;
 import it.unimi.dsi.fastutil.chars.Char2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2BooleanArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;

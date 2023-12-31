@@ -1,14 +1,13 @@
 package dev.hilligans.ourcraft.client.rendering.screens;
 
-import dev.hilligans.ourcraft.client.Client;
+import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.client.MatrixStack;
-import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
+import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.widgets.Button;
 import dev.hilligans.ourcraft.client.rendering.widgets.InputField;
 import dev.hilligans.ourcraft.network.packet.auth.CCreateAccount;
-import dev.hilligans.ourcraft.Ourcraft;
 
 public class AccountCreationScreen extends ScreenBase {
 

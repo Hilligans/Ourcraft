@@ -1,9 +1,5 @@
 package dev.hilligans.ourcraft.client.rendering.minimap;
 
-import dev.hilligans.ourcraft.client.MatrixStack;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-
-
 public class MiniMap {
 
     /*
