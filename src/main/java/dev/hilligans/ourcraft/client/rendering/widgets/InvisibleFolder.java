@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.client.rendering.widgets;
 
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 
 public class InvisibleFolder extends FolderWidget {
     public InvisibleFolder(int x, int y, int width, int height, String name) {
@@ -10,9 +11,9 @@ public class InvisibleFolder extends FolderWidget {
     }
 
     @Override
-    public void render(RenderWindow window, MatrixStack matrixStack, int xOffset, int yOffset) {
+    public void render(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, int xOffset, int yOffset) {
         for (Widget widget : widgets) {
-            widget.render(window, matrixStack, xOffset, yOffset);
+            widget.render(window, graphicsContext, matrixStack, xOffset, yOffset);
         }
     }
 

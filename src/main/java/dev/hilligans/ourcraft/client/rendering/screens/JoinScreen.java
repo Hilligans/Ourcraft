@@ -89,10 +89,10 @@ public class JoinScreen extends ScreenBase {
     public void drawScreen(RenderWindow window, MatrixStack matrixStack, GraphicsContext graphicsContext) {
         super.drawScreen(window, matrixStack, graphicsContext);
         if(getClient().playerData.valid_account) {
-            window.getStringRenderer().drawStringInternal(window, matrixStack,getClient().playerData.userName, (int) (Settings.guiSize * 8), (int) (1 * Settings.guiSize),0.5f);
-            Textures.CHECK_MARK.drawTexture(window, matrixStack,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
+            window.getStringRenderer().drawStringInternal(window, graphicsContext, matrixStack,getClient().playerData.userName, (int) (Settings.guiSize * 8), (int) (1 * Settings.guiSize),0.5f);
+            Textures.CHECK_MARK.drawTexture(window, graphicsContext, matrixStack,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
         } else {
-            Textures.X_MARK.drawTexture(window, matrixStack,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
+            Textures.X_MARK.drawTexture(window, graphicsContext, matrixStack,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
         }
     }
 }

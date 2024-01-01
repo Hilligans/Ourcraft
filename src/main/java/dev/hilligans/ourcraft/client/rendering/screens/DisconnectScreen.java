@@ -25,7 +25,7 @@ public class DisconnectScreen extends ScreenBase {
 
     @Override
     public void render(RenderWindow window, MatrixStack matrixStack, GraphicsContext graphicsContext) {
-        window.getStringRenderer().drawCenteredStringTranslated(window, matrixStack,message == null ? "" : message, (int) ((window.getWindowHeight() + window.getStringRenderer().stringHeight) / 2),1.0f);
+        window.getStringRenderer().drawCenteredStringTranslated(window, graphicsContext, matrixStack,message == null ? "" : message, (int) ((window.getWindowHeight() + window.getStringRenderer().stringHeight) / 2),1.0f);
         super.render(window, matrixStack, graphicsContext);
     }
 }

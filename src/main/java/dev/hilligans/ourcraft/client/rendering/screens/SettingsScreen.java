@@ -1,6 +1,5 @@
 package dev.hilligans.ourcraft.client.rendering.screens;
 
-import dev.hilligans.ourcraft.client.Camera;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.widgets.Button;
@@ -17,8 +16,8 @@ public class SettingsScreen extends ScreenBase {
     public void buildContentForWindow(RenderWindow window) {
         super.buildContentForWindow(window);
 
-        addWidget(new SliderWidget("settings.sensitivity",50, 50, 200, 40, 50, 300, (int) Camera.sensitivity, value -> Camera.sensitivity = value));
-        addWidget(new SliderWidget("settings.fov",50, 150, 200, 40, 10, 110, Camera.fov, value -> Camera.fov = value));
+        addWidget(new SliderWidget("settings.sensitivity",50, 50, 200, 40, 10, 300, window.getCamera().getSensitivity(), value -> window.getCamera().setSensitivity(value)));
+        addWidget(new SliderWidget("settings.fov",50, 150, 200, 40, 10, 110, window.getCamera().getFOV(), value -> window.getCamera().setFOV(value)));
         addWidget(new SliderWidget("settings.render_distance", 50, 250, 400, 40, 2, 512, Settings.renderDistance, value -> Settings.renderDistance = value));
         addWidget(new ToggleWidget(50, 350, 200, 40, "settings.transparent_textures", Settings.renderTransparency, value -> {
             Settings.renderTransparency = value;

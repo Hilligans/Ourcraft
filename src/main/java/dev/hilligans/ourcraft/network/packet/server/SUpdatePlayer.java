@@ -1,6 +1,5 @@
 package dev.hilligans.ourcraft.network.packet.server;
 
-import dev.hilligans.ourcraft.client.Camera;
 import dev.hilligans.ourcraft.network.*;
 
 public class SUpdatePlayer extends PacketBaseNew<IClientPacketHandler> {

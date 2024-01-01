@@ -18,7 +18,7 @@ public class InventoryScreen extends ContainerScreen<InventoryContainer> {
 
     @Override
     public void drawScreen(RenderWindow window, MatrixStack matrixStack, GraphicsContext graphicsContext) {
-        Textures.INVENTORY.drawCenteredTexture(window, matrixStack,0,0,158,99, Settings.guiSize);
+        Textures.INVENTORY.drawCenteredTexture(window, graphicsContext, matrixStack,0,0,158,99, Settings.guiSize);
     }
 
     public void drawHotbar(RenderWindow window, MatrixStack matrixStack) {

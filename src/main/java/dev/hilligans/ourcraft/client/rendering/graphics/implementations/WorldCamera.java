@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.client.rendering.graphics.implementations;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.ICamera;
+import dev.hilligans.ourcraft.data.other.BoundingBox;
 import dev.hilligans.ourcraft.network.packet.client.CUpdatePlayerPacket;
 import dev.hilligans.ourcraft.util.Ray;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
@@ -12,6 +13,7 @@ import java.lang.Math;
 
 public abstract class WorldCamera implements ICamera {
 
+    public static BoundingBox playerBoundingBox = new BoundingBox(-0.35f,-1.9f,-0.35f,0.35f,0.0f,0.35f, -0.15f);
     public Vector3d pos = new Vector3d(1, 64 + 5, 0);
    // public double x;
    // public double y = Chunk.terrain + 5;
@@ -37,6 +39,8 @@ public abstract class WorldCamera implements ICamera {
 
     public int pitchSign = 1;
 
+    public int sensitivity = 100;
+
 
     public float velX;
     public float velY;
@@ -44,7 +48,7 @@ public abstract class WorldCamera implements ICamera {
 
     public IWorld world;
 
-    public float fov = 90;
+    public int fov = 90;
 
     public Vector3d savedPosition;
 
@@ -250,9 +254,25 @@ public abstract class WorldCamera implements ICamera {
         }
     }
 
+    //sensitivity in terms of percentage
     @Override
-    public float getSensitivity() {
-        return 1;
+    public int getSensitivity() {
+        return sensitivity;
+    }
+
+    @Override
+    public void setSensitivity(int sensitivity) {
+        this.sensitivity = sensitivity;
+    }
+
+    @Override
+    public int getFOV() {
+        return fov;
+    }
+
+    @Override
+    public void setFOV(int fov) {
+        this.fov = fov;
     }
 
     @Override

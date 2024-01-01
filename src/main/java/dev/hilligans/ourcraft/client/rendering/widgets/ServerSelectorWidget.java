@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.client.rendering.widgets;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.Textures;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.screens.JoinScreen;
 import dev.hilligans.ourcraft.client.rendering.screens.LoadingScreen;
 import dev.hilligans.ourcraft.util.Settings;
@@ -22,12 +23,12 @@ public class ServerSelectorWidget extends Widget {
     }
 
     @Override
-    public void render(RenderWindow window, MatrixStack matrixStack, int xOffset, int yOffset) {
-        super.render(window, matrixStack, xOffset, yOffset);
-        Textures.BUTTON.drawTexture(window, matrixStack,x,y,width,height);
-        float sizeX = width / (float)Textures.BUTTON.width;
-        float sizeY = height / (float)Textures.BUTTON.height;
-        window.getStringRenderer().drawStringInternal(window, matrixStack,ip + ":" + port,x + (int)(sizeX * Settings.guiSize),y + (int)(sizeY * Settings.guiSize),0.5f);
+    public void render(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, int xOffset, int yOffset) {
+        super.render(window, graphicsContext, matrixStack, xOffset, yOffset);
+        Textures.BUTTON.drawTexture(window, graphicsContext, matrixStack,x,y,width,height);
+        float sizeX = width / (float)Textures.BUTTON.getWidth(window.getGameInstance());
+        float sizeY = height / (float)Textures.BUTTON.getHeight(window.getGameInstance());
+        window.getStringRenderer().drawStringInternal(window, graphicsContext, matrixStack,ip + ":" + port,x + (int)(sizeX * Settings.guiSize),y + (int)(sizeY * Settings.guiSize),0.5f);
     }
 
     public void joinServer() {

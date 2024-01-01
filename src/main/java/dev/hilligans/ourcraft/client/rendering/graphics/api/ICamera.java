@@ -35,7 +35,13 @@ public interface ICamera {
 
     void addRotation(float pitch, float yaw);
 
-    float getSensitivity();
+    int getSensitivity();
+
+    void setSensitivity(int val);
+
+    int getFOV();
+
+    void setFOV(int fov);
 
     Vector2f getRotation();
 

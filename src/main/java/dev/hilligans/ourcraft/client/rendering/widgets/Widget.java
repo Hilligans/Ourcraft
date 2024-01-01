@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.client.rendering.widgets;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.data.primitives.IntegerWrapper;
 
 public class Widget {
@@ -59,7 +60,7 @@ public class Widget {
         this.window = renderWindow;
     }
 
-    public void render(RenderWindow window, MatrixStack matrixStack, int xOffset, int yOffset) {}
+    public void render(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, int xOffset, int yOffset) {}
 
     public void screenClose() {}
 

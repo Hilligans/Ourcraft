@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering.newrenderer;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.client.rendering.world.managers.WorldTextureManager;
 import dev.hilligans.ourcraft.data.primitives.Triplet;
 import dev.hilligans.ourcraft.util.NamedThreadFactory;
@@ -26,35 +27,38 @@ public class TextureAtlas {
 
     public ArrayList<TextureAtlas.ImageHolder> imageHolders = new ArrayList<>();
     public ArrayList<Triplet<Integer,TextureSource,TextureLocation>> textures = new ArrayList<>();
-
-    public static WorldTextureManager instance = new WorldTextureManager();
+    public GameInstance gameInstance;
 
     public int glTextureId = -1;
 
-    public TextureAtlas(int maxTextureSize, int minTextureSize) {
+    public TextureAtlas(GameInstance gameInstance, int maxTextureSize, int minTextureSize) {
+        this.gameInstance = gameInstance;
         this.maxTextureSize = maxTextureSize;
         this.minTextureSize = minTextureSize;
         this.ratio = MAX_TEXTURE_SIZE / MIN_TEXTURE_SIZE;
     }
 
-    public TextureAtlas(int maxTextureSize) {
-        this(maxTextureSize,MIN_TEXTURE_SIZE);
+    public TextureAtlas(GameInstance gameInstance, int maxTextureSize) {
+        this(gameInstance, maxTextureSize,MIN_TEXTURE_SIZE);
     }
 
     public synchronized int addImage(BufferedImage img, int width) {
         int id;
         for(TextureAtlas.ImageHolder imageHolder : imageHolders) {
             if(imageHolder.imageSize == width && imageHolder.canAddImage()) {
-                EXECUTOR.submit(() -> imageHolder.addTexture(img));
-                id = imageHolder.getNextID();
+                Triplet<Integer, Integer, Integer> val = imageHolder.getNextID();
+                gameInstance.THREAD_PROVIDER.startVirtualThread(() -> imageHolder.addTexture(img, val.typeB, val.typeC), "abc");
+                id = val.typeA;
                 imageMap.put(id,imageHolder);
                 return id;
             }
         }
+
         TextureAtlas.ImageHolder imageHolder = new TextureAtlas.ImageHolder(width,imageHolders.size(), this);
-        EXECUTOR.submit(() -> imageHolder.addTexture(img));
+        Triplet<Integer, Integer, Integer> val = imageHolder.getNextID();
+        gameInstance.THREAD_PROVIDER.submit(() -> imageHolder.addTexture(img, val.typeB, val.typeC));
         imageHolders.add(imageHolder);
-        id = imageHolder.getNextID();
+        id = val.typeA;
         imageMap.put(id,imageHolder);
         this.width++;
         return id;
@@ -125,8 +129,6 @@ public class TextureAtlas {
         return img;
     }
 
-    public static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(1,new NamedThreadFactory("opengl_character_builder"));
-
     public static class ImageHolder {
 
         public double imageSize;
@@ -155,27 +157,32 @@ public class TextureAtlas {
             count = textureAtlas.maxTextureSize / imageSize;
         }
 
-        public synchronized void addTexture(BufferedImage img) {
+        public void addTexture(BufferedImage img, int width, int height) {
             for(int y = 0; y < Math.min(img.getHeight(),imageSize); y++) {
                 for(int x = 0; x < Math.min(img.getWidth(),64); x++) {
                     bufferedImage.setRGB(x + width * (int)imageSize, y + height * (int)imageSize, img.getRGB(x,y));
                 }
             }
+        }
+
+        public synchronized boolean canAddImage() {
+            return height <= imageSize;
+        }
+
+        public synchronized Triplet<Integer, Integer, Integer> getNextID() {
+            int val = idHolder;
+            idHolder++;
+
+            int w = width;
+            int h = height;
+
             width++;
             if(width >= count) {
                 width = 0;
                 height++;
             }
-        }
 
-        public boolean canAddImage() {
-            return height <= imageSize;
-        }
-
-        public int getNextID() {
-            int val = idHolder;
-            idHolder ++;
-            return val + textureAtlas.ratio * id;
+            return new Triplet<>(val + textureAtlas.ratio * id, w, h);
         }
 
         public float minX(int id) {

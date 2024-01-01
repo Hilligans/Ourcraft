@@ -40,7 +40,7 @@ public class ModListScreen extends ScreenBase implements SelectorScreen {
         super.drawScreen(window, matrixStack, graphicsContext);
         if(selectorWidget != null) {
             ModContent modContent = getClient().gameInstance.CONTENT_PACK.mods.get(selectorWidget.name);
-            window.getStringRenderer().drawStringInternal(window, matrixStack,new String[]{modContent.getModID() + "Version: " + modContent.version, "Dependencies: " + Util.toString(modContent.getDependencies()), " ", modContent.description},350,100,0.5f);
+            window.getStringRenderer().drawStringInternal(window, graphicsContext, matrixStack,new String[]{modContent.getModID() + "Version: " + modContent.version, "Dependencies: " + Util.toString(modContent.getDependencies()), " ", modContent.description},350,100,0.5f);
         }
     }
 }

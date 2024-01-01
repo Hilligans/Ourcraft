@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.client.rendering.widgets;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.lang.Languages;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import org.lwjgl.opengl.GL11;
 
 import java.nio.DoubleBuffer;
@@ -35,8 +36,8 @@ public class SliderWidget extends Widget {
     }
 
     @Override
-    public void render(RenderWindow window, MatrixStack matrixStack, int xOffset, int yOffset) {
-        super.render(window, matrixStack, xOffset, yOffset);
+    public void render(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, int xOffset, int yOffset) {
+        super.render(window, graphicsContext, matrixStack, xOffset, yOffset);
 
         if(isFocused && window.getClient().mouseHandler.mousePressed) {
             DoubleBuffer mousePos = window.getClient().getMousePos();
@@ -54,7 +55,7 @@ public class SliderWidget extends Widget {
         GL11.glDisable(GL11.GL_DEPTH_TEST);
        // Textures.SLIDER_BACKGROUND.drawTexture(matrixStack,x - height / 4,y,width + height / 2,height);
        // Textures.SLIDER.drawTexture(matrixStack,getSliderX(height),y,height/2,height);
-        window.getStringRenderer().drawStringTranslated(window, matrixStack, Languages.getTranslated(name) + ": " + value,x,y,0.5f);
+        window.getStringRenderer().drawStringTranslated(window, graphicsContext, matrixStack, Languages.getTranslated(name) + ": " + value,x,y,0.5f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 

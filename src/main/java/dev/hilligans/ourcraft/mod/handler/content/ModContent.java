@@ -57,7 +57,6 @@ public class ModContent {
     public ArrayList<Block> blocks = new ArrayList<>();
     public ArrayList<Item> items = new ArrayList<>();
     public ArrayList<Texture> textures = new ArrayList<>();
-    public HashMap<String,BufferedImage> blockTextures = new HashMap<>();
     public ArrayList<SoundBuffer> sounds = new ArrayList<>();
     public ArrayList<IModel> models = new ArrayList<>();
     public ArrayList<Tag> tags = new ArrayList<>();
@@ -456,7 +455,6 @@ public class ModContent {
                 ", blocks=" + blocks +
                 ", items=" + items +
                 ", textures=" + textures +
-                ", blockTextures=" + blockTextures +
                 ", sounds=" + sounds +
                 ", models=" + models +
                 ", loaded=" + loaded +

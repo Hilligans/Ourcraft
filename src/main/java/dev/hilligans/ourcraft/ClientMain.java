@@ -55,8 +55,8 @@ public class ClientMain {
         }
         //client1.setupClient();
         client.startClient();
+        gameInstance.THREAD_PROVIDER.EXECUTOR.shutdownNow();
         Ourcraft.EXECUTOR.shutdownNow();
-        TextureAtlas.EXECUTOR.shutdownNow();
         if(argumentContainer.getBoolean("--integratedServer", false)) {
             ServerMain.getServer().stop();
         }

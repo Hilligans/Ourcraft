@@ -2,7 +2,6 @@ package dev.hilligans.ourcraft.resource;
 
 import dev.hilligans.ourcraft.client.lang.Language;
 import dev.hilligans.ourcraft.client.lang.Languages;
-import dev.hilligans.ourcraft.client.rendering.ClientUtil;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.IModel;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.Ourcraft;
@@ -52,10 +51,13 @@ public class ResourceManager {
         return 0;
     }
 
+    /*
     public void putImage(String name, BufferedImage bufferedImage) {
         textures.computeIfAbsent(name, k -> new ArrayList<>());
         textures.get(name).add(new Image(name,bufferedImage));
     }
+
+     */
 
     public void putModel(String name, IModel model) {
         models.computeIfAbsent(name, k -> new ArrayList<>());
@@ -113,6 +115,7 @@ public class ResourceManager {
         public BufferedImage bufferedImage;
         public int color = -1;
 
+        /*
         public Image(String source, BufferedImage bufferedImage) {
             this.source = source;
             this.bufferedImage = bufferedImage;
@@ -137,6 +140,7 @@ public class ResourceManager {
                 });
             }
         }
+         */
     }
 
     static class Sound {

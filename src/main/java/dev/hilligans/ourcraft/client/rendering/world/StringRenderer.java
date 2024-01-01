@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering.world;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.lang.Languages;
@@ -29,8 +30,6 @@ public class StringRenderer {
     public int stringHeight = 58;
 
     public ShaderSource shaderSource;
-
-
     public IGraphicsEngine<?,?,?> graphicsEngine;
 
     public StringRenderer(IGraphicsEngine<?,?,?> graphicsEngine) {
@@ -38,22 +37,20 @@ public class StringRenderer {
         shaderSource = graphicsEngine.getGameInstance().SHADERS.get("ourcraft:position_texture");
     }
 
-    public void drawStringTranslated(RenderWindow window, MatrixStack matrixStack, String string, int x, int y, float scale) {
-        drawStringInternal(window, matrixStack, Languages.getTranslated(string),x,y,scale);
+    public void drawStringTranslated(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, String string, int x, int y, float scale) {
+        drawStringInternal(window, graphicsContext, matrixStack, Languages.getTranslated(string),x,y,scale);
     }
 
-    public void drawCenteredStringTranslated(RenderWindow window, MatrixStack matrixStack, String string, int y, float scale) {
-        drawCenteredStringInternal(window, matrixStack, Languages.getTranslated(string),y,scale);
+    public void drawCenteredStringTranslated(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, String string, int y, float scale) {
+        drawCenteredStringInternal(window, graphicsContext, matrixStack, Languages.getTranslated(string),y,scale);
     }
 
-    public void drawStringWithBackgroundTranslated(RenderWindow window, MatrixStack matrixStack, String string, int x, int y, float scale) {
-        drawStringWithBackgroundInternal(window, matrixStack, Languages.getTranslated(string),x,y,scale);
+    public void drawStringWithBackgroundTranslated(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, String string, int x, int y, float scale) {
+        drawStringWithBackgroundInternal(window, graphicsContext, matrixStack, Languages.getTranslated(string),x,y,scale);
     }
 
-    public void drawStringInternal(RenderWindow window, MatrixStack matrixStack, String string, int x, int y, float scale) {
-
+    public void drawStringInternal(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, String string, int x, int y, float scale) {
         matrixStack.push();
-
         int width = 0;
         IntList vals = getAtlases(string);
         Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
@@ -65,11 +62,11 @@ public class StringRenderer {
             width += getCharWidth(string.charAt(z)) * scale;
         }
 
-        draw1(window,matrixStack,vals,primitiveBuilders);
+        draw1(window,graphicsContext,matrixStack,vals,primitiveBuilders);
         matrixStack.pop();
     }
 
-    public void drawCenteredStringInternal(RenderWindow window, MatrixStack matrixStack, String string, int y, float scale) {
+    public void drawCenteredStringInternal(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, String string, int y, float scale) {
         matrixStack.push();
         try {
             IntList vals = getAtlases(string);
@@ -90,13 +87,13 @@ public class StringRenderer {
                 }
                 PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
                 primitiveBuilder.translate(window.getWindowWidth() / 2f - finalWidth / 2f,0,0);
-                draw1(window,matrixStack,vals,primitiveBuilders);
+                draw1(window,graphicsContext,matrixStack,vals,primitiveBuilders);
             });
         } catch (Exception ignored) {}
         matrixStack.pop();
     }
 
-    public void drawCenteredStringInternal(RenderWindow window, MatrixStack matrixStack, String string, int x, int y, float scale) {
+    public void drawCenteredStringInternal(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, String string, int x, int y, float scale) {
         matrixStack.push();
         try {
             IntList vals = getAtlases(string);
@@ -111,7 +108,7 @@ public class StringRenderer {
             int finalWidth = width;
             ensureTexturesBuilt(vals, window);
             IDefaultEngineImpl<?,?> impl = window.getEngineImpl();
-            impl.uploadMatrix(null,matrixStack,shaderSource);
+            impl.uploadMatrix(graphicsContext,matrixStack,shaderSource);
             vals.forEach((val) -> {
                 TextureAtlas textureAtlas = textureAtlases.get(val);
                 if(textureAtlas == null) {
@@ -119,9 +116,9 @@ public class StringRenderer {
                 }
                 PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
                 primitiveBuilder.translate(x - finalWidth / 2f,0,0);
-                impl.bindPipeline(null,shaderSource.program);
-                impl.bindTexture(null,textureAtlas.glTextureId);
-                impl.drawAndDestroyMesh(null,matrixStack,primitiveBuilder.toVertexMesh());
+                impl.bindPipeline(graphicsContext,shaderSource.program);
+                impl.bindTexture(graphicsContext,textureAtlas.glTextureId);
+                impl.drawAndDestroyMesh(graphicsContext,matrixStack,primitiveBuilder.toVertexMesh());
 
             });
         } catch (Exception ignored) {
@@ -130,7 +127,7 @@ public class StringRenderer {
         matrixStack.pop();
     }
 
-    public void drawStringWithBackgroundInternal(RenderWindow window, MatrixStack matrixStack, String string, int x, int y, float scale) {
+    public void drawStringWithBackgroundInternal(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, String string, int x, int y, float scale) {
         matrixStack.push();
         try {
             IntList vals = getAtlases(string);
@@ -142,14 +139,13 @@ public class StringRenderer {
                 addVertices(primitiveBuilder, string.charAt(z), x + width, y, scale);
                 width += getCharWidth(string.charAt(z)) * scale;
             }
-            Textures.BACKGROUND.drawTexture(window, matrixStack, x, y, width, (int) (stringHeight * scale));
-            draw1(window,matrixStack,vals,primitiveBuilders);
+            Textures.BACKGROUND.drawTexture(window, graphicsContext, matrixStack, x, y, width, (int) (stringHeight * scale));
+            draw1(window,graphicsContext,matrixStack, vals,primitiveBuilders);
         } catch (Exception ignored) {}
         matrixStack.pop();
     }
 
-    public void draw1(RenderWindow window, MatrixStack matrixStack, IntList vals, Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders) {
-
+    public void draw1(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, IntList vals, Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders) {
         vals.forEach((val) -> {
             TextureAtlas textureAtlas = textureAtlases.get(val);
             if(textureAtlas == null) {
@@ -158,10 +154,10 @@ public class StringRenderer {
             PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
             primitiveBuilder.translate(1.0f,0,1.0f);
             IDefaultEngineImpl<?,?> impl = window.getEngineImpl();
-            impl.uploadMatrix(null,matrixStack,shaderSource);
-            impl.bindPipeline(null,shaderSource.program);
-            impl.bindTexture(null,textureAtlas.glTextureId);
-            impl.drawAndDestroyMesh(null,matrixStack,primitiveBuilder.toVertexMesh());
+            impl.uploadMatrix(graphicsContext,matrixStack,shaderSource);
+            impl.bindPipeline(graphicsContext,shaderSource.program);
+            impl.bindTexture(graphicsContext,textureAtlas.glTextureId);
+            impl.drawAndDestroyMesh(graphicsContext,matrixStack,primitiveBuilder.toVertexMesh());
         });
     }
 
@@ -171,18 +167,18 @@ public class StringRenderer {
     public Int2BooleanArrayMap texturesBuilt = new Int2BooleanArrayMap();
 
     public void buildChars() {
+        GameInstance gameInstance = graphicsEngine.getGameInstance();
         for(int x = 0; x < Short.MAX_VALUE / 128; x++) {
             int finalX = x;
-            Future<TextureAtlas> atlasFuture = Ourcraft.EXECUTOR.submit(() -> {
-                TextureAtlas textureAtlas = buildTextureAtlas(finalX);
+            gameInstance.THREAD_PROVIDER.execute(() -> {
+                TextureAtlas textureAtlas = buildTextureAtlas(gameInstance, finalX);
                 textureAtlases.put(finalX,textureAtlas);
-                return textureAtlas;
             });
         }
     }
 
-    public TextureAtlas buildTextureAtlas(int startPos) {
-        TextureAtlas textureAtlas = new TextureAtlas(1024);
+    public TextureAtlas buildTextureAtlas(GameInstance gameInstance, int startPos) {
+        TextureAtlas textureAtlas = new TextureAtlas(gameInstance, 1024);
         for (int x = 0; x < 16; x++) {
             for (int y = 0; y < 16; y++) {
                 if (Character.isDefined(startPos * 256 + x * 16 + y)) {
@@ -243,10 +239,10 @@ public class StringRenderer {
         }
     }
 
-    public void drawStringInternal(RenderWindow window, MatrixStack matrixStack, String[] strings, int x, int y, float scale) {
+    public void drawStringInternal(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, String[] strings, int x, int y, float scale) {
         int z = 0;
         for(String string : strings) {
-            drawStringInternal(window, matrixStack,string,x, (int) (y + scale * z * stringHeight),scale);
+            drawStringInternal(window, graphicsContext, matrixStack,string,x, (int) (y + scale * z * stringHeight),scale);
             z++;
         }
     }

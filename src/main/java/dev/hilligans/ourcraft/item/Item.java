@@ -130,9 +130,9 @@ public class Item implements IRecipeComponent, IRegistryElement {
     void drawString(RenderWindow window, MatrixStack matrixStack, int x, int y, int size, int count) {
         if(count != 1) {
             if(count >= 10) {
-                window.getStringRenderer().drawStringInternal(window, matrixStack, count + "", x + size + 14 , (int) (y + size * 1f), 0.5f);
+              //  window.getStringRenderer().drawStringInternal(window, matrixStack, count + "", x + size + 14 , (int) (y + size * 1f), 0.5f);
             } else {
-                window.getStringRenderer().drawStringInternal(window, matrixStack, count + "", (int) (x + size) + 29, (int) (y + size * 1f), 0.5f);
+              //  window.getStringRenderer().drawStringInternal(window, matrixStack, count + "", (int) (x + size) + 29, (int) (y + size * 1f), 0.5f);
             }
         }
     }

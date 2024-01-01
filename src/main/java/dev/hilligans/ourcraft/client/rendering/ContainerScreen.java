@@ -32,7 +32,7 @@ public abstract class ContainerScreen<T extends Container> extends ScreenBase {
     @Override
     public void render(RenderWindow window, MatrixStack matrixStack, GraphicsContext graphicsContext) {
         super.render(window, matrixStack, graphicsContext);
-        container.render(window, matrixStack);
+        container.render(window,graphicsContext, matrixStack);
 
     }
 

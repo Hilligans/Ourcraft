@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering.graphics;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.input.InputHandler;
 import dev.hilligans.ourcraft.client.input.InputHandlerProvider;
@@ -188,6 +189,10 @@ public abstract class RenderWindow {
 
     public Vector2f getScissor() {
         return new Vector2f(0,0);
+    }
+
+    public GameInstance getGameInstance() {
+        return graphicsEngine.getGameInstance();
     }
 
     public void setupInputs() {

@@ -71,7 +71,7 @@ public class GameInstance {
     //public final
     public Side side;
 
-    public int gameInstanceUniversalID;
+    public final int gameInstanceUniversalID;
 
     public final ToolLevelList MATERIAL_LIST = new ToolLevelList();
 
@@ -387,11 +387,15 @@ public class GameInstance {
         Entity.register();
     }
 
+    public int getUniqueID() {
+        return gameInstanceUniversalID;
+    }
+
     public void handleArgs(String[] args) {
         ARGUMENTS.handle(args);
     }
 
-    private static int staticGameInstanceUniversalID = 0;
+    private static volatile int staticGameInstanceUniversalID = 0;
 
     public static synchronized int getNewGameInstanceUniversalID() {
         return staticGameInstanceUniversalID++;

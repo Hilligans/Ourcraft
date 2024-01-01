@@ -8,6 +8,7 @@ import dev.hilligans.ourcraft.client.rendering.graphics.FrameTracker;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.ShaderSource;
 import dev.hilligans.ourcraft.client.rendering.graphics.VertexFormat;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
 
@@ -50,7 +51,7 @@ public class FrameTimeWidget extends Widget {
     }
 
     @Override
-    public void render(RenderWindow window, MatrixStack matrixStack, int xOffset, int yOffset) {
+    public void render(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, int xOffset, int yOffset) {
         VertexMesh mesh = buildFrame().toVertexMesh();
 
        // Textures.BACKFILL.drawTexture(window,matrixStack,getX(),getY(),width,height);
@@ -63,7 +64,7 @@ public class FrameTimeWidget extends Widget {
         //window.getEngineImpl().drawAndDestroyMesh(window,null,matrixStack,mesh,0,shaderSource.program);
         //window.getEngineImpl().drawAndDestroyMesh(window,null,matrixStack,mesh,0,shaderSource.program);
        // Textures.FRAME_TIME.drawTexture(window,matrixStack,getX(),getY(),width,height);
-        Textures.FRAME_TIME.drawTexture(window,matrixStack,getX(),getY(),width,height);
+        Textures.FRAME_TIME.drawTexture(window, graphicsContext, matrixStack,getX(),getY(),width,height);
     }
 
 }

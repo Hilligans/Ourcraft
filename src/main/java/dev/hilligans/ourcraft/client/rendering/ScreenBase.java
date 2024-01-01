@@ -37,7 +37,7 @@ public abstract class ScreenBase implements Screen {
     public void render(RenderWindow window, MatrixStack matrixStack, GraphicsContext graphicsContext) {
         drawScreen(window, matrixStack, graphicsContext);
         for(Widget widget : widgets) {
-            widget.render(window, matrixStack,0,0);
+            widget.render(window, graphicsContext, matrixStack, 0, 0);
         }
     }
 

@@ -17,6 +17,6 @@ public class CreativeInventoryScreen extends ContainerScreen<CreativeContainer> 
 
     @Override
     public void drawScreen(RenderWindow window, MatrixStack matrixStack, GraphicsContext graphicsContext) {
-        Textures.CREATIVE_INVENTORY.drawCenteredTexture(window, matrixStack,0,0,158,210, Settings.guiSize);
+        Textures.CREATIVE_INVENTORY.drawCenteredTexture(window, graphicsContext, matrixStack,0,0,158,210, Settings.guiSize);
     }
 }

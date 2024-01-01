@@ -119,9 +119,6 @@ public class ContentPack {
                 for (Texture texture : mod.textures) {
                     gameInstance.registerTextures(texture);
                 }
-                for(String string1 : mod.blockTextures.keySet()) {
-                    gameInstance.RESOURCE_MANAGER.putImage("Blocks/" + string1,mod.blockTextures.get(string1));
-                }
                 for (Block block : mod.blocks) {
                     gameInstance.registerBlock(block);
                 }

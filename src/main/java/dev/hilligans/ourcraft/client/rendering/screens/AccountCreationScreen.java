@@ -37,6 +37,6 @@ public class AccountCreationScreen extends ScreenBase {
     @Override
     public void drawScreen(RenderWindow window, MatrixStack matrixStack, GraphicsContext graphicsContext) {
         super.drawScreen(window, matrixStack, graphicsContext);
-        window.getStringRenderer().drawStringInternal(window, matrixStack,debug,100,700,0.5f);
+        window.getStringRenderer().drawStringInternal(window, graphicsContext, matrixStack,debug,100,700,0.5f);
     }
 }

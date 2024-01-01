@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.client.rendering.widgets;
 
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.data.primitives.IntegerWrapper;
 import dev.hilligans.ourcraft.tag.CompoundNBTTag;
 import dev.hilligans.ourcraft.tag.ListNBTTag;
@@ -45,8 +46,8 @@ public class  FolderWidget extends Widget {
     }
 
     @Override
-    public void render(RenderWindow window, MatrixStack matrixStack, int xOffset, int yOffset) {
-        super.render(window, matrixStack, xOffset, yOffset);
+    public void render(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, int xOffset, int yOffset) {
+        super.render(window, graphicsContext, matrixStack, xOffset, yOffset);
         if (this.getY() > 0 && this.getY() < window.getWindowHeight() && this.isActive()) {
             if (shouldRender) {
                 if (isOpen) {
@@ -59,12 +60,12 @@ public class  FolderWidget extends Widget {
                 } else {
                   //  Textures.FOLDER.drawTexture(matrixStack, getX() + xOffset + size, getY() + yOffset, size, size);
                 }
-                window.getStringRenderer().drawStringInternal(window, matrixStack, name, getX() + xOffset + size * 2, getY() + yOffset, 0.5f);
+                window.getStringRenderer().drawStringInternal(window, graphicsContext, matrixStack, name, getX() + xOffset + size * 2, getY() + yOffset, 0.5f);
             }
         }
         if (isOpen) {
             for (Widget widget : widgets) {
-                widget.render(window, matrixStack, xOffset, yOffset);
+                widget.render(window, graphicsContext, matrixStack, xOffset, yOffset);
             }
         }
     }

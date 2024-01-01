@@ -30,7 +30,7 @@ public class ChatRenderTask extends RenderTaskSource {
                     if(chatMessages.messages.get(size - x - 1).getTypeB() < System.currentTimeMillis() && !chatMessages.typing) {
                         break;
                     }
-                    stringRenderer.drawStringInternal(window, screenStack, chatMessages.messages.get(size - x - 1).getTypeA(),0,y,0.5f);
+                    stringRenderer.drawStringInternal(window, graphicsContext, screenStack, chatMessages.messages.get(size - x - 1).getTypeA(),0,y,0.5f);
 
                     y -= stringRenderer.stringHeight / 2;
                     if(y <= 0 ) {
@@ -41,7 +41,7 @@ public class ChatRenderTask extends RenderTaskSource {
                 chatMessages.messages.removeIf(stringLongTuple -> stringLongTuple.typeB < time);
                 String val = chatMessages.getString();
                 if(!val.equals("")) {
-                    stringRenderer.drawStringInternal(window, screenStack, val,0, (int) (window.getWindowHeight() - stringRenderer.stringHeight / 2),0.5f);
+                    stringRenderer.drawStringInternal(window, graphicsContext, screenStack, val,0, (int) (window.getWindowHeight() - stringRenderer.stringHeight / 2),0.5f);
                 }
             }
         };
