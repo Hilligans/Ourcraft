@@ -9,8 +9,6 @@ import java.util.function.Consumer;
 
 public class ClientNetworkHandler extends NetworkHandler {
 
-    public static ClientNetworkHandler clientNetworkHandler;
-
     public ClientNetwork network;
     public ConcurrentLinkedQueue<PacketBase> packets = new ConcurrentLinkedQueue<>();
 
@@ -27,7 +25,8 @@ public class ClientNetworkHandler extends NetworkHandler {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("DISCONNECTED FROM SERVER");
+        System.out.println(STR."CLIENT \{network.client.rWindow.getWindowName()} DISCONNECTED FROM SERVER");
+        //System.out.println(channel.closeFuture().sync().exceptionNow().getMessage());
         network.client.renderWorld = false;
         network.client.valid = false;
         //network.client.clientWorld = new ClientWorld(network.client);
@@ -41,9 +40,8 @@ public class ClientNetworkHandler extends NetworkHandler {
     }
 
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        ctx.close();
         cause.printStackTrace();
-        //network.client.clientWorld = new ClientWorld(network.client);
+        ctx.close();
         network.client.openScreen(new DisconnectScreen(network.client,cause.getMessage()));
     }
 

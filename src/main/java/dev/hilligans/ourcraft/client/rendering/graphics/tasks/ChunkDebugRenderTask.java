@@ -60,14 +60,16 @@ public class ChunkDebugRenderTask extends RenderTaskSource {
                         worldStack.push();
                         worldStack.translate((chunkX) * chunkWidth, (chunkY) * chunkHeight, (chunkZ) * chunkWidth);
                         if (chunk != null) {
-                            if(chunkX-playerChunkPos.x == 0 && chunkY-playerChunkPos.y == 0 && chunkZ-playerChunkPos.z == 0) {
+                            if (chunkX - playerChunkPos.x == 0 && chunkY - playerChunkPos.y == 0 && chunkZ - playerChunkPos.z == 0) {
                                 worldStack.setColor(0, 255, 0, 255);
                             } else {
                                 worldStack.setColor(255, 255, 0, 255);
                             }
-                            impl.uploadMatrix(graphicsContext, worldStack, shaderSource);
-                            impl.drawMesh(graphicsContext, worldStack, mesh, 0, meshBuilder.indices.size());
+                        } else {
+                            worldStack.setColor(255, 0, 0, 255);
                         }
+                        impl.uploadMatrix(graphicsContext, worldStack, shaderSource);
+                        impl.drawMesh(graphicsContext, worldStack, mesh, 0, meshBuilder.indices.size());
                         worldStack.pop();
                     });
                     impl.destroyMesh(graphicsContext, mesh);

@@ -59,8 +59,7 @@ public class GameInstance {
     public final EventBus EVENT_BUS = new EventBus();
     public final ModLoader MOD_LOADER = new ModLoader(this);
     public final Logger LOGGER = new Logger("", "");
-    public final ExecutorService EXECUTOR = Executors.newFixedThreadPool(2,new NamedThreadFactory("random_executor"));
-    public final ResourceManager RESOURCE_MANAGER = new ResourceManager();
+    public final ResourceManager RESOURCE_MANAGER = new ResourceManager(this);
     public final ModContent OURCRAFT = new ModContent("ourcraft",this).addClassLoader(new URLClassLoader(new URL[]{Ourcraft.class.getProtectionDomain().getCodeSource().getLocation()})).addMainClass(Ourcraft.class);
     public final ContentPack CONTENT_PACK = new ContentPack(this);
     public final AtomicBoolean REBUILDING = new AtomicBoolean(false);
@@ -330,6 +329,10 @@ public class GameInstance {
 
     public void registerLayoutEngine(ILayoutEngine<?>... layoutEngines) {
         LAYOUT_ENGINES.putAll(layoutEngines);
+    }
+
+    public void register(IRegistryElement registryElement) {
+        register(registryElement.getIdentifierName(), registryElement);
     }
 
     public void register(String name, Object o) {

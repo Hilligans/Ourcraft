@@ -14,8 +14,6 @@ import java.io.IOException;
 
 public class ClientMain {
 
-    //public static GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
-
     public static ArgumentContainer argumentContainer;
 
     public static long start = System.currentTimeMillis();
@@ -32,6 +30,7 @@ public class ClientMain {
         gameInstance.handleArgs(args);
         gameInstance.side = Side.CLIENT;
         gameInstance.loadContent();
+        gameInstance.THREAD_PROVIDER.map();
 
         Thread serverThread = null;
         if(argumentContainer.getBoolean("--integratedServer", false)) {
@@ -46,17 +45,18 @@ public class ClientMain {
         }
 
         Client client = new Client(gameInstance, argumentContainer);
-       // Client client1 = new Client(gameInstance, argumentContainer);
+        Client client1 = new Client(gameInstance, argumentContainer);
         String graphicsEngine = argumentContainer.getString("--graphicsEngine", null);
         if(graphicsEngine != null) {
             System.out.println(graphicsEngine);
             client.setGraphicsEngine(gameInstance.GRAPHICS_ENGINES.get(graphicsEngine));
-          //  client1.setGraphicsEngine(gameInstance.GRAPHICS_ENGINES.get(graphicsEngine));
+            client1.setGraphicsEngine(gameInstance.GRAPHICS_ENGINES.get(graphicsEngine));
         }
-        //client1.setupClient();
+        client1.setupClient();
         client.startClient();
+
+
         gameInstance.THREAD_PROVIDER.EXECUTOR.shutdownNow();
-        Ourcraft.EXECUTOR.shutdownNow();
         if(argumentContainer.getBoolean("--integratedServer", false)) {
             ServerMain.getServer().stop();
         }

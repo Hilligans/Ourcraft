@@ -46,13 +46,13 @@ public class MultiPlayerServer implements IServer {
     public void startServer(String port) {
         gameInstance.EVENT_BUS.postEvent(new MultiPlayerServerStartEvent(this,port));
         Server server = new Server(this);
-        tick = Executors.newScheduledThreadPool(1, new NamedThreadFactory("server_tick"));
+        tick = Executors.newScheduledThreadPool(1, new NamedThreadFactory("server_tick", gameInstance));
         tick.scheduleAtFixedRate(server, 0, 40, TimeUnit.MILLISECONDS);
-        playerHandler = Executors.newScheduledThreadPool(1, new NamedThreadFactory("server_player_handler"));
+        playerHandler = Executors.newScheduledThreadPool(1, new NamedThreadFactory("server_player_handler", gameInstance));
         playerHandler.scheduleAtFixedRate(new PlayerHandler(this), 0, 10, TimeUnit.MILLISECONDS);
        // ConsoleReader consoleReader = new ConsoleReader(this::executeCommand);
 
-        serverNetwork = new ServerNetwork(gameInstance.PROTOCOLS.get("Play"), this).debug(ServerMain.argumentContainer.getBoolean("--packetTrace", false));
+        serverNetwork = new ServerNetwork(gameInstance.PROTOCOLS.get("Play"), this).debug(Ourcraft.getArgumentContainer().getBoolean("--packetTrace", false));
         try {
             serverNetwork.startServer(port);
         } catch (Exception e) {

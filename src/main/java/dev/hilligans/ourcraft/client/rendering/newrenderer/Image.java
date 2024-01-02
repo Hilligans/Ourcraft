@@ -23,7 +23,7 @@ public class Image {
     }
 
     public Image(int width, int height, int format) {
-        this(width,height,format,ByteBuffer.allocateDirect(width * height * format));
+        this(width,height,format, ByteBuffer.allocateDirect(width * height * format));
     }
 
     public Image(int width, int height, int format, ByteBuffer byteBuffer) {

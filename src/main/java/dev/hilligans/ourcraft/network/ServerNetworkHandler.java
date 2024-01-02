@@ -21,7 +21,7 @@ import java.util.HashMap;
 
 public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByteArray> implements IServerPacketHandler {
 
-    static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     public ArrayList<ChannelId> channelIds = new ArrayList<>();
     public HashMap<ChannelId, ServerPlayerData> mappedPlayerData = new HashMap<>();
     public HashMap<String, ServerPlayerData> nameToPlayerData = new HashMap<>();

@@ -66,7 +66,7 @@ public class TextAtlas {
     public void assemble(GameInstance gameInstance) {
         long start = System.currentTimeMillis();
 
-        executorService = Executors.newFixedThreadPool(4,new NamedThreadFactory("texture_atlas_builder"));
+        executorService = Executors.newFixedThreadPool(4, new NamedThreadFactory("texture_atlas_builder", gameInstance));
         time = 0;
         count = 0;
         for(ImageLocation imageLocation : images) {

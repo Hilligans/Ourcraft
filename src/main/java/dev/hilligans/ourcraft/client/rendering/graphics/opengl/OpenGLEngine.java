@@ -48,7 +48,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         renderWindow.setRenderPipeline(gameInstance.ARGUMENTS.getString("--renderPipeline", "ourcraft:menu_pipeline"));
         windows.add(renderWindow);
         renderWindow.setup();
-        GL.createCapabilities();
+        //GL.createCapabilities();
 
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_BLEND);

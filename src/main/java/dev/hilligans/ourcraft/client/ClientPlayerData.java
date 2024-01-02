@@ -6,6 +6,7 @@ import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.ourcraft.util.Settings;
 
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ClientPlayerData {
 
@@ -20,7 +21,7 @@ public class ClientPlayerData {
     public boolean spectator = true;
 
     public String authToken = "";
-    public String userName = "";
+    public String userName = "" + x.getAndIncrement();
     public String email = "";
     public String login_token = "";
     public boolean valid_account = false;
@@ -40,4 +41,6 @@ public class ClientPlayerData {
     public <T> T set(String key, T newValue) {
         return (T) arbDataMap.put(key, newValue);
     }
+
+    public static AtomicInteger x = new AtomicInteger();
 }

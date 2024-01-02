@@ -26,12 +26,13 @@ public class LogicalDevice {
     public VulkanQueueFamilyManager queueFamilyManager;
     public VkDeviceQueueCreateInfo.Buffer buffer;
     public VertexBufferManager bufferManager = new VertexBufferManager(this);
-    public final ExecutorService cleanup = Executors.newSingleThreadExecutor(new NamedThreadFactory("Vulkan cleanup"));
+    public final ExecutorService cleanup;
     public AtomicBoolean alive = new AtomicBoolean(true);
 
     public LogicalDevice(PhysicalDevice physicalDevice) {
         this.vulkanInstance = physicalDevice.vulkanInstance;
         this.physicalDevice = physicalDevice;
+        this.cleanup = Executors.newSingleThreadExecutor(new NamedThreadFactory("Vulkan cleanup", physicalDevice.vulkanInstance.engine.getGameInstance()));
         memoryManager = new VulkanMemoryManager(this);
         getMemoryAllocations();
 

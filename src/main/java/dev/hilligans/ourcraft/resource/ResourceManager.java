@@ -26,10 +26,16 @@ public class ResourceManager {
     public HashMap<String, ArrayList<IModel>> models = new HashMap<>();
 
     public ArrayList<URLClassLoader> classLoaders = new ArrayList<>();
+    public GameInstance gameInstance;
+
+
+    public ResourceManager(GameInstance gameInstance) {
+        this.gameInstance = gameInstance;
+    }
 
     public void setLanguageFile(String languageFile) {
         Languages.switchingLanguage.set(true);
-        Future<Language> languageFuture = Ourcraft.EXECUTOR.submit(() -> {
+        Future<Language> languageFuture = gameInstance.THREAD_PROVIDER.submit(() -> {
             Language language = new Language(languageFile + ".txt");
             ArrayList<LanguageFile> languageData = languageFiles.get(languageFile);
             if(languageData != null) {

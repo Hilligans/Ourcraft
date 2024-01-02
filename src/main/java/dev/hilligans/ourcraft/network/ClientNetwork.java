@@ -40,7 +40,8 @@ public class ClientNetwork extends Network {
             Bootstrap b = new Bootstrap();
             b.group(group).channel(NioSocketChannel.class).handler(this);
             ((NetworkHandler) networkHandler).setData(b.connect(HOST, PORT).sync().channel(), group, ip, port);
-        } finally {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         flush();
     }
@@ -53,6 +54,7 @@ public class ClientNetwork extends Network {
 
     @Override
     public void sendPacket(PacketBase packetBase) {
+        System.out.println("Sending packet:" + packetBase.getClass());
         if(networkHandler != null && ((ClientNetworkHandler)networkHandler).enabled) {
             packetBase.packetId = sendProtocol.packetMap.get(packetBase.getClass());
             sendPacketDirect(packetBase);

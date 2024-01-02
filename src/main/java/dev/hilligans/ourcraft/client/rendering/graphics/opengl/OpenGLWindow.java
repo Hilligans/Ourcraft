@@ -78,10 +78,10 @@ public class OpenGLWindow extends RenderWindow {
         }
         client.rendering = false;
         client.soundEngine.tick();
-        if(client.screenShot) {
-            client.screenShot = false;
-            ScreenShot.takeScreenShot(this);
-        }
+//        if(client.screenShot) {
+//            client.screenShot = false;
+//            ScreenShot.takeScreenShot(this);
+//        }
         glfwPollEvents();
         tick();
     }

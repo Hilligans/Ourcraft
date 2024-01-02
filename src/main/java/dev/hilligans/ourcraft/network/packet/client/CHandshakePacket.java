@@ -82,6 +82,8 @@ public class CHandshakePacket extends PacketBaseNew<IServerPacketHandler> {
         serverPlayerData.setServer(serverPacketHandler.getServer()).setNetworkHandler(serverPacketHandler.getServerNetworkHandler()).setName(name);
         serverPlayerData.setPlayerID(new UUID(playerId, 0)).setChannelID(ctx.channel().id());
 
+        System.out.println("Handling player");
+
         serverPacketHandler.getServerNetworkHandler().mappedPlayerData.put(ctx.channel().id(), serverPlayerData);
         //ServerNetworkHandler.mappedName.put(ctx.channel().id(),name);
         serverPacketHandler.getServerNetworkHandler().nameToPlayerData.put(name, serverPlayerData);

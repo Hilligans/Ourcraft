@@ -36,11 +36,19 @@ public class ThreadProvider {
         }
     }
 
-    public Future<?> submit(Runnable runnable) {
+    public <T> Future<T> submit(Callable<T> runnable) {
         if(!EXECUTOR.isShutdown()) {
             return EXECUTOR.submit(runnable);
         }
         return null;
+    }
+
+    public void map() {
+        mapThread(Thread.currentThread(), gameInstance);
+    }
+
+    public void unmap() {
+        unmapThread(Thread.currentThread());
     }
 
     public synchronized void addThread(Thread thread) {

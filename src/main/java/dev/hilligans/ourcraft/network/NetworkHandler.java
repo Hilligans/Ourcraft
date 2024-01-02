@@ -1,11 +1,9 @@
 package dev.hilligans.ourcraft.network;
 
+import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.network.debug.PacketTraceByteArray;
 import dev.hilligans.ourcraft.ServerMain;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.*;
 
 public abstract class NetworkHandler extends SimpleChannelInboundHandler<IPacketByteArray> {
 
@@ -14,7 +12,7 @@ public abstract class NetworkHandler extends SimpleChannelInboundHandler<IPacket
     public String ip;
     public String port;
     public boolean enabled;
-    public boolean debug = ServerMain.argumentContainer.getBoolean("--tracePacket", false);
+    public boolean debug = Ourcraft.getArgumentContainer().getBoolean("--tracePacket", false);
 
     public NetworkHandler setData(Channel channel, EventLoopGroup group, String ip, String port) {
         this.channel = channel;

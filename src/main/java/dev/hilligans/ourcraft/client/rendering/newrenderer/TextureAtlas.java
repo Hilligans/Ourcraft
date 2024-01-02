@@ -56,7 +56,7 @@ public class TextureAtlas {
 
         TextureAtlas.ImageHolder imageHolder = new TextureAtlas.ImageHolder(width,imageHolders.size(), this);
         Triplet<Integer, Integer, Integer> val = imageHolder.getNextID();
-        gameInstance.THREAD_PROVIDER.submit(() -> imageHolder.addTexture(img, val.typeB, val.typeC));
+        gameInstance.THREAD_PROVIDER.execute(() -> imageHolder.addTexture(img, val.typeB, val.typeC));
         imageHolders.add(imageHolder);
         id = val.typeA;
         imageMap.put(id,imageHolder);
@@ -65,13 +65,13 @@ public class TextureAtlas {
     }
 
     public dev.hilligans.ourcraft.client.rendering.newrenderer.Image toImage() {
-        BufferedImage img;
+        Image img;
         if(imageHolders.size() != 0) {
-            img = imageHolders.get(0).bufferedImage;
+            img = imageHolders.get(0).image;
             for (int x = 1; x < imageHolders.size(); x++) {
-                img = joinImage(img, imageHolders.get(x).bufferedImage);
+                img = joinImage(img, imageHolders.get(x).image=null);
             }
-            return new Image(img);
+            return img;
         }
         return null;
     }
@@ -129,12 +129,29 @@ public class TextureAtlas {
         return img;
     }
 
+    public static Image joinImage(Image img1, Image img2) {
+        int width = img1.getWidth() + img2.getWidth();
+        int height = Math.max(img1.getHeight(),img2.getHeight());
+        Image img = new Image(width,height,4);
+        for(int x = 0; x < img1.getWidth(); x++) {
+            for(int y = 0; y < img1.getHeight(); y++) {
+                img.putPixel(x,y,img1.getPixel(x,y));
+            }
+        }
+        for(int x = 0; x < img2.getWidth(); x++) {
+            for(int y = 0; y < img2.getHeight(); y++) {
+                img.putPixel(x + img1.getWidth(),y,img2.getPixel(x,y));
+            }
+        }
+        return img;
+    }
+
     public static class ImageHolder {
 
         public double imageSize;
         int count;
 
-        public BufferedImage bufferedImage;
+        public Image image;
 
         int width = 0;
         int height = 0;
@@ -148,10 +165,13 @@ public class TextureAtlas {
             this.imageSize = imageSize;
             this.id = id;
             this.textureAtlas = textureAtlas;
-            bufferedImage = new BufferedImage(textureAtlas.maxTextureSize,textureAtlas.maxTextureSize,BufferedImage.TYPE_INT_ARGB);
-            for(int y = 0; y < bufferedImage.getHeight(); y++) {
-                for(int x = 0; x < bufferedImage.getWidth(); x++) {
-                    bufferedImage.setRGB(x,y,new Color(255,255,255,127).getRGB());
+            image = new Image(textureAtlas.maxTextureSize, textureAtlas.maxTextureSize, 4);
+            //bufferedImage = new BufferedImage(textureAtlas.maxTextureSize,textureAtlas.maxTextureSize,BufferedImage.TYPE_INT_ARGB);
+            int color = new Color(255,255,255,127).getRGB();
+            for(int y = 0; y < image.getHeight(); y++) {
+                for(int x = 0; x < image.getWidth(); x++) {
+                    image.putPixel(x, y, color);
+                    //bufferedImage.setRGB(x,y,);
                 }
             }
             count = textureAtlas.maxTextureSize / imageSize;
@@ -160,7 +180,8 @@ public class TextureAtlas {
         public void addTexture(BufferedImage img, int width, int height) {
             for(int y = 0; y < Math.min(img.getHeight(),imageSize); y++) {
                 for(int x = 0; x < Math.min(img.getWidth(),64); x++) {
-                    bufferedImage.setRGB(x + width * (int)imageSize, y + height * (int)imageSize, img.getRGB(x,y));
+                    //bufferedImage.setRGB(x + width * (int)imageSize, y + height * (int)imageSize, img.getRGB(x,y));
+                    image.putPixel((int) (x + width * imageSize), (int) (y + height * imageSize), img.getRGB(x,y));
                 }
             }
         }

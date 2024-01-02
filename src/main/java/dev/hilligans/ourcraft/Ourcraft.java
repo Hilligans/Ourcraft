@@ -31,6 +31,7 @@ import dev.hilligans.ourcraft.resource.loaders.ImageLoader;
 import dev.hilligans.ourcraft.resource.loaders.JsonLoader;
 import dev.hilligans.ourcraft.resource.ResourceManager;
 import dev.hilligans.ourcraft.schematic.LitematicaSchematicLoader;
+import dev.hilligans.ourcraft.util.ArgumentContainer;
 import dev.hilligans.ourcraft.util.NamedThreadFactory;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import dev.hilligans.ourcraft.util.Side;
@@ -55,8 +56,9 @@ import static org.lwjgl.glfw.GLFW.*;
 public class Ourcraft {
 
     public static final GameInstance GAME_INSTANCE = new GameInstance();
-    public static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(2,new NamedThreadFactory("random_executor"));
-
+    public static final ArgumentContainer getArgumentContainer() {
+        return ClientMain.argumentContainer;
+    }
     public static String path = System.getProperty("user.dir");
 
     public static String hashString(String password, String salt) {

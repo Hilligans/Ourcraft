@@ -36,6 +36,7 @@ public class ServerMain {
 
     public static IServer server(GameInstance gameInstance, ArgumentContainer argumentContainer) {
         ServerMain.argumentContainer = argumentContainer;
+        gameInstance.THREAD_PROVIDER.map();
 
         //ServerWorld world = new ServerWorld(gameInstance);
         //world.worldBuilders.add(new OreBuilder("ore", Blocks.GRASS,Blocks.STONE).setFrequency(20));
@@ -56,6 +57,7 @@ public class ServerMain {
         server.addWorld(world1);
         System.out.println("starting server");
         server.startServer("25588");
+        gameInstance.THREAD_PROVIDER.unmap();
         return server;
     }
 

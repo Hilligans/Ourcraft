@@ -39,7 +39,7 @@ public class Network extends ChannelInitializer<SocketChannel> {
     protected void initChannel(SocketChannel ch) {
         ChannelPipeline pipeline = ch.pipeline();
         pipeline.addLast(sslCtx.newHandler(ch.alloc()));
-        if(debug) {
+        if(!debug) {
             pipeline.addLast(new PacketEncoder(packetIdWidth, compressed));
             pipeline.addLast(new PacketDecoder(packetIdWidth, compressed));
         } else {

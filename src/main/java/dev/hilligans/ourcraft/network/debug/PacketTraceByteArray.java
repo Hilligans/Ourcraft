@@ -122,20 +122,6 @@ public class PacketTraceByteArray implements IPacketByteArray {
     }
 
     @Override
-    public String readUTF8() {
-        return byteBuf.readCharSequence(readVarInt(), StandardCharsets.UTF_8).toString();
-    }
-
-    @Override
-    public String readUTF16() {
-        int length = readVarInt();
-        //System.out.print("read length:" + length + " ");
-        String s = byteBuf.readCharSequence(length, StandardCharsets.UTF_16).toString();
-        //System.out.println(s);
-        return s;
-    }
-
-    @Override
     public void writeByte(byte val) {
         index += 1;
         byteBuf.writeByte(val);
@@ -175,16 +161,6 @@ public class PacketTraceByteArray implements IPacketByteArray {
         index += 8;
         byteBuf.writeDouble(val);
         packetTrace.put(val);
-    }
-
-    @Override
-    public void writeUTF8(String val) {
-        writeBytes(val.getBytes(StandardCharsets.UTF_8));
-    }
-
-    @Override
-    public void writeUTF16(String val) {
-        writeBytes(val.getBytes(StandardCharsets.UTF_16));
     }
 
     @Override

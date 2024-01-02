@@ -154,14 +154,16 @@ public class StringRenderer {
             PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
             primitiveBuilder.translate(1.0f,0,1.0f);
             IDefaultEngineImpl<?,?> impl = window.getEngineImpl();
-            impl.uploadMatrix(graphicsContext,matrixStack,shaderSource);
-            impl.bindPipeline(graphicsContext,shaderSource.program);
-            impl.bindTexture(graphicsContext,textureAtlas.glTextureId);
-            impl.drawAndDestroyMesh(graphicsContext,matrixStack,primitiveBuilder.toVertexMesh());
+            if(textureAtlas.glTextureId != -1) {
+                impl.uploadMatrix(graphicsContext, matrixStack, shaderSource);
+                impl.bindPipeline(graphicsContext, shaderSource.program);
+                impl.bindTexture(graphicsContext, textureAtlas.glTextureId);
+                impl.drawAndDestroyMesh(graphicsContext, matrixStack, primitiveBuilder.toVertexMesh());
+            }
         });
     }
 
-    public Int2ObjectOpenHashMap<TextureAtlas> textureAtlases = new Int2ObjectOpenHashMap<>();
+    public final Int2ObjectOpenHashMap<TextureAtlas> textureAtlases = new Int2ObjectOpenHashMap<>();
     public Char2IntOpenHashMap charMap = new Char2IntOpenHashMap();
     public Char2IntOpenHashMap idMap = new Char2IntOpenHashMap();
     public Int2BooleanArrayMap texturesBuilt = new Int2BooleanArrayMap();
@@ -172,7 +174,9 @@ public class StringRenderer {
             int finalX = x;
             gameInstance.THREAD_PROVIDER.execute(() -> {
                 TextureAtlas textureAtlas = buildTextureAtlas(gameInstance, finalX);
-                textureAtlases.put(finalX,textureAtlas);
+                synchronized (textureAtlases) {
+                    textureAtlases.put(finalX, textureAtlas);
+                }
             });
         }
     }

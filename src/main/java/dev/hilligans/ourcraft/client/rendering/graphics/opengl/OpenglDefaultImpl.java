@@ -201,6 +201,11 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         if(texture == 0) {
             throw new NullPointerException();
         }
+        if(trackingResourceAllocations) {
+            if(textureAllocationTracker.get((int)texture) == null) {
+                throw new RuntimeException("Unknown texture with texture id " + texture);
+            }
+        }
         if(texture != boundTexture) {
             GL20.glBindTexture(textureTypes.get((int)texture), (int)texture);
             boundTexture = texture;

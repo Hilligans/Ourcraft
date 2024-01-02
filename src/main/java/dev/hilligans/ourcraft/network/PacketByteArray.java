@@ -38,7 +38,7 @@ public class PacketByteArray implements IPacketByteArray {
         } else {
             throw new RuntimeException("Unknown packet id width: " + packetWidth);
         }
-        index = bytes.length;
+        index = bytes.length - packetWidth;
     }
 
     public PacketByteArray() {
@@ -68,7 +68,7 @@ public class PacketByteArray implements IPacketByteArray {
 
     @Override
     public long length() {
-        return byteBuf.readableBytes();
+        return index;
     }
 
     @Override
@@ -126,26 +126,31 @@ public class PacketByteArray implements IPacketByteArray {
     @Override
     public void writeShort(short val) {
         index += 2;
+        byteBuf.writeShort(val);
     }
 
     @Override
     public void writeInt(int val) {
         index += 4;
+        byteBuf.writeInt(val);
     }
 
     @Override
     public void writeLong(long val) {
         index += 8;
+        byteBuf.writeLong(val);
     }
 
     @Override
     public void writeFloat(float val) {
         index += 4;
+        byteBuf.writeFloat(val);
     }
 
     @Override
     public void writeDouble(double val) {
         index += 8;
+        byteBuf.writeDouble(val);
     }
 
     @Override

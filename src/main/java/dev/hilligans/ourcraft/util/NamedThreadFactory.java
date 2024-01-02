@@ -13,10 +13,9 @@ public class NamedThreadFactory implements ThreadFactory {
     private final GameInstance gameInstance;
 
     public NamedThreadFactory(String name) {
-        SecurityManager s = System.getSecurityManager();
         this.gameInstance = null;
-        group = (s != null) ? s.getThreadGroup() :
-                Thread.currentThread().getThreadGroup();
+        Thread.currentThread().getThreadGroup();
+        group = Thread.currentThread().getThreadGroup();
         namePrefix = name + "-pool-" +
                 poolNumber.getAndIncrement() +
                 "-thread";
@@ -24,16 +23,14 @@ public class NamedThreadFactory implements ThreadFactory {
 
     public NamedThreadFactory(String name, GameInstance gameInstance) {
         this.gameInstance = gameInstance;
-        SecurityManager s = System.getSecurityManager();
-        group = (s != null) ? s.getThreadGroup() :
-                Thread.currentThread().getThreadGroup();
+        group = Thread.currentThread().getThreadGroup();
         namePrefix = name + "-pool-" +
                 poolNumber.getAndIncrement() +
                 "-thread";
     }
 
     public Thread newThread(Runnable r) {
-        Thread t = new Thread(group, r,
+        Thread t = new TrackedThread(group, r,
                 namePrefix + threadNumber.getAndIncrement(),
                 0);
         if(gameInstance != null) {

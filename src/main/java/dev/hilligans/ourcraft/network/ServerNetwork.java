@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.network;
 
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.server.IServer;
 import dev.hilligans.ourcraft.ServerMain;
 import io.netty.bootstrap.ServerBootstrap;
@@ -29,7 +30,7 @@ public class ServerNetwork extends Network {
 
     public void startServer(String port) throws Exception {
         networkHandler = new ServerNetworkHandler(this, server);
-        ServerNetworkHandler.debug = ServerMain.argumentContainer.getBoolean("--tracePacket", false);
+        ServerNetworkHandler.debug = Ourcraft.getArgumentContainer().getBoolean("--tracePacket", false);
 
         final int PORT = Integer.parseInt(System.getProperty("port", port));
 

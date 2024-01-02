@@ -57,7 +57,6 @@ public class Client implements IClientPacketHandler {
 
     public int playerId;
 
-    public boolean joinServer = true;
     public boolean valid = false;
     public boolean screenShot = false;
     public boolean renderWorld = false;
@@ -73,7 +72,6 @@ public class Client implements IClientPacketHandler {
     public SoundEngine soundEngine;
 
     public ClientPlayerData playerData = new ClientPlayerData();
-    //public IWorld newClientWorld = new SimpleWorld(0,"");
     public IWorld newClientWorld;
 
     public MultiPlayerServer multiPlayerServer;
