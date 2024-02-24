@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.data.descriptors.TagCollection;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.resource.ResourceLocation;
 
@@ -31,7 +32,9 @@ public interface IRegistryElement {
         return new ResourceLocation(getResourceName(),modContent);
     }
 
-    default void assignModContent(ModContent modContent) {}
+    default void assignOwner(ModContent modContent) {}
+
+    default void assignOwner(ModContainer owner) {}
 
     default void setUniqueID(int id) {}
 

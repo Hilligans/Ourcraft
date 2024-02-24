@@ -36,14 +36,6 @@ public class ContentPack {
 
     public ContentPack(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
-       /* gameInstance.EVENT_BUS.register(t -> {
-            if(waiting) {
-                waiting = false;
-                rebuild();
-            }
-        }, RenderEndEvent.class);
-
-        */
     }
 
     public void load() {

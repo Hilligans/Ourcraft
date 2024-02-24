@@ -1,16 +1,22 @@
 package dev.hilligans.ourcraft;
 
+import dev.hilligans.ourcraft.biome.Biome;
 import dev.hilligans.ourcraft.biome.Biomes;
 import dev.hilligans.ourcraft.block.Block;
+import dev.hilligans.ourcraft.client.audio.SoundBuffer;
 import dev.hilligans.ourcraft.client.audio.Sounds;
 import dev.hilligans.ourcraft.client.ChatWindow;
 import dev.hilligans.ourcraft.client.Client;
+import dev.hilligans.ourcraft.client.input.InputHandlerProvider;
 import dev.hilligans.ourcraft.client.input.handler.providers.ControllerHandlerProvider;
 import dev.hilligans.ourcraft.client.input.handler.providers.KeyPressHandlerProvider;
 import dev.hilligans.ourcraft.client.input.handler.providers.MouseHandlerProvider;
 import dev.hilligans.ourcraft.client.input.Input;
 import dev.hilligans.ourcraft.client.input.RepeatingInput;
 import dev.hilligans.ourcraft.client.input.handlers.MouseHandler;
+import dev.hilligans.ourcraft.client.rendering.Texture;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.ILayoutEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.fixedfunctiongl.FixedFunctionGLEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.implementations.WorldCamera;
 import dev.hilligans.ourcraft.client.rendering.graphics.nuklear.NuklearLayoutEngine;
@@ -20,21 +26,35 @@ import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanEngine;
 import dev.hilligans.ourcraft.client.rendering.ScreenBuilder;
 import dev.hilligans.ourcraft.client.rendering.screens.*;
 import dev.hilligans.ourcraft.client.rendering.Textures;
+import dev.hilligans.ourcraft.command.CommandHandler;
+import dev.hilligans.ourcraft.data.descriptors.Tag;
+import dev.hilligans.ourcraft.data.primitives.Tuple;
+import dev.hilligans.ourcraft.item.Items;
 import dev.hilligans.ourcraft.item.data.ToolLevel;
+import dev.hilligans.ourcraft.mod.handler.ModClass;
 import dev.hilligans.ourcraft.mod.handler.content.CoreExtensionView;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.mod.handler.Identifier;
+import dev.hilligans.ourcraft.mod.handler.content.RegistryView;
+import dev.hilligans.ourcraft.network.Protocol;
 import dev.hilligans.ourcraft.network.Protocols;
+import dev.hilligans.ourcraft.recipe.IRecipe;
+import dev.hilligans.ourcraft.recipe.helper.RecipeView;
+import dev.hilligans.ourcraft.resource.loaders.ResourceLoader;
 import dev.hilligans.ourcraft.resource.loaders.StringLoader;
 import dev.hilligans.ourcraft.resource.registry.loaders.JsonRegistryLoader;
 import dev.hilligans.ourcraft.resource.loaders.ImageLoader;
 import dev.hilligans.ourcraft.resource.loaders.JsonLoader;
 import dev.hilligans.ourcraft.resource.ResourceManager;
+import dev.hilligans.ourcraft.resource.registry.loaders.RegistryLoader;
 import dev.hilligans.ourcraft.schematic.LitematicaSchematicLoader;
+import dev.hilligans.ourcraft.settings.Setting;
 import dev.hilligans.ourcraft.util.ArgumentContainer;
-import dev.hilligans.ourcraft.util.NamedThreadFactory;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import dev.hilligans.ourcraft.util.Side;
+import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.ourcraft.util.registry.Registry;
+import dev.hilligans.ourcraft.world.Feature;
 import dev.hilligans.ourcraft.world.newworldsystem.ChainedBlockChunkStream;
 import dev.hilligans.ourcraft.world.newworldsystem.ChunkStream;
 import dev.hilligans.ourcraft.block.Blocks;
@@ -47,13 +67,10 @@ import org.lwjgl.glfw.GLFW;
 import java.io.File;
 import java.nio.DoubleBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.function.BiConsumer;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class Ourcraft {
+public class Ourcraft extends ModClass {
 
     public static final GameInstance GAME_INSTANCE = new GameInstance();
     public static final ArgumentContainer getArgumentContainer() {
@@ -81,7 +98,48 @@ public class Ourcraft {
         return new File(Ourcraft.path + "/" + path);
     }
 
-    public static void registerCoreExtensions(CoreExtensionView view) {
+
+    @Override
+    public String getModID() {
+        return "ourcraft";
+    }
+
+    @Override
+    public void registerRegistries(RegistryView view) {
+        Tuple<Class<? extends IRegistryElement>, String>[] elements = new Tuple[]{
+                new Tuple(Block.class, "block"),
+                new Tuple(Items.class, "item"),
+                new Tuple(Biome.class, "biome"),
+                new Tuple(Tag.class, "tag"),
+                new Tuple(IRecipe.class, "recipe"),
+                new Tuple(RecipeView.class, "recipe_view"),
+                new Tuple(IGraphicsEngine.class, "graphics_engine"),
+                new Tuple(CommandHandler.class, "command"),
+                new Tuple(Protocol.class, "protocol"),
+                new Tuple(Setting.class, "setting"),
+                new Tuple(ResourceLoader.class, "resource_loader"),
+                new Tuple(SoundBuffer.class, "sound"),
+                new Tuple(ToolLevel.class, "tool_level"),
+                new Tuple(RegistryLoader.class, "registry_loader"),
+                new Tuple(ScreenBuilder.class, "screen"),
+                new Tuple(Feature.class, "feature"),
+                new Tuple(RenderTarget.class, "render_target"),
+                new Tuple(RenderPipeline.class, "render_pipeline"),
+                new Tuple(RenderTaskSource.class, "render_task"),
+                new Tuple(Input.class, "key_bind"),
+                new Tuple(VertexFormat.class, "vertex_format"),
+                new Tuple(InputHandlerProvider.class, "input"),
+                new Tuple(Texture.class, "texture"),
+                new Tuple(ShaderSource.class, "shader"),
+                new Tuple(ILayoutEngine.class, "layout_engine")
+        };
+
+        for(Tuple<Class<? extends IRegistryElement>, String> element : elements) {
+            view.registerRegistry(() -> new Registry<>(view.getGameInstance(), element.getTypeA(), element.getTypeB()));
+        }
+    }
+
+    public void registerCoreExtensions(CoreExtensionView view) {
         view.registerRegistryLoader(new JsonRegistryLoader(new Identifier("tool_tiers", "ourcraft"), "Data/ToolTiers.json", (modContent1, jsonObject, string) -> {
             JSONArray elements = jsonObject.getJSONArray("material");
             ToolLevel[] levels = new ToolLevel[elements.length()];
@@ -177,9 +235,9 @@ public class Ourcraft {
 
     public static void registerDefaultContent(ModContent modContent) {
         //temporarily
-        registerCoreExtensions(modContent.getCoreView());
+        //registerCoreExtensions(modContent.getCoreView());
 
-        chainedChunkStream.assignModContent(modContent);
+        chainedChunkStream.assignOwner(modContent);
         modContent.registerResourceLoader(new JsonLoader(), new ImageLoader(), new StringLoader());
         modContent.registerResourceLoader(new LitematicaSchematicLoader());
 

@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.biome;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.Blocks;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.world.builders.WorldBuilder;
@@ -15,7 +16,7 @@ public class Biome implements IRegistryElement {
 
     public String name;
     public int terrainHeight = 10;
-    public ModContent source;
+    public ModContainer source;
 
     public Vector3i terrainHeights = new Vector3i(0,5,5);
 
@@ -66,6 +67,11 @@ public class Biome implements IRegistryElement {
 
     @Override
     public void load(GameInstance gameInstance) {
+    }
+
+    @Override
+    public void assignOwner(ModContainer owner) {
+        this.source = owner;
     }
 
     @Override

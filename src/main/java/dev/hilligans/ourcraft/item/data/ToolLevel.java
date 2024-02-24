@@ -1,13 +1,14 @@
 package dev.hilligans.ourcraft.item.data;
 
 import dev.hilligans.ourcraft.mod.handler.Identifier;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 
 public class ToolLevel implements IRegistryElement {
 
     public Identifier name;
-    public ModContent source;
+    public ModContainer source;
 
     public ToolLevel(Identifier name) {
         this.name = name;
@@ -21,8 +22,8 @@ public class ToolLevel implements IRegistryElement {
     }
 
     @Override
-    public void assignModContent(ModContent modContent) {
-        this.source = modContent;
+    public void assignOwner(ModContainer source) {
+        this.source = source;
     }
 
     @Override

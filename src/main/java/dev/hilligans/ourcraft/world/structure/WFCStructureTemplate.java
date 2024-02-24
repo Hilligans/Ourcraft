@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.world.structure;
 
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 public class WFCStructureTemplate implements IStructureTemplate {
 
     public String name;
-    public ModContent source;
+    public ModContainer source;
     public ArrayList<IWFCStructureSegment> segments = new ArrayList<>();
 
     public WFCStructureTemplate(String name) {
@@ -29,8 +30,8 @@ public class WFCStructureTemplate implements IStructureTemplate {
     }
 
     @Override
-    public void assignModContent(ModContent modContent) {
-        this.source = modContent;
+    public void assignOwner(ModContainer source) {
+        this.source = source;
     }
 
     @Override

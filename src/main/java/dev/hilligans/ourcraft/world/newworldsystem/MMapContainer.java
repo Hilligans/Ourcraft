@@ -25,6 +25,6 @@ public class MMapContainer {
     }
 
     public CubicChunk createChunk(int chunkX, int chunkY, int chunkZ) {
-        
+        return null;
     }
 }

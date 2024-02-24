@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.command;
 
 import dev.hilligans.ourcraft.command.executors.CommandExecutor;
 import dev.hilligans.ourcraft.entity.Entity;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.mod.handler.ModID;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 
 public abstract class CommandHandler implements IRegistryElement {
 
-    public ModContent modContent;
+    public ModContainer owner;
     public ArrayList<String> aliases;
     public String command;
     public ModID mod;
@@ -45,8 +46,8 @@ public abstract class CommandHandler implements IRegistryElement {
     }
 
     @Override
-    public void assignModContent(ModContent modContent) {
-        this.modContent = modContent;
+    public void assignOwner(ModContainer owner) {
+        this.owner = owner;
     }
 
     @Override
@@ -56,7 +57,7 @@ public abstract class CommandHandler implements IRegistryElement {
 
     @Override
     public String getResourceOwner() {
-        return modContent.getModID();
+        return owner.getModID();
     }
 
     @Override

@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsElement;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.mod.handler.content.UnknownResourceException;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
@@ -17,7 +18,7 @@ public abstract class RenderTaskSource implements IRegistryElement, IGraphicsEle
     public String renderTargetName;
     public String name;
     public RenderTarget target;
-    public ModContent source;
+    public ModContainer source;
 
     public RenderTaskSource(String name, String renderTarget) {
         this.name = name;
@@ -41,8 +42,8 @@ public abstract class RenderTaskSource implements IRegistryElement, IGraphicsEle
     }
 
     @Override
-    public void assignModContent(ModContent modContent) {
-        this.source = modContent;
+    public void assignOwner(ModContainer source) {
+        this.source = source;
     }
 
     @Override
@@ -52,7 +53,7 @@ public abstract class RenderTaskSource implements IRegistryElement, IGraphicsEle
 
     @Override
     public String getResourceOwner() {
-        return source.modID;
+        return source.getModID();
     }
 
     @Override

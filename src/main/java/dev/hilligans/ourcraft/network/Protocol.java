@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.network;
 
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.network.packet.InvalidFormatPacket;
 import dev.hilligans.ourcraft.Ourcraft;
@@ -20,7 +21,7 @@ public class Protocol implements IRegistryElement {
     public Int2BooleanOpenHashMap requiredIds = new Int2BooleanOpenHashMap();
     public boolean compressed;
     public GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
-    public ModContent source;
+    public ModContainer source;
 
     public void register(Supplier<PacketBase> packet) {
         register(new PacketFetcher(packets.size(),packet));
@@ -100,7 +101,7 @@ public class Protocol implements IRegistryElement {
     }
 
     @Override
-    public void assignModContent(ModContent source) {
+    public void assignOwner(ModContainer source) {
         this.source = source;
     }
 

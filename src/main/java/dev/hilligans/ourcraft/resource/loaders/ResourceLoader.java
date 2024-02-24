@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.resource.loaders;
 
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.resource.ResourceLocation;
 import dev.hilligans.ourcraft.tag.CompoundNBTTag;
@@ -18,7 +19,7 @@ public abstract class ResourceLoader<T> implements IRegistryElement {
     public String category;
     public GameInstance gameInstance;
     public ArrayList<String> fileTypes = new ArrayList<>();
-    public ModContent source;
+    public ModContainer source;
 
     public ResourceLoader(String name, String category) {
         this.name = name;
@@ -85,8 +86,8 @@ public abstract class ResourceLoader<T> implements IRegistryElement {
     }
 
     @Override
-    public void assignModContent(ModContent modContent) {
-        this.source = modContent;
+    public void assignOwner(ModContainer source) {
+        this.source = source;
     }
 
     @Override

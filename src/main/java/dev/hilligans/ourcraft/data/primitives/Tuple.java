@@ -1,6 +1,8 @@
 package dev.hilligans.ourcraft.data.primitives;
 
-public class Tuple<T,Q> {
+import java.util.function.Supplier;
+
+public class Tuple<T,Q> implements Supplier<T> {
 
     public T typeA;
     public Q typeB;
@@ -29,5 +31,10 @@ public class Tuple<T,Q> {
     @Override
     public String toString() {
         return "<" + typeA + "," + typeB + ">";
+    }
+
+    @Override
+    public T get() {
+        return getTypeA();
     }
 }

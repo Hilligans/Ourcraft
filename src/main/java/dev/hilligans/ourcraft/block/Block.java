@@ -71,6 +71,8 @@ public class Block implements IRegistryElement {
         return this;
     }
 
+
+
     public void setModContent(ModContent modContent) {
         this.modId = modContent.getModID();
         this.modContent = modContent;

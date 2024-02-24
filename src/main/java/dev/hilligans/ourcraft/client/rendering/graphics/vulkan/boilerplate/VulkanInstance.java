@@ -17,7 +17,6 @@ import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.vulkan.EXTDebugUtils.VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
 import static org.lwjgl.vulkan.VK10.*;
-import static org.lwjgl.vulkan.VK11.*;
 
 public class VulkanInstance {
 
@@ -86,7 +85,7 @@ public class VulkanInstance {
             applicationInfo.applicationVersion(VK_MAKE_VERSION(1, 0, 0));
             applicationInfo.pEngineName(memoryStack.UTF8("No Engine"));
             applicationInfo.engineVersion(VK_MAKE_VERSION(1, 0, 0));
-            applicationInfo.apiVersion(VK_API_VERSION_1_1);
+            applicationInfo.apiVersion(VK_API_VERSION_1_0);
 
             extensions.flip();
 

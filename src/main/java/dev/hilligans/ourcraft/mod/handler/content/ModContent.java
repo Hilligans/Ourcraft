@@ -30,7 +30,6 @@ import dev.hilligans.ourcraft.world.Feature;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.awt.image.BufferedImage;
 import java.net.URLClassLoader;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -176,7 +175,7 @@ public class ModContent {
 
     public void registerTexture(Texture... textures) {
         for(Texture texture : textures) {
-            texture.assignModContent(this);
+            texture.assignOwner(this);
             this.textures.add(texture);
         }
     }
@@ -245,70 +244,70 @@ public class ModContent {
 
     public void registerScreenBuilder(ScreenBuilder... screenBuilders) {
         for(ScreenBuilder screenBuilder : screenBuilders) {
-            screenBuilder.assignModContent(this);
+            screenBuilder.assignOwner(this);
             this.screenBuilders.add(screenBuilder);
         }
     }
 
     public void registerGraphicsEngine(IGraphicsEngine<?,?,?>... graphicsEngines) {
         for(IGraphicsEngine<?,?,?> graphicsEngine : graphicsEngines) {
-            graphicsEngine.assignModContent(this);
+            graphicsEngine.assignOwner(this);
             this.graphicsEngines.add(graphicsEngine);
         }
     }
 
     public void registerRenderTarget(RenderTarget... renderTargets) {
         for(RenderTarget renderTarget : renderTargets) {
-            renderTarget.assignModContent(this);
+            renderTarget.assignOwner(this);
         }
         this.renderTargets.addAll(Arrays.asList(renderTargets));
     }
 
     public void registerRenderPipelines(RenderPipeline... renderPipelines) {
         for(RenderPipeline renderPipeline : renderPipelines) {
-            renderPipeline.assignModContent(this);
+            renderPipeline.assignOwner(this);
         }
         this.renderPipelines.addAll(Arrays.asList(renderPipelines));
     }
 
     public void registerRenderTask(RenderTaskSource... renderTasks) {
         for(RenderTaskSource renderTask : renderTasks) {
-            renderTask.assignModContent(this);
+            renderTask.assignOwner(this);
         }
         this.renderTasks.addAll(Arrays.asList(renderTasks));
     }
 
     public void registerVertexFormat(VertexFormat... vertexFormats) {
         for(VertexFormat vertexFormat : vertexFormats) {
-            vertexFormat.assignModContent(this);
+            vertexFormat.assignOwner(this);
         }
         this.vertexFormats.addAll(Arrays.asList(vertexFormats));
     }
 
     public void registerInputHandlerProviders(InputHandlerProvider... providers) {
         for(InputHandlerProvider provider : providers) {
-            provider.assignModContent(this);
+            provider.assignOwner(this);
         }
         this.inputHandlerProviders.addAll(Arrays.asList(providers));
     }
 
     public void registerKeybinds(Input... inputs) {
         for(Input input : inputs) {
-            input.assignModContent(this);
+            input.assignOwner(this);
         }
         this.keybinds.addAll(Arrays.asList(inputs));
     }
 
     public void registerShader(ShaderSource... shaderSources) {
         for(ShaderSource shaderSource : shaderSources) {
-            shaderSource.assignModContent(this);
+            shaderSource.assignOwner(this);
         }
         this.shaders.addAll(Arrays.asList(shaderSources));
     }
 
     public void registerLayoutEngine(ILayoutEngine<?>... layoutEngines) {
         for(ILayoutEngine<?> layoutEngine : layoutEngines) {
-            layoutEngine.assignModContent(this);
+            layoutEngine.assignOwner(this);
         }
         this.layoutEngines.addAll(Arrays.asList(layoutEngines));
     }
@@ -438,7 +437,7 @@ public class ModContent {
     }
 
     public CoreExtensionView getCoreView() {
-        return new CoreExtensionView(this);
+        return new CoreExtensionView(null);
     }
 
     @Override

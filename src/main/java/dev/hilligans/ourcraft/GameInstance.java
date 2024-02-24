@@ -53,9 +53,11 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 public class GameInstance {
 
+    public final ArrayList<Consumer<GameInstance>> POST_CORE_HOOKS = new ArrayList<>();
     public final EventBus EVENT_BUS = new EventBus();
     public final ModLoader MOD_LOADER = new ModLoader(this);
     public final Logger LOGGER = new Logger("", "");
@@ -71,6 +73,8 @@ public class GameInstance {
     public Side side;
 
     public final int gameInstanceUniversalID;
+
+    public boolean built = false;
 
     public final ToolLevelList MATERIAL_LIST = new ToolLevelList();
 
@@ -114,6 +118,12 @@ public class GameInstance {
         CONTENT_PACK.generateData();
         buildBlockStates();
         REBUILDING.set(false);
+    }
+
+    public void runPostCoreHooks() {
+        for(Consumer<GameInstance> consumer : POST_CORE_HOOKS) {
+            consumer.accept(this);
+        }
     }
 
     public void build(IGraphicsEngine<?,?,?> graphicsEngine, GraphicsContext graphicsContext) {

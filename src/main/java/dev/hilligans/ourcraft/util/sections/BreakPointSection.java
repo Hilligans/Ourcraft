@@ -1,5 +1,9 @@
 package dev.hilligans.ourcraft.util.sections;
 
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
+
 public class BreakPointSection implements ISection {
 
     public String breakWord;
@@ -15,6 +19,21 @@ public class BreakPointSection implements ISection {
 
     @Override
     public void stopSection(String name) {
+
+    }
+
+    @Override
+    public synchronized <T extends Supplier<String>> void startSubSection(BiConsumer<ISection, T> consumer, T... names) {
+
+    }
+
+    @Override
+    public <T extends Supplier<String>> void startSubSection(BiConsumer<ISection, T> consumer, List<T> names) {
+
+    }
+
+    @Override
+    public void stopSubSection(String name) {
 
     }
 }

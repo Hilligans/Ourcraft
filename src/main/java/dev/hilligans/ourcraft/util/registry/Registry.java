@@ -7,6 +7,7 @@ import dev.hilligans.ourcraft.mod.handler.events.common.RegisterEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class Registry<T extends IRegistryElement> implements IRegistryElement {
 
@@ -15,6 +16,8 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
     public GameInstance gameInstance;
     public Class<?> classType;
     public String registryType;
+
+    public boolean mapping = true;
 
     public Registry(GameInstance gameInstance, Class<?> classType, String registryType) {
         this.gameInstance = gameInstance;
@@ -51,9 +54,51 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
             if(element != null) {
                 element.setUniqueID(getUniqueID());
             }
-            MAPPED_ELEMENTS.put(name, element);
+            if(mapping) {
+                MAPPED_ELEMENTS.put(name, element);
+            }
             ELEMENTS.add(element);
         }
+    }
+
+    public void putFrom(Registry<?> registry) {
+        if(registry.classType.equals(Registry.class)) {
+            if(!classType.equals(Registry.class)) {
+                throw new RegistryException("Failed to copy container elements to this registry", this);
+            }
+            registry.forEach(o -> {
+                Registry<?> r = (Registry<?>) o;
+                Registry<?> myReg = (Registry<?>) getExcept(r.getIdentifierName());
+                myReg.putFrom(r);
+            });
+        } else {
+            putAll((ArrayList<T>) registry.ELEMENTS);
+        }
+    }
+
+    public Registry<T> duplicate() {
+        Registry<T> registry = new Registry<>(gameInstance, classType, registryType);
+        registry.putFrom(this);
+        return registry;
+    }
+
+    public T computeIfAbsent(String key, Function<String, ? extends T> mappingFunction) {
+        T val = null;
+        if(mapping) {
+            val = MAPPED_ELEMENTS.get(key);
+        } else {
+            for(T e : ELEMENTS) {
+                if(key.equals(e.getIdentifierName())) {
+                    val = e;
+                    break;
+                }
+            }
+        }
+        if(val == null) {
+            val = mappingFunction.apply(key);
+            put(val);
+        }
+        return val;
     }
 
     public void put(T element) {
@@ -68,6 +113,30 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
         if(types.length != 0) {
             if(types[0] == null) {
                 throw new RegistryException("Failed to add elements to registry, " + types[0].getClass() + " does not implement the IRegistryElement class.", this);
+            }
+            for(T t : types) {
+                put(t.getIdentifierName(), t);
+            }
+        }
+    }
+
+    public <Q extends IRegistryElement> void putAllGen(Q[] data) {
+        if(data.length != 0) {
+            if(data[0] != null) {
+                if(classType.isInstance(data[0])) {
+                    throw new RegistryException("Failed to add elements to registry, " + data[0].getClass() + " is not an instance of the class you are trying to register into.", this);
+                }
+            }
+            for(Q t : data) {
+                put(t.getIdentifierName(), (T) t);
+            }
+        }
+    }
+
+    public void putAll(ArrayList<T> types) {
+        if(!types.isEmpty()) {
+            if(types.getFirst() == null) {
+                throw new RegistryException("Failed to add elements to registry, " + types.getFirst().getClass() + " does not implement the IRegistryElement class.", this);
             }
             for(T t : types) {
                 put(t.getIdentifierName(), t);

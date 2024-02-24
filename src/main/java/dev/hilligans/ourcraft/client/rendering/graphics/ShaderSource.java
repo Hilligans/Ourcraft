@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsElement;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 
@@ -19,7 +20,7 @@ public class ShaderSource implements IRegistryElement, IGraphicsElement {
 
     public VertexFormat vertexFormat;
 
-    public ModContent modContent;
+    public ModContainer owner;
 
     public int program;
 
@@ -49,8 +50,8 @@ public class ShaderSource implements IRegistryElement, IGraphicsElement {
     }
 
     @Override
-    public void assignModContent(ModContent modContent) {
-        this.modContent = modContent;
+    public void assignOwner(ModContainer owner) {
+        this.owner = owner;
     }
 
     @Override
@@ -65,7 +66,7 @@ public class ShaderSource implements IRegistryElement, IGraphicsElement {
 
     @Override
     public String getResourceOwner() {
-        return modContent.getModID();
+        return owner.getModID();
     }
 
     @Override

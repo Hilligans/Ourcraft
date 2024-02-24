@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.graphics;
 
 import dev.hilligans.ourcraft.client.MatrixStack;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 
@@ -12,7 +13,7 @@ public class RenderTarget implements IRegistryElement {
     public String before;
     public String targetedMod;
     public MatrixStack matrixStack;
-    public ModContent modContent;
+    public ModContainer owner;
 
     public PipelineState pipelineState;
 
@@ -43,8 +44,8 @@ public class RenderTarget implements IRegistryElement {
     }
 
     @Override
-    public void assignModContent(ModContent modContent) {
-        this.modContent = modContent;
+    public void assignOwner(ModContainer owner) {
+        this.owner = owner;
     }
 
     @Override
@@ -54,7 +55,7 @@ public class RenderTarget implements IRegistryElement {
 
     @Override
     public String getResourceOwner() {
-        return modContent.getModID();
+        return owner.getModID();
     }
 
     @Override

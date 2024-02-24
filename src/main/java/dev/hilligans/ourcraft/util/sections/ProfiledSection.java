@@ -6,7 +6,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Stack;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 import static dev.hilligans.ourcraft.util.FormattedString.FSTR;
 
@@ -35,6 +38,22 @@ public class ProfiledSection implements ISection {
             throw new IllegalArgumentException(STR."Expected frame \{name} does not match actual frame \{stackFrame.sectionName}");
         }
         processFrame(stackFrame);
+    }
+
+    @Override
+    public synchronized <T extends Supplier<String>> void startSubSection(BiConsumer<ISection, T> consumer, T... names) {
+        //todo implement
+        throw new RuntimeException("Unimplemented");
+    }
+
+    @Override
+    public <T extends Supplier<String>> void startSubSection(BiConsumer<ISection, T> consumer, List<T> names) {
+
+    }
+
+    @Override
+    public void stopSubSection(String name) {
+
     }
 
     public @Nullable StackFrame getMonitor() {

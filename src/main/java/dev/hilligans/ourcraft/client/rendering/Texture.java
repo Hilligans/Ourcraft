@@ -9,6 +9,7 @@ import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.ShaderSource;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.resource.ResourceLocation;
 import dev.hilligans.ourcraft.util.UniqueResource;
@@ -19,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 public class Texture implements IRegistryElement, IGraphicsElement {
 
     public String path;
-    public ModContent source;
+    public ModContainer source;
 
     public long textureId = -1;
     public ShaderSource shaderSource;
@@ -129,8 +130,8 @@ public class Texture implements IRegistryElement, IGraphicsElement {
         return "texture";
     }
     @Override
-    public void assignModContent(ModContent modContent) {
-        this.source = modContent;
+    public void assignOwner(ModContainer source) {
+        this.source = source;
     }
 
     @Override

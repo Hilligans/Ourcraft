@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.recipe;
 import dev.hilligans.ourcraft.container.Container;
 import dev.hilligans.ourcraft.container.CraftingContainer;
 import dev.hilligans.ourcraft.item.ItemStack;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 
 public class CraftingRecipe<T extends Container & CraftingContainer> implements IRecipe<T> {
@@ -19,7 +20,7 @@ public class CraftingRecipe<T extends Container & CraftingContainer> implements 
 
     }
 
-    public ModContent source;
+    public ModContainer source;
 
     public CraftingRecipe(boolean shapeless, boolean matchShapeExactly, boolean allowHorizontalFlip, boolean allowVerticalFlip) {
         this.shapeless = shapeless;
@@ -45,8 +46,8 @@ public class CraftingRecipe<T extends Container & CraftingContainer> implements 
     }
 
     @Override
-    public void assignModContent(ModContent modContent) {
-        this.source = modContent;
+    public void assignOwner(ModContainer source) {
+        this.source = source;
     }
 
     @Override

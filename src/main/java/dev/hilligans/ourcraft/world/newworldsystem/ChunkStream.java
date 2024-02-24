@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.world.newworldsystem;
 
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import io.netty.buffer.ByteBuf;
@@ -8,7 +9,7 @@ import io.netty.buffer.ByteBuf;
 public abstract class ChunkStream implements IRegistryElement {
 
     public String name;
-    public ModContent modContent;
+    public ModContainer owner;
     public GameInstance gameInstance;
 
     public ChunkStream(String name) {
@@ -26,7 +27,7 @@ public abstract class ChunkStream implements IRegistryElement {
 
     @Override
     public String getResourceOwner() {
-        return modContent.getModID();
+        return owner.getModID();
     }
 
     @Override
@@ -35,8 +36,8 @@ public abstract class ChunkStream implements IRegistryElement {
     }
 
     @Override
-    public void assignModContent(ModContent modContent) {
-        this.modContent = modContent;
-        this.gameInstance = modContent.getGameInstance();
+    public void assignOwner(ModContainer owner) {
+        this.owner = owner;
+        this.gameInstance = owner.getGameInstance();
     }
 }

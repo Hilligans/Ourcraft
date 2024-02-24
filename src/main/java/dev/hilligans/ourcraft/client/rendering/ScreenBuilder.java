@@ -5,6 +5,7 @@ import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import org.json.JSONArray;
@@ -16,7 +17,7 @@ public class ScreenBuilder implements IRegistryElement {
 
     public ArrayList<TextureElement> textures = new ArrayList<>();
     public String name;
-    public ModContent modContent;
+    public ModContainer owner;
 
     public ScreenBuilder(String name, JSONObject jsonObject) {
         this.name = name;
@@ -31,10 +32,10 @@ public class ScreenBuilder implements IRegistryElement {
     }
 
     @Override
-    public void assignModContent(ModContent modContent) {
-        this.modContent = modContent;
+    public void assignOwner(ModContainer owner) {
+        this.owner = owner;
         for(TextureElement textureElement : textures) {
-            modContent.registerTexture(textureElement.texture);
+            owner.registerTexture(textureElement.texture);
         }
     }
 
@@ -83,7 +84,7 @@ public class ScreenBuilder implements IRegistryElement {
 
     @Override
     public String getResourceOwner() {
-        return modContent.getModID();
+        return owner.getModID();
     }
 
     @Override

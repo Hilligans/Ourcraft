@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.settings;
 
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.util.Side;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
@@ -8,7 +9,7 @@ public abstract class Setting implements IRegistryElement {
 
     public Side side = Side.COMMON;
     public String name;
-    public ModContent source;
+    public ModContainer source;
 
     public Setting(String name) {
         this.name = name;
@@ -24,7 +25,7 @@ public abstract class Setting implements IRegistryElement {
     abstract String write();
 
     @Override
-    public void assignModContent(ModContent source) {
+    public void assignOwner(ModContainer source) {
         this.source = source;
     }
 

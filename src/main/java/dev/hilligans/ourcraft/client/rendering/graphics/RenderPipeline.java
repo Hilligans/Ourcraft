@@ -6,6 +6,7 @@ import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsElement;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 public class RenderPipeline implements IRegistryElement, IGraphicsElement {
 
     public String name;
-    public ModContent modContent;
+    public ModContainer owner;
    // public RenderWindow window;
 
     public ArrayList<RenderTarget> renderTargets = new ArrayList<>();
@@ -62,7 +63,7 @@ public class RenderPipeline implements IRegistryElement, IGraphicsElement {
     public PipelineInstance buildTargets(IGraphicsEngine<?, ?, ?> graphicsEngine) {
         ArrayList<RenderTask> tasks = new ArrayList<>();
         for(RenderTarget renderTarget : renderTargets) {
-            for (RenderTaskSource renderTaskSource : modContent.getGameInstance().RENDER_TASK.ELEMENTS) {
+            for (RenderTaskSource renderTaskSource : owner.getGameInstance().RENDER_TASK.ELEMENTS) {
                 if(renderTaskSource.renderTargetName.equals(renderTarget.getIdentifierName())) {
                     tasks.add(renderTaskSource.getTask(graphicsEngine.getIdentifierName()));
                 }
@@ -72,8 +73,8 @@ public class RenderPipeline implements IRegistryElement, IGraphicsElement {
     }
 
     @Override
-    public void assignModContent(ModContent modContent) {
-        this.modContent = modContent;
+    public void assignOwner(ModContainer owner) {
+        this.owner = owner;
     }
 
     @Override
@@ -92,7 +93,7 @@ public class RenderPipeline implements IRegistryElement, IGraphicsElement {
 
     @Override
     public String getResourceOwner() {
-        return modContent.getModID();
+        return owner.getModID();
     }
 
     @Override
