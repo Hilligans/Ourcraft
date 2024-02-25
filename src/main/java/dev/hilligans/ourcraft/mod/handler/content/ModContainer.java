@@ -28,8 +28,10 @@ import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.util.registry.Registry;
 import dev.hilligans.ourcraft.world.Feature;
 
+import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ModContainer {
@@ -37,6 +39,10 @@ public class ModContainer {
     public final ModClass modClass;
     public Registry<Registry<?>> registries;
     public GameInstance gameInstance;
+    public URLClassLoader classLoader;
+
+
+
 
     public Registry<Block> blockRegistry;
     public Registry<Item> itemRegistry;
@@ -72,31 +78,31 @@ public class ModContainer {
         this.gameInstance = gameInstance;
         this.registries = gameInstance.REGISTRIES.duplicate();
 
-        blockRegistry = (Registry<Block>) registries.getExcept("block");
-        itemRegistry = (Registry<Item>) registries.getExcept("item");
-        biomeRegistry = (Registry<Biome>) registries.getExcept("biome");
-        tagRegistry = (Registry<Tag>) registries.getExcept("tag");
-        recipeRegistry = (Registry<IRecipe<?>>) registries.getExcept("recipe");
-        recipeViewRegistry = (Registry<RecipeView<?>>) registries.getExcept("recipe_view");
-        graphicsEngineRegistry = (Registry<IGraphicsEngine<?, ?, ?>>) registries.getExcept("graphics_engine");
-        commandHandlerRegistry = (Registry<CommandHandler>) registries.getExcept("command");
-        protocolRegistry = (Registry<Protocol>) registries.getExcept("protocol");
-        settingRegistry = (Registry<Setting>) registries.getExcept("setting");
-        resourceLoaderRegistry = (Registry<ResourceLoader<?>>) registries.getExcept("resource_loader");
-        soundBufferRegistry = (Registry<SoundBuffer>) registries.getExcept("sound");
-        toolLevelRegistry = (Registry<ToolLevel>) registries.getExcept("tool_level");
-        registryLoaderRegistry = (Registry<RegistryLoader>) registries.getExcept("resource_loader");
-        screenBuilderRegistry = (Registry<ScreenBuilder>) registries.getExcept("screen");
-        featureRegistry = (Registry<Feature>) registries.getExcept("feature");
-        renderTargetRegistry = (Registry<RenderTarget>) registries.getExcept("render_target");
-        renderPipelineRegistry = (Registry<RenderPipeline>) registries.getExcept("render_pipeline");
-        renderTaskRegistry = (Registry<RenderTaskSource>) registries.getExcept("render_task");
-        inputRegistry = (Registry<Input>) registries.getExcept("key_bind");
-        vertexFormatRegistry = (Registry<VertexFormat>) registries.getExcept("vertex_format");
-        inputRegistry = (Registry<Input>) registries.getExcept("input");
-        textureRegistry = (Registry<Texture>) registries.getExcept("texture");
-        shaderSourceRegistry = (Registry<ShaderSource>) registries.getExcept("shader");
-        layoutEngineRegistry = (Registry<ILayoutEngine<?>>) registries.getExcept("layout_engine");
+        blockRegistry = (Registry<Block>) registries.getExcept("ourcraft:block");
+        itemRegistry = (Registry<Item>) registries.getExcept("ourcraft:item");
+        biomeRegistry = (Registry<Biome>) registries.getExcept("ourcraft:biome");
+        tagRegistry = (Registry<Tag>) registries.getExcept("ourcraft:tag");
+        recipeRegistry = (Registry<IRecipe<?>>) registries.getExcept("ourcraft:recipe");
+        recipeViewRegistry = (Registry<RecipeView<?>>) registries.getExcept("ourcraft:recipe_view");
+        graphicsEngineRegistry = (Registry<IGraphicsEngine<?, ?, ?>>) registries.getExcept("ourcraft:graphics_engine");
+        commandHandlerRegistry = (Registry<CommandHandler>) registries.getExcept("ourcraft:command");
+        protocolRegistry = (Registry<Protocol>) registries.getExcept("ourcraft:protocol");
+        settingRegistry = (Registry<Setting>) registries.getExcept("ourcraft:setting");
+        resourceLoaderRegistry = (Registry<ResourceLoader<?>>) registries.getExcept("ourcraft:resource_loader");
+        soundBufferRegistry = (Registry<SoundBuffer>) registries.getExcept("ourcraft:sound");
+        toolLevelRegistry = (Registry<ToolLevel>) registries.getExcept("ourcraft:tool_level");
+        registryLoaderRegistry = (Registry<RegistryLoader>) registries.getExcept("ourcraft:registry_loader");
+        screenBuilderRegistry = (Registry<ScreenBuilder>) registries.getExcept("ourcraft:screen");
+        featureRegistry = (Registry<Feature>) registries.getExcept("ourcraft:feature");
+        renderTargetRegistry = (Registry<RenderTarget>) registries.getExcept("ourcraft:render_target");
+        renderPipelineRegistry = (Registry<RenderPipeline>) registries.getExcept("ourcraft:render_pipeline");
+        renderTaskRegistry = (Registry<RenderTaskSource>) registries.getExcept("ourcraft:render_task");
+        inputRegistry = (Registry<Input>) registries.getExcept("ourcraft:key_bind");
+        vertexFormatRegistry = (Registry<VertexFormat>) registries.getExcept("ourcraft:vertex_format");
+        inputHandlerProviderRegistry = (Registry<InputHandlerProvider>) registries.getExcept("ourcraft:input");
+        textureRegistry = (Registry<Texture>) registries.getExcept("ourcraft:texture");
+        shaderSourceRegistry = (Registry<ShaderSource>) registries.getExcept("ourcraft:shader");
+        layoutEngineRegistry = (Registry<ILayoutEngine<?>>) registries.getExcept("ourcraft:layout_engine");
     }
 
     public String getModID() {
@@ -108,7 +114,17 @@ public class ModContainer {
     }
 
     public <T extends IRegistryElement> void register(String type, T... data) {
-        registries.get(type).putAllGen(data);
+        for(T val : data) {
+            val.assignOwner(this);
+        }
+        registries.getExcept(type).putAllGen(data);
+    }
+
+    public <T extends IRegistryElement> void registerCore(String type, T... data) {
+        for(T val : data) {
+            val.assignOwner(this);
+        }
+        gameInstance.REGISTRIES.getExcept(type).putAllGen(data);
     }
 
     public void registerBlock(Block block) {
@@ -139,7 +155,8 @@ public class ModContainer {
     }
 
     public void registerSound(SoundBuffer soundBuffer) {
-        ((Registry<SoundBuffer>)registries.get("sound")).put(soundBuffer);
+        soundBuffer.assignOwner(this);
+        soundBufferRegistry.put(soundBuffer);
         //sounds.add(soundBuffer);
         //soundBuffer.source = this;
     }
@@ -166,24 +183,27 @@ public class ModContainer {
 
     @SafeVarargs
     public final void registerPacket(Supplier<PacketBase>... packets) {
+        ModContainer self = this;
         for(Supplier<PacketBase> packet : packets) {
-            Protocol protocol = protocolRegistry.computeIfAbsent("Play", Protocol::new);
+            Protocol protocol = protocolRegistry.computeIfAbsent("Play", (s -> new Protocol(s).setSource(self)));
             protocol.register(packet);
         }
     }
 
     @SafeVarargs
     public final void registerPacket(String protocolName, Supplier<PacketBase>... packets) {
+        ModContainer self = this;
         for(Supplier<PacketBase> packet : packets) {
-            Protocol protocol = protocolRegistry.computeIfAbsent(protocolName, Protocol::new);
+            Protocol protocol = protocolRegistry.computeIfAbsent(protocolName, (s -> new Protocol(s).setSource(self)));
             protocol.register(packet);
         }
     }
 
     @SafeVarargs
     public final void registerPacket(String protocolName, int id, Supplier<PacketBase>... packets) {
+        ModContainer self = this;
         for(Supplier<PacketBase> packet : packets) {
-            Protocol protocol = protocolRegistry.computeIfAbsent(protocolName, Protocol::new);
+            Protocol protocol = protocolRegistry.computeIfAbsent(protocolName, (s -> new Protocol(s).setSource(self)));
             protocol.register(packet,id);
         }
     }
@@ -191,6 +211,7 @@ public class ModContainer {
     public void registerResourceLoader(ResourceLoader<?>... resourceLoaders) {
         for(ResourceLoader<?> resourceLoader : resourceLoaders) {
             resourceLoader.gameInstance = gameInstance;
+            resourceLoader.assignOwner(this);
         }
         resourceLoaderRegistry.putAll(resourceLoaders);
     }

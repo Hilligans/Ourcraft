@@ -68,7 +68,8 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
             }
             registry.forEach(o -> {
                 Registry<?> r = (Registry<?>) o;
-                Registry<?> myReg = (Registry<?>) getExcept(r.getIdentifierName());
+
+                Registry<?> myReg = (Registry<?>) computeIfAbsent(r.getIdentifierName(), s -> (T) new Registry<>(gameInstance, r.classType, r.getResourceName()));
                 myReg.putFrom(r);
             });
         } else {
@@ -123,8 +124,8 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
     public <Q extends IRegistryElement> void putAllGen(Q[] data) {
         if(data.length != 0) {
             if(data[0] != null) {
-                if(classType.isInstance(data[0])) {
-                    throw new RegistryException("Failed to add elements to registry, " + data[0].getClass() + " is not an instance of the class you are trying to register into.", this);
+                if(!classType.isInstance(data[0])) {
+                    throw new RegistryException("Failed to add elements to registry, " + data[0].getClass() + " is not an instance of the class you are trying to register into " + classType, this);
                 }
             }
             for(Q t : data) {
@@ -202,6 +203,14 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
 
     public int getUniqueID() {
         return ELEMENTS.size();
+    }
+
+    @Override
+    public String toString() {
+        return "Registry{" +
+                "ELEMENTS=" + ELEMENTS +
+                ", registryType='" + registryType + '\'' +
+                '}';
     }
 
     @Override

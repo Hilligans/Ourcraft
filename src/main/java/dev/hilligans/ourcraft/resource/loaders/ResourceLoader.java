@@ -32,7 +32,7 @@ public abstract class ResourceLoader<T> implements IRegistryElement {
     }
 
     public T read(ResourceLocation path) {
-        ByteBuffer buffer = gameInstance.getResource(path);
+        ByteBuffer buffer = source.gameInstance.getResource(path);
         if(buffer == null) {
             return null;
         }
@@ -88,6 +88,7 @@ public abstract class ResourceLoader<T> implements IRegistryElement {
     @Override
     public void assignOwner(ModContainer source) {
         this.source = source;
+        this.gameInstance = source.gameInstance;
     }
 
     @Override

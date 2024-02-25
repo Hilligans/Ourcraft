@@ -65,6 +65,12 @@ public class ContentPack {
         gameInstance.MOD_LOADER.mainClasses.computeIfAbsent(modContent.getModID(),a -> new Triplet<>(modContent.mainClass, modContent.mainClass.getProtectionDomain().getCodeSource().getLocation().getPath(), false));
     }
 
+    public void registerModContent(ModContainer modContent) {
+
+        gameInstance.RESOURCE_MANAGER.classLoaders.add(modContent.classLoader);
+        gameInstance.MOD_LOADER.mainClasses.computeIfAbsent(modContent.getModID(),a -> new Triplet<>(modContent.modClass.getClass(), modContent.modClass.getClass().getProtectionDomain().getCodeSource().getLocation().getPath(), false));
+    }
+
     ///TODO use Blocks, Items, Entity Instances so the game can still render while its being reupdated.
 
     public void buildVital() {
@@ -106,55 +112,55 @@ public class ContentPack {
             if(shouldLoad.get(string)) {
                 ModContent mod = mods.get(string);
                 for(SoundBuffer soundBuffer : mod.sounds) {
-                    gameInstance.registerSound(soundBuffer);
+                    //gameInstance.registerSound(soundBuffer);
                 }
                 for (Texture texture : mod.textures) {
-                    gameInstance.registerTextures(texture);
+                    //gameInstance.registerTextures(texture);
                 }
                 for (Block block : mod.blocks) {
-                    gameInstance.registerBlock(block);
+                    //gameInstance.registerBlock(block);
                 }
                 for (Item item : mod.items) {
-                    gameInstance.registerItem(item);
+                    //gameInstance.registerItem(item);
                 }
                 for(IModel model : mod.models) {
-                    gameInstance.RESOURCE_MANAGER.putModel(model.getPath(),model);
+                    //gameInstance.RESOURCE_MANAGER.putModel(model.getPath(),model);
                 }
                 for(Protocol protocol : mod.protocols.values()) {
-                    gameInstance.PROTOCOLS.put(protocol.protocolName,protocol);
+                    //gameInstance.PROTOCOLS.put(protocol.protocolName,protocol);
                 }
                 for(ScreenBuilder screenBuilder : mod.screenBuilders) {
-                    gameInstance.registerScreenBuilder(screenBuilder);
+                    //gameInstance.registerScreenBuilder(screenBuilder);
                 }
                 for(Feature feature : mod.features) {
-                    gameInstance.registerFeature(feature);
+                    //gameInstance.registerFeature(feature);
                 }
                 for(IGraphicsEngine<?,?,?> graphicsEngine : mod.graphicsEngines) {
-                    gameInstance.registerGraphicsEngine(graphicsEngine);
+                    //gameInstance.registerGraphicsEngine(graphicsEngine);
                 }
                 for(RenderTarget renderTarget : mod.renderTargets) {
-                    gameInstance.registerRenderTarget(renderTarget);
+                    //gameInstance.registerRenderTarget(renderTarget);
                 }
                 for(RenderPipeline renderPipeline : mod.renderPipelines) {
-                    gameInstance.registerRenderPipeline(renderPipeline);
+                    //gameInstance.registerRenderPipeline(renderPipeline);
                 }
                 for(RenderTaskSource renderTask : mod.renderTasks) {
-                    gameInstance.registerRenderTask(renderTask);
+                    //gameInstance.registerRenderTask(renderTask);
                 }
                 for(VertexFormat vertexFormat : mod.vertexFormats) {
-                    gameInstance.registerVertexFormat(vertexFormat);
+                    //gameInstance.registerVertexFormat(vertexFormat);
                 }
                 for(InputHandlerProvider provider : mod.inputHandlerProviders) {
-                    gameInstance.registerInputHandlerProviders(provider);
+                    //gameInstance.registerInputHandlerProviders(provider);
                 }
                 for(Input input : mod.keybinds) {
-                    gameInstance.registerKeybind(input);
+                    //gameInstance.registerKeybind(input);
                 }
                 for(ShaderSource shaderSource : mod.shaders) {
-                    gameInstance.registerShader(shaderSource);
+                    //gameInstance.registerShader(shaderSource);
                 }
                 for(ILayoutEngine<?> layoutEngine : mod.layoutEngines) {
-                    gameInstance.registerLayoutEngine(layoutEngine);
+                    //gameInstance.registerLayoutEngine(layoutEngine);
                 }
             }
         }

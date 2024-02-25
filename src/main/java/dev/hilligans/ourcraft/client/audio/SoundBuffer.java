@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.client.audio;
 
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.resource.ResourceLocation;
 import dev.hilligans.ourcraft.util.Side;
@@ -30,7 +31,7 @@ public class SoundBuffer implements IRegistryElement {
     public ByteBuffer data;
     public byte[] bytes;
 
-    public ModContent source;
+    public ModContainer source;
 
     public SoundBuffer(String file)  {
         this.file = file;
@@ -123,6 +124,11 @@ public class SoundBuffer implements IRegistryElement {
                 }
             }
         }
+    }
+
+    @Override
+    public void assignOwner(ModContainer owner) {
+        this.source = owner;
     }
 
     @Override

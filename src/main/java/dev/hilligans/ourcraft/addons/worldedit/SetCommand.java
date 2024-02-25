@@ -34,7 +34,7 @@ public class SetCommand extends WorldEditCommand {
             try {
                 int val = Integer.parseInt(args[0]);
 
-                Block b = modContent.gameInstance.getBlockWithID(val);
+                Block b = owner.gameInstance.getBlockWithID(val);
                 long time = System.currentTimeMillis();
                 BlockPos f = pos.getTypeA();
                 BlockPos s = pos.typeB;

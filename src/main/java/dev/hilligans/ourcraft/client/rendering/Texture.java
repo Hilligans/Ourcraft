@@ -141,14 +141,16 @@ public class Texture implements IRegistryElement, IGraphicsElement {
 
     @Override
     public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
-        Image texture = (Image) gameInstance.RESOURCE_LOADER.getResource(new ResourceLocation(path,source.getModID()));
-        if(texture == null) {
-            System.err.println(path);
-            return;
-        }
+        if(data.get(gameInstance) == null) {
+            Image texture = (Image) gameInstance.RESOURCE_LOADER.getResource(new ResourceLocation(path, source.getModID()));
+            if (texture == null) {
+                System.err.println(path);
+                return;
+            }
 
-        long textureId = graphicsEngine.getDefaultImpl().createTexture(graphicsContext, texture);
-        data.add(gameInstance, new TextureData(texture, textureId, shaderSource));
+            long textureId = graphicsEngine.getDefaultImpl().createTexture(graphicsContext, texture);
+            data.add(gameInstance, new TextureData(texture, textureId, shaderSource));
+        }
     }
 
     @Override

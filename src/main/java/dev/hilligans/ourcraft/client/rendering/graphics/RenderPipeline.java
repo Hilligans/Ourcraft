@@ -33,7 +33,7 @@ public class RenderPipeline implements IRegistryElement, IGraphicsElement {
             int x = 0;
             for(RenderTarget target : renderTargets) {
                 x++;
-                if(target.name.equals(renderTarget.after) && target.modContent.getModID().equals(renderTarget.targetedMod)) {
+                if(target.name.equals(renderTarget.after) && target.owner.getModID().equals(renderTarget.targetedMod)) {
                     renderTargets.add(x, renderTarget);
                     return;
                 }
@@ -44,7 +44,7 @@ public class RenderPipeline implements IRegistryElement, IGraphicsElement {
         if(renderTarget.before != null) {
             int x = 0;
             for(RenderTarget target : renderTargets) {
-                if(target.name.equals(renderTarget.before) && target.modContent.getModID().equals(target.targetedMod)) {
+                if(target.name.equals(renderTarget.before) && target.owner.getModID().equals(target.targetedMod)) {
                     renderTargets.add(x, renderTarget);
                     return;
                 }

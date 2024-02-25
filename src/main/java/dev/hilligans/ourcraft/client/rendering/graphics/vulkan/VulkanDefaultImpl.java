@@ -154,11 +154,11 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
         GraphicsPipeline graphicsPipeline = new GraphicsPipeline(device, shaderSource);
 
         if(asyncShaderLoading) {
-            submitShader(shaderSource.vertexShader, shaderSource.modContent.getModID(), device, VK_SHADER_STAGE_VERTEX_BIT);
-            submitShader(shaderSource.fragmentShader, shaderSource.modContent.getModID(), device, VK_SHADER_STAGE_FRAGMENT_BIT);
+            submitShader(shaderSource.vertexShader, shaderSource.owner.getModID(), device, VK_SHADER_STAGE_VERTEX_BIT);
+            submitShader(shaderSource.fragmentShader, shaderSource.owner.getModID(), device, VK_SHADER_STAGE_FRAGMENT_BIT);
         } else {
-            compileShaderAndPut(shaderSource.vertexShader, shaderSource.modContent.getModID(), device, VK_SHADER_STAGE_VERTEX_BIT);
-            compileShaderAndPut(shaderSource.fragmentShader, shaderSource.modContent.getModID(), device, VK_SHADER_STAGE_FRAGMENT_BIT);
+            compileShaderAndPut(shaderSource.vertexShader, shaderSource.owner.getModID(), device, VK_SHADER_STAGE_VERTEX_BIT);
+            compileShaderAndPut(shaderSource.fragmentShader, shaderSource.owner.getModID(), device, VK_SHADER_STAGE_FRAGMENT_BIT);
 
             Shader vertexShader;
             Shader fragmentShader;

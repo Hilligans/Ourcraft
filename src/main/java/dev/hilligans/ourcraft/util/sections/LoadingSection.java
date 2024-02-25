@@ -77,5 +77,6 @@ public class LoadingSection implements ISection {
         if(++subsectionCount == subsectionLength) {
             processingSubSections = false;
         }
+        System.err.println(STR."Completed Section: \{name} - \{subsectionCount} of \{subsectionLength}");
     }
 }

@@ -2,17 +2,16 @@ package dev.hilligans.ourcraft;
 
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.TextureAtlas;
-import dev.hilligans.ourcraft.data.other.BoundingBox;
+import dev.hilligans.ourcraft.mod.handler.pipeline.InstanceLoaderPipeline;
 import dev.hilligans.ourcraft.mod.handler.pipeline.standard.StandardPipeline;
 import dev.hilligans.ourcraft.util.ArgumentContainer;
 import dev.hilligans.ourcraft.util.Side;
-import org.joml.Intersectionf;
-import org.joml.Math;
-import org.joml.Vector2f;
+import dev.hilligans.ourcraft.util.registry.Registry;
 
 import java.io.IOException;
-import java.util.function.Consumer;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ClientMain {
 
@@ -32,34 +31,11 @@ public class ClientMain {
         gameInstance.handleArgs(args);
         gameInstance.side = Side.CLIENT;
         gameInstance.THREAD_PROVIDER.map();
-        gameInstance.POST_CORE_HOOKS.add(gameInstance1 -> new Thread(() -> {
-
-            gameInstance1.THREAD_PROVIDER.map();
-
-            Client client = new Client(gameInstance1, argumentContainer);
-            //Client client1 = new Client(gameInstance, argumentContainer);
-            String graphicsEngine = argumentContainer.getString("--graphicsEngine", null);
-            if(graphicsEngine != null) {
-                System.out.println(graphicsEngine);
-                client.setGraphicsEngine(gameInstance1.GRAPHICS_ENGINES.get(graphicsEngine));
-              //  client1.setGraphicsEngine(gameInstance.GRAPHICS_ENGINES.get(graphicsEngine));
-            }
-            //client1.setupClient();
-            client.startClient();
-
-
-            gameInstance1.THREAD_PROVIDER.EXECUTOR.shutdownNow();
-            if(argumentContainer.getBoolean("--integratedServer", false)) {
-                ServerMain.getServer().stop();
-            }
-            System.exit(0);
-
-        }).start());
-
 
         Thread serverThread = null;
         if(argumentContainer.getBoolean("--integratedServer", false)) {
             try {
+
                 serverThread = new Thread(() -> ServerMain.server(gameInstance, argumentContainer));
                 serverThread.setName("Server-Thread");
                 serverThread.setDaemon(true);
@@ -69,9 +45,48 @@ public class ClientMain {
             }
         }
 
-        StandardPipeline.get(gameInstance).build();
+        InstanceLoaderPipeline<?> pipeline = StandardPipeline.get(gameInstance);
 
+        AtomicReference<Client> client = new AtomicReference<>();
 
-        //gameInstance.loadContent();
+        pipeline.addPostCoreHook(gameInstance1 -> {
+            Semaphore waiting = new Semaphore(1);
+            try {
+                waiting.acquire();
+            } catch (Exception ignored) {}
+            new Thread(() -> {
+                gameInstance1.THREAD_PROVIDER.map();
+                client.set(new Client(gameInstance1, argumentContainer));
+
+                String graphicsEngine = argumentContainer.getString("--graphicsEngine", null);
+                if(graphicsEngine != null) {
+                    client.get().setGraphicsEngine(gameInstance1.GRAPHICS_ENGINES.get(graphicsEngine));
+                }
+                client.get().startClient();
+                waiting.release();
+
+                client.get().loop();
+
+                gameInstance1.THREAD_PROVIDER.EXECUTOR.shutdownNow();
+                if(argumentContainer.getBoolean("--integratedServer", false)) {
+                    ServerMain.getServer().stop();
+                }
+                System.exit(0);
+
+            }).start();
+
+            try {
+                waiting.acquire();
+                waiting.release();
+            } catch (Exception ignored) {}
+        });
+
+        pipeline.addPostHook(gameInstance12 -> {
+            while(client.get() == null) {}
+            client.get().transition = true;
+        });
+
+        pipeline.build();
+
     }
 }

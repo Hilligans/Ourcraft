@@ -170,10 +170,11 @@ public class StringRenderer {
 
     public void buildChars() {
         GameInstance gameInstance = graphicsEngine.getGameInstance();
-        for(int x = 0; x < Short.MAX_VALUE / 128; x++) {
+        for(int x = 0; x < Short.MAX_VALUE / 256; x++) {
             int finalX = x;
             gameInstance.THREAD_PROVIDER.execute(() -> {
                 TextureAtlas textureAtlas = buildTextureAtlas(gameInstance, finalX);
+                //System.out.println("DONZO "+ finalX);
                 synchronized (textureAtlases) {
                     textureAtlases.put(finalX, textureAtlas);
                 }

@@ -139,7 +139,7 @@ public class ModContent {
     }
 
     public void registerBlock(Block block) {
-        block.setModContent(this);
+       // block.setModContent(this);
         blocks.add(block);
        // blockTextures.putAll(block.blockProperties.blockTextureManager.getAllTextures());
         items.add(new BlockItem(block.name,block,modID).setModContent(this));
@@ -164,7 +164,7 @@ public class ModContent {
 
     public void registerSound(SoundBuffer soundBuffer) {
         sounds.add(soundBuffer);
-        soundBuffer.source = this;
+        //soundBuffer.source = this;
     }
 
     public void registerSounds(SoundBuffer... soundBuffers) {
@@ -219,7 +219,7 @@ public class ModContent {
 
     public void registerBiome(Biome... biomes) {
         for(Biome biome : biomes) {
-            biome.source = this;
+            //biome.source = this;
             this.biomes.add(biome);
         }
     }

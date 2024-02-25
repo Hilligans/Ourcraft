@@ -14,7 +14,10 @@ public interface PerModPipelineStage<T extends InstanceLoaderPipeline<T>> extend
         int length = pipeline.getModList().getCount();
         int last = 0;
         AtomicInteger counter = new AtomicInteger();
-        pipeline.getModList().foreach(mod -> Thread.startVirtualThread(() -> execute(mod)));
+        pipeline.getModList().foreach(mod -> Thread.startVirtualThread(() -> {
+            execute(mod);
+            counter.getAndIncrement();
+        }));
         while (counter.get() != length) {
             try(var $1 = section.startSection(STR."\{last} of \{length}")) {
                 try {

@@ -36,6 +36,7 @@ import dev.hilligans.ourcraft.tag.CompoundNBTTag;
 import dev.hilligans.ourcraft.util.ArgumentContainer;
 import dev.hilligans.ourcraft.util.Logger;
 import dev.hilligans.ourcraft.util.ThreadContext;
+import dev.hilligans.ourcraft.util.registry.Registry;
 import dev.hilligans.ourcraft.world.newworldsystem.ClientCubicWorld;
 import dev.hilligans.ourcraft.world.newworldsystem.CubicWorld;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
@@ -90,11 +91,16 @@ public class Client implements IClientPacketHandler {
     public ArgumentContainer argumentContainer;
     public ChatMessages chatMessages = new ChatMessages();
 
+    public boolean transition = false;
+
     public Client(GameInstance gameInstance, ArgumentContainer argumentContainer) {
         this.gameInstance = gameInstance;
         this.newClientWorld = new ClientCubicWorld(gameInstance, 0,"", 64);
         logger = gameInstance.LOGGER.withKey("client");
-        graphicsEngine = gameInstance.GRAPHICS_ENGINES.get("ourcraft:openglEngine");
+        graphicsEngine = ((Registry<IGraphicsEngine<?,?,?>>)gameInstance.REGISTRIES.getExcept("ourcraft:graphics_engine")).get("ourcraft:openglEngine");
+        for(IGraphicsEngine<?,?,?> engine : ((Registry<IGraphicsEngine<?,?,?>>)gameInstance.REGISTRIES.getExcept("ourcraft:graphics_engine")).ELEMENTS) {
+            System.out.println(engine.getIdentifierName());
+        }
         ((OpenGLEngine)graphicsEngine).client = this;
         soundEngine = new SoundEngine(gameInstance);
         this.argumentContainer = argumentContainer;
@@ -158,6 +164,9 @@ public class Client implements IClientPacketHandler {
         setupClient();
 
         System.err.println("Time to start running: " + (System.currentTimeMillis() - ClientMain.startTime));
+    }
+
+    public void loop() {
         graphicsEngine.createRenderLoop(gameInstance, rWindow).run();
         graphicsEngine.close();
         cleanUp();
@@ -169,6 +178,11 @@ public class Client implements IClientPacketHandler {
         }
         try(var $0 = threadContext.getSection().startSection("process_packets")) {
             network.processPackets();
+        }
+        if(transition) {
+            client.gameInstance.build(client.graphicsEngine, null);
+            transition = false;
+            rWindow.setRenderPipeline("ourcraft:menu_pipeline");
         }
     }
 

@@ -90,6 +90,6 @@ public class ChunkDebugRenderTask extends RenderTaskSource {
     @Override
     public void load(GameInstance gameInstance) {
         super.load(gameInstance);
-        shaderSource = gameInstance.SHADERS.getExcept("ourcraft:position_color_lines_shader");
+        shaderSource = gameInstance.getExcept("ourcraft:position_color_lines_shader", ShaderSource.class);
     }
 }

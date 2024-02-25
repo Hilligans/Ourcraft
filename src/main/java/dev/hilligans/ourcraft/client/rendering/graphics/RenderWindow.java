@@ -45,7 +45,7 @@ public abstract class RenderWindow {
                 logger = log.withKey("window");
             }
         }
-        setRenderPipeline("ourcraft:menu_pipeline");
+        setRenderPipeline("ourcraft:engine_loading_pipeline");
         camera = new FreeCamera(this);
         this.windowName = STR."window \{windowID.getAndIncrement()}";
     }
@@ -79,7 +79,7 @@ public abstract class RenderWindow {
     }
 
     public void setRenderPipeline(String name) {
-        setRenderPipeline(graphicsEngine.getGameInstance().RENDER_PIPELINES.get(name));
+        setRenderPipeline(graphicsEngine.getGameInstance().getExcept(name, RenderPipeline.class));
     }
 
     public void queueRenderPipeline(String name) {

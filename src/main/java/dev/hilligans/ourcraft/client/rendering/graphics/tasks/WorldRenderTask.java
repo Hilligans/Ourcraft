@@ -198,11 +198,6 @@ public class WorldRenderTask extends RenderTaskSource {
             }
 
             @Override
-            public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
-                super.load(gameInstance, graphicsEngine, graphicsContext);
-            }
-
-            @Override
             public void cleanup(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
                 super.cleanup(gameInstance, graphicsEngine, graphicsContext);
                 meshes.forEach(meshHolder -> graphicsEngine.getDefaultImpl().destroyMesh(graphicsContext, meshHolder.id));

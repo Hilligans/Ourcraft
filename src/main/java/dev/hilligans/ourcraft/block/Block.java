@@ -19,6 +19,7 @@ import dev.hilligans.ourcraft.data.other.blockstates.DataBlockState;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.item.Item;
 import dev.hilligans.ourcraft.item.ItemStack;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.resource.ResourceLocation;
 import dev.hilligans.ourcraft.server.concurrent.Lock;
@@ -45,7 +46,7 @@ public class Block implements IRegistryElement {
     public short id;
     public BlockProperties blockProperties;
     public Block droppedBlock;
-    public ModContent modContent;
+    public ModContainer source;
 
     public String path;
     public JSONObject overrides;
@@ -73,9 +74,9 @@ public class Block implements IRegistryElement {
 
 
 
-    public void setModContent(ModContent modContent) {
-        this.modId = modContent.getModID();
-        this.modContent = modContent;
+    public void assignOwner(ModContainer source) {
+        this.modId = source.getModID();
+        this.source = source;
         this.blockProperties.source = modId;
         this.blockProperties.blockTextureManager.source = modId;
         this.blockProperties.blockTextureManager.textureSource = modId;
@@ -144,7 +145,7 @@ public class Block implements IRegistryElement {
     }
 
     public Item getBlockItem() {
-        return modContent.gameInstance.getItem(getName());
+        return source.gameInstance.getItem(getName());
     }
 
     public boolean getAllowedMovement(Vector3d motion, Vector3d pos, BlockPos blockPos, BoundingBox boundingBox, IWorld world) {
@@ -311,7 +312,7 @@ public class Block implements IRegistryElement {
             }
         }
 
-        if(modContent.gameInstance.side == Side.CLIENT) {
+        if(source.gameInstance.side == Side.CLIENT) {
            // generateTextures();
         }
     }

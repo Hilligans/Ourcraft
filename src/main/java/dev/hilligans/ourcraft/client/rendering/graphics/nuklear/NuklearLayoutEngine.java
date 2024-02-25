@@ -173,8 +173,10 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
 
     @Override
     public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
-        nkProgram = gameInstance.SHADERS.get("ourcraft:nk_shader");
-        load(graphicsEngine, graphicsContext, gameInstance.getResourceDirect(new ResourceLocation("Roboto-Medium.ttf", "ourcraft")));
+        if(nkProgram == null) {
+            nkProgram = gameInstance.SHADERS.get("ourcraft:nk_shader");
+            load(graphicsEngine, graphicsContext, gameInstance.getResourceDirect(new ResourceLocation("Roboto-Medium.ttf", "ourcraft")));
+        }
     }
 
     @Override
@@ -183,5 +185,6 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
         graphicsEngine.getDefaultImpl().destroyTexture(graphicsContext, default_font.texture().id());
         default_font.free();
         null_texture.free();
+        nkProgram = null;
     }
 }

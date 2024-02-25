@@ -1,5 +1,7 @@
 package dev.hilligans.ourcraft.mod.handler.content;
 
+import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.data.primitives.Triplet;
 import dev.hilligans.ourcraft.mod.handler.Mod;
 import dev.hilligans.ourcraft.mod.handler.ModClass;
@@ -24,8 +26,22 @@ import java.util.zip.ZipInputStream;
 public class ModList {
 
     public ArrayList<ModContainer> mods = new ArrayList<>();
+    public GameInstance gameInstance;
+
+    public ModList(GameInstance gameInstance) {
+        this.gameInstance = gameInstance;
+    }
 
     public ModList load() {
+        if(new File("ourcraft-1.0.3-jar-with-dependencies.jar").exists()) {
+            gameInstance.DATA_LOADER.addJar("ourcraft-1.0.3-jar-with-dependencies.jar", "ourcraft");
+        } else if(new File("ourcraft-1.0.3.jar").exists()) {
+            gameInstance.DATA_LOADER.addJar("ourcraft-1.0.3.jar", "ourcraft");
+        } else {
+            gameInstance.DATA_LOADER.addFolder("target/classes/", "ourcraft");
+        }
+
+        mods.add(new ModContainer(new Ourcraft()));
         /*
         loadAllMods(new File("mods/"));
         if(true) {

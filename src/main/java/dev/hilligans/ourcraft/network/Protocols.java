@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.network;
 
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.network.packet.auth.*;
 import dev.hilligans.ourcraft.network.packet.client.*;
@@ -7,7 +8,7 @@ import dev.hilligans.ourcraft.network.packet.server.*;
 
 public class Protocols {
 
-    public static void register(ModContent modContent) {
+    public static void register(ModContainer modContent) {
         modContent.registerPacket(CRequestChunkPacket::new);
         modContent.registerPacket(SSendChunkPacket::new);
         modContent.registerPacket(CSendBlockChanges::new);

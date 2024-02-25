@@ -28,6 +28,7 @@ import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.mod.handler.EventBus;
 import dev.hilligans.ourcraft.mod.handler.events.common.RegistryClearEvent;
 import dev.hilligans.ourcraft.mod.handler.ModLoader;
+import dev.hilligans.ourcraft.mod.handler.pipeline.InstanceLoaderPipeline;
 import dev.hilligans.ourcraft.network.Protocol;
 import dev.hilligans.ourcraft.recipe.helper.RecipeView;
 import dev.hilligans.ourcraft.resource.dataloader.DataLoader;
@@ -56,8 +57,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 public class GameInstance {
-
-    public final ArrayList<Consumer<GameInstance>> POST_CORE_HOOKS = new ArrayList<>();
     public final EventBus EVENT_BUS = new EventBus();
     public final ModLoader MOD_LOADER = new ModLoader(this);
     public final Logger LOGGER = new Logger("", "");
@@ -75,12 +74,14 @@ public class GameInstance {
     public final int gameInstanceUniversalID;
 
     public boolean built = false;
+    public InstanceLoaderPipeline<?> loaderPipeline;
 
     public final ToolLevelList MATERIAL_LIST = new ToolLevelList();
 
     public GameInstance() {
         gameInstanceUniversalID = getNewGameInstanceUniversalID();
 
+        /*
         REGISTRIES.put(BLOCKS);
         REGISTRIES.put(ITEMS);
         REGISTRIES.put(BIOMES);
@@ -105,6 +106,8 @@ public class GameInstance {
         REGISTRIES.put(TEXTURES);
         REGISTRIES.put(SHADERS);
         REGISTRIES.put(LAYOUT_ENGINES);
+
+         */
     }
 
     public void loadContent() {
@@ -118,12 +121,6 @@ public class GameInstance {
         CONTENT_PACK.generateData();
         buildBlockStates();
         REBUILDING.set(false);
-    }
-
-    public void runPostCoreHooks() {
-        for(Consumer<GameInstance> consumer : POST_CORE_HOOKS) {
-            consumer.accept(this);
-        }
     }
 
     public void build(IGraphicsEngine<?,?,?> graphicsEngine, GraphicsContext graphicsContext) {
@@ -150,32 +147,60 @@ public class GameInstance {
 
     public final Registry<Registry<?>> REGISTRIES = new Registry<>(this, Registry.class, "registry");
 
-    public final Registry<Block> BLOCKS = new Registry<>(this, Block.class, "block");
-    public final Registry<Item> ITEMS = new Registry<>(this, Item.class, "item");
-    public final Registry<Biome> BIOMES = new Registry<>(this, Biome.class, "biome");
-    public final Registry<Tag> TAGS = new Registry<>(this, Tag.class, "tag");
-    public final Registry<IRecipe<?>> RECIPES = new Registry<>(this, IRecipe.class, "recipe");
-    public final Registry<RecipeView<?>> RECIPE_VIEWS = new Registry<>(this, RecipeView.class, "recipe_view");
-    public final Registry<IGraphicsEngine<?,?,?>> GRAPHICS_ENGINES = new Registry<>(this, IGraphicsEngine.class, "graphics_engine");
-    public final Registry<CommandHandler> COMMANDS = new Registry<>(this, CommandHandler.class, "command");
-    public final Registry<Protocol> PROTOCOLS = new Registry<>(this, Protocol.class, "protocol");
-    public final Registry<Setting> SETTINGS = new Registry<>(this, Setting.class, "setting");
-    public final Registry<ResourceLoader<?>> RESOURCE_LOADERS = new Registry<>(this, ResourceLoader.class, "resource_loader");
-    public final Registry<SoundBuffer> SOUNDS = new Registry<>(this, SoundBuffer.class, "sound");
-    public final Registry<ToolLevel> TOOL_MATERIALS = new Registry<>(this, ToolLevel.class, "tool_level");
-    public final Registry<RegistryLoader> DATA_LOADERS = new Registry<>(this, RegistryLoader.class, "registry_loader");
-    public final Registry<ScreenBuilder> SCREEN_BUILDERS = new Registry<>(this, ScreenBuilder.class, "screen");
-    public final Registry<Feature> FEATURES = new Registry<>(this, Feature.class, "feature");
-    public final Registry<RenderTarget> RENDER_TARGETS = new Registry<>(this, RenderTarget.class, "render_target");
-    public final Registry<RenderPipeline> RENDER_PIPELINES = new Registry<>(this, RenderPipeline.class, "render_pipeline");
-    public final Registry<RenderTaskSource> RENDER_TASK = new Registry<>(this, RenderTaskSource.class, "render_task");
-    public final Registry<Input> KEY_BINDS = new Registry<>(this, Input.class, "key_bind");
-    public final Registry<VertexFormat> VERTEX_FORMATS = new Registry<>(this, VertexFormat.class, "vertex_format");
-    public final Registry<InputHandlerProvider> INPUT_HANDLER_PROVIDERS = new Registry<>(this, InputHandlerProvider.class, "input");
-    public final Registry<Texture> TEXTURES = new Registry<>(this, Texture.class, "texture");
-    public final Registry<ShaderSource> SHADERS = new Registry<>(this, ShaderSource.class, "shader");
-    public final Registry<ILayoutEngine<?>> LAYOUT_ENGINES = new Registry<>(this, ILayoutEngine.class, "layout_engine");
+    public Registry<Block> BLOCKS = new Registry<>(this, Block.class, "block");
+    public Registry<Item> ITEMS = new Registry<>(this, Item.class, "item");
+    public Registry<Biome> BIOMES = new Registry<>(this, Biome.class, "biome");
+    public Registry<Tag> TAGS = new Registry<>(this, Tag.class, "tag");
+    public Registry<IRecipe<?>> RECIPES = new Registry<>(this, IRecipe.class, "recipe");
+    public Registry<RecipeView<?>> RECIPE_VIEWS = new Registry<>(this, RecipeView.class, "recipe_view");
+    public Registry<IGraphicsEngine<?,?,?>> GRAPHICS_ENGINES = new Registry<>(this, IGraphicsEngine.class, "graphics_engine");
+    public Registry<CommandHandler> COMMANDS = new Registry<>(this, CommandHandler.class, "command");
+    public Registry<Protocol> PROTOCOLS = new Registry<>(this, Protocol.class, "protocol");
+    public Registry<Setting> SETTINGS = new Registry<>(this, Setting.class, "setting");
+    public Registry<ResourceLoader<?>> RESOURCE_LOADERS = new Registry<>(this, ResourceLoader.class, "resource_loader");
+    public Registry<SoundBuffer> SOUNDS = new Registry<>(this, SoundBuffer.class, "sound");
+    public Registry<ToolLevel> TOOL_MATERIALS = new Registry<>(this, ToolLevel.class, "tool_level");
+    public Registry<RegistryLoader> DATA_LOADERS = new Registry<>(this, RegistryLoader.class, "registry_loader");
+    public Registry<ScreenBuilder> SCREEN_BUILDERS = new Registry<>(this, ScreenBuilder.class, "screen");
+    public Registry<Feature> FEATURES = new Registry<>(this, Feature.class, "feature");
+    public Registry<RenderTarget> RENDER_TARGETS = new Registry<>(this, RenderTarget.class, "render_target");
+    public Registry<RenderPipeline> RENDER_PIPELINES = new Registry<>(this, RenderPipeline.class, "render_pipeline");
+    public Registry<RenderTaskSource> RENDER_TASK = new Registry<>(this, RenderTaskSource.class, "render_task");
+    public Registry<Input> KEY_BINDS = new Registry<>(this, Input.class, "key_bind");
+    public Registry<VertexFormat> VERTEX_FORMATS = new Registry<>(this, VertexFormat.class, "vertex_format");
+    public Registry<InputHandlerProvider> INPUT_HANDLER_PROVIDERS = new Registry<>(this, InputHandlerProvider.class, "input");
+    public Registry<Texture> TEXTURES = new Registry<>(this, Texture.class, "texture");
+    public Registry<ShaderSource> SHADERS = new Registry<>(this, ShaderSource.class, "shader");
+    public Registry<ILayoutEngine<?>> LAYOUT_ENGINES = new Registry<>(this, ILayoutEngine.class, "layout_engine");
     public ArrayList<IBlockState> BLOCK_STATES;
+
+    public void copyRegistries() {
+        BLOCKS = (Registry<Block>) REGISTRIES.getExcept("ourcraft:block");
+        ITEMS = (Registry<Item>) REGISTRIES.getExcept("ourcraft:item");
+        BIOMES = (Registry<Biome>) REGISTRIES.getExcept("ourcraft:biome");
+        TAGS = (Registry<Tag>) REGISTRIES.getExcept("ourcraft:tag");
+        RECIPES = (Registry<IRecipe<?>>) REGISTRIES.getExcept("ourcraft:recipe");
+        RECIPE_VIEWS = (Registry<RecipeView<?>>) REGISTRIES.getExcept("ourcraft:recipe_view");
+        GRAPHICS_ENGINES = (Registry<IGraphicsEngine<?, ?, ?>>) REGISTRIES.getExcept("ourcraft:graphics_engine");
+        COMMANDS = (Registry<CommandHandler>) REGISTRIES.getExcept("ourcraft:command");
+        PROTOCOLS = (Registry<Protocol>) REGISTRIES.getExcept("ourcraft:protocol");
+        SETTINGS = (Registry<Setting>) REGISTRIES.getExcept("ourcraft:setting");
+        RESOURCE_LOADERS = (Registry<ResourceLoader<?>>) REGISTRIES.getExcept("ourcraft:resource_loader");
+        SOUNDS = (Registry<SoundBuffer>) REGISTRIES.getExcept("ourcraft:sound");
+        TOOL_MATERIALS = (Registry<ToolLevel>) REGISTRIES.getExcept("ourcraft:tool_level");
+        DATA_LOADERS = (Registry<RegistryLoader>) REGISTRIES.getExcept("ourcraft:registry_loader");
+        SCREEN_BUILDERS = (Registry<ScreenBuilder>) REGISTRIES.getExcept("ourcraft:screen");
+        FEATURES = (Registry<Feature>) REGISTRIES.getExcept("ourcraft:feature");
+        RENDER_TARGETS = (Registry<RenderTarget>) REGISTRIES.getExcept("ourcraft:render_target");
+        RENDER_PIPELINES = (Registry<RenderPipeline>) REGISTRIES.getExcept("ourcraft:render_pipeline");
+        RENDER_TASK = (Registry<RenderTaskSource>) REGISTRIES.getExcept("ourcraft:render_task");
+        KEY_BINDS = (Registry<Input>) REGISTRIES.getExcept("ourcraft:key_bind");
+        VERTEX_FORMATS = (Registry<VertexFormat>) REGISTRIES.getExcept("ourcraft:vertex_format");
+        INPUT_HANDLER_PROVIDERS = (Registry<InputHandlerProvider>) REGISTRIES.getExcept("ourcraft:input");
+        TEXTURES = (Registry<Texture>) REGISTRIES.getExcept("ourcraft:texture");
+        SHADERS = (Registry<ShaderSource>) REGISTRIES.getExcept("ourcraft:shader");
+        LAYOUT_ENGINES = (Registry<ILayoutEngine<?>>) REGISTRIES.getExcept("ourcraft:layout_engine");
+    }
 
     public void buildBlockStates() {
         BLOCK_STATES = new ArrayList<>(BLOCKS.ELEMENTS.size());
@@ -204,6 +229,24 @@ public class GameInstance {
         EVENT_BUS.postEvent(new RegistryClearEvent(this));
     }
 
+    public <T> T get(String name, Class<T> registryClass) {
+        for(Registry<?> registry : REGISTRIES.ELEMENTS) {
+            if(registry.classType == registryClass) {
+                return (T) registry.get(name);
+            }
+        }
+        return null;
+    }
+
+    public <T> T getExcept(String name, Class<T> registryClass) {
+        for(Registry<?> registry : REGISTRIES.ELEMENTS) {
+            if(registry.classType == registryClass) {
+                return (T) registry.getExcept(name);
+            }
+        }
+        throw new RuntimeException(STR."Unknown registry \{registryClass}");
+    }
+
     public Item getItem(int id) {
         if(ITEMS.ELEMENTS.size() > id) {
             return ITEMS.get(id);
@@ -227,42 +270,6 @@ public class GameInstance {
         return BLOCKS.ELEMENTS;
     }
 
-    public void registerBlock(Block... blocks) {
-        for(Block block : blocks) {
-            BLOCKS.put(block.getName(),block);
-        }
-    }
-
-    public void registerItem(Item... items) {
-        for(Item item : items) {
-            ITEMS.put(item.name,item);
-        }
-    }
-
-    public void registerBiome(Biome... biomes) {
-        for(Biome biome : biomes) {
-            BIOMES.put(biome.name, biome);
-        }
-    }
-
-    public void registerTag(Tag... tags) {
-        for(Tag tag : tags) {
-            TAGS.put(tag.type + ":" + tag.tagName,tag);
-        }
-    }
-
-    public void registerCommand(CommandHandler... commands) {
-        for(CommandHandler commandHandler : commands) {
-            COMMANDS.put(commandHandler.getIdentifierName(),commandHandler);
-        }
-    }
-
-    public void registerSound(SoundBuffer... soundBuffers) {
-        for(SoundBuffer soundBuffer : soundBuffers) {
-            SOUNDS.put(soundBuffer.file, soundBuffer);
-        }
-    }
-
     public void registerToolLevels(ToolLevel... toolLevels) {
         for(ToolLevel toolLevel : toolLevels) {
             TOOL_MATERIALS.put(toolLevel.name.getName(), toolLevel);
@@ -273,72 +280,6 @@ public class GameInstance {
         for(RegistryLoader loader : loaders) {
             DATA_LOADERS.put(loader.name.getName(),loader);
         }
-    }
-
-    public void registerResourceLoader(ResourceLoader<?>... resourceLoaders) {
-        for(ResourceLoader<?> resourceLoader : resourceLoaders) {
-            RESOURCE_LOADERS.put(resourceLoader.name,resourceLoader);
-        }
-    }
-
-    public void registerProtocol(Protocol... protocols) {
-        for(Protocol protocol : protocols) {
-            PROTOCOLS.put(protocol.protocolName,protocol);
-        }
-    }
-
-    public void registerScreenBuilder(ScreenBuilder... screenBuilders) {
-        for(ScreenBuilder screenBuilder : screenBuilders) {
-            SCREEN_BUILDERS.put(screenBuilder.getResourceLocation(screenBuilder.modContent).toIdentifier(),screenBuilder);
-        }
-    }
-
-    public void registerFeature(Feature... features) {
-        for(Feature feature : features) {
-            FEATURES.put(feature.getIdentifierName(), feature);
-        }
-    }
-
-    public void registerGraphicsEngine(IGraphicsEngine<?,?,?>... graphicsEngines) {
-        for(IGraphicsEngine<?,?,?> graphicsEngine : graphicsEngines) {
-            GRAPHICS_ENGINES.put(graphicsEngine.getIdentifierName(), graphicsEngine);
-        }
-    }
-
-    public void registerRenderTarget(RenderTarget... renderTargets) {
-        RENDER_TARGETS.putAll(renderTargets);
-    }
-
-    public void registerRenderPipeline(RenderPipeline... renderPipelines) {
-        RENDER_PIPELINES.putAll(renderPipelines);
-    }
-
-    public void registerRenderTask(RenderTaskSource... renderTaskSources) {
-        RENDER_TASK.putAll(renderTaskSources);
-    }
-
-    public void registerVertexFormat(VertexFormat... vertexFormats) {
-        VERTEX_FORMATS.putAll(vertexFormats);
-    }
-
-    public void registerInputHandlerProviders(InputHandlerProvider... providers) {
-        INPUT_HANDLER_PROVIDERS.putAll(providers);
-    }
-
-    public void registerTextures(Texture... textures) {
-        TEXTURES.putAll(textures);
-    }
-
-    public void registerKeybind(Input... inputs) {
-        KEY_BINDS.putAll(inputs);
-    }
-
-    public void registerShader(ShaderSource... shaderSources) {
-        SHADERS.putAll(shaderSources);
-    }
-
-    public void registerLayoutEngine(ILayoutEngine<?>... layoutEngines) {
-        LAYOUT_ENGINES.putAll(layoutEngines);
     }
 
     public void register(IRegistryElement registryElement) {
@@ -395,9 +336,9 @@ public class GameInstance {
     }
 
     public void registerDefaultContent() {
-        Ourcraft.registerDefaultContent(OURCRAFT);
-        Container.register();
-        Entity.register();
+     //   Ourcraft.registerDefaultContent(OURCRAFT);
+        //Container.register();
+        //Entity.register();
     }
 
     public int getUniqueID() {

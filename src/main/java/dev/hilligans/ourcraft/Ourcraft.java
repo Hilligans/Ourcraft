@@ -28,11 +28,13 @@ import dev.hilligans.ourcraft.client.rendering.screens.*;
 import dev.hilligans.ourcraft.client.rendering.Textures;
 import dev.hilligans.ourcraft.command.CommandHandler;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
+import dev.hilligans.ourcraft.data.other.BlockProperties;
 import dev.hilligans.ourcraft.data.primitives.Tuple;
 import dev.hilligans.ourcraft.item.Items;
 import dev.hilligans.ourcraft.item.data.ToolLevel;
 import dev.hilligans.ourcraft.mod.handler.ModClass;
 import dev.hilligans.ourcraft.mod.handler.content.CoreExtensionView;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.mod.handler.Identifier;
 import dev.hilligans.ourcraft.mod.handler.content.RegistryView;
@@ -140,6 +142,8 @@ public class Ourcraft extends ModClass {
     }
 
     public void registerCoreExtensions(CoreExtensionView view) {
+        view.registerResourceLoader(new JsonLoader(), new ImageLoader(), new StringLoader());
+
         view.registerRegistryLoader(new JsonRegistryLoader(new Identifier("tool_tiers", "ourcraft"), "Data/ToolTiers.json", (modContent1, jsonObject, string) -> {
             JSONArray elements = jsonObject.getJSONArray("material");
             ToolLevel[] levels = new ToolLevel[elements.length()];
@@ -175,47 +179,11 @@ public class Ourcraft extends ModClass {
         }).rerunOnInstanceClear());
 
         if (view.getGameInstance().side.equals(Side.CLIENT)) {
-            Textures.addData(view.getModContent());
+            Textures.addData(view);
 
             view.registerGraphicsEngine(new VulkanEngine());
             view.registerGraphicsEngine(new OpenGLEngine());
             view.registerGraphicsEngine(new FixedFunctionGLEngine());
-
-            view.registerRenderPipelines(new RenderPipeline("new_world_pipeline"));
-            view.registerRenderTarget(new RenderTarget("debug_world_renderer", "ourcraft:new_world_pipeline")
-                    .setPipelineState(new PipelineState().setDepth(false)));
-            view.registerRenderTarget(new RenderTarget("new_solid_world_renderer", "ourcraft:new_world_pipeline").afterTarget("debug_world_renderer", "ourcraft")
-                    .setPipelineState(new PipelineState().setDepth(true)));
-            view.registerRenderTarget(new RenderTarget("entity_renderer", "ourcraft:new_world_pipeline").afterTarget("new_solid_world_renderer", "ourcraft")
-                    .setPipelineState(new PipelineState().setDepth(true)));
-            view.registerRenderTarget(new RenderTarget("particle_renderer", "ourcraft:new_world_pipeline").afterTarget("entity_renderer", "ourcraft")
-                    .setPipelineState(new PipelineState().setDepth(true)));
-            view.registerRenderTarget(new RenderTarget("translucent_world_renderer", "ourcraft:new_world_pipeline").afterTarget("particle_renderer", "ourcraft")
-                    .setPipelineState(new PipelineState().setDepth(true)));
-            view.registerRenderTarget(new RenderTarget("chat_renderer", "ourcraft:new_world_pipeline").afterTarget("translucent_world_renderer", "ourcraft")
-                    .setPipelineState(new PipelineState()));
-            view.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:new_world_pipeline").afterTarget("chat_renderer", "ourcraft")
-                    .setPipelineState(new PipelineState()));
-
-
-            view.registerRenderPipelines(new RenderPipeline("menu_pipeline"));
-            view.registerRenderPipelines(new RenderPipeline("split_window_pipeline"));
-
-
-            view.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:menu_pipeline")
-                    .setPipelineState(new PipelineState()));
-
-            view.registerRenderTarget(new RenderTarget("split_window_renderer", "ourcraft:split_window_pipeline")
-                    .setPipelineState(new PipelineState()));
-
-
-            view.registerRenderTask(new GUIRenderTask());
-            view.registerRenderTask(new WorldRenderTask());
-            view.registerRenderTask(new WorldTransparentRenderTask());
-            view.registerRenderTask(new ChatRenderTask());
-            view.registerRenderTask(new SplitWindowRenderTask());
-            view.registerRenderTask(new ChunkDebugRenderTask());
-
 
             view.registerVertexFormat(position_texture_color, position_color_texture, position_texture_globalColor, position_texture, position_texture_animatedWrap_shortenedColor, position_color);
             view.registerVertexFormat(position2_texture_color, position_color_lines);
@@ -227,24 +195,69 @@ public class Ourcraft extends ModClass {
             view.registerShader(new ShaderSource("position_color_lines_shader", "ourcraft:position_color_lines", "Shaders/WorldVertexColorShader.glsl", "Shaders/WorldFragmentColorShader.glsl").withUniform("transform", "4fv").withUniform("color", "4f"));
             view.registerShader(new ShaderSource("nk_shader", "position2_texture_color", "Shaders/NkVertexShader.glsl", "Shaders/NkFragmentShader.glsl").withUniform("transform", "4fv"));
 
+            view.registerRenderPipelines(new RenderPipeline("engine_loading_pipeline"));
+
+            view.registerRenderTarget(new RenderTarget("engine_loading_target", "ourcraft:engine_loading_pipeline")
+                    .setPipelineState(new PipelineState()));
+
+            view.registerRenderTask(new EngineLoadingTask());
+
             view.registerInputHandlerProviders(new ControllerHandlerProvider(), new KeyPressHandlerProvider(), new MouseHandlerProvider());
 
             view.registerLayoutEngine(new NuklearLayoutEngine());
         }
     }
 
-    public static void registerDefaultContent(ModContent modContent) {
-        //temporarily
-        //registerCoreExtensions(modContent.getCoreView());
-
+    @Override
+    public void registerContent(ModContainer modContent) {
         chainedChunkStream.assignOwner(modContent);
-        modContent.registerResourceLoader(new JsonLoader(), new ImageLoader(), new StringLoader());
         modContent.registerResourceLoader(new LitematicaSchematicLoader());
+
+        modContent.registerRenderTask(new GUIRenderTask());
+        modContent.registerRenderTask(new WorldRenderTask());
+        modContent.registerRenderTask(new WorldTransparentRenderTask());
+        modContent.registerRenderTask(new ChatRenderTask());
+        modContent.registerRenderTask(new SplitWindowRenderTask());
+        modContent.registerRenderTask(new ChunkDebugRenderTask());
+
+        modContent.registerRenderPipelines(new RenderPipeline("new_world_pipeline"));
+        modContent.registerRenderTarget(new RenderTarget("debug_world_renderer", "ourcraft:new_world_pipeline")
+                .setPipelineState(new PipelineState().setDepth(false)));
+        modContent.registerRenderTarget(new RenderTarget("new_solid_world_renderer", "ourcraft:new_world_pipeline").afterTarget("debug_world_renderer", "ourcraft")
+                .setPipelineState(new PipelineState().setDepth(true)));
+        modContent.registerRenderTarget(new RenderTarget("entity_renderer", "ourcraft:new_world_pipeline").afterTarget("new_solid_world_renderer", "ourcraft")
+                .setPipelineState(new PipelineState().setDepth(true)));
+        modContent.registerRenderTarget(new RenderTarget("particle_renderer", "ourcraft:new_world_pipeline").afterTarget("entity_renderer", "ourcraft")
+                .setPipelineState(new PipelineState().setDepth(true)));
+        modContent.registerRenderTarget(new RenderTarget("translucent_world_renderer", "ourcraft:new_world_pipeline").afterTarget("particle_renderer", "ourcraft")
+                .setPipelineState(new PipelineState().setDepth(true)));
+        modContent.registerRenderTarget(new RenderTarget("chat_renderer", "ourcraft:new_world_pipeline").afterTarget("translucent_world_renderer", "ourcraft")
+                .setPipelineState(new PipelineState()));
+        modContent.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:new_world_pipeline").afterTarget("chat_renderer", "ourcraft")
+                .setPipelineState(new PipelineState()));
+
+
+        modContent.registerRenderPipelines(new RenderPipeline("menu_pipeline"));
+        modContent.registerRenderPipelines(new RenderPipeline("split_window_pipeline"));
+
+
+        modContent.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:menu_pipeline")
+                .setPipelineState(new PipelineState()));
+
+        modContent.registerRenderTarget(new RenderTarget("split_window_renderer", "ourcraft:split_window_pipeline")
+                .setPipelineState(new PipelineState()));
+
+
 
         modContent.registerBlocks(Blocks.AIR, Blocks.STONE, Blocks.DIRT, Blocks.GRASS, Blocks.BEDROCK, Blocks.IRON_ORE, Blocks.LEAVES, Blocks.LOG, Blocks.SAND, Blocks.CACTUS, Blocks.CHEST, Blocks.STAIR_BLOCK, Blocks.GRASS_PLANT, Blocks.WEEPING_VINE, Blocks.MAPLE_LOG, Blocks.MAPLE_PLANKS, Blocks.PINE_LOG, Blocks.PINE_PLANKS, Blocks.SPRUCE_LOG, Blocks.SPRUCE_PLANKS, Blocks.BIRCH_LOG, Blocks.BIRCH_PLANKS, Blocks.OAK_LOG, Blocks.OAK_PLANKS, Blocks.WILLOW_LOG, Blocks.WILLOW_PLANKS, Blocks.ACACIA_LOG, Blocks.ACACIA_PLANKS, Blocks.POPLAR_LOG, Blocks.POPLAR_PLANKS, Blocks.ELM_LOG, Blocks.ELM_WOOD, Blocks.PALM_LOG, Blocks.PALM_WOOD, Blocks.REDWOOD_LOG, Blocks.REDWOOD_WOOD, Blocks.SAPLING);
         modContent.registerBlock(Blocks.RED);
         modContent.registerBlock(Blocks.WATER);
         modContent.registerBiome(Biomes.PLAINS,Biomes.SANDY_HILLS,Biomes.DESERT,Biomes.FOREST);
+
+        for(int x = 0; x < 3000000; x++) {
+           // modContent.registerBlock(new Block("x" + x, new BlockProperties()));
+        }
+
 
         Sounds.reg();
         modContent.registerSounds(Sounds.BLOCK_BREAK, Sounds.MUSIC);
@@ -288,13 +301,13 @@ public class Ourcraft extends ModClass {
             }.onlyWithPipelines("ourcraft:new_world_pipeline"));
 
             modContent.registerKeybinds(new Input("ourcraft:mouse_handler::" + MouseHandler.MOUSE_X) {
-                                            @Override
-                                            public void press(RenderWindow window, float strength) {
-                                                window.getCamera().addRotation(0, strength/400);
-                                                window.setMousePosition(window.getWindowWidth()/2, window.getWindowHeight()/2);
-                                                //GLFW.glfwSetCursorPos(window.getWindowID(), window.getWindowWidth()/2,window.getWindowHeight()/2);
-                                            }
-                                        }.onlyWithPipelines("ourcraft:new_world_pipeline"));
+                @Override
+                public void press(RenderWindow window, float strength) {
+                    window.getCamera().addRotation(0, strength/400);
+                    window.setMousePosition(window.getWindowWidth()/2, window.getWindowHeight()/2);
+                    //GLFW.glfwSetCursorPos(window.getWindowID(), window.getWindowWidth()/2,window.getWindowHeight()/2);
+                }
+            }.onlyWithPipelines("ourcraft:new_world_pipeline"));
 
             modContent.registerKeybinds(new Input("ourcraft:mouse_handler::" + MouseHandler.MOUSE_Y) {
                 @Override

@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.opengl;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
@@ -11,8 +12,10 @@ import dev.hilligans.ourcraft.util.Logger;
 import dev.hilligans.ourcraft.util.sections.ISection;
 import dev.hilligans.ourcraft.util.sections.ProfiledSection;
 import dev.hilligans.ourcraft.util.sections.SteppingSection;
+import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL43;
+import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.opengl.GLDebugMessageCallback;
 import org.lwjgl.system.MemoryUtil;
 
@@ -45,7 +48,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
     @Override
     public OpenGLWindow createWindow() {
         OpenGLWindow renderWindow = new OpenGLWindow(this, "Ourcraft 1", 1600, 800, windows.get(0).window);
-        renderWindow.setRenderPipeline(gameInstance.ARGUMENTS.getString("--renderPipeline", "ourcraft:menu_pipeline"));
+        renderWindow.setRenderPipeline(gameInstance.ARGUMENTS.getString("--renderPipeline", "ourcraft:engine_loading_pipeline"));
         windows.add(renderWindow);
         renderWindow.setup();
         //GL.createCapabilities();
@@ -96,7 +99,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         OpenGLWindow renderWindow = new OpenGLWindow( this, "Ourcraft", 1600, 800, 0);
-        renderWindow.setRenderPipeline(gameInstance.ARGUMENTS.getString("--renderPipeline", "ourcraft:menu_pipeline"));
+        renderWindow.setRenderPipeline(gameInstance.ARGUMENTS.getString("--renderPipeline", "ourcraft:engine_loading_pipeline"));
         windows.add(renderWindow);
         renderWindow.setup();
         GL.createCapabilities();
@@ -128,6 +131,11 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
        // glDisable();
 
         return renderWindow;
+    }
+
+    @Override
+    public Runnable createRenderLoop(GameInstance gameInstance, RenderWindow w) {
+        return super.createRenderLoop(gameInstance, w);
     }
 
     @Override

@@ -2,9 +2,11 @@ package dev.hilligans.ourcraft.mod.handler.content;
 
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.client.input.InputHandlerProvider;
+import dev.hilligans.ourcraft.client.rendering.Texture;
 import dev.hilligans.ourcraft.client.rendering.graphics.*;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.ILayoutEngine;
+import dev.hilligans.ourcraft.resource.loaders.ResourceLoader;
 import dev.hilligans.ourcraft.resource.registry.loaders.RegistryLoader;
 
 public class CoreExtensionView implements RegistrationView {
@@ -16,44 +18,52 @@ public class CoreExtensionView implements RegistrationView {
     }
 
     public void registerRegistryLoader(RegistryLoader... registryLoaders) {
-        container.register("registry_loader", registryLoaders);
+        container.registerCore("ourcraft:registry_loader", registryLoaders);
     }
 
     public void registerGraphicsEngine(IGraphicsEngine<?,?,?>... graphicsEngines) {
-        container.register("graphics_engine", graphicsEngines);
+        container.registerCore("ourcraft:graphics_engine", graphicsEngines);
     }
 
     public void registerRenderTarget(RenderTarget... renderTargets) {
-        container.register("render_target", renderTargets);
+        container.registerCore("ourcraft:render_target", renderTargets);
     }
 
     public void registerRenderPipelines(RenderPipeline... renderPipelines) {
-        container.register("render_pipeline", renderPipelines);
+        container.registerCore("ourcraft:render_pipeline", renderPipelines);
     }
 
     public void registerRenderTask(RenderTaskSource... renderTasks) {
-        container.register("render_task", renderTasks);
+        container.registerCore("ourcraft:render_task", renderTasks);
     }
 
     public void registerVertexFormat(VertexFormat... vertexFormats) {
-        container.register("vertex_format", vertexFormats);
+        container.registerCore("ourcraft:vertex_format", vertexFormats);
     }
 
     public void registerShader(ShaderSource... shaderSources) {
-        container.register("shader_source", shaderSources);
+        container.registerCore("ourcraft:shader", shaderSources);
     }
 
     public void registerInputHandlerProviders(InputHandlerProvider... providers) {
-        container.register("input", providers);
+        container.registerCore("ourcraft:input", providers);
     }
 
     public void registerLayoutEngine(ILayoutEngine<?>... layoutEngines) {
-        container.register("layout_engine", layoutEngines);
+        container.registerCore("ourcraft:layout_engine", layoutEngines);
+    }
+
+    public void registerResourceLoader(ResourceLoader<?>... resourceLoaders) {
+        container.registerCore("ourcraft:resource_loader", resourceLoaders);
+    }
+
+    public void registerTexture(Texture... textures) {
+        container.registerCore("ourcraft:texture", textures);
     }
 
     @Override
-    public ModContent getModContent() {
-        return null;
+    public ModContainer getModContainer() {
+        return container;
     }
 
     @Override

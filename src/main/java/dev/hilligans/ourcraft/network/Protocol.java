@@ -69,6 +69,11 @@ public class Protocol implements IRegistryElement {
         register(InvalidFormatPacket::new);
     }
 
+    public Protocol setSource(ModContainer container) {
+        this.source = container;
+        return this;
+    }
+
     public void mergeProtocols(Protocol protocol) {
         int x = 0;
         for(PacketFetcher packetFetcher : protocol.packets) {

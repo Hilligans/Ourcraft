@@ -9,6 +9,7 @@ import dev.hilligans.ourcraft.util.sections.LoadingSection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class InstanceLoaderPipeline<T extends InstanceLoaderPipeline> {
@@ -19,6 +20,9 @@ public class InstanceLoaderPipeline<T extends InstanceLoaderPipeline> {
 
     public LoadingSection section;
 
+    public final ArrayList<Consumer<GameInstance>> POST_CORE_HOOKS = new ArrayList<>();
+    public final ArrayList<Consumer<GameInstance>> POST_HOOKS = new ArrayList<>();
+
     public ArrayList<Tuple<String, PipelineStage<T>>> stages = new ArrayList<>();
 
     public InstanceLoaderPipeline(GameInstance gameInstance) {
@@ -27,9 +31,33 @@ public class InstanceLoaderPipeline<T extends InstanceLoaderPipeline> {
 
     public void build() {
         section = new LoadingSection();
+        gameInstance.loaderPipeline = this;
 
         InstanceLoaderPipeline<T> self = this;
-        section.startSubSection((section1, stage) -> stage.getTypeB().execute((T)self, section1), stages);
+        section.startSubSection((section1, stage) -> {
+            stage.getTypeB().execute((T)self, section1);
+            section.stopSubSection(stage.getTypeA());
+        }, stages);
+    }
+
+    public void addPostHook(Consumer<GameInstance> consumer) {
+        POST_HOOKS.add(consumer);
+    }
+
+    public void addPostCoreHook(Consumer<GameInstance> consumer) {
+        POST_CORE_HOOKS.add(consumer);
+    }
+
+    public void runPostCoreHooks() {
+        for(Consumer<GameInstance> consumer : POST_CORE_HOOKS) {
+            consumer.accept(gameInstance);
+        }
+    }
+
+    public void runPostHooks() {
+        for(Consumer<GameInstance> consumer : POST_HOOKS) {
+            consumer.accept(gameInstance);
+        }
     }
 
     public void setModList(ModList modList) {

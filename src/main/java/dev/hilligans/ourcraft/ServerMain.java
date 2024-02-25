@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft;
 
+import dev.hilligans.ourcraft.mod.handler.pipeline.standard.StandardPipeline;
 import dev.hilligans.ourcraft.server.IServer;
 import dev.hilligans.ourcraft.server.MultiPlayerServer;
 import dev.hilligans.ourcraft.util.ArgumentContainer;
@@ -29,12 +30,15 @@ public class ServerMain {
         GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
         gameInstance.handleArgs(args);
         gameInstance.side = Side.SERVER;
-        gameInstance.loadContent();
+        //gameInstance.loadContent();
+
+        StandardPipeline.get(gameInstance).build();
 
         server(gameInstance, new ArgumentContainer(args));
     }
 
     public static IServer server(GameInstance gameInstance, ArgumentContainer argumentContainer) {
+        while(!gameInstance.built) {}
         ServerMain.argumentContainer = argumentContainer;
         gameInstance.THREAD_PROVIDER.map();
 

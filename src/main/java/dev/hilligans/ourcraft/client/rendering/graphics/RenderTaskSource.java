@@ -35,7 +35,7 @@ public abstract class RenderTaskSource implements IRegistryElement, IGraphicsEle
 
     @Override
     public void load(GameInstance gameInstance) {
-        target = gameInstance.RENDER_TARGETS.get(renderTargetName);
+        target = gameInstance.get(renderTargetName, RenderTarget.class);
         if(target == null) {
             throw new UnknownResourceException("Failed to find resource in the registry by name: " + renderTargetName, gameInstance.RENDER_TARGETS, renderTargetName, source);
         }

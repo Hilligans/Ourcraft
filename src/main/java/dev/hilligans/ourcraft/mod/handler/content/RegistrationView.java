@@ -4,7 +4,7 @@ import dev.hilligans.ourcraft.GameInstance;
 
 public interface RegistrationView {
 
-   ModContent getModContent();
+   ModContainer getModContainer();
 
    GameInstance getGameInstance();
 }

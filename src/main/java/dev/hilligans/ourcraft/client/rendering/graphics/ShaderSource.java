@@ -76,7 +76,9 @@ public class ShaderSource implements IRegistryElement, IGraphicsElement {
 
     @Override
     public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
-        program = (int) graphicsEngine.getDefaultImpl().createProgram(graphicsContext,this);
+        if(program == 0) {
+            program = (int) graphicsEngine.getDefaultImpl().createProgram(graphicsContext, this);
+        }
         /*
         if(uniformNames != null) {
             System.out.println(name);

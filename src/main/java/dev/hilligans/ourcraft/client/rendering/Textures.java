@@ -1,5 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering;
 
+import dev.hilligans.ourcraft.mod.handler.content.CoreExtensionView;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 
 public class Textures {
@@ -40,7 +42,7 @@ public class Textures {
     public static final Texture BACKFILL = new Texture("Images/GUI/backfill.png");
 
 
-    public static void addData(ModContent modContent) {
+    public static void addData(CoreExtensionView modContent) {
         modContent.registerTexture(ITEM_SLOT,INVENTORY,HOTBAR,ITEM_OUTLINE,CHEST,CREATIVE_INVENTORY,CURSOR,EMPTY_CHUNK);
         modContent.registerTexture(SEARCH_BAR);
         modContent.registerTexture(FOLDER,LIST_ICON,PLUS_ICON,MINUS_ICON,BYTE_ICON,SHORT_ICON,INTEGER_ICON,FLOAT_ICON,LONG_ICON,DOUBLE_ICON);
