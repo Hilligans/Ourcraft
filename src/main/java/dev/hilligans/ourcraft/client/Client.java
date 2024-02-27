@@ -25,6 +25,7 @@ import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.ourcraft.mod.handler.events.client.OpenScreenEvent;
 import dev.hilligans.ourcraft.network.ClientNetwork;
 import dev.hilligans.ourcraft.network.IClientPacketHandler;
+import dev.hilligans.ourcraft.network.Protocol;
 import dev.hilligans.ourcraft.network.packet.auth.CGetToken;
 import dev.hilligans.ourcraft.network.packet.client.CCloseScreen;
 import dev.hilligans.ourcraft.network.packet.client.CDropItem;
@@ -119,7 +120,6 @@ public class Client implements IClientPacketHandler {
     }
 
     public void setupClient() {
-        Thread.startVirtualThread(() -> network = new ClientNetwork(gameInstance.PROTOCOLS.get("Play")).debug(argumentContainer.getBoolean("--packetTrace", false)));
         /*authNetwork = new ClientNetwork(gameInstance.PROTOCOLS.get("Auth"));
 
         CompoundNBTTag tag = WorldLoader.loadTag("clientData.dat");
@@ -177,9 +177,14 @@ public class Client implements IClientPacketHandler {
             newClientWorld.tick();
         }
         try(var $0 = threadContext.getSection().startSection("process_packets")) {
-            network.processPackets();
+            if(network != null) {
+                network.processPackets();
+            }
         }
         if(transition) {
+            Thread.startVirtualThread(() -> {
+                    network = new ClientNetwork(gameInstance.PROTOCOLS.get("ourcraft:Play")).debug(argumentContainer.getBoolean("--packetTrace", false));
+            });
             client.gameInstance.build(client.graphicsEngine, null);
             transition = false;
             rWindow.setRenderPipeline("ourcraft:menu_pipeline");
@@ -264,22 +269,6 @@ public class Client implements IClientPacketHandler {
 
     public void registerKeyHandlers() {
 
-        /*
-        KeyHandler.register(new KeyPress() {
-            @Override
-            public void onPress() {
-                clientWorld.reloadChunks();
-            }
-        },KeyHandler.GLFW_KEY_F9);
-
-        KeyHandler.register(new KeyPress() {
-            @Override
-            public void onPress() {
-                ResourceManager.reload();
-                clientWorld.reloadChunks();
-            }
-        },KeyHandler.GLFW_KEY_F8);
-         */
 
         KeyHandler.register(new KeyPress() {
             @Override

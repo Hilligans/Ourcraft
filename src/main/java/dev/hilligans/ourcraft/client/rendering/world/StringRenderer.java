@@ -115,11 +115,13 @@ public class StringRenderer {
                 if(textureAtlas == null) {
                     return;
                 }
-                PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
-                primitiveBuilder.translate(x - finalWidth / 2f,0,0);
-                impl.bindPipeline(graphicsContext,shaderSource.program);
-                impl.bindTexture(graphicsContext,textureAtlas.glTextureId);
-                impl.drawAndDestroyMesh(graphicsContext,matrixStack,primitiveBuilder.toVertexMesh());
+                if(textureAtlas.glTextureId != -1) {
+                    PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
+                    primitiveBuilder.translate(x - finalWidth / 2f, 0, 0);
+                    impl.bindPipeline(graphicsContext, shaderSource.program);
+                    impl.bindTexture(graphicsContext, textureAtlas.glTextureId);
+                    impl.drawAndDestroyMesh(graphicsContext, matrixStack, primitiveBuilder.toVertexMesh());
+                }
 
             });
         } catch (Exception ignored) {

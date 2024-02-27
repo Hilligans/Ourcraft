@@ -67,15 +67,7 @@ public class StandardPipeline extends InstanceLoaderPipeline<StandardPipeline> {
         //this will copy all the loaded content to the game instance in a predictable way
         pipeline.addStage("Copy Content Back", (pipeline12, section) -> pipeline12.getModList().foreach(modContainer -> pipeline12.getGameInstance().REGISTRIES.putFrom(modContainer.registries)));
 
-        pipeline.addStage("Build Content For Game Instance", (pipeline15, section) -> {
-            for (Registry<?> registry : pipeline15.getGameInstance().REGISTRIES.ELEMENTS) {
-                for (Object o : registry.ELEMENTS) {
-                    if (o instanceof IRegistryElement) {
-                        ((IRegistryElement) o).load(pipeline15.getGameInstance());
-                    }
-                }
-            }
-        });
+        pipeline.addStage("Build Content For Game Instance", (pipeline15, section) -> pipeline15.getGameInstance().finishBuild());
 
         pipeline.addStage("Post Hooks", (pipeline1, section) -> pipeline1.runPostHooks());
 

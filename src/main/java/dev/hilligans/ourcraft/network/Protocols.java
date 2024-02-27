@@ -37,14 +37,14 @@ public class Protocols {
         modContent.registerPacket(SSendModContentPacket::new);
         modContent.registerPacket(CRequestContent::new);
 
-        modContent.registerPacket("Auth", SAccountPacket::new);
-        modContent.registerPacket("Auth", SSendToken::new);
-        modContent.registerPacket("Auth", STokenValid::new);
-        modContent.registerPacket("Auth", SSendLoginToken::new);
+        modContent.registerPacket("ourcraft:Auth", SAccountPacket::new);
+        modContent.registerPacket("ourcraft:Auth", SSendToken::new);
+        modContent.registerPacket("ourcraft:Auth", STokenValid::new);
+        modContent.registerPacket("ourcraft:Auth", SSendLoginToken::new);
 
-        modContent.registerPacket("Auth", CCreateAccount::new);
-        modContent.registerPacket("Auth", CGetToken::new);
-        modContent.registerPacket("Auth", CTokenValid::new);
-        modContent.registerPacket("Auth", CLogin::new);
+        modContent.registerPacket("ourcraft:Auth", CCreateAccount::new);
+        modContent.registerPacket("ourcraft:Auth", CGetToken::new);
+        modContent.registerPacket("ourcraft:Auth", CTokenValid::new);
+        modContent.registerPacket("ourcraft:Auth", CLogin::new);
     }
 }

@@ -197,7 +197,7 @@ public class ContentPack {
 
 
     public String[] getModList() {
-        String[] modList = new String[mods.size() - 1];
+        String[] modList = new String[mods.size()];
         int x = 0;
         for(String string : mods.keySet()) {
             if(!string.equals("ourcraft")) {

@@ -205,6 +205,140 @@ public class Ourcraft extends ModClass {
             view.registerInputHandlerProviders(new ControllerHandlerProvider(), new KeyPressHandlerProvider(), new MouseHandlerProvider());
 
             view.registerLayoutEngine(new NuklearLayoutEngine());
+
+            if (view.getGameInstance().side.equals(Side.CLIENT)) {
+                view.registerKeybinds(new Input("ourcraft:mouse_handler::0") {
+                    @Override
+                    public void press(RenderWindow renderWindow, float strength) {
+                        Client client = renderWindow.getClient();
+                        if (client.screen != null) {
+                            DoubleBuffer doubleBuffer = getMousePos(renderWindow.getWindowID());
+                            client.screen.mouseClick((int) doubleBuffer.get(0), (int) doubleBuffer.get(1), GLFW.GLFW_MOUSE_BUTTON_1);
+                        }
+                    }
+                });
+
+                view.registerKeybinds(new Input("ourcraft:key_press_handler::" + KeyHandler.GLFW_KEY_ESCAPE) {
+                    @Override
+                    public void press(RenderWindow renderWindow, float strength) {
+                        Client client = renderWindow.getClient();
+                        if (client.renderWorld) {
+                            if (client.screen == null) {
+                                client.openScreen(new EscapeScreen());
+                            } else {
+                                client.closeScreen();
+                            }
+                        } else {
+                            client.openScreen(new JoinScreen());
+                        }
+                    }
+                });
+
+                view.registerKeybinds(new Input("ourcraft:key_press_handler::" + KeyHandler.GLFW_KEY_F3) {
+                    @Override
+                    public void press(RenderWindow renderWindow, float strength) {
+                        Client client = renderWindow.getClient();
+                        client.playerData.f3 = !client.playerData.f3;
+                    }
+                }.onlyWithPipelines("ourcraft:new_world_pipeline"));
+
+                view.registerKeybinds(new Input("ourcraft:mouse_handler::" + MouseHandler.MOUSE_X) {
+                    @Override
+                    public void press(RenderWindow window, float strength) {
+                        window.getCamera().addRotation(0, strength/400);
+                        window.setMousePosition(window.getWindowWidth()/2, window.getWindowHeight()/2);
+                        //GLFW.glfwSetCursorPos(window.getWindowID(), window.getWindowWidth()/2,window.getWindowHeight()/2);
+                    }
+                }.onlyWithPipelines("ourcraft:new_world_pipeline"));
+
+                view.registerKeybinds(new Input("ourcraft:mouse_handler::" + MouseHandler.MOUSE_Y) {
+                    @Override
+                    public void press(RenderWindow window, float strength) {
+                        window.getCamera().addRotation(-strength/400,0);
+                        window.setMousePosition(window.getWindowWidth()/2, window.getWindowHeight()/2);
+                        //GLFW.glfwSetCursorPos(window.getWindowID(), window.getWindowWidth()/2,window.getWindowHeight()/2);
+                    }
+                }.onlyWithPipelines("ourcraft:new_world_pipeline"));
+
+                view.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_SEMICOLON) {
+                    @Override
+                    public void press(RenderWindow renderWindow, float strength) {
+                        super.press(renderWindow, strength);
+                        renderWindow.client.openScreen(new TestScreen());
+                    }
+                });
+
+                view.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_F8){
+                    @Override
+                    public void press(RenderWindow renderWindow, float strength) {
+                        super.press(renderWindow, strength);
+                        renderWindow.getClient().getPlayerData().debugChunkRendering = !renderWindow.getClient().getPlayerData().debugChunkRendering;
+                    }
+                });
+
+                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_W,
+                        (window, strength) -> window.getCamera().moveForward(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
+
+                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_A,
+                        (window, strength) -> window.getCamera().moveLeft(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
+
+                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_S,
+                        (window, strength) -> window.getCamera().moveBackward(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
+
+                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_D,
+                        (window, strength) -> window.getCamera().moveRight(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
+
+                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_SPACE,
+                        (window, strength) -> window.getCamera().moveUp(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
+
+                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_LEFT_SHIFT,
+                        (window, strength) -> window.getCamera().moveUp(-5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
+
+                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_DOWN,
+                        (window, strength) -> window.getCamera().addRotation(0.1f * strength, 0)));
+
+                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_UP,
+                        (window, strength) -> window.getCamera().addRotation(-0.1f * strength, 0)));
+
+                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_LEFT,
+                        (window, strength) -> window.getCamera().addRotation(0, -0.3f * strength)));
+
+                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_RIGHT,
+                        (window, strength) -> window.getCamera().addRotation(0, 0.3f * strength)));
+
+                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_L,
+                        (window, strength) -> ((WorldCamera)window.getCamera()).roll -= 0.1f * strength));
+
+                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_O,
+                        (window, strength) -> ((WorldCamera)window.getCamera()).roll += 0.1f * strength));
+
+
+                view.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_H) {
+                    @Override
+                    public void press(RenderWindow renderWindow, float strength) {
+                        Client client = renderWindow.getClient();
+                        client.openScreen(new TagEditorScreen());
+                    }
+                });
+
+                view.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_P) {
+                    @Override
+                    public void press(RenderWindow renderWindow, float strength) {
+                        Client client = renderWindow.getClient();
+                        client.openScreen(new FrameTimeScreen());
+                    }
+                });
+
+                view.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_T) {
+                    @Override
+                    public void press(RenderWindow renderWindow, float strength) {
+                        Client client = renderWindow.getClient();
+                        if (client.renderWorld) {
+                            client.openScreen(new ChatWindow());
+                        }
+                    }
+                });
+            }
         }
     }
 
@@ -254,8 +388,8 @@ public class Ourcraft extends ModClass {
         modContent.registerBlock(Blocks.WATER);
         modContent.registerBiome(Biomes.PLAINS,Biomes.SANDY_HILLS,Biomes.DESERT,Biomes.FOREST);
 
-        for(int x = 0; x < 3000000; x++) {
-            modContent.registerBlock(new Block("x" + x, new BlockProperties()));
+        for(int x = 0; x < 30000; x++) {
+            //modContent.registerBlock(new Block("x" + x, new BlockProperties()));
         }
 
 
@@ -263,140 +397,6 @@ public class Ourcraft extends ModClass {
         modContent.registerSounds(Sounds.BLOCK_BREAK, Sounds.MUSIC);
         //modContent.registerTexture(Textures.TEXTURES.toArray(new Texture[0]));
         Protocols.register(modContent);
-
-        if (modContent.getGameInstance().side.equals(Side.CLIENT)) {
-            modContent.registerKeybinds(new Input("ourcraft:mouse_handler::0") {
-                @Override
-                public void press(RenderWindow renderWindow, float strength) {
-                    Client client = renderWindow.getClient();
-                    if (client.screen != null) {
-                        DoubleBuffer doubleBuffer = getMousePos(renderWindow.getWindowID());
-                        client.screen.mouseClick((int) doubleBuffer.get(0), (int) doubleBuffer.get(1), GLFW.GLFW_MOUSE_BUTTON_1);
-                    }
-                }
-            });
-
-            modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + KeyHandler.GLFW_KEY_ESCAPE) {
-                @Override
-                public void press(RenderWindow renderWindow, float strength) {
-                    Client client = renderWindow.getClient();
-                    if (client.renderWorld) {
-                        if (client.screen == null) {
-                            client.openScreen(new EscapeScreen());
-                        } else {
-                            client.closeScreen();
-                        }
-                    } else {
-                        client.openScreen(new JoinScreen());
-                    }
-                }
-            });
-
-            modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + KeyHandler.GLFW_KEY_F3) {
-                @Override
-                public void press(RenderWindow renderWindow, float strength) {
-                    Client client = renderWindow.getClient();
-                    client.playerData.f3 = !client.playerData.f3;
-                }
-            }.onlyWithPipelines("ourcraft:new_world_pipeline"));
-
-            modContent.registerKeybinds(new Input("ourcraft:mouse_handler::" + MouseHandler.MOUSE_X) {
-                @Override
-                public void press(RenderWindow window, float strength) {
-                    window.getCamera().addRotation(0, strength/400);
-                    window.setMousePosition(window.getWindowWidth()/2, window.getWindowHeight()/2);
-                    //GLFW.glfwSetCursorPos(window.getWindowID(), window.getWindowWidth()/2,window.getWindowHeight()/2);
-                }
-            }.onlyWithPipelines("ourcraft:new_world_pipeline"));
-
-            modContent.registerKeybinds(new Input("ourcraft:mouse_handler::" + MouseHandler.MOUSE_Y) {
-                @Override
-                public void press(RenderWindow window, float strength) {
-                    window.getCamera().addRotation(-strength/400,0);
-                    window.setMousePosition(window.getWindowWidth()/2, window.getWindowHeight()/2);
-                    //GLFW.glfwSetCursorPos(window.getWindowID(), window.getWindowWidth()/2,window.getWindowHeight()/2);
-                }
-            }.onlyWithPipelines("ourcraft:new_world_pipeline"));
-
-            modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_SEMICOLON) {
-                @Override
-                public void press(RenderWindow renderWindow, float strength) {
-                    super.press(renderWindow, strength);
-                    renderWindow.client.openScreen(new TestScreen());
-                }
-            });
-
-            modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_F8){
-                @Override
-                public void press(RenderWindow renderWindow, float strength) {
-                    super.press(renderWindow, strength);
-                    renderWindow.getClient().getPlayerData().debugChunkRendering = !renderWindow.getClient().getPlayerData().debugChunkRendering;
-                }
-            });
-
-            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_W,
-                    (window, strength) -> window.getCamera().moveForward(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
-
-            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_A,
-                    (window, strength) -> window.getCamera().moveLeft(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
-
-            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_S,
-                    (window, strength) -> window.getCamera().moveBackward(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
-
-            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_D,
-                    (window, strength) -> window.getCamera().moveRight(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
-
-            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_SPACE,
-                    (window, strength) -> window.getCamera().moveUp(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
-
-            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_LEFT_SHIFT,
-                    (window, strength) -> window.getCamera().moveUp(-5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
-
-            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_DOWN,
-                    (window, strength) -> window.getCamera().addRotation(0.1f * strength, 0)));
-
-            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_UP,
-                    (window, strength) -> window.getCamera().addRotation(-0.1f * strength, 0)));
-
-            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_LEFT,
-                    (window, strength) -> window.getCamera().addRotation(0, -0.3f * strength)));
-
-            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_RIGHT,
-                    (window, strength) -> window.getCamera().addRotation(0, 0.3f * strength)));
-
-            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_L,
-                    (window, strength) -> ((WorldCamera)window.getCamera()).roll -= 0.1f * strength));
-
-            modContent.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_O,
-                    (window, strength) -> ((WorldCamera)window.getCamera()).roll += 0.1f * strength));
-
-
-            modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_H) {
-                @Override
-                public void press(RenderWindow renderWindow, float strength) {
-                    Client client = renderWindow.getClient();
-                    client.openScreen(new TagEditorScreen());
-                }
-            });
-
-            modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_P) {
-                @Override
-                public void press(RenderWindow renderWindow, float strength) {
-                    Client client = renderWindow.getClient();
-                    client.openScreen(new FrameTimeScreen());
-                }
-            });
-
-            modContent.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_T) {
-                @Override
-                public void press(RenderWindow renderWindow, float strength) {
-                    Client client = renderWindow.getClient();
-                    if (client.renderWorld) {
-                        client.openScreen(new ChatWindow());
-                    }
-                }
-            });
-        }
     }
 
     public static DoubleBuffer getMousePos(long window) {

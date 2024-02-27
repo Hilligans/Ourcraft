@@ -189,7 +189,7 @@ public class ModContainer {
     public final void registerPacket(Supplier<PacketBase>... packets) {
         ModContainer self = this;
         for(Supplier<PacketBase> packet : packets) {
-            Protocol protocol = protocolRegistry.computeIfAbsent("Play", (s -> new Protocol(s).setSource(self)));
+            Protocol protocol = protocolRegistry.computeIfAbsent("ourcraft:Play", (s -> new Protocol(s.split(":")[1]).setSource(self)));
             protocol.register(packet);
         }
     }
@@ -198,7 +198,7 @@ public class ModContainer {
     public final void registerPacket(String protocolName, Supplier<PacketBase>... packets) {
         ModContainer self = this;
         for(Supplier<PacketBase> packet : packets) {
-            Protocol protocol = protocolRegistry.computeIfAbsent(protocolName, (s -> new Protocol(s).setSource(self)));
+            Protocol protocol = protocolRegistry.computeIfAbsent(protocolName, (s -> new Protocol(s.split(":")[1]).setSource(self)));
             protocol.register(packet);
         }
     }
@@ -207,7 +207,7 @@ public class ModContainer {
     public final void registerPacket(String protocolName, int id, Supplier<PacketBase>... packets) {
         ModContainer self = this;
         for(Supplier<PacketBase> packet : packets) {
-            Protocol protocol = protocolRegistry.computeIfAbsent(protocolName, (s -> new Protocol(s).setSource(self)));
+            Protocol protocol = protocolRegistry.computeIfAbsent(protocolName, (s -> new Protocol(s.split(":")[1]).setSource(self)));
             protocol.register(packet,id);
         }
     }

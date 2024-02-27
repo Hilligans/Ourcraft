@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.client.input;
 
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IInputProvider;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
@@ -22,8 +23,6 @@ public class Input implements IRegistryElement {
     public ArrayList<String> boundKey = new ArrayList<>(1);
 
     public String displayName;
-
-    public ModContent modContent;
 
     public Input(String defaultBind) {
         bind(defaultBind);
@@ -83,9 +82,9 @@ public class Input implements IRegistryElement {
         return "key_bind";
     }
 
-    public void setModContent(ModContent modContent) {
-        this.modContent = modContent;
-        this.modID = modContent.getModID();
+    @Override
+    public void assignOwner(ModContainer owner) {
+        this.modID = owner.getModID();
     }
 
     public String getDisplay() {

@@ -54,7 +54,7 @@ public class ClientNetwork extends Network {
 
     @Override
     public void sendPacket(PacketBase packetBase) {
-        System.out.println("Sending packet:" + packetBase.getClass());
+       // System.out.println("Sending packet:" + packetBase.getClass());
         if(networkHandler != null && ((ClientNetworkHandler)networkHandler).enabled) {
             packetBase.packetId = sendProtocol.packetMap.get(packetBase.getClass());
             sendPacketDirect(packetBase);

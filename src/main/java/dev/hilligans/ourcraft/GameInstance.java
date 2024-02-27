@@ -204,6 +204,17 @@ public class GameInstance {
         LAYOUT_ENGINES = (Registry<ILayoutEngine<?>>) REGISTRIES.getExcept("ourcraft:layout_engine");
     }
 
+    public void finishBuild() {
+        for (Registry<?> registry : REGISTRIES.ELEMENTS) {
+            for (Object o : registry.ELEMENTS) {
+                if (o instanceof IRegistryElement) {
+                    ((IRegistryElement) o).load(this);
+                }
+            }
+        }
+        buildBlockStates();
+    }
+
     public void buildBlockStates() {
         BLOCK_STATES = new ArrayList<>(BLOCKS.ELEMENTS.size());
         int offset = 0;
