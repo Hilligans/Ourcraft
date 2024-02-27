@@ -105,11 +105,11 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     public void destroyMesh(GraphicsContext graphicsContext, long mesh) {
         long array = vertexArrayObjects.get((int)mesh);
         meshData.remove((int)mesh);
+        glDeleteBuffers((int)mesh);
         if((int)array != 0) {
             glDeleteBuffers((int) array);
         }
         glDeleteBuffers((int)(array >> 32));
-        glDeleteBuffers((int)mesh);
         if(trackingResourceAllocations) {
             vertexArrayAllocationTracker.remove((int)mesh);
         }
@@ -191,9 +191,9 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
 
         glDrawElements(mesh.vertexFormat.primitiveType,mesh.indices.limit(),GL_UNSIGNED_INT,0);
 
+        glDeleteBuffers(VAO);
         glDeleteBuffers(VBO);
         glDeleteBuffers(EBO);
-        glDeleteBuffers(VAO);
     }
 
     @Override

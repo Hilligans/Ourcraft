@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.util.sections;
 
 import dev.hilligans.ourcraft.util.ConsoleReader;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
@@ -12,10 +13,27 @@ public class SteppingSection implements ISection {
     public ConsoleReader consoleReader;
     public AtomicInteger step = new AtomicInteger();
 
+    public static ConsoleReader reader;
+    public static final ArrayList<AtomicInteger> vals = new ArrayList<>();
+
     public SteppingSection() {
-        consoleReader = new ConsoleReader(s -> {
-            if(s.equals("n")) {step.incrementAndGet(); }
-        });
+        synchronized (vals) {
+            if (reader == null) {
+                reader = new ConsoleReader(s -> {
+                    if (s.equals("n")) {
+                        synchronized (vals) {
+                            for (AtomicInteger a : vals) {
+                                a.getAndIncrement();
+                            }
+                        }
+                    }
+                });
+            }
+            vals.add(step);
+        }
+        //consoleReader = new ConsoleReader(s -> {
+        //    if(s.equals("n")) {step.incrementAndGet(); }
+        //});
     }
 
     @Override

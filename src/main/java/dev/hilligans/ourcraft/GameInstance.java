@@ -53,6 +53,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
@@ -73,7 +74,8 @@ public class GameInstance {
 
     public final int gameInstanceUniversalID;
 
-    public boolean built = false;
+    public Semaphore builtSemaphore = new Semaphore(1);
+
     public InstanceLoaderPipeline<?> loaderPipeline;
 
     public final ToolLevelList MATERIAL_LIST = new ToolLevelList();

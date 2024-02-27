@@ -255,7 +255,7 @@ public class Ourcraft extends ModClass {
         modContent.registerBiome(Biomes.PLAINS,Biomes.SANDY_HILLS,Biomes.DESERT,Biomes.FOREST);
 
         for(int x = 0; x < 3000000; x++) {
-           // modContent.registerBlock(new Block("x" + x, new BlockProperties()));
+            modContent.registerBlock(new Block("x" + x, new BlockProperties()));
         }
 
 

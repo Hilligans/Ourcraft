@@ -37,7 +37,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
 
     public OpenglDefaultImpl engineImpl;
 
-    public boolean profiling = true;
+    public boolean profiling = false;
     public boolean exceptOnMissingResourceCleanup = true;
 
 

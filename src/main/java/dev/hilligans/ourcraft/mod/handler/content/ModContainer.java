@@ -78,6 +78,10 @@ public class ModContainer {
         this.gameInstance = gameInstance;
         this.registries = gameInstance.REGISTRIES.duplicate();
 
+        for(Registry<?> registry : registries.ELEMENTS) {
+            registry.mapping = false;
+        }
+
         blockRegistry = (Registry<Block>) registries.getExcept("ourcraft:block");
         itemRegistry = (Registry<Item>) registries.getExcept("ourcraft:item");
         biomeRegistry = (Registry<Biome>) registries.getExcept("ourcraft:biome");

@@ -79,7 +79,7 @@ public class StandardPipeline extends InstanceLoaderPipeline<StandardPipeline> {
 
         pipeline.addStage("Post Hooks", (pipeline1, section) -> pipeline1.runPostHooks());
 
-        pipeline.addStage("Finish Building", (pipeline13, section) -> pipeline13.getGameInstance().built = true);
+        pipeline.addStage("Finish Building", (pipeline13, section) -> {pipeline13.getGameInstance().builtSemaphore.release();});
 
         return pipeline;
     }

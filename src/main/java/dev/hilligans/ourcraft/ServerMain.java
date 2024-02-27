@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft;
 import dev.hilligans.ourcraft.mod.handler.pipeline.standard.StandardPipeline;
 import dev.hilligans.ourcraft.server.IServer;
 import dev.hilligans.ourcraft.server.MultiPlayerServer;
+import dev.hilligans.ourcraft.server.concurrent.Lock;
 import dev.hilligans.ourcraft.util.ArgumentContainer;
 import dev.hilligans.ourcraft.util.Profiler;
 import dev.hilligans.ourcraft.util.Settings;
@@ -14,6 +15,8 @@ import dev.hilligans.planets.gen.PlanetWorldHeightBuilder;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.LockSupport;
 
 public class ServerMain {
 
@@ -37,8 +40,14 @@ public class ServerMain {
         server(gameInstance, new ArgumentContainer(args));
     }
 
+    static int x = 0;
+    public static AtomicInteger a = new AtomicInteger();
+    public static void doS() {}
+
     public static IServer server(GameInstance gameInstance, ArgumentContainer argumentContainer) {
-        while(!gameInstance.built) {}
+        gameInstance.builtSemaphore.acquireUninterruptibly();
+        gameInstance.builtSemaphore.release();
+
         ServerMain.argumentContainer = argumentContainer;
         gameInstance.THREAD_PROVIDER.map();
 

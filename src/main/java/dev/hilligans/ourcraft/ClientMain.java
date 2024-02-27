@@ -32,10 +32,11 @@ public class ClientMain {
         gameInstance.side = Side.CLIENT;
         gameInstance.THREAD_PROVIDER.map();
 
+        gameInstance.builtSemaphore.acquireUninterruptibly();
+
         Thread serverThread = null;
         if(argumentContainer.getBoolean("--integratedServer", false)) {
             try {
-
                 serverThread = new Thread(() -> ServerMain.server(gameInstance, argumentContainer));
                 serverThread.setName("Server-Thread");
                 serverThread.setDaemon(true);

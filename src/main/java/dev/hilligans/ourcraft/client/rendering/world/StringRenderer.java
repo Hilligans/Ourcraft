@@ -56,6 +56,7 @@ public class StringRenderer {
         Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
         vals.forEach((val) -> primitiveBuilders.put(val, new PrimitiveBuilder(shaderSource.vertexFormat)));
 
+        ensureTexturesBuilt(vals, window);
         for(int z = 0; z < string.length(); z++) {
             PrimitiveBuilder primitiveBuilder = primitiveBuilders.get((int) string.charAt(z) >> 8);
             addVertices(primitiveBuilder, string.charAt(z), x + width, y, scale);

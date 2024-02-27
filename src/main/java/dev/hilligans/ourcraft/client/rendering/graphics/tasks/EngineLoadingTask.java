@@ -33,10 +33,10 @@ public class EngineLoadingTask extends RenderTaskSource {
                         var stage = gameInstance.loaderPipeline.stages.get(index - 1);
                         screenStack.push();
                         screenStack.setColor(1.0f,1.0f,1.0f);
+                        engine.getDefaultImpl().uploadMatrix(graphicsContext, screenStack, Textures.BACKFILL.shaderSource);
+
                         rend.drawStringInternal(window, graphicsContext, screenStack, stage.getTypeA(), 20, 29, 0.5f);
                         rend.drawStringInternal(window, graphicsContext, screenStack, STR."\{index} of \{gameInstance.loaderPipeline.section.subsectionLength}", 20, 29 * 2, 0.5f);
-                        Textures.BACKFILL.drawTexture(window, graphicsContext, screenStack, 10, 10, 100, 100);
-                        Textures.CHECK_MARK.drawTexture(window, graphicsContext, screenStack,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
                         screenStack.pop();
                     } catch (Exception e) {
                         e.printStackTrace();

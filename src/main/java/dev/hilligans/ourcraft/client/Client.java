@@ -119,7 +119,7 @@ public class Client implements IClientPacketHandler {
     }
 
     public void setupClient() {
-        network = new ClientNetwork(gameInstance.PROTOCOLS.get("Play")).debug(argumentContainer.getBoolean("--packetTrace", false));
+        Thread.startVirtualThread(() -> network = new ClientNetwork(gameInstance.PROTOCOLS.get("Play")).debug(argumentContainer.getBoolean("--packetTrace", false)));
         /*authNetwork = new ClientNetwork(gameInstance.PROTOCOLS.get("Auth"));
 
         CompoundNBTTag tag = WorldLoader.loadTag("clientData.dat");
