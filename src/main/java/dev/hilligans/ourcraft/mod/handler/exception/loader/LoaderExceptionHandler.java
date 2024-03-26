@@ -15,7 +15,9 @@ public class LoaderExceptionHandler extends ExceptionHandler<Exception> {
     @Override
     public boolean handleException(Exception exception, @Nullable IContext context, CrashReport crashReport) {
         if(context instanceof LoadingCrashContext crashContext) {
-            gameInstance.MOD_LOADER.suspend();
+            //TODO update
+
+            // gameInstance.MOD_LOADER.suspend();
             int maxNameLength = 0;
             int maxVersionLength = 0;
             int maxSourceLength = 0;

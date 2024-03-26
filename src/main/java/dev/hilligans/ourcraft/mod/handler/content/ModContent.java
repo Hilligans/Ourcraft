@@ -49,34 +49,14 @@ public class ModContent {
     public ModDependency[] dependencies = new ModDependency[0];
     public int version = -1;
     public String description = "";
-    public boolean isJar = true;
     public String[] authors = new String[0];
     public String path = "";
 
     public ArrayList<Block> blocks = new ArrayList<>();
     public ArrayList<Item> items = new ArrayList<>();
-    public ArrayList<Texture> textures = new ArrayList<>();
-    public ArrayList<SoundBuffer> sounds = new ArrayList<>();
-    public ArrayList<IModel> models = new ArrayList<>();
-    public ArrayList<Tag> tags = new ArrayList<>();
-    public ArrayList<ResourceLoader<?>> resourceLoaders = new ArrayList<>();
-    public ArrayList<Biome> biomes = new ArrayList<>();
-    public ArrayList<ToolLevel> toolLevels = new ArrayList<>();
-    public ArrayList<RegistryLoader> registryLoaders = new ArrayList<>();
     public ArrayList<ScreenBuilder> screenBuilders = new ArrayList<>();
-    public ArrayList<Feature> features = new ArrayList<>();
-    public ArrayList<IGraphicsEngine<?,?,?>> graphicsEngines = new ArrayList<>();
-    public ArrayList<RenderTarget> renderTargets = new ArrayList<>();
-    public ArrayList<RenderPipeline> renderPipelines = new ArrayList<>();
-    public ArrayList<RenderTaskSource> renderTasks = new ArrayList<>();
-    public ArrayList<VertexFormat> vertexFormats = new ArrayList<>();
-    public ArrayList<InputHandlerProvider> inputHandlerProviders = new ArrayList<>();
-    public ArrayList<Input> keybinds = new ArrayList<>();
+
     public ArrayList<ShaderSource> shaders = new ArrayList<>();
-    public ArrayList<ILayoutEngine<?>> layoutEngines = new ArrayList<>();
-
-    public HashMap<String, Protocol> protocols = new HashMap<>();
-
     public boolean loaded = false;
     public boolean shouldLoad = true;
 
@@ -132,11 +112,6 @@ public class ModContent {
         loaded = true;
     }
 
-    public void invokeRegistryLoaders() {
-        for(RegistryLoader registryLoader : registryLoaders) {
-            registryLoader.runInit();
-        }
-    }
 
     public void registerBlock(Block block) {
        // block.setModContent(this);
@@ -145,102 +120,7 @@ public class ModContent {
         items.add(new BlockItem(block.name,block,modID).setModContent(this));
     }
 
-    public void registerBlocks(Block... blocks) {
-        for(Block block : blocks) {
-            registerBlock(block);
-        }
-    }
 
-    public void registerItem(Item item) {
-        items.add(item);
-        item.source = this;
-    }
-
-    public void registerItems(Item... items) {
-        for(Item item : items) {
-            registerItem(item);
-        }
-    }
-
-    public void registerSound(SoundBuffer soundBuffer) {
-        sounds.add(soundBuffer);
-        //soundBuffer.source = this;
-    }
-
-    public void registerSounds(SoundBuffer... soundBuffers) {
-        for(SoundBuffer soundBuffer : soundBuffers) {
-            registerSound(soundBuffer);
-        }
-    }
-
-    public void registerTexture(Texture... textures) {
-        for(Texture texture : textures) {
-            texture.assignOwner(this);
-            this.textures.add(texture);
-        }
-    }
-
-    public void registerModel(IModel... models) {
-        for(IModel iModel : models) {
-            this.models.add(iModel);
-        }
-    }
-
-    @SafeVarargs
-    public final void registerPacket(Supplier<PacketBase>... packets) {
-        for(Supplier<PacketBase> packet : packets) {
-            Protocol protocol = protocols.computeIfAbsent("Play", Protocol::new);
-            protocol.register(packet);
-        }
-    }
-
-    @SafeVarargs
-    public final void registerPacket(String protocolName, Supplier<PacketBase>... packets) {
-        for(Supplier<PacketBase> packet : packets) {
-            Protocol protocol = protocols.computeIfAbsent(protocolName, Protocol::new);
-            protocol.register(packet);
-        }
-    }
-
-    @SafeVarargs
-    public final void registerPacket(String protocolName, int id, Supplier<PacketBase>... packets) {
-        for(Supplier<PacketBase> packet : packets) {
-            Protocol protocol = protocols.computeIfAbsent(protocolName, Protocol::new);
-            protocol.register(packet,id);
-        }
-    }
-
-    public void registerResourceLoader(ResourceLoader<?>... resourceLoaders) {
-        for(ResourceLoader<?> resourceLoader : resourceLoaders) {
-            this.resourceLoaders.add(resourceLoader);
-            resourceLoader.gameInstance = gameInstance;
-        }
-    }
-
-    public void registerBiome(Biome... biomes) {
-        for(Biome biome : biomes) {
-            //biome.source = this;
-            this.biomes.add(biome);
-        }
-    }
-
-    public void registerFeature(Feature... features) {
-        for(Feature feature : features) {
-            feature.setModContent(this);
-            this.features.add(feature);
-        }
-    }
-
-    public void registerToolLevel(ToolLevel... toolLevels) {
-        this.toolLevels.addAll(List.of(toolLevels));
-    }
-
-    public void registerRegistryLoader(RegistryLoader... registryLoaders) {
-        for(RegistryLoader registryLoader : registryLoaders) {
-            registryLoader.gameInstance = gameInstance;
-            this.registryLoaders.add(registryLoader);
-        }
-    }
 
     public void registerScreenBuilder(ScreenBuilder... screenBuilders) {
         for(ScreenBuilder screenBuilder : screenBuilders) {
@@ -249,68 +129,6 @@ public class ModContent {
         }
     }
 
-    public void registerGraphicsEngine(IGraphicsEngine<?,?,?>... graphicsEngines) {
-        for(IGraphicsEngine<?,?,?> graphicsEngine : graphicsEngines) {
-            graphicsEngine.assignOwner(this);
-            this.graphicsEngines.add(graphicsEngine);
-        }
-    }
-
-    public void registerRenderTarget(RenderTarget... renderTargets) {
-        for(RenderTarget renderTarget : renderTargets) {
-            renderTarget.assignOwner(this);
-        }
-        this.renderTargets.addAll(Arrays.asList(renderTargets));
-    }
-
-    public void registerRenderPipelines(RenderPipeline... renderPipelines) {
-        for(RenderPipeline renderPipeline : renderPipelines) {
-            renderPipeline.assignOwner(this);
-        }
-        this.renderPipelines.addAll(Arrays.asList(renderPipelines));
-    }
-
-    public void registerRenderTask(RenderTaskSource... renderTasks) {
-        for(RenderTaskSource renderTask : renderTasks) {
-            renderTask.assignOwner(this);
-        }
-        this.renderTasks.addAll(Arrays.asList(renderTasks));
-    }
-
-    public void registerVertexFormat(VertexFormat... vertexFormats) {
-        for(VertexFormat vertexFormat : vertexFormats) {
-            vertexFormat.assignOwner(this);
-        }
-        this.vertexFormats.addAll(Arrays.asList(vertexFormats));
-    }
-
-    public void registerInputHandlerProviders(InputHandlerProvider... providers) {
-        for(InputHandlerProvider provider : providers) {
-            provider.assignOwner(this);
-        }
-        this.inputHandlerProviders.addAll(Arrays.asList(providers));
-    }
-
-    public void registerKeybinds(Input... inputs) {
-        for(Input input : inputs) {
-            input.assignOwner(this);
-        }
-        this.keybinds.addAll(Arrays.asList(inputs));
-    }
-
-    public void registerShader(ShaderSource... shaderSources) {
-        for(ShaderSource shaderSource : shaderSources) {
-            shaderSource.assignOwner(this);
-        }
-        this.shaders.addAll(Arrays.asList(shaderSources));
-    }
-
-    public void registerLayoutEngine(ILayoutEngine<?>... layoutEngines) {
-        for(ILayoutEngine<?> layoutEngine : layoutEngines) {
-            layoutEngine.assignOwner(this);
-        }
-        this.layoutEngines.addAll(Arrays.asList(layoutEngines));
-    }
 
     public void putData(IByteArray byteArray) {
         byteArray.writeInt(version);
@@ -318,7 +136,7 @@ public class ModContent {
         byteArray.writeUTF16(description);
         byteArray.writeUTF16(Util.toString(authors));
         byteArray.writeUTF16(Util.toString(getDependencies()));
-        byteArray.writeInt(models.size());
+       // byteArray.writeInt(models.size());
         /*
         for(IModel iModel : models) {
             byteArray.writeString(iModel.getPath());
@@ -433,29 +251,5 @@ public class ModContent {
 
     public GameInstance getGameInstance() {
         return gameInstance;
-    }
-
-    public CoreExtensionView getCoreView() {
-        return new CoreExtensionView(null);
-    }
-
-    @Override
-    public String toString() {
-        return "ModContent{" +
-                "modID='" + modID + '\'' +
-                ", mod=" + mod +
-                ", mainClass=" + mainClass +
-                ", classLoader=" + classLoader +
-                ", dependencies=" + Arrays.toString(dependencies) +
-                ", version=" + version +
-                ", description='" + description + '\'' +
-                ", authors=" + Arrays.toString(authors) +
-                ", blocks=" + blocks +
-                ", items=" + items +
-                ", textures=" + textures +
-                ", sounds=" + sounds +
-                ", models=" + models +
-                ", loaded=" + loaded +
-                '}';
     }
 }

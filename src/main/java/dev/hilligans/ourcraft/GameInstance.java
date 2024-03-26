@@ -29,7 +29,6 @@ import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.mod.handler.EventBus;
 import dev.hilligans.ourcraft.mod.handler.content.ModList;
 import dev.hilligans.ourcraft.mod.handler.events.common.RegistryClearEvent;
-import dev.hilligans.ourcraft.mod.handler.ModLoader;
 import dev.hilligans.ourcraft.mod.handler.pipeline.InstanceLoaderPipeline;
 import dev.hilligans.ourcraft.network.Protocol;
 import dev.hilligans.ourcraft.recipe.helper.RecipeView;
@@ -61,7 +60,6 @@ import java.util.function.Consumer;
 
 public class GameInstance {
     public final EventBus EVENT_BUS = new EventBus();
-    public final ModLoader MOD_LOADER = new ModLoader(this);
     public final Logger LOGGER = new Logger("", "");
     public final ResourceManager RESOURCE_MANAGER = new ResourceManager(this);
     public final ModContent OURCRAFT = new ModContent("ourcraft",this).addClassLoader(new URLClassLoader(new URL[]{Ourcraft.class.getProtectionDomain().getCodeSource().getLocation()})).addMainClass(Ourcraft.class);
