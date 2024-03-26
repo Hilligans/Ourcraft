@@ -27,13 +27,13 @@ public class StandardPipeline extends InstanceLoaderPipeline<StandardPipeline> {
 
 
         //load all mods
-        pipeline.addStage("Locate Mods", (pipeline1, s) -> pipeline1.setModList(new ModList(gameInstance).load()));
+        pipeline.addStage("Locate Mods", (pipeline1, s) -> pipeline1.setModList(gameInstance.MOD_LIST.load()));
 
         //load all the registries defined in each mod
-        pipeline.addStage("Register Registries", (pipeline1, s) -> pipeline1.getModList().foreach(container -> {
-            container.modClass.registerRegistries(registryView);
-            gameInstance.copyRegistries();
-        }));
+        pipeline.addStage("Register Registries", (pipeline16, section) -> {
+            pipeline16.getModList().foreach(container -> container.modClass.registerRegistries(registryView));
+            pipeline16.getGameInstance().copyRegistries();
+        });
 
         //register each of the mods core extensions into its
         pipeline.addStage("Register Core Extensions", (pipeline1, s) -> pipeline1.getModList().foreach(modContainer -> {

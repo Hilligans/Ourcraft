@@ -429,7 +429,6 @@ public class ModContent {
         }
         version = jsonObject.has("version") ? jsonObject.getInt("version") : -1;
         description = jsonObject.has("description") ? jsonObject.getString("description") : "";
-
     }
 
     public GameInstance getGameInstance() {

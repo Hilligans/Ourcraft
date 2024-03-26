@@ -28,6 +28,7 @@ import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.util.registry.Registry;
 import dev.hilligans.ourcraft.world.Feature;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.List;
@@ -69,6 +70,11 @@ public class ModContainer {
     public Registry<Texture> textureRegistry;
     public Registry<ShaderSource> shaderSourceRegistry;
     public Registry<ILayoutEngine<?>> layoutEngineRegistry;
+
+    public ModContainer(Class<? extends ModClass> clazz, URLClassLoader classLoader) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        this.modClass = clazz.getConstructor().newInstance();
+        this.classLoader = classLoader;
+    }
 
     public ModContainer(ModClass modClass) {
         this.modClass = modClass;

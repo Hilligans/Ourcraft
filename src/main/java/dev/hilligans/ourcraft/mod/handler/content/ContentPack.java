@@ -48,12 +48,12 @@ public class ContentPack {
     //private boolean waiting = false;
 
     public void generateData() {
-        gameInstance.REBUILDING.set(true);
+        //gameInstance.REBUILDING.set(true);
         ///TODO Could potentially rebuild when rendering but very unlikely
        //if(!Settings.isServer && !(ClientMain.getClient() == null || ClientMain.getClient().rendering)) {
        //    waiting = true;
        //} else {
-           rebuild();
+         //  rebuild();
        //}
     }
 
@@ -88,11 +88,11 @@ public class ContentPack {
     public boolean built = false;
 
     private void rebuild() {
-        gameInstance.clear();
-        gameInstance.RESOURCE_MANAGER.clearData();
+       // gameInstance.clear();
+       // gameInstance.RESOURCE_MANAGER.clearData();
 
         if(!built) {
-            buildVital();
+         //   buildVital();
         }
 
         for(String string : mods.keySet()) {
@@ -100,9 +100,9 @@ public class ContentPack {
                 ModContent mod = mods.get(string);
                 for(RegistryLoader registryLoader : mod.registryLoaders) {
                     if(registryLoader.rerunOnInstanceClear) {
-                        registryLoader.run();
+                 //       registryLoader.run();
                     }
-                    gameInstance.registerRegistryLoader(registryLoader);
+                 //   gameInstance.registerRegistryLoader(registryLoader);
                 }
             }
         }
@@ -167,7 +167,7 @@ public class ContentPack {
         for(Registry<?> registry : gameInstance.REGISTRIES.ELEMENTS) {
             for(Object o : registry.ELEMENTS) {
                 if(o instanceof IRegistryElement) {
-                    ((IRegistryElement) o).load(gameInstance);
+                 //   ((IRegistryElement) o).load(gameInstance);
                 }
             }
         }

@@ -10,6 +10,7 @@ import dev.hilligans.ourcraft.resource.dataloader.ResourceDirectory;
 import dev.hilligans.ourcraft.resource.dataloader.ZipResourceDirectory;
 import dev.hilligans.ourcraft.resource.loaders.ResourceLoader;
 import dev.hilligans.ourcraft.util.Settings;
+import dev.hilligans.planets.Planets;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -41,25 +42,21 @@ public class ModList {
             gameInstance.DATA_LOADER.addFolder("target/classes/", "ourcraft");
         }
 
-        mods.add(new ModContainer(new Ourcraft()));
-        /*
         loadAllMods(new File("mods/"));
-        if(true) {
-            loadClasses(new File("target/classes/"), "");
-        }
+        loadClasses(new File("target/classes/"), "");
 
-        if(new File("ourcraft-1.0.3-jar-with-dependencies.jar").exists()) {
-            gameInstance.DATA_LOADER.addJar("ourcraft-1.0.3-jar-with-dependencies.jar", "ourcraft");
-        } else if(new File("ourcraft-1.0.3.jar").exists()) {
-            gameInstance.DATA_LOADER.addJar("ourcraft-1.0.3.jar", "ourcraft");
-        } else {
-            gameInstance.DATA_LOADER.addFolder("target/classes/", "ourcraft");
+        if(!gameInstance.ARGUMENTS.getBoolean("--devBuild", false)) {
+            mods.add(new ModContainer(new Ourcraft()));
+            mods.add(new ModContainer(new Planets()));
         }
-        gameInstance.CONTENT_PACK.load();
-
-         */
 
         return this;
+    }
+
+    public void registerMod(ModContainer modContainer) {
+        mods.add(modContainer);
+
+        gameInstance.RESOURCE_MANAGER.classLoaders.add(modContainer.classLoader);
     }
 
     public ModList foreach(Consumer<ModContainer> consumer) {
@@ -73,7 +70,7 @@ public class ModList {
         return mods.size();
     }
 
-    /*
+
 
     public void loadAllMods(File folder) {
         File[] mods = folder.listFiles();
@@ -84,6 +81,63 @@ public class ModList {
         }
     }
 
+    public <T extends Class<ModClass>> T testClass(Class<?> clazz) {
+        if(ModClass.class.isAssignableFrom(clazz)) {
+            return (T)clazz;
+        }
+        return null;
+    }
+
+    public void loadClasses(File folder, String topName) {
+        File[] mods = folder.listFiles();
+        if(mods != null) {
+            for (File mod : mods) {
+                if(mod.isDirectory()) {
+                    loadClasses(mod, topName + mod.getName() + ".");
+                } else if(mod.getName().endsWith(".class")) {
+                    try {
+                        URLClassLoader child = new URLClassLoader(new URL[]{mod.toURI().toURL()}, this.getClass().getClassLoader());
+                        Class<?> testClass = child.loadClass(topName + mod.getName().substring(0,mod.getName().length() - 6));
+
+                        Class<ModClass> clazz = testClass(testClass);
+                        if(clazz != null) {
+                            ModContainer container = new ModContainer(clazz, child);
+                            String modID = container.getModID();
+
+                            FolderResourceDirectory resourceDirectory = new FolderResourceDirectory(new File("target/classes/"));
+                            gameInstance.DATA_LOADER.add(modID, resourceDirectory);
+                            gameInstance.MOD_LIST.registerMod(container);
+                        }
+                    } catch (Exception ignored) {}
+                }
+            }
+        }
+    }
+
+    public boolean loadMod(File file) {
+        try {
+            URLClassLoader child = new URLClassLoader(new URL[]{file.toURI().toURL()}, this.getClass().getClassLoader());
+            ArrayList<String> classNames = getClassNames(file);
+            for(String name : classNames) {
+                Class<?> testClass = Class.forName(name,false,child);
+
+                Class<ModClass> clazz = testClass(testClass);
+                if(clazz != null) {
+                    ModContainer container = new ModContainer(clazz, child);
+                    String modID = container.getModID();
+
+                    FolderResourceDirectory resourceDirectory = new FolderResourceDirectory(new File("target/classes/"));
+                    gameInstance.DATA_LOADER.add(modID, resourceDirectory);
+                    gameInstance.MOD_LIST.registerMod(container);
+                }
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    /*
     public void loadClasses(File folder, String topName) {
         File[] mods = folder.listFiles();
         if(mods != null) {
@@ -119,8 +173,10 @@ public class ModList {
         }
     }
 
+     */
 
-    public boolean loadMod(File file) {
+
+    /*public boolean loadMod(File file) {
         try {
             URLClassLoader child = new URLClassLoader(new URL[]{file.toURI().toURL()}, this.getClass().getClassLoader());
             ArrayList<String> classNames = getClassNames(file);
@@ -153,6 +209,8 @@ public class ModList {
         return true;
     }
 
+
+
     public JSONObject getContent(ResourceDirectory resourceDirectory) throws Exception {
         try {
             return new JSONObject(ResourceLoader.toString(resourceDirectory.get("mod.json")));
@@ -165,6 +223,9 @@ public class ModList {
         }
         return null;
     }
+
+     */
+
 
     //https://stackoverflow.com/questions/15720822/how-to-get-names-of-classes-inside-a-jar-file
     public ArrayList<String> getClassNames(File file) {
@@ -194,8 +255,4 @@ public class ModList {
         }
         return null;
     }
-
-     */
-
-
 }

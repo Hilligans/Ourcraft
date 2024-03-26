@@ -77,7 +77,9 @@ public class OpenGLWindow extends RenderWindow {
             glfwSwapBuffers(window);
         }
         client.rendering = false;
-        client.soundEngine.tick();
+        if(getGameInstance().built()) {
+            client.soundEngine.tick();
+        }
 //        if(client.screenShot) {
 //            client.screenShot = false;
 //            ScreenShot.takeScreenShot(this);

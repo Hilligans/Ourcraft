@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.biome.Biome;
 import dev.hilligans.ourcraft.biome.Biomes;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.client.audio.SoundBuffer;
+import dev.hilligans.ourcraft.client.audio.SoundCategory;
 import dev.hilligans.ourcraft.client.audio.Sounds;
 import dev.hilligans.ourcraft.client.ChatWindow;
 import dev.hilligans.ourcraft.client.Client;
@@ -133,7 +134,8 @@ public class Ourcraft extends ModClass {
                 new Tuple(InputHandlerProvider.class, "input"),
                 new Tuple(Texture.class, "texture"),
                 new Tuple(ShaderSource.class, "shader"),
-                new Tuple(ILayoutEngine.class, "layout_engine")
+                new Tuple(ILayoutEngine.class, "layout_engine"),
+                new Tuple(SoundCategory.class, "sound_category")
         };
 
         for(Tuple<Class<? extends IRegistryElement>, String> element : elements) {

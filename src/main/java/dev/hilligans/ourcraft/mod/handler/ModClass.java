@@ -9,14 +9,11 @@ public abstract class ModClass {
     public abstract String getModID();
 
     public void registerRegistries(RegistryView view) {
-
     }
 
     public void registerCoreExtensions(CoreExtensionView view) {
-
     }
 
     public void registerContent(ModContainer container) {
-
     }
 }

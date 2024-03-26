@@ -7,6 +7,7 @@ import dev.hilligans.ourcraft.block.blockstate.BlockStateTable;
 import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.ourcraft.block.blockstate.IBlockStateTable;
 import dev.hilligans.ourcraft.client.audio.SoundBuffer;
+import dev.hilligans.ourcraft.client.audio.SoundCategory;
 import dev.hilligans.ourcraft.client.input.Input;
 import dev.hilligans.ourcraft.client.input.InputHandlerProvider;
 import dev.hilligans.ourcraft.client.rendering.graphics.*;
@@ -26,6 +27,7 @@ import dev.hilligans.ourcraft.item.Item;
 import dev.hilligans.ourcraft.mod.handler.content.ContentPack;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.mod.handler.EventBus;
+import dev.hilligans.ourcraft.mod.handler.content.ModList;
 import dev.hilligans.ourcraft.mod.handler.events.common.RegistryClearEvent;
 import dev.hilligans.ourcraft.mod.handler.ModLoader;
 import dev.hilligans.ourcraft.mod.handler.pipeline.InstanceLoaderPipeline;
@@ -64,7 +66,7 @@ public class GameInstance {
     public final ResourceManager RESOURCE_MANAGER = new ResourceManager(this);
     public final ModContent OURCRAFT = new ModContent("ourcraft",this).addClassLoader(new URLClassLoader(new URL[]{Ourcraft.class.getProtectionDomain().getCodeSource().getLocation()})).addMainClass(Ourcraft.class);
     public final ContentPack CONTENT_PACK = new ContentPack(this);
-    public final AtomicBoolean REBUILDING = new AtomicBoolean(false);
+    public final ModList MOD_LIST = new ModList(this);
     public final UniversalResourceLoader RESOURCE_LOADER = new UniversalResourceLoader();
     public final ArgumentContainer ARGUMENTS = new ArgumentContainer();
     public final DataLoader DATA_LOADER = new DataLoader();
@@ -82,47 +84,19 @@ public class GameInstance {
 
     public GameInstance() {
         gameInstanceUniversalID = getNewGameInstanceUniversalID();
-
-        /*
-        REGISTRIES.put(BLOCKS);
-        REGISTRIES.put(ITEMS);
-        REGISTRIES.put(BIOMES);
-        REGISTRIES.put(TAGS);
-        REGISTRIES.put(RECIPES);
-        REGISTRIES.put(RECIPE_VIEWS);
-        REGISTRIES.put(GRAPHICS_ENGINES);
-        REGISTRIES.put(SETTINGS);
-        REGISTRIES.put(PROTOCOLS);
-        REGISTRIES.put(COMMANDS);
-        REGISTRIES.put(RESOURCE_LOADERS);
-        REGISTRIES.put(SOUNDS);
-        REGISTRIES.put(TOOL_MATERIALS);
-        REGISTRIES.put(SCREEN_BUILDERS);
-        REGISTRIES.put(FEATURES);
-        REGISTRIES.put(RENDER_TARGETS);
-        REGISTRIES.put(RENDER_PIPELINES);
-        REGISTRIES.put(RENDER_TASK);
-        REGISTRIES.put(KEY_BINDS);
-        REGISTRIES.put(VERTEX_FORMATS);
-        REGISTRIES.put(INPUT_HANDLER_PROVIDERS);
-        REGISTRIES.put(TEXTURES);
-        REGISTRIES.put(SHADERS);
-        REGISTRIES.put(LAYOUT_ENGINES);
-
-         */
     }
 
     public void loadContent() {
-        registerDefaultContent();
-        CONTENT_PACK.registerModContent(OURCRAFT);
+        //registerDefaultContent();
+        //CONTENT_PACK.registerModContent(OURCRAFT);
         //CONTENT_PACK.mods.put("ourcraft",OURCRAFT);
-        MOD_LOADER.loadDefaultMods();
-        CONTENT_PACK.buildVital();
-        CONTENT_PACK.mods.forEach((s, modContent) -> modContent.invokeRegistryLoaders());
-        REBUILDING.set(true);
-        CONTENT_PACK.generateData();
-        buildBlockStates();
-        REBUILDING.set(false);
+        //MOD_LOADER.loadDefaultMods();
+        //CONTENT_PACK.buildVital();
+        //CONTENT_PACK.mods.forEach((s, modContent) -> modContent.invokeRegistryLoaders());
+        //REBUILDING.set(true);
+        //CONTENT_PACK.generateData();
+        //buildBlockStates();
+        //REBUILDING.set(false);
     }
 
     public void build(IGraphicsEngine<?,?,?> graphicsEngine, GraphicsContext graphicsContext) {
@@ -149,31 +123,33 @@ public class GameInstance {
 
     public final Registry<Registry<?>> REGISTRIES = new Registry<>(this, Registry.class, "registry");
 
-    public Registry<Block> BLOCKS = new Registry<>(this, Block.class, "block");
-    public Registry<Item> ITEMS = new Registry<>(this, Item.class, "item");
-    public Registry<Biome> BIOMES = new Registry<>(this, Biome.class, "biome");
-    public Registry<Tag> TAGS = new Registry<>(this, Tag.class, "tag");
-    public Registry<IRecipe<?>> RECIPES = new Registry<>(this, IRecipe.class, "recipe");
-    public Registry<RecipeView<?>> RECIPE_VIEWS = new Registry<>(this, RecipeView.class, "recipe_view");
-    public Registry<IGraphicsEngine<?,?,?>> GRAPHICS_ENGINES = new Registry<>(this, IGraphicsEngine.class, "graphics_engine");
-    public Registry<CommandHandler> COMMANDS = new Registry<>(this, CommandHandler.class, "command");
-    public Registry<Protocol> PROTOCOLS = new Registry<>(this, Protocol.class, "protocol");
-    public Registry<Setting> SETTINGS = new Registry<>(this, Setting.class, "setting");
-    public Registry<ResourceLoader<?>> RESOURCE_LOADERS = new Registry<>(this, ResourceLoader.class, "resource_loader");
-    public Registry<SoundBuffer> SOUNDS = new Registry<>(this, SoundBuffer.class, "sound");
-    public Registry<ToolLevel> TOOL_MATERIALS = new Registry<>(this, ToolLevel.class, "tool_level");
-    public Registry<RegistryLoader> DATA_LOADERS = new Registry<>(this, RegistryLoader.class, "registry_loader");
-    public Registry<ScreenBuilder> SCREEN_BUILDERS = new Registry<>(this, ScreenBuilder.class, "screen");
-    public Registry<Feature> FEATURES = new Registry<>(this, Feature.class, "feature");
-    public Registry<RenderTarget> RENDER_TARGETS = new Registry<>(this, RenderTarget.class, "render_target");
-    public Registry<RenderPipeline> RENDER_PIPELINES = new Registry<>(this, RenderPipeline.class, "render_pipeline");
-    public Registry<RenderTaskSource> RENDER_TASK = new Registry<>(this, RenderTaskSource.class, "render_task");
-    public Registry<Input> KEY_BINDS = new Registry<>(this, Input.class, "key_bind");
-    public Registry<VertexFormat> VERTEX_FORMATS = new Registry<>(this, VertexFormat.class, "vertex_format");
-    public Registry<InputHandlerProvider> INPUT_HANDLER_PROVIDERS = new Registry<>(this, InputHandlerProvider.class, "input");
-    public Registry<Texture> TEXTURES = new Registry<>(this, Texture.class, "texture");
-    public Registry<ShaderSource> SHADERS = new Registry<>(this, ShaderSource.class, "shader");
-    public Registry<ILayoutEngine<?>> LAYOUT_ENGINES = new Registry<>(this, ILayoutEngine.class, "layout_engine");
+    public Registry<Block> BLOCKS;
+    public Registry<Item> ITEMS;
+    public Registry<Biome> BIOMES;
+    public Registry<Tag> TAGS;
+    public Registry<IRecipe<?>> RECIPES;
+    public Registry<RecipeView<?>> RECIPE_VIEWS;
+    public Registry<IGraphicsEngine<?,?,?>> GRAPHICS_ENGINES;
+    public Registry<CommandHandler> COMMANDS;
+    public Registry<Protocol> PROTOCOLS;
+    public Registry<Setting> SETTINGS;
+    public Registry<ResourceLoader<?>> RESOURCE_LOADERS;
+    public Registry<SoundBuffer> SOUNDS;
+    public Registry<SoundCategory> SOUND_CATEGORIES;
+    public Registry<ToolLevel> TOOL_MATERIALS;
+    public Registry<RegistryLoader> DATA_LOADERS;
+    public Registry<ScreenBuilder> SCREEN_BUILDERS;
+    public Registry<Feature> FEATURES;
+    public Registry<RenderTarget> RENDER_TARGETS;
+    public Registry<RenderPipeline> RENDER_PIPELINES;
+    public Registry<RenderTaskSource> RENDER_TASK;
+    public Registry<Input> KEY_BINDS;
+    public Registry<VertexFormat> VERTEX_FORMATS;
+    public Registry<InputHandlerProvider> INPUT_HANDLER_PROVIDERS;
+    public Registry<Texture> TEXTURES;
+    public Registry<ShaderSource> SHADERS;
+    public Registry<ILayoutEngine<?>> LAYOUT_ENGINES;
+
     public ArrayList<IBlockState> BLOCK_STATES;
 
     public void copyRegistries() {
@@ -202,6 +178,7 @@ public class GameInstance {
         TEXTURES = (Registry<Texture>) REGISTRIES.getExcept("ourcraft:texture");
         SHADERS = (Registry<ShaderSource>) REGISTRIES.getExcept("ourcraft:shader");
         LAYOUT_ENGINES = (Registry<ILayoutEngine<?>>) REGISTRIES.getExcept("ourcraft:layout_engine");
+        SOUND_CATEGORIES = (Registry<SoundCategory>) REGISTRIES.getExcept("ourcraft:sound_category");
     }
 
     public void finishBuild() {
@@ -230,6 +207,10 @@ public class GameInstance {
             }
             offset += builder.getSize();
         }
+    }
+
+    public boolean built() {
+        return builtSemaphore.availablePermits() == 1;
     }
 
     public void clear() {
@@ -286,12 +267,6 @@ public class GameInstance {
     public void registerToolLevels(ToolLevel... toolLevels) {
         for(ToolLevel toolLevel : toolLevels) {
             TOOL_MATERIALS.put(toolLevel.name.getName(), toolLevel);
-        }
-    }
-
-    public void registerRegistryLoader(RegistryLoader... loaders) {
-        for(RegistryLoader loader : loaders) {
-            DATA_LOADERS.put(loader.name.getName(),loader);
         }
     }
 

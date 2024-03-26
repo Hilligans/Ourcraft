@@ -1,8 +1,10 @@
 package dev.hilligans.ourcraft.client.audio;
 
+import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+
 import java.util.ArrayList;
 
-public class SoundCategory {
+public class SoundCategory implements IRegistryElement {
 
     public static final ArrayList<SoundCategory> soundCategories = new ArrayList<>();
 
@@ -66,5 +68,20 @@ public class SoundCategory {
     public SoundSource getRandomSource(boolean loop, boolean relative) {
         SoundBuffer soundBuffer = getRandomBuffer();
         return soundBuffer.createNewSound(loop,relative, this);
+    }
+
+    @Override
+    public String getResourceName() {
+        return null;
+    }
+
+    @Override
+    public String getResourceOwner() {
+        return null;
+    }
+
+    @Override
+    public String getResourceType() {
+        return null;
     }
 }

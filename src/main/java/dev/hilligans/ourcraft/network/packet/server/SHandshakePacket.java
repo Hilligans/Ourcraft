@@ -68,7 +68,7 @@ public class SHandshakePacket extends PacketBaseNew<IClientPacketHandler> {
 
           //  ctx.channel().writeAndFlush(new PacketData(new CRequestContent(neededMods)));
         } else if(mods.length != 0) {
-            gameInstance.CONTENT_PACK.generateData();
+           // gameInstance.CONTENT_PACK.generateData();
         }
     }
 }

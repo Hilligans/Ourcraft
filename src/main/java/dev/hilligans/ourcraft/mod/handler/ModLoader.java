@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.mod.handler;
 
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.data.primitives.Triplet;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.resource.dataloader.FolderResourceDirectory;
 import dev.hilligans.ourcraft.resource.dataloader.ResourceDirectory;
@@ -40,7 +41,7 @@ public class ModLoader {
         //System.out.println("Java " + System.getProperty("java.version"));
         loadAllMods(new File("mods/"));
         if(true) {
-            loadClasses(new File("target/classes/"), "");
+            // loadClasses1(new File("target/classes/"), "");
         }
 
         if(new File("ourcraft-1.0.3-jar-with-dependencies.jar").exists()) {
@@ -50,7 +51,7 @@ public class ModLoader {
         } else {
             gameInstance.DATA_LOADER.addFolder("target/classes/", "ourcraft");
         }
-        gameInstance.CONTENT_PACK.load();
+        //gameInstance.CONTENT_PACK.load();
     }
 
     public void loadAllMods(File folder) {
@@ -89,13 +90,14 @@ public class ModLoader {
                             modContent.addClassLoader(child);
                             mainClasses.put(modID,new Triplet<>(testClass,mod.getAbsolutePath(),false));
                             gameInstance.DATA_LOADER.add(modID, resourceDirectory);
-                            gameInstance.CONTENT_PACK.registerModContent(modContent);
+                            //gameInstance.MOD_LIST.registerMod(modContent);
                         }
                     } catch (Exception ignored) {}
                 }
             }
         }
     }
+
 
 
     public boolean loadMod(File file) {
@@ -157,6 +159,13 @@ public class ModLoader {
             }
         } catch (Exception ignored) {}
         return classNames;
+    }
+
+    public <T extends Class<ModClass>> T testClass(Class<?> clazz) {
+        if(ModClass.class.isAssignableFrom(clazz)) {
+            return (T)clazz;
+        }
+        return null;
     }
 
     public String getModID(Class<?> val) {
