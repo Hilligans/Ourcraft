@@ -15,7 +15,7 @@ public class ClientNetwork extends Network {
 
     public Client client;
     public GameInstance gameInstance;
-    public ArrayList<PacketBase> packets = new ArrayList<>();
+    public ArrayList<PacketBase<?>> packets = new ArrayList<>();
 
     public ClientNetwork(Protocol protocol) {
         super(protocol);
@@ -53,7 +53,7 @@ public class ClientNetwork extends Network {
     }
 
     @Override
-    public void sendPacket(PacketBase packetBase) {
+    public void sendPacket(PacketBase<?> packetBase) {
        // System.out.println("Sending packet:" + packetBase.getClass());
         if(networkHandler != null && ((ClientNetworkHandler)networkHandler).enabled) {
             packetBase.packetId = sendProtocol.packetMap.get(packetBase.getClass());
@@ -64,13 +64,13 @@ public class ClientNetwork extends Network {
     }
 
     public void flush() {
-        for (PacketBase packet : packets) {
+        for (PacketBase<?> packet : packets) {
             ((ClientNetworkHandler) networkHandler).sendPacket(packet);
         }
     }
 
     @Override
-    public void sendPacketDirect(PacketBase packetBase) {
+    public void sendPacketDirect(PacketBase<?> packetBase) {
         ((ClientNetworkHandler)networkHandler).sendPacket(packetBase);
     }
 

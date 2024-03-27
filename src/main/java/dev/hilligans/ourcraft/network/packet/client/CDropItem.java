@@ -2,7 +2,7 @@ package dev.hilligans.ourcraft.network.packet.client;
 
 import dev.hilligans.ourcraft.network.*;
 
-public class CDropItem extends PacketBaseNew<IServerPacketHandler> {
+public class CDropItem extends PacketBase<IServerPacketHandler> {
 
     short slot;
     byte count;

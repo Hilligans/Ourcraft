@@ -33,6 +33,8 @@ public interface IServerPacketHandler extends IPacketHandler {
 
     ServerNetworkHandler getServerNetworkHandler();
 
+    void disconnect(String reason);
+
     default GameInstance getGameInstance() {
         return getServer().getGameInstance();
     }
@@ -41,7 +43,7 @@ public interface IServerPacketHandler extends IPacketHandler {
         getWorld().removeEntity(getPlayerEntity().id, 0);
     }
 
-    default ChannelFuture sendPacket(PacketBase packetBase, ChannelHandlerContext ctx) {
+    default ChannelFuture sendPacket(PacketBase<?> packetBase, ChannelHandlerContext ctx) {
         if(ServerNetworkHandler.debug) {
             return ctx.channel().writeAndFlush(new PacketTraceByteArray(packetBase));
         } else {
@@ -49,7 +51,7 @@ public interface IServerPacketHandler extends IPacketHandler {
         }
     }
     
-    default void sendPacket(PacketBase packetBase) {
+    default void sendPacket(PacketBase<?> packetBase) {
         getServerNetworkHandler().sendPacketInternal(packetBase);
     }
 }

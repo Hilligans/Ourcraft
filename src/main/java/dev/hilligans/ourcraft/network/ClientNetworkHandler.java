@@ -5,12 +5,11 @@ import dev.hilligans.ourcraft.network.packet.client.CHandshakePacket;
 import io.netty.channel.*;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.Consumer;
 
 public class ClientNetworkHandler extends NetworkHandler {
 
     public ClientNetwork network;
-    public ConcurrentLinkedQueue<PacketBase> packets = new ConcurrentLinkedQueue<>();
+    public ConcurrentLinkedQueue<PacketBase<?>> packets = new ConcurrentLinkedQueue<>();
 
     public ClientNetworkHandler(ClientNetwork network) {
         this.network = network;
@@ -35,7 +34,7 @@ public class ClientNetworkHandler extends NetworkHandler {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, IPacketByteArray msg) throws Exception {
-        PacketBase packetBase = msg.createPacket(network.receiveProtocol);
+        PacketBase<?> packetBase = msg.createPacket(network.receiveProtocol);
         packets.add(packetBase);
     }
 
@@ -46,13 +45,9 @@ public class ClientNetworkHandler extends NetworkHandler {
     }
 
     public void processPackets() {
-        PacketBase packetBase;
+        PacketBase<?> packetBase;
         while((packetBase = packets.poll()) != null) {
-            if(packetBase instanceof PacketBaseNew<?> packetBaseNew) {
-                packetBaseNew.handle(network.client);
-            } else {
-                packetBase.handle();
-            }
+            packetBase.handle(network.client);
         }
     }
 }

@@ -1,9 +1,10 @@
 package dev.hilligans.ourcraft.network.packet.auth;
 
 import dev.hilligans.ourcraft.network.IPacketByteArray;
+import dev.hilligans.ourcraft.network.IPacketHandler;
 import dev.hilligans.ourcraft.network.PacketBase;
 
-public class CGetToken extends PacketBase {
+public class CGetToken extends PacketBase<IPacketHandler> {
 
     String username;
     String loginToken;
@@ -27,6 +28,9 @@ public class CGetToken extends PacketBase {
     @Override
     public void decode(IPacketByteArray packetData) {}
 
+
     @Override
-    public void handle() {}
+    public void handle(IPacketHandler iPacketHandler) {
+
+    }
 }

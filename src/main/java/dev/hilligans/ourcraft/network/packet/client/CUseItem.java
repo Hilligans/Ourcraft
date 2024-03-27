@@ -1,13 +1,10 @@
 package dev.hilligans.ourcraft.network.packet.client;
 
-import dev.hilligans.ourcraft.data.other.blockstates.BlockState;
 import dev.hilligans.ourcraft.data.other.BlockPos;
-import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.ourcraft.network.*;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
-import dev.hilligans.ourcraft.ServerMain;
 
-public class CUseItem extends PacketBaseNew<IServerPacketHandler> {
+public class CUseItem extends PacketBase<IServerPacketHandler> {
 
     byte slot;
 

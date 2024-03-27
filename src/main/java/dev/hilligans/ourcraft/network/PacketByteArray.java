@@ -20,7 +20,7 @@ public class PacketByteArray implements IPacketByteArray {
         this.index = byteBuf.readableBytes();
     }
 
-    public PacketByteArray(PacketBase packetBase) {
+    public PacketByteArray(PacketBase<?> packetBase) {
         byteBuf = Unpooled.buffer();
         packetID = (short) packetBase.packetId;
         packetBase.encode(this);

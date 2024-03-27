@@ -67,7 +67,7 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, IPacketByteArray msg) throws Exception {
-        PacketBase packetBase = msg.createPacket(network.receiveProtocol);
+        PacketBase<?> packetBase = msg.createPacket(network.receiveProtocol);
         if(!(packetBase instanceof CHandshakePacket)) {
             if(mappedPlayerData.get(ctx.channel().id()) == null) {
                 ctx.close();
@@ -75,15 +75,11 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
             }
         }
         try {
-            if (packetBase instanceof PacketBaseNew<?> packetBaseNew) {
-                ServerPlayerData serverPlayerData = mappedPlayerData.get(ctx.channel().id());
-                if(serverPlayerData == null) {
-                    packetBaseNew.handle(this);
-                } else  {
-                    packetBaseNew.handle(serverPlayerData);
-                }
-            } else {
-                packetBase.handle();
+            ServerPlayerData serverPlayerData = mappedPlayerData.get(ctx.channel().id());
+            if(serverPlayerData == null) {
+                packetBase.handle(this);
+            } else  {
+                packetBase.handle(serverPlayerData);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,7 +91,7 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
         ctx.close();
     }
 
-    public void sendPacketInternal(PacketBase packetBase) {
+    public void sendPacketInternal(PacketBase<?> packetBase) {
         for(int x = 0; x < channelIds.size(); x++) {
             Channel channel = channels.find(channelIds.get(x));
             if(channel == null) {
@@ -107,7 +103,7 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
         }
     }
 
-    public static ChannelFuture sendPacket(PacketBase packetBase, Channel channel) {
+    public static ChannelFuture sendPacket(PacketBase<?> packetBase, Channel channel) {
         if(debug) {
             return channel.writeAndFlush(new PacketTraceByteArray(packetBase));
         } else {
@@ -115,15 +111,15 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
         }
     }
 
-    public ChannelFuture sendPacket(PacketBase packetBase, ChannelHandlerContext ctx) {
+    public ChannelFuture sendPacket(PacketBase<?> packetBase, ChannelHandlerContext ctx) {
         return sendPacket(packetBase, ctx.channel());
     }
 
-    public static ChannelFuture sendPacket1(PacketBase packetBase, ChannelHandlerContext ctx) {
+    public static ChannelFuture sendPacket1(PacketBase<?> packetBase, ChannelHandlerContext ctx) {
         return sendPacket(packetBase, ctx.channel());
     }
 
-    public static void sendPacketClose(PacketBase packetBase, ChannelHandlerContext ctx) {
+    public static void sendPacketClose(PacketBase<?> packetBase, ChannelHandlerContext ctx) {
         try {
         sendPacket1(packetBase, ctx).addListeners((ChannelFutureListener) future -> {
             if (ctx.channel().isOpen()) {
@@ -133,15 +129,15 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
         } catch (Exception ignored) {}
     }
 
-    public void sendPacket(PacketBase packetBase, PlayerEntity playerEntity) {
+    public void sendPacket(PacketBase<?> packetBase, PlayerEntity playerEntity) {
         sendPacket(packetBase, playerEntity.getPlayerData().getChannelId());
     }
 
-    public void sendPacket(PacketBase packetBase, ChannelId channelId) {
+    public void sendPacket(PacketBase<?> packetBase, ChannelId channelId) {
         sendPacket(packetBase, channels.find(channelId));
     }
 
-    public void sendPacketExcept(PacketBase packetBase, ChannelHandlerContext ctx) {
+    public void sendPacketExcept(PacketBase<?> packetBase, ChannelHandlerContext ctx) {
         for(int x = 0; x < channelIds.size(); x++) {
             Channel channel = channels.find(channelIds.get(x));
             if(channel == null) {
@@ -186,5 +182,10 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
     @Override
     public ServerNetworkHandler getServerNetworkHandler() {
         return this;
+    }
+
+    @Override
+    public void disconnect(String reason) {
+
     }
 }

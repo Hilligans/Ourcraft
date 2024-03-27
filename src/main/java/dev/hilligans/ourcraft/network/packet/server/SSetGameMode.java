@@ -3,7 +3,7 @@ package dev.hilligans.ourcraft.network.packet.server;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.network.*;
 
-public class SSetGameMode extends PacketBaseNew<IClientPacketHandler> {
+public class SSetGameMode extends PacketBase<IClientPacketHandler> {
 
     int id;
 

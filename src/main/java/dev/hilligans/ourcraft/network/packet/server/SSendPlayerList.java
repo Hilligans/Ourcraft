@@ -3,7 +3,7 @@ package dev.hilligans.ourcraft.network.packet.server;
 import dev.hilligans.ourcraft.data.other.PlayerList;
 import dev.hilligans.ourcraft.network.*;
 
-public class SSendPlayerList extends PacketBaseNew<IClientPacketHandler> {
+public class SSendPlayerList extends PacketBase<IClientPacketHandler> {
 
     byte mode;
     String[] players;

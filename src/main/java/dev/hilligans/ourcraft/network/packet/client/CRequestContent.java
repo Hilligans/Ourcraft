@@ -1,17 +1,14 @@
 package dev.hilligans.ourcraft.network.packet.client;
 
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
-import dev.hilligans.ourcraft.entity.Entity;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.network.*;
-import dev.hilligans.ourcraft.Ourcraft;
-import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.network.packet.server.*;
 
 import java.util.ArrayList;
 
-public class CRequestContent extends PacketBaseNew<IServerPacketHandler> {
+public class CRequestContent extends PacketBase<IServerPacketHandler> {
 
     ArrayList<String> mods;
 

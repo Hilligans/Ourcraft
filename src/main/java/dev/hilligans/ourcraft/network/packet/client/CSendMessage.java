@@ -6,7 +6,7 @@ import dev.hilligans.ourcraft.command.Commands;
 import dev.hilligans.ourcraft.network.*;
 import dev.hilligans.ourcraft.network.packet.server.SChatMessage;
 
-public class CSendMessage extends PacketBaseNew<IServerPacketHandler> {
+public class CSendMessage extends PacketBase<IServerPacketHandler> {
 
     public String message;
 

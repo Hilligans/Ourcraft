@@ -4,7 +4,7 @@ import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.ourcraft.network.*;
 
-public class SUpdateContainer extends PacketBaseNew<IClientPacketHandler> {
+public class SUpdateContainer extends PacketBase<IClientPacketHandler> {
 
     short slot;
     ItemStack itemStack;

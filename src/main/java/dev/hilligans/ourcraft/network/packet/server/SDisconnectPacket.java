@@ -3,7 +3,7 @@ package dev.hilligans.ourcraft.network.packet.server;
 import dev.hilligans.ourcraft.client.rendering.screens.DisconnectScreen;
 import dev.hilligans.ourcraft.network.*;
 
-public class SDisconnectPacket extends PacketBaseNew<IClientPacketHandler> {
+public class SDisconnectPacket extends PacketBase<IClientPacketHandler> {
 
     public SDisconnectPacket() {
         super(22);

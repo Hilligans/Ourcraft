@@ -4,7 +4,7 @@ import dev.hilligans.ourcraft.network.*;
 import dev.hilligans.ourcraft.network.packet.server.SSendChunkPacket;
 import dev.hilligans.ourcraft.world.newworldsystem.IChunk;
 
-public class CRequestChunkPacket extends PacketBaseNew<IServerPacketHandler> {
+public class CRequestChunkPacket extends PacketBase<IServerPacketHandler> {
 
     public int ChunkX;
     public int ChunkZ;

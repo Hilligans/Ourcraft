@@ -5,7 +5,7 @@ import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.world.newworldsystem.CubicChunk;
 import dev.hilligans.ourcraft.world.newworldsystem.IChunk;
 
-public class SSendChunkPacket extends PacketBaseNew<IClientPacketHandler> {
+public class SSendChunkPacket extends PacketBase<IClientPacketHandler> {
 
     public byte mode;
     public IChunk newChunk;

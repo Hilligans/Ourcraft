@@ -7,8 +7,6 @@ import dev.hilligans.ourcraft.client.input.key.MouseHandler;
 import dev.hilligans.ourcraft.client.rendering.ContainerScreen;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IInputProvider;
-import dev.hilligans.ourcraft.client.rendering.graphics.implementations.splitwindows.SplitWindow;
-import dev.hilligans.ourcraft.client.rendering.graphics.implementations.splitwindows.SubWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.opengl.OpenGLEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanEngine;
@@ -25,12 +23,10 @@ import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.ourcraft.mod.handler.events.client.OpenScreenEvent;
 import dev.hilligans.ourcraft.network.ClientNetwork;
 import dev.hilligans.ourcraft.network.IClientPacketHandler;
-import dev.hilligans.ourcraft.network.Protocol;
-import dev.hilligans.ourcraft.network.packet.auth.CGetToken;
+import dev.hilligans.ourcraft.network.PacketBase;
 import dev.hilligans.ourcraft.network.packet.client.CCloseScreen;
 import dev.hilligans.ourcraft.network.packet.client.CDropItem;
 import dev.hilligans.ourcraft.network.packet.client.COpenScreen;
-import dev.hilligans.ourcraft.network.PacketBase;
 import dev.hilligans.ourcraft.client.audio.SoundBuffer;
 import dev.hilligans.ourcraft.client.audio.SoundEngine;
 import dev.hilligans.ourcraft.tag.CompoundNBTTag;
@@ -39,7 +35,6 @@ import dev.hilligans.ourcraft.util.Logger;
 import dev.hilligans.ourcraft.util.ThreadContext;
 import dev.hilligans.ourcraft.util.registry.Registry;
 import dev.hilligans.ourcraft.world.newworldsystem.ClientCubicWorld;
-import dev.hilligans.ourcraft.world.newworldsystem.CubicWorld;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 import dev.hilligans.ourcraft.save.WorldLoader;
 import dev.hilligans.ourcraft.server.MultiPlayerServer;
@@ -392,7 +387,7 @@ public class Client implements IClientPacketHandler {
     public static long timeSinceLastDraw = 0;
     public static float drawTime = 1000f * 1000000 / Settings.maxFps;
 
-    public void sendPacket(PacketBase packetBase) {
+    public void sendPacket(PacketBase<?> packetBase) {
          network.sendPacket(packetBase);
     }
 

@@ -2,7 +2,7 @@ package dev.hilligans.ourcraft.network.packet.server;
 
 import dev.hilligans.ourcraft.network.*;
 
-public class SRemoveEntityPacket extends PacketBaseNew<IClientPacketHandler> {
+public class SRemoveEntityPacket extends PacketBase<IClientPacketHandler> {
 
     int id;
 

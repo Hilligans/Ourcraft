@@ -231,4 +231,9 @@ public class ServerPlayerData implements IServerPacketHandler {
     public ServerNetworkHandler getServerNetworkHandler() {
         return null;
     }
+
+    @Override
+    public void disconnect(String reason) {
+
+    }
 }

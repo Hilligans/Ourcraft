@@ -17,7 +17,7 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 
-public class CHandshakePacket extends PacketBaseNew<IServerPacketHandler> {
+public class CHandshakePacket extends PacketBase<IServerPacketHandler> {
 
     public int id;
     public String name;

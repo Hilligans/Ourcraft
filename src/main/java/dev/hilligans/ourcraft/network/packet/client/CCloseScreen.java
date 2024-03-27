@@ -4,7 +4,7 @@ import dev.hilligans.ourcraft.container.containers.InventoryContainer;
 import dev.hilligans.ourcraft.network.*;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 
-public class CCloseScreen extends PacketBaseNew<IServerPacketHandler> {
+public class CCloseScreen extends PacketBase<IServerPacketHandler> {
 
     boolean newScreen = false;
 

@@ -6,7 +6,7 @@ import dev.hilligans.ourcraft.network.*;
 import dev.hilligans.ourcraft.network.packet.server.SUpdateEntityPacket;
 import dev.hilligans.ourcraft.server.IServer;
 
-public class CUpdatePlayerPacket extends PacketBaseNew<IServerPacketHandler> {
+public class CUpdatePlayerPacket extends PacketBase<IServerPacketHandler> {
 
     double x;
     double y;

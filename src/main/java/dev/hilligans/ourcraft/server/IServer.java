@@ -23,9 +23,9 @@ public interface IServer {
 
     ServerNetworkHandler getServerNetworkHandler();
 
-    void sendPacket(PacketBase packetBase);
+    void sendPacket(PacketBase<?> packetBase);
 
-    void sendPacket(PacketBase packetBase, PlayerEntity playerEntity);
+    void sendPacket(PacketBase<?> packetBase, PlayerEntity playerEntity);
 
     GameInstance getGameInstance();
 

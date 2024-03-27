@@ -30,9 +30,6 @@ import dev.hilligans.ourcraft.world.Feature;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLClassLoader;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ModContainer {
@@ -192,27 +189,27 @@ public class ModContainer {
     }
 
     @SafeVarargs
-    public final void registerPacket(Supplier<PacketBase>... packets) {
+    public final void registerPacket(Supplier<PacketBase<?>>... packets) {
         ModContainer self = this;
-        for(Supplier<PacketBase> packet : packets) {
+        for(Supplier<PacketBase<?>> packet : packets) {
             Protocol protocol = protocolRegistry.computeIfAbsent("ourcraft:Play", (s -> new Protocol(s.split(":")[1]).setSource(self)));
             protocol.register(packet);
         }
     }
 
     @SafeVarargs
-    public final void registerPacket(String protocolName, Supplier<PacketBase>... packets) {
+    public final void registerPacket(String protocolName, Supplier<PacketBase<?>>... packets) {
         ModContainer self = this;
-        for(Supplier<PacketBase> packet : packets) {
+        for(Supplier<PacketBase<?>> packet : packets) {
             Protocol protocol = protocolRegistry.computeIfAbsent(protocolName, (s -> new Protocol(s.split(":")[1]).setSource(self)));
             protocol.register(packet);
         }
     }
 
     @SafeVarargs
-    public final void registerPacket(String protocolName, int id, Supplier<PacketBase>... packets) {
+    public final void registerPacket(String protocolName, int id, Supplier<PacketBase<?>>... packets) {
         ModContainer self = this;
-        for(Supplier<PacketBase> packet : packets) {
+        for(Supplier<PacketBase<?>> packet : packets) {
             Protocol protocol = protocolRegistry.computeIfAbsent(protocolName, (s -> new Protocol(s.split(":")[1]).setSource(self)));
             protocol.register(packet,id);
         }

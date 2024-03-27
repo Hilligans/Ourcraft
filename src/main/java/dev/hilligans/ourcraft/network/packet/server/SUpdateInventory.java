@@ -3,7 +3,7 @@ package dev.hilligans.ourcraft.network.packet.server;
 import dev.hilligans.ourcraft.data.other.Inventory;
 import dev.hilligans.ourcraft.network.*;
 
-public class SUpdateInventory extends PacketBaseNew<IClientPacketHandler> {
+public class SUpdateInventory extends PacketBase<IClientPacketHandler> {
 
     Inventory inventory;
 

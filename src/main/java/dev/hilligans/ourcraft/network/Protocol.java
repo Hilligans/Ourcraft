@@ -17,13 +17,13 @@ public class Protocol implements IRegistryElement {
     public String protocolName;
 
     public ArrayList<PacketFetcher> packets = new ArrayList<>();
-    public HashMap<Class<PacketBase>, Integer> packetMap = new HashMap<>();
+    public HashMap<Class<PacketBase<?>>, Integer> packetMap = new HashMap<>();
     public Int2BooleanOpenHashMap requiredIds = new Int2BooleanOpenHashMap();
     public boolean compressed;
     public GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
     public ModContainer source;
 
-    public void register(Supplier<PacketBase> packet) {
+    public void register(Supplier<PacketBase<?>> packet) {
         register(new PacketFetcher(packets.size(),packet));
     }
 
@@ -41,7 +41,7 @@ public class Protocol implements IRegistryElement {
         packets.add(packetFetcher);
     }
 
-    public void register(Supplier<PacketBase> packet, int id) {
+    public void register(Supplier<PacketBase<?>> packet, int id) {
         register(new PacketFetcher(id, packet),id);
     }
 

@@ -321,12 +321,6 @@ public class GameInstance {
         return DATA_LOADER.get(resourceLocation, allocator);
     }
 
-    public void registerDefaultContent() {
-     //   Ourcraft.registerDefaultContent(OURCRAFT);
-        //Container.register();
-        //Entity.register();
-    }
-
     public int getUniqueID() {
         return gameInstanceUniversalID;
     }

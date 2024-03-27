@@ -1,12 +1,11 @@
 package dev.hilligans.ourcraft.network.packet.server;
 
 import dev.hilligans.ourcraft.data.other.blockstates.BlockState;
-import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.blockstates.DataBlockState;
 import dev.hilligans.ourcraft.network.*;
 
-public class SSendBlockChanges extends PacketBaseNew<IClientPacketHandler> {
+public class SSendBlockChanges extends PacketBase<IClientPacketHandler> {
     int x;
     int y;
     int z;

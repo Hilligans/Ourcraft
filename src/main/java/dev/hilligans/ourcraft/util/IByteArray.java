@@ -83,6 +83,18 @@ public interface IByteArray extends INBTTag {
         return result;
     }
 
+    default int readUByte() {
+        return Byte.toUnsignedInt(readByte());
+    }
+
+    default int readUShort() {
+        return Short.toUnsignedInt(readShort());
+    }
+
+    default long readUInt() {
+        return Integer.toUnsignedLong(readInt());
+    }
+
     default boolean[] readBooleans(int count) {
         boolean[] values = new boolean[count];
         byte val = 0;
@@ -276,6 +288,18 @@ public interface IByteArray extends INBTTag {
             writeByte((byte) (value & 0x7F | 0x80));
             value >>>= 7;
         }
+    }
+
+    default void writeUByte(int value) {
+        writeByte((byte)value);
+    }
+
+    default void writeUShort(int value) {
+        writeShort((short)value);
+    }
+
+    default void writeUInt(long value) {
+        writeInt((int)value);
     }
 
     default void writeBooleans(boolean[] values) {

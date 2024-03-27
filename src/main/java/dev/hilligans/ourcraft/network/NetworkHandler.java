@@ -23,7 +23,7 @@ public abstract class NetworkHandler extends SimpleChannelInboundHandler<IPacket
         return this;
     }
 
-    public ChannelFuture sendPacket(PacketBase packetBase) {
+    public ChannelFuture sendPacket(PacketBase<?> packetBase) {
         if(channel != null) {
             if(debug) {
                 return channel.writeAndFlush(new PacketTraceByteArray(packetBase));

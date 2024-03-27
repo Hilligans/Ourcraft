@@ -3,7 +3,7 @@ package dev.hilligans.ourcraft.network.packet.server;
 import dev.hilligans.ourcraft.entity.Entity;
 import dev.hilligans.ourcraft.network.*;
 
-public class SUpdateEntityPacket extends PacketBaseNew<IClientPacketHandler> {
+public class SUpdateEntityPacket extends PacketBase<IClientPacketHandler> {
 
     float x;
     float y;

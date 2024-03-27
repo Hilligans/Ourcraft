@@ -6,7 +6,7 @@ import dev.hilligans.ourcraft.network.packet.server.SDisconnectPacket;
 import dev.hilligans.ourcraft.ServerMain;
 import io.netty.channel.ChannelHandlerContext;
 
-public class STokenValid extends PacketBaseNew<IServerPacketHandler> {
+public class STokenValid extends PacketBase<IServerPacketHandler> {
 
     String username;
     String uuid;

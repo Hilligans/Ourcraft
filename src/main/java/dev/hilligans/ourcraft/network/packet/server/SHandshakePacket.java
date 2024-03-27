@@ -3,14 +3,13 @@ package dev.hilligans.ourcraft.network.packet.server;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.network.*;
-import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.util.Settings;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class SHandshakePacket extends PacketBaseNew<IClientPacketHandler> {
+public class SHandshakePacket extends PacketBase<IClientPacketHandler> {
 
     public int playerId;
     public String[] mods;

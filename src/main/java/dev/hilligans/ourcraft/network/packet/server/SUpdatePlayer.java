@@ -2,7 +2,7 @@ package dev.hilligans.ourcraft.network.packet.server;
 
 import dev.hilligans.ourcraft.network.*;
 
-public class SUpdatePlayer extends PacketBaseNew<IClientPacketHandler> {
+public class SUpdatePlayer extends PacketBase<IClientPacketHandler> {
 
     float x;
     float y;

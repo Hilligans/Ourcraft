@@ -8,7 +8,7 @@ import dev.hilligans.ourcraft.entity.Entity;
 import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.network.*;
 
-public class CSendBlockChanges extends PacketBaseNew<IServerPacketHandler> {
+public class CSendBlockChanges extends PacketBase<IServerPacketHandler> {
 
     int x;
     int y;

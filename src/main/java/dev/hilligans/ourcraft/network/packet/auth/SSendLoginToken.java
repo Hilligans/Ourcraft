@@ -3,7 +3,7 @@ package dev.hilligans.ourcraft.network.packet.auth;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.network.*;
 
-public class SSendLoginToken extends PacketBaseNew<IClientPacketHandler> {
+public class SSendLoginToken extends PacketBase<IClientPacketHandler> {
 
     String token;
 

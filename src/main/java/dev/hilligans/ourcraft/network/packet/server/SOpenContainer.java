@@ -4,7 +4,7 @@ import dev.hilligans.ourcraft.container.Container;
 import dev.hilligans.ourcraft.container.Slot;
 import dev.hilligans.ourcraft.network.*;
 
-public class SOpenContainer extends PacketBaseNew<IClientPacketHandler> {
+public class SOpenContainer extends PacketBase<IClientPacketHandler> {
 
 
     public short containerID;

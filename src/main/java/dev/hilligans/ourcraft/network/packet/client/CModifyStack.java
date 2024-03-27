@@ -3,7 +3,7 @@ package dev.hilligans.ourcraft.network.packet.client;
 import dev.hilligans.ourcraft.network.*;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 
-public class CModifyStack extends PacketBaseNew<IServerPacketHandler> {
+public class CModifyStack extends PacketBase<IServerPacketHandler> {
 
     byte mode;
     short slot;

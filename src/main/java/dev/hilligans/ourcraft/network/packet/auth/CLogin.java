@@ -1,9 +1,10 @@
 package dev.hilligans.ourcraft.network.packet.auth;
 
 import dev.hilligans.ourcraft.network.IPacketByteArray;
+import dev.hilligans.ourcraft.network.IServerPacketHandler;
 import dev.hilligans.ourcraft.network.PacketBase;
 
-public class CLogin extends PacketBase {
+public class CLogin extends PacketBase<IServerPacketHandler> {
 
     String username;
     String password;
@@ -34,7 +35,7 @@ public class CLogin extends PacketBase {
     }
 
     @Override
-    public void handle() {
+    public void handle(IServerPacketHandler iServerPacketHandler) {
 
     }
 }

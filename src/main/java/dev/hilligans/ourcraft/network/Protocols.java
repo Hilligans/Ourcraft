@@ -23,7 +23,6 @@ public class Protocols {
         modContent.registerPacket(SChatMessage::new);
         modContent.registerPacket(CModifyStack::new);
         modContent.registerPacket(SUpdateContainer::new);
-        modContent.registerPacket(CActivateBlock::new);
         modContent.registerPacket(SOpenContainer::new);
         modContent.registerPacket(SUpdateInventory::new);
         modContent.registerPacket(CDropItem::new);
@@ -34,7 +33,6 @@ public class Protocols {
         modContent.registerPacket(COpenScreen::new);
         modContent.registerPacket(SSendPlayerList::new);
         modContent.registerPacket(SSetGameMode::new);
-        modContent.registerPacket(SSendModContentPacket::new);
         modContent.registerPacket(CRequestContent::new);
 
         modContent.registerPacket("ourcraft:Auth", SAccountPacket::new);
@@ -44,7 +42,6 @@ public class Protocols {
 
         modContent.registerPacket("ourcraft:Auth", CCreateAccount::new);
         modContent.registerPacket("ourcraft:Auth", CGetToken::new);
-        modContent.registerPacket("ourcraft:Auth", CTokenValid::new);
         modContent.registerPacket("ourcraft:Auth", CLogin::new);
     }
 }

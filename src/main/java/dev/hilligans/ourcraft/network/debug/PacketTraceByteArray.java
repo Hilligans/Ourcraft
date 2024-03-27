@@ -10,7 +10,6 @@ import io.netty.util.ByteProcessor;
 
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
-import java.nio.charset.StandardCharsets;
 
 public class PacketTraceByteArray implements IPacketByteArray {
 
@@ -22,7 +21,7 @@ public class PacketTraceByteArray implements IPacketByteArray {
     public long universalPacketID;
 
 
-    public PacketTraceByteArray(PacketBase packetBase) {
+    public PacketTraceByteArray(PacketBase<?> packetBase) {
         byteBuf = Unpooled.buffer();
         packetID = (short) packetBase.packetId;
         packetBase.encode(this);
@@ -187,8 +186,8 @@ public class PacketTraceByteArray implements IPacketByteArray {
         return universalPacketID;
     }
 
-    public PacketBase createPacket(Protocol protocol) {
-        PacketBase packetBase = protocol.packets.get(getPacketID()).getPacket();
+    public PacketBase<?> createPacket(Protocol protocol) {
+        PacketBase<?> packetBase = protocol.packets.get(getPacketID()).getPacket();
         packetBase.ctx = getOwner();
         //System.out.println("Packet Trace:" + packetTrace.data);
         packetBase.decode(this);

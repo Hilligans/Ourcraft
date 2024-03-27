@@ -3,7 +3,7 @@ package dev.hilligans.ourcraft.network.packet.server;
 import dev.hilligans.ourcraft.entity.Entity;
 import dev.hilligans.ourcraft.network.*;
 
-public class SCreateEntityPacket extends PacketBaseNew<IClientPacketHandler> {
+public class SCreateEntityPacket extends PacketBase<IClientPacketHandler> {
 
     int entityType;
 

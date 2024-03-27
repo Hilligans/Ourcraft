@@ -3,7 +3,7 @@ package dev.hilligans.ourcraft.network.packet.auth;
 import dev.hilligans.ourcraft.client.rendering.screens.AccountCreationScreen;
 import dev.hilligans.ourcraft.network.*;
 
-public class SAccountPacket extends PacketBaseNew<IClientPacketHandler> {
+public class SAccountPacket extends PacketBase<IClientPacketHandler> {
 
     String response;
 

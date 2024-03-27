@@ -7,7 +7,7 @@ import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.ourcraft.network.*;
 import dev.hilligans.ourcraft.network.packet.server.SOpenContainer;
 
-public class COpenScreen extends PacketBaseNew<IServerPacketHandler> {
+public class COpenScreen extends PacketBase<IServerPacketHandler> {
 
     boolean containerScreen;
     short id;

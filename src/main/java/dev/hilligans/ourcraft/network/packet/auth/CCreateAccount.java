@@ -2,10 +2,11 @@ package dev.hilligans.ourcraft.network.packet.auth;
 
 
 import dev.hilligans.ourcraft.network.IPacketByteArray;
+import dev.hilligans.ourcraft.network.IPacketHandler;
 import dev.hilligans.ourcraft.network.PacketBase;
 
 
-public class CCreateAccount extends PacketBase {
+public class CCreateAccount extends PacketBase<IPacketHandler> {
 
     String username;
     String password;
@@ -37,7 +38,7 @@ public class CCreateAccount extends PacketBase {
     public void decode(IPacketByteArray packetData) {}
 
     @Override
-    public void handle() {}
+    public void handle(IPacketHandler iPacketHandler) {
 
-
+    }
 }

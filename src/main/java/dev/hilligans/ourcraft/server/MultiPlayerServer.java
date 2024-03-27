@@ -7,15 +7,13 @@ import dev.hilligans.ourcraft.data.primitives.Tuple;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.mod.handler.events.server.MultiPlayerServerStartEvent;
+import dev.hilligans.ourcraft.network.PacketBase;
 import dev.hilligans.ourcraft.network.packet.client.CHandshakePacket;
 import dev.hilligans.ourcraft.network.packet.server.SDisconnectPacket;
-import dev.hilligans.ourcraft.network.PacketBase;
 import dev.hilligans.ourcraft.network.ServerNetwork;
 import dev.hilligans.ourcraft.network.ServerNetworkHandler;
 import dev.hilligans.ourcraft.Ourcraft;
-import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
-import dev.hilligans.ourcraft.util.ConsoleReader;
 import dev.hilligans.ourcraft.util.NamedThreadFactory;
 import dev.hilligans.ourcraft.util.Settings;
 import io.netty.channel.ChannelHandlerContext;
@@ -97,11 +95,11 @@ public class MultiPlayerServer implements IServer {
         return (ServerNetworkHandler) serverNetwork.networkHandler;
     }
 
-    public void sendPacket(PacketBase packetBase) {
+    public void sendPacket(PacketBase<?> packetBase) {
         getServerNetworkHandler().sendPacketInternal(packetBase);
     }
 
-    public void sendPacket(PacketBase packetBase, PlayerEntity playerEntity) {
+    public void sendPacket(PacketBase<?> packetBase, PlayerEntity playerEntity) {
         getServerNetworkHandler().sendPacket(packetBase,playerEntity);
     }
 

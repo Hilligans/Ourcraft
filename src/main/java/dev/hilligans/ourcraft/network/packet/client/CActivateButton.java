@@ -6,7 +6,7 @@ import dev.hilligans.ourcraft.container.Container;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.ourcraft.network.*;
 
-public class CActivateButton extends PacketBaseNew<IServerPacketHandler> {
+public class CActivateButton extends PacketBase<IServerPacketHandler> {
 
     short button;
 

@@ -70,14 +70,14 @@ public class IntegratedServer implements IServer {
     }
 
     @Override
-    public void sendPacket(PacketBase packetBase) {
+    public void sendPacket(PacketBase<?> packetBase) {
        // PacketData packetData = new PacketData(packetBase);
        // PacketBase packet = packetData.createPacket();
        // packet.handle();
     }
 
     @Override
-    public void sendPacket(PacketBase packetBase, PlayerEntity playerEntity) {
+    public void sendPacket(PacketBase<?> packetBase, PlayerEntity playerEntity) {
         sendPacket(packetBase);
     }
 

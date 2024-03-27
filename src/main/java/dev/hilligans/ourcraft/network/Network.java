@@ -54,9 +54,9 @@ public class Network extends ChannelInitializer<SocketChannel> {
         return this;
     }
 
-    public void sendPacket(PacketBase packetBase) {}
+    public void sendPacket(PacketBase<?> packetBase) {}
 
-    public void sendPacketDirect(PacketBase packetBase) {}
+    public void sendPacketDirect(PacketBase<?> packetBase) {}
 
     public void disconnect() {
         if(networkHandler instanceof ClientNetworkHandler) {

@@ -3,7 +3,7 @@ package dev.hilligans.ourcraft.network.packet.server;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.network.*;
 
-public class SChatMessage extends PacketBaseNew<IClientPacketHandler> {
+public class SChatMessage extends PacketBase<IClientPacketHandler> {
 
     String message;
 
