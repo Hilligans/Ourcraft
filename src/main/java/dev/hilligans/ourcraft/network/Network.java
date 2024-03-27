@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.network;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.network.debug.PacketTrace;
 import dev.hilligans.ourcraft.network.debug.PacketTracePacketDecoder;
 import dev.hilligans.ourcraft.network.debug.PacketTracePacketEncoder;
@@ -18,21 +19,30 @@ public class Network extends ChannelInitializer<SocketChannel> {
     public int packetIdWidth;
     public boolean compressed;
     public boolean debug = false;
+    public GameInstance gameInstance;
 
-
-    public Network(Protocol protocol) {
-        this(protocol,protocol,2);
+    public Network(GameInstance gameInstance, Protocol protocol) {
+        this(gameInstance, protocol,protocol,2);
     }
 
-    public Network(Protocol sendProtocol, Protocol receiveProtocol, int packetIdWidth) {
-        this(sendProtocol,receiveProtocol,packetIdWidth,false);
+    public Network(GameInstance gameInstance, Protocol sendProtocol, Protocol receiveProtocol, int packetIdWidth) {
+        this(gameInstance, sendProtocol,receiveProtocol,packetIdWidth,false);
     }
 
-    public Network(Protocol sendProtocol, Protocol receiveProtocol, int packetIdWidth, boolean compressed) {
+    public Network(GameInstance gameInstance, Protocol sendProtocol, Protocol receiveProtocol, int packetIdWidth, boolean compressed) {
+        this.gameInstance = gameInstance;
         this.sendProtocol = sendProtocol;
         this.receiveProtocol = receiveProtocol;
         this.packetIdWidth = packetIdWidth;
         this.compressed = compressed;
+    }
+
+    public void setSendProtocol(String name) {
+        sendProtocol = gameInstance.PROTOCOLS.getExcept(name);
+    }
+
+    public void setReceiveProtocol(String name) {
+        receiveProtocol = gameInstance.PROTOCOLS.getExcept(name);
     }
 
     @Override

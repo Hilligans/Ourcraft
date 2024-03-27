@@ -9,6 +9,7 @@ import dev.hilligans.ourcraft.data.other.Inventory;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.ourcraft.network.IServerPacketHandler;
+import dev.hilligans.ourcraft.network.Network;
 import dev.hilligans.ourcraft.network.ServerNetworkHandler;
 import dev.hilligans.ourcraft.save.WorldLoader;
 import dev.hilligans.ourcraft.server.IServer;
@@ -235,5 +236,10 @@ public class ServerPlayerData implements IServerPacketHandler {
     @Override
     public void disconnect(String reason) {
 
+    }
+
+    @Override
+    public Network getNetwork() {
+        return serverNetworkHandler.network;
     }
 }

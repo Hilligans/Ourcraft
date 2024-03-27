@@ -23,6 +23,7 @@ import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.ourcraft.mod.handler.events.client.OpenScreenEvent;
 import dev.hilligans.ourcraft.network.ClientNetwork;
 import dev.hilligans.ourcraft.network.IClientPacketHandler;
+import dev.hilligans.ourcraft.network.Network;
 import dev.hilligans.ourcraft.network.PacketBase;
 import dev.hilligans.ourcraft.network.packet.client.CCloseScreen;
 import dev.hilligans.ourcraft.network.packet.client.CDropItem;
@@ -178,7 +179,7 @@ public class Client implements IClientPacketHandler {
         }
         if(transition) {
             Thread.startVirtualThread(() -> {
-                    network = new ClientNetwork(gameInstance.PROTOCOLS.get("ourcraft:Play")).debug(argumentContainer.getBoolean("--packetTrace", false));
+                    network = new ClientNetwork(gameInstance, gameInstance.PROTOCOLS.get("ourcraft:Play")).debug(argumentContainer.getBoolean("--packetTrace", false));
             });
             client.gameInstance.build(client.graphicsEngine, null);
             transition = false;
@@ -440,5 +441,10 @@ public class Client implements IClientPacketHandler {
     @Override
     public GameInstance getGameInstance() {
         return gameInstance;
+    }
+
+    @Override
+    public Network getNetwork() {
+        return network;
     }
 }

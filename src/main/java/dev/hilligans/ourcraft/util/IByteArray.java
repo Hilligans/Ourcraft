@@ -290,6 +290,28 @@ public interface IByteArray extends INBTTag {
         }
     }
 
+    static int varIntLength(int value) {
+        int length = 0;
+        while (true) {
+            length ++;
+            if ((value & 0xFFFFFF80) == 0) {
+                return length;
+            }
+            value >>>= 7;
+        }
+    }
+
+    static int varLongLength(long value) {
+        int length = 0;
+        while (true) {
+            length++;
+            if ((value & 0xFFFFFFFFFFFFFF80L) == 0) {
+                return length;
+            }
+            value >>>= 7;
+        }
+    }
+
     default void writeUByte(int value) {
         writeByte((byte)value);
     }
@@ -319,6 +341,12 @@ public interface IByteArray extends INBTTag {
 
     default void writeBytes(byte[] values) {
         writeVarInt(values.length);
+        for(int x = 0; x < values.length; x++) {
+            writeByte(values[x]);
+        }
+    }
+
+    default void writeBytesN(byte[] values) {
         for(int x = 0; x < values.length; x++) {
             writeByte(values[x]);
         }

@@ -29,6 +29,9 @@ public class StandardPipeline extends InstanceLoaderPipeline<StandardPipeline> {
         //load all mods
         pipeline.addStage("Locate Mods", (pipeline1, s) -> pipeline1.setModList(gameInstance.MOD_LIST.load()));
 
+        //register hooks
+        pipeline.addStage("Register Hooks", ((pipeline1, section1) -> pipeline1.getModList().foreach(modContainer -> modContainer.modClass.registerHooks(pipeline))));
+
         //load all the registries defined in each mod
         pipeline.addStage("Register Registries", (pipeline16, section) -> {
             pipeline16.getModList().foreach(container -> container.modClass.registerRegistries(registryView));

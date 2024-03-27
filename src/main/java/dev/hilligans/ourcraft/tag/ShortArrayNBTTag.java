@@ -1,5 +1,7 @@
 package dev.hilligans.ourcraft.tag;
 
+import dev.hilligans.ourcraft.util.IByteArray;
+
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -37,6 +39,19 @@ public class ShortArrayNBTTag extends NBTTag {
         byteBuf.putInt(val.length);
         for (short b : val) {
             byteBuf.putShort(b);
+        }
+    }
+
+    @Override
+    public void read(IByteArray byteArray) {
+        val = byteArray.readShorts(byteArray.readInt());
+    }
+
+    @Override
+    public void write(IByteArray byteArray) {
+        byteArray.writeInt(val.length);
+        for (short b : val) {
+            byteArray.writeShort(b);
         }
     }
 

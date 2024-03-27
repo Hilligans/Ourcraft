@@ -2,8 +2,11 @@ package dev.hilligans.ourcraft.tag;
 
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.item.ItemStack;
+import dev.hilligans.ourcraft.util.IByteArray;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -15,6 +18,8 @@ public class CompoundNBTTag extends NBTTag {
     int getSize() {
         return 0;
     }
+
+    public CompoundNBTTag() {}
 
 
     public CompoundNBTTag putTag(String id, NBTTag NBTTag) {
@@ -172,6 +177,29 @@ public class CompoundNBTTag extends NBTTag {
             tags.get(string).write(byteBuf);
         }
         byteBuf.put((byte)0);
+    }
+
+    @Override
+    public void read(IByteArray byteArray) {
+        byte tagId;
+        while((tagId = byteArray.readByte()) != 0) {
+            String string = new String(byteArray.readBytes(byteArray.readShort()), StandardCharsets.UTF_8);
+            NBTTag nbtTag = NBTTag.tags.get(tagId).get();
+            nbtTag.read(byteArray);
+            tags.put(string, nbtTag);
+        }
+    }
+
+    @Override
+    public void write(IByteArray byteArray) {
+        Collection<String> tagCollection = tags.keySet();
+        for(String string : tagCollection) {
+            byteArray.writeByte(tags.get(string).getId());
+            byteArray.writeShort((short) string.length());
+            byteArray.writeBytesN(string.getBytes(StandardCharsets.UTF_8));
+            tags.get(string).write(byteArray);
+        }
+        byteArray.writeByte((byte)0);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.network;
 
+import dev.hilligans.ourcraft.util.IByteArray;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -39,6 +40,15 @@ public class PacketByteArray implements IPacketByteArray {
             throw new RuntimeException("Unknown packet id width: " + packetWidth);
         }
         index = bytes.length - packetWidth;
+    }
+
+    public PacketByteArray(byte[] bytes) {
+        this.byteBuf = Unpooled.buffer();
+        this.byteBuf.writeBytes(bytes);
+
+        this.packetID = readVarInt();
+
+        this.index = bytes.length - IByteArray.varIntLength(packetID);
     }
 
     public PacketByteArray() {

@@ -1,5 +1,7 @@
 package dev.hilligans.ourcraft.tag;
 
+import dev.hilligans.ourcraft.util.IByteArray;
+
 import java.nio.ByteBuffer;
 
 public class FloatNBTTag extends NBTTag {
@@ -30,6 +32,16 @@ public class FloatNBTTag extends NBTTag {
     @Override
     public void write(ByteBuffer byteBuf) {
         val = byteBuf.getFloat();
+    }
+
+    @Override
+    public void read(IByteArray byteArray) {
+        val = byteArray.readFloat();
+    }
+
+    @Override
+    public void write(IByteArray byteArray) {
+        byteArray.writeFloat(val);
     }
 
     @Override

@@ -19,12 +19,12 @@ public class ServerNetwork extends Network {
     public GameInstance gameInstance;
     public IServer server;
 
-    EventLoopGroup bossGroup;
-    EventLoopGroup workerGroup;
-    ChannelFuture channelFuture;
+    public EventLoopGroup bossGroup;
+    public EventLoopGroup workerGroup;
+    public ChannelFuture channelFuture;
 
-    public ServerNetwork(Protocol protocol, IServer server) {
-        super(protocol);
+    public ServerNetwork(GameInstance gameInstance, Protocol protocol, IServer server) {
+        super(gameInstance, protocol);
         this.server = server;
     }
 

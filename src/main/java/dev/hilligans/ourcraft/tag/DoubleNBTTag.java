@@ -1,5 +1,7 @@
 package dev.hilligans.ourcraft.tag;
 
+import dev.hilligans.ourcraft.util.IByteArray;
+
 import java.nio.ByteBuffer;
 
 public class DoubleNBTTag extends NBTTag {
@@ -30,6 +32,16 @@ public class DoubleNBTTag extends NBTTag {
     @Override
     public void write(ByteBuffer byteBuf) {
         byteBuf.putDouble(val);
+    }
+
+    @Override
+    public void read(IByteArray byteArray) {
+        val = byteArray.readDouble();
+    }
+
+    @Override
+    public void write(IByteArray byteArray) {
+        byteArray.writeDouble(val);
     }
 
     @Override

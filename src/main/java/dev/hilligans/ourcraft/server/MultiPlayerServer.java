@@ -50,7 +50,7 @@ public class MultiPlayerServer implements IServer {
         playerHandler.scheduleAtFixedRate(new PlayerHandler(this), 0, 10, TimeUnit.MILLISECONDS);
        // ConsoleReader consoleReader = new ConsoleReader(this::executeCommand);
 
-        serverNetwork = new ServerNetwork(gameInstance.PROTOCOLS.get("ourcraft:Play"), this).debug(Ourcraft.getArgumentContainer().getBoolean("--packetTrace", false));
+        serverNetwork = new ServerNetwork(gameInstance, gameInstance.PROTOCOLS.get("ourcraft:Play"), this).debug(Ourcraft.getArgumentContainer().getBoolean("--packetTrace", false));
         try {
             serverNetwork.startServer(port);
         } catch (Exception e) {

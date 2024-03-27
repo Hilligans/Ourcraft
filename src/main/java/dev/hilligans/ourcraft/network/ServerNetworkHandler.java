@@ -19,6 +19,7 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@ChannelHandler.Sharable
 public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByteArray> implements IServerPacketHandler {
 
     final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
@@ -28,6 +29,7 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
 
     public ServerNetwork network;
     public static boolean debug = false;
+    public boolean ssl = true;
 
     public IServer server;
 
@@ -38,15 +40,17 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        ctx.pipeline().get(SslHandler.class).handshakeFuture().addListener(
-                new GenericFutureListener<Future<Channel>>() {
-                    @Override
-                    public void operationComplete(Future<Channel> future) throws Exception {
-                       // ctx.writeAndFlush(new PacketData(21));
-                        channels.add(ctx.channel());
-                        channelIds.add(ctx.channel().id());
-                    }
-                });
+        if(ssl) {
+            ctx.pipeline().get(SslHandler.class).handshakeFuture().addListener(
+                    new GenericFutureListener<Future<Channel>>() {
+                        @Override
+                        public void operationComplete(Future<Channel> future) throws Exception {
+                            // ctx.writeAndFlush(new PacketData(21));
+                            channels.add(ctx.channel());
+                            channelIds.add(ctx.channel().id());
+                        }
+                    });
+        }
         super.channelActive(ctx);
     }
 
@@ -113,6 +117,11 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
 
     public ChannelFuture sendPacket(PacketBase<?> packetBase, ChannelHandlerContext ctx) {
         return sendPacket(packetBase, ctx.channel());
+    }
+
+    @Override
+    public Network getNetwork() {
+        return network;
     }
 
     public static ChannelFuture sendPacket1(PacketBase<?> packetBase, ChannelHandlerContext ctx) {

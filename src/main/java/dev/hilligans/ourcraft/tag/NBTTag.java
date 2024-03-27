@@ -1,5 +1,7 @@
 package dev.hilligans.ourcraft.tag;
 
+import dev.hilligans.ourcraft.util.IByteArray;
+
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -12,6 +14,8 @@ public abstract class NBTTag {
     public abstract byte getId();
     public abstract void read(ByteBuffer byteBuf);
     public abstract void write(ByteBuffer byteBuf);
+    public abstract void read(IByteArray byteArray);
+    public abstract void write(IByteArray byteArray);
     public abstract NBTTag duplicate();
 
     public static String readString(ByteBuffer byteBuffer) {

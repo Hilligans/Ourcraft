@@ -1,5 +1,7 @@
 package dev.hilligans.ourcraft.tag;
 
+import dev.hilligans.ourcraft.util.IByteArray;
+
 import java.nio.ByteBuffer;
 
 public class FullStringNBTTag extends NBTTag {
@@ -30,6 +32,16 @@ public class FullStringNBTTag extends NBTTag {
     @Override
     public void write(ByteBuffer byteBuf) {
         writeFullString(byteBuf,val);
+    }
+
+    @Override
+    public void read(IByteArray byteArray) {
+
+    }
+
+    @Override
+    public void write(IByteArray byteArray) {
+
     }
 
     @Override

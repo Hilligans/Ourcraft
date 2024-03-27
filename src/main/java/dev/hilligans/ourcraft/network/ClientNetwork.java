@@ -17,12 +17,12 @@ public class ClientNetwork extends Network {
     public GameInstance gameInstance;
     public ArrayList<PacketBase<?>> packets = new ArrayList<>();
 
-    public ClientNetwork(Protocol protocol) {
-        super(protocol);
+    public ClientNetwork(GameInstance gameInstance, Protocol protocol) {
+        super(gameInstance, protocol);
     }
 
-    public ClientNetwork(Protocol sendProtocol, Protocol receiveProtocol, int packetIdWidth) {
-        super(sendProtocol, receiveProtocol, packetIdWidth, false);
+    public ClientNetwork(GameInstance gameInstance, Protocol sendProtocol, Protocol receiveProtocol, int packetIdWidth) {
+        super(gameInstance, sendProtocol, receiveProtocol, packetIdWidth, false);
     }
 
     public void joinServer(String ip, String port, Client client) throws Exception {

@@ -1,5 +1,7 @@
 package dev.hilligans.ourcraft.tag;
 
+import dev.hilligans.ourcraft.util.IByteArray;
+
 import java.nio.ByteBuffer;
 
 public class ShortNBTTag extends NBTTag {
@@ -30,6 +32,16 @@ public class ShortNBTTag extends NBTTag {
     @Override
     public void write(ByteBuffer byteBuf) {
         byteBuf.putShort(val);
+    }
+
+    @Override
+    public void read(IByteArray byteArray) {
+        val = byteArray.readShort();
+    }
+
+    @Override
+    public void write(IByteArray byteArray) {
+        byteArray.writeShort(val);
     }
 
     @Override
