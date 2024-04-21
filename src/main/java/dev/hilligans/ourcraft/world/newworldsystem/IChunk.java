@@ -102,6 +102,8 @@ public interface IChunk extends IBoundingBox {
 
     int getSubChunkCount();
 
+    ISubChunk getSubChunkWidthIndex(int index);
+
     void forEach(Consumer<ISubChunk> consumer);
 
     void replace(UnaryOperator<ISubChunk> replacer);

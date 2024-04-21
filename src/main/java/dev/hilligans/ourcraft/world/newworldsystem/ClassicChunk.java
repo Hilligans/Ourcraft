@@ -113,6 +113,11 @@ public class ClassicChunk implements IChunk {
     }
 
     @Override
+    public ISubChunk getSubChunkWidthIndex(int index) {
+        return chunks[index];
+    }
+
+    @Override
     public void forEach(Consumer<ISubChunk> consumer) {
         for(ISubChunk subChunk : chunks) {
             consumer.accept(subChunk);

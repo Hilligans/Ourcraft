@@ -22,7 +22,7 @@ import java.util.HashMap;
 @ChannelHandler.Sharable
 public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByteArray> implements IServerPacketHandler {
 
-    final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    public final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     public ArrayList<ChannelId> channelIds = new ArrayList<>();
     public HashMap<ChannelId, ServerPlayerData> mappedPlayerData = new HashMap<>();
     public HashMap<String, ServerPlayerData> nameToPlayerData = new HashMap<>();

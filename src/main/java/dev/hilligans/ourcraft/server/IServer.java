@@ -19,6 +19,8 @@ public interface IServer {
 
     void setTime(long time);
 
+    void tick();
+
     Object executeCommand(String command);
 
     ServerNetworkHandler getServerNetworkHandler();
@@ -26,6 +28,8 @@ public interface IServer {
     void sendPacket(PacketBase<?> packetBase);
 
     void sendPacket(PacketBase<?> packetBase, PlayerEntity playerEntity);
+
+    void sendPacket(PacketBase<?> packetBase, ServerPlayerData playerData);
 
     GameInstance getGameInstance();
 
@@ -41,6 +45,7 @@ public interface IServer {
         public void run() {
             server.setTime(server.getTime() + 1);
             Ourcraft.GAME_INSTANCE.EVENT_BUS.postEvent(new ServerTickEvent(server));
+            server.tick();
            // gameProcessor.tickServer(server);
             //for(World world : server.getWorlds()) {
             //    world.tick();

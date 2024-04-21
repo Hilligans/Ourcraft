@@ -22,8 +22,8 @@ public class LitematicaSchematicLoader extends ResourceLoader<Schematic> {
             }
 
             CompoundNBTTag metaData = compoundTag.getCompoundTag("Metadata");
-            Schematic schematic = new Schematic(metaData.getString("Name").getVal());
-            schematic.withAuthor(metaData.getString("Author").val);
+            Schematic schematic = new Schematic(metaData.getString("Name"));
+            schematic.withAuthor(metaData.getString("Author"));
 
             CompoundNBTTag regions = compoundTag.getCompoundTag("Regions");
 

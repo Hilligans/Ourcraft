@@ -48,7 +48,7 @@ public class Level {
     public void read(CompoundNBTTag compoundTag) {
         CompoundNBTTag blocks = compoundTag.getCompoundTag("blocks");
         for(String string : blocks.tags.keySet()) {
-            long val = blocks.getLong(string).val;
+            long val = blocks.getLong(string);
             this.blocks.put(string,new Tuple<>((int)(val >> 32),(int)val));
             this.idToNames.put((int) (val >> 32),string);
         }

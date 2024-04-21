@@ -40,6 +40,7 @@ import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 import dev.hilligans.ourcraft.save.WorldLoader;
 import dev.hilligans.ourcraft.server.MultiPlayerServer;
 import dev.hilligans.ourcraft.util.Settings;
+import io.netty.channel.ChannelFuture;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL11;
 
@@ -401,9 +402,9 @@ public class Client implements IClientPacketHandler {
     }
 
     public CompoundNBTTag readUsernameAndPassword(CompoundNBTTag tag) {
-         playerData.userName = tag.getFullString("username").val;
-         playerData.login_token = tag.getFullString("loginToken").val;
-         playerData.email = tag.getFullString("email").val;
+         playerData.userName = tag.getFullStringTag("username").val;
+         playerData.login_token = tag.getFullStringTag("loginToken").val;
+         playerData.email = tag.getFullStringTag("email").val;
          return tag;
     }
 

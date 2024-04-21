@@ -57,6 +57,11 @@ public class IntegratedServer implements IServer {
         this.time = time;
     }
 
+    @Override
+    public void tick() {
+
+    }
+
     public Object executeCommand(String command) {
         if(!command.startsWith("/")) {
             command = "/" + command;
@@ -78,6 +83,11 @@ public class IntegratedServer implements IServer {
 
     @Override
     public void sendPacket(PacketBase<?> packetBase, PlayerEntity playerEntity) {
+        sendPacket(packetBase);
+    }
+
+    @Override
+    public void sendPacket(PacketBase<?> packetBase, ServerPlayerData playerData) {
         sendPacket(packetBase);
     }
 

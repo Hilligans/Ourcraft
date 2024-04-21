@@ -17,6 +17,8 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
     public Class<?> classType;
     public String registryType;
 
+    public String owner;
+
     public boolean mapping = true;
 
     public Registry(GameInstance gameInstance, Class<?> classType, String registryType) {
@@ -69,7 +71,7 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
             registry.forEach(o -> {
                 Registry<?> r = (Registry<?>) o;
 
-                Registry<?> myReg = (Registry<?>) computeIfAbsent(r.getIdentifierName(), s -> (T) new Registry<>(gameInstance, r.classType, r.getResourceName()));
+                Registry<?> myReg = (Registry<?>) computeIfAbsent(r.getIdentifierName(), s -> (T) new Registry<>(gameInstance, r.classType, r.getResourceName()).assignOwner(r.owner));
                 myReg.putFrom(r);
             });
         } else {
@@ -79,6 +81,7 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
 
     public Registry<T> duplicate() {
         Registry<T> registry = new Registry<>(gameInstance, classType, registryType);
+        registry.owner = this.owner;
         registry.putFrom(this);
         return registry;
     }
@@ -205,6 +208,11 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
         return ELEMENTS.size();
     }
 
+    public Registry<T> assignOwner(String owner) {
+        this.owner = owner;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Registry{" +
@@ -220,7 +228,7 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
 
     @Override
     public String getResourceOwner() {
-        return "ourcraft";
+        return owner;
     }
 
     @Override

@@ -27,9 +27,9 @@ public class EntityPosition implements IPosition {
         chunkY = tag.getInt("cy");
         chunkZ = tag.getInt("cz");
 
-        x = tag.getFloat("x").val;
-        y = tag.getFloat("y").val;
-        z = tag.getFloat("z").val;
+        x = tag.getFloat("x");
+        y = tag.getFloat("y");
+        z = tag.getFloat("z");
 
         int val = tag.getInt("w");
         chunkWidth = (short) (val);

@@ -83,6 +83,11 @@ public class MultiPlayerServer implements IServer {
         this.time = time;
     }
 
+    @Override
+    public void tick() {
+
+    }
+
     public Object executeCommand(String command) {
         if(!command.startsWith("/")) {
             command = "/" + command;
@@ -101,6 +106,11 @@ public class MultiPlayerServer implements IServer {
 
     public void sendPacket(PacketBase<?> packetBase, PlayerEntity playerEntity) {
         getServerNetworkHandler().sendPacket(packetBase,playerEntity);
+    }
+
+    @Override
+    public void sendPacket(PacketBase<?> packetBase, ServerPlayerData playerData) {
+        getServerNetworkHandler().sendPacket(packetBase, playerData.getChannelId());
     }
 
     @Override

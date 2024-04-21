@@ -6,6 +6,7 @@ import dev.hilligans.ourcraft.container.Slot;
 import dev.hilligans.ourcraft.container.containers.InventoryContainer;
 import dev.hilligans.ourcraft.data.UUID;
 import dev.hilligans.ourcraft.data.other.Inventory;
+import dev.hilligans.ourcraft.entity.IPlayerEntity;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.ourcraft.network.IServerPacketHandler;
@@ -19,11 +20,17 @@ import dev.hilligans.ourcraft.util.Settings;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
 import io.netty.channel.ChannelId;
 
+import java.util.HashMap;
+
 public class ServerPlayerData implements IServerPacketHandler {
 
     IServer server;
 
+    public HashMap<String, Object> arbDataMap = new HashMap<>();
+
     public PlayerEntity playerEntity;
+    public IPlayerEntity entity;
+
     public ItemStack heldStack = ItemStack.emptyStack();
     public Container openContainer;
     public Inventory playerInventory;
@@ -53,6 +60,10 @@ public class ServerPlayerData implements IServerPacketHandler {
         playerInventory.setItem(3,new ItemStack(gameInstance.getItem("stair"), (byte)63));
         playerInventory.setItem(4,new ItemStack(gameInstance.getItem("grass_plant"), (byte)63));
         playerInventory.setItem(5,new ItemStack(gameInstance.getItem("blue"),(byte)63));
+    }
+
+    public ServerPlayerData(GameInstance gameInstance, String name) {
+        this.playerName = name;
     }
 
     public ServerPlayerData(PlayerEntity playerEntity, String id, CompoundNBTTag tag) {
@@ -123,8 +134,8 @@ public class ServerPlayerData implements IServerPacketHandler {
             }
             if (playerEntity != null) {
                 playerEntity.position = new EntityPosition(tag);
-                playerEntity.pitch = tag.getFloat("pitch").val;
-                playerEntity.yaw = tag.getFloat("yaw").val;
+                playerEntity.pitch = tag.getFloat("pitch");
+                playerEntity.yaw = tag.getFloat("yaw");
             }
         } catch (Exception ignored) {}
     }

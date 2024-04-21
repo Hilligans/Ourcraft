@@ -84,36 +84,73 @@ public class CompoundNBTTag extends NBTTag {
         return tags.get(name);
     }
 
+    public ByteNBTTag getByteTag(String name) {
+        return (ByteNBTTag) getTag(name);
+    }
+
+    public ShortNBTTag getShortTag(String name) {
+        return (ShortNBTTag) getTag(name);
+    }
+
     public IntegerNBTTag getIntTag(String name) {
         return (IntegerNBTTag)getTag(name);
     }
 
-    public StringNBTTag getString(String id) {
+    public StringNBTTag getStringTag(String id) {
         return (StringNBTTag)getTag(id);
     }
 
-    public DoubleNBTTag getDouble(String id) {
+    public DoubleNBTTag getDoubleTag(String id) {
         return (DoubleNBTTag)getTag(id);
     }
 
-    public FloatNBTTag getFloat(String id) {
+    public FloatNBTTag getFloatTag(String id) {
         return (FloatNBTTag)getTag(id);
     }
 
-    public LongNBTTag getLong(String id) {
+    public LongNBTTag getLongTag(String id) {
         return (LongNBTTag)getTag(id);
     }
 
-    public boolean getBoolean(String id) {
+    public boolean getBooleanTag(String id) {
         return ((ByteNBTTag)getTag(id)).val == 1;
     }
 
-    public FullStringNBTTag getFullString(String id) {
+    public FullStringNBTTag getFullStringTag(String id) {
         return (FullStringNBTTag)getTag(id);
+    }
+
+
+    public byte getByte(String name) {
+        return getByteTag(name).val;
+    }
+
+    public short getShort(String name) {
+        return getShortTag(name).val;
     }
 
     public int getInt(String name) {
         return ((IntegerNBTTag)getTag(name)).val;
+    }
+
+    public long getLong(String name) {
+        return getLongTag(name).val;
+    }
+
+    public String getString(String name) {
+        return getStringTag(name).val;
+    }
+
+    public float getFloat(String name) {
+        return getFloatTag(name).val;
+    }
+
+    public double getDouble(String name) {
+        return getDoubleTag(name).val;
+    }
+
+    public boolean getBoolean(String name) {
+        return getBooleanTag(name);
     }
 
     public CompoundNBTTag getCompoundTag(String name) {

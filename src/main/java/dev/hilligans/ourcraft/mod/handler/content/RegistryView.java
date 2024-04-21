@@ -8,9 +8,11 @@ import java.util.function.Supplier;
 public class RegistryView {
 
     public GameInstance gameInstance;
+    public String owner;
 
-    public RegistryView(GameInstance gameInstance) {
+    public RegistryView(GameInstance gameInstance, String owner) {
         this.gameInstance = gameInstance;
+        this.owner = owner;
     }
 
     public GameInstance getGameInstance() {
@@ -18,12 +20,12 @@ public class RegistryView {
     }
 
     public void registerRegistry(Supplier<Registry<?>> registry) {
-        gameInstance.REGISTRIES.put(registry.get());
+        gameInstance.REGISTRIES.put(registry.get().assignOwner(owner));
     }
 
     public void registerRegistry(Supplier<Registry<?>>... registries) {
         for(Supplier<Registry<?>> registrySupplier : registries) {
-            gameInstance.REGISTRIES.put(registrySupplier.get());
+            gameInstance.REGISTRIES.put(registrySupplier.get().assignOwner(owner));
         }
     }
 }

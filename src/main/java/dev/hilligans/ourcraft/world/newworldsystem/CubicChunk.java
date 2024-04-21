@@ -203,6 +203,11 @@ public class CubicChunk implements IAtomicChunk {
     }
 
     @Override
+    public ISubChunk getSubChunkWidthIndex(int index) {
+        return subChunks[index];
+    }
+
+    @Override
     public void forEach(Consumer<ISubChunk> consumer) {
         if(subChunks != null) {
             for(ISubChunk subChunk : subChunks) {

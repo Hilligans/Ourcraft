@@ -23,7 +23,7 @@ public class StandardPipeline extends InstanceLoaderPipeline<StandardPipeline> {
     public static InstanceLoaderPipeline get(GameInstance gameInstance) {
 
         StandardPipeline pipeline = new StandardPipeline(gameInstance);
-        RegistryView registryView = new RegistryView(gameInstance);
+        //RegistryView registryView = new RegistryView(gameInstance);
 
 
         //load all mods
@@ -34,7 +34,7 @@ public class StandardPipeline extends InstanceLoaderPipeline<StandardPipeline> {
 
         //load all the registries defined in each mod
         pipeline.addStage("Register Registries", (pipeline16, section) -> {
-            pipeline16.getModList().foreach(container -> container.modClass.registerRegistries(registryView));
+            pipeline16.getModList().foreach(container -> container.modClass.registerRegistries(new RegistryView(gameInstance, container.getModID())));
             pipeline16.getGameInstance().copyRegistries();
         });
 
