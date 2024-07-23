@@ -31,6 +31,8 @@ import dev.hilligans.ourcraft.command.CommandHandler;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
 import dev.hilligans.ourcraft.data.other.BlockProperties;
 import dev.hilligans.ourcraft.data.primitives.Tuple;
+import dev.hilligans.ourcraft.entity.Entities;
+import dev.hilligans.ourcraft.entity.EntityType;
 import dev.hilligans.ourcraft.item.Items;
 import dev.hilligans.ourcraft.item.data.ToolLevel;
 import dev.hilligans.ourcraft.mod.handler.ModClass;
@@ -135,7 +137,8 @@ public class Ourcraft extends ModClass {
                 new Tuple(Texture.class, "texture"),
                 new Tuple(ShaderSource.class, "shader"),
                 new Tuple(ILayoutEngine.class, "layout_engine"),
-                new Tuple(SoundCategory.class, "sound_category")
+                new Tuple(SoundCategory.class, "sound_category"),
+                new Tuple(EntityType.class, "entity_type")
         };
 
         for(Tuple<Class<? extends IRegistryElement>, String> element : elements) {
@@ -389,6 +392,9 @@ public class Ourcraft extends ModClass {
         modContent.registerBlock(Blocks.RED);
         modContent.registerBlock(Blocks.WATER);
         modContent.registerBiome(Biomes.PLAINS,Biomes.SANDY_HILLS,Biomes.DESERT,Biomes.FOREST);
+
+        modContent.registerEntityType(Entities.PLAYER);
+
 
         for(int x = 0; x < 30000; x++) {
             //modContent.registerBlock(new Block("x" + x, new BlockProperties()));

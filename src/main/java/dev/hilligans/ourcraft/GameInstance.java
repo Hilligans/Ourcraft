@@ -20,7 +20,7 @@ import dev.hilligans.ourcraft.client.rendering.graphics.api.ILayoutEngine;
 import dev.hilligans.ourcraft.command.CommandHandler;
 import dev.hilligans.ourcraft.container.Container;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
-import dev.hilligans.ourcraft.entity.Entity;
+import dev.hilligans.ourcraft.entity.EntityType;
 import dev.hilligans.ourcraft.item.data.ToolLevel;
 import dev.hilligans.ourcraft.item.data.ToolLevelList;
 import dev.hilligans.ourcraft.item.Item;
@@ -147,6 +147,7 @@ public class GameInstance {
     public Registry<Texture> TEXTURES;
     public Registry<ShaderSource> SHADERS;
     public Registry<ILayoutEngine<?>> LAYOUT_ENGINES;
+    public Registry<EntityType> ENTITY_TYPES;
 
     public ArrayList<IBlockState> BLOCK_STATES;
 
@@ -177,6 +178,7 @@ public class GameInstance {
         SHADERS = (Registry<ShaderSource>) REGISTRIES.getExcept("ourcraft:shader");
         LAYOUT_ENGINES = (Registry<ILayoutEngine<?>>) REGISTRIES.getExcept("ourcraft:layout_engine");
         SOUND_CATEGORIES = (Registry<SoundCategory>) REGISTRIES.getExcept("ourcraft:sound_category");
+        ENTITY_TYPES = (Registry<EntityType>) REGISTRIES.getExcept("ourcraft:entity_type");
     }
 
     public void finishBuild() {

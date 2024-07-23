@@ -128,7 +128,7 @@ public abstract class Entity {
         packetData.writeInt(id);
     }
 
-    public abstract void render(MatrixStack matrixStack);
+    public void render(MatrixStack matrixStack) {}
 
     public void tick() {}
 

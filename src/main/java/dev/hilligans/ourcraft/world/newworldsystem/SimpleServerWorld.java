@@ -25,17 +25,18 @@ public class SimpleServerWorld extends SimpleWorld implements IServerWorldBase, 
 
     public IChunk getGeneratedChunk(int xx, int zz) {
         Random random = new Random();
-        IChunk chunk = new ClassicChunk(this, 256, xx, zz);
+        IChunk chunk = new ClassicChunk(this, 16, xx, zz);
         for(int x = 0; x < 16; x++) {
             for(int y = 0; y < chunk.getHeight(); y++) {
                 for(int z = 0; z < 16; z++) {
                     if(y < 60) {
-                        chunk.setBlockState(x, y, z, Blocks.STONE.getDefaultState());
+                       // chunk.setBlockState(x, y, z, Blocks.STONE.getDefaultState());
                     } else {
+                       // chunk.setBlockState(x, y, z, Blocks.AIR.getDefaultState());
                         if(y % 2 == 0) {
-                            chunk.setBlockState(x, y, z, Blocks.RED.getDefaultState());
+                         //   chunk.setBlockState(x, y, z, Blocks.RED.getDefaultState());
                         } else {
-                            chunk.setBlockState(x, y, z, Blocks.AIR.getDefaultState());
+                          //  chunk.setBlockState(x, y, z, Blocks.AIR.getDefaultState());
                         }
                     }
 
@@ -53,18 +54,13 @@ public class SimpleServerWorld extends SimpleWorld implements IServerWorldBase, 
     }
 
     @Override
-    public IChunk getChunk(long blockX, long blockY, long blockZ) {
+    public IChunk getChunkNonNull(long blockX, long blockY, long blockZ) {
         IChunk chunk = super.getChunk(blockX, blockY, blockZ);
         if(chunk == null) {
             chunk = getGeneratedChunk((int) (blockX >> 4), (int) (blockZ >> 4));
             setChunk(blockX, blockY, blockZ, chunk);
         }
         return chunk;
-    }
-
-    @Override
-    public IChunk getChunkNonNull(long blockX, long blockY, long blockZ) {
-        return super.getChunkNonNull(blockX, blockY, blockZ);
     }
 
     @Override

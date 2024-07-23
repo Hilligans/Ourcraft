@@ -1,6 +1,10 @@
 package dev.hilligans.ourcraft.entity;
 
+import dev.hilligans.ourcraft.data.other.IInventory;
+import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.ourcraft.network.IPacketByteArray;
+
+import java.util.List;
 
 public abstract class LivingEntity extends Entity {
 
@@ -22,10 +26,12 @@ public abstract class LivingEntity extends Entity {
         super(packetData);
     }
 
+    public List<ItemStack> getOnDeathLoot() {
+        return null;
+    }
+
     public void hitGround(float vel) {
         float amount = (int)(vel * 10);
         health -= amount;
     }
-
-
 }

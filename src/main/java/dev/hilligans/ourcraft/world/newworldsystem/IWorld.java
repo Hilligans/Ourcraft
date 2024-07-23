@@ -5,10 +5,12 @@ import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.ChunkPos;
+import dev.hilligans.ourcraft.data.other.IBoundingBox;
 import dev.hilligans.ourcraft.entity.Entity;
 import dev.hilligans.ourcraft.util.Immutable;
 import dev.hilligans.ourcraft.util.MathUtil;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Intersectionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
@@ -118,6 +120,14 @@ public interface IWorld {
             return null;
         }
         return state;
+    }
+
+    default IBlockState getIntersection(IBoundingBox boundingBox, float dirX, float dirY, float dirZ) {
+
+        //Intersectionf.testObOb()
+
+
+        return null;
     }
 
     Vector3f DOWN = new Vector3f(0,-1,0);

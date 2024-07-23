@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.entity;
 
+import dev.hilligans.ourcraft.data.other.IBoundingBox;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 
 public interface IEntity {
@@ -12,8 +13,9 @@ public interface IEntity {
     long getID();
     void setID(long id);
 
+    EntityType getEntityType();
 
-
+    IBoundingBox getEntityBoundingBox();
 
     float getPitch();
     float getYaw();
@@ -29,4 +31,6 @@ public interface IEntity {
     double getX();
     double getY();
     double getZ();
+
+    void tick();
 }

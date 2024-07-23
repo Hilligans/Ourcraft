@@ -14,6 +14,7 @@ import dev.hilligans.ourcraft.client.rendering.graphics.api.ILayoutEngine;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.IModel;
 import dev.hilligans.ourcraft.command.CommandHandler;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
+import dev.hilligans.ourcraft.entity.EntityType;
 import dev.hilligans.ourcraft.item.Item;
 import dev.hilligans.ourcraft.item.data.ToolLevel;
 import dev.hilligans.ourcraft.mod.handler.ModClass;
@@ -67,6 +68,7 @@ public class ModContainer {
     public Registry<Texture> textureRegistry;
     public Registry<ShaderSource> shaderSourceRegistry;
     public Registry<ILayoutEngine<?>> layoutEngineRegistry;
+    public Registry<EntityType> entityTypeRegistry;
 
     public ModContainer(Class<? extends ModClass> clazz, URLClassLoader classLoader) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         this.modClass = clazz.getConstructor().newInstance();
@@ -110,6 +112,7 @@ public class ModContainer {
         textureRegistry = (Registry<Texture>) registries.getExcept("ourcraft:texture");
         shaderSourceRegistry = (Registry<ShaderSource>) registries.getExcept("ourcraft:shader");
         layoutEngineRegistry = (Registry<ILayoutEngine<?>>) registries.getExcept("ourcraft:layout_engine");
+        entityTypeRegistry = (Registry<EntityType>) registries.getExcept("ourcraft:entity_type");
     }
 
     public String getModID() {
@@ -330,5 +333,12 @@ public class ModContainer {
         }
         layoutEngineRegistry.putAll(layoutEngines);
         //this.layoutEngines.addAll(Arrays.asList(layoutEngines));
+    }
+
+    public void registerEntityType(EntityType... entityTypes) {
+        for(EntityType entityType : entityTypes) {
+            entityType.assignOwner(this);
+        }
+        entityTypeRegistry.putAll(entityTypes);
     }
 }

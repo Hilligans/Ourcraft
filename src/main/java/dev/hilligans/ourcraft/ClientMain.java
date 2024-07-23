@@ -7,6 +7,7 @@ import dev.hilligans.ourcraft.mod.handler.pipeline.standard.StandardPipeline;
 import dev.hilligans.ourcraft.util.ArgumentContainer;
 import dev.hilligans.ourcraft.util.Side;
 import dev.hilligans.ourcraft.util.registry.Registry;
+import org.joml.Intersectionf;
 
 import java.io.IOException;
 import java.util.concurrent.Semaphore;
@@ -22,7 +23,14 @@ public class ClientMain {
 
     public static long startTime;
     public static void main(String[] args) throws IOException {
-        startTime = System.currentTimeMillis();
+        for(int y = 0; y < 2; y++) {
+            startTime = System.currentTimeMillis();
+            for (int x = 0; x < 1000000; x++) {
+                Intersectionf.testObOb(x, x, x, 1, 1, x, 1, 1, y, 1, 1, 2 * x, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+            }
+            System.out.println("Time to 1M:" + (System.currentTimeMillis() - startTime));
+        }
+
         argumentContainer = new ArgumentContainer(args);
 
         System.out.println(STR."Starting client with PID \{ProcessHandle.current().pid()}");

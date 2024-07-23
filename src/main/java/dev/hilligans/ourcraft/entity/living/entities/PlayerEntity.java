@@ -1,13 +1,9 @@
 package dev.hilligans.ourcraft.entity.living.entities;
 
-import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.world.managers.VAOManager;
 import dev.hilligans.ourcraft.data.other.BoundingBox;
 import dev.hilligans.ourcraft.data.other.Inventory;
-import dev.hilligans.ourcraft.entity.entities.ItemEntity;
-import dev.hilligans.ourcraft.entity.Entity;
 import dev.hilligans.ourcraft.entity.LivingEntity;
-import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.ourcraft.network.IPacketByteArray;
 import dev.hilligans.ourcraft.network.packet.server.SUpdateInventory;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
@@ -15,14 +11,6 @@ import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.util.Settings;
 import dev.hilligans.ourcraft.util.Vector5f;
 import org.joml.Vector3d;
-import org.joml.Vector3f;
-import org.lwjgl.opengl.GL30;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 
 public class PlayerEntity extends LivingEntity {
 
@@ -35,7 +23,6 @@ public class PlayerEntity extends LivingEntity {
 
     public BoundingBox itemPickupBox = new BoundingBox(-1.3f,-1.9f,-1.3f,1.3f,0.0f,1.3f);
     public ServerPlayerData serverPlayerData;
-
 
     public PlayerEntity(float x, float y, float z,int id) {
         super(x,y,z,id,20);
@@ -91,53 +78,11 @@ public class PlayerEntity extends LivingEntity {
     }
 
     @Override
-    public void render(MatrixStack matrixStack) {
-        if(textureId == -1) {
-            createMesh();
-        }
-        GL30.glBindTexture(GL_TEXTURE_2D,imageId);
-        GL30.glBindVertexArray(textureId);
-
-        matrixStack.translateMinusOffset((float) getX(), (float) getY(), (float) getZ());
-        matrixStack.rotate(-yaw,new Vector3f(0,1,0));
-        matrixStack.rotate(pitch,new Vector3f(0,0,1));
-
-        //TODO fix
-        //matrixStack.applyTransformation();
-        //glDrawElements(GL_TRIANGLES, verticesCount,GL_UNSIGNED_INT,0);
-    }
-
-    @Override
     public void destroy() {
         if(id != -1) {
             VAOManager.destroyBuffer(id);
         }
         super.destroy();
-    }
-
-    private void createMesh() {
-        ArrayList<Vector5f> vector5fs = new ArrayList<>();
-        ArrayList<Integer> indices = new ArrayList<>();
-
-        for(int x = 0; x < 6; x++) {
-            vector5fs.addAll(Arrays.asList(getVertices(x)));
-            indices.addAll(Arrays.asList(getIndices(x,x * 4)));
-        }
-
-        float[] wholeMesh = new float[vector5fs.size() * 5];
-        int[] wholeIndices = new int[indices.size()];
-        int x = 0;
-        for(Vector5f vector5f : vector5fs) {
-            vector5f.addToList(wholeMesh,x * 5);
-            x++;
-        }
-        x = 0;
-        for(Integer a : indices) {
-            wholeIndices[x] = a;
-            x++;
-        }
-        verticesCount = wholeMesh.length;
-        textureId = VAOManager.createVAO(wholeMesh,wholeIndices);
     }
 
     private Vector5f[] getVertices(int side) {
