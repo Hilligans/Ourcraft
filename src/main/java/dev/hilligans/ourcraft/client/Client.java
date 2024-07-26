@@ -21,10 +21,7 @@ import dev.hilligans.ourcraft.data.other.PlayerList;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.ourcraft.mod.handler.events.client.OpenScreenEvent;
-import dev.hilligans.ourcraft.network.ClientNetwork;
-import dev.hilligans.ourcraft.network.IClientPacketHandler;
-import dev.hilligans.ourcraft.network.Network;
-import dev.hilligans.ourcraft.network.PacketBase;
+import dev.hilligans.ourcraft.network.*;
 import dev.hilligans.ourcraft.network.packet.client.CCloseScreen;
 import dev.hilligans.ourcraft.network.packet.client.CDropItem;
 import dev.hilligans.ourcraft.network.packet.client.COpenScreen;
@@ -41,6 +38,8 @@ import dev.hilligans.ourcraft.save.WorldLoader;
 import dev.hilligans.ourcraft.server.MultiPlayerServer;
 import dev.hilligans.ourcraft.util.Settings;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelId;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL11;
 
@@ -444,8 +443,12 @@ public class Client implements IClientPacketHandler {
         return gameInstance;
     }
 
-    @Override
     public Network getNetwork() {
         return network;
+    }
+
+    @Override
+    public Protocol getSendProtocol(ChannelId channelId) {
+        return null;
     }
 }

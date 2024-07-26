@@ -18,24 +18,29 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 @ChannelHandler.Sharable
 public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByteArray> implements IServerPacketHandler {
 
     public final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     public ArrayList<ChannelId> channelIds = new ArrayList<>();
-    public HashMap<ChannelId, ServerPlayerData> mappedPlayerData = new HashMap<>();
-    public HashMap<String, ServerPlayerData> nameToPlayerData = new HashMap<>();
+    public ConcurrentHashMap<ChannelId, ServerPlayerData> mappedPlayerData = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<String, ServerPlayerData> nameToPlayerData = new ConcurrentHashMap<>();
 
     public ServerNetwork network;
     public static boolean debug = false;
     public boolean ssl = true;
 
     public IServer server;
+    public Protocol defaultReceiveProtocol;
+    public Protocol defaultSendProtocol;
 
-    public ServerNetworkHandler(ServerNetwork network, IServer server) {
+    public ServerNetworkHandler(ServerNetwork network, IServer server, Protocol defaultSendProtocol, Protocol defaultReceiveProtocol) {
         this.network = network;
         this.server = server;
+        this.defaultSendProtocol = defaultSendProtocol;
+        this.defaultReceiveProtocol = defaultReceiveProtocol;
     }
 
     @Override
@@ -64,6 +69,7 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
             sendPacketInternal(new SSendPlayerList(serverPlayerData.getPlayerName(), (int) serverPlayerData.getPlayerID().l1,false));
             sendPacketInternal(new SChatMessage(serverPlayerData.getPlayerName() + " has left the game"));
         }
+        channels.remove(ctx.channel());
        // mappedChannels.remove(id);
         channelIds.remove(ctx.channel().id());
         super.channelInactive(ctx);
@@ -71,22 +77,18 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, IPacketByteArray msg) throws Exception {
-        PacketBase<?> packetBase = msg.createPacket(network.receiveProtocol);
-        if(!(packetBase instanceof CHandshakePacket)) {
-            if(mappedPlayerData.get(ctx.channel().id()) == null) {
+        ServerPlayerData serverPlayerData = mappedPlayerData.get(ctx.channel().id());
+        PacketBase<?> packetBase;
+        if(serverPlayerData == null) {
+            packetBase = msg.createPacket(defaultReceiveProtocol);
+            if(!(packetBase instanceof CHandshakePacket)) {
                 ctx.close();
                 return;
             }
-        }
-        try {
-            ServerPlayerData serverPlayerData = mappedPlayerData.get(ctx.channel().id());
-            if(serverPlayerData == null) {
-                packetBase.handle(this);
-            } else  {
-                packetBase.handle(serverPlayerData);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            packetBase.handle(this);
+        } else {
+            packetBase = msg.createPacket(serverPlayerData.getReceiveProtocol());
+            packetBase.handle(serverPlayerData);
         }
     }
 
@@ -120,8 +122,13 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
     }
 
     @Override
-    public Network getNetwork() {
-        return network;
+    public Protocol getSendProtocol(ChannelId channelId) {
+        ServerPlayerData serverPlayerData = mappedPlayerData.get(channelId);
+        if(serverPlayerData == null) {
+            return this.defaultSendProtocol;
+        } else {
+            return serverPlayerData.getSendProtocol();
+        }
     }
 
     public static ChannelFuture sendPacket1(PacketBase<?> packetBase, ChannelHandlerContext ctx) {

@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.command.executors.ConsoleExecutor;
 import dev.hilligans.ourcraft.command.Commands;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.ourcraft.data.primitives.Tuple;
+import dev.hilligans.ourcraft.entity.IPlayerEntity;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.mod.handler.events.server.MultiPlayerServerStartEvent;
@@ -16,6 +17,7 @@ import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
 import dev.hilligans.ourcraft.util.NamedThreadFactory;
 import dev.hilligans.ourcraft.util.Settings;
+import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 import io.netty.channel.ChannelHandlerContext;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
@@ -23,6 +25,7 @@ import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class MultiPlayerServer implements IServer {
 
@@ -36,6 +39,8 @@ public class MultiPlayerServer implements IServer {
     public boolean running = true;
     public ScheduledExecutorService tick;
     public ScheduledExecutorService playerHandler;
+
+    public int renderDistance = 32 * 4;
 
     public MultiPlayerServer(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
@@ -98,6 +103,11 @@ public class MultiPlayerServer implements IServer {
     @Override
     public ServerNetworkHandler getServerNetworkHandler() {
         return (ServerNetworkHandler) serverNetwork.networkHandler;
+    }
+
+    @Override
+    public void sendPacketToAllVisible(PacketBase<?> packet, long x, long y, long z, IWorld serverWorld) {
+        serverWorld.forEachPlayerInRange(x, y, z, renderDistance, iPlayerEntity -> sendPacket(packet, iPlayerEntity.getPlayerData()));
     }
 
     public void sendPacket(PacketBase<?> packetBase) {

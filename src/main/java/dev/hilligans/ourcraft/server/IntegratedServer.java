@@ -9,6 +9,7 @@ import dev.hilligans.ourcraft.network.PacketBase;
 import dev.hilligans.ourcraft.network.ServerNetworkHandler;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
 import dev.hilligans.ourcraft.util.ConsoleReader;
+import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -72,6 +73,11 @@ public class IntegratedServer implements IServer {
     @Override
     public ServerNetworkHandler getServerNetworkHandler() {
         return null;
+    }
+
+    @Override
+    public void sendPacketToAllVisible(PacketBase<?> packet, long x, long y, long z, IWorld serverWorld) {
+
     }
 
     @Override

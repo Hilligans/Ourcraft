@@ -9,20 +9,20 @@ import dev.hilligans.ourcraft.data.other.Inventory;
 import dev.hilligans.ourcraft.entity.IPlayerEntity;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.item.ItemStack;
-import dev.hilligans.ourcraft.network.IServerPacketHandler;
-import dev.hilligans.ourcraft.network.Network;
-import dev.hilligans.ourcraft.network.ServerNetworkHandler;
+import dev.hilligans.ourcraft.network.*;
 import dev.hilligans.ourcraft.save.WorldLoader;
 import dev.hilligans.ourcraft.server.IServer;
 import dev.hilligans.ourcraft.tag.CompoundNBTTag;
 import dev.hilligans.ourcraft.util.EntityPosition;
 import dev.hilligans.ourcraft.util.Settings;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelId;
 
 import java.util.HashMap;
 
-public class ServerPlayerData implements IServerPacketHandler {
+public class ServerPlayerData implements IServerPacketHandler, NetworkProfile {
 
     IServer server;
 
@@ -49,8 +49,15 @@ public class ServerPlayerData implements IServerPacketHandler {
     public UUID playerID;
     public ChannelId channelId;
 
+    GameInstance gameInstance;
+
+    public Protocol sendProtocol;
+    public Protocol receriveProtocol;
+    public Channel channel;
+
     public ServerPlayerData(GameInstance gameInstance, PlayerEntity playerEntity, String id) {
         this.playerEntity = playerEntity;
+        this.gameInstance = gameInstance;
         this.id = id;
         playerInventory = playerEntity.inventory;
         openContainer = new InventoryContainer(playerInventory).setPlayerId(playerEntity.id);
@@ -241,7 +248,7 @@ public class ServerPlayerData implements IServerPacketHandler {
 
     @Override
     public ServerNetworkHandler getServerNetworkHandler() {
-        return null;
+        return serverNetworkHandler;
     }
 
     @Override
@@ -249,8 +256,47 @@ public class ServerPlayerData implements IServerPacketHandler {
 
     }
 
-    @Override
     public Network getNetwork() {
         return serverNetworkHandler.network;
+    }
+
+    @Override
+    public void setSendProtocol(Protocol protocol) {
+        this.sendProtocol = protocol;
+    }
+
+    @Override
+    public void setReceiveProtocol(Protocol protocol) {
+        this.receriveProtocol = protocol;
+    }
+
+    @Override
+    public Protocol getSendProtocol() {
+        return sendProtocol;
+    }
+
+    @Override
+    public Protocol getReceiveProtocol() {
+        return receriveProtocol;
+    }
+
+    @Override
+    public void setChannel(Channel channel) {
+        this.channel = channel;
+    }
+
+    @Override
+    public Channel getChannel() {
+        return channel;
+    }
+
+    @Override
+    public Protocol getSendProtocol(ChannelHandlerContext ctx) {
+        return sendProtocol;
+    }
+
+    @Override
+    public Protocol getSendProtocol(ChannelId channelId) {
+        return sendProtocol;
     }
 }

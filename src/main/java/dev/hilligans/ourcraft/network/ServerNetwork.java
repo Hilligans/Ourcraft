@@ -16,7 +16,6 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
 
 public class ServerNetwork extends Network {
 
-    public GameInstance gameInstance;
     public IServer server;
 
     public EventLoopGroup bossGroup;
@@ -29,7 +28,7 @@ public class ServerNetwork extends Network {
     }
 
     public void startServer(String port) throws Exception {
-        networkHandler = new ServerNetworkHandler(this, server);
+        networkHandler = new ServerNetworkHandler(this, server, gameInstance.getExcept("ourcraft:Auth", Protocol.class), gameInstance.get("ourcraft:Auth", Protocol.class));
         ServerNetworkHandler.debug = Ourcraft.getArgumentContainer().getBoolean("--tracePacket", false);
 
         final int PORT = Integer.parseInt(System.getProperty("port", port));

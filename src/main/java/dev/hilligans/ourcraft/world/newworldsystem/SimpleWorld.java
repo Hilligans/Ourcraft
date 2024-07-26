@@ -4,8 +4,12 @@ import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.entity.Entity;
+import dev.hilligans.ourcraft.entity.IEntity;
+import dev.hilligans.ourcraft.entity.IPlayerEntity;
 
+import java.util.ArrayList;
 import java.util.Random;
+import java.util.function.Consumer;
 
 public class SimpleWorld implements IWorld {
 
@@ -17,6 +21,9 @@ public class SimpleWorld implements IWorld {
     public float randomTickSpeed = 3f / (16*16*16);
 
     public IThreeDChunkContainer chunkContainer;
+
+    public ArrayList<IPlayerEntity> players = new ArrayList<>();
+    public ArrayList<IEntity> entities = new ArrayList<>();
 
     public SimpleWorld(int id, String name) {
         this.worldID = id;
@@ -116,5 +123,31 @@ public class SimpleWorld implements IWorld {
     @Override
     public GameInstance getGameInstance() {
         return null;
+    }
+
+    @Override
+    public void addEntity(IEntity entity) {
+        if(entity instanceof IPlayerEntity) {
+            players.add((IPlayerEntity) entity);
+        }
+        entities.add(entity);
+    }
+
+    @Override
+    public void removeEntity(IEntity entity) {
+        entities.remove(entity);
+        if(entity instanceof IPlayerEntity) {
+            players.remove((IPlayerEntity) entity);
+        }
+    }
+
+    @Override
+    public void forEachEntity(Consumer<IEntity> consumer) {
+        entities.forEach(consumer);
+    }
+
+    @Override
+    public void forEachPlayer(Consumer<IPlayerEntity> consumer) {
+        players.forEach(consumer);
     }
 }

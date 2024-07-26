@@ -22,7 +22,7 @@ public class ClientNetwork extends Network {
     }
 
     public ClientNetwork(GameInstance gameInstance, Protocol sendProtocol, Protocol receiveProtocol, int packetIdWidth) {
-        super(gameInstance, sendProtocol, receiveProtocol, packetIdWidth, false);
+        super(gameInstance, sendProtocol, receiveProtocol, packetIdWidth);
     }
 
     public void joinServer(String ip, String port, Client client) throws Exception {
@@ -56,7 +56,7 @@ public class ClientNetwork extends Network {
     public void sendPacket(PacketBase<?> packetBase) {
        // System.out.println("Sending packet:" + packetBase.getClass());
         if(networkHandler != null && ((ClientNetworkHandler)networkHandler).enabled) {
-            packetBase.packetId = sendProtocol.packetMap.get(packetBase.getClass());
+         //   packetBase.packetId = sendProtocol.packetMap.get(packetBase.getClass());
             sendPacketDirect(packetBase);
         } else {
             packets.add(packetBase);

@@ -5,6 +5,7 @@ import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.BoundingBox;
+import dev.hilligans.ourcraft.server.IServer;
 import dev.hilligans.ourcraft.server.MultiPlayerServer;
 import dev.hilligans.ourcraft.server.concurrent.ChunkLocker;
 
@@ -14,7 +15,7 @@ import java.util.function.Consumer;
 
 public class SimpleServerWorld extends SimpleWorld implements IServerWorldBase, IMethodResult, IFeaturePlacerHelper {
 
-    public MultiPlayerServer server;
+    public IServer server;
     public BlockPos featurePlacerPosition = new BlockPos(0, 0, 0);
 
     public ConcurrentLinkedQueue<Consumer<IServerWorld>> postTickFutures = new ConcurrentLinkedQueue<>();
@@ -64,12 +65,12 @@ public class SimpleServerWorld extends SimpleWorld implements IServerWorldBase, 
     }
 
     @Override
-    public void setServer(MultiPlayerServer server) {
+    public void setServer(IServer server) {
         this.server = server;
     }
 
     @Override
-    public MultiPlayerServer getServer() {
+    public IServer getServer() {
         return server;
     }
 

@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.BoundingBox;
+import dev.hilligans.ourcraft.server.IServer;
 import dev.hilligans.ourcraft.server.MultiPlayerServer;
 import dev.hilligans.ourcraft.server.concurrent.ChunkLocker;
 import dev.hilligans.ourcraft.util.noises.PerlinNoise;
@@ -38,8 +39,8 @@ public class ServerCubicWorld extends CubicWorld implements IServerWorldBase {
     }
 
     @Override
-    public void setServer(MultiPlayerServer server) {
-        this.multiPlayerServer = server;
+    public void setServer(IServer server) {
+        this.multiPlayerServer = (MultiPlayerServer) server;
     }
 
     @Override

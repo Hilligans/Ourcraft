@@ -1,8 +1,11 @@
 package dev.hilligans.ourcraft.entity;
 
+import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
+
 public class NewPlayerEntity extends NewLivingEntity implements IPlayerEntity {
 
     public String name;
+    public ServerPlayerData playerData;
 
     public NewPlayerEntity(EntityType entityType) {
         super(entityType);
@@ -11,5 +14,10 @@ public class NewPlayerEntity extends NewLivingEntity implements IPlayerEntity {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public ServerPlayerData getPlayerData() {
+        return playerData;
     }
 }

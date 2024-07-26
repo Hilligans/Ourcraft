@@ -7,6 +7,9 @@ import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.ChunkPos;
 import dev.hilligans.ourcraft.data.other.IBoundingBox;
 import dev.hilligans.ourcraft.entity.Entity;
+import dev.hilligans.ourcraft.entity.IEntity;
+import dev.hilligans.ourcraft.entity.IPlayerEntity;
+import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.util.Immutable;
 import dev.hilligans.ourcraft.util.MathUtil;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +18,9 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.function.Consumer;
 
 public interface IWorld {
 
@@ -223,4 +228,19 @@ public interface IWorld {
         };
     }
 
+    void addEntity(IEntity entity);
+
+    void removeEntity(IEntity entity);
+
+    void forEachEntity(Consumer<IEntity> consumer);
+
+    void forEachPlayer(Consumer<IPlayerEntity> consumer);
+
+    default void forEachPlayerInRange(long x, long y, long z, int range, Consumer<IPlayerEntity> consumer) {
+        forEachPlayer((playerEntity) -> {
+           if(Math.abs(playerEntity.getX() - x) < range && Math.abs(playerEntity.getZ() - z) < range && Math.abs(playerEntity.getY() - y) < range) {
+               consumer.accept(playerEntity);
+           }
+        });
+    }
 }

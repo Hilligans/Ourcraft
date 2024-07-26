@@ -6,10 +6,12 @@ import io.netty.channel.*;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class ClientNetworkHandler extends NetworkHandler {
+public class ClientNetworkHandler extends NetworkHandler implements NetworkProfile{
 
     public ClientNetwork network;
     public ConcurrentLinkedQueue<PacketBase<?>> packets = new ConcurrentLinkedQueue<>();
+    public Protocol sendProtocol;
+    public Protocol receiveProtocol;
 
     public ClientNetworkHandler(ClientNetwork network) {
         this.network = network;
@@ -34,7 +36,7 @@ public class ClientNetworkHandler extends NetworkHandler {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, IPacketByteArray msg) throws Exception {
-        PacketBase<?> packetBase = msg.createPacket(network.receiveProtocol);
+        PacketBase<?> packetBase = msg.createPacket(receiveProtocol);
         packets.add(packetBase);
     }
 
@@ -49,5 +51,35 @@ public class ClientNetworkHandler extends NetworkHandler {
         while((packetBase = packets.poll()) != null) {
             packetBase.handle(network.client);
         }
+    }
+
+    @Override
+    public void setSendProtocol(Protocol protocol) {
+        this.sendProtocol = protocol;
+    }
+
+    @Override
+    public void setReceiveProtocol(Protocol protocol) {
+        this.receiveProtocol = protocol;
+    }
+
+    @Override
+    public Protocol getSendProtocol() {
+        return this.sendProtocol;
+    }
+
+    @Override
+    public Protocol getReceiveProtocol() {
+        return this.receiveProtocol;
+    }
+
+    @Override
+    public void setChannel(Channel channel) {
+
+    }
+
+    @Override
+    public Channel getChannel() {
+        return null;
     }
 }

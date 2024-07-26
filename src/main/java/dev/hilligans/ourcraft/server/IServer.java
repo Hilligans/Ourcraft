@@ -8,6 +8,7 @@ import dev.hilligans.ourcraft.network.PacketBase;
 import dev.hilligans.ourcraft.network.ServerNetworkHandler;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
+import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 
 public interface IServer {
 
@@ -24,6 +25,8 @@ public interface IServer {
     Object executeCommand(String command);
 
     ServerNetworkHandler getServerNetworkHandler();
+
+    void sendPacketToAllVisible(PacketBase<?> packet, long x, long y, long z, IWorld serverWorld);
 
     void sendPacket(PacketBase<?> packetBase);
 

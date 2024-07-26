@@ -14,8 +14,6 @@ public class Network extends ChannelInitializer<SocketChannel> {
     public SslContext sslCtx;
     public ChannelPipeline channelPipeline;
 
-    public Protocol sendProtocol;
-    public Protocol receiveProtocol;
     public int packetIdWidth;
     public boolean compressed;
     public boolean debug = false;
@@ -23,26 +21,14 @@ public class Network extends ChannelInitializer<SocketChannel> {
 
     public Network(GameInstance gameInstance, Protocol protocol) {
         this(gameInstance, protocol,protocol,2);
+        System.out.println("yes1");
     }
 
     public Network(GameInstance gameInstance, Protocol sendProtocol, Protocol receiveProtocol, int packetIdWidth) {
-        this(gameInstance, sendProtocol,receiveProtocol,packetIdWidth,false);
-    }
-
-    public Network(GameInstance gameInstance, Protocol sendProtocol, Protocol receiveProtocol, int packetIdWidth, boolean compressed) {
+        System.out.println("Instance" + gameInstance);
         this.gameInstance = gameInstance;
-        this.sendProtocol = sendProtocol;
-        this.receiveProtocol = receiveProtocol;
         this.packetIdWidth = packetIdWidth;
-        this.compressed = compressed;
-    }
-
-    public void setSendProtocol(String name) {
-        sendProtocol = gameInstance.PROTOCOLS.getExcept(name);
-    }
-
-    public void setReceiveProtocol(String name) {
-        receiveProtocol = gameInstance.PROTOCOLS.getExcept(name);
+        this.compressed = false;
     }
 
     @Override

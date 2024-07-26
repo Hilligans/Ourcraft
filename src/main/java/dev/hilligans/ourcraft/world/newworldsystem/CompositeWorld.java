@@ -3,9 +3,12 @@ package dev.hilligans.ourcraft.world.newworldsystem;
 
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.entity.Entity;
+import dev.hilligans.ourcraft.entity.IEntity;
+import dev.hilligans.ourcraft.entity.IPlayerEntity;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 
 /**
  * the main world system used for world in world worlds
@@ -98,5 +101,25 @@ public class CompositeWorld implements IWorld {
     @Override
     public GameInstance getGameInstance() {
         return gameInstance;
+    }
+
+    @Override
+    public void addEntity(IEntity entity) {
+
+    }
+
+    @Override
+    public void removeEntity(IEntity entity) {
+
+    }
+
+    @Override
+    public void forEachEntity(Consumer<IEntity> consumer) {
+
+    }
+
+    @Override
+    public void forEachPlayer(Consumer<IPlayerEntity> consumer) {
+
     }
 }

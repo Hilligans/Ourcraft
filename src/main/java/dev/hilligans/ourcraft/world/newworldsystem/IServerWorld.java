@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.BoundingBox;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.ourcraft.network.packet.server.SSendChunkPacket;
+import dev.hilligans.ourcraft.server.IServer;
 import dev.hilligans.ourcraft.server.MultiPlayerServer;
 import dev.hilligans.ourcraft.server.concurrent.ChunkLocker;
 
@@ -13,9 +14,9 @@ public interface IServerWorld extends IWorld {
 
     BlockPos getWorldSpawn(BoundingBox boundingBox);
 
-    void setServer(MultiPlayerServer server);
+    void setServer(IServer server);
 
-    MultiPlayerServer getServer();
+    IServer getServer();
 
     void queuePostTickEvent(Consumer<IServerWorld> consumer);
 
