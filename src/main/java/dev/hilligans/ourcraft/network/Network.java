@@ -19,9 +19,10 @@ public class Network extends ChannelInitializer<SocketChannel> {
     public boolean debug = false;
     public GameInstance gameInstance;
 
+    public Protocol prot;
+
     public Network(GameInstance gameInstance, Protocol protocol) {
         this(gameInstance, protocol,protocol,2);
-        System.out.println("yes1");
     }
 
     public Network(GameInstance gameInstance, Protocol sendProtocol, Protocol receiveProtocol, int packetIdWidth) {
@@ -29,6 +30,7 @@ public class Network extends ChannelInitializer<SocketChannel> {
         this.gameInstance = gameInstance;
         this.packetIdWidth = packetIdWidth;
         this.compressed = false;
+        this.prot = sendProtocol;
     }
 
     @Override

@@ -78,6 +78,9 @@ public class CHandshakePacket extends PacketBase<IServerPacketHandler> {
         PlayerEntity playerEntity = new PlayerEntity(spawn.x,spawn.y,spawn.z,playerId);
 
         ServerPlayerData serverPlayerData = ServerPlayerData.loadOrCreatePlayer(serverPacketHandler.getGameInstance(), playerEntity,identifier);
+
+        //serverPlayerData.setReceiveProtocol(ser);
+
         playerEntity.setPlayerData(serverPlayerData);
         serverPlayerData.setServer(serverPacketHandler.getServer()).setNetworkHandler(serverPacketHandler.getServerNetworkHandler()).setName(name);
         serverPlayerData.setPlayerID(new UUID(playerId, 0)).setChannelID(ctx.channel().id());

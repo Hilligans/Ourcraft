@@ -37,7 +37,8 @@ public class ResourceLocation {
 
     @Override
     public String toString() {
-        return STR."ResourceLocation{path='\{path}\{'\''}, source=\{source == null ? sSource : source.getModID()}\{'}'}";
+        return "ResourceLocation{path='" + path + "\', source=" + (source == null ? sSource : source.getModID()) + "}";
+        //return STR."ResourceLocation{path='\{path}\{'\''}, source=\{source == null ? sSource : source.getModID()}\{'}'}";
     }
 
     public Identifier toIdentifier() {

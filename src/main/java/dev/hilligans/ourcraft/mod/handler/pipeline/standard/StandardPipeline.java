@@ -13,7 +13,9 @@ import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.util.registry.Registry;
 import dev.hilligans.ourcraft.util.sections.ISection;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class StandardPipeline extends InstanceLoaderPipeline<StandardPipeline> {
 
@@ -75,6 +77,15 @@ public class StandardPipeline extends InstanceLoaderPipeline<StandardPipeline> {
         pipeline.addStage("Post Hooks", (pipeline1, section) -> pipeline1.runPostHooks());
 
         pipeline.addStage("Finish Building", (pipeline13, section) -> {pipeline13.getGameInstance().builtSemaphore.release();});
+
+        if(gameInstance.getArgumentContainer().getBoolean("--dump-registries", false)) {
+            pipeline.addStage("Debug", ((pipeline1, section1) -> {
+                System.out.println("Registries:");
+                for(Registry<? extends IRegistryElement> registry : pipeline1.getGameInstance().REGISTRIES.ELEMENTS) {
+                    System.out.println(registry.getIdentifierName() + "=+" + Arrays.toString(registry.ELEMENTS.stream().map((Function<IRegistryElement, String>) o -> o.getIdentifierName()).toArray()));
+                }
+            }));
+        }
 
         return pipeline;
     }

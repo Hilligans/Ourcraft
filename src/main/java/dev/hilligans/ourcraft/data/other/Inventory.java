@@ -24,7 +24,7 @@ public class Inventory implements IInventory {
     }
 
     @Override
-    public int getSize() {
+    public int getInventorySize() {
         return items.length;
     }
 

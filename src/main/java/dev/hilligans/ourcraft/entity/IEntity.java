@@ -33,4 +33,8 @@ public interface IEntity {
     double getZ();
 
     void tick();
+
+    default boolean intersects(IEntity entity) {
+        return entity.getEntityBoundingBox().intersects(getEntityBoundingBox(), entity.getX(), entity.getY(), entity.getZ(), this.getX(), this.getY(), this.getZ());
+    }
 }

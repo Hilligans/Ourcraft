@@ -192,6 +192,14 @@ public class GameInstance {
         buildBlockStates();
     }
 
+    public Side getSide() {
+        return side;
+    }
+
+    public ArgumentContainer getArgumentContainer() {
+        return Ourcraft.getArgumentContainer();
+    }
+
     public void buildBlockStates() {
         BLOCK_STATES = new ArrayList<>(BLOCKS.ELEMENTS.size());
         int offset = 0;
@@ -235,10 +243,12 @@ public class GameInstance {
     public <T> T getExcept(String name, Class<T> registryClass) {
         for(Registry<?> registry : REGISTRIES.ELEMENTS) {
             if(registry.classType == registryClass) {
+                System.out.println(registry);
                 return (T) registry.getExcept(name);
             }
         }
-        throw new RuntimeException(STR."Unknown registry \{registryClass}");
+        throw new RuntimeException("Unknown registry " + registryClass);
+        //throw new RuntimeException(STR."Unknown registry \{registryClass}");
     }
 
     public Item getItem(int id) {

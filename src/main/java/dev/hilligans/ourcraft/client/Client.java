@@ -178,9 +178,9 @@ public class Client implements IClientPacketHandler {
             }
         }
         if(transition) {
-            Thread.startVirtualThread(() -> {
+            new Thread(() -> {
                     network = new ClientNetwork(gameInstance, gameInstance.PROTOCOLS.get("ourcraft:Play")).debug(argumentContainer.getBoolean("--packetTrace", false));
-            });
+            }).start();
             client.gameInstance.build(client.graphicsEngine, null);
             transition = false;
             rWindow.setRenderPipeline("ourcraft:menu_pipeline");

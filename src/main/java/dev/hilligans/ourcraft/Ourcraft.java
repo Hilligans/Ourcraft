@@ -78,8 +78,9 @@ import static org.lwjgl.glfw.GLFW.*;
 public class Ourcraft extends ModClass {
 
     public static final GameInstance GAME_INSTANCE = new GameInstance();
+    public static ArgumentContainer argumentContainer;
     public static final ArgumentContainer getArgumentContainer() {
-        return ClientMain.argumentContainer;
+        return argumentContainer;
     }
     public static String path = System.getProperty("user.dir");
 
@@ -352,39 +353,41 @@ public class Ourcraft extends ModClass {
         chainedChunkStream.assignOwner(modContent);
         modContent.registerResourceLoader(new LitematicaSchematicLoader());
 
-        modContent.registerRenderTask(new GUIRenderTask());
-        modContent.registerRenderTask(new WorldRenderTask());
-        modContent.registerRenderTask(new WorldTransparentRenderTask());
-        modContent.registerRenderTask(new ChatRenderTask());
-        modContent.registerRenderTask(new SplitWindowRenderTask());
-        modContent.registerRenderTask(new ChunkDebugRenderTask());
+        if(modContent.getGameInstance().getSide() == Side.CLIENT) {
+            modContent.registerRenderTask(new GUIRenderTask());
+            modContent.registerRenderTask(new WorldRenderTask());
+            modContent.registerRenderTask(new WorldTransparentRenderTask());
+            modContent.registerRenderTask(new ChatRenderTask());
+            modContent.registerRenderTask(new SplitWindowRenderTask());
+            modContent.registerRenderTask(new ChunkDebugRenderTask());
 
-        modContent.registerRenderPipelines(new RenderPipeline("new_world_pipeline"));
-        modContent.registerRenderTarget(new RenderTarget("debug_world_renderer", "ourcraft:new_world_pipeline")
-                .setPipelineState(new PipelineState().setDepth(false)));
-        modContent.registerRenderTarget(new RenderTarget("new_solid_world_renderer", "ourcraft:new_world_pipeline").afterTarget("debug_world_renderer", "ourcraft")
-                .setPipelineState(new PipelineState().setDepth(true)));
-        modContent.registerRenderTarget(new RenderTarget("entity_renderer", "ourcraft:new_world_pipeline").afterTarget("new_solid_world_renderer", "ourcraft")
-                .setPipelineState(new PipelineState().setDepth(true)));
-        modContent.registerRenderTarget(new RenderTarget("particle_renderer", "ourcraft:new_world_pipeline").afterTarget("entity_renderer", "ourcraft")
-                .setPipelineState(new PipelineState().setDepth(true)));
-        modContent.registerRenderTarget(new RenderTarget("translucent_world_renderer", "ourcraft:new_world_pipeline").afterTarget("particle_renderer", "ourcraft")
-                .setPipelineState(new PipelineState().setDepth(true)));
-        modContent.registerRenderTarget(new RenderTarget("chat_renderer", "ourcraft:new_world_pipeline").afterTarget("translucent_world_renderer", "ourcraft")
-                .setPipelineState(new PipelineState()));
-        modContent.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:new_world_pipeline").afterTarget("chat_renderer", "ourcraft")
-                .setPipelineState(new PipelineState()));
-
-
-        modContent.registerRenderPipelines(new RenderPipeline("menu_pipeline"));
-        modContent.registerRenderPipelines(new RenderPipeline("split_window_pipeline"));
+            modContent.registerRenderPipelines(new RenderPipeline("new_world_pipeline"));
+            modContent.registerRenderTarget(new RenderTarget("debug_world_renderer", "ourcraft:new_world_pipeline")
+                    .setPipelineState(new PipelineState().setDepth(false)));
+            modContent.registerRenderTarget(new RenderTarget("new_solid_world_renderer", "ourcraft:new_world_pipeline").afterTarget("debug_world_renderer", "ourcraft")
+                    .setPipelineState(new PipelineState().setDepth(true)));
+            modContent.registerRenderTarget(new RenderTarget("entity_renderer", "ourcraft:new_world_pipeline").afterTarget("new_solid_world_renderer", "ourcraft")
+                    .setPipelineState(new PipelineState().setDepth(true)));
+            modContent.registerRenderTarget(new RenderTarget("particle_renderer", "ourcraft:new_world_pipeline").afterTarget("entity_renderer", "ourcraft")
+                    .setPipelineState(new PipelineState().setDepth(true)));
+            modContent.registerRenderTarget(new RenderTarget("translucent_world_renderer", "ourcraft:new_world_pipeline").afterTarget("particle_renderer", "ourcraft")
+                    .setPipelineState(new PipelineState().setDepth(true)));
+            modContent.registerRenderTarget(new RenderTarget("chat_renderer", "ourcraft:new_world_pipeline").afterTarget("translucent_world_renderer", "ourcraft")
+                    .setPipelineState(new PipelineState()));
+            modContent.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:new_world_pipeline").afterTarget("chat_renderer", "ourcraft")
+                    .setPipelineState(new PipelineState()));
 
 
-        modContent.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:menu_pipeline")
-                .setPipelineState(new PipelineState()));
+            modContent.registerRenderPipelines(new RenderPipeline("menu_pipeline"));
+            modContent.registerRenderPipelines(new RenderPipeline("split_window_pipeline"));
 
-        modContent.registerRenderTarget(new RenderTarget("split_window_renderer", "ourcraft:split_window_pipeline")
-                .setPipelineState(new PipelineState()));
+
+            modContent.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:menu_pipeline")
+                    .setPipelineState(new PipelineState()));
+
+            modContent.registerRenderTarget(new RenderTarget("split_window_renderer", "ourcraft:split_window_pipeline")
+                    .setPipelineState(new PipelineState()));
+        }
 
 
 
@@ -394,11 +397,6 @@ public class Ourcraft extends ModClass {
         modContent.registerBiome(Biomes.PLAINS,Biomes.SANDY_HILLS,Biomes.DESERT,Biomes.FOREST);
 
         modContent.registerEntityType(Entities.PLAYER);
-
-
-        for(int x = 0; x < 30000; x++) {
-            //modContent.registerBlock(new Block("x" + x, new BlockProperties()));
-        }
 
 
         Sounds.reg();

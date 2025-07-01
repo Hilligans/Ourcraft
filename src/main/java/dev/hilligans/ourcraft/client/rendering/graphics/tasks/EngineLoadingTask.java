@@ -36,7 +36,7 @@ public class EngineLoadingTask extends RenderTaskSource {
                         engine.getDefaultImpl().uploadMatrix(graphicsContext, screenStack, Textures.BACKFILL.shaderSource);
 
                         rend.drawCenteredStringInternal(window, graphicsContext, screenStack, stage.getTypeA(), 29, 0.5f);
-                        rend.drawCenteredStringInternal(window, graphicsContext, screenStack, STR."\{index} of \{gameInstance.loaderPipeline.section.subsectionLength}", 29 * 2, 0.5f);
+                        rend.drawCenteredStringInternal(window, graphicsContext, screenStack, index+" of "+gameInstance.loaderPipeline.section.subsectionLength, 29 * 2, 0.5f);
                         screenStack.pop();
                     } catch (Exception e) {
                         e.printStackTrace();

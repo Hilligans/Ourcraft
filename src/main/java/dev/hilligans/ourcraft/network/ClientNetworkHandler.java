@@ -26,7 +26,8 @@ public class ClientNetworkHandler extends NetworkHandler implements NetworkProfi
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println(STR."CLIENT \{network.client.rWindow.getWindowName()} DISCONNECTED FROM SERVER");
+        System.out.println("CLIENT " + network.client.rWindow.getWindowName()+" DISCONNECTED FROM SERVER");
+        //System.out.println(STR."CLIENT \{network.client.rWindow.getWindowName()} DISCONNECTED FROM SERVER");
         //System.out.println(channel.closeFuture().sync().exceptionNow().getMessage());
         network.client.renderWorld = false;
         network.client.valid = false;

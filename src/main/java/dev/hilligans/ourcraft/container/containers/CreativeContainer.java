@@ -4,7 +4,6 @@ import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.rendering.ContainerScreen;
 import dev.hilligans.ourcraft.client.rendering.screens.container.screens.CreativeInventoryScreen;
-import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.container.Container;
 import dev.hilligans.ourcraft.container.Slot;
 import dev.hilligans.ourcraft.data.other.IInventory;
@@ -13,7 +12,6 @@ import dev.hilligans.ourcraft.data.other.JoinedInventory;
 import dev.hilligans.ourcraft.item.BlockItem;
 import dev.hilligans.ourcraft.item.Item;
 import dev.hilligans.ourcraft.item.ItemStack;
-import dev.hilligans.ourcraft.Ourcraft;
 
 public class CreativeContainer extends Container {
 
@@ -28,7 +26,7 @@ public class CreativeContainer extends Container {
         addPlayerInventorySlots(7,118,joinedInventory,0);
         for(int y = 0; y < 6; y++) {
             for(int x = 0; x < 9; x++) {
-                addSlot(new Slot(7 + x * 16,12 + y * 16,joinedInventory,playerInventory.getSize() + x + y * 9));
+                addSlot(new Slot(7 + x * 16,12 + y * 16,joinedInventory,playerInventory.getInventorySize() + x + y * 9));
             }
         }
         resize();

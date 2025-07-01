@@ -28,7 +28,7 @@ public class ServerNetwork extends Network {
     }
 
     public void startServer(String port) throws Exception {
-        networkHandler = new ServerNetworkHandler(this, server, gameInstance.getExcept("ourcraft:Auth", Protocol.class), gameInstance.get("ourcraft:Auth", Protocol.class));
+        networkHandler = new ServerNetworkHandler(this, server, gameInstance.getExcept("ourcraft:Play", Protocol.class), gameInstance.getExcept("ourcraft:Play", Protocol.class));
         ServerNetworkHandler.debug = Ourcraft.getArgumentContainer().getBoolean("--tracePacket", false);
 
         final int PORT = Integer.parseInt(System.getProperty("port", port));

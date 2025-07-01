@@ -47,7 +47,7 @@ public abstract class RenderWindow {
         }
         setRenderPipeline("ourcraft:engine_loading_pipeline");
         camera = new FreeCamera(this);
-        this.windowName = STR."window \{windowID.getAndIncrement()}";
+        this.windowName = "window "+windowID.getAndIncrement();
     }
 
     public void renderPipeline(Client client, MatrixStack worldStack, MatrixStack screenStack, GraphicsContext graphicsContext) {

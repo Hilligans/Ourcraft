@@ -37,13 +37,23 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
     }
 
     public T get(String name) {
-        return MAPPED_ELEMENTS.get(name);
+        if(mapping) {
+            return MAPPED_ELEMENTS.get(name);
+        } else {
+            for(T element : ELEMENTS) {
+                if(name.equals(element.getIdentifierName())) {
+                    return element;
+                }
+            }
+        }
+        return null;
     }
 
     public T getExcept(String name) {
         T val = get(name);
         if(val == null) {
-            throw new RuntimeException(STR."Unknown resource type \{name}, are you missing the modID?");
+            throw new RuntimeException("Unknown resource type "+name+", are you missing the modID?");
+            //throw new RuntimeException(STR."Unknown resource type \{name}, are you missing the modID?");
         }
         return val;
     }

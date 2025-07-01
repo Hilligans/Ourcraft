@@ -11,7 +11,7 @@ import java.util.Stack;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import static dev.hilligans.ourcraft.util.FormattedString.FSTR;
+//import static dev.hilligans.ourcraft.util.FormattedString.FSTR;
 
 public class ProfiledSection implements ISection {
 
@@ -35,7 +35,7 @@ public class ProfiledSection implements ISection {
     public void stopSection(@NotNull String name) {
         StackFrame stackFrame = stackFrames.pop();
         if(!name.equals(stackFrame.sectionName)) {
-            throw new IllegalArgumentException(STR."Expected frame \{name} does not match actual frame \{stackFrame.sectionName}");
+            throw new IllegalArgumentException("Expected frame "+name+" does not match actual frame "+stackFrame.sectionName);
         }
         processFrame(stackFrame);
     }
@@ -136,7 +136,7 @@ public class ProfiledSection implements ISection {
             if(parent == null) {
                 return "";
             } else {
-                return STR."\{parent.getIndentLevel()}  ";
+                return parent.getIndentLevel()+"  ";
             }
         }
 
@@ -166,7 +166,8 @@ public class ProfiledSection implements ISection {
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
-            builder.append(STR."\{getIndentLevel()}\{sectionName}: \{Ourcraft.getConvertedTime(totalTime)}\n");
+            builder.append(getIndentLevel()+sectionName+": "+Ourcraft.getConvertedTime(totalTime)+"\n");
+            //builder.append(STR."\{getIndentLevel()}\{sectionName}: \{Ourcraft.getConvertedTime(totalTime)}\n");
             for(StackFrame frame : frames) {
                 builder.append(frame.toString());
             }
@@ -179,7 +180,8 @@ public class ProfiledSection implements ISection {
 
         String toString1(long time) {
             StringBuilder builder = new StringBuilder();
-            builder.append(FSTR."\{getIndentLevel()}\{sectionName}: %2.2f%%\{(double)totalTime/time*100}\n");
+            builder.append(String.format("%s%s: %2.2f\n", getIndentLevel(), sectionName, (double)totalTime/time*100));
+            //builder.append(FSTR."\{getIndentLevel()}\{sectionName}: %2.2f%%\{(double)totalTime/time*100}\n");
             for(StackFrame frame : frames) {
                 builder.append(frame.toString1(time));
             }

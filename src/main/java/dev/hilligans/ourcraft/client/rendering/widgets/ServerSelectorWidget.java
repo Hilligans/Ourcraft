@@ -33,7 +33,7 @@ public class ServerSelectorWidget extends Widget {
 
     public void joinServer() {
         try {
-            screenBase.getClient().network.joinServer(ip,port, screenBase.getClient());
+            screenBase.getClient().network.joinServer(ip, port, screenBase.getClient());
             Thread.sleep(1000);
             screenBase.getClient().closeScreen();
             screenBase.getClient().serverIP = ip + ":" + port;

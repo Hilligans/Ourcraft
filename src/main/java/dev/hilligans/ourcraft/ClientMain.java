@@ -6,34 +6,24 @@ import dev.hilligans.ourcraft.mod.handler.pipeline.InstanceLoaderPipeline;
 import dev.hilligans.ourcraft.mod.handler.pipeline.standard.StandardPipeline;
 import dev.hilligans.ourcraft.util.ArgumentContainer;
 import dev.hilligans.ourcraft.util.Side;
-import dev.hilligans.ourcraft.util.registry.Registry;
-import org.joml.Intersectionf;
+
+import static dev.hilligans.ourcraft.Ourcraft.argumentContainer;
 
 import java.io.IOException;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ClientMain {
-
-    public static ArgumentContainer argumentContainer;
 
     public static long start = System.currentTimeMillis();
     public static IGraphicsEngine<?,?,?> graphicsEngine = null;
 
     public static long startTime;
     public static void main(String[] args) throws IOException {
-        for(int y = 0; y < 2; y++) {
-            startTime = System.currentTimeMillis();
-            for (int x = 0; x < 1000000; x++) {
-                Intersectionf.testObOb(x, x, x, 1, 1, x, 1, 1, y, 1, 1, 2 * x, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
-            }
-            System.out.println("Time to 1M:" + (System.currentTimeMillis() - startTime));
-        }
+        Ourcraft.argumentContainer = new ArgumentContainer(args);
 
-        argumentContainer = new ArgumentContainer(args);
-
-        System.out.println(STR."Starting client with PID \{ProcessHandle.current().pid()}");
+        //System.out.println(STR."Starting client with PID \{ProcessHandle.current().pid()}");
+        System.out.println("Starting client with PID " + ProcessHandle.current().pid());
 
         GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
         gameInstance.handleArgs(args);
@@ -45,7 +35,7 @@ public class ClientMain {
         Thread serverThread = null;
         if(argumentContainer.getBoolean("--integratedServer", false)) {
             try {
-                serverThread = new Thread(() -> ServerMain.server(gameInstance, argumentContainer));
+                serverThread = new Thread(() -> ServerMain.server(gameInstance));
                 serverThread.setName("Server-Thread");
                 serverThread.setDaemon(true);
                 serverThread.start();

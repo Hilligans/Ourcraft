@@ -29,6 +29,7 @@ public class ServerMain {
 
 
     public static void main(String[] args) {
+        Ourcraft.argumentContainer = new ArgumentContainer(args);
         Settings.isServer = true;
         GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
         gameInstance.handleArgs(args);
@@ -37,18 +38,14 @@ public class ServerMain {
 
         StandardPipeline.get(gameInstance).build();
 
-        server(gameInstance, new ArgumentContainer(args));
+        server(gameInstance);
     }
 
-    static int x = 0;
-    public static AtomicInteger a = new AtomicInteger();
-    public static void doS() {}
 
-    public static IServer server(GameInstance gameInstance, ArgumentContainer argumentContainer) {
+    public static IServer server(GameInstance gameInstance) {
         gameInstance.builtSemaphore.acquireUninterruptibly();
         gameInstance.builtSemaphore.release();
 
-        ServerMain.argumentContainer = argumentContainer;
         gameInstance.THREAD_PROVIDER.map();
 
         //ServerWorld world = new ServerWorld(gameInstance);

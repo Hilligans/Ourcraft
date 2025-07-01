@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.client.rendering.graphics.tasks;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
+import dev.hilligans.ourcraft.client.rendering.VertexMesh;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
@@ -13,7 +14,7 @@ import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.world.StringRenderer;
 import dev.hilligans.ourcraft.util.sections.ProfiledSection;
 
-import static dev.hilligans.ourcraft.util.FormattedString.FSTR;
+//import static dev.hilligans.ourcraft.util.FormattedString.FSTR;
 
 public class GUIRenderTask extends RenderTaskSource {
 
@@ -60,6 +61,9 @@ public class GUIRenderTask extends RenderTaskSource {
                     stringRenderer.drawStringInternal(window, graphicsContext, screenStack, "Y:" + client.rWindow.camera.getCameraPos().y, window.getWindowWidth() / 2, 387,0.5f);
                     stringRenderer.drawStringInternal(window, graphicsContext, screenStack, "Z:" + client.rWindow.camera.getCameraPos().z, window.getWindowWidth() / 2, 416,0.5f);
 
+//                    VertexMesh vertexMesh = new VertexMesh(Ourcraft.position_color_texture);
+
+
                     if(counter % 100 == 0) {
                         counter = 0;
                         if(graphicsContext.getSection() instanceof ProfiledSection profiledSection) {
@@ -96,7 +100,7 @@ public class GUIRenderTask extends RenderTaskSource {
             }
 
             public void recursiveDraw(StringRenderer stringRenderer, RenderWindow renderWindow, GraphicsContext graphicsContext, MatrixStack matrixStack, ProfiledSection.StackFrame stackFrame, int[] y, long time) {
-                stringRenderer.drawStringInternal(renderWindow, graphicsContext, matrixStack, FSTR."\{stackFrame.getIndentLevel()}\{stackFrame.sectionName}: %2.2f%%\{(double)stackFrame.totalTime/time*100}\n", 0, y[0], 0.5f);
+                //stringRenderer.drawStringInternal(renderWindow, graphicsContext, matrixStack, FSTR."\{stackFrame.getIndentLevel()}\{stackFrame.sectionName}: %2.2f%%\{(double)stackFrame.totalTime/time*100}\n", 0, y[0], 0.5f);
                 y[0] += 29;
                 for(ProfiledSection.StackFrame child : stackFrame.frames) {
                     recursiveDraw(stringRenderer, renderWindow, graphicsContext, matrixStack, child, y, time);
@@ -104,7 +108,7 @@ public class GUIRenderTask extends RenderTaskSource {
             }
 
             public void recursiveDrawTimes(StringRenderer stringRenderer, RenderWindow renderWindow, GraphicsContext graphicsContext, MatrixStack matrixStack, ProfiledSection.StackFrame stackFrame, int[] y) {
-                stringRenderer.drawStringInternal(renderWindow, graphicsContext, matrixStack, STR."\{stackFrame.getIndentLevel()}\{stackFrame.sectionName}: \{Ourcraft.getConvertedTime(stackFrame.totalTime)}\n", 0, y[0], 0.5f);
+                //stringRenderer.drawStringInternal(renderWindow, graphicsContext, matrixStack, STR."\{stackFrame.getIndentLevel()}\{stackFrame.sectionName}: \{Ourcraft.getConvertedTime(stackFrame.totalTime)}\n", 0, y[0], 0.5f);
                 y[0] += 29;
                 for(ProfiledSection.StackFrame child : stackFrame.frames) {
                     recursiveDrawTimes(stringRenderer, renderWindow, graphicsContext, matrixStack, child, y);

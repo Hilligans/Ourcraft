@@ -4,7 +4,7 @@ import java.util.List;
 
 public class FormattedString {
 
-    public static StringTemplate.Processor<String, RuntimeException> FSTR = FormattedString::interpolate;
+    /*public static StringTemplate.Processor<String, RuntimeException> FSTR = FormattedString::interpolate;
 
     private static String interpolate(StringTemplate stringTemplate) {
         StringBuilder builder = new StringBuilder();
@@ -36,5 +36,5 @@ public class FormattedString {
             }
         }
         return false;
-    }
+    } */
 }

@@ -45,7 +45,7 @@ public class BotActions {
     }
 
     public int findItem(BotInstance botInstance, ItemDescriptor itemDescriptor) {
-        for(int x = 0; x < botInstance.client.playerData.inventory.getSize(); x++) {
+        for(int x = 0; x < botInstance.client.playerData.inventory.getInventorySize(); x++) {
 
         }
         return -1;

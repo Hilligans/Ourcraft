@@ -28,7 +28,8 @@ public class LoadingSection implements ISection {
     public void stopSection(@NotNull String name) {
         String stackFrame = stackFrames.pop();
         if(!name.equals(stackFrame)) {
-            throw new IllegalArgumentException(STR."Expected frame \{name} does not match actual frame \{stackFrame}");
+            throw new IllegalArgumentException("Expected frame "+name+" does not match actual frame "+stackFrame);
+            //throw new IllegalArgumentException(STR."Expected frame \{name} does not match actual frame \{stackFrame}");
         }
     }
 
@@ -77,6 +78,7 @@ public class LoadingSection implements ISection {
         if(++subsectionCount == subsectionLength) {
             processingSubSections = false;
         }
-        System.err.println(STR."Completed Section: \{name} - \{subsectionCount} of \{subsectionLength}");
+        //System.err.println(STR."Completed Section: \{name} - \{subsectionCount} of \{subsectionLength}");
+        System.err.println("Completed Section: "+name+" - "+subsectionCount+" of "+subsectionLength);
     }
 }

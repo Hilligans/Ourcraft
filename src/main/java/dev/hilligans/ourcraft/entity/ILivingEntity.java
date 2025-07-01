@@ -1,6 +1,8 @@
 package dev.hilligans.ourcraft.entity;
 
-public interface ILivingEntity extends IEntity {
+import dev.hilligans.ourcraft.data.other.IInventory;
+
+public interface ILivingEntity extends IEntity, IInventory {
 
     int getHealth();
 

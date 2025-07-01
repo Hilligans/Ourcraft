@@ -75,7 +75,7 @@ public class SimpleWorld implements IWorld {
 
     @Override
     public IChunk getChunk(long blockX, long blockY, long blockZ) {
-        return chunkContainer.getChunk(blockX, blockY, blockZ);
+        return chunkContainer.getChunk(blockX >> 4, 0, blockZ >> 4);
     }
 
     @Override

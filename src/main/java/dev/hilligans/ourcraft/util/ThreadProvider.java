@@ -17,7 +17,8 @@ public class ThreadProvider {
     public ThreadProvider(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
         int threads = Math.max(2, Runtime.getRuntime().availableProcessors()/2);
-        this.EXECUTOR = Executors.newFixedThreadPool(threads, new NamedThreadFactory(STR."game instance \{gameInstance.getUniqueID()} executor", gameInstance));
+        this.EXECUTOR = Executors.newFixedThreadPool(threads, new NamedThreadFactory("game instance "+gameInstance.getUniqueID()+" executor", gameInstance));
+        //this.EXECUTOR = Executors.newFixedThreadPool(threads, new NamedThreadFactory(STR."game instance \{gameInstance.getUniqueID()} executor", gameInstance));
     }
 
     public Thread startVirtualThread(Runnable task, String name) {

@@ -163,6 +163,54 @@ public class PacketTraceByteArray implements IPacketByteArray {
     }
 
     @Override
+    public byte peekByte() {
+        byteBuf.markReaderIndex();
+        byte val = byteBuf.readByte();
+        byteBuf.resetReaderIndex();
+        return val;
+    }
+
+    @Override
+    public short peekShort() {
+        byteBuf.markReaderIndex();
+        short val = byteBuf.readShort();
+        byteBuf.resetReaderIndex();
+        return val;
+    }
+
+    @Override
+    public int peekInt() {
+        byteBuf.markReaderIndex();
+        int val = byteBuf.readInt();
+        byteBuf.resetReaderIndex();
+        return val;
+    }
+
+    @Override
+    public long peekLong() {
+        byteBuf.markReaderIndex();
+        long val = byteBuf.readLong();
+        byteBuf.resetReaderIndex();
+        return val;
+    }
+
+    @Override
+    public float peekFloat() {
+        byteBuf.markReaderIndex();
+        float val = byteBuf.readFloat();
+        byteBuf.resetReaderIndex();
+        return val;
+    }
+
+    @Override
+    public double peekDouble() {
+        byteBuf.markReaderIndex();
+        double val = byteBuf.readDouble();
+        byteBuf.resetReaderIndex();
+        return val;
+    }
+
+    @Override
     public ByteBuf getByteBuf() {
         return byteBuf;
     }

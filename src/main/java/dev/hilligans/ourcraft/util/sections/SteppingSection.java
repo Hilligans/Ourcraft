@@ -38,7 +38,7 @@ public class SteppingSection implements ISection {
 
     @Override
     public SectionView startSection(String name) {
-        System.out.println(STR."Waiting on section:\{name}");
+        System.out.println("Waiting on section:"+name);
         while(step.get() == 0) {}
         step.decrementAndGet();
         return new SectionView(name, this);

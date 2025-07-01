@@ -19,7 +19,8 @@ public interface PerModPipelineStage<T extends InstanceLoaderPipeline<T>> extend
             counter.getAndIncrement();
         }));
         while (counter.get() != length) {
-            try(var $1 = section.startSection(STR."\{last} of \{length}")) {
+            try(var $1 = section.startSection(last + " of " + length)) {
+            //try(var $1 = section.startSection(STR."\{last} of \{length}")) {
                 try {
                     Thread.sleep(5);
                 } catch (Exception ignored) {}

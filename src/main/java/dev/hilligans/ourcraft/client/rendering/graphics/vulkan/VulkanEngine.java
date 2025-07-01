@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.vulkan;
 
+import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
@@ -125,7 +126,7 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
     }
 
     public static VulkanInstance getVulkanInstance() {
-        return getVulkanInstance(new VulkanProperties(ClientMain.argumentContainer).warningValidation().errorValidation().addValidationLayers("VK_LAYER_KHRONOS_validation").verboseValidation().enableValidationLayers());
+        return getVulkanInstance(new VulkanProperties(Ourcraft.getArgumentContainer()).warningValidation().errorValidation().addValidationLayers("VK_LAYER_KHRONOS_validation").verboseValidation().enableValidationLayers());
     }
 
     public static VulkanInstance getVulkanInstance(VulkanProperties vulkanProperties) {

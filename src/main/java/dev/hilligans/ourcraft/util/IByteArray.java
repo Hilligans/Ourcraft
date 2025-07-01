@@ -447,4 +447,65 @@ public interface IByteArray extends INBTTag {
     default String readString() {
         return readUTF16();
     }
+
+    default boolean peekBoolean() {
+        return peekByte() != 0;
+    }
+    byte peekByte();
+    short peekShort();
+    default char peekChar() {
+        return (char) peekShort();
+    }
+    int peekInt();
+    long peekLong();
+    float peekFloat();
+    double peekDouble();
+
+    default int peekVarInt() {
+        int numRead = 0;
+        int result = 0;
+        byte read;
+        do {
+            read = peekByte();
+            int value = (read & 0b01111111);
+            result |= (value << (7 * numRead));
+
+            numRead++;
+            if (numRead > 5) {
+                throw new RuntimeException("VarInt is too big");
+            }
+        } while ((read & 0b10000000) != 0);
+
+        return result;
+    }
+
+    default long peekVarLong() {
+        int numRead = 0;
+        long result = 0;
+        byte read;
+        do {
+            read = peekByte();
+            long value = (read & 0b01111111);
+            result |= (value << (7 * numRead));
+
+            numRead++;
+            if (numRead > 10) {
+                throw new RuntimeException("VarLong is too big");
+            }
+        } while ((read & 0b10000000) != 0);
+
+        return result;
+    }
+
+    default int peekUByte() {
+        return Byte.toUnsignedInt(peekByte());
+    }
+
+    default int peekUShort() {
+        return Short.toUnsignedInt(peekShort());
+    }
+
+    default long peekUInt() {
+        return Integer.toUnsignedLong(peekInt());
+    }
 }

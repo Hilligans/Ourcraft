@@ -29,7 +29,10 @@ public class ClientNetwork extends Network {
         this.client = client;
         this.gameInstance = client.gameInstance;
 
-        networkHandler = new ClientNetworkHandler(this);
+        ClientNetworkHandler net = new ClientNetworkHandler(this);
+        net.setSendProtocol(prot);
+        net.setReceiveProtocol(prot);
+        networkHandler = net;
 
         final String HOST = System.getProperty("host", ip);
         final int PORT = Integer.parseInt(System.getProperty("port", port));

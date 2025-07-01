@@ -73,6 +73,4 @@ public class SliderWidget extends Widget {
         value = (int) (minValue + percentage * delta);
         sliderChange.onChange(value);
     }
-
-
 }

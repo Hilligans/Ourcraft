@@ -12,10 +12,10 @@ public class JoinedInventory implements IInventory {
     }
 
     @Override
-    public int getSize() {
+    public int getInventorySize() {
         int size = 0;
         for(IInventory iInventory : inventories) {
-            size += iInventory.getSize();
+            size += iInventory.getInventorySize();
         }
         return size;
     }
@@ -23,8 +23,8 @@ public class JoinedInventory implements IInventory {
     @Override
     public ItemStack getItem(int slot) {
         for(IInventory iInventory : inventories) {
-            if(slot >= iInventory.getSize()) {
-                slot -= iInventory.getSize();
+            if(slot >= iInventory.getInventorySize()) {
+                slot -= iInventory.getInventorySize();
             } else {
                 return iInventory.getItem(slot);
             }
@@ -35,8 +35,8 @@ public class JoinedInventory implements IInventory {
     @Override
     public void setItem(int slot, ItemStack item) {
         for(IInventory iInventory : inventories) {
-            if(slot >= iInventory.getSize()) {
-                slot -= iInventory.getSize();
+            if(slot >= iInventory.getInventorySize()) {
+                slot -= iInventory.getInventorySize();
             } else {
                 iInventory.setItem(slot,item);
                 break;
@@ -57,8 +57,8 @@ public class JoinedInventory implements IInventory {
     @Override
     public void addListener(int slot, IInventoryChanged iInventoryChanged) {
         for(IInventory iInventory : inventories) {
-            if(slot >= iInventory.getSize()) {
-                slot -= iInventory.getSize();
+            if(slot >= iInventory.getInventorySize()) {
+                slot -= iInventory.getInventorySize();
             } else {
                 iInventory.addListener(slot,iInventoryChanged);
                 break;
@@ -69,8 +69,8 @@ public class JoinedInventory implements IInventory {
     @Override
     public void removeListener(int slot, IInventoryChanged iInventoryChanged) {
         for(IInventory iInventory : inventories) {
-            if(slot >= iInventory.getSize()) {
-                slot -= iInventory.getSize();
+            if(slot >= iInventory.getInventorySize()) {
+                slot -= iInventory.getInventorySize();
             } else {
                 iInventory.removeListener(slot,iInventoryChanged);
                 break;
@@ -81,8 +81,8 @@ public class JoinedInventory implements IInventory {
     @Override
     public void notifyListeners(int slot) {
         for(IInventory iInventory : inventories) {
-            if(slot >= iInventory.getSize()) {
-                slot -= iInventory.getSize();
+            if(slot >= iInventory.getInventorySize()) {
+                slot -= iInventory.getInventorySize();
             } else {
                 iInventory.notifyListeners(slot);
                 break;
