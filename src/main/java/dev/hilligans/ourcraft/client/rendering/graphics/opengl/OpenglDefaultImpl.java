@@ -188,6 +188,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
             pointer += part.getSize();
             x++;
         }
+        mesh.destroy();
 
         glDrawElements(mesh.vertexFormat.primitiveType,mesh.indices.limit(),GL_UNSIGNED_INT,0);
 

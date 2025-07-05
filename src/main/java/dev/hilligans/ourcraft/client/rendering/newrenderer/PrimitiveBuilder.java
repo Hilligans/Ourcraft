@@ -43,6 +43,7 @@ public class PrimitiveBuilder {
     public VertexMesh toVertexMesh() {
         VertexMesh vertexMesh = new VertexMesh(vertexFormat);
         vertexMesh.addData(indices.getElementDataBuffer(), vertices.getElementDataBuffer());
+        vertexMesh.setAllocator(vertexMesh);
         return vertexMesh;
     }
 

@@ -44,8 +44,8 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
     }
 
     public void load(IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext, ByteBuffer ttf) {
-        default_font = NkUserFont.create();
-        null_texture = NkDrawNullTexture.create();
+        default_font = NkUserFont.malloc();
+        null_texture = NkDrawNullTexture.malloc();
 
         int BITMAP_W = 1024;
         int BITMAP_H = 1024;

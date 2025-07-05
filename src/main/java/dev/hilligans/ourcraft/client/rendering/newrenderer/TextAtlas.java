@@ -86,6 +86,7 @@ public class TextAtlas {
                         long starts = System.nanoTime();
                         spot = findSpot(tempImage.width, imageLocation.index);
                         image.putImage(tempImage, (int) (spot >> 32), (int) (spot));
+                        tempImage.free();
                         time += System.nanoTime() - starts;
 
                     } catch (Exception e) {

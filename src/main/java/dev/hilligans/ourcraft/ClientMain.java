@@ -1,6 +1,8 @@
 package dev.hilligans.ourcraft;
 
 import dev.hilligans.ourcraft.client.Client;
+import dev.hilligans.ourcraft.network.Protocol;
+import dev.hilligans.ourcraft.network.engine.INetworkEngine;
 import dev.hilligans.ourcraft.util.argument.Argument;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.mod.handler.pipeline.InstanceLoaderPipeline;
@@ -8,6 +10,7 @@ import dev.hilligans.ourcraft.mod.handler.pipeline.standard.StandardPipeline;
 import dev.hilligans.ourcraft.util.argument.ArgumentContainer;
 import dev.hilligans.ourcraft.util.Side;
 import dev.hilligans.ourcraft.util.argument.ArgumentSearcher;
+import org.lwjgl.system.Configuration;
 
 import static dev.hilligans.ourcraft.Ourcraft.argumentContainer;
 
@@ -15,6 +18,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 public class ClientMain {
 
@@ -31,9 +35,13 @@ public class ClientMain {
     public static final Argument<Boolean> loadImmediate = Argument.existArg("--loadImmediate")
             .help("Always immediately load the GameInstance immediately, otherwise, it's loaded later in the chain before argument parsing. \n" +
                     "This is needed to see any acceptable values from registry arguments");
+    public static final Argument<Protocol> defaultProtocol = Argument.registryArg("--protocol", Protocol.class, "ourcraft:Play")
+            .help("The network protocol to use");
+
 
 
     public static void main(String[] args) throws IOException {
+        //Configuration.DEBUG_MEMORY_ALLOCATOR.set(true);
         Ourcraft.argumentContainer = new ArgumentContainer(args);
         System.out.println("Starting with arguments: " + Arrays.toString(args));
         //System.out.println(STR."Starting client with PID \{ProcessHandle.current().pid()}");
@@ -102,6 +110,23 @@ public class ClientMain {
         pipeline.addPostHook(gameInstance12 -> {
             while(client.get() == null) {}
             client.get().transition = true;
+        });
+
+        pipeline.addPostHook(gameInstance13 -> {
+            Thread thread = new Thread() {
+                @Override
+                public void run() {
+                    INetworkEngine<?, ?> engine = gameInstance13.getExcept("ourcraft:nettyEngine", INetworkEngine.class);
+                    engine.openServer(defaultProtocol.get(gameInstance13), "10000");
+                }
+            };
+            thread.setDaemon(true);
+            thread.start();
+        });
+
+        pipeline.addPostHook(gameInstance1 -> {
+            INetworkEngine<?, ?> engine = gameInstance1.getExcept("ourcraft:nettyEngine", INetworkEngine.class);
+            engine.openClient(defaultProtocol.get(gameInstance1), "localhost", "10000");
         });
 
         pipeline.build();

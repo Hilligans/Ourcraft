@@ -30,6 +30,7 @@ import dev.hilligans.ourcraft.mod.handler.content.ModList;
 import dev.hilligans.ourcraft.mod.handler.events.common.RegistryClearEvent;
 import dev.hilligans.ourcraft.mod.handler.pipeline.InstanceLoaderPipeline;
 import dev.hilligans.ourcraft.network.Protocol;
+import dev.hilligans.ourcraft.network.engine.INetworkEngine;
 import dev.hilligans.ourcraft.recipe.helper.RecipeView;
 import dev.hilligans.ourcraft.resource.dataloader.DataLoader;
 import dev.hilligans.ourcraft.resource.IBufferAllocator;
@@ -144,6 +145,7 @@ public class GameInstance {
     public Registry<ShaderSource> SHADERS;
     public Registry<ILayoutEngine<?>> LAYOUT_ENGINES;
     public Registry<EntityType> ENTITY_TYPES;
+    public Registry<INetworkEngine<?, ?>> NETWORK_ENGINES;
 
     public ArrayList<IBlockState> BLOCK_STATES;
 
@@ -175,6 +177,7 @@ public class GameInstance {
         LAYOUT_ENGINES = (Registry<ILayoutEngine<?>>) REGISTRIES.getExcept("ourcraft:layout_engine");
         SOUND_CATEGORIES = (Registry<SoundCategory>) REGISTRIES.getExcept("ourcraft:sound_category");
         ENTITY_TYPES = (Registry<EntityType>) REGISTRIES.getExcept("ourcraft:entity_type");
+        NETWORK_ENGINES = (Registry<INetworkEngine<?,?>>) REGISTRIES.getExcept("ourcraft:network_engine");
     }
 
     public void finishBuild() {

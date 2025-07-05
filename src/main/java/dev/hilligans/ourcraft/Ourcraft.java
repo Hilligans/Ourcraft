@@ -41,6 +41,8 @@ import dev.hilligans.ourcraft.mod.handler.Identifier;
 import dev.hilligans.ourcraft.mod.handler.content.RegistryView;
 import dev.hilligans.ourcraft.network.Protocol;
 import dev.hilligans.ourcraft.network.Protocols;
+import dev.hilligans.ourcraft.network.engine.INetworkEngine;
+import dev.hilligans.ourcraft.network.engine.NettyEngine;
 import dev.hilligans.ourcraft.recipe.IRecipe;
 import dev.hilligans.ourcraft.recipe.helper.RecipeView;
 import dev.hilligans.ourcraft.resource.loaders.ResourceLoader;
@@ -136,7 +138,8 @@ public class Ourcraft extends ModClass {
                 new Tuple(ShaderSource.class, "shader"),
                 new Tuple(ILayoutEngine.class, "layout_engine"),
                 new Tuple(SoundCategory.class, "sound_category"),
-                new Tuple(EntityType.class, "entity_type")
+                new Tuple(EntityType.class, "entity_type"),
+                new Tuple(INetworkEngine.class, "network_engine")
         };
 
         for(Tuple<Class<? extends IRegistryElement>, String> element : elements) {
@@ -385,6 +388,8 @@ public class Ourcraft extends ModClass {
             modContent.registerRenderTarget(new RenderTarget("split_window_renderer", "ourcraft:split_window_pipeline")
                     .setPipelineState(new PipelineState()));
         }
+
+        modContent.registerNetworkEngine(new NettyEngine());
 
 
 

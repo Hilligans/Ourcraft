@@ -23,8 +23,8 @@ public interface INetworkEngine<T extends NetworkEntity, Q extends NetworkSocket
 
     GameInstance getGameInstance();
 
-    void openClient(String host, String port);
-    void openServer(String port);
+    Q openClient(Protocol protocol, String host, String port);
+    Q openServer(Protocol protocol, String port);
 
     @Override
     default String getResourceType() {

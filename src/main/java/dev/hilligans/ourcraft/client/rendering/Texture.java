@@ -156,6 +156,7 @@ public class Texture implements IRegistryElement, IGraphicsElement {
     @Override
     public void cleanup(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
         graphicsEngine.getDefaultImpl().destroyTexture(graphicsContext, getTextureId(gameInstance));
+        data.get(gameInstance).image().free();
     }
 
     record TextureData(Image image, long textureID, ShaderSource shaderSource) {}

@@ -20,6 +20,7 @@ import dev.hilligans.ourcraft.item.data.ToolLevel;
 import dev.hilligans.ourcraft.mod.handler.ModClass;
 import dev.hilligans.ourcraft.network.PacketBase;
 import dev.hilligans.ourcraft.network.Protocol;
+import dev.hilligans.ourcraft.network.engine.INetworkEngine;
 import dev.hilligans.ourcraft.recipe.IRecipe;
 import dev.hilligans.ourcraft.recipe.helper.RecipeView;
 import dev.hilligans.ourcraft.resource.loaders.ResourceLoader;
@@ -70,6 +71,7 @@ public class ModContainer {
     public Registry<ShaderSource> shaderSourceRegistry;
     public Registry<ILayoutEngine<?>> layoutEngineRegistry;
     public Registry<EntityType> entityTypeRegistry;
+    public Registry<INetworkEngine<?, ?>> networkEngineRegistry;
 
     public ModContainer(Class<? extends ModClass> clazz, URLClassLoader classLoader, Path path) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         this.modClass = clazz.getConstructor().newInstance();
@@ -115,6 +117,7 @@ public class ModContainer {
         shaderSourceRegistry = (Registry<ShaderSource>) registries.getExcept("ourcraft:shader");
         layoutEngineRegistry = (Registry<ILayoutEngine<?>>) registries.getExcept("ourcraft:layout_engine");
         entityTypeRegistry = (Registry<EntityType>) registries.getExcept("ourcraft:entity_type");
+        networkEngineRegistry = (Registry<INetworkEngine<?,?>>) registries.getExcept("ourcraft:network_engine");
     }
 
     public String getModID() {
@@ -342,5 +345,12 @@ public class ModContainer {
             entityType.assignOwner(this);
         }
         entityTypeRegistry.putAll(entityTypes);
+    }
+
+    public void registerNetworkEngine(INetworkEngine<?, ?>... networkEngines) {
+        for(INetworkEngine<?, ?> networkEngine : networkEngines) {
+            networkEngine.assignOwner(this);
+        }
+        networkEngineRegistry.putAll(networkEngines);
     }
 }

@@ -1,25 +1,25 @@
 package dev.hilligans.ourcraft.network.engine;
 
-import dev.hilligans.ourcraft.network.IPacketByteArray;
-import dev.hilligans.ourcraft.network.PacketBase;
-import dev.hilligans.ourcraft.network.PacketByteArray;
-import dev.hilligans.ourcraft.network.Protocol;
+import dev.hilligans.ourcraft.network.*;
 import dev.hilligans.ourcraft.util.Side;
+import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class NettyEngine extends NetworkEngine<NettyEngine.NettyNetworkEntity, NettyEngine.NettySocket> {
 
-    public ConcurrentHashMap<NettySocket, Boolean> openSockets = new ConcurrentHashMap<>();
+    public ArrayList<NettySocket> sockets = new ArrayList<>();
 
     @Override
     public String getResourceName() {
@@ -47,14 +47,24 @@ public class NettyEngine extends NetworkEngine<NettyEngine.NettyNetworkEntity, N
         return List.of();
     }
 
-    @Override
-    public void openClient(String host, String port) {
-
+    public synchronized void addSocket(NettySocket socket) {
+        sockets.add(socket);
     }
 
     @Override
-    public void openServer(String port) {
+    public NettySocket openClient(Protocol protocol, String host, String port) {
+        NettySocket socket = new NettySocket(protocol, host, Integer.parseInt(port));
+        addSocket(socket);
+        socket.connectSocket();
+        return socket;
+    }
 
+    @Override
+    public NettySocket openServer(Protocol protocol, String port) {
+        NettySocket socket = new NettySocket(protocol, Integer.parseInt(port));
+        addSocket(socket);
+        socket.connectSocket();
+        return socket;
     }
 
     public static class NettySocket extends ChannelInitializer<SocketChannel> implements NetworkSocket {
@@ -80,32 +90,39 @@ public class NettyEngine extends NetworkEngine<NettyEngine.NettyNetworkEntity, N
 
         @Override
         protected void initChannel(SocketChannel ch) throws Exception {
-
-
+            System.out.println("initChannel");
+            ch.pipeline().addLast(new PacketEncoder(2, false));
+            ch.pipeline().addLast(new PacketDecoder(2, false));
             ch.pipeline().addLast(new NettyNetworkEntity(protocol, this));
         }
+
+        EventLoopGroup bossGroup;
+        EventLoopGroup workerGroup;
+        ChannelFuture channelFuture;
 
         @Override
         public void connectSocket() {
             try {
-                EventLoopGroup bossGroup;
-                EventLoopGroup workerGroup;
-                ChannelFuture channelFuture;
-
-                bossGroup = new NioEventLoopGroup(1);
                 workerGroup = new NioEventLoopGroup();
-                try {
-                    ServerBootstrap b = new ServerBootstrap();
-                    b.group(bossGroup, workerGroup)
-                            .channel(NioServerSocketChannel.class)
-                            .handler(new LoggingHandler(LogLevel.INFO))
-                            .childHandler(this);
+                if(getSide().isClient()) {
+                    Bootstrap b = new Bootstrap();
+                    b.group(workerGroup).channel(NioSocketChannel.class).handler(this);
+                    b.connect(host, port).sync();
+                } else {
+                    bossGroup = new NioEventLoopGroup(1);
+                    try {
+                        ServerBootstrap b = new ServerBootstrap();
+                        b.group(bossGroup, workerGroup)
+                                .channel(NioServerSocketChannel.class)
+                                .handler(new LoggingHandler(LogLevel.INFO))
+                                .childHandler(this);
 
-                    channelFuture = b.bind(port).sync();
-                    channelFuture.channel().closeFuture().sync();
-                } finally {
-                    bossGroup.shutdownGracefully();
-                    workerGroup.shutdownGracefully();
+                        channelFuture = b.bind(port).sync();
+                        channelFuture.channel().closeFuture().sync();
+                    } finally {
+                        bossGroup.shutdownGracefully();
+                        workerGroup.shutdownGracefully();
+                    }
                 }
             } catch (Exception e) {
                 throw new RuntimeException(e);
