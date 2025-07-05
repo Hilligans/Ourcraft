@@ -28,7 +28,7 @@ import dev.hilligans.ourcraft.network.packet.client.COpenScreen;
 import dev.hilligans.ourcraft.client.audio.SoundBuffer;
 import dev.hilligans.ourcraft.client.audio.SoundEngine;
 import dev.hilligans.ourcraft.tag.CompoundNBTTag;
-import dev.hilligans.ourcraft.util.ArgumentContainer;
+import dev.hilligans.ourcraft.util.argument.ArgumentContainer;
 import dev.hilligans.ourcraft.util.Logger;
 import dev.hilligans.ourcraft.util.ThreadContext;
 import dev.hilligans.ourcraft.util.registry.Registry;
@@ -37,8 +37,6 @@ import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 import dev.hilligans.ourcraft.save.WorldLoader;
 import dev.hilligans.ourcraft.server.MultiPlayerServer;
 import dev.hilligans.ourcraft.util.Settings;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelId;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL11;
@@ -159,7 +157,7 @@ public class Client implements IClientPacketHandler {
     public void startClient() {
         setupClient();
 
-        System.err.println("Time to start running: " + (System.currentTimeMillis() - ClientMain.startTime));
+        System.err.println("Time to start running: " + (System.currentTimeMillis() - ClientMain.start));
     }
 
     public void loop() {

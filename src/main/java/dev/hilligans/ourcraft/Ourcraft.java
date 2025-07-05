@@ -29,7 +29,6 @@ import dev.hilligans.ourcraft.client.rendering.screens.*;
 import dev.hilligans.ourcraft.client.rendering.Textures;
 import dev.hilligans.ourcraft.command.CommandHandler;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
-import dev.hilligans.ourcraft.data.other.BlockProperties;
 import dev.hilligans.ourcraft.data.primitives.Tuple;
 import dev.hilligans.ourcraft.entity.Entities;
 import dev.hilligans.ourcraft.entity.EntityType;
@@ -38,7 +37,6 @@ import dev.hilligans.ourcraft.item.data.ToolLevel;
 import dev.hilligans.ourcraft.mod.handler.ModClass;
 import dev.hilligans.ourcraft.mod.handler.content.CoreExtensionView;
 import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
-import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.mod.handler.Identifier;
 import dev.hilligans.ourcraft.mod.handler.content.RegistryView;
 import dev.hilligans.ourcraft.network.Protocol;
@@ -54,9 +52,8 @@ import dev.hilligans.ourcraft.resource.ResourceManager;
 import dev.hilligans.ourcraft.resource.registry.loaders.RegistryLoader;
 import dev.hilligans.ourcraft.schematic.LitematicaSchematicLoader;
 import dev.hilligans.ourcraft.settings.Setting;
-import dev.hilligans.ourcraft.util.ArgumentContainer;
+import dev.hilligans.ourcraft.util.argument.ArgumentContainer;
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import dev.hilligans.ourcraft.util.Side;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.util.registry.Registry;
 import dev.hilligans.ourcraft.world.Feature;
@@ -184,7 +181,7 @@ public class Ourcraft extends ModClass {
             modContent12.registerScreenBuilder(new ScreenBuilder(key, jsonObject));
         }).rerunOnInstanceClear());
 
-        if (view.getGameInstance().side.equals(Side.CLIENT)) {
+        if (view.getGameInstance().side.isClient()) {
             Textures.addData(view);
 
             view.registerGraphicsEngine(new VulkanEngine());
@@ -212,7 +209,7 @@ public class Ourcraft extends ModClass {
 
             view.registerLayoutEngine(new NuklearLayoutEngine());
 
-            if (view.getGameInstance().side.equals(Side.CLIENT)) {
+            if (view.getGameInstance().side.isClient()) {
                 view.registerKeybinds(new Input("ourcraft:mouse_handler::0") {
                     @Override
                     public void press(RenderWindow renderWindow, float strength) {
@@ -353,7 +350,7 @@ public class Ourcraft extends ModClass {
         chainedChunkStream.assignOwner(modContent);
         modContent.registerResourceLoader(new LitematicaSchematicLoader());
 
-        if(modContent.getGameInstance().getSide() == Side.CLIENT) {
+        if(modContent.getGameInstance().getSide().isClient()) {
             modContent.registerRenderTask(new GUIRenderTask());
             modContent.registerRenderTask(new WorldRenderTask());
             modContent.registerRenderTask(new WorldTransparentRenderTask());

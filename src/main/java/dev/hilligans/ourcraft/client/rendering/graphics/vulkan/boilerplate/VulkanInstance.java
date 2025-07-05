@@ -2,7 +2,7 @@ package dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate;
 
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanEngineException;
-import dev.hilligans.ourcraft.util.ArgumentContainer;
+import dev.hilligans.ourcraft.util.argument.ArgumentContainer;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanWindow;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFWVulkan;

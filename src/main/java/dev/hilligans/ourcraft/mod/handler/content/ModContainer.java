@@ -31,6 +31,7 @@ import dev.hilligans.ourcraft.world.Feature;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLClassLoader;
+import java.nio.file.Path;
 import java.util.function.Supplier;
 
 public class ModContainer {
@@ -39,7 +40,7 @@ public class ModContainer {
     public Registry<Registry<?>> registries;
     public GameInstance gameInstance;
     public URLClassLoader classLoader;
-
+    public Path path;
 
 
 
@@ -70,9 +71,10 @@ public class ModContainer {
     public Registry<ILayoutEngine<?>> layoutEngineRegistry;
     public Registry<EntityType> entityTypeRegistry;
 
-    public ModContainer(Class<? extends ModClass> clazz, URLClassLoader classLoader) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public ModContainer(Class<? extends ModClass> clazz, URLClassLoader classLoader, Path path) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         this.modClass = clazz.getConstructor().newInstance();
         this.classLoader = classLoader;
+        this.path = path;
     }
 
     public ModContainer(ModClass modClass) {

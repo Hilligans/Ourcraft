@@ -1,0 +1,44 @@
+package dev.hilligans.ourcraft.util.argument;
+
+import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.mod.handler.content.ModList;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+
+public class ArgumentSearcher {
+
+    public static String findAllArguments(GameInstance gameInstance) {
+        try {
+            StringBuilder stringBuilder = new StringBuilder();
+            ModList list = gameInstance.MOD_LIST.load();
+            for(Class<?> clazz : list.classList) {
+                boolean spaced = false;
+                for(Field field : clazz.getFields()) {
+                    if(!Modifier.isStatic(field.getModifiers())) {
+                        continue;
+                    }
+                    if(Argument.class.isAssignableFrom(field.getType())) {
+                        spaced = true;
+                        Argument<?> arg = (Argument<?>) field.get(null);
+                        for(String s : arg.keys) {
+                            stringBuilder.append('\t').append(s);
+                            if(arg.defaultAcceptedValuesString != null) {
+                                stringBuilder.append(":").append(arg.defaultAcceptedValuesString);
+                            }
+                            stringBuilder.append("\n\t\t").append(arg.helpString.replace("\n", "\n\t\t")).append('\n');
+                        }
+                    }
+                }
+                if(spaced) {
+                    stringBuilder.append('\n');
+                }
+            }
+
+            return stringBuilder.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+}

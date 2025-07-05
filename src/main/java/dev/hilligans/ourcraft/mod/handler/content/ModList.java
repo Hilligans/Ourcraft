@@ -2,14 +2,9 @@ package dev.hilligans.ourcraft.mod.handler.content;
 
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.Ourcraft;
-import dev.hilligans.ourcraft.data.primitives.Triplet;
-import dev.hilligans.ourcraft.mod.handler.Mod;
+import dev.hilligans.ourcraft.util.argument.Argument;
 import dev.hilligans.ourcraft.mod.handler.ModClass;
 import dev.hilligans.ourcraft.resource.dataloader.FolderResourceDirectory;
-import dev.hilligans.ourcraft.resource.dataloader.ResourceDirectory;
-import dev.hilligans.ourcraft.resource.dataloader.ZipResourceDirectory;
-import dev.hilligans.ourcraft.resource.loaders.ResourceLoader;
-import dev.hilligans.ourcraft.util.Settings;
 import dev.hilligans.planets.Planets;
 import org.json.JSONObject;
 
@@ -19,6 +14,7 @@ import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -26,8 +22,13 @@ import java.util.zip.ZipInputStream;
 
 public class ModList {
 
+    public static Argument<Boolean> devBuild = Argument.existArg("--devBuild")
+            .help("Used to disable manual class loading, required when developing in intellij.");
+
     public ArrayList<ModContainer> mods = new ArrayList<>();
     public GameInstance gameInstance;
+
+    public HashSet<Class<?>> classList = new HashSet<>();
 
     public ModList(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
@@ -45,7 +46,7 @@ public class ModList {
         loadAllMods(new File("mods/"));
         loadClasses(new File("target/classes/"), "");
 
-        if(!gameInstance.ARGUMENTS.getBoolean("--devBuild", false)) {
+        if(!(devBuild.get(gameInstance))) {
             mods.add(new ModContainer(new Ourcraft()));
             mods.add(new ModContainer(new Planets()));
         }
@@ -98,10 +99,11 @@ public class ModList {
                     try {
                         URLClassLoader child = new URLClassLoader(new URL[]{mod.toURI().toURL()}, this.getClass().getClassLoader());
                         Class<?> testClass = child.loadClass(topName + mod.getName().substring(0,mod.getName().length() - 6));
+                        classList.add(testClass);
 
                         Class<ModClass> clazz = testClass(testClass);
                         if(clazz != null) {
-                            ModContainer container = new ModContainer(clazz, child);
+                            ModContainer container = new ModContainer(clazz, child, new File("target/classes/").toPath());
                             String modID = container.getModID();
 
                             FolderResourceDirectory resourceDirectory = new FolderResourceDirectory(new File("target/classes/"));
@@ -120,10 +122,11 @@ public class ModList {
             ArrayList<String> classNames = getClassNames(file);
             for(String name : classNames) {
                 Class<?> testClass = Class.forName(name,false,child);
+                classList.add(testClass);
 
                 Class<ModClass> clazz = testClass(testClass);
                 if(clazz != null) {
-                    ModContainer container = new ModContainer(clazz, child);
+                    ModContainer container = new ModContainer(clazz, child, file.toPath());
                     String modID = container.getModID();
 
                     FolderResourceDirectory resourceDirectory = new FolderResourceDirectory(new File("target/classes/"));

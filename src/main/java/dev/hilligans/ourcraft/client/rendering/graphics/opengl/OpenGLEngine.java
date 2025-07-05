@@ -1,8 +1,10 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.opengl;
 
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.util.argument.Argument;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
+import dev.hilligans.ourcraft.client.rendering.graphics.RenderPipeline;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsEngineBase;
@@ -28,6 +30,9 @@ import static org.lwjgl.opengl.GL43.*;
 
 public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefaultImpl, GraphicsContext> {
 
+    public static Argument<RenderPipeline> renderPipelineArgument = Argument.registryArg("--renderPipeline", RenderPipeline.class, "ourcraft:engine_loading_pipeline")
+            .help("The default render pipeline to use.");
+
     public Logger logger;
 
     public long window;
@@ -48,7 +53,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
     @Override
     public OpenGLWindow createWindow() {
         OpenGLWindow renderWindow = new OpenGLWindow(this, "Ourcraft 1", 1600, 800, windows.get(0).window);
-        renderWindow.setRenderPipeline(gameInstance.ARGUMENTS.getString("--renderPipeline", "ourcraft:engine_loading_pipeline"));
+        renderWindow.setRenderPipeline(renderPipelineArgument.get(gameInstance));
         windows.add(renderWindow);
         renderWindow.setup();
         //GL.createCapabilities();

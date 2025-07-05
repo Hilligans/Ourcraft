@@ -18,7 +18,6 @@ import dev.hilligans.ourcraft.client.rendering.ScreenBuilder;
 import dev.hilligans.ourcraft.client.rendering.Texture;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.ILayoutEngine;
 import dev.hilligans.ourcraft.command.CommandHandler;
-import dev.hilligans.ourcraft.container.Container;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
 import dev.hilligans.ourcraft.entity.EntityType;
 import dev.hilligans.ourcraft.item.data.ToolLevel;
@@ -42,6 +41,7 @@ import dev.hilligans.ourcraft.resource.UniversalResourceLoader;
 import dev.hilligans.ourcraft.settings.Setting;
 import dev.hilligans.ourcraft.util.*;
 import dev.hilligans.ourcraft.recipe.IRecipe;
+import dev.hilligans.ourcraft.util.argument.ArgumentContainer;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.util.registry.Registry;
 import dev.hilligans.ourcraft.world.Feature;
@@ -52,11 +52,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 
 public class GameInstance {
     public final EventBus EVENT_BUS = new EventBus();

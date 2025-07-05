@@ -1,4 +1,4 @@
-package dev.hilligans.ourcraft.util;
+package dev.hilligans.ourcraft.util.argument;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,6 +21,10 @@ public class ArgumentContainer {
                 tasks.add(parts[0]);
             }
         }
+    }
+
+    public boolean exists(String key) {
+        return tasks.contains(key);
     }
 
     public String getString(String key, String defaultValue) {

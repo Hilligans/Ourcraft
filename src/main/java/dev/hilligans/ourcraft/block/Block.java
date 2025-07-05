@@ -311,10 +311,6 @@ public class Block implements IRegistryElement {
                 blockProperties.read(jsonObject);
             }
         }
-
-        if(source.gameInstance.side == Side.CLIENT) {
-           // generateTextures();
-        }
     }
 
     @Override

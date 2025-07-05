@@ -12,6 +12,13 @@ public enum Side {
 
     public final String name;
 
+    public boolean isClient() {
+        return this != SERVER;
+    }
+
+    public boolean isServer() {
+        return this != CLIENT;
+    }
 
     public boolean equals(Side s) {
         if(s == null) {
@@ -21,5 +28,14 @@ public enum Side {
             return true;
         }
         return this == s;
+    }
+
+    public static Side parseSide(String s) {
+        for(Side side : Side.values()) {
+            if(side.name.equals(s)) {
+                return side;
+            }
+        }
+        throw new RuntimeException("Invalid side " + s);
     }
 }

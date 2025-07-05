@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate;
 
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanEngineException;
+import dev.hilligans.ourcraft.util.argument.Argument;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.VkPhysicalDevice;
@@ -12,6 +13,11 @@ import static org.lwjgl.vulkan.VK10.vkEnumeratePhysicalDevices;
 
 public class PhysicalDeviceManager {
 
+    public static Argument<Integer> vkDevice = Argument.integerArg("--vkDevice", 0)
+            .help("Specifies which physical device index to always select when using the vulkan backend.");
+    public static Argument<String> vkDeviceName = Argument.stringArg("--vkDeviceName", "")
+            .help("Specifies which physical device name to always select when using the vulkan backend.");
+
     public ArrayList<PhysicalDevice> devices = new ArrayList<>();
     public VulkanInstance vulkanInstance;
     public int defaultDevice;
@@ -19,8 +25,8 @@ public class PhysicalDeviceManager {
 
     public PhysicalDeviceManager(VulkanInstance vulkanInstance) {
         this.vulkanInstance = vulkanInstance;
-        defaultDevice = vulkanInstance.getArgumentContainer().getInt("--vkDevice", 0);
-        defaultDeviceName = vulkanInstance.getArgumentContainer().getString("--vkDeviceName", "");
+        defaultDevice = vkDevice.get(vulkanInstance.getArgumentContainer());
+        defaultDeviceName = vkDeviceName.get(vulkanInstance.getArgumentContainer());
     }
 
     public PhysicalDevice getDefaultDevice() {

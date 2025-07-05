@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate;
 
-import dev.hilligans.ourcraft.util.ArgumentContainer;
+import dev.hilligans.ourcraft.util.argument.ArgumentContainer;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.*;

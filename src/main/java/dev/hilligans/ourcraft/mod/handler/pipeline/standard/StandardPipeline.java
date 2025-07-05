@@ -2,12 +2,10 @@ package dev.hilligans.ourcraft.mod.handler.pipeline.standard;
 
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.mod.handler.content.CoreExtensionView;
-import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
-import dev.hilligans.ourcraft.mod.handler.content.ModList;
+import dev.hilligans.ourcraft.util.argument.Argument;
 import dev.hilligans.ourcraft.mod.handler.content.RegistryView;
 import dev.hilligans.ourcraft.mod.handler.pipeline.InstanceLoaderPipeline;
 import dev.hilligans.ourcraft.mod.handler.pipeline.PerModPipelineStage;
-import dev.hilligans.ourcraft.mod.handler.pipeline.PipelineStage;
 import dev.hilligans.ourcraft.resource.loaders.ResourceLoader;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.util.registry.Registry;
@@ -18,6 +16,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class StandardPipeline extends InstanceLoaderPipeline<StandardPipeline> {
+
+    public static final Argument<Boolean> dumpRegistries = Argument.existArg("--dump-registries")
+            .help("Prints all the registries to stdout at the end of loading.");
 
     public StandardPipeline(GameInstance gameInstance) {
         super(gameInstance);
@@ -78,7 +79,7 @@ public class StandardPipeline extends InstanceLoaderPipeline<StandardPipeline> {
 
         pipeline.addStage("Finish Building", (pipeline13, section) -> {pipeline13.getGameInstance().builtSemaphore.release();});
 
-        if(gameInstance.getArgumentContainer().getBoolean("--dump-registries", false)) {
+        if(dumpRegistries.get(gameInstance)) {
             pipeline.addStage("Debug", ((pipeline1, section1) -> {
                 System.out.println("Registries:");
                 for(Registry<? extends IRegistryElement> registry : pipeline1.getGameInstance().REGISTRIES.ELEMENTS) {

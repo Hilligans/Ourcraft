@@ -155,7 +155,7 @@ public class Item implements IRecipeComponent, IRegistryElement {
 
     @Override
     public void load(GameInstance gameInstance) {
-        if(source.gameInstance.side == Side.CLIENT) {
+        if(source.gameInstance.side.isClient()) {
             generateTextures();
         }
     }
