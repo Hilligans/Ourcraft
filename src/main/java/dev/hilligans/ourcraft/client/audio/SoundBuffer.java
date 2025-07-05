@@ -99,7 +99,7 @@ public class SoundBuffer implements IRegistryElement {
 
     @Override
     public void load(GameInstance gameInstance) {
-        if(bytes == null && source.gameInstance.side == Side.CLIENT) {
+        if(bytes == null && source.gameInstance.side.isClient()) {
             this.data = source.gameInstance.getResource(new ResourceLocation(file, source));
             try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
                 try {

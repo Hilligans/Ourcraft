@@ -38,4 +38,9 @@ public enum Side {
         }
         throw new RuntimeException("Invalid side " + s);
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

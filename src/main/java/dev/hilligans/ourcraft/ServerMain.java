@@ -45,8 +45,6 @@ public class ServerMain {
 
         gameInstance.THREAD_PROVIDER.map();
 
-        //ServerWorld world = new ServerWorld(gameInstance);
-        //world.worldBuilders.add(new OreBuilder("ore", Blocks.GRASS,Blocks.STONE).setFrequency(20));
 
         server = new MultiPlayerServer(gameInstance);
         //server.addWorld(0,world);

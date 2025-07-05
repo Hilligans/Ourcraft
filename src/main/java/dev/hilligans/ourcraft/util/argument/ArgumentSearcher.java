@@ -23,8 +23,9 @@ public class ArgumentSearcher {
                         Argument<?> arg = (Argument<?>) field.get(null);
                         for(String s : arg.keys) {
                             stringBuilder.append('\t').append(s);
-                            if(arg.defaultAcceptedValuesString != null) {
-                                stringBuilder.append(":").append(arg.defaultAcceptedValuesString);
+                            String acceptedValues = arg.getAcceptedValuesString(gameInstance);
+                            if(acceptedValues != null) {
+                                stringBuilder.append("=").append(acceptedValues);
                             }
                             stringBuilder.append("\n\t\t").append(arg.helpString.replace("\n", "\n\t\t")).append('\n');
                         }

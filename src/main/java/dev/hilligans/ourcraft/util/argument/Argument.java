@@ -1,9 +1,12 @@
 package dev.hilligans.ourcraft.util.argument;
 
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.util.Ansi;
 import dev.hilligans.ourcraft.util.Side;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.ourcraft.util.registry.Registry;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
@@ -11,12 +14,11 @@ import java.util.function.Function;
 public class Argument<T> {
     public Class<T> clazz;
     public T defaultValue;
-    public String defaultVal;
     public Function<String, T> parseFunction;
     public String[] keys;
     public List<String> acceptedValues;
     public String helpString = "";
-    public String defaultAcceptedValuesString;
+    public String acceptedValuesString;
 
     public Argument(Class<T> clazz, T defaultValue, Function<String, T> parseFunction, String... keys) {
         this.clazz = clazz;
@@ -30,19 +32,34 @@ public class Argument<T> {
         return this;
     }
 
-    public Argument<T> defaultAcceptedValue(String defaultValueString) {
-        this.defaultAcceptedValuesString = defaultValueString;
+    public Argument<T> acceptedValuesString(String defaultValueString) {
+        this.acceptedValuesString = defaultValueString;
         return this;
     }
 
     public Argument<T> acceptedValues(List<String> acceptedValues) {
         this.acceptedValues = acceptedValues;
-        defaultAcceptedValuesString = acceptedValues.toString();
+        if(Ansi.USE_ANSI) {
+            ArrayList<String> strings = new ArrayList<>();
+            for(String s : acceptedValues) {
+                if(s.equals(defaultValue.toString())) {
+                    strings.add(Ansi.ANSI_BOLD + s + Ansi.ANSI_RESET);
+                } else {
+                    strings.add(s);
+                }
+            }
+            acceptedValues = strings;
+        }
+        acceptedValuesString = acceptedValues.toString();
         return this;
     }
 
     public Argument<T> acceptedValues(String... acceptedValues) {
         return acceptedValues(List.of(acceptedValues));
+    }
+
+    public String getAcceptedValuesString(GameInstance gameInstance) {
+        return acceptedValuesString;
     }
 
     public T get(ArgumentContainer argumentContainer) {
@@ -64,7 +81,7 @@ public class Argument<T> {
     }
 
     public static Argument<String> stringArg(String key, String defaultValue) {
-        return new Argument<>(String.class, defaultValue, (str) -> str, key).defaultAcceptedValue("<str>");
+        return new Argument<>(String.class, defaultValue, (str) -> str, key).acceptedValuesString("<str>");
     }
 
     public static Argument<Boolean> booleanArg(String key, boolean defaultValue) {
@@ -86,11 +103,11 @@ public class Argument<T> {
     }
 
     public static Argument<Integer> integerArg(String key, int defaultValue) {
-        return new Argument<>(Integer.class, defaultValue, Integer::parseInt, key).defaultAcceptedValue("<int>");
+        return new Argument<>(Integer.class, defaultValue, Integer::parseInt, key).acceptedValuesString("<int>");
     }
 
     public static Argument<Float> floatArg(String key, float defaultValue) {
-        return new Argument<>(Float.class, defaultValue, Float::parseFloat, key).defaultAcceptedValue("<float>");
+        return new Argument<>(Float.class, defaultValue, Float::parseFloat, key).acceptedValuesString("<float>");
     }
 
     public static Argument<Side> sideArg(String key, Side defaultValue) {
@@ -110,6 +127,28 @@ public class Argument<T> {
             public T get(GameInstance gameInstance) {
                 return gameInstance.getExcept(strArg.get(gameInstance), clazz);
             }
-        }.defaultAcceptedValue("<mod_id:value>");
+
+            @Override
+            public String getAcceptedValuesString(GameInstance gameInstance) {
+                Registry<T> registry = gameInstance.getRegistry(clazz);
+                if(registry == null) {
+                    return super.getAcceptedValuesString(gameInstance);
+                }
+                ArrayList<String> list = new ArrayList<>();
+                if(Ansi.USE_ANSI) {
+                    registry.forEach((val) -> {
+                        String str = val.getIdentifierName();
+                        if(str.equals(strArg.defaultValue)) {
+                            list.add(Ansi.ANSI_BOLD + val.getIdentifierName() + Ansi.ANSI_RESET);
+                        } else {
+                            list.add(val.getIdentifierName());
+                        }
+                    });
+                } else {
+                    registry.forEach((val) -> list.add(val.getIdentifierName()));
+                }
+                return list.toString();
+            }
+        }.acceptedValuesString("<mod_id:value>");
     }
 }

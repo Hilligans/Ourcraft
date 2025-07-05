@@ -14,7 +14,7 @@ public class ArgumentContainer {
 
     public void handle(String... args) {
         for(String string : args) {
-            String[] parts = string.split(":",2);
+            String[] parts = string.split("=",2);
             if(parts.length != 1) {
                 arguments.put(parts[0],parts[1]);
             } else {

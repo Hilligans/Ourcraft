@@ -12,6 +12,7 @@ import dev.hilligans.ourcraft.util.argument.ArgumentSearcher;
 import static dev.hilligans.ourcraft.Ourcraft.argumentContainer;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -23,7 +24,7 @@ public class ClientMain {
             .help("Shows this menu.");
     public static final Argument<Side> startingSide = Argument.sideArg("--side", Side.CLIENT)
             .help("Specifies which side to load.");
-    public static final Argument<Boolean> integratedServer = Argument.booleanArg("--integrated-server", false)
+    public static final Argument<Boolean> integratedServer = Argument.existArg("--integrated-server")
             .help("Whether or not to launch an integrated server.");
     public static final Argument<IGraphicsEngine> graphicsEngine = Argument.registryArg("--graphicsEngine", IGraphicsEngine.class, "ourcraft:openglEngine")
             .help("The default graphics engine to use, still need to lookup acceptable values based on registry.");
@@ -34,22 +35,24 @@ public class ClientMain {
 
     public static void main(String[] args) throws IOException {
         Ourcraft.argumentContainer = new ArgumentContainer(args);
-
+        System.out.println("Starting with arguments: " + Arrays.toString(args));
         //System.out.println(STR."Starting client with PID \{ProcessHandle.current().pid()}");
         System.out.println("Starting client with PID " + ProcessHandle.current().pid());
 
         GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
         gameInstance.handleArgs(args);
+        gameInstance.side = startingSide.get(argumentContainer);
+
         if(help.get(argumentContainer)) {
+            if(loadImmediate.get(gameInstance)) {
+                StandardPipeline.get(gameInstance).build();
+            }
             System.out.println(ArgumentSearcher.findAllArguments(gameInstance));
-            //TODO implement the argument lookup
             System.exit(0);
         }
 
 
-        gameInstance.side = startingSide.get(argumentContainer);
         gameInstance.THREAD_PROVIDER.map();
-
         gameInstance.builtSemaphore.acquireUninterruptibly();
 
         if(integratedServer.get(argumentContainer)) {
@@ -102,6 +105,5 @@ public class ClientMain {
         });
 
         pipeline.build();
-
     }
 }

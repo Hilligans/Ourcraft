@@ -247,6 +247,15 @@ public class GameInstance {
         //throw new RuntimeException(STR."Unknown registry \{registryClass}");
     }
 
+    public <T extends IRegistryElement> Registry<T> getRegistry(Class<T> registryClass) {
+        for(Registry<?> registry : REGISTRIES.ELEMENTS) {
+            if(registry.classType == registryClass) {
+                return (Registry<T>) registry;
+            }
+        }
+        return null;
+    }
+
     public Item getItem(int id) {
         if(ITEMS.ELEMENTS.size() > id) {
             return ITEMS.get(id);
