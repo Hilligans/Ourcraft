@@ -42,18 +42,6 @@ public class PacketByteArray implements IPacketByteArray {
         index = bytes.length - packetWidth;
     }
 
-    public PacketByteArray(byte[] bytes) {
-        this.byteBuf = Unpooled.buffer();
-        this.byteBuf.writeBytes(bytes);
-
-        this.packetID = readVarInt();
-
-        this.index = bytes.length - IByteArray.varIntLength(packetID);
-    }
-
-    public PacketByteArray() {
-    }
-
     @Override
     public void write(MemorySegment memorySegment) {
         ValueLayout.OfByte ofByte = ValueLayout.JAVA_BYTE;
