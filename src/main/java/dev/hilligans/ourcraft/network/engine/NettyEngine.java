@@ -1,7 +1,16 @@
 package dev.hilligans.ourcraft.network.engine;
 
+import dev.hilligans.ourcraft.client.Client;
+import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
+import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.network.*;
+import dev.hilligans.ourcraft.network.packet.PacketType;
+import dev.hilligans.ourcraft.network.packet.packet.SServerExceptionPacket;
+import dev.hilligans.ourcraft.server.IServer;
+import dev.hilligans.ourcraft.util.IByteArray;
 import dev.hilligans.ourcraft.util.Side;
+import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
+import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -16,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 
 public class NettyEngine extends NetworkEngine<NettyEngine.NettyNetworkEntity, NettyEngine.NettySocket> {
 
@@ -52,48 +62,70 @@ public class NettyEngine extends NetworkEngine<NettyEngine.NettyNetworkEntity, N
     }
 
     @Override
-    public NettySocket openClient(Protocol protocol, String host, String port) {
-        NettySocket socket = new NettySocket(protocol, host, Integer.parseInt(port));
+    public NettySocket openClient(Protocol protocol, Client client, String host, String port) {
+        NettySocket socket = new NettySocket(this, protocol, client, host, Integer.parseInt(port));
         addSocket(socket);
-        socket.connectSocket();
         return socket;
     }
 
     @Override
-    public NettySocket openServer(Protocol protocol, String port) {
-        NettySocket socket = new NettySocket(protocol, Integer.parseInt(port));
+    public NettySocket openServer(Protocol protocol, IServer server, String port) {
+        NettySocket socket = new NettySocket(this, protocol, server, Integer.parseInt(port));
         addSocket(socket);
-        socket.connectSocket();
         return socket;
     }
 
-    public static class NettySocket extends ChannelInitializer<SocketChannel> implements NetworkSocket {
+    @Override
+    public IByteArray allocByteArray() {
+        return new PacketByteArray();
+    }
+
+    @Override
+    public void freeByteArray(IByteArray array) {
+    }
+
+    public static class NettySocket extends ChannelInitializer<SocketChannel> implements NetworkSocket<NettyEngine.NettyNetworkEntity> {
 
         public Side side;
         public Protocol protocol;
+        public NettyEngine engine;
 
         public int port;
         public String host;
 
-        public NettySocket(Protocol protocol, String host, int port) {
+        public Consumer<NettyNetworkEntity> callback;
+
+        public Client client;
+        public IServer server;
+
+        public NettySocket(NettyEngine engine, Protocol protocol, Client client, String host, int port) {
+            this.engine = engine;
             this.protocol = protocol;
+            this.client = client;
             this.port = port;
             this.host = host;
             this.side = Side.CLIENT;
         }
 
-        public NettySocket(Protocol protocol, int port) {
+        public NettySocket(NettyEngine engine, Protocol protocol, IServer server, int port) {
+            this.engine = engine;
             this.protocol = protocol;
+            this.server = server;
             this.port = port;
             this.side = Side.SERVER;
         }
 
         @Override
+        public void onConnected(Consumer<NettyNetworkEntity> callback) {
+            this.callback = callback;
+        }
+
+        @Override
         protected void initChannel(SocketChannel ch) throws Exception {
-            System.out.println("initChannel");
+            System.out.println("Channel Active:");
             ch.pipeline().addLast(new PacketEncoder(2, false));
             ch.pipeline().addLast(new PacketDecoder(2, false));
-            ch.pipeline().addLast(new NettyNetworkEntity(protocol, this));
+            ch.pipeline().addLast(new NettyNetworkEntity(protocol, this).setNetworkEngine(engine));
         }
 
         EventLoopGroup bossGroup;
@@ -160,7 +192,7 @@ public class NettyEngine extends NetworkEngine<NettyEngine.NettyNetworkEntity, N
         }
     }
 
-    public static class NettyNetworkEntity extends SimpleChannelInboundHandler<IPacketByteArray> implements NetworkEntity {
+    public static class NettyNetworkEntity extends SimpleChannelInboundHandler<IPacketByteArray> implements NetworkEntity, ClientNetworkEntity, ServerNetworkEntity {
 
         Protocol sendProtocol;
         Protocol receiveProtocol;
@@ -180,17 +212,35 @@ public class NettyEngine extends NetworkEngine<NettyEngine.NettyNetworkEntity, N
         public void channelActive(ChannelHandlerContext ctx) throws Exception {
             super.channelActive(ctx);
             this.alive = true;
+            this.channel = ctx.channel();
+            if(this.socket.callback != null) {
+                this.socket.callback.accept(this);
+            }
         }
 
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, IPacketByteArray msg) throws Exception {
-
+            try {
+                PacketType packet = getReceiveProtocol().fromIdToPacketType(msg.readShort());
+                packet.decode(this, msg);
+            } catch (Exception e) {
+                e.printStackTrace();
+                if(socket.side.isServer()) {
+                    SServerExceptionPacket.send(this, e);
+                }
+            }
         }
 
         @Override
         public void channelInactive(ChannelHandlerContext ctx) throws Exception {
             super.channelInactive(ctx);
             this.alive = false;
+        }
+
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+            super.exceptionCaught(ctx, cause);
+            cause.printStackTrace();
         }
 
         @Override
@@ -209,12 +259,13 @@ public class NettyEngine extends NetworkEngine<NettyEngine.NettyNetworkEntity, N
         }
 
         @Override
-        public void setNetworkEngine(INetworkEngine<?, ?> networkEngine) {
+        public NettyNetworkEntity setNetworkEngine(INetworkEngine<?, ?> networkEngine) {
             this.engine = (NetworkEngine<NettyNetworkEntity, NettySocket>) networkEngine;
+            return this;
         }
 
         @Override
-        public NetworkSocket getNetworkSocket() {
+        public NetworkSocket<NettyEngine.NettyNetworkEntity> getNetworkSocket() {
             return socket;
         }
 
@@ -228,6 +279,41 @@ public class NettyEngine extends NetworkEngine<NettyEngine.NettyNetworkEntity, N
         @Override
         public boolean isAlive() {
             return alive;
+        }
+
+        @Override
+        public void sendPacket(IByteArray packet) {
+            channel.writeAndFlush(packet);
+        }
+
+        @Override
+        public Client getClient() {
+            return socket.client;
+        }
+
+        @Override
+        public IWorld getWorld() {
+            return getClient().getWorld();
+        }
+
+        @Override
+        public IServerWorld getServerWorld() {
+            return null;
+        }
+
+        @Override
+        public ServerPlayerData getServerPlayerData() {
+            return null;
+        }
+
+        @Override
+        public PlayerEntity getPlayerEntity() {
+            return null;
+        }
+
+        @Override
+        public IServer getServer() {
+            return socket.server;
         }
     }
 }

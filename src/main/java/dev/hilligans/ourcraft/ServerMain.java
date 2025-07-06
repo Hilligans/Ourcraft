@@ -40,6 +40,7 @@ public class ServerMain {
 
 
     public static IServer server(GameInstance gameInstance) {
+        System.out.println("Starting server...");
         gameInstance.builtSemaphore.acquireUninterruptibly();
         gameInstance.builtSemaphore.release();
 

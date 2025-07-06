@@ -1,7 +1,6 @@
 package dev.hilligans.ourcraft.network.engine;
 
 import dev.hilligans.ourcraft.GameInstance;
-import dev.hilligans.ourcraft.network.PacketBase;
 import dev.hilligans.ourcraft.network.Protocol;
 import dev.hilligans.ourcraft.util.Side;
 
@@ -10,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
-public abstract class NetworkEngine<T extends NetworkEntity, Q extends NetworkSocket> implements INetworkEngine<T, Q> {
+public abstract class NetworkEngine<T extends NetworkEntity, Q extends NetworkSocket<T>> implements INetworkEngine<T, Q> {
 
     public GameInstance gameInstance;
     public ConcurrentHashMap<T, Boolean> networkEntities;

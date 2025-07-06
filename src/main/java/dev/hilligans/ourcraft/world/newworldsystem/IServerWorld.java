@@ -3,9 +3,8 @@ package dev.hilligans.ourcraft.world.newworldsystem;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.BoundingBox;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
-import dev.hilligans.ourcraft.network.packet.server.SSendChunkPacket;
+import dev.hilligans.ourcraft.network.packet.packet.SSendChunkPacket;
 import dev.hilligans.ourcraft.server.IServer;
-import dev.hilligans.ourcraft.server.MultiPlayerServer;
 import dev.hilligans.ourcraft.server.concurrent.ChunkLocker;
 
 import java.util.function.Consumer;
@@ -47,7 +46,7 @@ public interface IServerWorld extends IWorld {
                         IChunk chunk = getChunk((long) (x + chunkX) * chunkWidth, (long) (y + chunkY) * chunkHeight, (long) (z + chunkZ) * chunkWidth);
                         if(chunk != null) {
                             if (boundingBox.intersects(chunk) && !old.intersects(chunk)) {
-                                getServer().sendPacket(new SSendChunkPacket(chunk), serverPlayerData.playerEntity);
+                                SSendChunkPacket.send(serverPlayerData.networkEntity, chunk);
                             }
                         }
                     }

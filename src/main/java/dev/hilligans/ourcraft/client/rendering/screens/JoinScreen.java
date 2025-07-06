@@ -10,6 +10,10 @@ import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.widgets.Button;
 import dev.hilligans.ourcraft.client.rendering.widgets.ServerSelectorWidget;
 import dev.hilligans.ourcraft.network.PortUtil;
+import dev.hilligans.ourcraft.network.Protocol;
+import dev.hilligans.ourcraft.network.engine.INetworkEngine;
+import dev.hilligans.ourcraft.network.engine.NetworkSocket;
+import dev.hilligans.ourcraft.network.packet.packet.CLogin;
 import dev.hilligans.ourcraft.util.Settings;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_H;
@@ -67,7 +71,12 @@ public class JoinScreen extends ScreenBase {
 
         addWidget(new Button(500,500,200,50,"menu.singleplayerjoin", () -> {
             try {
-                client.network.joinServer("localhost",portString,client);
+                NetworkSocket<?> socket = client.getGameInstance().getExcept("ourcraft:nettyEngine", INetworkEngine.class)
+                        .openClient(client.getGameInstance().getExcept("ourcraft:Play", Protocol.class), client, "localhost", portString);
+                socket.onConnected(e -> CLogin.send(e, "hilligans"));
+                client.socket = socket;
+                socket.connectSocket();
+                //client.network.joinServer("localhost",portString,client);
                 client.closeScreen();
             } catch (Exception e) {
                 e.printStackTrace();

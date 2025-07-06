@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.world.newworldsystem;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
+import dev.hilligans.ourcraft.util.IByteArray;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import io.netty.buffer.ByteBuf;
 
@@ -19,6 +20,10 @@ public abstract class ChunkStream implements IRegistryElement {
     public abstract IChunk fillChunk(ByteBuf buffer, int position, IChunk chunk);
 
     public abstract int fillBuffer(ByteBuf buffer, int position, IChunk chunk);
+
+    public abstract void fillBuffer(IByteArray array, IChunk chunk);
+
+    public abstract void fillChunk(IByteArray array, IChunk chunk);
 
     @Override
     public String getResourceName() {

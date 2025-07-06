@@ -67,7 +67,7 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
             serverPlayerData.handleDisconnect();
             serverPlayerData.close();
             sendPacketInternal(new SSendPlayerList(serverPlayerData.getPlayerName(), (int) serverPlayerData.getPlayerID().l1,false));
-            sendPacketInternal(new SChatMessage(serverPlayerData.getPlayerName() + " has left the game"));
+            //sendPacketInternal(new SChatMessage(serverPlayerData.getPlayerName() + " has left the game"));
         }
         channels.remove(ctx.channel());
        // mappedChannels.remove(id);
@@ -121,15 +121,6 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
         return sendPacket(packetBase, ctx.channel());
     }
 
-    @Override
-    public Protocol getSendProtocol(ChannelId channelId) {
-        ServerPlayerData serverPlayerData = mappedPlayerData.get(channelId);
-        if(serverPlayerData == null) {
-            return this.defaultSendProtocol;
-        } else {
-            return serverPlayerData.getSendProtocol();
-        }
-    }
 
     public static ChannelFuture sendPacket1(PacketBase<?> packetBase, ChannelHandlerContext ctx) {
         return sendPacket(packetBase, ctx.channel());

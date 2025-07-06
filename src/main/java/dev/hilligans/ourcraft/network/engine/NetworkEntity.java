@@ -1,6 +1,8 @@
 package dev.hilligans.ourcraft.network.engine;
 
+import dev.hilligans.ourcraft.network.PacketBase;
 import dev.hilligans.ourcraft.network.Protocol;
+import dev.hilligans.ourcraft.util.IByteArray;
 
 public interface NetworkEntity {
 
@@ -9,11 +11,20 @@ public interface NetworkEntity {
     Protocol getReceiveProtocol();
 
     INetworkEngine<?, ?> getNetworkEngine();
-    void setNetworkEngine(INetworkEngine<?, ?> networkEngine);
+    NetworkEntity setNetworkEngine(INetworkEngine<?, ?> networkEngine);
 
-    NetworkSocket getNetworkSocket();
+    NetworkSocket<?> getNetworkSocket();
 
     void setAlive(boolean alive);
     boolean isAlive();
 
+    void sendPacket(IByteArray data);
+
+    default IByteArray allocByteArray() {
+        return getNetworkEngine().allocByteArray();
+    }
+
+    default void freeByteArray(IByteArray array) {
+        getNetworkEngine().freeByteArray(array);
+    }
 }

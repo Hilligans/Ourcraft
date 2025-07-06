@@ -22,6 +22,7 @@ import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.ourcraft.mod.handler.events.client.OpenScreenEvent;
 import dev.hilligans.ourcraft.network.*;
+import dev.hilligans.ourcraft.network.engine.NetworkSocket;
 import dev.hilligans.ourcraft.network.packet.client.CCloseScreen;
 import dev.hilligans.ourcraft.network.packet.client.CDropItem;
 import dev.hilligans.ourcraft.network.packet.client.COpenScreen;
@@ -55,7 +56,7 @@ public class Client implements IClientPacketHandler {
 
     public boolean valid = false;
     public boolean screenShot = false;
-    public boolean renderWorld = false;
+    public boolean renderWorld = true;
     public PlayerList playerList;
     public boolean glStarted = false;
     public long renderTime = 0;
@@ -70,8 +71,9 @@ public class Client implements IClientPacketHandler {
     public ClientPlayerData playerData = new ClientPlayerData();
     public IWorld newClientWorld;
 
-    public MultiPlayerServer multiPlayerServer;
     public boolean rendering = false;
+
+    public NetworkSocket<?> socket;
 
     public ClientNetwork network;
     public ClientNetwork authNetwork;
@@ -171,14 +173,14 @@ public class Client implements IClientPacketHandler {
             newClientWorld.tick();
         }
         try(var $0 = threadContext.getSection().startSection("process_packets")) {
-            if(network != null) {
-                network.processPackets();
-            }
+            //if(network != null) {
+            //    network.processPackets();
+            //}
         }
         if(transition) {
-            new Thread(() -> {
-                    network = new ClientNetwork(gameInstance, gameInstance.PROTOCOLS.get("ourcraft:Play")).debug(argumentContainer.getBoolean("--packetTrace", false));
-            }).start();
+            //new Thread(() -> {
+            //        network = new ClientNetwork(gameInstance, gameInstance.PROTOCOLS.get("ourcraft:Play")).debug(argumentContainer.getBoolean("--packetTrace", false));
+            //}).start();
             client.gameInstance.build(client.graphicsEngine, null);
             transition = false;
             rWindow.setRenderPipeline("ourcraft:menu_pipeline");
@@ -387,7 +389,7 @@ public class Client implements IClientPacketHandler {
     public static float drawTime = 1000f * 1000000 / Settings.maxFps;
 
     public void sendPacket(PacketBase<?> packetBase) {
-         network.sendPacket(packetBase);
+       //  network.sendPacket(packetBase);
     }
 
     public DoubleBuffer getMousePos() {
@@ -431,7 +433,6 @@ public class Client implements IClientPacketHandler {
         return this;
     }
 
-    @Override
     public IWorld getWorld() {
         return newClientWorld;
     }
@@ -441,12 +442,4 @@ public class Client implements IClientPacketHandler {
         return gameInstance;
     }
 
-    public Network getNetwork() {
-        return network;
-    }
-
-    @Override
-    public Protocol getSendProtocol(ChannelId channelId) {
-        return null;
-    }
 }

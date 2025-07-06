@@ -3,7 +3,9 @@ package dev.hilligans.ourcraft.network.engine;
 import dev.hilligans.ourcraft.network.Protocol;
 import dev.hilligans.ourcraft.util.Side;
 
-public interface NetworkSocket {
+import java.util.function.Consumer;
+
+public interface NetworkSocket<T extends NetworkEntity> {
 
     void connectSocket();
     void closeSocket();
@@ -14,4 +16,6 @@ public interface NetworkSocket {
 
     Protocol getInitialSendProtocol();
     Protocol getInitialReceiveProtocol();
+
+    void onConnected(Consumer<T> callback);
 }

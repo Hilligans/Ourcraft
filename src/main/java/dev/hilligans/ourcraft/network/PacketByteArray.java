@@ -16,6 +16,10 @@ public class PacketByteArray implements IPacketByteArray {
     public int index = 0;
     ChannelHandlerContext ctx;
 
+    public PacketByteArray() {
+        byteBuf = Unpooled.buffer();
+    }
+
     public PacketByteArray(ByteBuf byteBuf) {
         this.byteBuf = byteBuf;
         this.index = byteBuf.readableBytes();

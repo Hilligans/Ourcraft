@@ -21,6 +21,7 @@ import dev.hilligans.ourcraft.mod.handler.ModClass;
 import dev.hilligans.ourcraft.network.PacketBase;
 import dev.hilligans.ourcraft.network.Protocol;
 import dev.hilligans.ourcraft.network.engine.INetworkEngine;
+import dev.hilligans.ourcraft.network.packet.PacketType;
 import dev.hilligans.ourcraft.recipe.IRecipe;
 import dev.hilligans.ourcraft.recipe.helper.RecipeView;
 import dev.hilligans.ourcraft.resource.loaders.ResourceLoader;
@@ -197,20 +198,20 @@ public class ModContainer {
     }
 
     @SafeVarargs
-    public final void registerPacket(Supplier<PacketBase<?>>... packets) {
+    public final void registerPacket(PacketType... packets) {
         ModContainer self = this;
-        for(Supplier<PacketBase<?>> packet : packets) {
+        for(PacketType packetType : packets) {
             Protocol protocol = protocolRegistry.computeIfAbsent("ourcraft:Play", (s -> new Protocol(s.split(":")[1]).setSource(self)));
-            protocol.register(packet);
+            protocol.register(packetType);
         }
     }
 
     @SafeVarargs
-    public final void registerPacket(String protocolName, Supplier<PacketBase<?>>... packets) {
+    public final void registerPacket(String protocolName, PacketType... packets) {
         ModContainer self = this;
-        for(Supplier<PacketBase<?>> packet : packets) {
+        for(PacketType packetType : packets) {
             Protocol protocol = protocolRegistry.computeIfAbsent(protocolName, (s -> new Protocol(s.split(":")[1]).setSource(self)));
-            protocol.register(packet);
+            protocol.register(packetType);
         }
     }
 
@@ -219,7 +220,7 @@ public class ModContainer {
         ModContainer self = this;
         for(Supplier<PacketBase<?>> packet : packets) {
             Protocol protocol = protocolRegistry.computeIfAbsent(protocolName, (s -> new Protocol(s.split(":")[1]).setSource(self)));
-            protocol.register(packet,id);
+         //   protocol.register(packet,id);
         }
     }
 

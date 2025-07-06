@@ -7,6 +7,7 @@ import dev.hilligans.ourcraft.mod.handler.events.server.ServerTickEvent;
 import dev.hilligans.ourcraft.network.PacketBase;
 import dev.hilligans.ourcraft.network.ServerNetworkHandler;
 import dev.hilligans.ourcraft.Ourcraft;
+import dev.hilligans.ourcraft.util.IByteArray;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 
@@ -26,13 +27,13 @@ public interface IServer {
 
     ServerNetworkHandler getServerNetworkHandler();
 
-    void sendPacketToAllVisible(PacketBase<?> packet, long x, long y, long z, IWorld serverWorld);
-
     void sendPacket(PacketBase<?> packetBase);
 
     void sendPacket(PacketBase<?> packetBase, PlayerEntity playerEntity);
 
-    void sendPacket(PacketBase<?> packetBase, ServerPlayerData playerData);
+    void sendPacket(IByteArray array);
+
+    ServerPlayerData loadPlayer(String player);
 
     GameInstance getGameInstance();
 

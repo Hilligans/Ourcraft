@@ -2,18 +2,23 @@ package dev.hilligans.ourcraft.server;
 
 import dev.hilligans.ourcraft.command.executors.ConsoleExecutor;
 import dev.hilligans.ourcraft.command.Commands;
+import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.ourcraft.data.primitives.Tuple;
+import dev.hilligans.ourcraft.entity.Entity;
 import dev.hilligans.ourcraft.entity.IPlayerEntity;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.mod.handler.events.server.MultiPlayerServerStartEvent;
 import dev.hilligans.ourcraft.network.PacketBase;
+import dev.hilligans.ourcraft.network.engine.INetworkEngine;
+import dev.hilligans.ourcraft.network.engine.NetworkSocket;
 import dev.hilligans.ourcraft.network.packet.client.CHandshakePacket;
 import dev.hilligans.ourcraft.network.packet.server.SDisconnectPacket;
 import dev.hilligans.ourcraft.network.ServerNetwork;
 import dev.hilligans.ourcraft.network.ServerNetworkHandler;
 import dev.hilligans.ourcraft.Ourcraft;
+import dev.hilligans.ourcraft.util.IByteArray;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
 import dev.hilligans.ourcraft.util.NamedThreadFactory;
 import dev.hilligans.ourcraft.util.Settings;
@@ -21,6 +26,7 @@ import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 import io.netty.channel.ChannelHandlerContext;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -39,6 +45,7 @@ public class MultiPlayerServer implements IServer {
     public boolean running = true;
     public ScheduledExecutorService tick;
     public ScheduledExecutorService playerHandler;
+    public ArrayList<NetworkSocket<?>> networkSockets = new ArrayList<>();
 
     public int renderDistance = 32 * 4;
 
@@ -55,9 +62,13 @@ public class MultiPlayerServer implements IServer {
         playerHandler.scheduleAtFixedRate(new PlayerHandler(this), 0, 10, TimeUnit.MILLISECONDS);
        // ConsoleReader consoleReader = new ConsoleReader(this::executeCommand);
 
-        serverNetwork = new ServerNetwork(gameInstance, gameInstance.PROTOCOLS.getExcept("ourcraft:Play"), this).debug(Ourcraft.getArgumentContainer().getBoolean("--packetTrace", false));
+        INetworkEngine<?, ?> engine = gameInstance.getExcept("ourcraft:nettyEngine", INetworkEngine.class);
+        NetworkSocket<?> socket = engine.openServer(gameInstance.PROTOCOLS.getExcept("ourcraft:Play"), this, "25588");
+        networkSockets.add(socket);
+
+        //serverNetwork = new ServerNetwork(gameInstance, gameInstance.PROTOCOLS.getExcept("ourcraft:Play"), this).debug(Ourcraft.getArgumentContainer().getBoolean("--packetTrace", false));
         try {
-            serverNetwork.startServer(port);
+            socket.connectSocket();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -105,11 +116,6 @@ public class MultiPlayerServer implements IServer {
         return (ServerNetworkHandler) serverNetwork.networkHandler;
     }
 
-    @Override
-    public void sendPacketToAllVisible(PacketBase<?> packet, long x, long y, long z, IWorld serverWorld) {
-        serverWorld.forEachPlayerInRange(x, y, z, renderDistance, iPlayerEntity -> sendPacket(packet, iPlayerEntity.getPlayerData()));
-    }
-
     public void sendPacket(PacketBase<?> packetBase) {
         getServerNetworkHandler().sendPacketInternal(packetBase);
     }
@@ -119,8 +125,22 @@ public class MultiPlayerServer implements IServer {
     }
 
     @Override
-    public void sendPacket(PacketBase<?> packetBase, ServerPlayerData playerData) {
-        getServerNetworkHandler().sendPacket(packetBase, playerData.getChannelId());
+    public void sendPacket(IByteArray array) {
+
+    }
+
+    @Override
+    public ServerPlayerData loadPlayer(String player) {
+        int playerId = Entity.getNewId();
+        // BlockPos spawn = ServerMain.getWorld(0).getWorldSpawn(Settings.playerBoundingBox);
+        BlockPos spawn = new BlockPos(0, 100, 0);
+        PlayerEntity playerEntity = new PlayerEntity(spawn.x,spawn.y,spawn.z,playerId);
+
+        ServerPlayerData serverPlayerData = ServerPlayerData.loadOrCreatePlayer(getGameInstance(), playerEntity, player);
+        playerEntity.setPlayerData(serverPlayerData);
+        serverPlayerData.setServer(this);
+
+        return serverPlayerData;
     }
 
     @Override

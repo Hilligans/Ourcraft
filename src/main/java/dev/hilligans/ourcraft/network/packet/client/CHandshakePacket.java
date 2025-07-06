@@ -94,7 +94,7 @@ public class CHandshakePacket extends PacketBase<IServerPacketHandler> {
         serverPlayerData.getWorld().addEntity(playerEntity);
         serverPacketHandler.sendPacket(new SHandshakePacket(playerId, serverPacketHandler.getGameInstance()),ctx);
         serverPlayerData.getWorld().sendChunksToPlayer((int) playerEntity.getX(), (int) playerEntity.getY(), (int) playerEntity.getZ(), serverPlayerData);
-        serverPlayerData.getServer().sendPacket(new SChatMessage(name + " has joined the game"));
+        //serverPlayerData.getServer().sendPacket(new SChatMessage(name + " has joined the game"));
         //ServerMain.getServer().sendPacket(new SUpdatePlayer(serverPlayerData.));
         serverPacketHandler.getServerNetworkHandler().sendPacketExcept(new SSendPlayerList(name,playerId,true),ctx);
 

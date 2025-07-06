@@ -7,6 +7,7 @@ import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.network.PacketBase;
 import dev.hilligans.ourcraft.network.ServerNetworkHandler;
+import dev.hilligans.ourcraft.util.IByteArray;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
 import dev.hilligans.ourcraft.util.ConsoleReader;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
@@ -76,11 +77,6 @@ public class IntegratedServer implements IServer {
     }
 
     @Override
-    public void sendPacketToAllVisible(PacketBase<?> packet, long x, long y, long z, IWorld serverWorld) {
-
-    }
-
-    @Override
     public void sendPacket(PacketBase<?> packetBase) {
        // PacketData packetData = new PacketData(packetBase);
        // PacketBase packet = packetData.createPacket();
@@ -93,8 +89,13 @@ public class IntegratedServer implements IServer {
     }
 
     @Override
-    public void sendPacket(PacketBase<?> packetBase, ServerPlayerData playerData) {
-        sendPacket(packetBase);
+    public void sendPacket(IByteArray array) {
+
+    }
+
+    @Override
+    public ServerPlayerData loadPlayer(String player) {
+        return null;
     }
 
     @Override

@@ -10,10 +10,12 @@ import dev.hilligans.ourcraft.entity.IPlayerEntity;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.ourcraft.network.*;
+import dev.hilligans.ourcraft.network.engine.NetworkEntity;
 import dev.hilligans.ourcraft.save.WorldLoader;
 import dev.hilligans.ourcraft.server.IServer;
 import dev.hilligans.ourcraft.tag.CompoundNBTTag;
 import dev.hilligans.ourcraft.util.EntityPosition;
+import dev.hilligans.ourcraft.util.IByteArray;
 import dev.hilligans.ourcraft.util.Settings;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
 import io.netty.channel.Channel;
@@ -54,6 +56,8 @@ public class ServerPlayerData implements IServerPacketHandler, NetworkProfile {
     public Protocol sendProtocol;
     public Protocol receriveProtocol;
     public Channel channel;
+
+    public NetworkEntity networkEntity;
 
     public ServerPlayerData(GameInstance gameInstance, PlayerEntity playerEntity, String id) {
         this.playerEntity = playerEntity;
@@ -99,6 +103,10 @@ public class ServerPlayerData implements IServerPacketHandler, NetworkProfile {
     public ServerPlayerData setPlayerID(UUID id) {
         this.playerID = id;
         return this;
+    }
+
+    public void sendPacket(IByteArray array) {
+        networkEntity.sendPacket(array);
     }
 
     public UUID getPlayerID() {
@@ -290,13 +298,4 @@ public class ServerPlayerData implements IServerPacketHandler, NetworkProfile {
         return channel;
     }
 
-    @Override
-    public Protocol getSendProtocol(ChannelHandlerContext ctx) {
-        return sendProtocol;
-    }
-
-    @Override
-    public Protocol getSendProtocol(ChannelId channelId) {
-        return sendProtocol;
-    }
 }

@@ -242,7 +242,6 @@ public class GameInstance {
     public <T> T getExcept(String name, Class<T> registryClass) {
         for(Registry<?> registry : REGISTRIES.ELEMENTS) {
             if(registry.classType == registryClass) {
-                System.out.println(registry);
                 return (T) registry.getExcept(name);
             }
         }

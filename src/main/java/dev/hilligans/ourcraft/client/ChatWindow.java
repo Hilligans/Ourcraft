@@ -1,13 +1,6 @@
 package dev.hilligans.ourcraft.client;
 
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
-import dev.hilligans.ourcraft.ClientMain;
-import dev.hilligans.ourcraft.data.primitives.Tuple;
-import dev.hilligans.ourcraft.mod.handler.events.client.ClientSendMessageEvent;
-import dev.hilligans.ourcraft.network.packet.client.CSendMessage;
-import dev.hilligans.ourcraft.client.input.key.CharPress;
-import dev.hilligans.ourcraft.client.input.key.KeyHandler;
-import dev.hilligans.ourcraft.client.input.key.KeyPress;
 import dev.hilligans.ourcraft.client.rendering.Screen;
 import dev.hilligans.ourcraft.Ourcraft;
 

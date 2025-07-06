@@ -1,14 +1,13 @@
 package dev.hilligans.ourcraft.network;
 
 import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
-import dev.hilligans.ourcraft.mod.handler.content.ModContent;
-import dev.hilligans.ourcraft.network.packet.auth.*;
-import dev.hilligans.ourcraft.network.packet.client.*;
-import dev.hilligans.ourcraft.network.packet.server.*;
+import dev.hilligans.ourcraft.network.packet.packet.*;
+import dev.hilligans.ourcraft.network.packet.packet.CLogin;
 
 public class Protocols {
 
     public static void register(ModContainer modContent) {
+        /*
         modContent.registerPacket(CRequestChunkPacket::new);
         modContent.registerPacket(SSendChunkPacket::new);
         modContent.registerPacket(CSendBlockChanges::new);
@@ -23,6 +22,7 @@ public class Protocols {
         modContent.registerPacket(SChatMessage::new);
         modContent.registerPacket(CModifyStack::new);
         modContent.registerPacket(SUpdateContainer::new);
+        modContent.registerPacket(SUpdateContainer::new);
         modContent.registerPacket(SOpenContainer::new);
         modContent.registerPacket(SUpdateInventory::new);
         modContent.registerPacket(CDropItem::new);
@@ -34,6 +34,7 @@ public class Protocols {
         modContent.registerPacket(SSendPlayerList::new);
         modContent.registerPacket(SSetGameMode::new);
         modContent.registerPacket(CRequestContent::new);
+        modContent.registerPacket(CPing::new);
 
         modContent.registerPacket("ourcraft:Auth", SAccountPacket::new);
         modContent.registerPacket("ourcraft:Auth", SSendToken::new);
@@ -43,5 +44,13 @@ public class Protocols {
         modContent.registerPacket("ourcraft:Auth", CCreateAccount::new);
         modContent.registerPacket("ourcraft:Auth", CGetToken::new);
         modContent.registerPacket("ourcraft:Auth", CLogin::new);
+
+         */
+        modContent.registerPacket("ourcraft:Play", CPing.instance);
+        modContent.registerPacket("ourcraft:Play", SPing.instance);
+        modContent.registerPacket("ourcraft:Play", SServerExceptionPacket.instance);
+        modContent.registerPacket("ourcraft:Play", CLogin.instance);
+        modContent.registerPacket("ourcraft:Play", SSendChunkPacket.instance);
+        modContent.registerPacket("ourcraft:Play", SChatMessage.instance);
     }
 }

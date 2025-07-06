@@ -8,13 +8,7 @@ import io.netty.channel.ChannelId;
 public interface IPacketHandler {
 
     default ChannelFuture sendPacket(PacketBase<?> packetBase, ChannelHandlerContext ctx) {
-        packetBase.packetId = getSendProtocol(ctx).packetMap.get(packetBase.getClass());
+        //packetBase.packetId = getSendProtocol(ctx).packetMap.get(packetBase.getClass());
         return ctx.channel().writeAndFlush(new PacketByteArray(packetBase));
     }
-
-    default Protocol getSendProtocol(ChannelHandlerContext ctx) {
-        return getSendProtocol(ctx.channel().id());
-    }
-
-    Protocol getSendProtocol(ChannelId channelId);
 }
