@@ -7,7 +7,6 @@ import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.network.*;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.ourcraft.util.Settings;
-import dev.hilligans.ourcraft.network.packet.server.SChatMessage;
 import dev.hilligans.ourcraft.network.packet.server.SDisconnectPacket;
 import dev.hilligans.ourcraft.network.packet.server.SHandshakePacket;
 import dev.hilligans.ourcraft.network.packet.server.SSendPlayerList;

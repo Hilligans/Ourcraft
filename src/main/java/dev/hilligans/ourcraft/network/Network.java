@@ -26,7 +26,6 @@ public class Network extends ChannelInitializer<SocketChannel> {
     }
 
     public Network(GameInstance gameInstance, Protocol sendProtocol, Protocol receiveProtocol, int packetIdWidth) {
-        System.out.println("Instance" + gameInstance);
         this.gameInstance = gameInstance;
         this.packetIdWidth = packetIdWidth;
         this.compressed = false;

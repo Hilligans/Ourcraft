@@ -3,7 +3,6 @@ package dev.hilligans.ourcraft.network;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.network.debug.PacketTraceByteArray;
 import dev.hilligans.ourcraft.network.packet.client.CHandshakePacket;
-import dev.hilligans.ourcraft.network.packet.server.SChatMessage;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.ourcraft.network.packet.server.SSendPlayerList;
 import dev.hilligans.ourcraft.server.IServer;
@@ -28,7 +27,6 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
     public ConcurrentHashMap<ChannelId, ServerPlayerData> mappedPlayerData = new ConcurrentHashMap<>();
     public ConcurrentHashMap<String, ServerPlayerData> nameToPlayerData = new ConcurrentHashMap<>();
 
-    public ServerNetwork network;
     public static boolean debug = false;
     public boolean ssl = true;
 
@@ -36,8 +34,7 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
     public Protocol defaultReceiveProtocol;
     public Protocol defaultSendProtocol;
 
-    public ServerNetworkHandler(ServerNetwork network, IServer server, Protocol defaultSendProtocol, Protocol defaultReceiveProtocol) {
-        this.network = network;
+    public ServerNetworkHandler(IServer server, Protocol defaultSendProtocol, Protocol defaultReceiveProtocol) {
         this.server = server;
         this.defaultSendProtocol = defaultSendProtocol;
         this.defaultReceiveProtocol = defaultReceiveProtocol;

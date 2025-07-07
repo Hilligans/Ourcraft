@@ -5,8 +5,10 @@ import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.mod.handler.events.server.ServerTickEvent;
 import dev.hilligans.ourcraft.network.PacketBase;
+import dev.hilligans.ourcraft.network.Protocol;
 import dev.hilligans.ourcraft.network.ServerNetworkHandler;
 import dev.hilligans.ourcraft.Ourcraft;
+import dev.hilligans.ourcraft.network.engine.NetworkEntity;
 import dev.hilligans.ourcraft.util.IByteArray;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
@@ -16,6 +18,7 @@ public interface IServer {
 
     void addWorld(IServerWorld world);
     IServerWorld getWorld(ServerPlayerData serverPlayerData);
+    Iterable<IServerWorld> getWorlds();
 
     long getTime();
 
@@ -31,9 +34,9 @@ public interface IServer {
 
     void sendPacket(PacketBase<?> packetBase, PlayerEntity playerEntity);
 
-    void sendPacket(IByteArray array);
+    void sendPacket(Protocol matchingProtocol, IByteArray array);
 
-    ServerPlayerData loadPlayer(String player);
+    ServerPlayerData loadPlayer(String player, NetworkEntity entity);
 
     GameInstance getGameInstance();
 
@@ -55,6 +58,10 @@ public interface IServer {
             //    world.tick();
             //}
         }
+    }
+
+    default String getMOTD() {
+        return "";
     }
 }
 

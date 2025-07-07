@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.network.engine;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
@@ -244,6 +245,12 @@ public class NettyEngine extends NetworkEngine<NettyEngine.NettyNetworkEntity, N
         }
 
         @Override
+        public void switchProtocol(Protocol protocol) {
+            this.sendProtocol = protocol;
+            this.receiveProtocol = protocol;
+        }
+
+        @Override
         public Protocol getSendProtocol() {
             return sendProtocol;
         }
@@ -284,6 +291,11 @@ public class NettyEngine extends NetworkEngine<NettyEngine.NettyNetworkEntity, N
         @Override
         public void sendPacket(IByteArray packet) {
             channel.writeAndFlush(packet);
+        }
+
+        @Override
+        public GameInstance getGameInstance() {
+            return socket.engine.getGameInstance();
         }
 
         @Override

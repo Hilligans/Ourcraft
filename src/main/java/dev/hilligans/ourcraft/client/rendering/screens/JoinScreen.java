@@ -72,7 +72,7 @@ public class JoinScreen extends ScreenBase {
         addWidget(new Button(500,500,200,50,"menu.singleplayerjoin", () -> {
             try {
                 NetworkSocket<?> socket = client.getGameInstance().getExcept("ourcraft:nettyEngine", INetworkEngine.class)
-                        .openClient(client.getGameInstance().getExcept("ourcraft:Play", Protocol.class), client, "localhost", portString);
+                        .openClient(client.getGameInstance().getExcept("ourcraft:login", Protocol.class), client, "localhost", portString);
                 socket.onConnected(e -> CLogin.send(e, "hilligans"));
                 client.socket = socket;
                 socket.connectSocket();

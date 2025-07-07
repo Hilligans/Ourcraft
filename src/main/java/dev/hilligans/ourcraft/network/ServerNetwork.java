@@ -27,31 +27,6 @@ public class ServerNetwork extends Network {
         this.server = server;
     }
 
-    public void startServer(String port) throws Exception {
-        networkHandler = new ServerNetworkHandler(this, server, gameInstance.getExcept("ourcraft:Play", Protocol.class), gameInstance.getExcept("ourcraft:Play", Protocol.class));
-        ServerNetworkHandler.debug = Ourcraft.getArgumentContainer().getBoolean("--tracePacket", false);
-
-        final int PORT = Integer.parseInt(System.getProperty("port", port));
-
-        SelfSignedCertificate ssc = new SelfSignedCertificate();
-        sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
-        bossGroup = new NioEventLoopGroup(1);
-        workerGroup = new NioEventLoopGroup();
-        try {
-            ServerBootstrap b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup)
-                    .channel(NioServerSocketChannel.class)
-                    .handler(new LoggingHandler(LogLevel.INFO))
-                    .childHandler(this);
-
-            channelFuture = b.bind(PORT).sync();
-            channelFuture.channel().closeFuture().sync();
-        } finally {
-            bossGroup.shutdownGracefully();
-            workerGroup.shutdownGracefully();
-        }
-    }
-
     @Override
     public ServerNetwork debug(boolean debug) {
         super.debug(debug);

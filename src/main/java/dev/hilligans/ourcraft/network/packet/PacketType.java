@@ -32,5 +32,15 @@ public abstract class PacketType<T extends NetworkEntity> {
         return array;
     }
 
+    /*
+        All packet type sub classes must have this method in approximately this format.
+
+        public IByteArray encode(NetworkEntity entity) {
+            IByteArray array = getWriteArray(entity);
+
+            return array;
+        }
+     */
+
     public abstract void decode(T entity, IByteArray data);
 }

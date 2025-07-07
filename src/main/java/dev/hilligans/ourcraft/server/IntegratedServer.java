@@ -6,7 +6,9 @@ import dev.hilligans.ourcraft.command.Commands;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.network.PacketBase;
+import dev.hilligans.ourcraft.network.Protocol;
 import dev.hilligans.ourcraft.network.ServerNetworkHandler;
+import dev.hilligans.ourcraft.network.engine.NetworkEntity;
 import dev.hilligans.ourcraft.util.IByteArray;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
 import dev.hilligans.ourcraft.util.ConsoleReader;
@@ -50,6 +52,11 @@ public class IntegratedServer implements IServer {
     }
 
     @Override
+    public Iterable<IServerWorld> getWorlds() {
+        return null;
+    }
+
+    @Override
     public long getTime() {
         return time;
     }
@@ -89,12 +96,12 @@ public class IntegratedServer implements IServer {
     }
 
     @Override
-    public void sendPacket(IByteArray array) {
+    public void sendPacket(Protocol matchingProtocol, IByteArray array) {
 
     }
 
     @Override
-    public ServerPlayerData loadPlayer(String player) {
+    public ServerPlayerData loadPlayer(String player, NetworkEntity entity) {
         return null;
     }
 

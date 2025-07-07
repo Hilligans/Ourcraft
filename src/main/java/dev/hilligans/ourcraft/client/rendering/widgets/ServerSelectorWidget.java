@@ -10,6 +10,7 @@ import dev.hilligans.ourcraft.network.Protocol;
 import dev.hilligans.ourcraft.network.engine.INetworkEngine;
 import dev.hilligans.ourcraft.network.engine.NetworkSocket;
 import dev.hilligans.ourcraft.network.packet.packet.CLogin;
+import dev.hilligans.ourcraft.network.packet.packet.CPing;
 import dev.hilligans.ourcraft.util.Settings;
 
 public class ServerSelectorWidget extends Widget {
@@ -38,7 +39,7 @@ public class ServerSelectorWidget extends Widget {
     public void joinServer() {
         try {
             NetworkSocket<?> socket = screenBase.getClient().getGameInstance().getExcept("ourcraft:nettyEngine", INetworkEngine.class)
-                    .openClient(screenBase.getClient().getGameInstance().getExcept("ourcraft:Play", Protocol.class), screenBase.getClient(), ip, port);
+                    .openClient(screenBase.getClient().getGameInstance().getExcept("ourcraft:login", Protocol.class), screenBase.getClient(), ip, port);
             screenBase.getClient().socket = socket;
             socket.onConnected(e -> CLogin.send(e, "hilligans"));
             socket.connectSocket();

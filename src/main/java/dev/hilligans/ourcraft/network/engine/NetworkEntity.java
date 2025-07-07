@@ -1,11 +1,13 @@
 package dev.hilligans.ourcraft.network.engine;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.network.PacketBase;
 import dev.hilligans.ourcraft.network.Protocol;
 import dev.hilligans.ourcraft.util.IByteArray;
 
 public interface NetworkEntity {
 
+    void switchProtocol(Protocol protocol);
 
     Protocol getSendProtocol();
     Protocol getReceiveProtocol();
@@ -27,4 +29,6 @@ public interface NetworkEntity {
     default void freeByteArray(IByteArray array) {
         getNetworkEngine().freeByteArray(array);
     }
+
+    GameInstance getGameInstance();
 }

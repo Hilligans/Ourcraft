@@ -264,10 +264,6 @@ public class ServerPlayerData implements IServerPacketHandler, NetworkProfile {
 
     }
 
-    public Network getNetwork() {
-        return serverNetworkHandler.network;
-    }
-
     @Override
     public void setSendProtocol(Protocol protocol) {
         this.sendProtocol = protocol;

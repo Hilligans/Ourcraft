@@ -11,7 +11,9 @@ import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.mod.handler.events.server.MultiPlayerServerStartEvent;
 import dev.hilligans.ourcraft.network.PacketBase;
+import dev.hilligans.ourcraft.network.Protocol;
 import dev.hilligans.ourcraft.network.engine.INetworkEngine;
+import dev.hilligans.ourcraft.network.engine.NetworkEntity;
 import dev.hilligans.ourcraft.network.engine.NetworkSocket;
 import dev.hilligans.ourcraft.network.packet.client.CHandshakePacket;
 import dev.hilligans.ourcraft.network.packet.server.SDisconnectPacket;
@@ -28,6 +30,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -46,6 +49,7 @@ public class MultiPlayerServer implements IServer {
     public ScheduledExecutorService tick;
     public ScheduledExecutorService playerHandler;
     public ArrayList<NetworkSocket<?>> networkSockets = new ArrayList<>();
+    public ConcurrentHashMap<ServerPlayerData, Boolean> playerMap = new ConcurrentHashMap<>();
 
     public int renderDistance = 32 * 4;
 
@@ -63,7 +67,7 @@ public class MultiPlayerServer implements IServer {
        // ConsoleReader consoleReader = new ConsoleReader(this::executeCommand);
 
         INetworkEngine<?, ?> engine = gameInstance.getExcept("ourcraft:nettyEngine", INetworkEngine.class);
-        NetworkSocket<?> socket = engine.openServer(gameInstance.PROTOCOLS.getExcept("ourcraft:Play"), this, "25588");
+        NetworkSocket<?> socket = engine.openServer(gameInstance.PROTOCOLS.getExcept("ourcraft:login"), this, "25588");
         networkSockets.add(socket);
 
         //serverNetwork = new ServerNetwork(gameInstance, gameInstance.PROTOCOLS.getExcept("ourcraft:Play"), this).debug(Ourcraft.getArgumentContainer().getBoolean("--packetTrace", false));
@@ -87,6 +91,11 @@ public class MultiPlayerServer implements IServer {
     @Override
     public IServerWorld getWorld(ServerPlayerData serverPlayerData) {
         return newWorlds.get(serverPlayerData.getDimension());
+    }
+
+    @Override
+    public Iterable<IServerWorld> getWorlds() {
+        return newWorlds.values();
     }
 
     @Override
@@ -125,20 +134,22 @@ public class MultiPlayerServer implements IServer {
     }
 
     @Override
-    public void sendPacket(IByteArray array) {
-
+    public void sendPacket(Protocol matchingProtocol, IByteArray array) {
+        playerMap.forEachKey(Integer.MAX_VALUE, (key) -> {if(key.networkEntity.getSendProtocol().equals(matchingProtocol)) { key.sendPacket(array);}});
     }
 
     @Override
-    public ServerPlayerData loadPlayer(String player) {
+    public ServerPlayerData loadPlayer(String player, NetworkEntity entity) {
         int playerId = Entity.getNewId();
         // BlockPos spawn = ServerMain.getWorld(0).getWorldSpawn(Settings.playerBoundingBox);
         BlockPos spawn = new BlockPos(0, 100, 0);
         PlayerEntity playerEntity = new PlayerEntity(spawn.x,spawn.y,spawn.z,playerId);
 
         ServerPlayerData serverPlayerData = ServerPlayerData.loadOrCreatePlayer(getGameInstance(), playerEntity, player);
+        serverPlayerData.networkEntity = entity;
         playerEntity.setPlayerData(serverPlayerData);
         serverPlayerData.setServer(this);
+        playerMap.put(serverPlayerData, true);
 
         return serverPlayerData;
     }

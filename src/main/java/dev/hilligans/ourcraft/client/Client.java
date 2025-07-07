@@ -24,7 +24,6 @@ import dev.hilligans.ourcraft.mod.handler.events.client.OpenScreenEvent;
 import dev.hilligans.ourcraft.network.*;
 import dev.hilligans.ourcraft.network.engine.NetworkSocket;
 import dev.hilligans.ourcraft.network.packet.client.CCloseScreen;
-import dev.hilligans.ourcraft.network.packet.client.CDropItem;
 import dev.hilligans.ourcraft.network.packet.client.COpenScreen;
 import dev.hilligans.ourcraft.client.audio.SoundBuffer;
 import dev.hilligans.ourcraft.client.audio.SoundEngine;
@@ -75,7 +74,6 @@ public class Client implements IClientPacketHandler {
 
     public NetworkSocket<?> socket;
 
-    public ClientNetwork network;
     public ClientNetwork authNetwork;
     public GameInstance gameInstance;
 
@@ -198,7 +196,7 @@ public class Client implements IClientPacketHandler {
 
     public void closeScreen() {
         if(!playerData.heldStack.isEmpty()) {
-            sendPacket(new CDropItem((short)-1,(byte)-1));
+            //sendPacket(new CDropItem((short)-1,(byte)-1));
             playerData.heldStack = ItemStack.emptyStack();
         }
         if(screen != null) {

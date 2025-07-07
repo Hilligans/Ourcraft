@@ -13,7 +13,6 @@ import dev.hilligans.ourcraft.container.containers.CreativeContainer;
 import dev.hilligans.ourcraft.container.containers.InventoryContainer;
 import dev.hilligans.ourcraft.data.other.IInventory;
 import dev.hilligans.ourcraft.item.ItemStack;
-import dev.hilligans.ourcraft.network.packet.client.CActivateButton;
 import dev.hilligans.ourcraft.util.Settings;
 
 import java.nio.DoubleBuffer;

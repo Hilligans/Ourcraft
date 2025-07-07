@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.network.packet.packet;
 
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
+import dev.hilligans.ourcraft.network.Protocol;
 import dev.hilligans.ourcraft.network.engine.NetworkEntity;
 import dev.hilligans.ourcraft.network.engine.ServerNetworkEntity;
 import dev.hilligans.ourcraft.network.packet.ClientToServerPacketType;
@@ -28,7 +29,13 @@ public class CLogin extends ClientToServerPacketType {
 
     public void decode(ServerNetworkEntity entity, IByteArray data) {
         String username = data.readString();
-        ServerPlayerData serverPlayerData = entity.getServer().loadPlayer(username);
+
+        Protocol newProtocol = entity.getGameInstance().getExcept("ourcraft:Play", Protocol.class);
+        SSwitchProtocol.send(entity, newProtocol);
+        entity.switchProtocol(newProtocol);
+
+        ServerPlayerData serverPlayerData = entity.getServer().loadPlayer(username, entity);
+        serverPlayerData.getServer().sendPacket(entity.getSendProtocol(), SSendMessage.get(entity, username + " has joined."));
         serverPlayerData.networkEntity = entity;
         PlayerEntity playerEntity = serverPlayerData.playerEntity;
         serverPlayerData.getWorld().sendChunksToPlayer((int) playerEntity.getX(), (int) playerEntity.getY(), (int) playerEntity.getZ(), serverPlayerData);

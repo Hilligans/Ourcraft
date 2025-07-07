@@ -81,19 +81,6 @@ public class GameInstance {
         gameInstanceUniversalID = getNewGameInstanceUniversalID();
     }
 
-    public void loadContent() {
-        //registerDefaultContent();
-        //CONTENT_PACK.registerModContent(OURCRAFT);
-        //CONTENT_PACK.mods.put("ourcraft",OURCRAFT);
-        //MOD_LOADER.loadDefaultMods();
-        //CONTENT_PACK.buildVital();
-        //CONTENT_PACK.mods.forEach((s, modContent) -> modContent.invokeRegistryLoaders());
-        //REBUILDING.set(true);
-        //CONTENT_PACK.generateData();
-        //buildBlockStates();
-        //REBUILDING.set(false);
-    }
-
     public void build(IGraphicsEngine<?,?,?> graphicsEngine, GraphicsContext graphicsContext) {
         for(Registry<?> registry : REGISTRIES.ELEMENTS) {
             for(Object o : registry.ELEMENTS) {

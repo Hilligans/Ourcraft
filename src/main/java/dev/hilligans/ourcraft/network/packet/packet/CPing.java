@@ -9,16 +9,22 @@ public class CPing extends ClientToServerPacketType {
 
     public static final CPing instance = new CPing();
 
-    public static void send(NetworkEntity networkEntity) {
-        networkEntity.sendPacket(instance.encode(networkEntity));
+    public static void send(NetworkEntity networkEntity, int num) {
+        networkEntity.sendPacket(instance.encode(networkEntity, num));
     }
 
-    public IByteArray encode(NetworkEntity entity) {
-        return getWriteArray(entity);
+    public static IByteArray get(NetworkEntity entity, int num) {
+        return instance.encode(entity, num);
+    }
+
+    public IByteArray encode(NetworkEntity entity, int num) {
+        IByteArray array = getWriteArray(entity);
+        array.writeInt(num);
+        return array;
     }
 
     @Override
     public void decode(ServerNetworkEntity entity, IByteArray data) {
-        SPing.send(entity);
+        SPing.send(entity, data.readInt());
     }
 }
