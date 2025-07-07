@@ -29,7 +29,7 @@ public class AccountCreationScreen extends ScreenBase {
             String passwordVal = Ourcraft.hashString(password.string, email.string);
             getClient().playerData.userName = username.string;
             getClient().saveUsernameAndPassword();
-            getClient().authNetwork.sendPacket(new CCreateAccount(username.string,passwordVal,email.string,token.string));
+            //getClient().authNetwork.sendPacket(new CCreateAccount(username.string,passwordVal,email.string,token.string));
         }));
 
     }

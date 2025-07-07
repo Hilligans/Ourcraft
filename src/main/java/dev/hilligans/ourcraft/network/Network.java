@@ -55,9 +55,4 @@ public class Network extends ChannelInitializer<SocketChannel> {
 
     public void sendPacketDirect(PacketBase<?> packetBase) {}
 
-    public void disconnect() {
-        if(networkHandler instanceof ClientNetworkHandler) {
-            ((ClientNetworkHandler) networkHandler).channel.close();
-        }
-    }
 }

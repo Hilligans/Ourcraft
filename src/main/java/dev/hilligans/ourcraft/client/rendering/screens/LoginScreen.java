@@ -22,7 +22,7 @@ public class LoginScreen extends ScreenBase {
             String passwordVal = Ourcraft.hashString(password.string, email.string);
             getClient().playerData.userName = username.string;
             getClient().saveUsernameAndPassword();
-            getClient().authNetwork.sendPacket(new CLogin(username.string,passwordVal,email.string));
+            //getClient().authNetwork.sendPacket(new CLogin(username.string,passwordVal,email.string));
             getClient().openScreen(new JoinScreen());
         }));
     }

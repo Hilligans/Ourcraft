@@ -17,7 +17,6 @@ import dev.hilligans.ourcraft.network.engine.NetworkEntity;
 import dev.hilligans.ourcraft.network.engine.NetworkSocket;
 import dev.hilligans.ourcraft.network.packet.client.CHandshakePacket;
 import dev.hilligans.ourcraft.network.packet.server.SDisconnectPacket;
-import dev.hilligans.ourcraft.network.ServerNetwork;
 import dev.hilligans.ourcraft.network.ServerNetworkHandler;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.util.IByteArray;
@@ -44,7 +43,6 @@ public class MultiPlayerServer implements IServer {
     public HashMap<ChannelHandlerContext, CHandshakePacket> waitingPlayers = new HashMap<>();
     public HashMap<String, Tuple<ChannelHandlerContext,Long>> playerQueue = new HashMap<>();
     public GameInstance gameInstance;
-    public ServerNetwork serverNetwork;
     public boolean running = true;
     public ScheduledExecutorService tick;
     public ScheduledExecutorService playerHandler;
@@ -122,7 +120,7 @@ public class MultiPlayerServer implements IServer {
 
     @Override
     public ServerNetworkHandler getServerNetworkHandler() {
-        return (ServerNetworkHandler) serverNetwork.networkHandler;
+        return null;
     }
 
     public void sendPacket(PacketBase<?> packetBase) {
@@ -164,9 +162,7 @@ public class MultiPlayerServer implements IServer {
         running = false;
         tick.shutdownNow();
         playerHandler.shutdownNow();
-        if(serverNetwork != null) {
-            serverNetwork.close();
-        }
+        networkSockets.forEach(NetworkSocket::closeSocket);
     }
 
     static class PlayerHandler implements Runnable {

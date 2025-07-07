@@ -24,7 +24,7 @@ import io.netty.channel.ChannelId;
 
 import java.util.HashMap;
 
-public class ServerPlayerData implements IServerPacketHandler, NetworkProfile {
+public class ServerPlayerData implements IServerPacketHandler {
 
     IServer server;
 
@@ -263,35 +263,4 @@ public class ServerPlayerData implements IServerPacketHandler, NetworkProfile {
     public void disconnect(String reason) {
 
     }
-
-    @Override
-    public void setSendProtocol(Protocol protocol) {
-        this.sendProtocol = protocol;
-    }
-
-    @Override
-    public void setReceiveProtocol(Protocol protocol) {
-        this.receriveProtocol = protocol;
-    }
-
-    @Override
-    public Protocol getSendProtocol() {
-        return sendProtocol;
-    }
-
-    @Override
-    public Protocol getReceiveProtocol() {
-        return receriveProtocol;
-    }
-
-    @Override
-    public void setChannel(Channel channel) {
-        this.channel = channel;
-    }
-
-    @Override
-    public Channel getChannel() {
-        return channel;
-    }
-
 }

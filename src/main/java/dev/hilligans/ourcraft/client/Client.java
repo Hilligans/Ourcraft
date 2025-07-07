@@ -45,7 +45,7 @@ import java.nio.DoubleBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class Client implements IClientPacketHandler {
+public class Client {
 
     public long window;
 
@@ -74,7 +74,6 @@ public class Client implements IClientPacketHandler {
 
     public NetworkSocket<?> socket;
 
-    public ClientNetwork authNetwork;
     public GameInstance gameInstance;
 
     public IGraphicsEngine<?,?,?> graphicsEngine;
@@ -426,18 +425,11 @@ public class Client implements IClientPacketHandler {
         return playerData;
     }
 
-    @Override
-    public Client getClient() {
-        return this;
-    }
-
     public IWorld getWorld() {
         return newClientWorld;
     }
 
-    @Override
     public GameInstance getGameInstance() {
         return gameInstance;
     }
-
 }

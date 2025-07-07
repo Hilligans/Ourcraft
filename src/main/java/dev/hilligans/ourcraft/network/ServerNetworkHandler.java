@@ -84,8 +84,8 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
             }
             packetBase.handle(this);
         } else {
-            packetBase = msg.createPacket(serverPlayerData.getReceiveProtocol());
-            packetBase.handle(serverPlayerData);
+          //  packetBase = msg.createPacket(serverPlayerData.getReceiveProtocol());
+          //  packetBase.handle(serverPlayerData);
         }
     }
 
