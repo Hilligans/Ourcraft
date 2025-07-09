@@ -63,6 +63,10 @@ public interface IServer {
     default String getMOTD() {
         return "";
     }
+
+    default String getVersion() {
+        return "0";
+    }
 }
 
 

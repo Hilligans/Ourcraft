@@ -54,6 +54,7 @@ public class ModList {
         return this;
     }
 
+
     public void registerMod(ModContainer modContainer) {
         mods.add(modContainer);
 
@@ -153,5 +154,9 @@ public class ModList {
             }
         } catch (Exception ignored) {}
         return classNames;
+    }
+
+    public ModContainer getMod(String modID) {
+        return mods.stream().filter((mod) -> mod.getModID().equals(modID)).findFirst().orElse(null);
     }
 }

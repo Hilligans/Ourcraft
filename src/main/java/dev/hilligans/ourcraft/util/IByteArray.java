@@ -5,7 +5,10 @@ import dev.hilligans.ourcraft.tag.INBTTag;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface IByteArray extends INBTTag {
@@ -245,6 +248,14 @@ public interface IByteArray extends INBTTag {
         return readVarLongs(readVarInt());
     }
 
+    default <T> List<T> readList(Function<IByteArray, T> reader) {
+        int size = readVarInt();
+        ArrayList<T> list = new ArrayList<>(size);
+        for(int x = 0; x < size; x++) {
+            list.add(reader.apply(this));
+        }
+        return list;
+    }
 
     default void writeBoolean(boolean val) {
         writeByte((byte) (val ? 1 : 0));
@@ -443,6 +454,14 @@ public interface IByteArray extends INBTTag {
     default void writeString(String string) {
         writeUTF16(string);
     }
+
+    default <T> void writeList(List<T> list, BiConsumer<IByteArray, T> consumer) {
+        writeVarInt(list.size());
+        for(T val : list) {
+            consumer.accept(this, val);
+        }
+    }
+
 
     default String readString() {
         return readUTF16();

@@ -46,16 +46,21 @@ public class Protocols {
         modContent.registerPacket("ourcraft:Auth", CLogin::new);
 
          */
+        modContent.registerPacket("ourcraft:login", SServerExceptionPacket.instance);
+        modContent.registerPacket("ourcraft:login", SSwitchProtocol.instance);
+
         modContent.registerPacket("ourcraft:login", CPing.instance);
         modContent.registerPacket("ourcraft:login", SPing.instance);
         modContent.registerPacket("ourcraft:login", CGetServerInfo.instance);
         modContent.registerPacket("ourcraft:login", SSendServerInfo.instance);
-        modContent.registerPacket("ourcraft:login", SServerExceptionPacket.instance);
         modContent.registerPacket("ourcraft:login", CLogin.instance);
-        modContent.registerPacket("ourcraft:login", SSwitchProtocol.instance);
         modContent.registerPacket("ourcraft:login", SRejectClient.instance);
 
+
+
         modContent.registerPacket("ourcraft:Play", SServerExceptionPacket.instance);
+        modContent.registerPacket("ourcraft:Play", SSwitchProtocol.instance);
+
         modContent.registerPacket("ourcraft:Play", SSendChunkPacket.instance);
         modContent.registerPacket("ourcraft:Play", CSendMessage.instance);
         modContent.registerPacket("ourcraft:Play", SSendMessage.instance);

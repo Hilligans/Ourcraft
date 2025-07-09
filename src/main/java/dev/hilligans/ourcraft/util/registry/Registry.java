@@ -5,7 +5,9 @@ import dev.hilligans.ourcraft.mod.handler.Identifier;
 import dev.hilligans.ourcraft.mod.handler.events.common.RegisterEvent;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -244,5 +246,22 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
     @Override
     public String getResourceType() {
         return "registry";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Registry<?> registry = (Registry<?>) o;
+        return Objects.equals(ELEMENTS, registry.ELEMENTS) && Objects.equals(owner, registry.owner);
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = getUniqueName().hashCode();
+        for(T element : ELEMENTS) {
+            hashCode = 31 * hashCode + element.hashcode();
+        }
+
+        return hashCode;
     }
 }

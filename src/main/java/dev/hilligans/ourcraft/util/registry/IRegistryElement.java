@@ -43,4 +43,8 @@ public interface IRegistryElement {
     }
 
     default void cleanupGraphics(IGraphicsEngine<?,?,?> graphicsEngine, GraphicsContext graphicsContext) {}
+
+    default int hashcode() {
+        return getUniqueName().hashCode();
+    }
 }

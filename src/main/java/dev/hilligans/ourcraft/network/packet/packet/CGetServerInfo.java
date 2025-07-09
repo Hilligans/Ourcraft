@@ -23,6 +23,6 @@ public class CGetServerInfo extends ClientToServerPacketType {
 
     @Override
     public void decode(ServerNetworkEntity entity, IByteArray data) {
-
+        SSendServerInfo.send(entity, entity.getServer());
     }
 }

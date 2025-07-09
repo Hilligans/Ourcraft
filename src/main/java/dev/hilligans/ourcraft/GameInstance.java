@@ -24,6 +24,7 @@ import dev.hilligans.ourcraft.item.data.ToolLevel;
 import dev.hilligans.ourcraft.item.data.ToolLevelList;
 import dev.hilligans.ourcraft.item.Item;
 import dev.hilligans.ourcraft.mod.handler.content.ContentPack;
+import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.mod.handler.EventBus;
 import dev.hilligans.ourcraft.mod.handler.content.ModList;
@@ -333,6 +334,10 @@ public class GameInstance {
 
     public void handleArgs(String[] args) {
         ARGUMENTS.handle(args);
+    }
+
+    public ModContainer getMod(String modID) {
+        return MOD_LIST.getMod(modID);
     }
 
     private static volatile int staticGameInstanceUniversalID = 0;

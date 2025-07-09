@@ -354,4 +354,9 @@ public class ModContainer {
         }
         networkEngineRegistry.putAll(networkEngines);
     }
+
+    @Override
+    public int hashCode() {
+        return registries.hashCode();
+    }
 }
