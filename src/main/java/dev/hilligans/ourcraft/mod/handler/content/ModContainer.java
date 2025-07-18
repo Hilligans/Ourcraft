@@ -12,7 +12,7 @@ import dev.hilligans.ourcraft.client.rendering.graphics.*;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.ILayoutEngine;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.IModel;
-import dev.hilligans.ourcraft.command.CommandHandler;
+import dev.hilligans.ourcraft.command.ICommand;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
 import dev.hilligans.ourcraft.entity.EntityType;
 import dev.hilligans.ourcraft.item.Item;
@@ -53,7 +53,6 @@ public class ModContainer {
     public Registry<IRecipe<?>> recipeRegistry;
     public Registry<RecipeView<?>> recipeViewRegistry;
     public Registry<IGraphicsEngine<?,?,?>> graphicsEngineRegistry;
-    public Registry<CommandHandler> commandHandlerRegistry;
     public Registry<Protocol> protocolRegistry;
     public Registry<Setting> settingRegistry;
     public Registry<ResourceLoader<?>> resourceLoaderRegistry;
@@ -73,6 +72,7 @@ public class ModContainer {
     public Registry<ILayoutEngine<?>> layoutEngineRegistry;
     public Registry<EntityType> entityTypeRegistry;
     public Registry<INetworkEngine<?, ?>> networkEngineRegistry;
+    public Registry<ICommand> commandRegistry;
 
     public ModContainer(Class<? extends ModClass> clazz, URLClassLoader classLoader, Path path) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         this.modClass = clazz.getConstructor().newInstance();
@@ -99,7 +99,6 @@ public class ModContainer {
         recipeRegistry = (Registry<IRecipe<?>>) registries.getExcept("ourcraft:recipe");
         recipeViewRegistry = (Registry<RecipeView<?>>) registries.getExcept("ourcraft:recipe_view");
         graphicsEngineRegistry = (Registry<IGraphicsEngine<?, ?, ?>>) registries.getExcept("ourcraft:graphics_engine");
-        commandHandlerRegistry = (Registry<CommandHandler>) registries.getExcept("ourcraft:command");
         protocolRegistry = (Registry<Protocol>) registries.getExcept("ourcraft:protocol");
         settingRegistry = (Registry<Setting>) registries.getExcept("ourcraft:setting");
         resourceLoaderRegistry = (Registry<ResourceLoader<?>>) registries.getExcept("ourcraft:resource_loader");
@@ -119,6 +118,7 @@ public class ModContainer {
         layoutEngineRegistry = (Registry<ILayoutEngine<?>>) registries.getExcept("ourcraft:layout_engine");
         entityTypeRegistry = (Registry<EntityType>) registries.getExcept("ourcraft:entity_type");
         networkEngineRegistry = (Registry<INetworkEngine<?,?>>) registries.getExcept("ourcraft:network_engine");
+        commandRegistry = (Registry<ICommand>) registries.getExcept("ourcraft:command");
     }
 
     public String getModID() {
@@ -353,6 +353,13 @@ public class ModContainer {
             networkEngine.assignOwner(this);
         }
         networkEngineRegistry.putAll(networkEngines);
+    }
+
+    public void registerCommands(ICommand... commands) {
+        for(ICommand command : commands) {
+            command.assignOwner(this);
+        }
+        commandRegistry.putAll(commands);
     }
 
     @Override

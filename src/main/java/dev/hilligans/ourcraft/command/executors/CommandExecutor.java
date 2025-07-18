@@ -5,13 +5,5 @@ import dev.hilligans.ourcraft.server.IServer;
 
 public interface CommandExecutor {
 
-     double getX();
-
-     double getY();
-
-     double getZ();
-
-     IServer getServer();
-
-     IWorld getWorld();
+    void sendMessage(String message);
 }

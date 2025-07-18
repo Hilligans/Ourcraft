@@ -64,5 +64,6 @@ public class Protocols {
         modContent.registerPacket("ourcraft:Play", SSendChunkPacket.instance);
         modContent.registerPacket("ourcraft:Play", CSendMessage.instance);
         modContent.registerPacket("ourcraft:Play", SSendMessage.instance);
+        modContent.registerPacket("ourcraft:Play", CSendCommand.instance);
     }
 }

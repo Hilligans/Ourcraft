@@ -203,6 +203,8 @@ public class NettyEngine extends NetworkEngine<NettyEngine.NettyNetworkEntity, N
 
         public boolean alive = false;
 
+        public ServerPlayerData data;
+
         public NettyNetworkEntity(Protocol initialProtocol, NettySocket socket) {
             this.sendProtocol = initialProtocol;
             this.receiveProtocol = initialProtocol;
@@ -315,7 +317,12 @@ public class NettyEngine extends NetworkEngine<NettyEngine.NettyNetworkEntity, N
 
         @Override
         public ServerPlayerData getServerPlayerData() {
-            return null;
+            return data;
+        }
+
+        @Override
+        public void setServerPlayerData(ServerPlayerData data) {
+            this.data = data;
         }
 
         @Override

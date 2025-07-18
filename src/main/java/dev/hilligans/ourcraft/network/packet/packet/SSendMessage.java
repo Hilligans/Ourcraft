@@ -27,5 +27,6 @@ public class SSendMessage extends ServerToClientPacketType {
     public void decode(ClientNetworkEntity entity, IByteArray data) {
         String message = data.readUTF16();
         entity.getClient().chatMessages.addMessage(message);
+        CSendCommand.send(entity, new String[] {"setBlock", "0", "100", "0", "ourcraft:stone"});
     }
 }

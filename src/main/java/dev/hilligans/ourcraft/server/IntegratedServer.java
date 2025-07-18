@@ -1,7 +1,6 @@
 package dev.hilligans.ourcraft.server;
 
 import dev.hilligans.ourcraft.GameInstance;
-import dev.hilligans.ourcraft.command.executors.ConsoleExecutor;
 import dev.hilligans.ourcraft.command.Commands;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
@@ -12,7 +11,6 @@ import dev.hilligans.ourcraft.network.engine.NetworkEntity;
 import dev.hilligans.ourcraft.util.IByteArray;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
 import dev.hilligans.ourcraft.util.ConsoleReader;
-import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -75,7 +73,8 @@ public class IntegratedServer implements IServer {
         if(!command.startsWith("/")) {
             command = "/" + command;
         }
-        return Commands.executeCommand(command,new ConsoleExecutor(this));
+        return null;
+        //return Commands.executeCommand(command, null);
     }
 
     @Override

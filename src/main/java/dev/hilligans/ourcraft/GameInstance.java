@@ -17,7 +17,7 @@ import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.client.rendering.ScreenBuilder;
 import dev.hilligans.ourcraft.client.rendering.Texture;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.ILayoutEngine;
-import dev.hilligans.ourcraft.command.CommandHandler;
+import dev.hilligans.ourcraft.command.ICommand;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
 import dev.hilligans.ourcraft.entity.EntityType;
 import dev.hilligans.ourcraft.item.data.ToolLevel;
@@ -113,7 +113,6 @@ public class GameInstance {
     public Registry<IRecipe<?>> RECIPES;
     public Registry<RecipeView<?>> RECIPE_VIEWS;
     public Registry<IGraphicsEngine<?,?,?>> GRAPHICS_ENGINES;
-    public Registry<CommandHandler> COMMANDS;
     public Registry<Protocol> PROTOCOLS;
     public Registry<Setting> SETTINGS;
     public Registry<ResourceLoader<?>> RESOURCE_LOADERS;
@@ -134,6 +133,7 @@ public class GameInstance {
     public Registry<ILayoutEngine<?>> LAYOUT_ENGINES;
     public Registry<EntityType> ENTITY_TYPES;
     public Registry<INetworkEngine<?, ?>> NETWORK_ENGINES;
+    public Registry<ICommand> COMMANDS;
 
     public ArrayList<IBlockState> BLOCK_STATES;
 
@@ -145,7 +145,6 @@ public class GameInstance {
         RECIPES = (Registry<IRecipe<?>>) REGISTRIES.getExcept("ourcraft:recipe");
         RECIPE_VIEWS = (Registry<RecipeView<?>>) REGISTRIES.getExcept("ourcraft:recipe_view");
         GRAPHICS_ENGINES = (Registry<IGraphicsEngine<?, ?, ?>>) REGISTRIES.getExcept("ourcraft:graphics_engine");
-        COMMANDS = (Registry<CommandHandler>) REGISTRIES.getExcept("ourcraft:command");
         PROTOCOLS = (Registry<Protocol>) REGISTRIES.getExcept("ourcraft:protocol");
         SETTINGS = (Registry<Setting>) REGISTRIES.getExcept("ourcraft:setting");
         RESOURCE_LOADERS = (Registry<ResourceLoader<?>>) REGISTRIES.getExcept("ourcraft:resource_loader");
@@ -166,6 +165,7 @@ public class GameInstance {
         SOUND_CATEGORIES = (Registry<SoundCategory>) REGISTRIES.getExcept("ourcraft:sound_category");
         ENTITY_TYPES = (Registry<EntityType>) REGISTRIES.getExcept("ourcraft:entity_type");
         NETWORK_ENGINES = (Registry<INetworkEngine<?,?>>) REGISTRIES.getExcept("ourcraft:network_engine");
+        COMMANDS = (Registry<ICommand>) REGISTRIES.getExcept("ourcraft:command");
     }
 
     public void finishBuild() {

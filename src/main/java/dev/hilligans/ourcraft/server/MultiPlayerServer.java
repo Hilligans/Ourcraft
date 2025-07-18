@@ -1,12 +1,10 @@
 package dev.hilligans.ourcraft.server;
 
-import dev.hilligans.ourcraft.command.executors.ConsoleExecutor;
 import dev.hilligans.ourcraft.command.Commands;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.ourcraft.data.primitives.Tuple;
 import dev.hilligans.ourcraft.entity.Entity;
-import dev.hilligans.ourcraft.entity.IPlayerEntity;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.mod.handler.events.server.MultiPlayerServerStartEvent;
@@ -18,12 +16,10 @@ import dev.hilligans.ourcraft.network.engine.NetworkSocket;
 import dev.hilligans.ourcraft.network.packet.client.CHandshakePacket;
 import dev.hilligans.ourcraft.network.packet.server.SDisconnectPacket;
 import dev.hilligans.ourcraft.network.ServerNetworkHandler;
-import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.util.IByteArray;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
 import dev.hilligans.ourcraft.util.NamedThreadFactory;
 import dev.hilligans.ourcraft.util.Settings;
-import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 import io.netty.channel.ChannelHandlerContext;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
@@ -33,7 +29,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 public class MultiPlayerServer implements IServer {
 
@@ -115,7 +110,8 @@ public class MultiPlayerServer implements IServer {
         if(!command.startsWith("/")) {
             command = "/" + command;
         }
-        return Commands.executeCommand(command,new ConsoleExecutor(this));
+        return null;
+        //return Commands.executeCommand(command,new ConsoleExecutor(this));
     }
 
     @Override

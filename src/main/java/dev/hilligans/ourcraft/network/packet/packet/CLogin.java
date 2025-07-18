@@ -38,6 +38,7 @@ public class CLogin extends ClientToServerPacketType {
         serverPlayerData.getServer().sendPacket(entity.getSendProtocol(), SSendMessage.get(entity, username + " has joined."));
         serverPlayerData.networkEntity = entity;
         PlayerEntity playerEntity = serverPlayerData.playerEntity;
+        entity.setServerPlayerData(serverPlayerData);
         serverPlayerData.getWorld().sendChunksToPlayer((int) playerEntity.getX(), (int) playerEntity.getY(), (int) playerEntity.getZ(), serverPlayerData);
     }
 }

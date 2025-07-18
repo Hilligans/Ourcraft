@@ -19,6 +19,8 @@ public interface ServerNetworkEntity extends NetworkEntity {
      */
     ServerPlayerData getServerPlayerData();
 
+    void setServerPlayerData(ServerPlayerData data);
+
     /**
      * @return the player entity belonging to this player
      * @throws IllegalStateException - if the player data hasn't been loaded yet in the networking sequence
@@ -26,5 +28,6 @@ public interface ServerNetworkEntity extends NetworkEntity {
     PlayerEntity getPlayerEntity();
 
     IServer getServer();
+
 
 }

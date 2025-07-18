@@ -27,7 +27,8 @@ import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanEngine;
 import dev.hilligans.ourcraft.client.rendering.ScreenBuilder;
 import dev.hilligans.ourcraft.client.rendering.screens.*;
 import dev.hilligans.ourcraft.client.rendering.Textures;
-import dev.hilligans.ourcraft.command.CommandHandler;
+import dev.hilligans.ourcraft.command.Commands;
+import dev.hilligans.ourcraft.command.ICommand;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
 import dev.hilligans.ourcraft.data.primitives.Tuple;
 import dev.hilligans.ourcraft.entity.Entities;
@@ -119,7 +120,6 @@ public class Ourcraft extends ModClass {
                 new Tuple(IRecipe.class, "recipe"),
                 new Tuple(RecipeView.class, "recipe_view"),
                 new Tuple(IGraphicsEngine.class, "graphics_engine"),
-                new Tuple(CommandHandler.class, "command"),
                 new Tuple(Protocol.class, "protocol"),
                 new Tuple(Setting.class, "setting"),
                 new Tuple(ResourceLoader.class, "resource_loader"),
@@ -139,7 +139,8 @@ public class Ourcraft extends ModClass {
                 new Tuple(ILayoutEngine.class, "layout_engine"),
                 new Tuple(SoundCategory.class, "sound_category"),
                 new Tuple(EntityType.class, "entity_type"),
-                new Tuple(INetworkEngine.class, "network_engine")
+                new Tuple(INetworkEngine.class, "network_engine"),
+                new Tuple(ICommand.class, "command")
         };
 
         for(Tuple<Class<? extends IRegistryElement>, String> element : elements) {
@@ -405,6 +406,7 @@ public class Ourcraft extends ModClass {
         modContent.registerSounds(Sounds.BLOCK_BREAK, Sounds.MUSIC);
         //modContent.registerTexture(Textures.TEXTURES.toArray(new Texture[0]));
         Protocols.register(modContent);
+        Commands.register(modContent);
     }
 
     public static DoubleBuffer getMousePos(long window) {
