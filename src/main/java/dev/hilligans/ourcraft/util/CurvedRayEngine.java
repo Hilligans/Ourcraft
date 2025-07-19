@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.util;
 
 import dev.hilligans.ourcraft.data.other.BlockPos;
+import dev.hilligans.ourcraft.util.interfaces.TriConsumer;
 import org.joml.Vector3d;
 
 public class CurvedRayEngine {

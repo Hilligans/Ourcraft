@@ -1,4 +1,4 @@
-package dev.hilligans.ourcraft.util;
+package dev.hilligans.ourcraft.util.interfaces;
 
 public interface QuadConsumer<A, B, C, D> {
 

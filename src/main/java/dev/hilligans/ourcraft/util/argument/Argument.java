@@ -6,6 +6,7 @@ import dev.hilligans.ourcraft.util.Side;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.util.registry.Registry;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -150,5 +151,55 @@ public class Argument<T> {
                 return list.toString();
             }
         }.acceptedValuesString("<mod_id:value>");
+    }
+
+    public static <T extends IRegistryElement> Argument<T[]> arrayRegistryArg(String key, Class<T> Clazz, String defaultValue) {
+        Argument<String> strArg = stringArg(key, defaultValue);
+
+        return new Argument<>((Class<T[]>) Clazz.arrayType(), null, null, key) {
+            @Override
+            public T[] get(ArgumentContainer argumentContainer) {
+                throw new UnsupportedOperationException("Must use get with GameInstance when looking up registry elements!");
+            }
+
+            @Override
+            public T[] get(GameInstance gameInstance) {
+                String key = strArg.get(gameInstance);
+                if (key.equals("all")) {
+                    return gameInstance.getRegistry(Clazz).getArray();
+                }
+
+                Registry<T> registry = gameInstance.getRegistry(Clazz);
+                String[] vals = key.split(",");
+                T[] elem = (T[]) Array.newInstance(Clazz, vals.length);
+                for(int x = 0; x < vals.length; x++) {
+                    elem[x] = registry.getExcept(vals[x]);
+                }
+
+                return elem;
+            }
+
+            @Override
+            public String getAcceptedValuesString(GameInstance gameInstance) {
+                Registry<T> registry = gameInstance.getRegistry(Clazz);
+                if (registry == null) {
+                    return super.getAcceptedValuesString(gameInstance);
+                }
+                ArrayList<String> list = new ArrayList<>();
+                if (Ansi.USE_ANSI) {
+                    registry.forEach((val) -> {
+                        String str = val.getIdentifierName();
+                        if (str.equals(strArg.defaultValue)) {
+                            list.add(Ansi.ANSI_BOLD + val.getIdentifierName() + Ansi.ANSI_RESET);
+                        } else {
+                            list.add(val.getIdentifierName());
+                        }
+                    });
+                } else {
+                    registry.forEach((val) -> list.add(val.getIdentifierName()));
+                }
+                return list.toString();
+            }
+        }.acceptedValuesString("<mod_id:value,mod_id:value>|<all>");
     }
 }

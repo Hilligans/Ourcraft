@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.util;
 
+import dev.hilligans.ourcraft.util.interfaces.TriConsumer;
 import org.joml.Vector3i;
 
 public class Loops {

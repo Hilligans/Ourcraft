@@ -1,12 +1,12 @@
 package dev.hilligans.ourcraft.command;
 
-import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.command.executors.CommandExecutor;
 import dev.hilligans.ourcraft.util.EnumParser;
-import dev.hilligans.ourcraft.util.QuadConsumer;
-import dev.hilligans.ourcraft.util.QuinConsumer;
-import dev.hilligans.ourcraft.util.TriConsumer;
+import dev.hilligans.ourcraft.util.interfaces.QuadConsumer;
+import dev.hilligans.ourcraft.util.interfaces.QuinConsumer;
+import dev.hilligans.ourcraft.util.interfaces.SextConsumer;
+import dev.hilligans.ourcraft.util.interfaces.TriConsumer;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 
 import java.lang.reflect.Array;
@@ -17,16 +17,11 @@ import java.util.function.Function;
 
 public class CommandBuilder {
 
-    public ArrayList<ICommand> handlingOrder = new ArrayList<>();
-
-    public CommandBuilder() {
-    }
-
-    public  EmptyCommand<CommandExecutor> builder(String... aliases) {
+    public static EmptyCommand<CommandExecutor> create(String... aliases) {
         return new EmptyCommand<>(CommandExecutor.class, aliases);
     }
 
-    public <T extends CommandExecutor> EmptyCommand<T> builder(Class<T> clazz, String... aliases) {
+    public static <T extends CommandExecutor> EmptyCommand<T> create(Class<T> clazz, String... aliases) {
         return new EmptyCommand<>(clazz, aliases);
     }
 
@@ -94,8 +89,7 @@ public class CommandBuilder {
         public <X extends Enum<X>> SingleCommand<T, X> withEnum(Class<X> clazz) { return with((str) -> EnumParser.parse(str, clazz)); }
         public <X extends IRegistryElement> SingleCommand<T, X> withElement(Class<X> clazz) { return with((str) -> getGameInstance().get(str, clazz)); }
         public SingleCommand<T, ICommand> withSubCommand(ICommand... commands) { return null; }
-
-        public TripleCommand<T, Integer, Integer, Integer> withXYZ() { return new TripleCommand<>(this, Integer::parseInt, Integer::parseInt, Integer::parseInt, 3); }
+        public TripleCommand<T, Integer, Integer, Integer> withXYZ() { return new TripleCommand<>(this, Integer::parseInt, Integer::parseInt, Integer::parseInt); }
 
         public EmptyCommand<T> withExecutor(Class<T> executorClass) {
             this.executorClass = executorClass;
@@ -153,6 +147,7 @@ public class CommandBuilder {
         public <X extends Enum<X>> DoubleCommand<T, A, X> withEnum(Class<X> clazz) { return with((str) -> EnumParser.parse(str, clazz)); }
         public <X extends IRegistryElement> DoubleCommand<T, A, X> withElement(Class<X> clazz) { return with((str) -> getGameInstance().get(str, clazz)); }
         public DoubleCommand<T, A, ICommand> withSubCommand(ICommand... commands) { return null; }
+        public QuadrupleCommand<T, A, Integer, Integer, Integer> withXYZ() { return new QuadrupleCommand<>(this, parserA, Integer::parseInt, Integer::parseInt, Integer::parseInt); }
 
         public SingleCommand<T, A> withExecutor(Class<T> executorClass) {
             this.executorClass = executorClass;
@@ -180,11 +175,11 @@ public class CommandBuilder {
             this.parserB = parserB;
         }
 
-        public DoubleCommand(BuilderCommand<T> parent, Function<String, A> parserA, Function<String, B> parserB, int argCount) {
+        public DoubleCommand(BuilderCommand<T> parent, Function<String, A> parserA, Function<String, B> parserB) {
             super(parent);
             this.parserA = parserA;
             this.parserB = parserB;
-            this.argCount = argCount;
+            this.argCount = 2;
         }
 
         public DoubleCommand(DoubleCommand<T, A, B> self, TriConsumer<T, A, B> consumer) {
@@ -213,6 +208,8 @@ public class CommandBuilder {
         public <X extends Enum<X>> TripleCommand<T, A, B, X> withEnum(Class<X> clazz) { return with((str) -> EnumParser.parse(str, clazz)); }
         public <X extends IRegistryElement> TripleCommand<T, A, B, X> withElement(Class<X> clazz) { return with((str) -> getGameInstance().get(str, clazz)); }
         public TripleCommand<T, A, B, ICommand> withSubCommand(ICommand... command) { return null; }
+        public QuintupleCommand<T, A, B, Integer, Integer, Integer> withXYZ() { return new QuintupleCommand<>(this, parserA, parserB, Integer::parseInt, Integer::parseInt, Integer::parseInt); }
+
 
         public DoubleCommand<T, A, B> withExecutor(Class<T> executorClass) {
             this.executorClass = executorClass;
@@ -242,12 +239,12 @@ public class CommandBuilder {
             this.parserC = parserC;
         }
 
-        public TripleCommand(BuilderCommand<T> parent, Function<String, A> parserA, Function<String, B> parserB, Function<String, C> parserC, int argCount) {
+        public TripleCommand(BuilderCommand<T> parent, Function<String, A> parserA, Function<String, B> parserB, Function<String, C> parserC) {
             super(parent);
             this.parserA = parserA;
             this.parserB = parserB;
             this.parserC = parserC;
-            this.argCount = argCount;
+            this.argCount = 3;
         }
 
         public TripleCommand(TripleCommand<T, A, B, C> self, QuadConsumer<T, A, B, C> consumer) {
@@ -309,13 +306,13 @@ public class CommandBuilder {
             this.parserD = parserD;
         }
 
-        public QuadrupleCommand(BuilderCommand<T> parent, Function<String, A> parserA, Function<String, B> parserB, Function<String, C> parserC, Function<String, D> parserD, int argCount) {
+        public QuadrupleCommand(BuilderCommand<T> parent, Function<String, A> parserA, Function<String, B> parserB, Function<String, C> parserC, Function<String, D> parserD) {
             super(parent);
             this.parserA = parserA;
             this.parserB = parserB;
             this.parserC = parserC;
             this.parserD = parserD;
-            this.argCount = argCount;
+            this.argCount = 4;
         }
 
         public QuadrupleCommand(QuadrupleCommand<T, A, B, C, D> self, QuinConsumer<T, A, B, C, D> consumer) {
@@ -329,6 +326,21 @@ public class CommandBuilder {
             this.consumer = consumer;
         }
 
+        public <X> QuintupleCommand<T, A, B, C, D, X> with(Function<String, X> parser) {
+            return new QuintupleCommand<>(this, parser);
+        }
+
+        public QuintupleCommand<T, A, B, C, D, Boolean> withBool() { return with(Boolean::parseBoolean); }
+        public QuintupleCommand<T, A, B, C, D, Integer> withInt() { return with(Integer::parseInt); }
+        public QuintupleCommand<T, A, B, C, D, Long> withLong() { return with(Long::parseLong); }
+        public QuintupleCommand<T, A, B, C, D, Float> withFloat() { return with(Float::parseFloat); }
+        public QuintupleCommand<T, A, B, C, D, Double> withDouble() { return with(Double::parseDouble); }
+        public QuintupleCommand<T, A, B, C, D, String> withString() { return with((str) -> str); }
+        public <X extends Enum<X>> QuintupleCommand<T, A, B, C, D, X> withEnum(Class<X> clazz) { return with((str) -> EnumParser.parse(str, clazz)); }
+        public <X extends IRegistryElement> QuintupleCommand<T, A, B, C, D, X> withElement(Class<X> clazz) { return with((str) -> Ourcraft.GAME_INSTANCE.get(str, clazz)); }
+        public QuintupleCommand<T, A, B, C, D, ICommand> withSubCommand(ICommand... command) { return null; }
+
+
         @Override
         public void parseAndExecute(T executor, String[] args) {
             consumer.accept(executor, parserA.apply(args[0]), parserB.apply(args[1]), parserC.apply(args[2]), parserD.apply(args[3]));
@@ -339,6 +351,53 @@ public class CommandBuilder {
         }
     }
 
+    public static class QuintupleCommand<T, A, B, C, D, E> extends BuilderCommand<T> {
+        public Function<String, A> parserA;
+        public Function<String, B> parserB;
+        public Function<String, C> parserC;
+        public Function<String, D> parserD;
+        public Function<String, E> parserE;
+        public SextConsumer<T, A, B, C, D, E> consumer;
+
+        public QuintupleCommand(QuadrupleCommand<T, A, B, C, D> parent, Function<String, E> parserE) {
+            super(parent);
+            this.parserA = parent.parserA;
+            this.parserB = parent.parserB;
+            this.parserC = parent.parserC;
+            this.parserD = parent.parserD;
+            this.parserE = parserE;
+        }
+
+        public QuintupleCommand(BuilderCommand<T> parent, Function<String, A> parserA, Function<String, B> parserB, Function<String, C> parserC, Function<String, D> parserD, Function<String, E> parserE) {
+            super(parent);
+            this.parserA = parserA;
+            this.parserB = parserB;
+            this.parserC = parserC;
+            this.parserD = parserD;
+            this.parserE = parserE;
+            this.argCount = 5;
+        }
+
+        public QuintupleCommand(QuintupleCommand<T, A, B, C, D, E> self, SextConsumer<T, A, B, C, D, E> consumer) {
+            super(self);
+            this.argCount = self.argCount;
+
+            this.parserA = self.parserA;
+            this.parserB = self.parserB;
+            this.parserC = self.parserC;
+            this.parserD = self.parserD;
+            this.consumer = consumer;
+        }
+
+        @Override
+        public void parseAndExecute(T executor, String[] args) {
+            consumer.accept(executor, parserA.apply(args[0]), parserB.apply(args[1]), parserC.apply(args[2]), parserD.apply(args[3]), parserE.apply(args[4]));
+        }
+
+        public BuilderCommand<T> build(SextConsumer<T, A, B, C, D, E> consumer) {
+            return new QuintupleCommand<>(this, consumer);
+        }
+    }
 
     public static String[] concatenate(String[] a, String[] b) {
         if(a == null) {

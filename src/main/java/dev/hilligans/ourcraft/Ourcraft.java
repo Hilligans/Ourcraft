@@ -54,6 +54,8 @@ import dev.hilligans.ourcraft.resource.loaders.JsonLoader;
 import dev.hilligans.ourcraft.resource.ResourceManager;
 import dev.hilligans.ourcraft.resource.registry.loaders.RegistryLoader;
 import dev.hilligans.ourcraft.schematic.LitematicaSchematicLoader;
+import dev.hilligans.ourcraft.server.authentication.IAuthenticationScheme;
+import dev.hilligans.ourcraft.server.authentication.UnauthenticatedScheme;
 import dev.hilligans.ourcraft.settings.Setting;
 import dev.hilligans.ourcraft.util.argument.ArgumentContainer;
 import at.favre.lib.crypto.bcrypt.BCrypt;
@@ -140,7 +142,8 @@ public class Ourcraft extends ModClass {
                 new Tuple(SoundCategory.class, "sound_category"),
                 new Tuple(EntityType.class, "entity_type"),
                 new Tuple(INetworkEngine.class, "network_engine"),
-                new Tuple(ICommand.class, "command")
+                new Tuple(ICommand.class, "command"),
+                new Tuple(IAuthenticationScheme.class, "authentication_scheme")
         };
 
         for(Tuple<Class<? extends IRegistryElement>, String> element : elements) {
@@ -407,6 +410,8 @@ public class Ourcraft extends ModClass {
         //modContent.registerTexture(Textures.TEXTURES.toArray(new Texture[0]));
         Protocols.register(modContent);
         Commands.register(modContent);
+
+        modContent.registerAuthenticationScheme(new UnauthenticatedScheme());
     }
 
     public static DoubleBuffer getMousePos(long window) {

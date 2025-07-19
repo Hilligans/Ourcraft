@@ -1,4 +1,4 @@
-package dev.hilligans.ourcraft.util;
+package dev.hilligans.ourcraft.util.interfaces;
 
 public interface QuinConsumer<A, B, C, D, E> {
 

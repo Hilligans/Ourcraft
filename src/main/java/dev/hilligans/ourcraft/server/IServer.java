@@ -9,6 +9,7 @@ import dev.hilligans.ourcraft.network.Protocol;
 import dev.hilligans.ourcraft.network.ServerNetworkHandler;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.network.engine.NetworkEntity;
+import dev.hilligans.ourcraft.server.authentication.IAccount;
 import dev.hilligans.ourcraft.util.IByteArray;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
@@ -67,6 +68,8 @@ public interface IServer {
     default String getVersion() {
         return "0";
     }
+
+    IAccount<?> authenticate(String scheme, String username, IByteArray data);
 }
 
 

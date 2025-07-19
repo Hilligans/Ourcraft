@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.mod.handler.Identifier;
 import dev.hilligans.ourcraft.mod.handler.events.common.RegisterEvent;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
@@ -223,6 +224,10 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
     public Registry<T> assignOwner(String owner) {
         this.owner = owner;
         return this;
+    }
+
+    public T[] getArray() {
+        return ELEMENTS.toArray((T[]) Array.newInstance(classType, ELEMENTS.size()));
     }
 
     @Override

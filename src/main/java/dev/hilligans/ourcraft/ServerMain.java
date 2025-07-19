@@ -3,10 +3,13 @@ package dev.hilligans.ourcraft;
 import dev.hilligans.ourcraft.mod.handler.pipeline.standard.StandardPipeline;
 import dev.hilligans.ourcraft.server.IServer;
 import dev.hilligans.ourcraft.server.MultiPlayerServer;
+import dev.hilligans.ourcraft.server.authentication.IAuthenticationScheme;
+import dev.hilligans.ourcraft.util.argument.Argument;
 import dev.hilligans.ourcraft.util.argument.ArgumentContainer;
 import dev.hilligans.ourcraft.util.Profiler;
 import dev.hilligans.ourcraft.util.Settings;
 import dev.hilligans.ourcraft.util.Side;
+import dev.hilligans.ourcraft.util.registry.Registry;
 import dev.hilligans.ourcraft.world.newworldsystem.*;
 import dev.hilligans.ourcraft.world.gen.IWorldHeightBuilder;
 import dev.hilligans.planets.gen.PlanetWorldHeightBuilder;
@@ -14,8 +17,12 @@ import dev.hilligans.planets.gen.PlanetWorldHeightBuilder;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class ServerMain {
+
+    public static Argument<IAuthenticationScheme[]> authenticationSchemes = Argument.arrayRegistryArg("--authenticationSchemes", IAuthenticationScheme.class, "all")
+            .help("Specify which authentication schemes to use");
 
 
     public static Profiler profiler;
@@ -43,6 +50,7 @@ public class ServerMain {
         System.out.println("Starting server...");
         gameInstance.builtSemaphore.acquireUninterruptibly();
         gameInstance.builtSemaphore.release();
+        System.out.println("Authentication Schemes:" + Arrays.toString(authenticationSchemes.get(gameInstance)));
 
         gameInstance.THREAD_PROVIDER.map();
 

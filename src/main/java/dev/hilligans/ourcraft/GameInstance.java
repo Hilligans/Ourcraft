@@ -40,6 +40,7 @@ import dev.hilligans.ourcraft.resource.loaders.ResourceLoader;
 import dev.hilligans.ourcraft.resource.ResourceLocation;
 import dev.hilligans.ourcraft.resource.ResourceManager;
 import dev.hilligans.ourcraft.resource.UniversalResourceLoader;
+import dev.hilligans.ourcraft.server.authentication.IAuthenticationScheme;
 import dev.hilligans.ourcraft.settings.Setting;
 import dev.hilligans.ourcraft.util.*;
 import dev.hilligans.ourcraft.recipe.IRecipe;
@@ -134,6 +135,8 @@ public class GameInstance {
     public Registry<EntityType> ENTITY_TYPES;
     public Registry<INetworkEngine<?, ?>> NETWORK_ENGINES;
     public Registry<ICommand> COMMANDS;
+    public Registry<IAuthenticationScheme<?>> AUTHENTICATION_SCHEMES;
+
 
     public ArrayList<IBlockState> BLOCK_STATES;
 
@@ -166,6 +169,7 @@ public class GameInstance {
         ENTITY_TYPES = (Registry<EntityType>) REGISTRIES.getExcept("ourcraft:entity_type");
         NETWORK_ENGINES = (Registry<INetworkEngine<?,?>>) REGISTRIES.getExcept("ourcraft:network_engine");
         COMMANDS = (Registry<ICommand>) REGISTRIES.getExcept("ourcraft:command");
+        AUTHENTICATION_SCHEMES = (Registry<IAuthenticationScheme<?>>) REGISTRIES.getExcept("ourcraft:authentication_scheme");
     }
 
     public void finishBuild() {

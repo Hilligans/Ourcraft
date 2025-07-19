@@ -10,12 +10,10 @@ import dev.hilligans.ourcraft.network.packet.packet.SSendChunkPacket;
 public class Commands {
 
     public static void register(ModContainer mod) {
-        CommandBuilder com = new CommandBuilder();
         mod.registerCommands(
-                com.builder("stop").build(Commands::stop),
+                CommandBuilder.create("stop").build(Commands::stop),
 
-
-                com.builder(PlayerExecutor.class, "setBlock")
+                CommandBuilder.create(PlayerExecutor.class, "setBlock")
                         .withXYZ()
                         .withElement(Block.class)
                         .build(Commands::setBlock));
