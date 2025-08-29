@@ -5,11 +5,13 @@ import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
+import dev.hilligans.ourcraft.client.rendering.VertexMesh;
 import dev.hilligans.ourcraft.client.rendering.graphics.*;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.client.rendering.MeshHolder;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IMeshBuilder;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
 import dev.hilligans.ourcraft.data.other.BlockPos;
@@ -37,8 +39,6 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
     public int lastTickRenderCount = 0;
 
     public ShaderSource shaderSource;
-
-    public ExecutorService chunkBuilder = Executors.newFixedThreadPool(2);
 
     TextAtlas textAtlas;
 
@@ -122,13 +122,6 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
             public static int rebuildDistance = 4;
 
             void drawChunk(RenderWindow window, GraphicsContext graphicsContext, Client client, IGraphicsEngine<?, ?,?> engine, MatrixStack matrixStack, Vector3i playerChunkPos, IWorld world, int x, int y, int z, int chunkWidth, int chunkHeight) {
-                for (Tuple<IChunk, PrimitiveBuilder> tuple : primitiveBuilders) {
-                    asyncedChunks.remove(((tuple.getTypeA().getX()) << 32) | (tuple.getTypeA().getZ() & 0xffffffffL));
-                    tuple.typeB.setVertexFormat(shaderSource.vertexFormat);
-                    int meshID = (int) window.getGraphicsEngine().getDefaultImpl().createMesh(graphicsContext, tuple.typeB.toVertexMesh());
-                    meshes.setChunk(tuple.getTypeA().getX(), tuple.getTypeA().getY(), tuple.getTypeA().getZ(), new MeshHolder().set(meshID, tuple.getTypeB().indices.size()));
-                    primitiveBuilders.remove(tuple);
-                }
                 IChunk chunk = getChunk(x, y, z, world);
                 if (chunk != null) {
                     MeshHolder meshHolder = getMesh(x, y, z);
@@ -172,8 +165,7 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
                 return false;
             }
 
-            public PrimitiveBuilder getPrimitiveBuilder(IChunk chunk) {
-                PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(shaderSource.vertexFormat);
+            public VertexMesh getMesh(IChunk chunk, IMeshBuilder builder) {
                 BlockPos p = new BlockPos(0, 0, 0);
                 for(int x = 0; x < chunk.getWidth(); x++) {
                     for(int y = chunk.getHeight() - 1; y >= 0; y--) {
@@ -189,21 +181,20 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
                                         newState = chunk.getBlockState1(p);
                                     }
                                     if (newState.getBlock() != block.getBlock()) {
-                                        block.getBlock().addVertices(textAtlas, primitiveBuilder, a, 1f, block, p.set(x, y, z), x, z);
+                                        block.getBlock().addVertices(textAtlas, builder, a, 1f, block, p.set(x, y, z), x, z);
                                     }
                                 }
                             }
                         }
                     }
                 }
-                return primitiveBuilder;
+                return builder.build();
             }
 
             public void buildMesh(RenderWindow window, GraphicsContext graphicsContext, IChunk chunk) {
-                PrimitiveBuilder primitiveBuilder = getPrimitiveBuilder(chunk);
-                primitiveBuilder.setVertexFormat(shaderSource.vertexFormat);
-                long meshID = window.getGraphicsEngine().getDefaultImpl().createMesh(graphicsContext, primitiveBuilder.toVertexMesh());
-                MeshHolder meshHolder = meshes.setChunk(chunk.getX(),chunk.getY(),chunk.getZ(),new MeshHolder().set(meshID,primitiveBuilder.indices.size()));
+                IMeshBuilder builder = window.getEngineImpl().getMeshBuilder(shaderSource.vertexFormat);
+                long meshID = window.getGraphicsEngine().getDefaultImpl().createMesh(graphicsContext, getMesh(chunk, builder));
+                MeshHolder meshHolder = meshes.setChunk(chunk.getX(),chunk.getY(),chunk.getZ(),new MeshHolder().set(meshID,builder.getIndexCount()));
                 if(meshHolder != null) {
                     window.getGraphicsEngine().getDefaultImpl().destroyMesh(graphicsContext, meshHolder.id);
                 }

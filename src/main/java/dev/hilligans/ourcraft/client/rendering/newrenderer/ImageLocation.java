@@ -6,7 +6,6 @@ public class ImageLocation {
     public String modId;
 
     public int index;
-    public TextAtlas textAtlas;
 
     public ImageLocation(String name, String modId) {
         if(modId.equals("")) {
@@ -22,7 +21,6 @@ public class ImageLocation {
                 "name='" + path + '\'' +
                 ", modId='" + modId + '\'' +
                 ", index=" + index +
-                ", textAtlas=" + textAtlas +
                 '}';
     }
 }

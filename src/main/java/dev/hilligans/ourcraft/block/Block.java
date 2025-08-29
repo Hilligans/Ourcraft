@@ -7,6 +7,7 @@ import dev.hilligans.ourcraft.block.blockstate.IBlockStateTable;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.Renderer;
 import dev.hilligans.ourcraft.client.rendering.graphics.IPrimitiveBuilder;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IMeshBuilder;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
 import dev.hilligans.ourcraft.data.descriptors.TagCollection;
@@ -263,6 +264,10 @@ public class Block implements IRegistryElement {
 
     public void addVertices(TextAtlas textAtlas, PrimitiveBuilder primitiveBuilder, int side, float size, IBlockState blockState, BlockPos blockPos, int x, int z) {
         blockProperties.blockShape.addVertices(textAtlas, primitiveBuilder,side,size,blockState,blockProperties.blockTextureManager,new Vector3f(), x,blockPos.y,z);
+    }
+
+    public void addVertices(TextAtlas textAtlas, IMeshBuilder builder, int side, float size, IBlockState blockState, BlockPos blockPos, int x, int z) {
+        blockProperties.blockShape.addVertices(textAtlas, builder,side,size,blockState,blockProperties.blockTextureManager,new Vector3f(), x,blockPos.y,z);
     }
 
     public void addVertices(IPrimitiveBuilder primitiveBuilder, int side, float size, IBlockState blockState, BlockPos blockPos, int offsetX, int offsetY, int offsetZ) {

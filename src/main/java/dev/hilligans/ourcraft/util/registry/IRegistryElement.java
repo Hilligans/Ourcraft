@@ -28,6 +28,10 @@ public interface IRegistryElement {
         return getResourceType() + "." + getResourceOwner() + "." + getIdentifierName();
     }
 
+    default String getRegistryName() {
+        return getResourceOwner() + ":" + getResourceType();
+    }
+
     default ResourceLocation getResourceLocation(ModContent modContent) {
         return new ResourceLocation(getResourceName(),modContent);
     }

@@ -1,7 +1,6 @@
 package dev.hilligans.ourcraft.client;
 
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.GLRenderer;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
 import dev.hilligans.ourcraft.client.rendering.world.managers.WorldTextureManager;
 import dev.hilligans.ourcraft.data.primitives.Triplet;
@@ -40,7 +39,6 @@ public class ScreenShot {
     }
 
     public static void largeScreenshot(int width, int height, Client client) {
-        GLRenderer.resetFrame();
         Image image = getImage(width,height,client,0,0,0,0);
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         for(int y = 0; y < height; y++) {

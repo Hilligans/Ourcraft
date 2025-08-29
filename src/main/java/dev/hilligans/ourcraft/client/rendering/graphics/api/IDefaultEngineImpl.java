@@ -4,6 +4,7 @@ import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.PipelineState;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.ShaderSource;
+import dev.hilligans.ourcraft.client.rendering.graphics.VertexFormat;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
 import dev.hilligans.ourcraft.client.rendering.VertexMesh;
 import org.jetbrains.annotations.NotNull;
@@ -63,6 +64,10 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
     void clearFBO(Q graphicsContext, Vector4f clearColor);
 
     void setScissor(Q graphicsContext, int x, int y, int width, int height);
+
+    IMeshBuilder getMeshBuilder(String vertexFormat);
+
+    IMeshBuilder getMeshBuilder(VertexFormat vertexFormat);
 
     default void drawMesh(Object graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
         drawMesh((Q) graphicsContext, matrixStack, meshID, indicesIndex, length);

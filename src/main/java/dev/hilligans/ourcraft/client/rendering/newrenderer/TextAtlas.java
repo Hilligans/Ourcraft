@@ -43,7 +43,6 @@ public class TextAtlas {
             return cache.get(key);
         }
         images.add(imageLocation);
-        imageLocation.textAtlas = this;
         imageLocation.index = id;
         if(id == -1) {
             System.out.println("ran out of space");

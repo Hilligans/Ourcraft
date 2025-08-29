@@ -61,6 +61,7 @@ public class VulkanWindow extends RenderWindow {
 
     public VulkanWindow(VulkanInstance vulkanInstance, int width, int height, IGraphicsEngine<?,?,?> graphicsEngine) {
         super(graphicsEngine);
+        System.out.println("New vulkan window");
         windowRenderer = new WindowRenderer(this);
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
@@ -103,6 +104,11 @@ public class VulkanWindow extends RenderWindow {
         this.context = new VulkanGraphicsContext(renderPool, device, this);
         this.frameManager = new FrameManager(this);
         return this;
+    }
+
+    @Override
+    public VulkanGraphicsContext getGraphicsContext() {
+        return context;
     }
 
     public VulkanWindow selectFamily() {

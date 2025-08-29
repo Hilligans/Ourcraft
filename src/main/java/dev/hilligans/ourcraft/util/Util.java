@@ -2,6 +2,10 @@ package dev.hilligans.ourcraft.util;
 
 public class Util {
 
+    public static <X> X identity(X val) {
+        return val;
+    }
+
     public static String shader = "#version 330 core\n " +
             "layout (location = 0) in vec3 aPos;\n" +
             "layout (location = 1) in vec2 aTexCoord;\n" +

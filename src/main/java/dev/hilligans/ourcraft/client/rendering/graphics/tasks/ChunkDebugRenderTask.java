@@ -7,6 +7,7 @@ import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IMeshBuilder;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
 import dev.hilligans.ourcraft.data.other.BoundingBox;
 import dev.hilligans.ourcraft.util.Loops;
@@ -44,11 +45,11 @@ public class ChunkDebugRenderTask extends RenderTaskSource {
                     float maxY = chunkHeight;
                     float maxZ = chunkWidth;
 
-                    PrimitiveBuilder meshBuilder = new PrimitiveBuilder(shaderSource);
+                    IMeshBuilder builder = engine.getDefaultImpl().getMeshBuilder(shaderSource.vertexFormat);
                     IDefaultEngineImpl<?, ?> impl = engine.getDefaultImpl();
-                    meshBuilder.addBoundingBox(new BoundingBox(minX, minY, minZ, maxX, maxY, maxZ), floatList -> floatList.add(1, 1, 1, 1));
+                    builder.addBoundingBox(new BoundingBox(minX, minY, minZ, maxX, maxY, maxZ), floatList -> floatList.addVertices(1, 1, 1, 1));
 
-                    long mesh = impl.createMesh(graphicsContext, meshBuilder.toVertexMesh());
+                    long mesh = impl.createMesh(graphicsContext, builder.build());
 
                     Vector3i playerChunkPos = new Vector3i(Math.floorDiv((int)pos.x, chunkWidth), Math.floorDiv((int)pos.y, chunkHeight), Math.floorDiv((int)pos.z, chunkWidth));
 
@@ -69,7 +70,7 @@ public class ChunkDebugRenderTask extends RenderTaskSource {
                             worldStack.setColor(255, 0, 0, 255);
                         }
                         impl.uploadMatrix(graphicsContext, worldStack, shaderSource);
-                        impl.drawMesh(graphicsContext, worldStack, mesh, 0, meshBuilder.indices.size());
+                        impl.drawMesh(graphicsContext, worldStack, mesh, 0, builder.getIndexCount());
                         worldStack.pop();
                     });
                     impl.destroyMesh(graphicsContext, mesh);

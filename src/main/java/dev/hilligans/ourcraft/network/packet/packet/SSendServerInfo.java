@@ -66,6 +66,6 @@ public class SSendServerInfo extends ServerToClientPacketType {
             throw new RuntimeException("Cannot join server, content differs, " + differingMods);
         }
 
-        CLogin.send(entity, "hilligans");
+        CLogin.send(entity, "hilligans", "ourcraft:unathenticated_scheme");
     }
 }

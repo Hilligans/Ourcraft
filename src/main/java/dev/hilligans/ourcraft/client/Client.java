@@ -397,13 +397,6 @@ public class Client {
         //return BufferUtils.createDoubleBuffer(2).put(x.get()).put(y.get());
     }
 
-    public CompoundNBTTag readUsernameAndPassword(CompoundNBTTag tag) {
-         playerData.userName = tag.getFullStringTag("username").val;
-         playerData.login_token = tag.getFullStringTag("loginToken").val;
-         playerData.email = tag.getFullStringTag("email").val;
-         return tag;
-    }
-
     public CompoundNBTTag writeUsernameAndPassword(CompoundNBTTag tag) {
          tag.putFullString("username",playerData.userName);
          tag.putFullString("loginToken",playerData.login_token);

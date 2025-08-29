@@ -5,10 +5,7 @@ import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsEngineBase;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.GLRenderer;
 import dev.hilligans.ourcraft.client.rendering.screens.JoinScreen;
-import dev.hilligans.ourcraft.client.rendering.world.managers.ShaderManager;
-import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.util.Logger;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -39,7 +36,6 @@ public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWin
         Client client = window.getClient();
         client.mouseLocked = client.screen == null;
         glGetError();
-        GLRenderer.resetFrame();
         long currentTime = System.nanoTime();
         if(currentTime - Client.timeSinceLastDraw < Client.drawTime) {
             return;
@@ -121,11 +117,6 @@ public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWin
 
     @Override
     public Logger getLogger() {
-        return null;
-    }
-
-    @Override
-    public GraphicsContext getGraphicsContext() {
         return null;
     }
 

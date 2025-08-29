@@ -226,6 +226,8 @@ public class NettyEngine extends NetworkEngine<NettyEngine.NettyNetworkEntity, N
             try {
                 PacketType packet = getReceiveProtocol().fromIdToPacketType(msg.readShort());
                 packet.decode(this, msg);
+            } catch (AuthenticationException e) {
+                e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
                 if(socket.side.isServer()) {
@@ -247,9 +249,9 @@ public class NettyEngine extends NetworkEngine<NettyEngine.NettyNetworkEntity, N
         }
 
         @Override
-        public void switchProtocol(Protocol protocol) {
-            this.sendProtocol = protocol;
-            this.receiveProtocol = protocol;
+        public void switchProtocol(Protocol sendProtocol, Protocol receiveProtocol) {
+            this.sendProtocol = sendProtocol;
+            this.receiveProtocol = receiveProtocol;
         }
 
         @Override

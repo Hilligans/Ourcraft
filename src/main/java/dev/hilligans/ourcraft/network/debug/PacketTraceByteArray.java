@@ -235,10 +235,11 @@ public class PacketTraceByteArray implements IPacketByteArray {
     }
 
     public PacketBase<?> createPacket(Protocol protocol) {
-        PacketBase<?> packetBase = protocol.packets.get(getPacketID()).getPacket();
-        packetBase.ctx = getOwner();
+      //  PacketBase<?> packetBase = protocol.packets.get(getPacketID()).getPacket();
+      //  packetBase.ctx = getOwner();
         //System.out.println("Packet Trace:" + packetTrace.data);
-        packetBase.decode(this);
-        return packetBase;
+      //  packetBase.decode(this);
+      //  return packetBase;
+        return null;
     }
 }

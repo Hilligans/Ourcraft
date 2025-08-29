@@ -141,7 +141,7 @@ public class VulkanMemoryManager {
     }
 
 
-    static class MemoryHeap {
+    public static class MemoryHeap {
         public int heapIndex;
         public ArrayList<Tuple<Integer, Integer>> types = new ArrayList<>(4);
         public long size;

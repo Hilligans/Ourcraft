@@ -31,6 +31,12 @@ public class PacketByteArray implements IPacketByteArray {
         packetBase.encode(this);
     }
 
+    public PacketByteArray(byte[] bytes) {
+        byteBuf = Unpooled.buffer();
+        byteBuf.writeBytes(bytes);
+        index = bytes.length;
+    }
+
     public PacketByteArray(byte[] bytes, int packetWidth) {
         byteBuf = Unpooled.buffer();
         byteBuf.writeBytes(bytes);

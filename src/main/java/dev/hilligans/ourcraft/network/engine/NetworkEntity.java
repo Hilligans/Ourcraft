@@ -7,7 +7,10 @@ import dev.hilligans.ourcraft.util.IByteArray;
 
 public interface NetworkEntity {
 
-    void switchProtocol(Protocol protocol);
+    default void switchProtocol(Protocol protocol) {
+        switchProtocol(protocol, protocol);
+    }
+    void switchProtocol(Protocol sendProtocol, Protocol receiveProtocol);
 
     Protocol getSendProtocol();
     Protocol getReceiveProtocol();

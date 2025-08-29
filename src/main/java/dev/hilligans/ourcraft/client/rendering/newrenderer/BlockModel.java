@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.newrenderer;
 
 import dev.hilligans.ourcraft.block.Block;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IMeshBuilder;
 import dev.hilligans.ourcraft.client.rendering.world.managers.BlockTextureManager;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.save.WorldLoader;
@@ -203,6 +204,67 @@ public class BlockModel implements IModel {
         }
     }
 
+    public void addData(TextAtlas textAtlas, IMeshBuilder builder, BlockTextureManager textureManager, int side, float size, Vector3f offset, int rotX, int rotY) {
+        rotX = 0;
+        rotY = 0;
+        float[] vertices = getVertices(side,rotX,rotY);
+        int[] indices = this.indices[side];
+        if(vertices != null) {
+            if(textureManager != null) {
+                float color = getSideColor(side, rotX, rotY);
+                //float[] vals = new float[vertices.length];
+                int id = textureManager.textures[side];
+
+                float startX = textAtlas.getMinX(id);
+                float startY = textAtlas.getMinY(id);
+                float offsetX = textAtlas.getMaxX(id) - startX;
+                float offsetY = textAtlas.getMaxY(id) - startY;
+
+                float[] vals = new float[vertices.length];
+
+                int index = 0;
+                for (int x = 0; x < vertices.length; x += 9) {
+                    vals[x] = vertices[index] * size;
+                    vals[x + 1] = vertices[index + 1] * size;
+                    vals[x + 2] = vertices[index + 2] * size;
+                    vals[x + 7] = vertices[index + 3] * offsetX + startX;
+                    vals[x + 8] = vertices[index + 4] * offsetY + startY;
+                    vals[x + 3] = color * getRed(side);
+                    vals[x + 4] = color * getGreen(side);
+                    vals[x + 5] = color * getBlue(side);
+                    vals[x + 6] = 1.0f;
+                    index += 9;
+                }
+
+                applyRotation(vals, rotX, rotY, size, offset, 0, vertices.length);
+
+                int[] indexVals = new int[indices.length];
+                int vertexCount = builder.getVertexCount();
+
+                boolean rotate = doRations[rotX | rotY << 2];
+                index = 0;
+                if (rotate) {
+                    for (int x = 0; x < indices.length; x += 3) {
+                        indexVals[x] = indices[index] + vertexCount;
+                        indexVals[x + 1] = indices[index + 2] + vertexCount;
+                        indexVals[x + 2] = indices[index + 1] + vertexCount;
+                        index += 3;
+                    }
+                } else {
+                    for (int x = 0; x < indices.length; x += 3) {
+                        indexVals[x] = indices[index] + vertexCount;
+                        indexVals[x + 1] = indices[index + 1] + vertexCount;
+                        indexVals[x + 2] = indices[index + 2] + vertexCount;
+                        index += 3;
+                    }
+                }
+
+                builder.addVertices(vals);
+                builder.addIndices(indexVals);
+            }
+        }
+    }
+
     public float getRed(int side) {
         return color[side][0];
     }
@@ -223,12 +285,6 @@ public class BlockModel implements IModel {
     @Override
     public String getPath() {
         return path;
-    }
-
-    public static void smallArrayCopy(int[] source, int startPos, int[] dest, int destPos, int length, int toAdd) {
-        for(int x = startPos; x < Math.min(source.length,startPos + length); x++) {
-            dest[destPos + x] = source[x] + toAdd;
-        }
     }
 
     private float getSideColor(int side) {
@@ -410,7 +466,7 @@ public class BlockModel implements IModel {
         }
     }
 
-    public void applyRotation(float[] vertices, int rotX, int rotY, float size, Vector3f offset, int xoff, int s) {
+    public final void applyRotation(float[] vertices, int rotX, int rotY, float size, Vector3f offset, int xoff, int s) {
         switch (rotX | rotY << 2) {
             case 0 -> {
                 for (int x = xoff; x < s; x += 9) {

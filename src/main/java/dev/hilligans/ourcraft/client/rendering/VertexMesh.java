@@ -18,8 +18,6 @@ public class VertexMesh implements IAllocator<VertexMesh> {
     public VertexFormat vertexFormat;
     public String vertexFormatName;
 
-    public ArrayList<UniformComponent> uniformComponents = new ArrayList<>();
-
     public IntBuffer indices;
     public FloatBuffer vertices;
     public int elementSize = 4;
@@ -69,30 +67,11 @@ public class VertexMesh implements IAllocator<VertexMesh> {
         return this;
     }
 
-    public VertexMesh addUniform(Matrix4f matrix4f) {
-
-        return this;
-    }
-
-    public VertexMesh addUniform(ByteBuffer byteBuffer) {
-
-        return this;
-    }
 
     @Override
     public void free(VertexMesh resource) {
         MemoryUtil.memFree(resource.vertices);
         MemoryUtil.memFree(resource.indices);
-    }
-
-    static class UniformComponent {
-
-        public String name;
-
-        public UniformComponent(String name) {
-            this.name = name;
-        }
-
     }
 }
 

@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class RenderWindow {
@@ -36,6 +37,8 @@ public abstract class RenderWindow {
     public String windowName;
 
     public static AtomicInteger windowID = new AtomicInteger();
+
+    public ArrayList<Runnable> resourceCleanup = new ArrayList<>();
 
     public RenderWindow(IGraphicsEngine<?,?,?> graphicsEngine) {
         this.graphicsEngine = graphicsEngine;
@@ -75,7 +78,7 @@ public abstract class RenderWindow {
         }
         this.renderPipeline = renderPipeline;
         this.pipelineInstance = this.renderPipeline.buildTargets(graphicsEngine);
-        this.pipelineInstance.load(graphicsEngine.getGameInstance(), graphicsEngine, graphicsEngine.getGraphicsContext());
+        this.pipelineInstance.load(graphicsEngine.getGameInstance(), graphicsEngine, graphicsEngine.getContext());
     }
 
     public void setRenderPipeline(String name) {
@@ -153,6 +156,22 @@ public abstract class RenderWindow {
 
     public void registerInput(KeyPress keyPress) {
 
+    }
+
+    public GraphicsContext getGraphicsContext() {
+        return graphicsEngine.getContext();
+    }
+
+    public RenderWindow addResourceCleanup(Runnable runnable) {
+        resourceCleanup.add(runnable);
+        return this;
+    }
+
+    public void cleanup() {
+        for(Runnable runnable : resourceCleanup) {
+            runnable.run();
+        }
+        resourceCleanup.clear();
     }
 
     public ICamera getCamera() {

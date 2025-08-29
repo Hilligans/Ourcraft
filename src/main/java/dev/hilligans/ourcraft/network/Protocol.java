@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.network;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.data.primitives.IntArrayMap;
 import dev.hilligans.ourcraft.data.primitives.IntArrayMapBuilder;
+import dev.hilligans.ourcraft.data.primitives.Tuple;
 import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.network.packet.InvalidFormatPacket;
@@ -10,6 +11,7 @@ import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.network.packet.PacketType;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import it.unimi.dsi.fastutil.ints.Int2BooleanOpenHashMap;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,45 +20,70 @@ import java.util.function.Supplier;
 public class Protocol implements IRegistryElement {
 
     public String protocolName;
-
-    public ArrayList<PacketFetcher> packets = new ArrayList<>();
+    
     public GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
     public ModContainer source;
 
-    public ArrayList<PacketType> packetTypes = new ArrayList<>();
+    public ArrayList<Tuple<PacketType<?>, Integer>> packetTypes = new ArrayList<>();
+    public boolean setIDs;
+    public int maxID;
 
+    public Int2IntOpenHashMap mapper;
     public IntArrayMap map;
-    public PacketType[] unmap;
+    public PacketType<?>[] unmap;
 
     public Protocol(String protocolName) {
         this.protocolName = protocolName;
     }
 
-    public void register(PacketType packetType) {
-        packetTypes.add(packetType);
+    public void register(PacketType<?> packetType) {
+        packetTypes.add(new Tuple<>(packetType, -1));
+    }
+
+    public void register(PacketType<?> packetType, int id) {
+        packetTypes.add(new Tuple<>(packetType, id));
+        setIDs = true;
+        maxID = Math.max(maxID, id);
     }
 
     public int fromPacketTypeToId(int id) {
-        return map.get(id);
+        if(map == null) {
+            return mapper.get(id);
+        } else {
+            return map.get(id);
+        }
     }
 
-    public PacketType fromIdToPacketType(int id) {
+    public PacketType<?> fromIdToPacketType(int id) {
         return unmap[id];
     }
 
     @Override
     public void load(GameInstance gameInstance) {
-        IntArrayMapBuilder builder = new IntArrayMapBuilder(packetTypes.size(), 3);
+        if(setIDs) {
+            mapper = new Int2IntOpenHashMap();
+            unmap = new PacketType[maxID+1];
 
-        for(PacketType packetType : packetTypes) {
-            builder.add(packetType.getRawID());
-        }
+            for (Tuple<PacketType<?>, Integer> packetType : packetTypes) {
+                if(packetType.getTypeB() == -1) {
+                    throw new RuntimeException("Cannot use mixed packet types");
+                }
+                mapper.put(packetType.getTypeA().getRawID(), (int)packetType.getTypeB());
+                unmap[packetType.getTypeB()] = packetType.getTypeA();
+            }
+        } else {
+            IntArrayMapBuilder builder = new IntArrayMapBuilder(packetTypes.size(), 3);
 
-        map = builder.build();
-        unmap = new PacketType[map.size()];
+            for (Tuple<PacketType<?>, Integer> packetType : packetTypes) {
+                builder.add(packetType.getTypeA().getRawID());
+            }
 
-        for(PacketType packetType : packetTypes) {
-            unmap[map.get(packetType.getRawID())] = packetType;
+            map = builder.build();
+            unmap = new PacketType[map.size()];
+
+            for (Tuple<PacketType<?>, Integer> packetType : packetTypes) {
+                unmap[map.get(packetType.getTypeA().getRawID())] = packetType.getTypeA();
+            }
         }
     }
 

@@ -1,13 +1,18 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.vulkan;
 
-import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.CommandBuffer;
-import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.CommandPool;
-import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.LogicalDevice;
+import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.*;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.pipeline.GraphicsPipeline;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.pipeline.RenderPass;
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.VkCommandBuffer;
+import org.lwjgl.vulkan.VkSubmitInfo;
 
-import static org.lwjgl.vulkan.VK10.vkEndCommandBuffer;
+import java.nio.LongBuffer;
+import java.util.ArrayList;
+import java.util.HashSet;
+
+import static org.lwjgl.vulkan.VK10.*;
 
 public class VulkanGraphicsContext extends VulkanBaseGraphicsContext {
 
@@ -15,6 +20,13 @@ public class VulkanGraphicsContext extends VulkanBaseGraphicsContext {
     public LogicalDevice device;
     public VulkanWindow window;
     public RenderPass renderPass;
+
+    public VulkanFrameInfo frameInfo;
+    public HashSet<Semaphore> signalSemaphores = new HashSet<>();
+    public HashSet<Semaphore> waitSemaphores = new HashSet<>();
+    public VkCommandBuffer commandBuffer;
+    public Queue graphicsQueue;
+
 
     public GraphicsPipeline boundPipeline;
 
@@ -39,8 +51,23 @@ public class VulkanGraphicsContext extends VulkanBaseGraphicsContext {
         return window;
     }
 
+    @Override
+    public VulkanFrameInfo frameInfo() {
+        return frameInfo;
+    }
+
+    @Override
+    public void addWaitSemaphore(Semaphore semaphore) {
+        waitSemaphores.add(semaphore);
+    }
+
+    @Override
+    public void addSignalSemaphore(Semaphore semaphore) {
+        signalSemaphores.add(semaphore);
+    }
+
     public VkCommandBuffer getBuffer() {
-        return commandPool.commandBuffers.get(bufferIndex);
+        return commandBuffer;
     }
 
     @Override
@@ -56,21 +83,56 @@ public class VulkanGraphicsContext extends VulkanBaseGraphicsContext {
     }
 
      */
-    public void setBufferInUse(int index) {
-        this.bufferIndex = index;
-    }
+  //  public void setBufferInUse(int index) {
+  //      this.bufferIndex = index;
+   // }
 
     public void bindPipeline(GraphicsPipeline pipeline) {
         this.boundPipeline = pipeline;
     }
 
-    public void startRecording() {
-        commandPool.beginRecording(bufferIndex);
-        renderPass.startRenderPass(window, window.frameBuffers.get(bufferIndex), getBuffer());
+  //  public void startRecording() {
+  //      commandPool.beginRecording(bufferIndex);
+  //      renderPass.startRenderPass(window, window.frameBuffers.get(bufferIndex), getBuffer());
+  //  }
+
+  //  public void endRecording() {
+  //      renderPass.endRenderPass(getBuffer());
+  //      vkEndCommandBuffer(getBuffer());
+  //  }
+
+    public void submit(long fence) {
+        try(MemoryStack memoryStack = MemoryStack.stackPush()) {
+            VkSubmitInfo submitInfo = VkSubmitInfo.calloc(memoryStack);
+            submitInfo.sType(VK_STRUCTURE_TYPE_SUBMIT_INFO);
+
+            int x = 0;
+
+            if(!signalSemaphores.isEmpty()) {
+                LongBuffer signalBuffer = memoryStack.mallocLong(signalSemaphores.size());
+                for (Semaphore semaphore : signalSemaphores) {
+                    signalBuffer.put(x++, semaphore.handle());
+                }
+                submitInfo.pSignalSemaphores(signalBuffer);
+            }
+
+            if(!waitSemaphores.isEmpty()) {
+                LongBuffer waitBuffer = memoryStack.mallocLong(waitSemaphores.size());
+                x = 0;
+                for (Semaphore semaphore : waitSemaphores) {
+                    waitBuffer.put(x++, semaphore.handle());
+                }
+                submitInfo.pWaitSemaphores(waitBuffer);
+            }
+
+            PointerBuffer buffer = memoryStack.pointers(commandBuffer);
+            submitInfo.pCommandBuffers(buffer);
+
+            vkQueueSubmit(graphicsQueue.handle(), submitInfo, fence);
+        }
     }
 
-    public void endRecording() {
-        renderPass.endRenderPass(getBuffer());
-        vkEndCommandBuffer(getBuffer());
+    public VulkanFrameInfo getFrameInfo() {
+        return frameInfo;
     }
 }

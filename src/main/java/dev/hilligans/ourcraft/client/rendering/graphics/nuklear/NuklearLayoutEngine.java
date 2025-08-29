@@ -15,6 +15,7 @@ import org.lwjgl.stb.STBTTFontinfo;
 import org.lwjgl.stb.STBTTPackContext;
 import org.lwjgl.stb.STBTTPackedchar;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -43,6 +44,9 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
         return new NuklearLayout(this).setup();
     }
 
+    STBTTFontinfo fontInfo;
+    STBTTPackedchar.Buffer cdata;
+
     public void load(IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext, ByteBuffer ttf) {
         default_font = NkUserFont.malloc();
         null_texture = NkDrawNullTexture.malloc();
@@ -53,8 +57,8 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
         int FONT_HEIGHT = 18;
         int fontTexID;
 
-        STBTTFontinfo fontInfo = STBTTFontinfo.create();
-        STBTTPackedchar.Buffer cdata    = STBTTPackedchar.create(95);
+        fontInfo = STBTTFontinfo.create();
+        cdata    = STBTTPackedchar.create(95);
 
         float scale;
         float descent;
@@ -89,8 +93,8 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
             //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-            memFree(texture);
-            memFree(bitmap);
+            //memFree(texture);
+            //memFree(bitmap);
         }
 
         default_font
@@ -98,6 +102,7 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
                     float text_width = 0;
                     try (MemoryStack stack = stackPush()) {
                         IntBuffer unicode = stack.mallocInt(1);
+                        //IntBuffer unicode = MemoryUtil.memAllocInt(1);
 
                         int glyph_len = nnk_utf_decode(text, memAddress(unicode), len);
                         int text_len  = glyph_len;

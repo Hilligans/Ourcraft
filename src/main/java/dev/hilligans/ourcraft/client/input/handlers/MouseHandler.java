@@ -6,6 +6,7 @@ import dev.hilligans.ourcraft.client.rendering.graphics.api.IInputProvider;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.system.Callback;
 
 public class MouseHandler implements IInputProvider {
 
@@ -18,14 +19,20 @@ public class MouseHandler implements IInputProvider {
         this.window = window;
         this.handler = handler;
         MouseHandler mouse = this;
-        GLFW.glfwSetMouseButtonCallback(window.getWindowID(), new GLFWMouseButtonCallback() {
+        Callback callback = GLFW.glfwSetMouseButtonCallback(window.getWindowID(), new GLFWMouseButtonCallback() {
             @Override
             public void invoke(long window, int button, int action, int mods) {
                 handler.handleInput(button,action,window,action, mouse);
             }
         });
+        window.addResourceCleanup(() -> {
+            if(callback != null) {
+                callback.close();
+                callback.free();
+            }
+        });
 
-        GLFW.glfwSetCursorPosCallback(window.getWindowID(), new GLFWCursorPosCallback() {
+        Callback callback1 = GLFW.glfwSetCursorPosCallback(window.getWindowID(), new GLFWCursorPosCallback() {
             @Override
             public void invoke(long w, double xpos, double ypos) {
                 xpos -= window.getWindowWidth() / 2;
@@ -36,6 +43,13 @@ public class MouseHandler implements IInputProvider {
                 if(ypos != 0) {
                     handler.handleInput(MOUSE_Y, 2, w, 1,0,0, (float) ypos, mouse);
                 }
+            }
+        });
+
+        window.addResourceCleanup(() -> {
+            if(callback1 != null) {
+                callback1.close();
+                callback1.free();
             }
         });
     }

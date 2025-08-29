@@ -20,4 +20,11 @@ public class UnauthenticatedScheme implements IAuthenticationScheme<BasicAccount
     public String getResourceOwner() {
         return "ourcraft";
     }
+
+    @Override
+    public String toString() {
+        return "UnauthenticatedScheme{" +
+                "name=" + getIdentifierName() +
+                '}';
+    }
 }

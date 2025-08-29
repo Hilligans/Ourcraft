@@ -19,8 +19,10 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL43;
 import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.opengl.GLDebugMessageCallback;
+import org.lwjgl.system.Callback;
 import org.lwjgl.system.MemoryUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -45,6 +47,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
     public boolean profiling = false;
     public boolean exceptOnMissingResourceCleanup = true;
 
+    public ArrayList<Callback> callbacks = new ArrayList<>();
 
     public OpenGLEngine() {
         engineImpl = new OpenglDefaultImpl(this);
@@ -111,7 +114,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
 
         glEnable(GL_DEBUG_OUTPUT);
 
-        glDebugMessageCallback(new GLDebugMessageCallback() {
+        GLDebugMessageCallback messageCallback = new GLDebugMessageCallback() {
             @Override
             public void invoke(int source, int type, int id, int severity, int length, long message, long userParam) {
                 if(severity == GL43.GL_DEBUG_SEVERITY_NOTIFICATION) {
@@ -120,7 +123,11 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
                     System.err.println(MemoryUtil.memUTF8(message));
                 }
             }
-        }, 0);
+        };
+        glDebugMessageCallback(messageCallback, 0);
+        callbacks.add(messageCallback);
+
+
         gameInstance.build(this, null);
         setupStringRenderer("");
 
@@ -145,13 +152,17 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
 
     @Override
     public void close() {
-        gameInstance.cleanupGraphics(this, getGraphicsContext());
+        for(Callback callback : callbacks) {
+           // callback.close();
+           // callback.free();
+        }
+        gameInstance.cleanupGraphics(this, getContext());
         for(RenderWindow renderWindow : windows) {
             if(renderWindow.pipelineInstance != null) {
-                renderWindow.pipelineInstance.cleanup(getGameInstance(), this, getGraphicsContext());
+                renderWindow.pipelineInstance.cleanup(getGameInstance(), this, getContext());
             }
         }
-        stringRenderer.close(engineImpl, getGraphicsContext());
+        stringRenderer.close(engineImpl, getContext());
 
         engineImpl.close();
         glfwTerminate();
@@ -159,21 +170,16 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
 
     @Override
     public GraphicsContext getContext() {
-        return new GraphicsContext();
+        if(profiling) {
+            return new GraphicsContext().setSection(new ProfiledSection().setMonitorName("loop"));
+        }
+        return new GraphicsContext().setSection(ISection.getSection(client.argumentContainer.getString("--clientSection", "empty")));
     }
 
 
     @Override
     public Logger getLogger() {
         return logger;
-    }
-
-    @Override
-    public GraphicsContext getGraphicsContext() {
-        if(profiling) {
-            return new GraphicsContext().setSection(new ProfiledSection().setMonitorName("loop"));
-        }
-        return new GraphicsContext().setSection(ISection.getSection(client.argumentContainer.getString("--clientSection", "empty")));
     }
 
     @Override

@@ -1,11 +1,13 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.opengl;
 
 import dev.hilligans.ourcraft.client.MatrixStack;
+import dev.hilligans.ourcraft.client.rendering.graphics.DefaultMeshBuilder;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.ourcraft.client.rendering.graphics.PipelineState;
 import dev.hilligans.ourcraft.client.rendering.graphics.ShaderSource;
 import dev.hilligans.ourcraft.client.rendering.graphics.VertexFormat;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IMeshBuilder;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
 import dev.hilligans.ourcraft.client.rendering.VertexMesh;
 import dev.hilligans.ourcraft.client.rendering.world.managers.ShaderManager;
@@ -142,7 +144,9 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         format = format == 4 ? GL_RGBA : GL_RGB;
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, buffer);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_INT_8_8_8_8_REV, buffer);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glGenerateMipmap(GL_TEXTURE_2D);
         textureTypes.put(texture, GL_TEXTURE_2D);
         if(trackingResourceAllocations) {
@@ -360,6 +364,16 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     @Override
     public void setScissor(GraphicsContext graphicsContext, int x, int y, int width, int height) {
         glScissor(x, y, width, height);
+    }
+
+    @Override
+    public IMeshBuilder getMeshBuilder(String vertexFormat) {
+        return new DefaultMeshBuilder(getFormat(vertexFormat));
+    }
+
+    @Override
+    public IMeshBuilder getMeshBuilder(VertexFormat vertexFormat) {
+        return new DefaultMeshBuilder(vertexFormat);
     }
 
     @Override

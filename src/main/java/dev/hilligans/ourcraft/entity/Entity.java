@@ -243,10 +243,4 @@ public abstract class Entity {
         return iD++;
     }
 
-    public static ArrayList<EntityFetcher> entities = new ArrayList<>();
-
-    public static void register() {
-        entities.add(PlayerEntity::new);
-        entities.add(ItemEntity::new);
-    }
 }

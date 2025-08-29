@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.data.other.blockshapes;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.blockstate.IBlockState;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IMeshBuilder;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.BlockModel;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
@@ -76,6 +77,15 @@ public class BlockShape {
             getModel(blockState).addData(textAtlas, primitiveBuilder,blockTextureManager,side,size,offset.add(offsetX,offsetY,offsetZ),rot & 3,(rot & 12) >> 2);
         } else {
             getModel(blockState).addData(textAtlas, primitiveBuilder, blockTextureManager, side, size, offset.add(offsetX, offsetY, offsetZ), 0, 0);
+        }
+    }
+
+    public void addVertices(TextAtlas textAtlas, IMeshBuilder builder, int side, float size, IBlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset, float offsetX, float offsetY, float offsetZ) {
+        int rot = blockState.getBlock().getRotation(blockState);
+        if (rot != -1) {
+            getModel(blockState).addData(textAtlas, builder,blockTextureManager,side,size,offset.add(offsetX,offsetY,offsetZ),rot & 3,(rot & 12) >> 2);
+        } else {
+            getModel(blockState).addData(textAtlas, builder, blockTextureManager, side, size, offset.add(offsetX, offsetY, offsetZ), 0, 0);
         }
     }
 

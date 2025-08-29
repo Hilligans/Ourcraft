@@ -95,6 +95,10 @@ public class Queue {
         asyncSubmitQueue.add(new Tuple<>(commandBuffer, null));
     }
 
+    public final VkQueue handle() {
+        return vkQueue;
+    }
+
     public void cleanup() {
         //vkDestroyQ
     }

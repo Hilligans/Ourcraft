@@ -16,7 +16,6 @@ import io.netty.util.concurrent.GenericFutureListener;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 @ChannelHandler.Sharable
@@ -77,12 +76,12 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
         ServerPlayerData serverPlayerData = mappedPlayerData.get(ctx.channel().id());
         PacketBase<?> packetBase;
         if(serverPlayerData == null) {
-            packetBase = msg.createPacket(defaultReceiveProtocol);
-            if(!(packetBase instanceof CHandshakePacket)) {
-                ctx.close();
-                return;
-            }
-            packetBase.handle(this);
+            //packetBase = msg.createPacket(defaultReceiveProtocol);
+            //if(!(packetBase instanceof CHandshakePacket)) {
+            //    ctx.close();
+            //    return;
+            //}
+            //packetBase.handle(this);
         } else {
           //  packetBase = msg.createPacket(serverPlayerData.getReceiveProtocol());
           //  packetBase.handle(serverPlayerData);
@@ -134,7 +133,7 @@ public class ServerNetworkHandler extends SimpleChannelInboundHandler<IPacketByt
     }
 
     public void sendPacket(PacketBase<?> packetBase, PlayerEntity playerEntity) {
-        sendPacket(packetBase, playerEntity.getPlayerData().getChannelId());
+       // sendPacket(packetBase, playerEntity.getPlayerData().getChannelId());
     }
 
     public void sendPacket(PacketBase<?> packetBase, ChannelId channelId) {

@@ -8,6 +8,7 @@ import dev.hilligans.ourcraft.entity.Entity;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.mod.handler.events.server.MultiPlayerServerStartEvent;
+import dev.hilligans.ourcraft.network.AuthenticationException;
 import dev.hilligans.ourcraft.network.PacketBase;
 import dev.hilligans.ourcraft.network.Protocol;
 import dev.hilligans.ourcraft.network.engine.INetworkEngine;
@@ -16,6 +17,8 @@ import dev.hilligans.ourcraft.network.engine.NetworkSocket;
 import dev.hilligans.ourcraft.network.packet.client.CHandshakePacket;
 import dev.hilligans.ourcraft.network.packet.server.SDisconnectPacket;
 import dev.hilligans.ourcraft.network.ServerNetworkHandler;
+import dev.hilligans.ourcraft.server.authentication.IAccount;
+import dev.hilligans.ourcraft.server.authentication.IAuthenticationScheme;
 import dev.hilligans.ourcraft.util.IByteArray;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
 import dev.hilligans.ourcraft.util.NamedThreadFactory;
@@ -46,8 +49,13 @@ public class MultiPlayerServer implements IServer {
 
     public int renderDistance = 32 * 4;
 
-    public MultiPlayerServer(GameInstance gameInstance) {
+    public HashMap<String, IAuthenticationScheme<?>> authenticationSchemes = new HashMap<>();
+
+    public MultiPlayerServer(GameInstance gameInstance, IAuthenticationScheme<?>[] authenticationSchemes) {
         this.gameInstance = gameInstance;
+        for(IAuthenticationScheme<?> authenticationScheme : authenticationSchemes) {
+            this.authenticationSchemes.put(authenticationScheme.getIdentifierName(), authenticationScheme);
+        }
     }
 
     public void startServer(String port) {
@@ -159,6 +167,16 @@ public class MultiPlayerServer implements IServer {
         tick.shutdownNow();
         playerHandler.shutdownNow();
         networkSockets.forEach(NetworkSocket::closeSocket);
+    }
+
+    @Override
+    public IAccount<?> authenticate(String scheme, String username, IByteArray data) {
+        IAuthenticationScheme<?> authenticationScheme = authenticationSchemes.get(scheme);
+        if(authenticationScheme == null) {
+            throw new AuthenticationException("Unknown authentication scheme: " + scheme);
+        }
+
+        return authenticationScheme.authenticate(username, data);
     }
 
     static class PlayerHandler implements Runnable {

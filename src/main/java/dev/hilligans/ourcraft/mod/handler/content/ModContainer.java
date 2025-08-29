@@ -201,30 +201,27 @@ public class ModContainer {
     }
 
     @SafeVarargs
-    public final void registerPacket(PacketType... packets) {
+    public final void registerPacket(PacketType<?>... packets) {
         ModContainer self = this;
-        for(PacketType packetType : packets) {
+        for(PacketType<?> packetType : packets) {
             Protocol protocol = protocolRegistry.computeIfAbsent("ourcraft:Play", (s -> new Protocol(s.split(":")[1]).setSource(self)));
             protocol.register(packetType);
         }
     }
 
     @SafeVarargs
-    public final void registerPacket(String protocolName, PacketType... packets) {
+    public final void registerPacket(String protocolName, PacketType<?>... packets) {
         ModContainer self = this;
-        for(PacketType packetType : packets) {
+        for(PacketType<?> packetType : packets) {
             Protocol protocol = protocolRegistry.computeIfAbsent(protocolName, (s -> new Protocol(s.split(":")[1]).setSource(self)));
             protocol.register(packetType);
         }
     }
 
-    @SafeVarargs
-    public final void registerPacket(String protocolName, int id, Supplier<PacketBase<?>>... packets) {
+    public final void registerPacket(String protocolName, int id, PacketType<?> packet) {
         ModContainer self = this;
-        for(Supplier<PacketBase<?>> packet : packets) {
-            Protocol protocol = protocolRegistry.computeIfAbsent(protocolName, (s -> new Protocol(s.split(":")[1]).setSource(self)));
-         //   protocol.register(packet,id);
-        }
+        Protocol protocol = protocolRegistry.computeIfAbsent(protocolName, (s -> new Protocol(s.split(":")[1]).setSource(self)));
+        protocol.register(packet,id);
     }
 
     public void registerResourceLoader(ResourceLoader<?>... resourceLoaders) {

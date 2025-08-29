@@ -8,6 +8,8 @@ import dev.hilligans.ourcraft.client.rendering.graphics.implementations.FreeCame
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.ScreenShot;
 import org.joml.Vector4f;
+import org.lwjgl.glfw.GLFWWindowFocusCallback;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL30;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -118,15 +120,36 @@ public class OpenGLWindow extends RenderWindow {
         return "glfw";
     }
 
+    private GLFWWindowSizeCallback sizeCallback;
+    private GLFWWindowFocusCallback focusCallback;
+
     public void registerCallbacks() {
-        glfwSetWindowSizeCallback(window, (window, w, h) -> {
+        sizeCallback = glfwSetWindowSizeCallback(window, (window, w, h) -> {
             width = w;
             height = h;
             updatedSize = true;
         });
 
-        glfwSetWindowFocusCallback(window, (window, focused) -> windowFocused = focused);
+
+        focusCallback = glfwSetWindowFocusCallback(window, (window, focused) -> windowFocused = focused);
+
         //MouseHandler mouseHandler = new MouseHandler(client);
         //glfwSetMouseButtonCallback(window, mouseHandler::invoke);
+    }
+
+    @Override
+    public void cleanup() {
+        super.cleanup();
+        if(sizeCallback != null) {
+            sizeCallback.close();
+            sizeCallback.free();
+        }
+        if(focusCallback != null) {
+            focusCallback.close();
+            focusCallback.free();
+        }
+
+
+        glfwDestroyWindow(window);
     }
 }

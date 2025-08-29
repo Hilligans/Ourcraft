@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.network.packet.packet;
 
+import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.network.Protocol;
@@ -7,32 +8,41 @@ import dev.hilligans.ourcraft.network.engine.NetworkEntity;
 import dev.hilligans.ourcraft.network.engine.ServerNetworkEntity;
 import dev.hilligans.ourcraft.network.packet.ClientToServerPacketType;
 import dev.hilligans.ourcraft.network.packet.PacketType;
+import dev.hilligans.ourcraft.server.authentication.IAccount;
+import dev.hilligans.ourcraft.server.authentication.IAuthenticationScheme;
 import dev.hilligans.ourcraft.util.IByteArray;
 
 public class CLogin extends ClientToServerPacketType {
 
     public static final CLogin instance = new CLogin();
 
-    public static void send(NetworkEntity networkEntity, String username) {
-        networkEntity.sendPacket(instance.encode(networkEntity, username));
+    public static void send(NetworkEntity networkEntity, String username, String authScheme) {
+        networkEntity.sendPacket(instance.encode(networkEntity, username, authScheme));
     }
 
-    public static IByteArray get(NetworkEntity networkEntity, String username)  {
-        return instance.encode(networkEntity, username);
+    public static IByteArray get(NetworkEntity networkEntity, String username, String authScheme)  {
+        return instance.encode(networkEntity, username, authScheme);
     }
 
-    public IByteArray encode(NetworkEntity entity, String username) {
+    public IByteArray encode(NetworkEntity entity, String username, String authScheme) {
         IByteArray array = getWriteArray(entity);
         array.writeString(username);
+        array.writeString(authScheme);
         return array;
     }
 
     public void decode(ServerNetworkEntity entity, IByteArray data) {
+        final GameInstance gameInstance = entity.getGameInstance();
+
         String username = data.readString();
+        String authScheme = data.readString();
+
+        IAccount<?> account = entity.getServer().authenticate(authScheme, username, data);
 
         Protocol newProtocol = entity.getGameInstance().getExcept("ourcraft:Play", Protocol.class);
         SSwitchProtocol.send(entity, newProtocol);
         entity.switchProtocol(newProtocol);
+
 
         ServerPlayerData serverPlayerData = entity.getServer().loadPlayer(username, entity);
         serverPlayerData.getServer().sendPacket(entity.getSendProtocol(), SSendMessage.get(entity, username + " has joined."));

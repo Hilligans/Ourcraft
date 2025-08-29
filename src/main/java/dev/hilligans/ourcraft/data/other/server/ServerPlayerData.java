@@ -46,15 +46,11 @@ public class ServerPlayerData implements IServerPacketHandler {
 
     public int renderDistance = 6;
     public int renderYDistance = 4;
-    public ServerNetworkHandler serverNetworkHandler;
     public String playerName;
     public UUID playerID;
-    public ChannelId channelId;
 
     GameInstance gameInstance;
 
-    public Protocol sendProtocol;
-    public Protocol receriveProtocol;
     public Channel channel;
 
     public NetworkEntity networkEntity;
@@ -90,11 +86,6 @@ public class ServerPlayerData implements IServerPacketHandler {
         return this;
     }
 
-    public ServerPlayerData setNetworkHandler(ServerNetworkHandler serverNetworkHandler) {
-        this.serverNetworkHandler = serverNetworkHandler;
-        return this;
-    }
-
     public ServerPlayerData setName(String name) {
         this.playerName = name;
         return this;
@@ -112,16 +103,6 @@ public class ServerPlayerData implements IServerPacketHandler {
     public UUID getPlayerID() {
         return playerID;
     }
-
-    public ServerPlayerData setChannelID(ChannelId channelId) {
-        this.channelId = channelId;
-        return this;
-    }
-
-    public ChannelId getChannelId() {
-        return channelId;
-    }
-
 
     public String getPlayerName() {
         return playerName;
@@ -256,7 +237,7 @@ public class ServerPlayerData implements IServerPacketHandler {
 
     @Override
     public ServerNetworkHandler getServerNetworkHandler() {
-        return serverNetworkHandler;
+        return null;
     }
 
     @Override

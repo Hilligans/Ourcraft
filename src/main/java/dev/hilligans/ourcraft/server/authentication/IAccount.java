@@ -9,6 +9,6 @@ public interface IAccount<T> {
     T getAccountID();
 
     default String getUniqueString() {
-        return getAuthenticationScheme().getUniqueName() + ":" + getUsername();
+        return getAuthenticationScheme().getResourceName() + ":" + getUsername();
     }
 }

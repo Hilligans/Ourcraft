@@ -106,11 +106,6 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
     }
 
     @Override
-    public GraphicsContext getGraphicsContext() {
-        return null;
-    }
-
-    @Override
     public boolean isCompatible() {
         return true;
     }

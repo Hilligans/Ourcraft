@@ -34,14 +34,13 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
 
     Logger getLogger();
 
-    GraphicsContext getGraphicsContext();
-
     boolean isRunning();
 
     default Runnable createRenderLoop(GameInstance gameInstance, RenderWindow w) {
         return () -> {
             try {
-                GraphicsContext graphicsContext = getGraphicsContext();
+                GraphicsContext graphicsContext = getContext();
+                System.out.println(w);
                 ISection section = graphicsContext.getSection();
                 try(var $0 = section.startSection("base")) {
                     out: {
@@ -70,6 +69,8 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
             } catch (Exception e) {
                 e.printStackTrace();
                 throw e;
+            } finally {
+                w.cleanup();
             }
             System.out.println("Closing");
         };

@@ -11,10 +11,4 @@ public interface IPacketByteArray extends IByteArray {
     void setOwner(ChannelHandlerContext ctx);
     ChannelHandlerContext getOwner();
 
-    default PacketBase<?> createPacket(Protocol protocol) {
-        PacketBase<?> packetBase = protocol.packets.get(getPacketID()).getPacket();
-        packetBase.ctx = getOwner();
-        packetBase.decode(this);
-        return packetBase;
-    }
 }

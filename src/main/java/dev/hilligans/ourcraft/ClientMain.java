@@ -14,6 +14,7 @@ import dev.hilligans.ourcraft.mod.handler.pipeline.standard.StandardPipeline;
 import dev.hilligans.ourcraft.util.argument.ArgumentContainer;
 import dev.hilligans.ourcraft.util.Side;
 import dev.hilligans.ourcraft.util.argument.ArgumentSearcher;
+import org.lwjgl.system.Configuration;
 
 import static dev.hilligans.ourcraft.Ourcraft.argumentContainer;
 

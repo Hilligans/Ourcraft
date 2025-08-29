@@ -11,12 +11,15 @@ import dev.hilligans.ourcraft.client.rendering.graphics.api.ILayout;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.nuklear.*;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.nuklear.Nuklear.*;
+import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL11.glScissor;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.*;
@@ -39,7 +42,7 @@ public class NuklearLayout implements ILayout {
 
     protected NuklearLayout setup() {
         ctx = NkContext.create();
-        cmds = NkBuffer.create();
+        cmds = NkBuffer.calloc();
         nk_init(ctx, ALLOCATOR, null);
         nk_buffer_init(cmds, ALLOCATOR, 1024);
         nk_style_set_font(ctx, engine.default_font);
@@ -50,11 +53,20 @@ public class NuklearLayout implements ILayout {
     public void drawLayout(RenderWindow renderWindow, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, MatrixStack matrixStack, Client client) {
         int AA = NK_ANTI_ALIASING_ON;
 
+        glEnable(GL_BLEND);
+        glBlendEquation(GL_FUNC_ADD);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_CULL_FACE);
+        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_SCISSOR_TEST);
+
         IDefaultEngineImpl<?, ?> impl = engine.getDefaultImpl();
         layout(ctx, width, height);
 
-        ByteBuffer vertices;
-        ByteBuffer elements;
+        ByteBuffer vertices = MemoryUtil.memCalloc(10000);
+        //vertices.order(ByteOrder.LITTLE_ENDIAN);
+        ByteBuffer elements = MemoryUtil.memCalloc(10000);
+        //elements.order(ByteOrder.LITTLE_ENDIAN);
         try (MemoryStack stack = stackPush()) {
             // fill convert configuration
             NkConvertConfig config = NkConvertConfig.calloc(stack)
@@ -70,16 +82,24 @@ public class NuklearLayout implements ILayout {
                     .line_AA(AA);
 
             // setup buffers to load vertices and elements
-            NkBuffer vbuf = NkBuffer.calloc(stack);
-            NkBuffer ebuf = NkBuffer.calloc(stack);
+            NkBuffer vbuf = NkBuffer.malloc(stack);
+            NkBuffer ebuf = NkBuffer.malloc(stack);
 
-            nk_buffer_init(vbuf, ALLOCATOR, 1024);
-            nk_buffer_init(ebuf, ALLOCATOR, 1024);
-            vertices = vbuf.memory().ptr();
-            elements = ebuf.memory().ptr();
+            //nk_buffer_init(vbuf, ALLOCATOR, 1024);
+            //nk_buffer_init(ebuf, ALLOCATOR, 1024);
+            //vertices = vbuf.memory().ptr();
+            //elements = ebuf.memory().ptr();
+
+            nk_buffer_init_fixed(vbuf, vertices/*, max_vertex_buffer*/);
+            nk_buffer_init_fixed(ebuf, elements/*, max_element_buffer*/);
             //nk_buffer_init_fixed(vbuf, vertices/*, max_vertex_buffer*/);
             //nk_buffer_init_fixed(ebuf, elements/*, max_element_buffer*/);
             nk_convert(ctx, cmds, vbuf, ebuf, config);
+
+            for(int x = 0; x < 100; x++) {
+                //System.out.println(Short.toUnsignedInt(elements.getShort(x*2)));
+            }
+            //System.exit(0);
 
 
             FloatBuffer f = stack.floats(
@@ -123,9 +143,11 @@ public class NuklearLayout implements ILayout {
             int width = (int) (rect.w() * fb_scale_x);
             int height = (int) (rect.h() * fb_scale_y);
             impl.setScissor(graphicsContext, x, y, width, height);
+
             impl.drawMesh(graphicsContext, matrixStack, mesh, offset, cmd.elem_count());
 
             //glDrawElements(GL_TRIANGLES, cmd.elem_count(), GL_UNSIGNED_SHORT, offset);
+
             offset += cmd.elem_count() * 2L;
         }
         impl.destroyMesh(graphicsContext, mesh);
@@ -136,14 +158,14 @@ public class NuklearLayout implements ILayout {
 
     void layout(NkContext ctx, int x, int y) {
         try (MemoryStack stack = stackPush()) {
-            NkRect rect = NkRect.malloc(stack);
+            NkRect rect = NkRect.malloc();
 
             if (nk_begin(
                     ctx,
                     "Demo",
                     nk_rect(x, y, 230, 250, rect),
                     NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE | NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE)) {
-              //  nk_label(ctx, "some rando text", NK_LEFT);
+                nk_label(ctx, "some rando text", NK_LEFT);
 
 
                 nk_layout_row_static(ctx, 30, 80, 1);
@@ -165,7 +187,7 @@ public class NuklearLayout implements ILayout {
                 nk_layout_row_dynamic(ctx, 20, 1);
                 nk_label(ctx, "background:", NK_TEXT_LEFT);
                 nk_layout_row_dynamic(ctx, 25, 1);
-                if (nk_combo_begin_color(ctx, nk_rgb_cf(background, NkColor.malloc(stack)), NkVec2.malloc(stack).set(nk_widget_width(ctx), 400))) {
+                if (nk_combo_begin_color(ctx, nk_rgb_cf(background, NkColor.malloc()), NkVec2.malloc().set(nk_widget_width(ctx), 400))) {
                     nk_layout_row_dynamic(ctx, 120, 1);
                     nk_color_picker(ctx, background, NK_RGBA);
                     nk_layout_row_dynamic(ctx, 25, 1);

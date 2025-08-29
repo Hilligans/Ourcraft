@@ -7,6 +7,7 @@ import dev.hilligans.ourcraft.client.rendering.graphics.PipelineState;
 import dev.hilligans.ourcraft.client.rendering.graphics.ShaderSource;
 import dev.hilligans.ourcraft.client.rendering.graphics.VertexFormat;
 import dev.hilligans.ourcraft.client.rendering.VertexMesh;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IMeshBuilder;
 import dev.hilligans.ourcraft.data.primitives.Tuple;
 import dev.hilligans.ourcraft.mod.handler.content.UnknownResourceException;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
@@ -204,6 +205,16 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     @Override
     public void setScissor(GraphicsContext graphicsContext, int x, int y, int width, int height) {
 
+    }
+
+    @Override
+    public IMeshBuilder getMeshBuilder(String vertexFormat) {
+        return null;
+    }
+
+    @Override
+    public IMeshBuilder getMeshBuilder(VertexFormat vertexFormat) {
+        return null;
     }
 
     private int getGLPrimitive(int type) {

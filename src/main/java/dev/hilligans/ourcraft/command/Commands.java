@@ -28,7 +28,4 @@ public class Commands {
     public static void stop(CommandExecutor executor) {
         System.out.println("stop");
     }
-
-    public static void discordJoin(PlayerExecutor executor) {}
-    public static void discordLeave(PlayerExecutor executor) {}
 }

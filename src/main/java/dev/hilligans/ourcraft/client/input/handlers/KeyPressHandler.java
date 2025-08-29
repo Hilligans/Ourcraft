@@ -3,8 +3,10 @@ package dev.hilligans.ourcraft.client.input.handlers;
 import dev.hilligans.ourcraft.client.input.InputHandler;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IInputProvider;
+import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.system.Callback;
 
 public class KeyPressHandler implements IInputProvider {
 
@@ -17,10 +19,16 @@ public class KeyPressHandler implements IInputProvider {
         this.window = window;
         this.inputHandler = inputHandler;
         KeyPressHandler handler = this;
-        GLFW.glfwSetKeyCallback(window.getWindowID(), new GLFWKeyCallback() {
+        Callback callback = GLFW.glfwSetKeyCallback(window.getWindowID(), new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
                 inputHandler.handleInput(key,action,window,action,scancode,mods,action != 0 ? 1 : 0,handler);
+            }
+        });
+        window.addResourceCleanup(() -> {
+            if(callback != null) {
+                callback.close();
+                callback.free();
             }
         });
     }

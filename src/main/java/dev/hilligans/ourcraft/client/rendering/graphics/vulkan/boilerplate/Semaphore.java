@@ -36,6 +36,7 @@ public class Semaphore {
         return memoryStack.mallocLong(1).put(0, semaphore);
     }
 
-
-
+    public final long handle() {
+        return semaphore;
+    }
 }

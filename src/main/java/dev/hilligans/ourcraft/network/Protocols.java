@@ -55,7 +55,7 @@ public class Protocols {
         modContent.registerPacket("ourcraft:login", SSendServerInfo.instance);
         modContent.registerPacket("ourcraft:login", CLogin.instance);
         modContent.registerPacket("ourcraft:login", SRejectClient.instance);
-
+        modContent.registerPacket("ourcraft:login", SRejectAuthentication.instance);
 
 
         modContent.registerPacket("ourcraft:Play", SServerExceptionPacket.instance);
