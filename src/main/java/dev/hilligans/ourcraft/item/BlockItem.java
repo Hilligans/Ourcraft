@@ -87,10 +87,13 @@ public class BlockItem extends Item {
         for(int z = 0; z < 6; z++) {
             //block.addVertices(textAtlas, primitiveBuilder,z,size,block.getDefaultState(),new BlockPos(0,0,0),0,0);
         }
+        /*
         primitiveBuilder.translate(size / 3f,size / 1.3f,0);
         primitiveBuilder.rotate(0.785f,new Vector3f(0.5f,-1,0));
         primitiveBuilder.rotate(0.186f,new Vector3f(0,0,-1));
         primitiveBuilder.rotate(3.1415f,new Vector3f(0,0,1));
         primitiveBuilder.translate(0,0 ,-size * 2);
+
+         */
     }
 }

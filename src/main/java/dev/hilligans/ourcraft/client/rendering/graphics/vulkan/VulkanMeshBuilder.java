@@ -1,32 +1,35 @@
-package dev.hilligans.ourcraft.client.rendering.graphics;
+package dev.hilligans.ourcraft.client.rendering.graphics.vulkan;
 
 import dev.hilligans.ourcraft.client.rendering.VertexMesh;
+import dev.hilligans.ourcraft.client.rendering.graphics.VertexFormat;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IMeshBuilder;
-import dev.hilligans.ourcraft.data.other.BoundingBox;
+import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.VulkanBuffer;
 import dev.hilligans.ourcraft.resource.IAllocator;
 import dev.hilligans.ourcraft.resource.IBufferAllocator;
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
-import it.unimi.dsi.fastutil.floats.FloatList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.util.function.Consumer;
 
-public class DefaultMeshBuilder implements IMeshBuilder, IAllocator<VertexMesh> {
+public class VulkanMeshBuilder implements IMeshBuilder, IAllocator<VertexMesh> {
+
+    public VulkanMemoryManager memoryAllocator;
 
     VertexFormat format;
 
     FloatArrayList vertices = new FloatArrayList();
     IntArrayList indices = new IntArrayList();
 
+    //VulkanBuffer vertexBuffer;
+    //VulkanBuffer indexBuffer;
+
     ByteBuffer vertexBuffer;
     ByteBuffer indexBuffer;
 
-    public DefaultMeshBuilder(VertexFormat format) {
+    public VulkanMeshBuilder(VertexFormat format, VulkanMemoryManager memoryAllocator) {
         this.format = format;
+        this.memoryAllocator = memoryAllocator;
     }
 
     @Override
@@ -91,6 +94,8 @@ public class DefaultMeshBuilder implements IMeshBuilder, IAllocator<VertexMesh> 
 
     @Override
     public VertexMesh build() {
+        //memoryAllocator.allocateBuffer()
+
         if(vertexBuffer == null) {
             vertexBuffer = MemoryUtil.memAlloc(vertices.size() * 4);
             vertexBuffer.asFloatBuffer().put(vertices.elements(), 0, vertices.size());

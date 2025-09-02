@@ -270,10 +270,6 @@ public class Block implements IRegistryElement {
         blockProperties.blockShape.addVertices(textAtlas, builder,side,size,blockState,blockProperties.blockTextureManager,new Vector3f(), x,blockPos.y,z);
     }
 
-    public void addVertices(IPrimitiveBuilder primitiveBuilder, int side, float size, IBlockState blockState, BlockPos blockPos, int offsetX, int offsetY, int offsetZ) {
-
-    }
-
     public int getRotation(IBlockState state) {
         return 0;
     }

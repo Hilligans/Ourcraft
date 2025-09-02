@@ -87,18 +87,4 @@ public class PrimitiveBuilder {
         return (vertexFormat.getStride() / 4);
     }
 
-    public void rotate(float degrees, Vector3f vector) {
-        rotate(degrees,vector,0);
-    }
-
-    public void rotate(float degrees, Vector3f vector, int startPos) {
-        Matrix3f matrix3f = new Matrix3f(1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f);
-        matrix3f.rotate(degrees,vector);
-        for(int x = startPos; x < vertices.size(); x+=vertexFormat.getStride()) {
-            Vector3f vector3f = new Vector3f(vertices.elementData[x],vertices.elementData[x] + 1, vertices.elementData[x] + 2).mul(matrix3f);
-            vertices.elementData[x] = vector3f.x;
-            vertices.elementData[x + 1] = vector3f.y;
-            vertices.elementData[x + 2] = vector3f.z;
-        }
-    }
 }

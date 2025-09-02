@@ -1,7 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering.world;
 
 import dev.hilligans.ourcraft.GameInstance;
-import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.lang.Languages;
 import dev.hilligans.ourcraft.client.rendering.Textures;
@@ -10,8 +9,8 @@ import dev.hilligans.ourcraft.client.rendering.graphics.ShaderSource;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IMeshBuilder;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.TextureAtlas;
 import dev.hilligans.ourcraft.client.rendering.world.managers.WorldTextureManager;
 import dev.hilligans.ourcraft.data.primitives.IntList;
@@ -20,7 +19,6 @@ import it.unimi.dsi.fastutil.ints.Int2BooleanArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import java.awt.image.BufferedImage;
-import java.util.concurrent.Future;
 
 public class StringRenderer {
 
@@ -50,120 +48,106 @@ public class StringRenderer {
     }
 
     public void drawStringInternal(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, String string, int x, int y, float scale) {
-        matrixStack.push();
         int width = 0;
         IntList vals = getAtlases(string);
-        Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
-        vals.forEach((val) -> primitiveBuilders.put(val, new PrimitiveBuilder(shaderSource.vertexFormat)));
+        Int2ObjectOpenHashMap<IMeshBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
+        vals.forEach((val) -> primitiveBuilders.put(val, window.getEngineImpl().getMeshBuilder(shaderSource.vertexFormat)));
 
         ensureTexturesBuilt(vals, window);
         for(int z = 0; z < string.length(); z++) {
-            PrimitiveBuilder primitiveBuilder = primitiveBuilders.get((int) string.charAt(z) >> 8);
-            addVertices(primitiveBuilder, string.charAt(z), x + width, y, scale);
+            IMeshBuilder builder = primitiveBuilders.get((int) string.charAt(z) >> 8);
+            addVertices(builder, string.charAt(z), x + width, y, scale);
             width += getCharWidth(string.charAt(z)) * scale;
         }
 
-        draw1(window,graphicsContext,matrixStack,vals,primitiveBuilders);
-        matrixStack.pop();
+        draw(window,graphicsContext,matrixStack,vals,primitiveBuilders);
     }
 
     public void drawCenteredStringInternal(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, String string, int y, float scale) {
-        matrixStack.push();
         try {
             IntList vals = getAtlases(string);
-            Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
-            vals.forEach((val) -> primitiveBuilders.put(val,new PrimitiveBuilder(shaderSource.vertexFormat)));
+            Int2ObjectOpenHashMap<IMeshBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
+            vals.forEach((val) -> primitiveBuilders.put(val,window.getEngineImpl().getMeshBuilder(shaderSource.vertexFormat)));
             int width = 0;
             for(int z = 0; z < string.length(); z++) {
-                PrimitiveBuilder primitiveBuilder = primitiveBuilders.get((int)string.charAt(z) >> 8);
+                IMeshBuilder primitiveBuilder = primitiveBuilders.get((int)string.charAt(z) >> 8);
                 addVertices(primitiveBuilder,string.charAt(z),width,y,scale);
                 width += getCharWidth(string.charAt(z)) * scale;
             }
             int finalWidth = width;
             ensureTexturesBuilt(vals, window);
-            vals.forEach((val) -> {
-                TextureAtlas textureAtlas = textureAtlases.get(val);
-                if(textureAtlas == null) {
-                    return;
-                }
-                PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
-                primitiveBuilder.translate(window.getWindowWidth() / 2f - finalWidth / 2f,0,0);
-                draw1(window,graphicsContext,matrixStack,vals,primitiveBuilders);
-            });
-        } catch (Exception ignored) {}
-        matrixStack.pop();
-    }
-
-    public void drawCenteredStringInternal(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, String string, int x, int y, float scale) {
-        matrixStack.push();
-        try {
-            IntList vals = getAtlases(string);
-            Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
-            vals.forEach((val) -> primitiveBuilders.put(val, new PrimitiveBuilder(shaderSource.vertexFormat)));
-            int width = 0;
-            for(int z = 0; z < string.length(); z++) {
-                PrimitiveBuilder primitiveBuilder = primitiveBuilders.get((int)string.charAt(z) >> 8);
-                addVertices(primitiveBuilder,string.charAt(z),width,y,scale);
-                width += getCharWidth(string.charAt(z)) * scale;
-            }
-            int finalWidth = width;
-            ensureTexturesBuilt(vals, window);
-            IDefaultEngineImpl<?,?> impl = window.getEngineImpl();
-            impl.uploadMatrix(graphicsContext,matrixStack,shaderSource);
+            int[] strideIndex = new int[]{(shaderSource.vertexFormat.getOffset("position"))};
             vals.forEach((val) -> {
                 TextureAtlas textureAtlas = textureAtlases.get(val);
                 if(textureAtlas == null) {
                     return;
                 }
                 if(textureAtlas.glTextureId != -1) {
-                    PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
-                    primitiveBuilder.translate(x - finalWidth / 2f, 0, 0);
-                    impl.bindPipeline(graphicsContext, shaderSource.program);
-                    impl.bindTexture(graphicsContext, textureAtlas.glTextureId);
-                    impl.drawAndDestroyMesh(graphicsContext, matrixStack, primitiveBuilder.toVertexMesh());
+                    IMeshBuilder mesh = primitiveBuilders.get(val);
+                    mesh.transform(window.getWindowWidth() / 2f - finalWidth / 2f, strideIndex[0]);
+                    draw2(window, graphicsContext, matrixStack, mesh, textureAtlas.glTextureId);
                 }
-
             });
-        } catch (Exception ignored) {
-            ignored.printStackTrace();
-        }
-        matrixStack.pop();
+        } catch (Exception ignored) {}
+    }
+
+    public void drawCenteredStringInternal(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, String string, int x, int y, float scale) {
+        try {
+            IntList vals = getAtlases(string);
+            Int2ObjectOpenHashMap<IMeshBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
+            vals.forEach((val) -> primitiveBuilders.put(val,window.getEngineImpl().getMeshBuilder(shaderSource.vertexFormat)));
+            int width = 0;
+            for(int z = 0; z < string.length(); z++) {
+                IMeshBuilder primitiveBuilder = primitiveBuilders.get((int)string.charAt(z) >> 8);
+                addVertices(primitiveBuilder,string.charAt(z),width,y,scale);
+                width += getCharWidth(string.charAt(z)) * scale;
+            }
+            int finalWidth = width;
+            ensureTexturesBuilt(vals, window);
+            int[] strideIndex = new int[]{(shaderSource.vertexFormat.getOffset("position"))};
+            vals.forEach((val) -> {
+                IMeshBuilder primitiveBuilder = primitiveBuilders.get(val);
+                primitiveBuilder.transform(x - finalWidth / 2f, strideIndex[0]);
+            });
+            draw(window,graphicsContext,matrixStack,vals,primitiveBuilders);
+        } catch (Exception ignored) {}
     }
 
     public void drawStringWithBackgroundInternal(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, String string, int x, int y, float scale) {
-        matrixStack.push();
         try {
             IntList vals = getAtlases(string);
-            Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
-            vals.forEach((val) -> primitiveBuilders.put(val, new PrimitiveBuilder(shaderSource.vertexFormat)));
+            Int2ObjectOpenHashMap<IMeshBuilder> primitiveBuilders = new Int2ObjectOpenHashMap<>();
+            vals.forEach((val) -> primitiveBuilders.put(val, window.getEngineImpl().getMeshBuilder(shaderSource.vertexFormat)));
             int width = 0;
             for (int z = 0; z < string.length(); z++) {
-                PrimitiveBuilder primitiveBuilder = primitiveBuilders.get((int) string.charAt(z) >> 8);
+                IMeshBuilder primitiveBuilder = primitiveBuilders.get((int) string.charAt(z) >> 8);
                 addVertices(primitiveBuilder, string.charAt(z), x + width, y, scale);
                 width += getCharWidth(string.charAt(z)) * scale;
             }
             Textures.BACKGROUND.drawTexture(window, graphicsContext, matrixStack, x, y, width, (int) (stringHeight * scale));
-            draw1(window,graphicsContext,matrixStack, vals,primitiveBuilders);
+            draw(window,graphicsContext,matrixStack, vals,primitiveBuilders);
         } catch (Exception ignored) {}
-        matrixStack.pop();
     }
 
-    public void draw1(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, IntList vals, Int2ObjectOpenHashMap<PrimitiveBuilder> primitiveBuilders) {
+    public void draw(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, IntList vals, Int2ObjectOpenHashMap<IMeshBuilder> meshes) {
         vals.forEach((val) -> {
             TextureAtlas textureAtlas = textureAtlases.get(val);
             if(textureAtlas == null) {
                 return;
             }
-            PrimitiveBuilder primitiveBuilder = primitiveBuilders.get(val);
-            primitiveBuilder.translate(1.0f,0,1.0f);
-            IDefaultEngineImpl<?,?> impl = window.getEngineImpl();
             if(textureAtlas.glTextureId != -1) {
-                impl.uploadMatrix(graphicsContext, matrixStack, shaderSource);
-                impl.bindPipeline(graphicsContext, shaderSource.program);
-                impl.bindTexture(graphicsContext, textureAtlas.glTextureId);
-                impl.drawAndDestroyMesh(graphicsContext, matrixStack, primitiveBuilder.toVertexMesh());
+                IMeshBuilder mesh = meshes.get(val);
+                draw2(window, graphicsContext, matrixStack, mesh, textureAtlas.glTextureId);
             }
         });
+    }
+
+    public void draw2(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, IMeshBuilder mesh, int textureId) {
+        IDefaultEngineImpl<?, ?> impl = window.getEngineImpl();
+        impl.uploadMatrix(graphicsContext, matrixStack, shaderSource);
+        impl.bindPipeline(graphicsContext, shaderSource.program);
+        impl.bindTexture(graphicsContext, textureId);
+        impl.drawAndDestroyMesh(graphicsContext, matrixStack, mesh.build());
     }
 
     public final Int2ObjectOpenHashMap<TextureAtlas> textureAtlases = new Int2ObjectOpenHashMap<>();
@@ -220,7 +204,9 @@ public class StringRenderer {
     }
 
     //TODO fix array index exception
-    public void addVertices(PrimitiveBuilder primitiveBuilder, char character, int x, int y, float scale) {
+    public void addVertices(IMeshBuilder primitiveBuilder, char character, int x, int y, float scale) {
+        float z = 0;
+        x += 1;
         if(textureAtlases.containsKey(character >> 8)) {
             TextureAtlas textureAtlas = textureAtlases.getOrDefault(character >> 8, null);
             if (textureAtlas == null) {
@@ -243,9 +229,13 @@ public class StringRenderer {
 
             int width = getCharWidth(character);
             int height = stringHeight;
-            primitiveBuilder.addQuad(x, y, 0, minX, minY, x, y + height * scale, 0, minX, maxY, x + width * scale, y, 0, maxX, minY, x + width * scale, y + height * scale, 0, maxX, maxY);
+            primitiveBuilder.addQuad(
+                    x, y,  minX, minY,
+                    x + width * scale, y + height * scale, maxX, maxY,
+                    z);
         }
     }
+
 
     public void drawStringInternal(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, String[] strings, int x, int y, float scale) {
         int z = 0;

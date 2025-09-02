@@ -8,7 +8,6 @@ import dev.hilligans.ourcraft.client.rendering.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IMeshBuilder;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
 import dev.hilligans.ourcraft.data.other.BoundingBox;
 import dev.hilligans.ourcraft.util.Loops;
 import dev.hilligans.ourcraft.world.newworldsystem.IChunk;

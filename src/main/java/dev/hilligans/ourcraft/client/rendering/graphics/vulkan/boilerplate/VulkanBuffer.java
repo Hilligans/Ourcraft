@@ -1,12 +1,16 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate;
 
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanEngineException;
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.vulkan.*;
 
+import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
 
 import static org.lwjgl.vulkan.VK10.*;
+import static org.lwjgl.vulkan.VK10.vkUnmapMemory;
 
 public class VulkanBuffer {
 
@@ -17,6 +21,8 @@ public class VulkanBuffer {
     public int size;
 
     public int properties;
+
+    public long address = 0;
 
     public VulkanBuffer(LogicalDevice device, int size, int usage, int properties, boolean singleUseResource) {
         this.size = size;
@@ -90,8 +96,37 @@ public class VulkanBuffer {
         return -1;
     }
 
+    public boolean canMap() {
+        return (properties & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0;
+    }
+
+    public boolean requiresStaging() {
+        return (properties & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) == 0;
+    }
+
+    public ByteBuffer map() {
+        try(MemoryStack memoryStack = MemoryStack.stackPush()) {
+            PointerBuffer pos = memoryStack.mallocPointer(1);
+            vkMapMemory(device.device, memory, 0, size, 0, pos);
+            this.address = pos.get(0);
+        }
+
+        return null;
+    }
+
+    public void unmap() {
+        vkUnmapMemory(device.device, memory);
+        this.address = 0;
+    }
+
+    public void write(ByteBuffer buffer) {
+        MemoryUtil.memByteBuffer(address, size).put(buffer);
+    }
 
     public void free() {
+        if(address != 0) {
+            unmap();
+        }
         vkDestroyBuffer(device.device, buffer, null);
         vkFreeMemory(device.device, memory, null);
     }
