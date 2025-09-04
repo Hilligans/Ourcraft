@@ -44,6 +44,8 @@ public class VulkanBuffer {
             VkMemoryRequirements memRequirements = VkMemoryRequirements.calloc(memoryStack);
             vkGetBufferMemoryRequirements(device.device, buf.get(0), memRequirements);
 
+            System.out.println("Vulkan buffer memory requirements: " + Integer.toBinaryString(memRequirements.memoryTypeBits()));
+
             VkMemoryAllocateInfo allocInfo = VkMemoryAllocateInfo.calloc(memoryStack);
             allocInfo.sType(VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO);
             allocInfo.allocationSize(memRequirements.size());

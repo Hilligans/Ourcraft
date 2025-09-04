@@ -6,5 +6,7 @@ public class VulkanEngineException extends RuntimeException {
         super(reason);
     }
 
-
+    public VulkanEngineException(int vkError) {
+        super();
+    }
 }

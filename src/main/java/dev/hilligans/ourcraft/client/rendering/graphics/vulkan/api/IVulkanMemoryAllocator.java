@@ -1,18 +1,14 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.vulkan.api;
 
-import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.LogicalDevice;
-import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.VulkanBuffer;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import org.jetbrains.annotations.Nullable;
 
-public interface IVulkanMemoryAllocator extends IRegistryElement {
+public interface IVulkanMemoryAllocator {
 
-    void setup(LogicalDevice logicalDevice);
+    void free(VulkanMemoryAllocation buffer);
 
-    void free(LogicalDevice logicalDevice);
+    @Nullable
+    VulkanMemoryAllocation allocate(long size, long bits, long alignment);
 
-    VulkanBuffer allocate(LogicalDevice logicalDevice, long bits);
+    void cleanup();
 
-    default String getResourceType() {
-        return "vulkanMemoryAllocator";
-    }
 }
