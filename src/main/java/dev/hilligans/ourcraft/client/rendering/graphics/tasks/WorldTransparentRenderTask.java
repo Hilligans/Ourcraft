@@ -12,7 +12,6 @@ import dev.hilligans.ourcraft.client.rendering.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.client.rendering.MeshHolder;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IMeshBuilder;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.primitives.Tuple;
@@ -144,7 +143,7 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
                             if (matrixStack.frustumIntersection.testAab((x) * chunkWidth, (y) * chunkHeight, (z) * chunkWidth, (x + 1) * chunkWidth, (y + 1) * chunkHeight, (z + 1) * chunkWidth)) {
                                 matrixStack.push();
                                 matrixStack.translate(x * chunkWidth, y * chunkHeight, z * chunkWidth);
-                                IDefaultEngineImpl<?,?> impl = engine.getDefaultImpl();
+                                IDefaultEngineImpl<?,?,?> impl = engine.getDefaultImpl();
                                 impl.uploadMatrix(graphicsContext, matrixStack, shaderSource);
                                 impl.drawMesh(graphicsContext, matrixStack, meshHolder.getId(), meshHolder.index, meshHolder.length);
                                 matrixStack.pop();
@@ -154,7 +153,6 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
                 }
             }
 
-            public ConcurrentLinkedQueue<Tuple<IChunk, PrimitiveBuilder>> primitiveBuilders = new ConcurrentLinkedQueue<>();
             Long2BooleanOpenHashMap asyncedChunks = new Long2BooleanOpenHashMap();
 
             boolean putChunk(int chunkX, int chunkZ) {
@@ -165,7 +163,7 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
                 return false;
             }
 
-            public VertexMesh getMesh(IChunk chunk, IMeshBuilder builder) {
+            public IMeshBuilder getMesh(IChunk chunk, IMeshBuilder builder) {
                 BlockPos p = new BlockPos(0, 0, 0);
                 for(int x = 0; x < chunk.getWidth(); x++) {
                     for(int y = chunk.getHeight() - 1; y >= 0; y--) {
@@ -188,7 +186,7 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
                         }
                     }
                 }
-                return builder.build();
+                return builder;
             }
 
             public void buildMesh(RenderWindow window, GraphicsContext graphicsContext, IChunk chunk) {

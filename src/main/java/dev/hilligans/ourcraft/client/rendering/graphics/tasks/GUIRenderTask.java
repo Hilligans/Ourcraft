@@ -31,7 +31,7 @@ public class GUIRenderTask extends RenderTaskSource {
 
             @Override
             public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?,?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack, float delta) {
-                IDefaultEngineImpl<?,?> impl = engine.getDefaultImpl();
+                IDefaultEngineImpl<?,?,?> impl = engine.getDefaultImpl();
 
                 StringRenderer stringRenderer = engine.getStringRenderer();
                 counter++;

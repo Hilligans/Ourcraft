@@ -5,7 +5,7 @@ import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IMeshBuilder;
 import org.jetbrains.annotations.NotNull;
 
 public class ResizingTexture extends Texture {
@@ -40,8 +40,8 @@ public class ResizingTexture extends Texture {
         return this;
     }
 
-    public PrimitiveBuilder get(GameInstance gameInstance, int width, int height, int x, int y) {
-        PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(shaderSource.vertexFormat);
+    public IMeshBuilder get(IDefaultEngineImpl<?,?,?> impl, GameInstance gameInstance, int width, int height, int x, int y) {
+        IMeshBuilder primitiveBuilder = impl.getMeshBuilder(shaderSource.vertexFormat);
         startSegment.put(primitiveBuilder,x,y,height * startSegment.getRatio(),height,this.getWidth(gameInstance), this.getHeight(gameInstance));
         float middleWidth = width - height * startSegment.getRatio() - height * endSegment.getRatio();
         middleSegment.put(primitiveBuilder,height * startSegment.getRatio() + x,y,middleWidth,height,this.getWidth(gameInstance), this.getHeight(gameInstance));
@@ -52,12 +52,12 @@ public class ResizingTexture extends Texture {
 
     @Override
     public void drawTexture(RenderWindow window, @NotNull GraphicsContext graphicsContext, MatrixStack matrixStack, int x, int y, int width, int height) {
-        PrimitiveBuilder primitiveBuilder = get(window.getGameInstance(), width,height,x,y);
-        IDefaultEngineImpl<?,?> defaultEngineImpl = window.getEngineImpl();
+        IMeshBuilder primitiveBuilder = get(window.getEngineImpl(), window.getGameInstance(), width,height,x,y);
+        IDefaultEngineImpl<?,?,?> defaultEngineImpl = window.getEngineImpl();
         defaultEngineImpl.bindTexture(graphicsContext, getTextureId(window.getGameInstance()));
         defaultEngineImpl.bindPipeline(graphicsContext, shaderSource.program);
         defaultEngineImpl.uploadMatrix(graphicsContext, matrixStack, shaderSource);
-        defaultEngineImpl.drawAndDestroyMesh(graphicsContext,matrixStack,primitiveBuilder.toVertexMesh());
+        defaultEngineImpl.drawAndDestroyMesh(graphicsContext,matrixStack,primitiveBuilder);
     }
 
     static class Segment {
@@ -74,8 +74,8 @@ public class ResizingTexture extends Texture {
             this.height = height;
         }
 
-        public void put(PrimitiveBuilder builder, float x, float y, float width, float height, int textureWidth, int textureHeight) {
-            builder.buildQuad(x,y,0,1f/textureWidth * this.x,1f/textureHeight * this.y,x + width, y + height, 1f/ textureWidth * (this.x + this.width),1f/textureHeight *  (this.y + this.height));
+        public void put(IMeshBuilder builder, float x, float y, float width, float height, int textureWidth, int textureHeight) {
+            builder.addQuad(x,y,1f/textureWidth * this.x,1f/textureHeight * this.y,x + width, y + height, 1f/ textureWidth * (this.x + this.width),1f/textureHeight *  (this.y + this.height), 0);
         }
 
         public float getRatio() {

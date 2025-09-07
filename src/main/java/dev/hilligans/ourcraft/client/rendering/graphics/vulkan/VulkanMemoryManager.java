@@ -14,10 +14,10 @@ import static org.lwjgl.vulkan.VK10.*;
 
 public class VulkanMemoryManager {
 
-    public MemoryHeap primaryHeap;
-    public MemoryHeap barHeap;
-    public MemoryHeap stagingHeap;
-    public MemoryHeap[] memoryHeaps;
+    public VulkanMemoryHeap primaryHeap;
+    public VulkanMemoryHeap barHeap;
+    public VulkanMemoryHeap stagingHeap;
+    public VulkanMemoryHeap[] memoryHeaps;
     public LogicalDevice device;
 
     public int maxHeapAllocations;
@@ -38,10 +38,10 @@ public class VulkanMemoryManager {
             VkPhysicalDeviceMemoryProperties memProperties = VkPhysicalDeviceMemoryProperties.calloc(memoryStack);
             vkGetPhysicalDeviceMemoryProperties(device.physicalDevice.physicalDevice, memProperties);
 
-            memoryHeaps = new MemoryHeap[memProperties.memoryHeapCount()];
+            memoryHeaps = new VulkanMemoryHeap[memProperties.memoryHeapCount()];
             long largestHeapSize = 0;
             for (int x = 0; x < memProperties.memoryHeapCount(); x++) {
-                MemoryHeap heap = new MemoryHeap(device, this, x, memProperties);
+                VulkanMemoryHeap heap = new VulkanMemoryHeap(device, this, x, memProperties);
                 memoryHeaps[x] = heap;
                 if(heap.deviceLocal && heap.size > largestHeapSize) {
                     largestHeapSize = heap.size;
@@ -140,67 +140,21 @@ public class VulkanMemoryManager {
         return -1;
     }
 
-
-    public static class MemoryHeap {
-        public int heapIndex;
-        public ArrayList<Tuple<Integer, Integer>> types = new ArrayList<>(4);
-        public long size;
-
-        public AtomicLong allocatedSize = new AtomicLong(0);
-
-        public boolean deviceLocal;
-        public boolean cpuAccessible;
-
-        public LogicalDevice device;
-        public VulkanMemoryManager memoryManager;
-
-        public MemoryHeap(LogicalDevice device, VulkanMemoryManager memoryManager, int heapIndex, VkPhysicalDeviceMemoryProperties memoryProperties) {
-            this.device = device;
-            this.memoryManager = memoryManager;
-            this.heapIndex = heapIndex;
-            this.size = memoryProperties.memoryHeaps(heapIndex).size();
-            for(int x = 0; x < memoryProperties.memoryTypeCount(); x++) {
-                if(memoryProperties.memoryTypes(x).heapIndex() == heapIndex) {
-                    int flags = memoryProperties.memoryTypes(x).propertyFlags();
-                    types.add(new Tuple<>(flags, x));
-                    if((flags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0) {
-                        cpuAccessible = true;
-                    }
-                    if((flags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) != 0) {
-                        deviceLocal = true;
-                    }
-                }
+    public boolean hasRebar() {
+        for(VulkanMemoryHeap heap : memoryHeaps) {
+            if(heap.deviceLocal && !heap.cpuAccessible) {
+                return false;
             }
         }
+        return true;
+    }
 
-        public int getMemoryType(int filter, int flags) {
-            for (Tuple<Integer, Integer> type : types) {
-                if ((type.typeA & flags) == flags && (filter & (1 << type.typeB)) != 0) {
-                    return type.typeB;
-                }
-            }
-            return -1;
-        }
-
-        public MemoryRegion allocateRegion(long size, int type) {
-            try(MemoryStack memoryStack = MemoryStack.stackPush()) {
-                VkMemoryAllocateInfo allocInfo = VkMemoryAllocateInfo.calloc(memoryStack);
-                allocInfo.sType(VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO);
-                allocInfo.allocationSize(size);
-                allocInfo.memoryTypeIndex(type);
-
-                LongBuffer mem = MemoryStack.stackCallocLong(1);
-
-                int result = vkAllocateMemory(device.device, allocInfo, null, mem);
-                if(result == VK_SUCCESS) {
-                    allocatedSize.addAndGet(size);
-                    return new MemoryRegion(this, mem.get(0), size, (int)memoryManager.regionWidth);
-                } else if((result & VK_ERROR_OUT_OF_DEVICE_MEMORY) == VK_ERROR_OUT_OF_DEVICE_MEMORY || (result & VK_ERROR_OUT_OF_HOST_MEMORY) == VK_ERROR_OUT_OF_HOST_MEMORY) {
-                    return null;
-                } else {
-                    throw new VulkanEngineException("Failed to allocate memory");
-                }
+    public boolean hasStagingHeap() {
+        for(VulkanMemoryHeap heap : memoryHeaps) {
+            if(!heap.deviceLocal && heap.cpuAccessible) {
+                return true;
             }
         }
+        return false;
     }
 }

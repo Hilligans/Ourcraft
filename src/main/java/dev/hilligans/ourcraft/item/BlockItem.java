@@ -3,8 +3,6 @@ package dev.hilligans.ourcraft.item;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.client.MatrixStack;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.ItemProperties;
 import dev.hilligans.ourcraft.data.other.RayResult;
@@ -82,7 +80,7 @@ public class BlockItem extends Item {
        // drawString(matrixStack,x - size / 2,y,size,itemStack.count);
     }
 
-    @Override
+   /* @Override
     public void addData(TextAtlas textAtlas, PrimitiveBuilder primitiveBuilder, float size) {
         for(int z = 0; z < 6; z++) {
             //block.addVertices(textAtlas, primitiveBuilder,z,size,block.getDefaultState(),new BlockPos(0,0,0),0,0);
@@ -94,6 +92,6 @@ public class BlockItem extends Item {
         primitiveBuilder.rotate(3.1415f,new Vector3f(0,0,1));
         primitiveBuilder.translate(0,0 ,-size * 2);
 
-         */
     }
+    */
 }

@@ -184,7 +184,7 @@ public abstract class RenderWindow {
     }
 
     @NotNull
-    public IDefaultEngineImpl<?,?> getEngineImpl() {
+    public IDefaultEngineImpl<?,?,?> getEngineImpl() {
         return graphicsEngine.getDefaultImpl();
     }
 

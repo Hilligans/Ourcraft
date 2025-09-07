@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.vulkan.VK10.*;
 
-public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, VulkanBaseGraphicsContext> {
+public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, VulkanBaseGraphicsContext, VulkanMeshBuilder> {
 
     public static Argument<Boolean> useSeparateTransferThread = Argument.booleanArg("--useSeparateVulkanTransferThread", true);
 
@@ -101,17 +101,18 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     }
 
     @Override
-    public long createMesh(VulkanBaseGraphicsContext graphicsContext, VertexMesh mesh) {
-        VertexBuffer vertexBuffer = new VertexBuffer(graphicsContext.getDevice(), mesh.vertices, graphicsContext.getCommandBuffer());
+    public long createMesh(VulkanBaseGraphicsContext graphicsContext, VulkanMeshBuilder mesh) {
+
+        //VertexBuffer vertexBuffer = new VertexBuffer(graphicsContext.getDevice(), mesh.vertices, graphicsContext.getCommandBuffer());
         synchronized (vertexBuffers) {
-            vertexBuffers.put(vertexBuffer.buffer.buffer, vertexBuffer);
+        //    vertexBuffers.put(vertexBuffer.buffer.buffer, vertexBuffer);
         }
-        IndexBuffer indexBuffer = new IndexBuffer(graphicsContext.getDevice(), mesh.indices, graphicsContext.getCommandBuffer());
+        //IndexBuffer indexBuffer = new IndexBuffer(graphicsContext.getDevice(), mesh.indices, graphicsContext.getCommandBuffer());
         synchronized (indexBuffers) {
-            indexBuffers.put(indexBuffer.buffer.buffer, indexBuffer);
+        //    indexBuffers.put(indexBuffer.buffer.buffer, indexBuffer);
         }
         synchronized (vertexToIndexMap) {
-            vertexToIndexMap.put(vertexBuffer.buffer.buffer, indexBuffer.buffer.buffer);
+        //    vertexToIndexMap.put(vertexBuffer.buffer.buffer, indexBuffer.buffer.buffer);
         }
 
         if(useSeparateTransferThread.get(getGameInstance())) {
@@ -119,8 +120,8 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
         } else {
 
         }
-
-        return vertexBuffer.buffer.buffer;
+        return 0;
+       // return vertexBuffer.buffer.buffer;
     }
 
     @Override
@@ -154,7 +155,7 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     }
 
     @Override
-    public void drawAndDestroyMesh(VulkanBaseGraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh) {
+    public void drawAndDestroyMesh(VulkanBaseGraphicsContext graphicsContext, MatrixStack matrixStack, VulkanMeshBuilder mesh) {
         System.out.println("DrawingANdDestroyed");
     }
 
@@ -293,12 +294,12 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     }
 
     @Override
-    public IMeshBuilder getMeshBuilder(String vertexFormat) {
+    public VulkanMeshBuilder getMeshBuilder(String vertexFormat) {
         return null;
     }
 
     @Override
-    public IMeshBuilder getMeshBuilder(VertexFormat vertexFormat) {
+    public VulkanMeshBuilder getMeshBuilder(VertexFormat vertexFormat) {
         return null;
     }
 

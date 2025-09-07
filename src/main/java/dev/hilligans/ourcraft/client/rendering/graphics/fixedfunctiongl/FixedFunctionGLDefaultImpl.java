@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.fixedfunctiongl;
 
 import dev.hilligans.ourcraft.client.MatrixStack;
+import dev.hilligans.ourcraft.client.rendering.graphics.DefaultMeshBuilder;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.ourcraft.client.rendering.graphics.PipelineState;
@@ -21,7 +22,7 @@ import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunctionGLWindow, GraphicsContext> {
+public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunctionGLWindow, GraphicsContext, DefaultMeshBuilder> {
 
     public FixedFunctionGLEngine engine;
 
@@ -71,7 +72,8 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     }
 
     @Override
-    public long createMesh(GraphicsContext graphicsContext, VertexMesh mesh) {
+    public long createMesh(GraphicsContext graphicsContext, DefaultMeshBuilder builder) {
+        VertexMesh mesh = builder.build();
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
@@ -106,7 +108,8 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     }
 
     @Override
-    public void drawAndDestroyMesh(GraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh) {
+    public void drawAndDestroyMesh(GraphicsContext graphicsContext, MatrixStack matrixStack, DefaultMeshBuilder builder) {
+        VertexMesh mesh = builder.build();
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
@@ -208,12 +211,12 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     }
 
     @Override
-    public IMeshBuilder getMeshBuilder(String vertexFormat) {
+    public DefaultMeshBuilder getMeshBuilder(String vertexFormat) {
         return null;
     }
 
     @Override
-    public IMeshBuilder getMeshBuilder(VertexFormat vertexFormat) {
+    public DefaultMeshBuilder getMeshBuilder(VertexFormat vertexFormat) {
         return null;
     }
 

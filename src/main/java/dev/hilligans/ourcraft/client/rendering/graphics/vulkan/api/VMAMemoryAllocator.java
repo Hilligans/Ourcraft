@@ -1,27 +1,30 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.vulkan.api;
 
+import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanMemoryHeap;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.LogicalDevice;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.VulkanBuffer;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.util.vma.VmaAllocationCreateInfo;
-import org.lwjgl.util.vma.VmaAllocationInfo;
-import org.lwjgl.util.vma.VmaAllocatorCreateInfo;
-import org.lwjgl.util.vma.VmaVulkanFunctions;
+import org.lwjgl.util.vma.*;
 import org.lwjgl.vulkan.VkBufferCreateInfo;
 import org.lwjgl.vulkan.VkMemoryRequirements;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
 
 import static org.lwjgl.util.vma.Vma.*;
 import static org.lwjgl.vulkan.VK10.VK_API_VERSION_1_0;
 
 public class VMAMemoryAllocator implements IVulkanMemoryAllocator {
 
-    public ConcurrentHashMap<LogicalDevice, Long> allocators = new ConcurrentHashMap<>();
     public LogicalDevice logicalDevice;
+    public int allocator;
 
-    public void setup() {
+    public int allowedMemoryTypes = 0;
+    public List<VulkanMemoryHeap> managedHeaps;
+
+    public VMAMemoryAllocator(LogicalDevice logicalDevice) {
+        this.logicalDevice = logicalDevice;
+
         try (MemoryStack stack = MemoryStack.stackPush()) {
             VmaVulkanFunctions functions = VmaVulkanFunctions.malloc(stack);
             //functions.vkGetInstanceProcAddr()
@@ -35,9 +38,18 @@ public class VMAMemoryAllocator implements IVulkanMemoryAllocator {
 
             PointerBuffer buffer = stack.mallocPointer(1);
 
-            int res = vmaCreateAllocator(allocInfo, buffer);
+            allocator = vmaCreateAllocator(allocInfo, buffer);
+        }
+    }
 
-            allocators.put(logicalDevice, buffer.get(0));
+    public VMAMemoryAllocator(LogicalDevice device, List<VulkanMemoryHeap> managedHeaps) {
+        this(device);
+        this.managedHeaps = managedHeaps;
+
+        for(VulkanMemoryHeap heap : managedHeaps) {
+            for(VulkanMemoryHeap.VulkanMemoryType type : heap.types) {
+                this.allowedMemoryTypes |= 1 << type.memoryTypeIndex();
+            }
         }
     }
 
@@ -47,22 +59,25 @@ public class VMAMemoryAllocator implements IVulkanMemoryAllocator {
     }
 
     @Override
-    public VulkanMemoryAllocation allocate(long size, long bits, long alignment) {
+    public VulkanMemoryAllocation allocateForBuffer(VulkanBuffer vulkanBuffer) {
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
 
             VkBufferCreateInfo bufferCreateInfo = VkBufferCreateInfo.calloc(memoryStack);
-            bufferCreateInfo.size(size);
+            bufferCreateInfo.size(vulkanBuffer.size);
             bufferCreateInfo.usage();
             bufferCreateInfo.sharingMode();
             bufferCreateInfo.flags();
 
 
+
             VmaAllocationInfo info = VmaAllocationInfo.calloc(memoryStack);
             VkMemoryRequirements requirements = VkMemoryRequirements.calloc(memoryStack);
+           // requirements.
             VmaAllocationCreateInfo createInfo = VmaAllocationCreateInfo.calloc(memoryStack);
+            createInfo.memoryTypeBits(allowedMemoryTypes);
 
+            //vmaAllocateMem
 
-            //createInfo.pool();
 
 
             //vmaAllocateMemoryForBuffer(allocators.get(logicalDevice),
@@ -75,6 +90,6 @@ public class VMAMemoryAllocator implements IVulkanMemoryAllocator {
 
     @Override
     public void cleanup() {
-
+        vmaDestroyAllocator(allocator);
     }
 }

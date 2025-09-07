@@ -1,11 +1,30 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.vulkan.api;
 
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.LogicalDevice;
+import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.VulkanBuffer;
 
 public class DirectAccessVulkanMemoryManager implements IVulkanMemoryManager {
 
+    public DirectAccessVulkanMemoryManager() {}
+
     @Override
     public boolean canUse(LogicalDevice device) {
-        return false;
+        return device.getMemoryManager().hasRebar();
+    }
+
+    @Override
+    public VulkanMemoryAllocation allocate(GraphicsContext graphicsContext, VulkanBuffer vulkanBuffer) {
+        return null;
+    }
+
+    @Override
+    public VulkanMemoryAllocation allocateSingleUse(GraphicsContext graphicsContext, VulkanBuffer vulkanBuffer) {
+        return null;
+    }
+
+    @Override
+    public void free(VulkanMemoryAllocation allocation) {
+
     }
 }

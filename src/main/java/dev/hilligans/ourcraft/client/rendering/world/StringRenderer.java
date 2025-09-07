@@ -143,11 +143,11 @@ public class StringRenderer {
     }
 
     public void draw2(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, IMeshBuilder mesh, int textureId) {
-        IDefaultEngineImpl<?, ?> impl = window.getEngineImpl();
+        IDefaultEngineImpl<?,?,?> impl = window.getEngineImpl();
         impl.uploadMatrix(graphicsContext, matrixStack, shaderSource);
         impl.bindPipeline(graphicsContext, shaderSource.program);
         impl.bindTexture(graphicsContext, textureId);
-        impl.drawAndDestroyMesh(graphicsContext, matrixStack, mesh.build());
+        impl.drawAndDestroyMesh(graphicsContext, matrixStack, mesh);
     }
 
     public final Int2ObjectOpenHashMap<TextureAtlas> textureAtlases = new Int2ObjectOpenHashMap<>();
@@ -245,7 +245,7 @@ public class StringRenderer {
         }
     }
 
-    public void close(IDefaultEngineImpl<?,?> impl, GraphicsContext graphicsContext) {
+    public void close(IDefaultEngineImpl<?,?,?> impl, GraphicsContext graphicsContext) {
         for(TextureAtlas textureAtlas : textureAtlases.values()) {
             impl.destroyTexture(graphicsContext, textureAtlas.glTextureId);
         }

@@ -1,5 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate;
 
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
+import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanBaseGraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanEngineException;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
@@ -24,6 +26,9 @@ public class VulkanBuffer {
 
     public long address = 0;
 
+    public ByteBuffer writeableBuffer;
+
+    @Deprecated
     public VulkanBuffer(LogicalDevice device, int size, int usage, int properties, boolean singleUseResource) {
         this.size = size;
         this.device = device;
@@ -62,6 +67,26 @@ public class VulkanBuffer {
         }
     }
 
+    public VulkanBuffer(LogicalDevice device, long size, int usage, int sharingMode) {
+        this.size = (int) size;
+        this.device = device;
+        try(MemoryStack memoryStack = MemoryStack.stackPush()) {
+            VkBufferCreateInfo bufferInfo = VkBufferCreateInfo.calloc(memoryStack);
+            bufferInfo.sType(VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO);
+            bufferInfo.size(size);
+            bufferInfo.usage(usage);
+            bufferInfo.sharingMode(sharingMode);
+
+            LongBuffer buf = memoryStack.mallocLong(1);
+
+            int res;
+            if ((res = vkCreateBuffer(device.device, bufferInfo, null, buf)) != VK_SUCCESS){
+                throw new VulkanEngineException(res, "Failed to allocate buffer");
+            }
+            buffer = buf.get(0);
+        }
+    }
+
     public VulkanBuffer(long size, long buffer, long memoryRegion, long offset) {
         this.size = (int) size;
         this.buffer = buffer;
@@ -69,8 +94,14 @@ public class VulkanBuffer {
         this.offset = offset;
     }
 
+    public void bind(ByteBuffer buffer) {
+        this.writeableBuffer = buffer;
+    }
 
     public void copyTo(VkCommandBuffer commandBuffer, VulkanBuffer destBuffer) {
+        if(destBuffer == this) {
+            return;
+        }
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             VkBufferCopy copyRegion = VkBufferCopy.calloc(memoryStack);
             copyRegion.size(size);
@@ -78,7 +109,22 @@ public class VulkanBuffer {
             copyRegion.dstOffset(destBuffer.offset);
             VkBufferCopy.Buffer buf = VkBufferCopy.calloc(1, memoryStack);
             buf.put(0, copyRegion);
-            vkCmdCopyBuffer(commandBuffer, buffer, destBuffer.buffer, buf);
+            vkCmdCopyBuffer(commandBuffer, buffer, destBuffer.getVkBuffer(), buf);
+        }
+    }
+
+    public void copyTo(VkCommandBuffer commandBuffer, VulkanImage destImage) {
+        try(MemoryStack memoryStack = MemoryStack.stackPush()) {
+            VkBufferImageCopy copyRegion = VkBufferImageCopy.calloc(memoryStack);
+            copyRegion.bufferOffset(offset);
+
+            //copyRegion.size(size);
+            //copyRegion.srcOffset(offset);
+            //copyRegion.dstOffset(destBuffer.offset);
+            VkBufferImageCopy.Buffer buf = VkBufferImageCopy.calloc(1, memoryStack);
+            buf.put(0, copyRegion);
+
+            vkCmdCopyBufferToImage(commandBuffer, buffer, destImage.getVkImage(), destImage.getVkImageLayout(), buf);
         }
     }
 
@@ -106,6 +152,18 @@ public class VulkanBuffer {
         return (properties & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) == 0;
     }
 
+    public long getVkBuffer() {
+        return buffer;
+    }
+
+    public int getAlignment() {
+        return 16;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
     public ByteBuffer map() {
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             PointerBuffer pos = memoryStack.mallocPointer(1);
@@ -122,7 +180,10 @@ public class VulkanBuffer {
     }
 
     public void write(ByteBuffer buffer) {
-        MemoryUtil.memByteBuffer(address, size).put(buffer);
+        if(writeableBuffer == null) {
+            throw new VulkanEngineException("Buffer not bound to memory!");
+        }
+        writeableBuffer.put(buffer).flip();
     }
 
     public void free() {
@@ -131,5 +192,21 @@ public class VulkanBuffer {
         }
         vkDestroyBuffer(device.device, buffer, null);
         vkFreeMemory(device.device, memory, null);
+    }
+
+    public static VulkanBuffer newIndexBuffer(LogicalDevice device, long size) {
+        return new VulkanBuffer(device, size, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE);
+    }
+
+    public static VulkanBuffer newIndexBuffer(GraphicsContext graphicsContext, long size) {
+        return newIndexBuffer(VkInterface.getDevice(graphicsContext), size);
+    }
+
+    public static VulkanBuffer newVertexBuffer(LogicalDevice device, long size) {
+        return new VulkanBuffer(device, size, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE);
+    }
+
+    public static VulkanBuffer newVertexBuffer(GraphicsContext graphicsContext, long size) {
+        return newVertexBuffer(VkInterface.getDevice(graphicsContext), size);
     }
 }

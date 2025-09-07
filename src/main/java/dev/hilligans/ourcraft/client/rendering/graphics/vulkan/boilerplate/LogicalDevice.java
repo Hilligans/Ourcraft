@@ -67,6 +67,10 @@ public class LogicalDevice {
         }
     }
 
+    public VulkanMemoryManager getMemoryManager() {
+        return memoryManager;
+    }
+
     public void executeMethod(Supplier<Integer> supplier, String exception) {
         int result = supplier.get();
         if(result != VK_SUCCESS) {

@@ -10,7 +10,7 @@ import dev.hilligans.ourcraft.util.sections.ISection;
 
 import java.util.ArrayList;
 
-public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngineImpl<Q,X>, X extends GraphicsContext> extends IRegistryElement {
+public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngineImpl<Q,X,?>, X extends GraphicsContext> extends IRegistryElement {
 
     Q createWindow();
 

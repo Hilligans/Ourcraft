@@ -30,8 +30,8 @@ public class ItemModel implements IModel {
         return new int[0];
     }
 
-    @Override
-    public void addData(TextAtlas textAtlas, PrimitiveBuilder primitiveBuilder, BlockTextureManager textureManager, int side, float size, Vector3f offset, int rotX, int rotY) {
+    //@Override
+    //public void addData(TextAtlas textAtlas, PrimitiveBuilder primitiveBuilder, BlockTextureManager textureManager, int side, float size, Vector3f offset, int rotX, int rotY) {
         //int id = textureManager.getTextureId();
        /* BufferedImage bufferedImage = TextAtlas.instance.register(new ImageLocation("Items/" + path,"purcraft"));
         float minX = TextAtlas.getMinX(id);
@@ -82,8 +82,7 @@ public class ItemModel implements IModel {
 
 
         */
-
-    }
+//    }
 
     @Override
     public String getModel() {

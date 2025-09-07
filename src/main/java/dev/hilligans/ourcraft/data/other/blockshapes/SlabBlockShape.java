@@ -1,8 +1,6 @@
 package dev.hilligans.ourcraft.data.other.blockshapes;
 
 import dev.hilligans.ourcraft.client.rendering.newrenderer.BlockModel;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
-import dev.hilligans.ourcraft.client.rendering.world.managers.BlockTextureManager;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.BoundingBox;
 import dev.hilligans.ourcraft.data.other.blockstates.BlockState;
@@ -16,7 +14,7 @@ public class SlabBlockShape extends BlockShape {
         data = BlockModel.create("/Models/Blocks/slab.txt");
     }
 
-
+/*
     public void addVertices(PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockTextureManager blockTextureManager, Vector3f offset) {
         switch (((DataBlockState)blockState).readData()) {
             case 4:
@@ -39,6 +37,8 @@ public class SlabBlockShape extends BlockShape {
                 break;
         }
     }
+
+ */
 
     @Override
     public int getSide(BlockState blockState, int side) {

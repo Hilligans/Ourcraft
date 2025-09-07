@@ -11,6 +11,7 @@ import dev.hilligans.ourcraft.client.rendering.graphics.ShaderSource;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.IMeshBuilder;
 import dev.hilligans.ourcraft.client.rendering.graphics.implementations.splitwindows.SplitWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.implementations.splitwindows.SubWindow;
 
@@ -50,13 +51,13 @@ public class SplitWindowRenderTask extends RenderTaskSource {
                     float[] vertices = new float[] {x,y,0,minX,minY,x,y + height,0,minX,maxY,x + width,y,0,maxX,minY,x + width,y + height,0,maxX,maxY};
                     int[] indices = new int[] {0,1,2,2,1,3};
 
-                    VertexMesh mesh = new VertexMesh(shaderSource.vertexFormat);
+                    IMeshBuilder builder = window.getEngineImpl().getMeshBuilder(shaderSource.vertexFormat);
 
-                    mesh.addData(indices, vertices);
+                    builder.setData(vertices, indices);
 
                     engine.getDefaultImpl().bindPipeline(graphicsContext, shaderSource.program);
                     engine.getDefaultImpl().bindTexture(graphicsContext, subWindow.getTexture());
-                    engine.getDefaultImpl().drawAndDestroyMesh(graphicsContext, screenStack, mesh);
+                    engine.getDefaultImpl().drawAndDestroyMesh(graphicsContext, screenStack, builder);
                     subWindow.swapBuffers(graphicsContext);
                 }
             }

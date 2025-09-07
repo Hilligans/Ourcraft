@@ -14,7 +14,7 @@ import org.lwjgl.system.MemoryStack;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
-public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsContext> {
+public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsContext, V extends IMeshBuilder> {
 
     default void close() {
     }
@@ -23,7 +23,7 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
 
     void drawMesh(Q graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length);
 
-    long createMesh(Q graphicsContext, VertexMesh mesh);
+    long createMesh(Q graphicsContext, V mesh);
 
     void destroyMesh(Q graphicsContext, long mesh);
 
@@ -35,7 +35,7 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
 
     void destroyTexture(Q graphicsContext, long texture);
 
-    void drawAndDestroyMesh(Q graphicsContext, MatrixStack matrixStack, VertexMesh mesh);
+    void drawAndDestroyMesh(Q graphicsContext, MatrixStack matrixStack, V mesh);
 
     void bindTexture(Q graphicsContext, long texture);
 
@@ -65,16 +65,16 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
 
     void setScissor(Q graphicsContext, int x, int y, int width, int height);
 
-    IMeshBuilder getMeshBuilder(String vertexFormat);
+    V getMeshBuilder(String vertexFormat);
 
-    IMeshBuilder getMeshBuilder(VertexFormat vertexFormat);
+    V getMeshBuilder(VertexFormat vertexFormat);
 
     default void drawMesh(Object graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
         drawMesh((Q) graphicsContext, matrixStack, meshID, indicesIndex, length);
     }
 
-    default long createMesh(Object graphicsContext, VertexMesh mesh) {
-        return createMesh((Q) graphicsContext, mesh);
+    default long createMesh(Object graphicsContext, IMeshBuilder mesh) {
+        return createMesh((Q) graphicsContext, (V)mesh);
     }
 
     default void destroyMesh(Object graphicsContext, long id) {
@@ -93,8 +93,8 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
         destroyTexture((Q) graphicsContext, texture);
     }
 
-    default void drawAndDestroyMesh(Object graphicsContext, MatrixStack matrixStack, VertexMesh mesh) {
-        drawAndDestroyMesh((Q) graphicsContext, matrixStack, mesh);
+    default void drawAndDestroyMesh(Object graphicsContext, MatrixStack matrixStack, IMeshBuilder mesh) {
+        drawAndDestroyMesh((Q) graphicsContext, matrixStack, (V)mesh);
     }
 
     default void bindTexture(Object graphicsContext, long texture) {

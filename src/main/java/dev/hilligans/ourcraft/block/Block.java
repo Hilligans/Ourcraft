@@ -6,9 +6,7 @@ import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.ourcraft.block.blockstate.IBlockStateTable;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.Renderer;
-import dev.hilligans.ourcraft.client.rendering.graphics.IPrimitiveBuilder;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IMeshBuilder;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
 import dev.hilligans.ourcraft.data.descriptors.TagCollection;
 import dev.hilligans.ourcraft.data.other.BlockPos;
@@ -21,10 +19,8 @@ import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.item.Item;
 import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
-import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.resource.ResourceLocation;
 import dev.hilligans.ourcraft.server.concurrent.Lock;
-import dev.hilligans.ourcraft.util.Side;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.world.DataProvider;
 import dev.hilligans.ourcraft.world.data.providers.ShortBlockState;
@@ -165,10 +161,6 @@ public class Block implements IRegistryElement {
         blockProperties.blockTextureManager.generate(textAtlas);
     }
 
-    public void addVertices(TextAtlas textAtlas, PrimitiveBuilder primitiveBuilder, int side, float size, BlockState blockState, BlockPos blockPos, int x, int z) {
-        blockProperties.blockShape. addVertices(textAtlas, primitiveBuilder,side,size,blockState,blockProperties.blockTextureManager, new BlockPos(x,blockPos.y,z).get3f());
-    }
-
     public int getSide(BlockState blockState, int side) {
         return blockProperties.blockShape.getSide(blockState,side);
     }
@@ -260,10 +252,6 @@ public class Block implements IRegistryElement {
     //TODO pull state from table
     public IBlockState getDefaultState() {
         return table.getBlockState(0);
-    }
-
-    public void addVertices(TextAtlas textAtlas, PrimitiveBuilder primitiveBuilder, int side, float size, IBlockState blockState, BlockPos blockPos, int x, int z) {
-        blockProperties.blockShape.addVertices(textAtlas, primitiveBuilder,side,size,blockState,blockProperties.blockTextureManager,new Vector3f(), x,blockPos.y,z);
     }
 
     public void addVertices(TextAtlas textAtlas, IMeshBuilder builder, int side, float size, IBlockState blockState, BlockPos blockPos, int x, int z) {

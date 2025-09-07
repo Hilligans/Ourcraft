@@ -1,5 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate;
 
+import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
+import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanBaseGraphicsContext;
 import org.lwjgl.glfw.GLFWVulkan;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.NativeType;
@@ -49,5 +51,19 @@ public class VkInterface {
         VkClearColorValue vkClearValue = VkClearColorValue.malloc();
         vkClearValue.float32(0,r).float32(1,g).float32(2,b).float32(3,a);
         return vkClearValue;
+    }
+
+    public static LogicalDevice getDevice(GraphicsContext graphicsContext) {
+        if(graphicsContext instanceof VulkanBaseGraphicsContext context) {
+            return context.getDevice();
+        }
+        throw new IllegalStateException("Invalid graphics context for engine");
+    }
+
+    public static CommandBuffer getCommandBuffer(GraphicsContext graphicsContext) {
+        if(graphicsContext instanceof VulkanBaseGraphicsContext context) {
+            return context.getCommandBuffer();
+        }
+        throw new IllegalStateException("Invalid graphics context for engine");
     }
 }

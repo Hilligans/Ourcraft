@@ -9,4 +9,9 @@ public class VulkanEngineException extends RuntimeException {
     public VulkanEngineException(int vkError) {
         super();
     }
+
+
+    public VulkanEngineException(int vkError, String reason) {
+        super(reason);
+    }
 }

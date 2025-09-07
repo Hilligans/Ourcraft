@@ -9,8 +9,6 @@ import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.ShaderSource;
 import dev.hilligans.ourcraft.client.rendering.graphics.VertexFormat;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.IDefaultEngineImpl;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
 
 public class FrameTimeWidget extends Widget {
 
@@ -35,7 +33,8 @@ public class FrameTimeWidget extends Widget {
         this.shaderSource = renderWindow.getGraphicsEngine().getGameInstance().SHADERS.get("ourcraft:position_color_shader");
     }
 
-    public PrimitiveBuilder buildFrame() {
+    //public PrimitiveBuilder buildFrame() {
+        /*
         VertexFormat vertexFormat = Ourcraft.position_color;
         PrimitiveBuilder primitiveBuilder = new PrimitiveBuilder(vertexFormat);
         int barCount = width / barPixelWidth;
@@ -48,16 +47,20 @@ public class FrameTimeWidget extends Widget {
             primitiveBuilder.addSolidQuad(x,getY() + height - (val * ratio * height),x + barPixelWidth, getY() + height,r,g,0,1);
         }
         return primitiveBuilder;
-    }
+
+         */
+    //    return null;
+    //}
 
     @Override
     public void render(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, int xOffset, int yOffset) {
+        /*
         VertexMesh mesh = buildFrame().toVertexMesh();
 
        // Textures.BACKFILL.drawTexture(window,matrixStack,getX(),getY(),width,height);
       //  window.getEngineImpl().setState(window,null,new PipelineState().setDepth(false));
 
-        IDefaultEngineImpl<?, ?> impl = window.getEngineImpl();
+        IDefaultEngineImpl<?,?,?> impl = window.getEngineImpl();
         impl.bindPipeline(null, shaderSource.program);
         impl.bindTexture(null, 0);
 
@@ -65,6 +68,8 @@ public class FrameTimeWidget extends Widget {
         //window.getEngineImpl().drawAndDestroyMesh(window,null,matrixStack,mesh,0,shaderSource.program);
        // Textures.FRAME_TIME.drawTexture(window,matrixStack,getX(),getY(),width,height);
         Textures.FRAME_TIME.drawTexture(window, graphicsContext, matrixStack,getX(),getY(),width,height);
+
+         */
     }
 
 }

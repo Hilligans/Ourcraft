@@ -2,6 +2,8 @@ package dev.hilligans.ourcraft.client.rendering.graphics.vulkan.api;
 
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanEngineException;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.LogicalDevice;
+import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.VulkanBuffer;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.VkMemoryAllocateInfo;
@@ -10,7 +12,7 @@ import java.nio.LongBuffer;
 
 import static org.lwjgl.vulkan.VK10.*;
 
-public class LinearVulkanMemoryAllocator implements IVulkanMemoryAllocator {
+public class VulkanBumpAllocator implements IVulkanMemoryAllocator {
 
     public LogicalDevice device;
     public long[] memoryHandles;
@@ -22,7 +24,7 @@ public class LinearVulkanMemoryAllocator implements IVulkanMemoryAllocator {
     public int currentIndex;
     public int segmentCount;
 
-    public LinearVulkanMemoryAllocator(LogicalDevice device, int segmentCount, long size, int memoryType) {
+    public VulkanBumpAllocator(LogicalDevice device, int segmentCount, long size, int memoryType) {
         long[] result = new long[segmentCount];
         long[] memoryPointers = new long[segmentCount];
 
@@ -55,7 +57,7 @@ public class LinearVulkanMemoryAllocator implements IVulkanMemoryAllocator {
         this(device, segmentCount, size, result, memoryPointers);
     }
 
-    public LinearVulkanMemoryAllocator(LogicalDevice device, int segmentCount, long size, long[] memoryHandles, long[] memoryPointers) {
+    public VulkanBumpAllocator(LogicalDevice device, int segmentCount, long size, long[] memoryHandles, long[] memoryPointers) {
         this.device = device;
         this.segmentCount = segmentCount;
         this.currentIndex = 0;
@@ -71,21 +73,19 @@ public class LinearVulkanMemoryAllocator implements IVulkanMemoryAllocator {
 
     @Override
     public void free(VulkanMemoryAllocation buffer) {
-
     }
 
     @Override
-    public VulkanMemoryAllocation allocate(long size, long bits, long alignment) {
-
-        long heapPointer = this.heapPointer % alignment;
+    public @Nullable VulkanMemoryAllocation allocateForBuffer(VulkanBuffer buffer) {
+        long heapPointer = this.heapPointer % buffer.getAlignment();
         long offset = heapPointer;
-        heapPointer += size + size % alignment;
+        heapPointer += buffer.getSize() + buffer.getSize() % buffer.getAlignment();
 
         if(heapPointer > heapSize) {
             return null;
         }
 
-        return new VulkanMemoryAllocation(memoryHandles[currentIndex], size, offset, memoryPointers[currentIndex] + offset);
+        return new VulkanMemoryAllocation(memoryHandles[currentIndex], buffer.getSize(), offset, memoryPointers[currentIndex] + offset, null);
     }
 
     @Override

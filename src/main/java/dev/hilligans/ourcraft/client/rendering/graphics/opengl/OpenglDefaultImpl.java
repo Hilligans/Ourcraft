@@ -29,7 +29,7 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL30.*;
 
-public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, GraphicsContext> {
+public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, GraphicsContext, DefaultMeshBuilder> {
 
     public final OpenGLEngine engine;
 
@@ -64,7 +64,8 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public long createMesh(GraphicsContext graphicsContext, VertexMesh mesh) {
+    public long createMesh(GraphicsContext graphicsContext, DefaultMeshBuilder builder) {
+        VertexMesh mesh = builder.build();
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
@@ -165,7 +166,8 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public void drawAndDestroyMesh(GraphicsContext graphicsContext, MatrixStack matrixStack, VertexMesh mesh) {
+    public void drawAndDestroyMesh(GraphicsContext graphicsContext, MatrixStack matrixStack, DefaultMeshBuilder builder) {
+        VertexMesh mesh = builder.build();
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
         }
@@ -367,12 +369,12 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public IMeshBuilder getMeshBuilder(String vertexFormat) {
+    public DefaultMeshBuilder getMeshBuilder(String vertexFormat) {
         return new DefaultMeshBuilder(getFormat(vertexFormat));
     }
 
     @Override
-    public IMeshBuilder getMeshBuilder(VertexFormat vertexFormat) {
+    public DefaultMeshBuilder getMeshBuilder(VertexFormat vertexFormat) {
         return new DefaultMeshBuilder(vertexFormat);
     }
 

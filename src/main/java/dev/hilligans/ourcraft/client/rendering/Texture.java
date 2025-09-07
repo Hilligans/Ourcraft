@@ -1,10 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering;
 
 import dev.hilligans.ourcraft.client.MatrixStack;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.IDefaultEngineImpl;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsElement;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
+import dev.hilligans.ourcraft.client.rendering.graphics.api.*;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.ShaderSource;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
@@ -32,7 +29,7 @@ public class Texture implements IRegistryElement, IGraphicsElement {
     }
 
     public void drawTexture(@NotNull RenderWindow window, @NotNull GraphicsContext graphicsContext, MatrixStack matrixStack, int x, int y, int width, int height, int startX, int startY, int endX, int endY) {
-        IDefaultEngineImpl<?,?> defaultEngineImpl = window.getEngineImpl();
+        IDefaultEngineImpl<?,?,?> defaultEngineImpl = window.getEngineImpl();
         GameInstance gameInstance = window.getGameInstance();
         float minX = (float)startX / this.getWidth(gameInstance);
         float minY = (float)startY / this.getHeight(gameInstance);
@@ -41,14 +38,16 @@ public class Texture implements IRegistryElement, IGraphicsElement {
         float[] vertices = new float[] {x,y,0,minX,minY,x,y + height,0,minX,maxY,x + width,y,0,maxX,minY,x + width,y + height,0,maxX,maxY};
         int[] indices = new int[] {0,1,2,2,1,3};
 
-        VertexMesh mesh = new VertexMesh(shaderSource.vertexFormat);
 
-        mesh.addData(indices, vertices);
+        IMeshBuilder builder = window.getEngineImpl().getMeshBuilder(shaderSource.vertexFormat);
+        //VertexMesh mesh = new VertexMesh(shaderSource.vertexFormat);
+
+        builder.setData(vertices, indices);
 
         //GL11.glDisable(GL11.GL_DEPTH_TEST);
         defaultEngineImpl.bindPipeline(graphicsContext, shaderSource.program);
         defaultEngineImpl.bindTexture( graphicsContext, getTextureId(gameInstance));
-        defaultEngineImpl.drawAndDestroyMesh(graphicsContext,matrixStack,mesh);
+        defaultEngineImpl.drawAndDestroyMesh(graphicsContext, matrixStack, builder);
     }
 
     public void drawTexture(@NotNull RenderWindow window, @NotNull GraphicsContext graphicsContext, MatrixStack matrixStack, int x, int y, int width, int height) {

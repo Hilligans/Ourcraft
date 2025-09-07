@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.client.rendering.graphics.vulkan;
 import dev.hilligans.ourcraft.client.rendering.VertexMesh;
 import dev.hilligans.ourcraft.client.rendering.graphics.VertexFormat;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IMeshBuilder;
+import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.api.IVulkanMemoryManager;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.VulkanBuffer;
 import dev.hilligans.ourcraft.resource.IAllocator;
 import dev.hilligans.ourcraft.resource.IBufferAllocator;
@@ -15,14 +16,15 @@ import java.nio.ByteBuffer;
 public class VulkanMeshBuilder implements IMeshBuilder, IAllocator<VertexMesh> {
 
     public VulkanMemoryManager memoryAllocator;
+    public IVulkanMemoryManager memoryManager;
 
     VertexFormat format;
 
     FloatArrayList vertices = new FloatArrayList();
     IntArrayList indices = new IntArrayList();
 
-    //VulkanBuffer vertexBuffer;
-    //VulkanBuffer indexBuffer;
+    float[] vertexArray;
+    int[] indexArray;
 
     ByteBuffer vertexBuffer;
     ByteBuffer indexBuffer;
@@ -34,11 +36,8 @@ public class VulkanMeshBuilder implements IMeshBuilder, IAllocator<VertexMesh> {
 
     @Override
     public void setData(float[] vertices, int[] indices) {
-        vertexBuffer = MemoryUtil.memAlloc(vertices.length * 4);
-        indexBuffer = MemoryUtil.memAlloc(indices.length * 4);
-
-        vertexBuffer.asFloatBuffer().put(vertices);
-        indexBuffer.asIntBuffer().put(indices);
+        this.vertexArray = vertices;
+        this.indexArray = indices;
     }
 
     @Override
@@ -94,25 +93,7 @@ public class VulkanMeshBuilder implements IMeshBuilder, IAllocator<VertexMesh> {
 
     @Override
     public VertexMesh build() {
-        //memoryAllocator.allocateBuffer()
-
-        if(vertexBuffer == null) {
-            vertexBuffer = MemoryUtil.memAlloc(vertices.size() * 4);
-            vertexBuffer.asFloatBuffer().put(vertices.elements(), 0, vertices.size());
-        }
-        if(indexBuffer == null) {
-            indexBuffer = MemoryUtil.memAlloc(indices.size() * 4);
-            indexBuffer.asIntBuffer().put(indices.elements(), 0, indices.size());
-        }
-
-        this.vertices = null;
-        this.indices = null;
-
-        VertexMesh mesh = new VertexMesh(format);
-        mesh.addData(indexBuffer, vertexBuffer);
-        mesh.setAllocator(this);
-
-        return mesh;
+        return null;
     }
 
     @Override

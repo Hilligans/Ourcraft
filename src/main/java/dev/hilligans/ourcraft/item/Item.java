@@ -1,17 +1,13 @@
 package dev.hilligans.ourcraft.item;
 
 import dev.hilligans.ourcraft.GameInstance;
-import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
 import dev.hilligans.ourcraft.data.descriptors.TagCollection;
 import dev.hilligans.ourcraft.data.other.ItemProperties;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.recipe.IRecipeComponent;
-import dev.hilligans.ourcraft.util.Side;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 
@@ -117,10 +113,6 @@ public class Item implements IRecipeComponent, IRegistryElement {
         drawString(window, matrixStack,x - size / 2,y,size/2,itemStack.count);
 
         */
-    }
-
-    public void addData(TextAtlas textAtlas, PrimitiveBuilder primitiveBuilder, float size) {
-        //itemProperties.itemModel.addData(primitiveBuilder,itemProperties.itemTextureManager,0,size,null,0,0);
     }
 
     public boolean onActivate(IWorld world, PlayerEntity playerEntity) {

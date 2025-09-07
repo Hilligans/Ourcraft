@@ -60,7 +60,7 @@ public class NuklearLayout implements ILayout {
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_SCISSOR_TEST);
 
-        IDefaultEngineImpl<?, ?> impl = engine.getDefaultImpl();
+        IDefaultEngineImpl<?, ?, ?> impl = engine.getDefaultImpl();
         layout(ctx, width, height);
 
         ByteBuffer vertices = MemoryUtil.memCalloc(10000);
@@ -122,9 +122,10 @@ public class NuklearLayout implements ILayout {
         //glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
         //glUnmapBuffer(GL_ARRAY_BUFFER);
 
-        VertexMesh vertexMesh = new VertexMesh(this.engine.vertexFormat).addData(elements, vertices);
-        vertexMesh.elementSize = 2;
-        long mesh = impl.createMesh(graphicsContext, vertexMesh);
+        //VertexMesh vertexMesh = new VertexMesh(this.engine.vertexFormat).addData(elements, vertices);
+        //vertexMesh.elementSize = 2;
+        //long mesh = impl.createMesh(graphicsContext, vertexMesh);
+        long mesh = 0;
 
         // iterate over and execute each draw command
         float fb_scale_x = (float) renderWindow.getWindowWidth() / (float) width;

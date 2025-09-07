@@ -45,10 +45,10 @@ public class ChunkDebugRenderTask extends RenderTaskSource {
                     float maxZ = chunkWidth;
 
                     IMeshBuilder builder = engine.getDefaultImpl().getMeshBuilder(shaderSource.vertexFormat);
-                    IDefaultEngineImpl<?, ?> impl = engine.getDefaultImpl();
+                    IDefaultEngineImpl<?, ?, ?> impl = engine.getDefaultImpl();
                     builder.addBoundingBox(new BoundingBox(minX, minY, minZ, maxX, maxY, maxZ), floatList -> floatList.addVertices(1, 1, 1, 1));
 
-                    long mesh = impl.createMesh(graphicsContext, builder.build());
+                    long mesh = impl.createMesh(graphicsContext, builder);
 
                     Vector3i playerChunkPos = new Vector3i(Math.floorDiv((int)pos.x, chunkWidth), Math.floorDiv((int)pos.y, chunkHeight), Math.floorDiv((int)pos.z, chunkWidth));
 

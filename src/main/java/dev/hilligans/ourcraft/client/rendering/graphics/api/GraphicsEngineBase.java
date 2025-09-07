@@ -6,7 +6,7 @@ import dev.hilligans.ourcraft.GameInstance;
 
 import java.util.ArrayList;
 
-public abstract class GraphicsEngineBase<Q extends RenderWindow,V extends IDefaultEngineImpl<Q,X>, X extends GraphicsContext> implements IGraphicsEngine<Q,V,X> {
+public abstract class GraphicsEngineBase<Q extends RenderWindow,V extends IDefaultEngineImpl<Q,X,?>, X extends GraphicsContext> implements IGraphicsEngine<Q,V,X> {
 
     public StringRenderer stringRenderer;
     public ArrayList<Q> windows = new ArrayList<>();

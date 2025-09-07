@@ -5,17 +5,13 @@ import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.MatrixStack;
-import dev.hilligans.ourcraft.client.rendering.VertexMesh;
 import dev.hilligans.ourcraft.client.rendering.culling.CullingEngine;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.client.rendering.MeshHolder;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IMeshBuilder;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.PrimitiveBuilder;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
 import dev.hilligans.ourcraft.data.other.BlockPos;
-import dev.hilligans.ourcraft.data.primitives.Tuple;
 import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.util.Settings;
 import dev.hilligans.ourcraft.client.rendering.graphics.*;
@@ -23,7 +19,6 @@ import dev.hilligans.ourcraft.world.newworldsystem.EmptyContainer;
 import dev.hilligans.ourcraft.world.newworldsystem.IChunk;
 import dev.hilligans.ourcraft.world.newworldsystem.IThreeDContainer;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
-import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 
@@ -148,7 +143,7 @@ public class WorldRenderTask extends RenderTaskSource {
                 }
             }
 
-            public VertexMesh getMesh(IChunk chunk, IMeshBuilder builder) {
+            public IMeshBuilder getMesh(IChunk chunk, IMeshBuilder builder) {
                 BlockPos p = new BlockPos(0, 0, 0);
 
                 for(int x = 0; x < chunk.getWidth(); x++) {
@@ -172,7 +167,7 @@ public class WorldRenderTask extends RenderTaskSource {
                         }
                     }
                 }
-                return builder.build();
+                return builder;
             }
 
             public void buildMesh(RenderWindow window, GraphicsContext graphicsContext, IChunk chunk) {
