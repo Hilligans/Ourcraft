@@ -54,7 +54,9 @@ public class ShaderCompiler {
             long result = shaderc_compile_into_preprocessed_text(compiler, shader, shaderc_vertex_shader, "", "main", options);
 
             long buf = nshaderc_result_get_bytes(result);
-            return MemoryUtil.memUTF8(buf);
+            String val = MemoryUtil.memUTF8(buf);
+            shaderc_result_release(result);
+            return val;
         } finally {
             Shaderc.shaderc_compile_options_release(options);
             Shaderc.shaderc_compiler_release(compiler);
