@@ -21,9 +21,11 @@ public class VulkanQueueFamilyManager {
     public ArrayList<QueueFamily> queueFamilies = new ArrayList<>();
 
     public VulkanQueueFamilyManager(LogicalDevice device) {
+        System.out.println("Initializing Vulkan Queue Family Manager");
         this.device = device;
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             vkGetPhysicalDeviceProperties(device.physicalDevice.physicalDevice, device.physicalDevice.properties);
+
             IntBuffer size = memoryStack.mallocInt(1);
             vkGetPhysicalDeviceQueueFamilyProperties(device.physicalDevice.physicalDevice, size, null);
             VkQueueFamilyProperties.Buffer buffer = VkQueueFamilyProperties.calloc(size.get(0));
@@ -31,7 +33,6 @@ public class VulkanQueueFamilyManager {
             AtomicInteger x = new AtomicInteger();
             buffer.forEach(t -> {
                 QueueFamily queueFamily = new QueueFamily(t, device, x.getAndIncrement());
-                queueFamilies.add(queueFamily);
                 this.addQueue(queueFamily);
             });
         }

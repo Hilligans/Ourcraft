@@ -110,7 +110,7 @@ public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWin
     }
 
     @Override
-    public GraphicsContext getContext() {
+    public GraphicsContext createContext(FixedFunctionGLWindow window) {
         return null;
     }
 

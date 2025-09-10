@@ -11,9 +11,6 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.util.function.Consumer;
 
 public class DefaultMeshBuilder implements IMeshBuilder, IAllocator<VertexMesh> {
 
@@ -90,6 +87,23 @@ public class DefaultMeshBuilder implements IMeshBuilder, IAllocator<VertexMesh> 
     }
 
     @Override
+    public long getVertexSize() {
+        if(vertexBuffer != null) {
+            return vertexBuffer.capacity();
+        }
+
+        return (long) vertices.size() * Float.BYTES;
+    }
+
+    @Override
+    public long getIndexSize() {
+        if(indexBuffer != null) {
+            return indexBuffer.capacity();
+        }
+
+        return indices.size() * Integer.BYTES;
+    }
+
     public VertexMesh build() {
         if(vertexBuffer == null) {
             vertexBuffer = MemoryUtil.memAlloc(vertices.size() * 4);

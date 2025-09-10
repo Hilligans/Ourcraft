@@ -8,7 +8,6 @@ import dev.hilligans.ourcraft.client.input.key.KeyPress;
 import dev.hilligans.ourcraft.client.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.*;
 import dev.hilligans.ourcraft.client.rendering.graphics.implementations.FreeCamera;
-import dev.hilligans.ourcraft.client.rendering.graphics.implementations.PlayerCamera;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
 import dev.hilligans.ourcraft.client.rendering.world.StringRenderer;
 import dev.hilligans.ourcraft.util.Logger;
@@ -78,7 +77,7 @@ public abstract class RenderWindow {
         }
         this.renderPipeline = renderPipeline;
         this.pipelineInstance = this.renderPipeline.buildTargets(graphicsEngine);
-        this.pipelineInstance.load(graphicsEngine.getGameInstance(), graphicsEngine, graphicsEngine.getContext());
+        this.pipelineInstance.load(graphicsEngine.getGameInstance(), graphicsEngine, graphicsEngine.createContext(this));
     }
 
     public void setRenderPipeline(String name) {
@@ -159,7 +158,7 @@ public abstract class RenderWindow {
     }
 
     public GraphicsContext getGraphicsContext() {
-        return graphicsEngine.getContext();
+        return graphicsEngine.createContext(this);
     }
 
     public RenderWindow addResourceCleanup(Runnable runnable) {

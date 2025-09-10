@@ -15,6 +15,7 @@ import static org.lwjgl.vulkan.VK10.*;
 public class VulkanBumpAllocator implements IVulkanMemoryAllocator {
 
     public LogicalDevice device;
+    public IVulkanMemoryManager memoryManager;
     public long[] memoryHandles;
     public long[] memoryPointers;
     public long heapSize;
@@ -24,7 +25,7 @@ public class VulkanBumpAllocator implements IVulkanMemoryAllocator {
     public int currentIndex;
     public int segmentCount;
 
-    public VulkanBumpAllocator(LogicalDevice device, int segmentCount, long size, int memoryType) {
+    public VulkanBumpAllocator(LogicalDevice device, IVulkanMemoryManager memoryManager, int segmentCount, long size, int memoryType) {
         long[] result = new long[segmentCount];
         long[] memoryPointers = new long[segmentCount];
 
@@ -54,11 +55,12 @@ public class VulkanBumpAllocator implements IVulkanMemoryAllocator {
             }
         }
 
-        this(device, segmentCount, size, result, memoryPointers);
+        this(device, memoryManager, segmentCount, size, result, memoryPointers);
     }
 
-    public VulkanBumpAllocator(LogicalDevice device, int segmentCount, long size, long[] memoryHandles, long[] memoryPointers) {
+    public VulkanBumpAllocator(LogicalDevice device, IVulkanMemoryManager memoryManager, int segmentCount, long size, long[] memoryHandles, long[] memoryPointers) {
         this.device = device;
+        this.memoryManager = memoryManager;
         this.segmentCount = segmentCount;
         this.currentIndex = 0;
         this.memoryHandles = memoryHandles;
@@ -85,7 +87,7 @@ public class VulkanBumpAllocator implements IVulkanMemoryAllocator {
             return null;
         }
 
-        return new VulkanMemoryAllocation(memoryHandles[currentIndex], buffer.getSize(), offset, memoryPointers[currentIndex] + offset, null);
+        return new VulkanMemoryAllocation(memoryHandles[currentIndex], buffer.getSize(), offset, memoryPointers[currentIndex] + offset, 0, null, this);
     }
 
     @Override
@@ -94,5 +96,10 @@ public class VulkanBumpAllocator implements IVulkanMemoryAllocator {
             vkUnmapMemory(device.device, memoryHandles[x]);
             vkFreeMemory(device.device, memoryHandles[x], null);
         }
+    }
+
+    @Override
+    public IVulkanMemoryManager getMemoryManager() {
+        return memoryManager;
     }
 }

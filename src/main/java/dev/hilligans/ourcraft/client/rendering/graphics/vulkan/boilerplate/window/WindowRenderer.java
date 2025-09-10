@@ -141,8 +141,4 @@ public class WindowRenderer {
     }
 
      */
-
-    public void resetBuffer(VkCommandBuffer commandBuffer) {
-
-    }
 }

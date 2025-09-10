@@ -6,10 +6,11 @@ import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.Vulka
 
 import static org.lwjgl.vulkan.VK10.*;
 
-public record VulkanMemoryAllocation(long memory, long size, long offset, long pointer, VulkanMemoryAllocation transferDestination) {
+public record VulkanMemoryAllocation(long memory, long size, long offset, long pointer, long allocation, VulkanMemoryAllocation transferDestination, IVulkanMemoryAllocator allocator) {
 
     public void bindToBuffer(VulkanBuffer buffer) {
         buffer.memory = memory;
+        buffer.setAllocation(this);
         vkBindBufferMemory(buffer.device.device, buffer.buffer, memory, offset);
     }
 
@@ -42,5 +43,9 @@ public record VulkanMemoryAllocation(long memory, long size, long offset, long p
 
     public boolean requiresCopy() {
         return transferDestination != null;
+    }
+
+    public void free() {
+        allocator.getMemoryManager().free(this);
     }
 }

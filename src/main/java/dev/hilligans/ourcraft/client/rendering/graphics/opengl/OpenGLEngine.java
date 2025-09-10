@@ -8,22 +8,17 @@ import dev.hilligans.ourcraft.client.rendering.graphics.RenderPipeline;
 import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsEngineBase;
-import dev.hilligans.ourcraft.client.rendering.screens.JoinScreen;
 import dev.hilligans.ourcraft.data.primitives.Tuple;
 import dev.hilligans.ourcraft.util.Logger;
 import dev.hilligans.ourcraft.util.sections.ISection;
 import dev.hilligans.ourcraft.util.sections.ProfiledSection;
-import dev.hilligans.ourcraft.util.sections.SteppingSection;
-import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL43;
-import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.opengl.GLDebugMessageCallback;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.MemoryUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -156,20 +151,20 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
            // callback.close();
            // callback.free();
         }
-        gameInstance.cleanupGraphics(this, getContext());
+        gameInstance.cleanupGraphics(this, createContext(null));
         for(RenderWindow renderWindow : windows) {
             if(renderWindow.pipelineInstance != null) {
-                renderWindow.pipelineInstance.cleanup(getGameInstance(), this, getContext());
+                renderWindow.pipelineInstance.cleanup(getGameInstance(), this, createContext(null));
             }
         }
-        stringRenderer.close(engineImpl, getContext());
+        stringRenderer.close(engineImpl, createContext(null));
 
         engineImpl.close();
         glfwTerminate();
     }
 
     @Override
-    public GraphicsContext getContext() {
+    public GraphicsContext createContext(OpenGLWindow window) {
         if(profiling) {
             return new GraphicsContext().setSection(new ProfiledSection().setMonitorName("loop"));
         }

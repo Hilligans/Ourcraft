@@ -12,4 +12,5 @@ public interface IVulkanMemoryAllocator {
 
     void cleanup();
 
+    IVulkanMemoryManager getMemoryManager();
 }

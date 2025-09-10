@@ -5,6 +5,7 @@ import dev.hilligans.ourcraft.client.rendering.graphics.VertexFormat;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IMeshBuilder;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.api.IVulkanMemoryManager;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.VulkanBuffer;
+import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.pipeline.VertexBuffer;
 import dev.hilligans.ourcraft.resource.IAllocator;
 import dev.hilligans.ourcraft.resource.IBufferAllocator;
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
@@ -29,9 +30,10 @@ public class VulkanMeshBuilder implements IMeshBuilder, IAllocator<VertexMesh> {
     ByteBuffer vertexBuffer;
     ByteBuffer indexBuffer;
 
-    public VulkanMeshBuilder(VertexFormat format, VulkanMemoryManager memoryAllocator) {
+    public VulkanMeshBuilder(VertexFormat format, VulkanMemoryManager memoryAllocator, IVulkanMemoryManager memoryManager) {
         this.format = format;
         this.memoryAllocator = memoryAllocator;
+        this.memoryManager = memoryManager;
     }
 
     @Override
@@ -78,22 +80,43 @@ public class VulkanMeshBuilder implements IMeshBuilder, IAllocator<VertexMesh> {
     public int getVertexCount() {
         if(vertexBuffer != null) {
             return vertexBuffer.capacity()/format.getStride();
+        } else if(vertexArray != null) {
+            return vertexArray.length/(format.getStride()/Float.BYTES);
         }
-        return vertices.size()/(format.getStride()/4);
+        return vertices.size()/(format.getStride()/ Float.BYTES);
     }
 
     @Override
     public int getIndexCount() {
         if(indexBuffer != null) {
-            return indexBuffer.capacity()/4;
+            return indexBuffer.capacity()/Float.BYTES;
+        } else if(indexArray != null) {
+            return indexArray.length/(format.getStride()/Float.BYTES);
         }
 
         return indices.size();
     }
 
     @Override
-    public VertexMesh build() {
-        return null;
+    public long getVertexSize() {
+        if(vertices != null) {
+            return (long) vertices.size() * Float.BYTES;
+        } else if(vertexBuffer != null) {
+            return vertexBuffer.capacity();
+        }
+
+        return (long) vertexArray.length * Float.BYTES;
+    }
+
+    @Override
+    public long getIndexSize() {
+        if(indices != null) {
+            return (long) indices.size() * Integer.BYTES;
+        } else if(indexBuffer != null) {
+            return indexBuffer.capacity();
+        }
+
+        return (long) indexArray.length * Integer.BYTES;
     }
 
     @Override
@@ -101,9 +124,26 @@ public class VulkanMeshBuilder implements IMeshBuilder, IAllocator<VertexMesh> {
         return format;
     }
 
+    public void writeToBuffers(VulkanBuffer vertices, VulkanBuffer indices) {
+        if(this.vertices != null) {
+            vertices.write(this.vertices.elements(), this.vertices.size());
+        } else if(this.vertexArray != null) {
+            vertices.write(this.vertexArray);
+        } else if(this.vertexBuffer != null) {
+            vertices.write(this.vertexBuffer);
+        }
+
+        if(this.indices != null) {
+            indices.write(this.indices.elements(), this.indices.size());
+        } else if(this.indexArray != null) {
+            indices.write(this.indexArray);
+        } else if(this.indexBuffer != null) {
+            indices.write(this.indexBuffer);
+        }
+    }
+
     @Override
     public void free(VertexMesh resource) {
-        MemoryUtil.memFree(vertexBuffer);
-        MemoryUtil.memFree(indexBuffer);
+
     }
 }

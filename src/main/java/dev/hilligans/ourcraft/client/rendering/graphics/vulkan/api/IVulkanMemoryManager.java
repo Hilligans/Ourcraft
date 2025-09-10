@@ -16,6 +16,10 @@ public interface IVulkanMemoryManager {
 
     VulkanMemoryAllocation allocate(GraphicsContext graphicsContext, VulkanBuffer vulkanBuffer);
 
+    default VulkanMemoryAllocation allocateSingleUse(GraphicsContext graphicsContext, VulkanBuffer vulkanBuffer) {
+        return allocate(graphicsContext, vulkanBuffer);
+    }
+
     default void upload(GraphicsContext graphicsContext, VulkanBuffer buffer, ByteBuffer data) {
         CommandBuffer cmdBuffer = VkInterface.getCommandBuffer(graphicsContext);
 
@@ -29,8 +33,6 @@ public interface IVulkanMemoryManager {
             cmdBuffer.add(() -> free(allocation));
         }
     }
-
-    VulkanMemoryAllocation allocateSingleUse(GraphicsContext graphicsContext, VulkanBuffer vulkanBuffer);
 
     void free(VulkanMemoryAllocation allocation);
 }

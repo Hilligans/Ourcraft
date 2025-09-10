@@ -91,13 +91,13 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
     }
 
     @Override
-    public VulkanBaseGraphicsContext getContext() {
-        return null;
+    public VulkanBaseGraphicsContext createContext(VulkanWindow window) {
+        return new VulkanGraphicsContext(window.renderPool, vulkanInstance.logicalDevice, window);
     }
 
     @Override
     public ArrayList<VulkanWindow> getWindows() {
-        return null;
+        return this.windows;
     }
 
     @Override

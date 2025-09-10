@@ -26,7 +26,8 @@ public interface IMeshBuilder {
     int getVertexCount();
     int getIndexCount();
 
-    VertexMesh build();
+    long getVertexSize();
+    long getIndexSize();
 
     VertexFormat getFormat();
 

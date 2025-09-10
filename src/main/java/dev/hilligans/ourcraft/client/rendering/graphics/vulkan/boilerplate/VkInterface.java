@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate;
 
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanBaseGraphicsContext;
+import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanEngineException;
 import org.lwjgl.glfw.GLFWVulkan;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.NativeType;
@@ -10,6 +11,7 @@ import org.lwjgl.vulkan.*;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 
+import static org.lwjgl.vulkan.VK10.VK_SUCCESS;
 import static org.lwjgl.vulkan.VK10.vkEnumerateInstanceLayerProperties;
 
 
@@ -65,5 +67,11 @@ public class VkInterface {
             return context.getCommandBuffer();
         }
         throw new IllegalStateException("Invalid graphics context for engine");
+    }
+
+    public static void check(int value, String reason) {
+        if(value != VK_SUCCESS) {
+            throw new VulkanEngineException(value, reason);
+        }
     }
 }

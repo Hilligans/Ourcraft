@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.window;
 
+import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.util.shaderc.Shaderc;
 
 import java.nio.ByteBuffer;
@@ -20,6 +21,7 @@ public class ShaderCompiler {
         ByteBuffer compiledShader;
         long compiler = Shaderc.shaderc_compiler_initialize();
         long options = Shaderc.shaderc_compile_options_initialize();
+        Shaderc.shaderc_compile_options_set_forced_version_profile(options, 450, shaderc_profile_core);
         try {
 
             long result = Shaderc.shaderc_compile_into_spv(
@@ -42,6 +44,21 @@ public class ShaderCompiler {
         }
 
         return compiledShader;
+    }
+
+    public static String preprocessShader(String shader) {
+        long compiler = Shaderc.shaderc_compiler_initialize();
+        long options = Shaderc.shaderc_compile_options_initialize();
+        Shaderc.shaderc_compile_options_add_macro_definition(options, "OPENGL", "1");
+        try {
+            long result = shaderc_compile_into_preprocessed_text(compiler, shader, shaderc_vertex_shader, "", "main", options);
+
+            long buf = nshaderc_result_get_bytes(result);
+            return MemoryUtil.memUTF8(buf);
+        } finally {
+            Shaderc.shaderc_compile_options_release(options);
+            Shaderc.shaderc_compiler_release(compiler);
+        }
     }
 
     private static int vulkanStageToShadercKind(int stage) {

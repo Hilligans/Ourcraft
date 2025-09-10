@@ -2,17 +2,18 @@ package dev.hilligans.ourcraft.client.rendering.graphics.vulkan.api;
 
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanMemoryHeap;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.LogicalDevice;
+import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.VkInterface;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.VulkanBuffer;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.vma.*;
-import org.lwjgl.vulkan.VkBufferCreateInfo;
 import org.lwjgl.vulkan.VkMemoryRequirements;
 
 import java.util.List;
 
 import static org.lwjgl.util.vma.Vma.*;
 import static org.lwjgl.vulkan.VK10.VK_API_VERSION_1_0;
+import static org.lwjgl.vulkan.VK10.vkGetBufferMemoryRequirements;
 
 public class VMAMemoryAllocator implements IVulkanMemoryAllocator {
 
@@ -55,34 +56,36 @@ public class VMAMemoryAllocator implements IVulkanMemoryAllocator {
 
     @Override
     public void free(VulkanMemoryAllocation buffer) {
-        //vmaFreeMemory(allocators.get(logicalDevice), buffer.buffer);
+        vmaFreeMemory(allocator, buffer.allocation());
     }
 
     @Override
     public VulkanMemoryAllocation allocateForBuffer(VulkanBuffer vulkanBuffer) {
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
 
-            VkBufferCreateInfo bufferCreateInfo = VkBufferCreateInfo.calloc(memoryStack);
-            bufferCreateInfo.size(vulkanBuffer.size);
-            bufferCreateInfo.usage();
-            bufferCreateInfo.sharingMode();
-            bufferCreateInfo.flags();
+
+            VkMemoryRequirements requirements = VkMemoryRequirements.calloc(memoryStack);
+            vkGetBufferMemoryRequirements(logicalDevice.device, vulkanBuffer.getVkBuffer(), requirements);
+
+
+            PointerBuffer buffer = memoryStack.mallocPointer(1);
+
+            VmaAllocationCreateInfo createInfo = VmaAllocationCreateInfo.calloc(memoryStack);
+            createInfo.memoryTypeBits(allowedMemoryTypes);
 
 
 
             VmaAllocationInfo info = VmaAllocationInfo.calloc(memoryStack);
-            VkMemoryRequirements requirements = VkMemoryRequirements.calloc(memoryStack);
-           // requirements.
-            VmaAllocationCreateInfo createInfo = VmaAllocationCreateInfo.calloc(memoryStack);
-            createInfo.memoryTypeBits(allowedMemoryTypes);
 
-            //vmaAllocateMem
+            VkInterface.check(vmaAllocateMemory(allocator, requirements, createInfo, buffer, info),
+                    "Failed to allocate vmaMemory");
 
+            //VulkanMemoryAllocation allocation = new VulkanMemoryAllocation(info.deviceMemory(), info.size(), info.offset(), info.)
 
+            PointerBuffer buf = memoryStack.mallocPointer(1);
+            //vmaMapMemory(allocator, );
 
-            //vmaAllocateMemoryForBuffer(allocators.get(logicalDevice),
-            //)
-
+            //vmaFreeMemory();
         }
 
         return null;
@@ -91,5 +94,10 @@ public class VMAMemoryAllocator implements IVulkanMemoryAllocator {
     @Override
     public void cleanup() {
         vmaDestroyAllocator(allocator);
+    }
+
+    @Override
+    public IVulkanMemoryManager getMemoryManager() {
+        return null;
     }
 }

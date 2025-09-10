@@ -51,9 +51,5 @@ public class MiniMapScreen extends ScreenBase {
     public float getRatio(int size) {
         return size / 256f;
     }
-
-    @Override
-    public boolean renderWorld() {
-        return false;
-    }
+    
 }

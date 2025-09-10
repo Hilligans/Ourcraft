@@ -8,6 +8,7 @@ import dev.hilligans.ourcraft.client.rendering.graphics.PipelineState;
 import dev.hilligans.ourcraft.client.rendering.graphics.ShaderSource;
 import dev.hilligans.ourcraft.client.rendering.graphics.VertexFormat;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IMeshBuilder;
+import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.window.ShaderCompiler;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
 import dev.hilligans.ourcraft.client.rendering.VertexMesh;
 import dev.hilligans.ourcraft.client.rendering.world.managers.ShaderManager;
@@ -239,11 +240,21 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         }
     }
 
+    public String getEngineName() {
+        return engine.getResourceOwner() + "." + engine.getResourceName();
+    }
+
+    public String getShader(String shader, ShaderSource shaderSource) {
+        String engineName = getEngineName() + "/";
+        String code = engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shader, shaderSource.getResourceOwner()), engineName, "");
+        return ShaderCompiler.preprocessShader(code);
+    }
+
     @Override
     public long createProgram(GraphicsContext graphicsContext, ShaderSource shaderSource) {
-        String vertex = engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.vertexShader, shaderSource.getResourceOwner()));
-        String fragment = engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.fragmentShader, shaderSource.getResourceOwner()));
-        String geometry = shaderSource.geometryShader == null ? null :  engine.getGameInstance().RESOURCE_LOADER.getString(new ResourceLocation(shaderSource.geometryShader, shaderSource.getResourceOwner()));
+        String vertex = getShader(shaderSource.vertexShader, shaderSource);
+        String fragment = getShader(shaderSource.fragmentShader, shaderSource);
+        String geometry = shaderSource.geometryShader == null ? null : getShader(shaderSource.geometryShader, shaderSource);
 
         int shader;
         if(geometry == null) {

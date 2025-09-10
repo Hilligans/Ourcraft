@@ -27,5 +27,4 @@ public interface Screen {
 
     default void resize(int x, int y) {}
 
-    default boolean renderWorld() {return true;}
 }

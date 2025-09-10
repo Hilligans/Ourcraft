@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.pipe
 
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.Semaphore;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanWindow;
+import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.VulkanFrameInfo;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.vulkan.VkFenceCreateInfo;
@@ -14,40 +15,44 @@ public class FrameManager {
 
     public int MAX_FRAMES_IN_FLIGHT;
     public int currentFrame = 0;
-    public long[] vkFences;
     public long[] imagesInFlight;
-    public Semaphore[] imageAvailableSemaphores;
-    public Semaphore[] renderFinishedSemaphores;
     public VulkanWindow vulkanWindow;
+
+    VulkanFrameInfo[] frames;
 
     public FrameManager(VulkanWindow vulkanWindow, int maxFrames, int swapChainSize) {
         this.MAX_FRAMES_IN_FLIGHT = maxFrames;
         this.vulkanWindow = vulkanWindow;
-        this.vkFences = new long[maxFrames];
         this.imagesInFlight = new long[swapChainSize];
-        this.imageAvailableSemaphores = new Semaphore[maxFrames];
-        this.renderFinishedSemaphores = new Semaphore[maxFrames];
-        createSyncData();
+        this.frames = new VulkanFrameInfo[maxFrames];
+
+        for(int x = 0; x < frames.length; x++) {
+            frames[x] = new VulkanFrameInfo(vulkanWindow.device);
+        }
     }
 
     public FrameManager(VulkanWindow vulkanWindow) {
         this(vulkanWindow,2, vulkanWindow.swapChain.size);
     }
 
+    public VulkanFrameInfo getCurrentFrameInfo() {
+        return frames[currentFrame];
+    }
+
     public LongBuffer getFence() {
-        return MemoryUtil.memAllocLong(1).put(0,vkFences[currentFrame]);
+        return MemoryUtil.memAllocLong(1).put(0, getFencePointer());
     }
 
     public long getFencePointer() {
-        return vkFences[currentFrame];
+        return getCurrentFrameInfo().submitFence.handle();
     }
 
     public Semaphore getImageSemaphore() {
-        return imageAvailableSemaphores[currentFrame];
+        return getCurrentFrameInfo().imageAvailableSemaphore;
     }
 
     public Semaphore getRenderSemaphore() {
-        return renderFinishedSemaphores[currentFrame];
+        return getCurrentFrameInfo().renderFinishSemaphore;
     }
 
     public void advanceFrame() {
@@ -55,7 +60,7 @@ public class FrameManager {
     }
 
     public void startDrawing(int image) {
-        imagesInFlight[image] = vkFences[currentFrame];
+        imagesInFlight[image] = getFencePointer();
     }
 
     public boolean canDrawToImage(int image) {
@@ -65,36 +70,10 @@ public class FrameManager {
         return vkGetFenceStatus(vulkanWindow.device.device,imagesInFlight[image]) == VK_NULL_HANDLE;
     }
 
-    private void createSyncData() {
-        try {
-            try (MemoryStack memoryStack = MemoryStack.stackPush()) {
-                VkFenceCreateInfo createInfo = VkFenceCreateInfo.calloc(memoryStack).sType(VK_STRUCTURE_TYPE_FENCE_CREATE_INFO).flags(VK_FENCE_CREATE_SIGNALED_BIT);
-                LongBuffer longBuffer = memoryStack.mallocLong(1);
-                for (int x = 0; x < MAX_FRAMES_IN_FLIGHT; x++) {
-                    if (vkCreateFence(vulkanWindow.device.device, createInfo, null, longBuffer) != VK_SUCCESS) {
-                        vulkanWindow.device.physicalDevice.vulkanInstance.exit("failed to create vk fence");
-                    }
-                    vkFences[x] = longBuffer.get(0);
-                    imageAvailableSemaphores[x] = new Semaphore(vulkanWindow.device);
-                    renderFinishedSemaphores[x] = new Semaphore(vulkanWindow.device);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void cleanup() {
         vkDeviceWaitIdle(vulkanWindow.device.device);
-        for(Semaphore semaphore : renderFinishedSemaphores) {
-            semaphore.cleanup();
-        }
-        for(Semaphore semaphore : imageAvailableSemaphores) {
-            semaphore.cleanup();
-        }
-        for(long fence : vkFences) {
-            vkDestroyFence(vulkanWindow.device.device,fence,null);
+        for(VulkanFrameInfo frameInfo : frames) {
+            frameInfo.cleanup();
         }
     }
-
 }

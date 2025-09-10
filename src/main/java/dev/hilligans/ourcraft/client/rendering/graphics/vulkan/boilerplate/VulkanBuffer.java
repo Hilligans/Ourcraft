@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanBaseGraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanEngineException;
+import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.api.VulkanMemoryAllocation;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -17,6 +18,8 @@ import static org.lwjgl.vulkan.VK10.vkUnmapMemory;
 public class VulkanBuffer {
 
     public LogicalDevice device;
+    public VulkanMemoryAllocation allocation;
+
     public long buffer;
     public long memory;
     public long offset;
@@ -96,6 +99,10 @@ public class VulkanBuffer {
 
     public void bind(ByteBuffer buffer) {
         this.writeableBuffer = buffer;
+    }
+
+    public void setAllocation(VulkanMemoryAllocation allocation) {
+        this.allocation = allocation;
     }
 
     public void copyTo(VkCommandBuffer commandBuffer, VulkanBuffer destBuffer) {
@@ -179,6 +186,11 @@ public class VulkanBuffer {
         this.address = 0;
     }
 
+    public void free() {
+        vkDestroyBuffer(device.device, buffer, null);
+        allocation.free();
+    }
+
     public void write(ByteBuffer buffer) {
         if(writeableBuffer == null) {
             throw new VulkanEngineException("Buffer not bound to memory!");
@@ -186,12 +198,70 @@ public class VulkanBuffer {
         writeableBuffer.put(buffer).flip();
     }
 
-    public void free() {
-        if(address != 0) {
-            unmap();
+    public void write(byte[] data, int length) {
+        if(writeableBuffer == null) {
+            throw new VulkanEngineException("Buffer not bound to memory!");
         }
-        vkDestroyBuffer(device.device, buffer, null);
-        vkFreeMemory(device.device, memory, null);
+        writeableBuffer.put(0, data, 0, length).flip();
+    }
+
+    public void write(byte[] data) {
+        write(data, data.length);
+    }
+
+    public void write(short[] data, int length) {
+        if(writeableBuffer == null) {
+            throw new VulkanEngineException("Buffer not bound to memory!");
+        }
+        writeableBuffer.asShortBuffer().put(0, data, 0, length).flip();
+    }
+
+    public void write(short[] data) {
+        write(data, data.length);
+    }
+
+    public void write(float[] data, int length) {
+        if(writeableBuffer == null) {
+            throw new VulkanEngineException("Buffer not bound to memory!");
+        }
+        writeableBuffer.asFloatBuffer().put(0, data, 0, length).flip();
+    }
+
+    public void write(float[] data) {
+        write(data, data.length);
+    }
+
+    public void write(int[] data, int length) {
+        if(writeableBuffer == null) {
+            throw new VulkanEngineException("Buffer not bound to memory!");
+        }
+        writeableBuffer.asIntBuffer().put(0, data, 0, length).flip();
+    }
+
+    public void write(int[] data) {
+        write(data, data.length);
+    }
+
+    public void write(long[] data, int length) {
+        if(writeableBuffer == null) {
+            throw new VulkanEngineException("Buffer not bound to memory!");
+        }
+        writeableBuffer.asLongBuffer().put(0, data, 0, length).flip();
+    }
+
+    public void write(long[] data) {
+        write(data, data.length);
+    }
+
+    public void write(double[] data, int length) {
+        if(writeableBuffer == null) {
+            throw new VulkanEngineException("Buffer not bound to memory!");
+        }
+        writeableBuffer.asDoubleBuffer().put(0, data, 0, length).flip();
+    }
+
+    public void write(double[] data) {
+        write(data, data.length);
     }
 
     public static VulkanBuffer newIndexBuffer(LogicalDevice device, long size) {

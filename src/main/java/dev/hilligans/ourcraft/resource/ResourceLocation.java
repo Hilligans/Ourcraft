@@ -35,6 +35,18 @@ public class ResourceLocation {
         return source.getModID();
     }
 
+    public ResourceLocation withPrefix(String prefix) {
+        return new ResourceLocation(prefix + this.path, this.sSource);
+    }
+
+    public ResourceLocation withSuffix(String suffix) {
+        return new ResourceLocation(this.path + suffix, this.sSource);
+    }
+
+    public ResourceLocation with(String prefix, String suffix) {
+        return new ResourceLocation(prefix + this.path + suffix, this.sSource);
+    }
+
     @Override
     public String toString() {
         return "ResourceLocation{path='" + path + "\', source=" + (source == null ? sSource : source.getModID()) + "}";

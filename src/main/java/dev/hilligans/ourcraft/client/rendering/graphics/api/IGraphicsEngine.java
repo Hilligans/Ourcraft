@@ -26,7 +26,11 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
 
     void close();
 
-    X getContext();
+    X createContext(Q window);
+
+    default X createContext(Object window) {
+        return createContext((Q)window);
+    }
 
     ArrayList<Q> getWindows();
 
@@ -39,7 +43,7 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
     default Runnable createRenderLoop(GameInstance gameInstance, RenderWindow w) {
         return () -> {
             try {
-                GraphicsContext graphicsContext = getContext();
+                GraphicsContext graphicsContext = createContext(w);
                 System.out.println(w);
                 ISection section = graphicsContext.getSection();
                 try(var $0 = section.startSection("base")) {

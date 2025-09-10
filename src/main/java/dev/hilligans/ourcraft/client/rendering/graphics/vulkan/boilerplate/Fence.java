@@ -19,15 +19,16 @@ public class Fence {
                     .sType(VK_STRUCTURE_TYPE_FENCE_CREATE_INFO)
                     .flags(VK_FENCE_CREATE_SIGNALED_BIT);
             LongBuffer longBuffer = memoryStack.mallocLong(1);
-            if (vkCreateFence(device.device, createInfo, null, longBuffer) != VK_SUCCESS) {
-                throw new RuntimeException();
-            }
+            VkInterface.check(vkCreateFence(device.device, createInfo, null, longBuffer),
+                    "Failed to allocate fence");
+
             handle = longBuffer.get(0);
         }
     }
 
     public void reset() {
-        vkResetFences(device.device, handle);
+        VkInterface.check(vkResetFences(device.device, handle),
+                "Failed to reset fence");
     }
 
     public void await() {
