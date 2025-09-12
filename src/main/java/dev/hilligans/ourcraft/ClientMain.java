@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.data.primitives.IntArrayMap;
 import dev.hilligans.ourcraft.data.primitives.IntArrayMapBuilder;
+import dev.hilligans.ourcraft.mod.handler.pipeline.other.TestPipeline;
 import dev.hilligans.ourcraft.network.Protocol;
 import dev.hilligans.ourcraft.network.engine.INetworkEngine;
 import dev.hilligans.ourcraft.network.engine.NetworkSocket;
@@ -40,7 +41,8 @@ public class ClientMain {
                     "This is needed to see any acceptable values from registry arguments");
     public static final Argument<Protocol> defaultProtocol = Argument.registryArg("--protocol", Protocol.class, "ourcraft:Play")
             .help("The network protocol to use");
-
+    public static final Argument<Boolean> runTests = Argument.existArg("--test")
+            .help("Loads all contents and performs standard tests");
 
 
     public static void main(String[] args) throws IOException {
@@ -62,6 +64,9 @@ public class ClientMain {
             System.exit(0);
         }
 
+        if(runTests.get(gameInstance)) {
+            test(gameInstance);
+        }
 
         gameInstance.THREAD_PROVIDER.map();
         gameInstance.builtSemaphore.acquireUninterruptibly();
@@ -117,5 +122,11 @@ public class ClientMain {
         });
 
         pipeline.build();
+    }
+
+    public static void test(GameInstance gameInstance) {
+        InstanceLoaderPipeline<?> pipeline = TestPipeline.get(gameInstance);
+        pipeline.build();
+        System.exit(0);
     }
 }

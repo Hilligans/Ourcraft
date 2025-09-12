@@ -23,7 +23,7 @@ public class StandardPipeline extends InstanceLoaderPipeline<StandardPipeline> {
     public StandardPipeline(GameInstance gameInstance) {
         super(gameInstance);
     }
-    public static InstanceLoaderPipeline get(GameInstance gameInstance) {
+    public static InstanceLoaderPipeline<?> get(GameInstance gameInstance) {
 
         StandardPipeline pipeline = new StandardPipeline(gameInstance);
         //RegistryView registryView = new RegistryView(gameInstance);

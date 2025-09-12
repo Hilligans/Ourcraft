@@ -12,7 +12,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class InstanceLoaderPipeline<T extends InstanceLoaderPipeline> {
+public class InstanceLoaderPipeline<T extends InstanceLoaderPipeline<?>> {
 
     GameInstance gameInstance;
 

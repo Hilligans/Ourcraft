@@ -57,6 +57,8 @@ import dev.hilligans.ourcraft.schematic.LitematicaSchematicLoader;
 import dev.hilligans.ourcraft.server.authentication.IAuthenticationScheme;
 import dev.hilligans.ourcraft.server.authentication.UnauthenticatedScheme;
 import dev.hilligans.ourcraft.settings.Setting;
+import dev.hilligans.ourcraft.test.ITest;
+import dev.hilligans.ourcraft.test.standard.DuplicateRegistryTest;
 import dev.hilligans.ourcraft.util.argument.ArgumentContainer;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
@@ -143,7 +145,8 @@ public class Ourcraft extends ModClass {
                 new Tuple(EntityType.class, "entity_type"),
                 new Tuple(INetworkEngine.class, "network_engine"),
                 new Tuple(ICommand.class, "command"),
-                new Tuple(IAuthenticationScheme.class, "authentication_scheme")
+                new Tuple(IAuthenticationScheme.class, "authentication_scheme"),
+                new Tuple(ITest.class, "test"),
         };
 
         for(Tuple<Class<? extends IRegistryElement>, String> element : elements) {
@@ -356,6 +359,8 @@ public class Ourcraft extends ModClass {
     public void registerContent(ModContainer modContent) {
         chainedChunkStream.assignOwner(modContent);
         modContent.registerResourceLoader(new LitematicaSchematicLoader());
+
+        modContent.registerTest(new DuplicateRegistryTest());
 
         if(modContent.getGameInstance().getSide().isClient()) {
             modContent.registerRenderTask(new GUIRenderTask());

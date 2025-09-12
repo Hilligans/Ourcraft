@@ -17,7 +17,7 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
     public HashMap<String,T> MAPPED_ELEMENTS = new HashMap<>();
     public ArrayList<T> ELEMENTS = new ArrayList<>();
     public GameInstance gameInstance;
-    public Class<?> classType;
+    public Class<T> classType;
     public String registryType;
 
     public String owner;
@@ -26,7 +26,7 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
 
     public Registry(GameInstance gameInstance, Class<?> classType, String registryType) {
         this.gameInstance = gameInstance;
-        this.classType = classType;
+        this.classType = (Class<T>) classType;
         this.registryType = registryType;
     }
 
@@ -193,6 +193,13 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
             }
         }
         return element;
+    }
+
+    public boolean contains(IRegistryElement element) {
+        if(!canPut(element)) {
+            return false;
+        }
+        return ELEMENTS.contains(element);
     }
 
     public void recursivelyClear() {

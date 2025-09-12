@@ -28,6 +28,7 @@ import dev.hilligans.ourcraft.resource.loaders.ResourceLoader;
 import dev.hilligans.ourcraft.resource.registry.loaders.RegistryLoader;
 import dev.hilligans.ourcraft.server.authentication.IAuthenticationScheme;
 import dev.hilligans.ourcraft.settings.Setting;
+import dev.hilligans.ourcraft.test.ITest;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.util.registry.Registry;
 import dev.hilligans.ourcraft.world.Feature;
@@ -75,6 +76,7 @@ public class ModContainer {
     public Registry<INetworkEngine<?, ?>> networkEngineRegistry;
     public Registry<ICommand> commandRegistry;
     public Registry<IAuthenticationScheme<?>> authenticationSchemeRegistry;
+    public Registry<ITest> testRegistry;
 
     public ModContainer(Class<? extends ModClass> clazz, URLClassLoader classLoader, Path path) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         this.modClass = clazz.getConstructor().newInstance();
@@ -122,6 +124,7 @@ public class ModContainer {
         networkEngineRegistry = (Registry<INetworkEngine<?,?>>) registries.getExcept("ourcraft:network_engine");
         commandRegistry = (Registry<ICommand>) registries.getExcept("ourcraft:command");
         authenticationSchemeRegistry = (Registry<IAuthenticationScheme<?>>) registries.getExcept("ourcraft:authentication_scheme");
+        testRegistry = (Registry<ITest>) registries.getExcept("ourcraft:test");
     }
 
     public String getModID() {
@@ -367,6 +370,13 @@ public class ModContainer {
             scheme.assignOwner(this);
         }
         authenticationSchemeRegistry.putAll(schemes);
+    }
+
+    public void registerTest(ITest... tests) {
+        for(ITest test : tests) {
+            test.assignOwner(this);
+        }
+        testRegistry.putAll(tests);
     }
 
     @Override
