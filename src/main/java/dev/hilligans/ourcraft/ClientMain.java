@@ -100,6 +100,7 @@ public class ClientMain {
                 if(integratedServer.get(gameInstance)) {
                     ServerMain.getServer().stop();
                 }
+                //while(true);
                 System.exit(0);
 
             }).start();

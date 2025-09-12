@@ -37,7 +37,6 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     public final Int2ObjectOpenHashMap<Tuple<Integer, Integer>> meshData = new Int2ObjectOpenHashMap<>();
     public final Int2IntOpenHashMap textureTypes = new Int2IntOpenHashMap();
     public final Int2LongOpenHashMap vertexArrayObjects = new Int2LongOpenHashMap();
-    public final Int2ObjectOpenHashMap<VertexMesh> meshReferences = new Int2ObjectOpenHashMap<>();
     public final Int2IntOpenHashMap fbos = new Int2IntOpenHashMap();
 
     public final boolean trackingResourceAllocations = true;
@@ -96,7 +95,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         mesh.destroy();
 
-        meshReferences.put(VAO, mesh);
+        //meshReferences.put(VAO, mesh);
         meshData.put(VAO, new Tuple<>(mesh.vertexFormat.primitiveType, mesh.elementSize == 4 ? GL_UNSIGNED_INT : GL_UNSIGNED_SHORT));
         vertexArrayObjects.put(VAO, ((long)VBO << 32) | (long)EBO);
         if(trackingResourceAllocations) {
@@ -109,7 +108,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     public void destroyMesh(GraphicsContext graphicsContext, long mesh) {
         long array = vertexArrayObjects.get((int)mesh);
         meshData.remove((int)mesh);
-        glDeleteBuffers((int)mesh);
+        glDeleteVertexArrays((int)mesh);
         if((int)array != 0) {
             glDeleteBuffers((int) array);
         }
@@ -199,7 +198,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
 
         glDrawElements(mesh.vertexFormat.primitiveType,mesh.indices.limit(),GL_UNSIGNED_INT,0);
 
-        glDeleteBuffers(VAO);
+        glDeleteVertexArrays(VAO);
         glDeleteBuffers(VBO);
         glDeleteBuffers(EBO);
     }

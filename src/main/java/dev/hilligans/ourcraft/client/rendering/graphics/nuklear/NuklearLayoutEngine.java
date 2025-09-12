@@ -93,8 +93,8 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
             //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-            //memFree(texture);
-            //memFree(bitmap);
+            memFree(texture);
+            memFree(bitmap);
         }
 
         default_font

@@ -89,14 +89,7 @@ public class GUIRenderTask extends RenderTaskSource {
                 if (client.screen != null) {
                     client.screen.render(window, screenStack, graphicsContext);
                   //  client.playerData.heldStack.renderStack(screenStack, (int) (Camera.newX - Settings.guiSize * 8), (int) (Camera.newY - Settings.guiSize * 8));
-                } //else {
-                   // Textures.CURSOR.drawCenteredTexture(window, screenStack,1.0f);
-                 //   if (KeyHandler.keyPressed[GLFW_KEY_TAB]) {
-                //        if (client.playerList != null) {
-                          //  client.playerList.render(screenStack);
-                //        }
-               //     }
-             //   }
+                }
             }
 
             public void recursiveDraw(StringRenderer stringRenderer, RenderWindow renderWindow, GraphicsContext graphicsContext, MatrixStack matrixStack, ProfiledSection.StackFrame stackFrame, int[] y, long time) {

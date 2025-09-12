@@ -55,7 +55,7 @@ public class Client {
 
     public boolean valid = false;
     public boolean screenShot = false;
-    public boolean renderWorld = true;
+    public boolean renderWorld = false;
     public PlayerList playerList;
     public boolean glStarted = false;
     public long renderTime = 0;

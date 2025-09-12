@@ -36,7 +36,6 @@ public class JoinScreen extends ScreenBase {
         int windowY = (int) window.getWindowHeight();
 
         Client client = getClient();
-
         play = new Button(100, windowY / 2 + 100, 200, 50, "menu.join", () -> {
             if(selected != null) {
                 selected.joinServer();
