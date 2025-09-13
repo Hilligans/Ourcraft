@@ -1,10 +1,10 @@
 package dev.hilligans.ourcraft.container;
 
-import dev.hilligans.ourcraft.client.MatrixStack;
+import dev.hilligans.engine.client.graphics.MatrixStack;
 import dev.hilligans.ourcraft.data.other.IInventory;
-import dev.hilligans.ourcraft.data.primitives.IntegerWrapper;
-import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.ourcraft.data.other.server.IInventoryChanged;
+import dev.hilligans.engine.data.IntegerWrapper;
+import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.ourcraft.util.Settings;
 
 public class Slot implements IInventoryChanged {

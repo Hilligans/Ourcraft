@@ -1,30 +1,27 @@
 package dev.hilligans.ourcraft.data.other.server;
 
-import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.container.Container;
 import dev.hilligans.ourcraft.container.Slot;
 import dev.hilligans.ourcraft.container.containers.InventoryContainer;
-import dev.hilligans.ourcraft.data.UUID;
+import dev.hilligans.engine.data.UUID;
 import dev.hilligans.ourcraft.data.other.Inventory;
 import dev.hilligans.ourcraft.entity.IPlayerEntity;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.item.ItemStack;
-import dev.hilligans.ourcraft.network.*;
-import dev.hilligans.ourcraft.network.engine.NetworkEntity;
-import dev.hilligans.ourcraft.save.WorldLoader;
+import dev.hilligans.engine.network.engine.NetworkEntity;
+import dev.hilligans.engine.save.FileLoader;
 import dev.hilligans.ourcraft.server.IServer;
-import dev.hilligans.ourcraft.tag.CompoundNBTTag;
+import dev.hilligans.engine.tag.CompoundNBTTag;
 import dev.hilligans.ourcraft.util.EntityPosition;
-import dev.hilligans.ourcraft.util.IByteArray;
+import dev.hilligans.engine.util.IByteArray;
 import dev.hilligans.ourcraft.util.Settings;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelId;
 
 import java.util.HashMap;
 
-public class ServerPlayerData implements IServerPacketHandler {
+public class ServerPlayerData {
 
     IServer server;
 
@@ -109,7 +106,7 @@ public class ServerPlayerData implements IServerPacketHandler {
     }
 
     public static ServerPlayerData loadOrCreatePlayer(GameInstance gameInstance, PlayerEntity playerEntity, String id) {
-        CompoundNBTTag tag = WorldLoader.loadTag(path + id + ".dat");
+        CompoundNBTTag tag = FileLoader.loadTag(path + id + ".dat");
             if(tag == null) {
             return new ServerPlayerData(gameInstance, playerEntity,id);
         } else {
@@ -152,7 +149,7 @@ public class ServerPlayerData implements IServerPacketHandler {
     public void save() {
         CompoundNBTTag compoundTag = new CompoundNBTTag();
         write(compoundTag);
-        WorldLoader.save(compoundTag,ServerPlayerData.path + id + ".dat");
+        FileLoader.save(compoundTag,ServerPlayerData.path + id + ".dat");
     }
 
     public int getDimension() {
@@ -215,33 +212,15 @@ public class ServerPlayerData implements IServerPacketHandler {
         openContainer.closeContainer();
     }
 
-    @Override
     public IServer getServer() {
         return server;
     }
 
-    @Override
     public IServerWorld getWorld() {
         return server.getWorld(this);
     }
 
-    @Override
-    public ServerPlayerData getServerPlayerData() {
-        return this;
-    }
-
-    @Override
     public PlayerEntity getPlayerEntity() {
         return playerEntity;
-    }
-
-    @Override
-    public ServerNetworkHandler getServerNetworkHandler() {
-        return null;
-    }
-
-    @Override
-    public void disconnect(String reason) {
-
     }
 }

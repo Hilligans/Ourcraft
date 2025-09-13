@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.data.other;
 
+import dev.hilligans.engine.data.RectangleBB;
 import org.joml.Vector2d;
 import org.joml.Vector2f;
 

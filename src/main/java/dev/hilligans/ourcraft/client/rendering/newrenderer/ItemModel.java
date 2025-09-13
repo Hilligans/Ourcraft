@@ -1,8 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering.newrenderer;
 
-import dev.hilligans.ourcraft.client.rendering.world.managers.BlockTextureManager;
 import dev.hilligans.ourcraft.util.Settings;
-import org.joml.Vector3f;
 
 public class ItemModel implements IModel {
 

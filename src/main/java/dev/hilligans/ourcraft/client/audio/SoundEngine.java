@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.client.audio;
 
-import dev.hilligans.ourcraft.GameInstance;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.ICamera;
+import dev.hilligans.engine.GameInstance;
+import dev.hilligans.engine.client.graphics.api.ICamera;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.lwjgl.openal.AL;

@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.world.data.providers;
 
 import dev.hilligans.ourcraft.data.other.Inventory;
-import dev.hilligans.ourcraft.tag.CompoundNBTTag;
+import dev.hilligans.engine.tag.CompoundNBTTag;
 import dev.hilligans.ourcraft.world.DataProvider;
 
 public class ChestDataProvider extends DataProvider {

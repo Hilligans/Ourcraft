@@ -3,7 +3,7 @@ package dev.hilligans.ourcraft.world.newworldsystem;
 import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.ChunkPos;
-import dev.hilligans.ourcraft.data.other.IBoundingBox;
+import dev.hilligans.engine.data.IBoundingBox;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Intersectionf;

@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.client;
 
-import dev.hilligans.ourcraft.data.primitives.Tuple;
+import dev.hilligans.engine.data.Tuple;
 
 import java.util.ArrayList;
 

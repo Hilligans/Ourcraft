@@ -1,10 +1,10 @@
 package dev.hilligans.ourcraft.client.rendering.widgets;
 
-import dev.hilligans.ourcraft.client.MatrixStack;
+import dev.hilligans.engine.client.graphics.MatrixStack;
 import dev.hilligans.ourcraft.client.lang.Languages;
 import dev.hilligans.ourcraft.client.rendering.Textures;
-import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
+import dev.hilligans.engine.client.graphics.RenderWindow;
+import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import org.lwjgl.opengl.GL11;
 
 public class ToggleWidget extends Widget {

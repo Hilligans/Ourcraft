@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.screens;
 
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
-import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
+import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.widgets.Button;
 import dev.hilligans.ourcraft.client.rendering.widgets.SliderWidget;
 import dev.hilligans.ourcraft.client.rendering.widgets.ToggleWidget;

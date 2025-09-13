@@ -1,39 +1,37 @@
 package dev.hilligans.ourcraft.client;
 
-import dev.hilligans.ourcraft.application.IApplication;
-import dev.hilligans.ourcraft.client.input.InputHandler;
-import dev.hilligans.ourcraft.client.input.key.MouseHandler;
-import dev.hilligans.ourcraft.client.rendering.ContainerScreen;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.IInputProvider;
-import dev.hilligans.ourcraft.client.rendering.graphics.opengl.OpenGLEngine;
-import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
-import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanEngine;
-import dev.hilligans.ourcraft.client.rendering.Screen;
-import dev.hilligans.ourcraft.client.rendering.ScreenBuilder;
-import dev.hilligans.ourcraft.client.rendering.screens.JoinScreen;
-import dev.hilligans.ourcraft.client.rendering.screens.container.screens.InventoryScreen;
-import dev.hilligans.ourcraft.EngineMain;
-import dev.hilligans.ourcraft.container.Container;
-import dev.hilligans.ourcraft.data.other.PlayerList;
-import dev.hilligans.ourcraft.GameInstance;
-import dev.hilligans.ourcraft.item.ItemStack;
-import dev.hilligans.ourcraft.mod.handler.events.client.OpenScreenEvent;
-import dev.hilligans.ourcraft.network.*;
-import dev.hilligans.ourcraft.network.engine.NetworkSocket;
-import dev.hilligans.ourcraft.network.packet.client.COpenScreen;
+import dev.hilligans.engine.EngineMain;
+import dev.hilligans.engine.GameInstance;
+import dev.hilligans.engine.application.IApplication;
 import dev.hilligans.ourcraft.client.audio.SoundBuffer;
 import dev.hilligans.ourcraft.client.audio.SoundEngine;
-import dev.hilligans.ourcraft.tag.CompoundNBTTag;
-import dev.hilligans.ourcraft.util.argument.Argument;
-import dev.hilligans.ourcraft.util.argument.ArgumentContainer;
+import dev.hilligans.engine.client.input.InputHandler;
+import dev.hilligans.engine.client.input.key.MouseHandler;
+import dev.hilligans.ourcraft.client.rendering.ContainerScreen;
+import dev.hilligans.ourcraft.client.rendering.Screen;
+import dev.hilligans.ourcraft.client.rendering.ScreenBuilder;
+import dev.hilligans.engine.client.graphics.RenderWindow;
+import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
+import dev.hilligans.engine.client.graphics.api.IInputProvider;
+import dev.hilligans.engine.client.graphics.opengl.OpenGLEngine;
+import dev.hilligans.engine.client.graphics.vulkan.VulkanEngine;
+import dev.hilligans.ourcraft.client.rendering.screens.JoinScreen;
+import dev.hilligans.ourcraft.client.rendering.screens.container.screens.InventoryScreen;
+import dev.hilligans.ourcraft.container.Container;
+import dev.hilligans.ourcraft.data.other.PlayerList;
+import dev.hilligans.ourcraft.item.ItemStack;
+import dev.hilligans.engine.mod.handler.events.client.OpenScreenEvent;
+import dev.hilligans.engine.network.engine.NetworkSocket;
+import dev.hilligans.engine.save.FileLoader;
+import dev.hilligans.engine.tag.CompoundNBTTag;
 import dev.hilligans.ourcraft.util.Logger;
-import dev.hilligans.ourcraft.util.ThreadContext;
+import dev.hilligans.ourcraft.util.Settings;
+import dev.hilligans.engine.util.ThreadContext;
+import dev.hilligans.engine.util.argument.Argument;
+import dev.hilligans.engine.util.argument.ArgumentContainer;
 import dev.hilligans.ourcraft.util.registry.Registry;
 import dev.hilligans.ourcraft.world.newworldsystem.ClientCubicWorld;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
-import dev.hilligans.ourcraft.save.WorldLoader;
-import dev.hilligans.ourcraft.util.Settings;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL11;
 
@@ -192,7 +190,6 @@ public class Client implements IApplication {
             playerData.openContainer = container;
         }
         screen1.resize(renderWindow.getWindowWidth(),renderWindow.getWindowHeight());
-        sendPacket(new COpenScreen(screen1));
     }
 
     public void openScreen(Container container) {
@@ -222,10 +219,6 @@ public class Client implements IApplication {
     public static long timeSinceLastDraw = 0;
     public static float drawTime = 1000f * 1000000 / Settings.maxFps;
 
-    public void sendPacket(PacketBase<?> packetBase) {
-       //  network.sendPacket(packetBase);
-    }
-
     public DoubleBuffer getMousePos() {
         DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
         DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
@@ -244,7 +237,7 @@ public class Client implements IApplication {
     public void saveUsernameAndPassword() {
          CompoundNBTTag tag = new CompoundNBTTag();
          writeUsernameAndPassword(tag);
-         WorldLoader.save(tag,"clientData.dat");
+         FileLoader.save(tag,"clientData.dat");
     }
 
     public long getRenderTime() {

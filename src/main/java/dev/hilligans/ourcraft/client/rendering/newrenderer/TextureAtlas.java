@@ -1,16 +1,12 @@
 package dev.hilligans.ourcraft.client.rendering.newrenderer;
 
-import dev.hilligans.ourcraft.GameInstance;
-import dev.hilligans.ourcraft.client.rendering.world.managers.WorldTextureManager;
-import dev.hilligans.ourcraft.data.primitives.Triplet;
-import dev.hilligans.ourcraft.util.NamedThreadFactory;
+import dev.hilligans.engine.GameInstance;
+import dev.hilligans.engine.data.Triplet;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class TextureAtlas {
 

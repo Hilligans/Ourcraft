@@ -1,13 +1,13 @@
 package dev.hilligans.ourcraft.entity.entities;
 
 import dev.hilligans.ourcraft.block.Block;
-import dev.hilligans.ourcraft.client.MatrixStack;
+import dev.hilligans.engine.client.graphics.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.world.managers.VAOManager;
-import dev.hilligans.ourcraft.data.other.BoundingBox;
+import dev.hilligans.engine.data.BoundingBox;
 import dev.hilligans.ourcraft.entity.Entity;
 import dev.hilligans.ourcraft.item.BlockItem;
 import dev.hilligans.ourcraft.item.ItemStack;
-import dev.hilligans.ourcraft.network.IPacketByteArray;
+import dev.hilligans.engine.network.IPacketByteArray;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 
 public class ItemEntity extends Entity {

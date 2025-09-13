@@ -1,14 +1,10 @@
 package dev.hilligans.ourcraft.client.rendering.widgets;
 
-import dev.hilligans.ourcraft.Ourcraft;
-import dev.hilligans.ourcraft.client.MatrixStack;
-import dev.hilligans.ourcraft.client.rendering.Textures;
-import dev.hilligans.ourcraft.client.rendering.VertexMesh;
-import dev.hilligans.ourcraft.client.rendering.graphics.FrameTracker;
-import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
-import dev.hilligans.ourcraft.client.rendering.graphics.ShaderSource;
-import dev.hilligans.ourcraft.client.rendering.graphics.VertexFormat;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
+import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.FrameTracker;
+import dev.hilligans.engine.client.graphics.RenderWindow;
+import dev.hilligans.engine.client.graphics.ShaderSource;
+import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 
 public class FrameTimeWidget extends Widget {
 

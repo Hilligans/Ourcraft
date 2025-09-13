@@ -1,7 +1,7 @@
 package dev.hilligans.planets;
 
-import dev.hilligans.ourcraft.mod.handler.ModClass;
-import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.handler.ModClass;
+import dev.hilligans.engine.mod.handler.content.ModContainer;
 
 public class Planets extends ModClass {
 

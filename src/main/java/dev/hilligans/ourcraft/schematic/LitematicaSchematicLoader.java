@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.schematic;
 
-import dev.hilligans.ourcraft.resource.loaders.ResourceLoader;
-import dev.hilligans.ourcraft.tag.CompoundNBTTag;
+import dev.hilligans.engine.resource.loaders.ResourceLoader;
+import dev.hilligans.engine.tag.CompoundNBTTag;
 
 import java.nio.ByteBuffer;
 

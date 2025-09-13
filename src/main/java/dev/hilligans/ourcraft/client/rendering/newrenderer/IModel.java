@@ -1,8 +1,5 @@
 package dev.hilligans.ourcraft.client.rendering.newrenderer;
 
-import dev.hilligans.ourcraft.client.rendering.world.managers.BlockTextureManager;
-import org.joml.Vector3f;
-
 public interface IModel {
 
     float[] getVertices(int side);

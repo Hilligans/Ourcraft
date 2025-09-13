@@ -1,10 +1,9 @@
 package dev.hilligans.ourcraft.client.rendering.newrenderer;
 
-import dev.hilligans.ourcraft.GameInstance;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
-import dev.hilligans.ourcraft.Ourcraft;
-import dev.hilligans.ourcraft.resource.ResourceLocation;
-import dev.hilligans.ourcraft.util.NamedThreadFactory;
+import dev.hilligans.engine.GameInstance;
+import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
+import dev.hilligans.engine.resource.ResourceLocation;
+import dev.hilligans.engine.util.NamedThreadFactory;
 import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import org.lwjgl.system.MemoryStack;
 

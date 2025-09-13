@@ -1,7 +1,5 @@
 package dev.hilligans.ourcraft.client.rendering.layout.parser;
 
-import dev.hilligans.ourcraft.client.rendering.layout.LList;
-import dev.hilligans.ourcraft.client.rendering.layout.LText;
 import dev.hilligans.ourcraft.client.rendering.layout.LWidget;
 import org.json.JSONObject;
 

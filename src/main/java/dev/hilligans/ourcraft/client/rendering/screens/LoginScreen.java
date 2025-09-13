@@ -4,7 +4,6 @@ import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
 import dev.hilligans.ourcraft.client.rendering.widgets.Button;
 import dev.hilligans.ourcraft.client.rendering.widgets.InputField;
-import dev.hilligans.ourcraft.network.packet.auth.CLogin;
 
 public class LoginScreen extends ScreenBase {
 

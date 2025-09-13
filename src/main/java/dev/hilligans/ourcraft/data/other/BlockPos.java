@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.data.other;
 
+import dev.hilligans.engine.data.BoundingBox;
 import dev.hilligans.ourcraft.util.IPosition;
 import org.joml.Matrix3f;
 import org.joml.Vector3d;

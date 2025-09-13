@@ -1,17 +1,16 @@
 package dev.hilligans.ourcraft.client.rendering;
 
-import dev.hilligans.ourcraft.client.MatrixStack;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.*;
-import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
-import dev.hilligans.ourcraft.client.rendering.graphics.ShaderSource;
+import dev.hilligans.engine.GameInstance;
+import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.RenderWindow;
+import dev.hilligans.engine.client.graphics.ShaderSource;
+import dev.hilligans.engine.client.graphics.api.*;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
-import dev.hilligans.ourcraft.GameInstance;
-import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
-import dev.hilligans.ourcraft.mod.handler.content.ModContent;
-import dev.hilligans.ourcraft.resource.ResourceLocation;
-import dev.hilligans.ourcraft.util.UniqueResource;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.resource.ResourceLocation;
 import dev.hilligans.ourcraft.util.Settings;
+import dev.hilligans.engine.util.UniqueResource;
+import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import org.jetbrains.annotations.NotNull;
 
 public class Texture implements IRegistryElement, IGraphicsElement {

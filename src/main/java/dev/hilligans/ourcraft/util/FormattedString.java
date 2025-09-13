@@ -1,7 +1,5 @@
 package dev.hilligans.ourcraft.util;
 
-import java.util.List;
-
 public class FormattedString {
 
     /*public static StringTemplate.Processor<String, RuntimeException> FSTR = FormattedString::interpolate;

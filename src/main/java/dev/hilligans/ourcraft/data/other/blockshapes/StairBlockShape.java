@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.data.other.blockshapes;
 
 import dev.hilligans.ourcraft.data.other.BlockPos;
-import dev.hilligans.ourcraft.data.other.BoundingBox;
+import dev.hilligans.engine.data.BoundingBox;
 import dev.hilligans.ourcraft.data.other.JoinedBoundingBox;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 

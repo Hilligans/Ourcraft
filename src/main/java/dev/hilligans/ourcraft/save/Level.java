@@ -1,8 +1,8 @@
 package dev.hilligans.ourcraft.save;
 
 import dev.hilligans.ourcraft.block.Block;
-import dev.hilligans.ourcraft.data.primitives.Tuple;
-import dev.hilligans.ourcraft.tag.CompoundNBTTag;
+import dev.hilligans.engine.data.Tuple;
+import dev.hilligans.engine.tag.CompoundNBTTag;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import java.util.HashMap;

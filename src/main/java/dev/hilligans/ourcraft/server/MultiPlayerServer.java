@@ -1,27 +1,23 @@
 package dev.hilligans.ourcraft.server;
 
+import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
-import dev.hilligans.ourcraft.data.primitives.Tuple;
+import dev.hilligans.engine.data.Tuple;
 import dev.hilligans.ourcraft.entity.Entity;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
-import dev.hilligans.ourcraft.GameInstance;
-import dev.hilligans.ourcraft.mod.handler.events.server.MultiPlayerServerStartEvent;
-import dev.hilligans.ourcraft.network.AuthenticationException;
-import dev.hilligans.ourcraft.network.PacketBase;
-import dev.hilligans.ourcraft.network.Protocol;
-import dev.hilligans.ourcraft.network.engine.INetworkEngine;
-import dev.hilligans.ourcraft.network.engine.NetworkEntity;
-import dev.hilligans.ourcraft.network.engine.NetworkSocket;
-import dev.hilligans.ourcraft.network.packet.client.CHandshakePacket;
-import dev.hilligans.ourcraft.network.packet.server.SDisconnectPacket;
-import dev.hilligans.ourcraft.network.ServerNetworkHandler;
-import dev.hilligans.ourcraft.server.authentication.IAccount;
-import dev.hilligans.ourcraft.server.authentication.IAuthenticationScheme;
-import dev.hilligans.ourcraft.util.IByteArray;
-import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
-import dev.hilligans.ourcraft.util.NamedThreadFactory;
+import dev.hilligans.engine.mod.handler.events.server.MultiPlayerServerStartEvent;
+import dev.hilligans.engine.network.AuthenticationException;
+import dev.hilligans.engine.network.Protocol;
+import dev.hilligans.engine.network.engine.INetworkEngine;
+import dev.hilligans.engine.network.engine.NetworkEntity;
+import dev.hilligans.engine.network.engine.NetworkSocket;
+import dev.hilligans.engine.authentication.IAccount;
+import dev.hilligans.engine.authentication.IAuthenticationScheme;
+import dev.hilligans.engine.util.IByteArray;
+import dev.hilligans.engine.util.NamedThreadFactory;
 import dev.hilligans.ourcraft.util.Settings;
+import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
 import io.netty.channel.ChannelHandlerContext;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
@@ -37,7 +33,6 @@ public class MultiPlayerServer implements IServer {
     public long time = 0;
 
     public Int2ObjectOpenHashMap<IServerWorld> newWorlds = new Int2ObjectOpenHashMap<>();
-    public HashMap<ChannelHandlerContext, CHandshakePacket> waitingPlayers = new HashMap<>();
     public HashMap<String, Tuple<ChannelHandlerContext,Long>> playerQueue = new HashMap<>();
     public GameInstance gameInstance;
     public boolean running = true;
@@ -122,19 +117,6 @@ public class MultiPlayerServer implements IServer {
     }
 
     @Override
-    public ServerNetworkHandler getServerNetworkHandler() {
-        return null;
-    }
-
-    public void sendPacket(PacketBase<?> packetBase) {
-        getServerNetworkHandler().sendPacketInternal(packetBase);
-    }
-
-    public void sendPacket(PacketBase<?> packetBase, PlayerEntity playerEntity) {
-        getServerNetworkHandler().sendPacket(packetBase,playerEntity);
-    }
-
-    @Override
     public void sendPacket(Protocol matchingProtocol, IByteArray array) {
         playerMap.forEachKey(Integer.MAX_VALUE, (key) -> {if(key.networkEntity.getSendProtocol().equals(matchingProtocol)) { key.sendPacket(array);}});
     }
@@ -192,9 +174,9 @@ public class MultiPlayerServer implements IServer {
             for(String key : server.playerQueue.keySet()) {
                 Tuple<ChannelHandlerContext,Long> player = server.playerQueue.get(key);
                 if(player.getTypeB() < time) {
-                    server.waitingPlayers.remove(player.typeA);
-                    server.playerQueue.remove(key);
-                    ServerNetworkHandler.sendPacketClose(new SDisconnectPacket("could not authorize your game"),player.typeA);
+                    //server.waitingPlayers.remove(player.typeA);
+                    //server.playerQueue.remove(key);
+                    //ServerNetworkHandler.sendPacketClose(new SDisconnectPacket("could not authorize your game"),player.typeA);
                 }
             }
         }

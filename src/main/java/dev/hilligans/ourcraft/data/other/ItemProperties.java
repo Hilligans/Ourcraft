@@ -7,7 +7,7 @@ import dev.hilligans.ourcraft.client.rendering.world.managers.ItemTextureManager
 import dev.hilligans.ourcraft.data.descriptors.TagCollection;
 import dev.hilligans.ourcraft.item.BlockItem;
 import dev.hilligans.ourcraft.item.Item;
-import dev.hilligans.ourcraft.mod.handler.content.ModContent;
+import dev.hilligans.engine.mod.handler.content.ModContent;
 import org.json.JSONObject;
 
 public class ItemProperties {

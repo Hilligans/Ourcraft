@@ -3,10 +3,9 @@ package dev.hilligans.ourcraft.client.rendering.screens;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
 import dev.hilligans.ourcraft.client.rendering.widgets.Button;
 import dev.hilligans.ourcraft.client.rendering.widgets.FolderWidget;
-import dev.hilligans.ourcraft.data.primitives.IntegerWrapper;
-import dev.hilligans.ourcraft.save.FileLoader;
-import dev.hilligans.ourcraft.save.WorldLoader;
-import dev.hilligans.ourcraft.tag.CompoundNBTTag;
+import dev.hilligans.engine.data.IntegerWrapper;
+import dev.hilligans.engine.save.FileLoader;
+import dev.hilligans.engine.tag.CompoundNBTTag;
 import org.lwjgl.PointerBuffer;
 
 public class TagEditorScreen extends ScreenBase {
@@ -26,7 +25,7 @@ public class TagEditorScreen extends ScreenBase {
             @Override
             public void success(PointerBuffer path) {
                 path.mark();
-                compoundTag = WorldLoader.loadTag(path.getStringUTF8());
+                compoundTag = FileLoader.loadTag(path.getStringUTF8());
                 path.reset();
                 filePath = path.getStringUTF8();
                 yOffset = new IntegerWrapper(0);
@@ -40,7 +39,7 @@ public class TagEditorScreen extends ScreenBase {
                 getClient().openScreen(new JoinScreen());
             }
         })));
-        addWidget(new Button(100, 0, 100, 40, "Save", () -> WorldLoader.save(compoundTag,filePath)));
+        addWidget(new Button(100, 0, 100, 40, "Save", () -> FileLoader.save(compoundTag,filePath)));
     }
 
     @Override

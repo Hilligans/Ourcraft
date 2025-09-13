@@ -1,22 +1,17 @@
 package dev.hilligans.ourcraft.entity;
 
+import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.Blocks;
-import dev.hilligans.ourcraft.client.MatrixStack;
-import dev.hilligans.ourcraft.data.other.BoundingBox;
-import dev.hilligans.ourcraft.entity.entities.ItemEntity;
-import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
-import dev.hilligans.ourcraft.network.IPacketByteArray;
-import dev.hilligans.ourcraft.network.packet.server.SUpdateEntityPacket;
+import dev.hilligans.engine.client.graphics.MatrixStack;
 import dev.hilligans.ourcraft.data.other.BlockPos;
-import dev.hilligans.ourcraft.ServerMain;
+import dev.hilligans.engine.data.BoundingBox;
+import dev.hilligans.engine.network.IPacketByteArray;
 import dev.hilligans.ourcraft.util.EntityPosition;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 import org.joml.Vector2f;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
-
-import java.util.ArrayList;
 
 public abstract class Entity {
 
@@ -146,7 +141,7 @@ public abstract class Entity {
             velX = velX * slowAmount;
             velY = velY * slowAmount;
             velZ = velZ * slowAmount;
-            ServerMain.getServer().sendPacket(new SUpdateEntityPacket(this));
+            //ServerMain.getServer().sendPacket(new SUpdateEntityPacket(this));
         }
     }
 

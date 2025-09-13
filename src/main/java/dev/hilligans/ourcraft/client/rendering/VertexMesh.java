@@ -1,14 +1,12 @@
 package dev.hilligans.ourcraft.client.rendering;
 
-import dev.hilligans.ourcraft.client.rendering.graphics.VertexFormat;
-import dev.hilligans.ourcraft.resource.IAllocator;
-import org.joml.Matrix4f;
+import dev.hilligans.engine.client.graphics.VertexFormat;
+import dev.hilligans.engine.resource.IAllocator;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.ArrayList;
 
 public class VertexMesh implements IAllocator<VertexMesh> {
 

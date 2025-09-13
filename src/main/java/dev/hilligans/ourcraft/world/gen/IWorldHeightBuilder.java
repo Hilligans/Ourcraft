@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.world.gen;
 
-import dev.hilligans.ourcraft.data.other.BoundingBox;
+import dev.hilligans.engine.data.BoundingBox;
 
 public interface IWorldHeightBuilder {
 

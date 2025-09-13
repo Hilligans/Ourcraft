@@ -1,8 +1,5 @@
 package dev.hilligans.ourcraft.client.rendering.layout;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 

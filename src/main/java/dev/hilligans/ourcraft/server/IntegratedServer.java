@@ -1,17 +1,13 @@
 package dev.hilligans.ourcraft.server;
 
-import dev.hilligans.ourcraft.GameInstance;
-import dev.hilligans.ourcraft.command.Commands;
+import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
-import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
-import dev.hilligans.ourcraft.network.PacketBase;
-import dev.hilligans.ourcraft.network.Protocol;
-import dev.hilligans.ourcraft.network.ServerNetworkHandler;
-import dev.hilligans.ourcraft.network.engine.NetworkEntity;
-import dev.hilligans.ourcraft.server.authentication.IAccount;
-import dev.hilligans.ourcraft.util.IByteArray;
-import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
+import dev.hilligans.engine.network.Protocol;
+import dev.hilligans.engine.network.engine.NetworkEntity;
+import dev.hilligans.engine.authentication.IAccount;
 import dev.hilligans.ourcraft.util.ConsoleReader;
+import dev.hilligans.engine.util.IByteArray;
+import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -76,23 +72,6 @@ public class IntegratedServer implements IServer {
         }
         return null;
         //return Commands.executeCommand(command, null);
-    }
-
-    @Override
-    public ServerNetworkHandler getServerNetworkHandler() {
-        return null;
-    }
-
-    @Override
-    public void sendPacket(PacketBase<?> packetBase) {
-       // PacketData packetData = new PacketData(packetBase);
-       // PacketBase packet = packetData.createPacket();
-       // packet.handle();
-    }
-
-    @Override
-    public void sendPacket(PacketBase<?> packetBase, PlayerEntity playerEntity) {
-        sendPacket(packetBase);
     }
 
     @Override

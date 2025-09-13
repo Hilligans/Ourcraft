@@ -1,9 +1,9 @@
 package dev.hilligans.ourcraft.world.newworldsystem;
 
 import dev.hilligans.ourcraft.data.other.BlockPos;
-import dev.hilligans.ourcraft.data.other.BoundingBox;
+import dev.hilligans.engine.data.BoundingBox;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
-import dev.hilligans.ourcraft.network.packet.packet.SSendChunkPacket;
+import dev.hilligans.ourcraft.network.packet.SSendChunkPacket;
 import dev.hilligans.ourcraft.server.IServer;
 import dev.hilligans.ourcraft.server.concurrent.ChunkLocker;
 

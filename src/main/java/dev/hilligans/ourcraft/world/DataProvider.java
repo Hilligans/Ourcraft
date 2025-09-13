@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.world;
 
-import dev.hilligans.ourcraft.tag.CompoundNBTTag;
+import dev.hilligans.engine.tag.CompoundNBTTag;
 
 public class DataProvider {
 

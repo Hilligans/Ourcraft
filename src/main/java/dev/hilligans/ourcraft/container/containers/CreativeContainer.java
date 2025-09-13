@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.container.containers;
 
-import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.rendering.ContainerScreen;
 import dev.hilligans.ourcraft.client.rendering.screens.container.screens.CreativeInventoryScreen;

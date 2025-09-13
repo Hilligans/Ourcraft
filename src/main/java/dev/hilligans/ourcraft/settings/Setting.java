@@ -1,8 +1,7 @@
 package dev.hilligans.ourcraft.settings;
 
-import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
-import dev.hilligans.ourcraft.mod.handler.content.ModContent;
-import dev.hilligans.ourcraft.util.Side;
+import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.util.Side;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 
 public abstract class Setting implements IRegistryElement {

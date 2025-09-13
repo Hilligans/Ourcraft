@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.util;
 
-import dev.hilligans.ourcraft.data.other.BoundingBox;
+import dev.hilligans.engine.data.BoundingBox;
 
 public class Settings {
 

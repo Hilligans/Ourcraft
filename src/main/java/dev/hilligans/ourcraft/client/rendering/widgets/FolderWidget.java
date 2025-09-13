@@ -1,12 +1,12 @@
 package dev.hilligans.ourcraft.client.rendering.widgets;
 
-import dev.hilligans.ourcraft.client.MatrixStack;
-import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
-import dev.hilligans.ourcraft.data.primitives.IntegerWrapper;
-import dev.hilligans.ourcraft.tag.CompoundNBTTag;
-import dev.hilligans.ourcraft.tag.ListNBTTag;
-import dev.hilligans.ourcraft.tag.NBTTag;
+import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.RenderWindow;
+import dev.hilligans.engine.client.graphics.api.GraphicsContext;
+import dev.hilligans.engine.data.IntegerWrapper;
+import dev.hilligans.engine.tag.CompoundNBTTag;
+import dev.hilligans.engine.tag.ListNBTTag;
+import dev.hilligans.engine.tag.NBTTag;
 
 import java.util.ArrayList;
 import java.util.TreeMap;

@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.util;
 
-import dev.hilligans.ourcraft.tag.CompoundNBTTag;
+import dev.hilligans.engine.util.IByteArray;
+import dev.hilligans.engine.tag.CompoundNBTTag;
 
 public interface IPosition {
 

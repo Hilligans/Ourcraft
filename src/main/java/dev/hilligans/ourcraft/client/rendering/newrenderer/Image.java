@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.newrenderer;
 
-import dev.hilligans.ourcraft.resource.EmptyAllocator;
-import dev.hilligans.ourcraft.resource.IAllocator;
+import dev.hilligans.engine.resource.EmptyAllocator;
+import dev.hilligans.engine.resource.IAllocator;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 

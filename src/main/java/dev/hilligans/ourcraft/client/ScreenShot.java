@@ -1,13 +1,13 @@
 package dev.hilligans.ourcraft.client;
 
-import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
+import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
 import dev.hilligans.ourcraft.client.rendering.world.managers.WorldTextureManager;
-import dev.hilligans.ourcraft.data.primitives.Triplet;
+import dev.hilligans.engine.data.Triplet;
 import org.lwjgl.opengl.GL11;
 
 import javax.imageio.ImageIO;
-import java.awt.Color;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -15,8 +15,8 @@ import java.nio.ByteBuffer;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30C.glBindFramebuffer;
 
 public class ScreenShot {

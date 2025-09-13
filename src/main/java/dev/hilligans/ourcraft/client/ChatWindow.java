@@ -1,12 +1,9 @@
 package dev.hilligans.ourcraft.client;
 
-import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.Screen;
-import dev.hilligans.ourcraft.Ourcraft;
+import dev.hilligans.engine.client.graphics.RenderWindow;
 
 import java.util.ArrayList;
-
-import static org.lwjgl.glfw.GLFW.*;
 
 public class ChatWindow implements Screen {
 

@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.entity;
 
-import dev.hilligans.ourcraft.network.IPacketByteArray;
+import dev.hilligans.engine.network.IPacketByteArray;
 
 public interface EntityFetcher {
 

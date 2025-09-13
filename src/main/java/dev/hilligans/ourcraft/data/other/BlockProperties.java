@@ -1,11 +1,12 @@
 package dev.hilligans.ourcraft.data.other;
 
+import dev.hilligans.engine.data.BoundingBox;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.BlockModel;
 import dev.hilligans.ourcraft.client.rendering.world.managers.BlockTextureManager;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
 import dev.hilligans.ourcraft.data.descriptors.TagCollection;
 import dev.hilligans.ourcraft.data.other.blockshapes.BlockShape;
-import dev.hilligans.ourcraft.save.WorldLoader;
+import dev.hilligans.engine.save.FileLoader;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -172,7 +173,7 @@ public class BlockProperties {
                 if(model.getString("modelName").endsWith(".obj")) {
                     blockShape = new BlockShape();
                     try {
-                        blockShape.data = new BlockModel(new ObjFile(WorldLoader.readString("/Models/Blocks/" + model.getString("modelName"))).toBlockModel().toString());
+                        blockShape.data = new BlockModel(new ObjFile(FileLoader.readString("/Models/Blocks/" + model.getString("modelName"))).toBlockModel().toString());
                     } catch (Exception ignored) {
                         ignored.printStackTrace();
                     }

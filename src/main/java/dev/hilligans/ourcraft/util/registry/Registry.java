@@ -1,12 +1,11 @@
 package dev.hilligans.ourcraft.util.registry;
 
-import dev.hilligans.ourcraft.GameInstance;
-import dev.hilligans.ourcraft.mod.handler.Identifier;
-import dev.hilligans.ourcraft.mod.handler.events.common.RegisterEvent;
+import dev.hilligans.engine.GameInstance;
+import dev.hilligans.engine.mod.handler.Identifier;
+import dev.hilligans.engine.mod.handler.events.common.RegisterEvent;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.function.Consumer;

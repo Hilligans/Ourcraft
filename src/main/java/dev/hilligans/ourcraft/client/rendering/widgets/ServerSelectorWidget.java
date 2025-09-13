@@ -1,17 +1,15 @@
 package dev.hilligans.ourcraft.client.rendering.widgets;
 
-import dev.hilligans.ourcraft.client.MatrixStack;
+import dev.hilligans.engine.client.graphics.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.Textures;
-import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
+import dev.hilligans.engine.client.graphics.RenderWindow;
+import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.screens.JoinScreen;
 import dev.hilligans.ourcraft.client.rendering.screens.LoadingScreen;
-import dev.hilligans.ourcraft.network.Protocol;
-import dev.hilligans.ourcraft.network.engine.INetworkEngine;
-import dev.hilligans.ourcraft.network.engine.NetworkSocket;
-import dev.hilligans.ourcraft.network.packet.packet.CGetServerInfo;
-import dev.hilligans.ourcraft.network.packet.packet.CLogin;
-import dev.hilligans.ourcraft.network.packet.packet.CPing;
+import dev.hilligans.engine.network.Protocol;
+import dev.hilligans.engine.network.engine.INetworkEngine;
+import dev.hilligans.engine.network.engine.NetworkSocket;
+import dev.hilligans.ourcraft.network.packet.CGetServerInfo;
 import dev.hilligans.ourcraft.util.Settings;
 
 public class ServerSelectorWidget extends Widget {

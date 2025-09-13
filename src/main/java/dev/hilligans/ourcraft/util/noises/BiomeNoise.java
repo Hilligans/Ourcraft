@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.util.noises;
 
-import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.biome.Biome;
 import dev.hilligans.ourcraft.biome.Biomes;
 

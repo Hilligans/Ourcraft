@@ -2,7 +2,7 @@ package dev.hilligans.ourcraft.data.other;
 
 import dev.hilligans.ourcraft.data.other.server.IInventoryChanged;
 import dev.hilligans.ourcraft.item.ItemStack;
-import dev.hilligans.ourcraft.network.IPacketByteArray;
+import dev.hilligans.engine.network.IPacketByteArray;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.save;
 
-import dev.hilligans.ourcraft.tag.CompoundNBTTag;
-import dev.hilligans.ourcraft.util.IByteArray;
+import dev.hilligans.engine.tag.CompoundNBTTag;
+import dev.hilligans.engine.util.IByteArray;
 
 public interface IEncodeable {
 

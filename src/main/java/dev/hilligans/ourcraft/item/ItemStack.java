@@ -1,16 +1,16 @@
 package dev.hilligans.ourcraft.item;
 
-import dev.hilligans.ourcraft.client.MatrixStack;
-import dev.hilligans.ourcraft.tag.CompoundNBTTag;
-import dev.hilligans.ourcraft.tag.EndNBTTag;
-import dev.hilligans.ourcraft.tag.NBTTag;
+import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.tag.CompoundNBTTag;
+import dev.hilligans.engine.tag.EndNBTTag;
+import dev.hilligans.engine.tag.NBTTag;
 import dev.hilligans.ourcraft.util.Settings;
 
 public class ItemStack {
 
     public int count;
     public Item item;
-    public dev.hilligans.ourcraft.tag.NBTTag NBTTag;
+    public dev.hilligans.engine.tag.NBTTag NBTTag;
 
     public ItemStack(Item item, int count) {
         this.item = item;

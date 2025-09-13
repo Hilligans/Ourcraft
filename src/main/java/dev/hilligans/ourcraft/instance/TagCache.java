@@ -1,8 +1,8 @@
 package dev.hilligans.ourcraft.instance;
 
+import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
-import dev.hilligans.ourcraft.GameInstance;
 import dev.hilligans.ourcraft.item.Item;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 

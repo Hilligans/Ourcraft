@@ -1,6 +1,5 @@
 package dev.hilligans.ourcraft.container.containers;
 
-import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.rendering.ContainerScreen;
 import dev.hilligans.ourcraft.container.Container;
 import dev.hilligans.ourcraft.container.CraftingContainer;

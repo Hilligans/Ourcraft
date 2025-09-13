@@ -4,11 +4,11 @@ import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.data.other.blockstates.BlockState;
 import dev.hilligans.ourcraft.data.other.blockstates.DataBlockState;
-import dev.hilligans.ourcraft.save.WorldLoader;
-import dev.hilligans.ourcraft.tag.CompoundNBTTag;
-import dev.hilligans.ourcraft.tag.IntegerNBTTag;
-import dev.hilligans.ourcraft.tag.ListNBTTag;
-import dev.hilligans.ourcraft.tag.ShortNBTTag;
+import dev.hilligans.engine.save.FileLoader;
+import dev.hilligans.engine.tag.CompoundNBTTag;
+import dev.hilligans.engine.tag.IntegerNBTTag;
+import dev.hilligans.engine.tag.ListNBTTag;
+import dev.hilligans.engine.tag.ShortNBTTag;
 
 public class Structure {
 
@@ -50,7 +50,7 @@ public class Structure {
     }
 
     public static Structure fromPath(String path) {
-        CompoundNBTTag compoundTag = WorldLoader.loadTag(path);
+        CompoundNBTTag compoundTag = FileLoader.loadTag(path);
         Structure structure = new Structure(compoundTag.getInt("width"),compoundTag.getInt("height"),compoundTag.getInt("length"));
         ListNBTTag<ShortNBTTag> blocks = (ListNBTTag<ShortNBTTag>) compoundTag.getTag("blocks");
         int listSpot = 0;

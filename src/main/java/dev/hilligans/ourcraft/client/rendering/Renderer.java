@@ -1,16 +1,10 @@
 package dev.hilligans.ourcraft.client.rendering;
 
 import dev.hilligans.ourcraft.block.Block;
-import dev.hilligans.ourcraft.client.MatrixStack;
-import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
+import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.ourcraft.item.ItemStack;
-import dev.hilligans.ourcraft.client.rendering.world.managers.VAOManager;
-import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.util.Settings;
-import org.lwjgl.opengl.GL30;
-
-import static org.lwjgl.opengl.GL30.*;
 
 public class Renderer {
 

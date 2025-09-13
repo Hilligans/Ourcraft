@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering.culling;
 
-import dev.hilligans.ourcraft.client.rendering.graphics.api.ICamera;
+import dev.hilligans.engine.client.graphics.api.ICamera;
 import dev.hilligans.ourcraft.world.newworldsystem.IChunk;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 

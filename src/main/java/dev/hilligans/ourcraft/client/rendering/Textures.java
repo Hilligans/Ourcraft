@@ -1,8 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering;
 
-import dev.hilligans.ourcraft.mod.handler.content.CoreExtensionView;
-import dev.hilligans.ourcraft.mod.handler.content.ModContainer;
-import dev.hilligans.ourcraft.mod.handler.content.ModContent;
+import dev.hilligans.engine.mod.handler.content.CoreExtensionView;
 
 public class Textures {
 

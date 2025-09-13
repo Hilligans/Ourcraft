@@ -1,8 +1,7 @@
 package dev.hilligans.ourcraft.entity;
 
-import dev.hilligans.ourcraft.data.other.IInventory;
 import dev.hilligans.ourcraft.item.ItemStack;
-import dev.hilligans.ourcraft.network.IPacketByteArray;
+import dev.hilligans.engine.network.IPacketByteArray;
 
 import java.util.List;
 

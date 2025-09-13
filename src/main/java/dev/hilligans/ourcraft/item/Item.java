@@ -1,12 +1,12 @@
 package dev.hilligans.ourcraft.item;
 
-import dev.hilligans.ourcraft.GameInstance;
-import dev.hilligans.ourcraft.client.MatrixStack;
-import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
+import dev.hilligans.engine.GameInstance;
+import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.ourcraft.data.descriptors.TagCollection;
 import dev.hilligans.ourcraft.data.other.ItemProperties;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
-import dev.hilligans.ourcraft.mod.handler.content.ModContent;
+import dev.hilligans.engine.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.recipe.IRecipeComponent;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;

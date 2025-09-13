@@ -1,13 +1,11 @@
 package dev.hilligans.ourcraft.entity.living.entities;
 
 import dev.hilligans.ourcraft.client.rendering.world.managers.VAOManager;
-import dev.hilligans.ourcraft.data.other.BoundingBox;
+import dev.hilligans.engine.data.BoundingBox;
 import dev.hilligans.ourcraft.data.other.Inventory;
-import dev.hilligans.ourcraft.entity.LivingEntity;
-import dev.hilligans.ourcraft.network.IPacketByteArray;
-import dev.hilligans.ourcraft.network.packet.server.SUpdateInventory;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
-import dev.hilligans.ourcraft.ServerMain;
+import dev.hilligans.ourcraft.entity.LivingEntity;
+import dev.hilligans.engine.network.IPacketByteArray;
 import dev.hilligans.ourcraft.util.Settings;
 import dev.hilligans.ourcraft.util.Vector5f;
 import org.joml.Vector3d;
@@ -60,7 +58,7 @@ public class PlayerEntity extends LivingEntity {
          */
         if(updateInventory) {
             inventory.age++;
-            ServerMain.getServer().sendPacket(new SUpdateInventory(inventory),this);
+        //    ServerMain.getServer().sendPacket(new SUpdateInventory(inventory),this);
         }
     }
 

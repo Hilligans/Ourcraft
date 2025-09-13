@@ -1,10 +1,10 @@
 package dev.hilligans.ourcraft.client.rendering.newrenderer;
 
-import dev.hilligans.ourcraft.block.Block;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.IMeshBuilder;
-import dev.hilligans.ourcraft.client.rendering.world.managers.BlockTextureManager;
 import dev.hilligans.ourcraft.Ourcraft;
-import dev.hilligans.ourcraft.save.WorldLoader;
+import dev.hilligans.ourcraft.block.Block;
+import dev.hilligans.engine.client.graphics.api.IMeshBuilder;
+import dev.hilligans.ourcraft.client.rendering.world.managers.BlockTextureManager;
+import dev.hilligans.engine.save.FileLoader;
 import org.joml.Vector3f;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -547,7 +547,7 @@ public class BlockModel implements IModel {
         if(model instanceof BlockModel) {
             return (BlockModel) model;
         }
-        String val = WorldLoader.readString(Ourcraft.GAME_INSTANCE.RESOURCE_MANAGER.getResource(path));
+        String val = FileLoader.readString(Ourcraft.GAME_INSTANCE.RESOURCE_MANAGER.getResource(path));
         try {
             BlockModel blockModel = new BlockModel(val);
             blockModel.path = path;

@@ -1,8 +1,8 @@
 package dev.hilligans.ourcraft.client.rendering.world.managers;
 
-import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
-import dev.hilligans.ourcraft.resource.ResourceLocation;
+import dev.hilligans.engine.resource.ResourceLocation;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
