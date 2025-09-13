@@ -9,7 +9,6 @@ import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsEngineBase;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.SingleUseCommandBuffer;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.VulkanInstance;
 import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.boilerplate.VulkanProperties;
-import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.util.Logger;
 
 import java.util.ArrayList;

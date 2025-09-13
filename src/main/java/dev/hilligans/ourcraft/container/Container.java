@@ -7,7 +7,6 @@ import dev.hilligans.ourcraft.client.rendering.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.GraphicsContext;
 import dev.hilligans.ourcraft.client.rendering.widgets.Button;
 import dev.hilligans.ourcraft.client.rendering.widgets.Widget;
-import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.container.containers.ChestContainer;
 import dev.hilligans.ourcraft.container.containers.CreativeContainer;
 import dev.hilligans.ourcraft.container.containers.InventoryContainer;

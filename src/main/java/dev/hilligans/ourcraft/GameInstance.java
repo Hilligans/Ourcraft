@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft;
 
+import dev.hilligans.ourcraft.application.IApplication;
 import dev.hilligans.ourcraft.biome.Biome;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.blockstate.BlockStateBuilder;
@@ -69,7 +70,6 @@ public class GameInstance {
     public final ArgumentContainer ARGUMENTS = new ArgumentContainer();
     public final DataLoader DATA_LOADER = new DataLoader();
     public final ThreadProvider THREAD_PROVIDER = new ThreadProvider(this);
-    //public final
     public Side side;
 
     public final int gameInstanceUniversalID;
@@ -138,6 +138,7 @@ public class GameInstance {
     public Registry<ICommand> COMMANDS;
     public Registry<IAuthenticationScheme<?>> AUTHENTICATION_SCHEMES;
     public Registry<ITest> TESTS;
+    public Registry<IApplication> APPLICATIONS;
 
     public ArrayList<IBlockState> BLOCK_STATES;
 
@@ -172,6 +173,7 @@ public class GameInstance {
         COMMANDS = (Registry<ICommand>) REGISTRIES.getExcept("ourcraft:command");
         AUTHENTICATION_SCHEMES = (Registry<IAuthenticationScheme<?>>) REGISTRIES.getExcept("ourcraft:authentication_scheme");
         TESTS = (Registry<ITest>) REGISTRIES.getExcept("ourcraft:test");
+        APPLICATIONS = (Registry<IApplication>) REGISTRIES.getExcept("ourcraft:application");
     }
 
     public void finishBuild() {

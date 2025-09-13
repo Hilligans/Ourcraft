@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft;
 
+import dev.hilligans.ourcraft.application.IApplication;
 import dev.hilligans.ourcraft.biome.Biome;
 import dev.hilligans.ourcraft.biome.Biomes;
 import dev.hilligans.ourcraft.block.Block;
@@ -147,6 +148,7 @@ public class Ourcraft extends ModClass {
                 new Tuple(ICommand.class, "command"),
                 new Tuple(IAuthenticationScheme.class, "authentication_scheme"),
                 new Tuple(ITest.class, "test"),
+                new Tuple(IApplication.class, "application"),
         };
 
         for(Tuple<Class<? extends IRegistryElement>, String> element : elements) {
@@ -352,6 +354,7 @@ public class Ourcraft extends ModClass {
                     }
                 });
             }
+            view.registerApplication(new Client(view.getGameInstance(), view.getGameInstance().getArgumentContainer()));
         }
     }
 

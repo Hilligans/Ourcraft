@@ -38,7 +38,6 @@ public class ServerMain {
         GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
         gameInstance.handleArgs(args);
         gameInstance.side = Side.SERVER;
-        //gameInstance.loadContent();
 
         StandardPipeline.get(gameInstance).build();
 
@@ -73,10 +72,6 @@ public class ServerMain {
         server.startServer("25588");
         gameInstance.THREAD_PROVIDER.unmap();
         return server;
-    }
-
-    public static void newServer(GameInstance gameInstance) {
-
     }
 
     public static MultiPlayerServer getServer() {

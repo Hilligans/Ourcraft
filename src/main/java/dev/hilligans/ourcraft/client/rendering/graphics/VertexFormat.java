@@ -6,12 +6,12 @@ import java.util.ArrayList;
 
 public class VertexFormat implements IRegistryElement {
 
-    public String formatName;
-    public String modID;
+    public final String formatName;
+    public final String modID;
 
-    public ArrayList<VertexPart> parts = new ArrayList<>();
+    public final ArrayList<VertexPart> parts = new ArrayList<>();
 
-    public int primitiveType;
+    public final int primitiveType;
 
     public VertexFormat(String modID, String formatName, int primitiveType) {
         this.formatName = formatName;

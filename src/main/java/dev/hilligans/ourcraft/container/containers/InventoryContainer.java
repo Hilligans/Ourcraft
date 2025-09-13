@@ -3,7 +3,6 @@ package dev.hilligans.ourcraft.container.containers;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.rendering.ContainerScreen;
 import dev.hilligans.ourcraft.client.rendering.screens.container.screens.InventoryScreen;
-import dev.hilligans.ourcraft.ClientMain;
 import dev.hilligans.ourcraft.container.Container;
 import dev.hilligans.ourcraft.container.Slot;
 import dev.hilligans.ourcraft.data.other.Inventory;

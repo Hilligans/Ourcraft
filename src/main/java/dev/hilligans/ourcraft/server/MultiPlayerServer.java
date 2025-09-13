@@ -1,6 +1,5 @@
 package dev.hilligans.ourcraft.server;
 
-import dev.hilligans.ourcraft.command.Commands;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.ourcraft.data.primitives.Tuple;

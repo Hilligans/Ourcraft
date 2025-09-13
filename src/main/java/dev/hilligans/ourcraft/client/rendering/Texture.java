@@ -16,13 +16,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class Texture implements IRegistryElement, IGraphicsElement {
 
-    public String path;
+    public final String path;
     public ModContainer source;
 
-    public long textureId = -1;
     public ShaderSource shaderSource;
 
-    UniqueResource<TextureData> data = new UniqueResource<>();
+    final UniqueResource<TextureData> data = new UniqueResource<>();
 
     public Texture(String path) {
         this.path = path;

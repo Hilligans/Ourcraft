@@ -1,15 +1,8 @@
 package dev.hilligans.ourcraft;
 
-import dev.hilligans.ourcraft.client.Client;
-import dev.hilligans.ourcraft.data.primitives.IntArrayMap;
-import dev.hilligans.ourcraft.data.primitives.IntArrayMapBuilder;
 import dev.hilligans.ourcraft.mod.handler.pipeline.other.TestPipeline;
 import dev.hilligans.ourcraft.network.Protocol;
-import dev.hilligans.ourcraft.network.engine.INetworkEngine;
-import dev.hilligans.ourcraft.network.engine.NetworkSocket;
-import dev.hilligans.ourcraft.network.packet.packet.CLogin;
 import dev.hilligans.ourcraft.util.argument.Argument;
-import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.mod.handler.pipeline.InstanceLoaderPipeline;
 import dev.hilligans.ourcraft.mod.handler.pipeline.standard.StandardPipeline;
 import dev.hilligans.ourcraft.util.argument.ArgumentContainer;
@@ -21,10 +14,8 @@ import static dev.hilligans.ourcraft.Ourcraft.argumentContainer;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicReference;
 
-public class ClientMain {
+public class EngineMain {
 
     public static final long start = System.currentTimeMillis();
 
@@ -34,8 +25,6 @@ public class ClientMain {
             .help("Specifies which side to load.");
     public static final Argument<Boolean> integratedServer = Argument.existArg("--integratedServer")
             .help("Whether or not to launch an integrated server.");
-    public static final Argument<IGraphicsEngine> graphicsEngine = Argument.registryArg("--graphicsEngine", IGraphicsEngine.class, "ourcraft:openglEngine")
-            .help("The default graphics engine to use, still need to lookup acceptable values based on registry.");
     public static final Argument<Boolean> loadImmediate = Argument.existArg("--loadImmediate")
             .help("Always immediately load the GameInstance immediately, otherwise, it's loaded later in the chain before argument parsing. \n" +
                     "This is needed to see any acceptable values from registry arguments");
@@ -43,13 +32,12 @@ public class ClientMain {
             .help("The network protocol to use");
     public static final Argument<Boolean> runTests = Argument.existArg("--test")
             .help("Loads all contents and performs standard tests");
-
+    public static final Argument<Boolean> debug = Argument.existArg("--debug")
+            .help("Turns on engine debuggers and memory trackers.");
 
     public static void main(String[] args) throws IOException {
-        //Configuration.DEBUG_MEMORY_ALLOCATOR.set(true);
         Ourcraft.argumentContainer = new ArgumentContainer(args);
         System.out.println("Starting with arguments: " + Arrays.toString(args));
-        //System.out.println(STR."Starting client with PID \{ProcessHandle.current().pid()}");
         System.out.println("Starting client with PID " + ProcessHandle.current().pid());
 
         GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
@@ -64,8 +52,14 @@ public class ClientMain {
             System.exit(0);
         }
 
+        if(debug.get(gameInstance)) {
+            Configuration.DEBUG_MEMORY_ALLOCATOR.set(true);
+        }
+
         if(runTests.get(gameInstance)) {
-            test(gameInstance);
+            InstanceLoaderPipeline<?> pipeline = TestPipeline.get(gameInstance);
+            pipeline.build();
+            System.exit(0);
         }
 
         gameInstance.THREAD_PROVIDER.map();
@@ -84,49 +78,14 @@ public class ClientMain {
 
         InstanceLoaderPipeline<?> pipeline = StandardPipeline.get(gameInstance);
 
-        AtomicReference<Client> client = new AtomicReference<>();
+        pipeline.addPostCoreHook(gameInstance1 ->
+                gameInstance1.APPLICATIONS.forEach(application ->
+                        application.postCoreStartApplication(gameInstance1)));
 
-        pipeline.addPostCoreHook(gameInstance1 -> {
-            Semaphore waiting = new Semaphore(1);
-            try {
-                waiting.acquire();
-            } catch (Exception ignored) {}
-            new Thread(() -> {
-                gameInstance1.THREAD_PROVIDER.map();
-                client.set(new Client(gameInstance1, argumentContainer));
-                client.get().setGraphicsEngine(graphicsEngine.get(gameInstance));
-
-                client.get().startClient();
-                waiting.release();
-
-                client.get().loop();
-
-                gameInstance1.THREAD_PROVIDER.EXECUTOR.shutdownNow();
-                if(integratedServer.get(gameInstance)) {
-                    ServerMain.getServer().stop();
-                }
-                //while(true);
-                System.exit(0);
-
-            }).start();
-
-            try {
-                waiting.acquire();
-                waiting.release();
-            } catch (Exception ignored) {}
-        });
-
-        pipeline.addPostHook(gameInstance12 -> {
-            while(client.get() == null) {}
-            client.get().transition = true;
-        });
+        pipeline.addPostHook(gameInstance1 ->
+                gameInstance1.APPLICATIONS.forEach(application ->
+                        application.startApplication(gameInstance1)));
 
         pipeline.build();
-    }
-
-    public static void test(GameInstance gameInstance) {
-        InstanceLoaderPipeline<?> pipeline = TestPipeline.get(gameInstance);
-        pipeline.build();
-        System.exit(0);
     }
 }

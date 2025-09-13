@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.mod.handler.content;
 
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.application.IApplication;
 import dev.hilligans.ourcraft.biome.Biome;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.client.audio.SoundBuffer;
@@ -77,6 +78,7 @@ public class ModContainer {
     public Registry<ICommand> commandRegistry;
     public Registry<IAuthenticationScheme<?>> authenticationSchemeRegistry;
     public Registry<ITest> testRegistry;
+    public Registry<IApplication> applicationRegistry;
 
     public ModContainer(Class<? extends ModClass> clazz, URLClassLoader classLoader, Path path) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         this.modClass = clazz.getConstructor().newInstance();
@@ -125,6 +127,7 @@ public class ModContainer {
         commandRegistry = (Registry<ICommand>) registries.getExcept("ourcraft:command");
         authenticationSchemeRegistry = (Registry<IAuthenticationScheme<?>>) registries.getExcept("ourcraft:authentication_scheme");
         testRegistry = (Registry<ITest>) registries.getExcept("ourcraft:test");
+        applicationRegistry = (Registry<IApplication>) registries.getExcept("ourcraft:application");
     }
 
     public String getModID() {
@@ -377,6 +380,13 @@ public class ModContainer {
             test.assignOwner(this);
         }
         testRegistry.putAll(tests);
+    }
+
+    public void registerApplication(IApplication... applications) {
+        for(IApplication application : applications) {
+            application.assignOwner(this);
+        }
+        applicationRegistry.putAll(applications);
     }
 
     @Override

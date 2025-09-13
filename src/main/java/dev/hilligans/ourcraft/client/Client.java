@@ -1,8 +1,7 @@
 package dev.hilligans.ourcraft.client;
 
+import dev.hilligans.ourcraft.application.IApplication;
 import dev.hilligans.ourcraft.client.input.InputHandler;
-import dev.hilligans.ourcraft.client.input.key.KeyHandler;
-import dev.hilligans.ourcraft.client.input.key.KeyPress;
 import dev.hilligans.ourcraft.client.input.key.MouseHandler;
 import dev.hilligans.ourcraft.client.rendering.ContainerScreen;
 import dev.hilligans.ourcraft.client.rendering.graphics.api.IGraphicsEngine;
@@ -13,9 +12,8 @@ import dev.hilligans.ourcraft.client.rendering.graphics.vulkan.VulkanEngine;
 import dev.hilligans.ourcraft.client.rendering.Screen;
 import dev.hilligans.ourcraft.client.rendering.ScreenBuilder;
 import dev.hilligans.ourcraft.client.rendering.screens.JoinScreen;
-import dev.hilligans.ourcraft.client.rendering.screens.container.screens.CreativeInventoryScreen;
 import dev.hilligans.ourcraft.client.rendering.screens.container.screens.InventoryScreen;
-import dev.hilligans.ourcraft.ClientMain;
+import dev.hilligans.ourcraft.EngineMain;
 import dev.hilligans.ourcraft.container.Container;
 import dev.hilligans.ourcraft.data.other.PlayerList;
 import dev.hilligans.ourcraft.GameInstance;
@@ -23,11 +21,11 @@ import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.ourcraft.mod.handler.events.client.OpenScreenEvent;
 import dev.hilligans.ourcraft.network.*;
 import dev.hilligans.ourcraft.network.engine.NetworkSocket;
-import dev.hilligans.ourcraft.network.packet.client.CCloseScreen;
 import dev.hilligans.ourcraft.network.packet.client.COpenScreen;
 import dev.hilligans.ourcraft.client.audio.SoundBuffer;
 import dev.hilligans.ourcraft.client.audio.SoundEngine;
 import dev.hilligans.ourcraft.tag.CompoundNBTTag;
+import dev.hilligans.ourcraft.util.argument.Argument;
 import dev.hilligans.ourcraft.util.argument.ArgumentContainer;
 import dev.hilligans.ourcraft.util.Logger;
 import dev.hilligans.ourcraft.util.ThreadContext;
@@ -35,17 +33,13 @@ import dev.hilligans.ourcraft.util.registry.Registry;
 import dev.hilligans.ourcraft.world.newworldsystem.ClientCubicWorld;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 import dev.hilligans.ourcraft.save.WorldLoader;
-import dev.hilligans.ourcraft.server.MultiPlayerServer;
 import dev.hilligans.ourcraft.util.Settings;
-import io.netty.channel.ChannelId;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL11;
 
 import java.nio.DoubleBuffer;
 
-import static org.lwjgl.glfw.GLFW.*;
-
-public class Client {
+public class Client implements IApplication {
 
     public long window;
 
@@ -113,25 +107,6 @@ public class Client {
     }
 
     public void setupClient() {
-        /*authNetwork = new ClientNetwork(gameInstance.PROTOCOLS.get("Auth"));
-
-        CompoundNBTTag tag = WorldLoader.loadTag("clientData.dat");
-        if(tag != null) {
-            Thread thread = new Thread(() -> {
-                try {
-                    authNetwork.joinServer("hilligans.dev", "25588", this);
-                } catch (Exception e) {}
-            });
-            thread.setName("authenticate");
-            thread.setDaemon(true);
-            thread.start();
-        }
-        if(tag != null) {
-            readUsernameAndPassword(tag);
-        }
-        authNetwork.sendPacket(new CGetToken(playerData.userName, playerData.login_token));
-         */
-
         RenderWindow window = graphicsEngine.startEngine();
         window.setClient(this);
         client.screen = new JoinScreen();
@@ -156,7 +131,7 @@ public class Client {
     public void startClient() {
         setupClient();
 
-        System.err.println("Time to start running: " + (System.currentTimeMillis() - ClientMain.start));
+        System.err.println("Time to start running: " + (System.currentTimeMillis() - EngineMain.start));
     }
 
     public void loop() {
@@ -169,15 +144,7 @@ public class Client {
         try(var $0 = threadContext.getSection().startSection("tick_world")) {
             newClientWorld.tick();
         }
-        try(var $0 = threadContext.getSection().startSection("process_packets")) {
-            //if(network != null) {
-            //    network.processPackets();
-            //}
-        }
         if(transition) {
-            //new Thread(() -> {
-            //        network = new ClientNetwork(gameInstance, gameInstance.PROTOCOLS.get("ourcraft:Play")).debug(argumentContainer.getBoolean("--packetTrace", false));
-            //}).start();
             client.gameInstance.build(client.graphicsEngine, null);
             transition = false;
             rWindow.setRenderPipeline("ourcraft:menu_pipeline");
@@ -198,17 +165,9 @@ public class Client {
             //sendPacket(new CDropItem((short)-1,(byte)-1));
             playerData.heldStack = ItemStack.emptyStack();
         }
-        if(screen != null) {
-            //glfwSetCursorPos(window, (double)windowX / 2, (double)windowY / 2);
-           // screen.close(false);
-          //  screen = null;
-          //  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-        }
         if(playerData.openContainer != null) {
             playerData.openContainer.closeContainer();
         }
-
-        sendPacket(new CCloseScreen(false));
     }
 
     public void openScreen(Screen screen1) {
@@ -260,128 +219,6 @@ public class Client {
         openScreen(screenBuilder.get(this));
     }
 
-    public void registerKeyHandlers() {
-
-
-        KeyHandler.register(new KeyPress() {
-            @Override
-            public void onPress() {
-                System.exit(1);
-            }
-        },KeyHandler.GLFW_KEY_F11);
-
-        KeyHandler.register(new KeyPress() {
-            @Override
-            public void onPress() {
-                if(screen == null) {
-                    if(playerData.creative) {
-                        openScreen(new CreativeInventoryScreen());
-                    } else {
-                        openScreen(new InventoryScreen());
-                    }
-                } else if(screen instanceof ContainerScreen) {
-                    closeScreen();
-                }
-            }
-        },GLFW_KEY_E);
-
-        KeyHandler.register(new KeyPress() {
-            @Override
-            public void onPress() {
-                if(screen != null) {
-                    if(playerData.openContainer != null) {
-                        /*
-                        Slot slot = playerData.openContainer.getSlotAt((int)Camera.newX,(int)Camera.newY);
-                        if(slot != null) {
-                            if(KeyHandler.keyPressed[GLFW_KEY_LEFT_CONTROL]) {
-                                slot.setContents(ItemStack.emptyStack());
-                                sendPacket(new CDropItem(slot.id,(byte)-1));
-                            } else {
-                                slot.getContents().removeCount(1);
-                                sendPacket(new CDropItem(slot.id,(byte)1));
-                            }
-                        }
-
-                         */
-                    }
-                }
-            }
-        },GLFW_KEY_Q);
-
-        KeyHandler.register(new KeyPress() {
-            @Override
-            public void onPress() {
-                screenShot = true;
-            }
-        }, GLFW_KEY_F2);
-    }
-
-    public void createCallbacks() {
-        /*
-        mouseHandler = new MouseHandler(this);
-
-        glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
-            if(height % 2 == 1) {
-                height += 1;
-            }
-            if(width % 2 == 1) {
-                width += 1;
-            }
-            GL30.glViewport(0, 0, width, height);
-            windowX = width;
-            windowY = height;
-            if(playerData.openContainer != null) {
-                playerData.openContainer.resize();
-            }
-            if(screen != null) {
-                screen.resize(windowX,windowY);
-            }
-        });
-
-
-        glfwSetScrollCallback(window, new GLFWScrollCallback() {
-            @Override
-            public void invoke(long window, double xoffset, double yoffset) {
-                if(screen != null) {
-                    screen.mouseScroll(0,0,(float)yoffset);
-                }
-                if(renderWorld) {
-                    if(Camera.thirdPerson && KeyHandler.keyPressed[GLFW_KEY_LEFT_ALT]) {
-                        Camera.addToThirdPerson((float) (yoffset / -2.0f));
-                    } else {
-                        if (yoffset == 1.0) {
-
-                            playerData.handSlot--;
-                            if (playerData.handSlot <= -1) {
-                                playerData.handSlot = 8;
-                            }
-                        } else if (yoffset == -1.0) {
-
-                            playerData.handSlot++;
-                            if (playerData.handSlot >= 9) {
-                                playerData.handSlot = 0;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        glfwSetMouseButtonCallback(window, mouseHandler::invoke);
-        glfwSetWindowFocusCallback(window, (window, focused) -> {
-            if(!focused) {
-                if(screen == null) {
-                    if (renderWorld) {
-                        openScreen(new EscapeScreen(client));
-                    } else {
-                        openScreen(new JoinScreen(client));
-                    }
-                }
-            }
-        });
-
-         */
-    }
-
     public static long timeSinceLastDraw = 0;
     public static float drawTime = 1000f * 1000000 / Settings.maxFps;
 
@@ -424,5 +261,42 @@ public class Client {
 
     public GameInstance getGameInstance() {
         return gameInstance;
+    }
+
+    public static final Argument<IGraphicsEngine> graphicsEngineArg = Argument.registryArg("--graphicsEngine", IGraphicsEngine.class, "ourcraft:openglEngine")
+            .help("The default graphics engine to use, still need to lookup acceptable values based on registry.");
+
+    @Override
+    public void postCoreStartApplication(GameInstance gameInstance) {
+        Client client = this;
+        Thread thread = new Thread(() -> {
+            client.setGraphicsEngine(graphicsEngineArg.get(gameInstance));
+
+            client.startClient();
+
+            client.loop();
+
+            gameInstance.THREAD_PROVIDER.EXECUTOR.shutdownNow();
+            //if(integratedServer.get(gameInstance)) {
+            //    ServerMain.getServer().stop();
+            //}
+            System.exit(0);
+        });
+        thread.start();
+    }
+
+    @Override
+    public void startApplication(GameInstance gameInstance) {
+        this.transition = true;
+    }
+
+    @Override
+    public String getResourceName() {
+        return "client";
+    }
+
+    @Override
+    public String getResourceOwner() {
+        return "ourcraft";
     }
 }

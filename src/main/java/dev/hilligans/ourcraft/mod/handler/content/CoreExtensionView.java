@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.mod.handler.content;
 
 import dev.hilligans.ourcraft.GameInstance;
+import dev.hilligans.ourcraft.application.IApplication;
 import dev.hilligans.ourcraft.client.input.Input;
 import dev.hilligans.ourcraft.client.input.InputHandlerProvider;
 import dev.hilligans.ourcraft.client.rendering.Texture;
@@ -56,6 +57,10 @@ public class CoreExtensionView implements RegistrationView {
 
     public void registerResourceLoader(ResourceLoader<?>... resourceLoaders) {
         container.registerCore("ourcraft:resource_loader", resourceLoaders);
+    }
+
+    public void registerApplication(IApplication... applications) {
+        container.registerCore("ourcraft:application", applications);
     }
 
     public void registerKeybinds(Input... inputs) {

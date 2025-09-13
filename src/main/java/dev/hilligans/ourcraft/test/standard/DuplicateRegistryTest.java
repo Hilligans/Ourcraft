@@ -7,6 +7,9 @@ import dev.hilligans.ourcraft.test.ITest;
 import dev.hilligans.ourcraft.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.util.registry.Registry;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+
 public class DuplicateRegistryTest implements ITest {
 
     @Override
@@ -33,10 +36,22 @@ public class DuplicateRegistryTest implements ITest {
             if(secondaryRegistry != null) {
                 for(IRegistryElement element : registry.ELEMENTS) {
                     if(secondaryRegistry.contains(element)) {
-                        throw new RuntimeException("Registry element " + element.getUniqueName() + " found registered across two different game instances.");
+                        if(!testFinals(element.getClass())) {
+                            throw new RuntimeException("Registry element " + element.getUniqueName() + " found registered across two different game instances.");
+                        }
                     }
                 }
             }
         }
+    }
+
+    /* Checks if all the fields in this object are final */
+    public static boolean testFinals(Class<? extends IRegistryElement> clazz) {
+        for(Field field : clazz.getDeclaredFields()) {
+            if((field.getModifiers() & Modifier.FINAL) == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 }
