@@ -1,12 +1,10 @@
 package dev.hilligans.ourcraft.client.rendering.widgets;
 
-import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.ourcraft.client.lang.Languages;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import org.lwjgl.opengl.GL11;
-
-import java.nio.DoubleBuffer;
 
 public class SliderWidget extends Widget {
 
@@ -40,7 +38,7 @@ public class SliderWidget extends Widget {
         super.render(window, graphicsContext, matrixStack, xOffset, yOffset);
 
         if(isFocused && window.getClient().mouseHandler.mousePressed) {
-            DoubleBuffer mousePos = window.getClient().getMousePos();
+         /*   DoubleBuffer mousePos = window.getClient().getMousePos();
             if(isInBoundsX((int)mousePos.get(0))) {
                 activate((int)mousePos.get(0) - x, (int)mousePos.get(1) - y);
             } else if(mousePos.get(0) - x <= 0) {
@@ -50,6 +48,8 @@ public class SliderWidget extends Widget {
                 value = maxValue;
                 sliderChange.onChange(value);
             }
+
+          */
         }
 
         GL11.glDisable(GL11.GL_DEPTH_TEST);

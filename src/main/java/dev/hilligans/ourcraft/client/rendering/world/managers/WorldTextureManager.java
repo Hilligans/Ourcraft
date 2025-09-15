@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.world.managers;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
+import dev.hilligans.engine.client.graphics.resource.Image;
 import dev.hilligans.engine.resource.ResourceLocation;
 
 import java.awt.*;

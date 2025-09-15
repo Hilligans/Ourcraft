@@ -15,6 +15,9 @@ public class UniqueResource <T> {
     }
 
     public T get(int index) {
+        if(values.length <= index) {
+            return null;
+        }
         return (T) values[index];
     }
 

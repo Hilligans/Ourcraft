@@ -1,7 +1,7 @@
 package dev.hilligans.engine.mod.handler.exception;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class ExceptionHandler<T extends Exception> implements IRegistryElement {

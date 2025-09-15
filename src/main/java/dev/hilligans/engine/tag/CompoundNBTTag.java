@@ -163,7 +163,8 @@ public class CompoundNBTTag extends NBTTag {
         if(item == -1) {
             return ItemStack.emptyStack();
         }
-        return new ItemStack(Ourcraft.GAME_INSTANCE.getItem(item),count);
+        return null;
+        //return new ItemStack(Ourcraft.GAME_INSTANCE.getItem(item),count);
     }
 
     public CompoundNBTTag writeStack(int slot, ItemStack itemStack) {

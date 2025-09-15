@@ -101,7 +101,7 @@ public class CubicChunk implements IAtomicChunk {
         int index = getIndex(x & 31, y & 31, z & 31);
         ISubChunk subChunk = subChunks[index];
         if(subChunk == null) {
-            subChunk = new GlobalPaletteAtomicSubChunk();
+            subChunk = new GlobalPaletteAtomicSubChunk(getWorld().getGameInstance());
             subChunks[index] = subChunk;
         }
         ISubChunk repl = subChunk.canInsertOrGetNext(blockState);

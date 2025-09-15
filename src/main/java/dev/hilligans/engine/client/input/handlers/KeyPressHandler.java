@@ -1,5 +1,7 @@
 package dev.hilligans.engine.client.input.handlers;
 
+import dev.hilligans.engine.client.graphics.api.GraphicsContext;
+import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.input.InputHandler;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.IInputProvider;
@@ -18,18 +20,14 @@ public class KeyPressHandler implements IInputProvider {
         this.window = window;
         this.inputHandler = inputHandler;
         KeyPressHandler handler = this;
-        Callback callback = GLFW.glfwSetKeyCallback(window.getWindowID(), new GLFWKeyCallback() {
+        GLFWKeyCallback callback = new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
-                inputHandler.handleInput(key,action,window,action,scancode,mods,action != 0 ? 1 : 0,handler);
+                inputHandler.handleInput(key, action, window, action, scancode, mods, action != 0 ? 1 : 0, handler);
             }
-        });
-        window.addResourceCleanup(() -> {
-            if(callback != null) {
-                callback.close();
-                callback.free();
-            }
-        });
+        };
+        GLFW.glfwSetKeyCallback(window.getWindowID(), callback);
+        window.addResourceCleanup(callback::close);
     }
 
     @Override

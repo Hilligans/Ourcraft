@@ -3,7 +3,7 @@ package dev.hilligans.engine.client.input;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.IInputProvider;
-import dev.hilligans.ourcraft.util.Logger;
+import dev.hilligans.engine.util.Logger;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 import java.util.ArrayList;

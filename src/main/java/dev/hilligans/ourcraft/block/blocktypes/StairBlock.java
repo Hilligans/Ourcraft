@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.block.blocktypes;
 
+import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.data.other.BlockProperties;
 import dev.hilligans.ourcraft.data.other.blockshapes.StairBlockShape;
@@ -10,7 +11,6 @@ import dev.hilligans.ourcraft.world.data.providers.ShortBlockState;
 public class StairBlock extends Block {
     public StairBlock(String name, BlockProperties blockProperties) {
         super(name, blockProperties);
-        blockProperties.blockShape = new StairBlockShape();
         blockProperties.transparent();
     }
 
@@ -25,6 +25,11 @@ public class StairBlock extends Block {
         return new DataBlockState(this, new ShortBlockState((short)0));
     }
      */
+
+    @Override
+    public void load(GameInstance gameInstance) {
+        blockProperties.blockShape = new StairBlockShape(gameInstance);
+    }
 
     @Override
     public BlockState getStateWithData(short data) {

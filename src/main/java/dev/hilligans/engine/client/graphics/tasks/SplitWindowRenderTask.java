@@ -1,8 +1,8 @@
 package dev.hilligans.engine.client.graphics.tasks;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.ourcraft.client.Client;
-import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.application.IClientApplication;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderTask;
 import dev.hilligans.engine.client.graphics.RenderTaskSource;
 import dev.hilligans.engine.client.graphics.RenderWindow;
@@ -18,14 +18,14 @@ public class SplitWindowRenderTask extends RenderTaskSource {
     public ShaderSource shaderSource;
 
     public SplitWindowRenderTask() {
-        super("split_window_render_task", "ourcraft:split_window_renderer");
+        super("split_window_render_task");
     }
 
     @Override
-    public RenderTask getDefaultTask() {
-        return new RenderTask() {
+    public RenderTask<IClientApplication> getDefaultTask() {
+        return new RenderTask<IClientApplication>() {
             @Override
-            public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack, float delta) {
+            public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, IClientApplication client, MatrixStack worldStack, MatrixStack screenStack, float delta) {
                 long fboOld = engine.getDefaultImpl().getBoundFBO(graphicsContext);
                 SplitWindow splitWindow = (SplitWindow) window;
                 for(SubWindow subWindow : splitWindow.windows) {
@@ -63,8 +63,8 @@ public class SplitWindowRenderTask extends RenderTaskSource {
     }
 
     @Override
-    public void load(GameInstance gameInstance) {
-        super.load(gameInstance);
+    public void preLoad(GameInstance gameInstance) {
+        super.preLoad(gameInstance);
         shaderSource = gameInstance.SHADERS.get("ourcraft:position_texture");
     }
 }

@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.data.other;
 
+import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.data.BoundingBox;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.BlockModel;
 import dev.hilligans.ourcraft.client.rendering.world.managers.BlockTextureManager;
@@ -11,9 +12,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class BlockProperties {
-    
-    public static BlockShape defaultShape = new BlockShape();
-
 
     public boolean serverSide = false;
     public boolean transparent = false;
@@ -30,7 +28,7 @@ public class BlockProperties {
     public int blockStateSize = 0;
     public String texture = "";
     public BlockTextureManager blockTextureManager = new BlockTextureManager();
-    public BlockShape blockShape = defaultShape;
+    public BlockShape blockShape;
     public String toolLevel;
     public String source;
     public String drops;
@@ -40,6 +38,8 @@ public class BlockProperties {
     public JSONObject overrides;
     public boolean fromFile = false;
     public TagCollection tags = new TagCollection();
+
+
 
     public BlockProperties() {
     }
@@ -150,7 +150,13 @@ public class BlockProperties {
         return jsonObject;
     }
 
-    public void read(JSONObject jsonObject) {
+    public void load(GameInstance gameInstance) {
+        if(blockShape == null) {
+            blockShape = new BlockShape(gameInstance);
+        }
+    }
+
+    public void read(GameInstance gameInstance, JSONObject jsonObject) {
         if (jsonObject.has("properties")) {
             JSONObject properties = jsonObject.getJSONObject("properties");
             canWalkThrough(getBoolean(properties, "canWalkThrough", false));
@@ -171,14 +177,14 @@ public class BlockProperties {
             JSONArray colors = model.optJSONArray("colors");
             if (model.has("modelName")) {
                 if(model.getString("modelName").endsWith(".obj")) {
-                    blockShape = new BlockShape();
+                    blockShape = new BlockShape(gameInstance);
                     try {
                         blockShape.data = new BlockModel(new ObjFile(FileLoader.readString("/Models/Blocks/" + model.getString("modelName"))).toBlockModel().toString());
                     } catch (Exception ignored) {
                         ignored.printStackTrace();
                     }
                 } else {
-                    blockShape = new BlockShape(model.getString("modelName"));
+                    blockShape = new BlockShape(gameInstance, model.getString("modelName"));
                 }
                 blockShape.data.withColor(colors);
             }
@@ -234,7 +240,7 @@ public class BlockProperties {
         }
     }
 
-    public static BlockProperties loadProperties(String path, JSONObject overrides) {
+    public static BlockProperties loadProperties(GameInstance gameInstance, String path, JSONObject overrides) {
         BlockProperties blockProperties = new BlockProperties();
         if (path.equals("Data/null")) {
             return blockProperties;
@@ -258,12 +264,6 @@ public class BlockProperties {
                 jsonObject.put(string, object);
             }
         }
-    }
-
-    public static BlockProperties loadProperties(JSONObject jsonObject) {
-        BlockProperties blockProperties = new BlockProperties();
-        blockProperties.read(jsonObject);
-        return blockProperties;
     }
 
     public static boolean getBoolean(JSONObject jsonObject, String key, boolean defaultValue) {

@@ -50,7 +50,7 @@ public class GlobalPaletteImpl implements ISubChunk {
             }
         }
         try {
-            return Ourcraft.GAME_INSTANCE.BLOCK_STATES.get(blockStates[(int) ((x * width + y) * height + z)] = (short) blockState.getBlockStateID());
+            return world.getGameInstance().BLOCK_STATES.get(blockStates[(int) ((x * width + y) * height + z)] = (short) blockState.getBlockStateID());
         } catch (Exception e) {
             e.printStackTrace();
         }

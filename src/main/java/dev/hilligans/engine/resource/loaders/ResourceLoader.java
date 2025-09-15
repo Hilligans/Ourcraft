@@ -5,7 +5,7 @@ import dev.hilligans.engine.mod.handler.content.ModContainer;
 import dev.hilligans.engine.resource.ResourceLocation;
 import dev.hilligans.engine.save.FileLoader;
 import dev.hilligans.engine.tag.CompoundNBTTag;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;

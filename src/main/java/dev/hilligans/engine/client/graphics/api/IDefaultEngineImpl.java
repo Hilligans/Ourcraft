@@ -1,11 +1,11 @@
 package dev.hilligans.engine.client.graphics.api;
 
-import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.PipelineState;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.ShaderSource;
-import dev.hilligans.engine.client.graphics.VertexFormat;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
+import dev.hilligans.engine.client.graphics.resource.VertexFormat;
+import dev.hilligans.engine.client.graphics.resource.Image;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector4f;
 import org.lwjgl.system.MemoryStack;

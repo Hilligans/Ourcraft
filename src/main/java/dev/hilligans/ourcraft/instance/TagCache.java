@@ -4,7 +4,7 @@ import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
 import dev.hilligans.ourcraft.item.Item;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IDefaultEngineImpl;
@@ -16,12 +16,12 @@ public class ResizingTexture extends Texture {
     public boolean canStretch;
 
 
-    public ResizingTexture(String path) {
-        this(path,true);
+    public ResizingTexture(String path, String modID) {
+        this(path,modID, true);
     }
 
-    public ResizingTexture(String path, boolean canStretch) {
-        super(path);
+    public ResizingTexture(String path, String modID, boolean canStretch) {
+        super(path, modID);
         this.canStretch = canStretch;
     }
 
@@ -41,7 +41,7 @@ public class ResizingTexture extends Texture {
     }
 
     public IMeshBuilder get(IDefaultEngineImpl<?,?,?> impl, GameInstance gameInstance, int width, int height, int x, int y) {
-        IMeshBuilder primitiveBuilder = impl.getMeshBuilder(shaderSource.vertexFormat);
+        IMeshBuilder primitiveBuilder = impl.getMeshBuilder(this.data.get(gameInstance).shaderSource().vertexFormat);
         startSegment.put(primitiveBuilder,x,y,height * startSegment.getRatio(),height,this.getWidth(gameInstance), this.getHeight(gameInstance));
         float middleWidth = width - height * startSegment.getRatio() - height * endSegment.getRatio();
         middleSegment.put(primitiveBuilder,height * startSegment.getRatio() + x,y,middleWidth,height,this.getWidth(gameInstance), this.getHeight(gameInstance));
@@ -55,8 +55,8 @@ public class ResizingTexture extends Texture {
         IMeshBuilder primitiveBuilder = get(window.getEngineImpl(), window.getGameInstance(), width,height,x,y);
         IDefaultEngineImpl<?,?,?> defaultEngineImpl = window.getEngineImpl();
         defaultEngineImpl.bindTexture(graphicsContext, getTextureId(window.getGameInstance()));
-        defaultEngineImpl.bindPipeline(graphicsContext, shaderSource.program);
-        defaultEngineImpl.uploadMatrix(graphicsContext, matrixStack, shaderSource);
+        defaultEngineImpl.bindPipeline(graphicsContext, this.data.get(window.getGameInstance()).shaderSource().program);
+        defaultEngineImpl.uploadMatrix(graphicsContext, matrixStack, this.data.get(window.getGameInstance()).shaderSource());
         defaultEngineImpl.drawAndDestroyMesh(graphicsContext,matrixStack,primitiveBuilder);
     }
 

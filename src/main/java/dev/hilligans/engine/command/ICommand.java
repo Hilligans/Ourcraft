@@ -1,7 +1,8 @@
 package dev.hilligans.engine.command;
 
+import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.command.executors.CommandExecutor;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 
 
 public interface ICommand extends IRegistryElement {
@@ -13,6 +14,8 @@ public interface ICommand extends IRegistryElement {
     ICommand setAliases(String... aliases);
 
     boolean execute(CommandExecutor executor, String[] args);
+
+    GameInstance getGameInstance();
 
     default String getResourceType() {
         return "command";

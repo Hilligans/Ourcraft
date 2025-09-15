@@ -12,8 +12,6 @@ import org.joml.Vector3d;
 
 public class PlayerEntity extends LivingEntity {
 
-    int textureId = -1;
-    int verticesCount;
 
     public Inventory inventory;
 
@@ -77,9 +75,7 @@ public class PlayerEntity extends LivingEntity {
 
     @Override
     public void destroy() {
-        if(id != -1) {
-            VAOManager.destroyBuffer(id);
-        }
+
         super.destroy();
     }
 

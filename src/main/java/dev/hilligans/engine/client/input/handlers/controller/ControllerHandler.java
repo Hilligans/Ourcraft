@@ -1,5 +1,7 @@
 package dev.hilligans.engine.client.input.handlers.controller;
 
+import dev.hilligans.engine.client.graphics.api.GraphicsContext;
+import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.input.InputHandler;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.IInputProvider;
@@ -38,7 +40,7 @@ public class ControllerHandler implements IInputProvider {
         this.window = window;
         inputHandlers.add(inputHandler);
         if(!initialized) {
-            GLFW.glfwSetJoystickCallback(new GLFWJoystickCallback() {
+            GLFWJoystickCallback callback = new GLFWJoystickCallback() {
                 @Override
                 public void invoke(int jid, int event) {
                     if (event == GLFW.GLFW_CONNECTED) {
@@ -55,7 +57,10 @@ public class ControllerHandler implements IInputProvider {
                         isGamePad[jid] = false;
                     }
                 }
-            });
+            };
+
+            GLFW.glfwSetJoystickCallback(callback);
+            window.addResourceCleanup(callback::close);
         }
 
     }

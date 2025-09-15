@@ -1,16 +1,14 @@
-package dev.hilligans.ourcraft.client.rendering.world;
+package dev.hilligans.engine.client.graphics;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.ourcraft.client.lang.Languages;
 import dev.hilligans.ourcraft.client.rendering.Textures;
-import dev.hilligans.engine.client.graphics.RenderWindow;
-import dev.hilligans.engine.client.graphics.ShaderSource;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.graphics.api.IMeshBuilder;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
+import dev.hilligans.engine.client.graphics.resource.Image;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.TextureAtlas;
 import dev.hilligans.ourcraft.client.rendering.world.managers.WorldTextureManager;
 import dev.hilligans.engine.data.IntList;
@@ -247,7 +245,9 @@ public class StringRenderer {
 
     public void close(IDefaultEngineImpl<?,?,?> impl, GraphicsContext graphicsContext) {
         for(TextureAtlas textureAtlas : textureAtlases.values()) {
-            impl.destroyTexture(graphicsContext, textureAtlas.glTextureId);
+            if(textureAtlas.glTextureId != -1) {
+                impl.destroyTexture(graphicsContext, textureAtlas.glTextureId);
+            }
         }
     }
 

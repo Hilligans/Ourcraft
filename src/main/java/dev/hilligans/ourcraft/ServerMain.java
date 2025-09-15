@@ -35,6 +35,7 @@ public class ServerMain {
 
 
     public static void main(String[] args) {
+        /*
         Ourcraft.argumentContainer = new ArgumentContainer(args);
         Settings.isServer = true;
         GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
@@ -44,6 +45,8 @@ public class ServerMain {
         StandardPipeline.get(gameInstance).build();
 
         server(gameInstance);
+
+         */
     }
 
 

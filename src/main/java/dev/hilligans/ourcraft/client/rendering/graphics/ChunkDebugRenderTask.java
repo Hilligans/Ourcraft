@@ -3,7 +3,7 @@ package dev.hilligans.ourcraft.client.rendering.graphics;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.*;
 import dev.hilligans.ourcraft.client.Client;
-import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
@@ -20,12 +20,12 @@ public class ChunkDebugRenderTask extends RenderTaskSource {
     public ShaderSource shaderSource;
 
     public ChunkDebugRenderTask() {
-        super("chunk_debug_render_task", "ourcraft:debug_world_renderer");
+        super("chunk_debug_render_task");
     }
 
     @Override
-    public RenderTask getDefaultTask() {
-        return new RenderTask() {
+    public RenderTask<Client> getDefaultTask() {
+        return new RenderTask<Client>() {
             @Override
             public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack, float delta) {
                 if (client.getPlayerData().debugChunkRendering) {
@@ -88,8 +88,8 @@ public class ChunkDebugRenderTask extends RenderTaskSource {
     }
 
     @Override
-    public void load(GameInstance gameInstance) {
-        super.load(gameInstance);
+    public void preLoad(GameInstance gameInstance) {
+        super.preLoad(gameInstance);
         shaderSource = gameInstance.getExcept("ourcraft:position_color_lines_shader", ShaderSource.class);
     }
 }

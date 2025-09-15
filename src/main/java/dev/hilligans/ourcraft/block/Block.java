@@ -4,7 +4,7 @@ import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.block.blockstate.BlockStateBuilder;
 import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.ourcraft.block.blockstate.IBlockStateTable;
-import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.Renderer;
 import dev.hilligans.engine.client.graphics.api.IMeshBuilder;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
@@ -21,7 +21,7 @@ import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
 import dev.hilligans.engine.resource.ResourceLocation;
 import dev.hilligans.ourcraft.server.concurrent.Lock;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.world.DataProvider;
 import dev.hilligans.ourcraft.world.data.providers.ShortBlockState;
 import dev.hilligans.ourcraft.world.newworldsystem.IAtomicChunk;
@@ -57,11 +57,14 @@ public class Block implements IRegistryElement {
 
     public Block(String name, BlockProperties blockProperties, String modId) {
         this(name,blockProperties);
+        this.path = blockProperties.path;
         this.modId = modId;
     }
 
     public Block(String name, String path, JSONObject overrides) {
-        this(name, BlockProperties.loadProperties(path,overrides));
+        this.name = name;
+        this.path = path;
+        this.overrides = overrides;
     }
 
     public Block setBlockDrop(Block blockDrop) {
@@ -291,15 +294,20 @@ public class Block implements IRegistryElement {
 
     @Override
     public void load(GameInstance gameInstance) {
+        if(path != null) {
+            blockProperties = BlockProperties.loadProperties(gameInstance, path, overrides);
+        }
+
         if(blockProperties.path != null && blockProperties.fromFile) {
             JSONObject jsonObject = (JSONObject) gameInstance.RESOURCE_LOADER.getResource(new ResourceLocation(blockProperties.path, modId));
             if(jsonObject != null) {
                 if (overrides != null) {
                     BlockProperties.recursivelyOverride(jsonObject, overrides);
                 }
-                blockProperties.read(jsonObject);
+                blockProperties.read(gameInstance, jsonObject);
             }
         }
+        blockProperties.load(gameInstance);
     }
 
     @Override

@@ -1,13 +1,10 @@
 package dev.hilligans.ourcraft.client.rendering.screens;
 
 import dev.hilligans.ourcraft.client.Client;
-import dev.hilligans.engine.client.graphics.MatrixStack;
-import dev.hilligans.engine.client.input.key.MouseHandler;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
-
-import java.nio.DoubleBuffer;
 
 public class MiniMapScreen extends ScreenBase {
 
@@ -22,7 +19,7 @@ public class MiniMapScreen extends ScreenBase {
     @Override
     public void drawScreen(RenderWindow window, MatrixStack matrixStack, GraphicsContext graphicsContext) {
         super.drawScreen(window, matrixStack, graphicsContext);
-        if(MouseHandler.instance.mousePressed) {
+      /*  if(MouseHandler.instance.mousePressed) {
             DoubleBuffer mousePos = window.getClient().getMousePos();
             int x = (int) (mousePos.get(0) - mouseLastX);
             int y = (int) (mousePos.get(1) - mouseLastY);
@@ -32,6 +29,8 @@ public class MiniMapScreen extends ScreenBase {
             mouseLastX = (int) mousePos.get(0);
             mouseLastY = (int) mousePos.get(1);
         }
+
+       */
        // miniMap.draw(matrixStack,miniMap.lastX, miniMap.lastY,0,0, (int) window.getWindowWidth(), (int) window.getWindowHeight());
     }
 

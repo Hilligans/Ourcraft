@@ -1,6 +1,5 @@
-package dev.hilligans.ourcraft.client.rendering;
+package dev.hilligans.engine.client.graphics.resource;
 
-import dev.hilligans.engine.client.graphics.VertexFormat;
 import dev.hilligans.engine.resource.IAllocator;
 import org.lwjgl.system.MemoryUtil;
 

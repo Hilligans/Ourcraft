@@ -1,16 +1,16 @@
 package dev.hilligans.engine.client.graphics.opengl;
 
-import dev.hilligans.engine.client.graphics.MatrixStack;
-import dev.hilligans.ourcraft.client.rendering.VertexMesh;
+import dev.hilligans.engine.EngineMain;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
+import dev.hilligans.engine.client.graphics.resource.VertexMesh;
 import dev.hilligans.engine.client.graphics.DefaultMeshBuilder;
 import dev.hilligans.engine.client.graphics.PipelineState;
 import dev.hilligans.engine.client.graphics.ShaderSource;
-import dev.hilligans.engine.client.graphics.VertexFormat;
+import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.engine.client.graphics.vulkan.boilerplate.window.ShaderCompiler;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
-import dev.hilligans.ourcraft.client.rendering.world.managers.ShaderManager;
+import dev.hilligans.engine.client.graphics.resource.Image;
 import dev.hilligans.engine.data.Tuple;
 import dev.hilligans.engine.mod.handler.content.UnknownResourceException;
 import dev.hilligans.engine.resource.ResourceLocation;
@@ -37,8 +37,8 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     public final Int2LongOpenHashMap vertexArrayObjects = new Int2LongOpenHashMap();
     public final Int2IntOpenHashMap fbos = new Int2IntOpenHashMap();
 
-    public final boolean trackingResourceAllocations = true;
-    public final Int2ObjectOpenHashMap<Exception> textureAllocationTracker = new Int2ObjectOpenHashMap<>();
+    public final boolean trackingResourceAllocations;
+    public final Int2ObjectOpenHashMap<Throwable> textureAllocationTracker = new Int2ObjectOpenHashMap<>();
     public final Int2ObjectOpenHashMap<Exception> vertexArrayAllocationTracker = new Int2ObjectOpenHashMap<>();
     public final Int2ObjectOpenHashMap<Exception> programAllocationTracker = new Int2ObjectOpenHashMap<>();
     public final Int2ObjectOpenHashMap<Exception> fboAllocationTracker = new Int2ObjectOpenHashMap<>();
@@ -49,6 +49,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
 
     public OpenglDefaultImpl(OpenGLEngine engine) {
         this.engine = engine;
+        this.trackingResourceAllocations = EngineMain.debug.get(engine.getGameInstance());
     }
 
     @Override
@@ -131,7 +132,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         glGenerateMipmap(GL_TEXTURE_2D);
         textureTypes.put(texture, GL_TEXTURE_2D);
         if(trackingResourceAllocations) {
-            textureAllocationTracker.put(texture, new Exception());
+            textureAllocationTracker.put(texture, new Throwable());
         }
         return texture;
     }
@@ -149,7 +150,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         glGenerateMipmap(GL_TEXTURE_2D);
         textureTypes.put(texture, GL_TEXTURE_2D);
         if(trackingResourceAllocations) {
-            textureAllocationTracker.put(texture, new Exception());
+            textureAllocationTracker.put(texture, new Throwable());
         }
         return texture;
     }
@@ -392,7 +393,8 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
             for(Exception e : vertexArrayAllocationTracker.values()) {
                 throw new VideoMemoryLeakException("Missing VAO deallocation allocated at:", e);
             }
-            for(Exception e : textureAllocationTracker.values()) {
+            System.out.println(textureAllocationTracker.keySet());
+            for(Throwable e : textureAllocationTracker.values()) {
                 throw new VideoMemoryLeakException("Missing texture deallocation allocated at:", e);
             }
             for(Exception e : programAllocationTracker.values()) {
@@ -435,6 +437,10 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     public static class VideoMemoryLeakException extends RuntimeException {
 
         public VideoMemoryLeakException(String message, Exception e) {
+            super(message, e);
+        }
+
+        public VideoMemoryLeakException(String message, Throwable e) {
             super(message, e);
         }
     }

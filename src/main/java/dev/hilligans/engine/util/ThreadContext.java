@@ -1,7 +1,7 @@
 package dev.hilligans.engine.util;
 
-import dev.hilligans.ourcraft.util.sections.EmptySection;
-import dev.hilligans.ourcraft.util.sections.ISection;
+import dev.hilligans.engine.util.sections.EmptySection;
+import dev.hilligans.engine.util.sections.ISection;
 import org.jetbrains.annotations.NotNull;
 
 public class ThreadContext {

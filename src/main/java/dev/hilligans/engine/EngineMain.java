@@ -1,6 +1,7 @@
 package dev.hilligans.engine;
 
 import dev.hilligans.engine.mod.handler.pipeline.InstanceLoaderPipeline;
+import dev.hilligans.engine.mod.handler.pipeline.other.DumpRegistriesPipeline;
 import dev.hilligans.engine.mod.handler.pipeline.other.TestPipeline;
 import dev.hilligans.engine.mod.handler.pipeline.standard.StandardPipeline;
 import dev.hilligans.engine.network.Protocol;
@@ -36,14 +37,15 @@ public class EngineMain {
             .help("Loads all contents and performs standard tests");
     public static final Argument<Boolean> debug = Argument.existArg("--debug")
             .help("Turns on engine debuggers and memory trackers.");
+    public static final Argument<Boolean> dumpRegistries = Argument.existArg("--dumpRegistries")
+            .help("Prints all registry contents after loading");
 
     public static void main(String[] args) throws IOException {
         Ourcraft.argumentContainer = new ArgumentContainer(args);
         System.out.println("Starting with arguments: " + Arrays.toString(args));
         System.out.println("Starting client with PID " + ProcessHandle.current().pid());
 
-        GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
-        gameInstance.handleArgs(args);
+        GameInstance gameInstance = new GameInstance(Ourcraft.argumentContainer);
         gameInstance.side = startingSide.get(argumentContainer);
 
         if(help.get(argumentContainer)) {
@@ -59,9 +61,10 @@ public class EngineMain {
         }
 
         if(runTests.get(gameInstance)) {
-            InstanceLoaderPipeline<?> pipeline = TestPipeline.get(gameInstance);
-            pipeline.build();
-            System.exit(0);
+            TestPipeline.run(gameInstance);
+        }
+        if(dumpRegistries.get(gameInstance)) {
+            DumpRegistriesPipeline.run(gameInstance);
         }
 
         gameInstance.THREAD_PROVIDER.map();

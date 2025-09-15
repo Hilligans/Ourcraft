@@ -4,6 +4,8 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.application.IApplication;
 import dev.hilligans.engine.client.graphics.*;
+import dev.hilligans.engine.client.graphics.resource.VertexFormat;
+import dev.hilligans.engine.client.graphics.tasks.BlankRenderTask;
 import dev.hilligans.engine.client.graphics.tasks.EngineLoadingTask;
 import dev.hilligans.engine.client.graphics.tasks.GUIRenderTask;
 import dev.hilligans.engine.client.graphics.tasks.SplitWindowRenderTask;
@@ -69,8 +71,8 @@ import dev.hilligans.ourcraft.settings.Setting;
 import dev.hilligans.engine.test.ITest;
 import dev.hilligans.engine.test.standard.DuplicateRegistryTest;
 import dev.hilligans.engine.util.argument.ArgumentContainer;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
-import dev.hilligans.ourcraft.util.registry.Registry;
+import dev.hilligans.engine.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.Registry;
 import dev.hilligans.ourcraft.world.Feature;
 import dev.hilligans.ourcraft.world.newworldsystem.ChainedBlockChunkStream;
 import dev.hilligans.ourcraft.world.newworldsystem.ChunkStream;
@@ -105,8 +107,8 @@ public class Ourcraft extends ModClass {
         return String.format("%2.2fms", time/1000000f);
     }
 
-    public static synchronized ResourceManager getResourceManager() {
-        return GAME_INSTANCE.RESOURCE_MANAGER;
+    public static synchronized ResourceManager getResourceManager(GameInstance gameInstance) {
+        return gameInstance.RESOURCE_MANAGER;
     }
 
     public static File getFile(String path) {
@@ -216,7 +218,7 @@ public class Ourcraft extends ModClass {
 
             view.registerRenderPipelines(new RenderPipeline("engine_loading_pipeline"));
 
-            view.registerRenderTarget(new RenderTarget("engine_loading_target", "ourcraft:engine_loading_pipeline")
+            view.registerRenderTarget(new RenderTarget("engine_loading_target", "ourcraft:engine_loading_pipeline", "ourcraft:engine_loading_task")
                     .setPipelineState(new PipelineState()));
 
             view.registerRenderTask(new EngineLoadingTask());
@@ -226,7 +228,7 @@ public class Ourcraft extends ModClass {
             view.registerLayoutEngine(new NuklearLayoutEngine());
 
             if (view.getGameInstance().side.isClient()) {
-                view.registerKeybinds(new Input("ourcraft:mouse_handler::0") {
+                view.registerKeybinds(new Input("left_click", "ourcraft:mouse_handler::0") {
                     @Override
                     public void press(RenderWindow renderWindow, float strength) {
                         Client client = renderWindow.getClient();
@@ -237,7 +239,7 @@ public class Ourcraft extends ModClass {
                     }
                 });
 
-                view.registerKeybinds(new Input("ourcraft:key_press_handler::" + KeyHandler.GLFW_KEY_ESCAPE) {
+                view.registerKeybinds(new Input("escape_menu", "ourcraft:key_press_handler::" + KeyHandler.GLFW_KEY_ESCAPE) {
                     @Override
                     public void press(RenderWindow renderWindow, float strength) {
                         Client client = renderWindow.getClient();
@@ -253,7 +255,7 @@ public class Ourcraft extends ModClass {
                     }
                 });
 
-                view.registerKeybinds(new Input("ourcraft:key_press_handler::" + KeyHandler.GLFW_KEY_F3) {
+                view.registerKeybinds(new Input("f3", "ourcraft:key_press_handler::" + KeyHandler.GLFW_KEY_F3) {
                     @Override
                     public void press(RenderWindow renderWindow, float strength) {
                         Client client = renderWindow.getClient();
@@ -261,7 +263,7 @@ public class Ourcraft extends ModClass {
                     }
                 }.onlyWithPipelines("ourcraft:new_world_pipeline"));
 
-                view.registerKeybinds(new Input("ourcraft:mouse_handler::" + MouseHandler.MOUSE_X) {
+                view.registerKeybinds(new Input("rotate_yaw", "ourcraft:mouse_handler::" + MouseHandler.MOUSE_X) {
                     @Override
                     public void press(RenderWindow window, float strength) {
                         window.getCamera().addRotation(0, strength/400);
@@ -270,7 +272,7 @@ public class Ourcraft extends ModClass {
                     }
                 }.onlyWithPipelines("ourcraft:new_world_pipeline"));
 
-                view.registerKeybinds(new Input("ourcraft:mouse_handler::" + MouseHandler.MOUSE_Y) {
+                view.registerKeybinds(new Input("rotate_pitch", "ourcraft:mouse_handler::" + MouseHandler.MOUSE_Y) {
                     @Override
                     public void press(RenderWindow window, float strength) {
                         window.getCamera().addRotation(-strength/400,0);
@@ -279,7 +281,7 @@ public class Ourcraft extends ModClass {
                     }
                 }.onlyWithPipelines("ourcraft:new_world_pipeline"));
 
-                view.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_SEMICOLON) {
+                view.registerKeybinds(new Input("open_test_screen", "ourcraft:key_press_handler::" + GLFW_KEY_SEMICOLON) {
                     @Override
                     public void press(RenderWindow renderWindow, float strength) {
                         super.press(renderWindow, strength);
@@ -287,7 +289,7 @@ public class Ourcraft extends ModClass {
                     }
                 });
 
-                view.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_F8){
+                view.registerKeybinds(new Input("chunk_outlines", "ourcraft:key_press_handler::" + GLFW_KEY_F8){
                     @Override
                     public void press(RenderWindow renderWindow, float strength) {
                         super.press(renderWindow, strength);
@@ -295,44 +297,44 @@ public class Ourcraft extends ModClass {
                     }
                 });
 
-                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_W,
+                view.registerKeybinds(new RepeatingInput("move_forward", "ourcraft:key_press_handler::" + GLFW_KEY_W,
                         (window, strength) -> window.getCamera().moveForward(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
 
-                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_A,
+                view.registerKeybinds(new RepeatingInput("move_left", "ourcraft:key_press_handler::" + GLFW_KEY_A,
                         (window, strength) -> window.getCamera().moveLeft(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
 
-                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_S,
+                view.registerKeybinds(new RepeatingInput("move_backward", "ourcraft:key_press_handler::" + GLFW_KEY_S,
                         (window, strength) -> window.getCamera().moveBackward(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
 
-                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_D,
+                view.registerKeybinds(new RepeatingInput("move_right", "ourcraft:key_press_handler::" + GLFW_KEY_D,
                         (window, strength) -> window.getCamera().moveRight(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
 
-                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_SPACE,
+                view.registerKeybinds(new RepeatingInput("jump", "ourcraft:key_press_handler::" + GLFW_KEY_SPACE,
                         (window, strength) -> window.getCamera().moveUp(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
 
-                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_LEFT_SHIFT,
+                view.registerKeybinds(new RepeatingInput("crouch", "ourcraft:key_press_handler::" + GLFW_KEY_LEFT_SHIFT,
                         (window, strength) -> window.getCamera().moveUp(-5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
 
-                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_DOWN,
+                view.registerKeybinds(new RepeatingInput("pitch_down", "ourcraft:key_press_handler::" + GLFW_KEY_DOWN,
                         (window, strength) -> window.getCamera().addRotation(0.1f * strength, 0)));
 
-                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_UP,
+                view.registerKeybinds(new RepeatingInput("pitch_up", "ourcraft:key_press_handler::" + GLFW_KEY_UP,
                         (window, strength) -> window.getCamera().addRotation(-0.1f * strength, 0)));
 
-                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_LEFT,
+                view.registerKeybinds(new RepeatingInput("yaw_down", "ourcraft:key_press_handler::" + GLFW_KEY_LEFT,
                         (window, strength) -> window.getCamera().addRotation(0, -0.3f * strength)));
 
-                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_RIGHT,
+                view.registerKeybinds(new RepeatingInput("yaw_up", "ourcraft:key_press_handler::" + GLFW_KEY_RIGHT,
                         (window, strength) -> window.getCamera().addRotation(0, 0.3f * strength)));
 
-                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_L,
+                view.registerKeybinds(new RepeatingInput("roll_down", "ourcraft:key_press_handler::" + GLFW_KEY_L,
                         (window, strength) -> ((WorldCamera)window.getCamera()).roll -= 0.1f * strength));
 
-                view.registerKeybinds(new RepeatingInput("ourcraft:key_press_handler::" + GLFW_KEY_O,
+                view.registerKeybinds(new RepeatingInput("roll_up", "ourcraft:key_press_handler::" + GLFW_KEY_O,
                         (window, strength) -> ((WorldCamera)window.getCamera()).roll += 0.1f * strength));
 
 
-                view.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_H) {
+                view.registerKeybinds(new Input("open_tag_editor", "ourcraft:key_press_handler::" + GLFW_KEY_H) {
                     @Override
                     public void press(RenderWindow renderWindow, float strength) {
                         Client client = renderWindow.getClient();
@@ -340,7 +342,7 @@ public class Ourcraft extends ModClass {
                     }
                 });
 
-                view.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_P) {
+                view.registerKeybinds(new Input("open_frame_times", "ourcraft:key_press_handler::" + GLFW_KEY_P) {
                     @Override
                     public void press(RenderWindow renderWindow, float strength) {
                         Client client = renderWindow.getClient();
@@ -348,7 +350,7 @@ public class Ourcraft extends ModClass {
                     }
                 });
 
-                view.registerKeybinds(new Input("ourcraft:key_press_handler::" + GLFW_KEY_T) {
+                view.registerKeybinds(new Input("open_chat", "ourcraft:key_press_handler::" + GLFW_KEY_T) {
                     @Override
                     public void press(RenderWindow renderWindow, float strength) {
                         Client client = renderWindow.getClient();
@@ -376,21 +378,22 @@ public class Ourcraft extends ModClass {
             modContent.registerRenderTask(new ChatRenderTask());
             modContent.registerRenderTask(new SplitWindowRenderTask());
             modContent.registerRenderTask(new ChunkDebugRenderTask());
+            modContent.registerRenderTask(new BlankRenderTask());
 
             modContent.registerRenderPipelines(new RenderPipeline("new_world_pipeline"));
-            modContent.registerRenderTarget(new RenderTarget("debug_world_renderer", "ourcraft:new_world_pipeline")
+            modContent.registerRenderTarget(new RenderTarget("debug_world_renderer", "ourcraft:new_world_pipeline", "ourcraft:chunk_debug_render_task")
                     .setPipelineState(new PipelineState().setDepth(false)));
-            modContent.registerRenderTarget(new RenderTarget("new_solid_world_renderer", "ourcraft:new_world_pipeline").afterTarget("debug_world_renderer", "ourcraft")
+            modContent.registerRenderTarget(new RenderTarget("new_solid_world_renderer", "ourcraft:new_world_pipeline", "ourcraft:new_world_render_task").afterTarget("debug_world_renderer", "ourcraft")
                     .setPipelineState(new PipelineState().setDepth(true)));
-            modContent.registerRenderTarget(new RenderTarget("entity_renderer", "ourcraft:new_world_pipeline").afterTarget("new_solid_world_renderer", "ourcraft")
+            modContent.registerRenderTarget(new RenderTarget("entity_renderer", "ourcraft:new_world_pipeline", "ourcraft:blank_render_task").afterTarget("new_solid_world_renderer", "ourcraft")
                     .setPipelineState(new PipelineState().setDepth(true)));
-            modContent.registerRenderTarget(new RenderTarget("particle_renderer", "ourcraft:new_world_pipeline").afterTarget("entity_renderer", "ourcraft")
+            modContent.registerRenderTarget(new RenderTarget("particle_renderer", "ourcraft:new_world_pipeline", "ourcraft:blank_render_task").afterTarget("entity_renderer", "ourcraft")
                     .setPipelineState(new PipelineState().setDepth(true)));
-            modContent.registerRenderTarget(new RenderTarget("translucent_world_renderer", "ourcraft:new_world_pipeline").afterTarget("particle_renderer", "ourcraft")
+            modContent.registerRenderTarget(new RenderTarget("translucent_world_renderer", "ourcraft:new_world_pipeline", "ourcraft:world_transparent_render_task").afterTarget("particle_renderer", "ourcraft")
                     .setPipelineState(new PipelineState().setDepth(true)));
-            modContent.registerRenderTarget(new RenderTarget("chat_renderer", "ourcraft:new_world_pipeline").afterTarget("translucent_world_renderer", "ourcraft")
+            modContent.registerRenderTarget(new RenderTarget("chat_renderer", "ourcraft:new_world_pipeline", "ourcraft:chat_render_task").afterTarget("translucent_world_renderer", "ourcraft")
                     .setPipelineState(new PipelineState()));
-            modContent.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:new_world_pipeline").afterTarget("chat_renderer", "ourcraft")
+            modContent.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:new_world_pipeline", "ourcraft:gui_render_task").afterTarget("chat_renderer", "ourcraft")
                     .setPipelineState(new PipelineState()));
 
 
@@ -398,10 +401,10 @@ public class Ourcraft extends ModClass {
             modContent.registerRenderPipelines(new RenderPipeline("split_window_pipeline"));
 
 
-            modContent.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:menu_pipeline")
+            modContent.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:menu_pipeline", "ourcraft:gui_render_task")
                     .setPipelineState(new PipelineState()));
 
-            modContent.registerRenderTarget(new RenderTarget("split_window_renderer", "ourcraft:split_window_pipeline")
+            modContent.registerRenderTarget(new RenderTarget("split_window_renderer", "ourcraft:split_window_pipeline", "ourcraft:split_window_render_task")
                     .setPipelineState(new PipelineState()));
         }
 

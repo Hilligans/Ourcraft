@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.entity;
 
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 
 public class EntityType implements IRegistryElement {
 

@@ -1,7 +1,7 @@
 package dev.hilligans.engine.application;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 
 public interface IApplication extends IRegistryElement {
 

@@ -2,7 +2,7 @@ package dev.hilligans.engine.client.graphics.api;
 
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.RenderWindow;
-import dev.hilligans.ourcraft.client.rendering.world.StringRenderer;
+import dev.hilligans.engine.client.graphics.StringRenderer;
 
 import java.util.ArrayList;
 
@@ -40,7 +40,7 @@ public abstract class GraphicsEngineBase<Q extends RenderWindow,V extends IDefau
     }
 
     @Override
-    public void load(GameInstance gameInstance) {
+    public void preLoad(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
     }
 

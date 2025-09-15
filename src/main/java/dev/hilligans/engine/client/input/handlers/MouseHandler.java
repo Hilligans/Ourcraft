@@ -19,20 +19,16 @@ public class MouseHandler implements IInputProvider {
         this.window = window;
         this.handler = handler;
         MouseHandler mouse = this;
-        Callback callback = GLFW.glfwSetMouseButtonCallback(window.getWindowID(), new GLFWMouseButtonCallback() {
+        GLFWMouseButtonCallback callback = new GLFWMouseButtonCallback() {
             @Override
             public void invoke(long window, int button, int action, int mods) {
                 handler.handleInput(button,action,window,action, mouse);
             }
-        });
-        window.addResourceCleanup(() -> {
-            if(callback != null) {
-                callback.close();
-                callback.free();
-            }
-        });
+        };
+        GLFW.glfwSetMouseButtonCallback(window.getWindowID(), callback);
+        window.addResourceCleanup(callback::close);
 
-        Callback callback1 = GLFW.glfwSetCursorPosCallback(window.getWindowID(), new GLFWCursorPosCallback() {
+        GLFWCursorPosCallback callback1 = new GLFWCursorPosCallback() {
             @Override
             public void invoke(long w, double xpos, double ypos) {
                 xpos -= window.getWindowWidth() / 2;
@@ -44,14 +40,9 @@ public class MouseHandler implements IInputProvider {
                     handler.handleInput(MOUSE_Y, 2, w, 1,0,0, (float) ypos, mouse);
                 }
             }
-        });
-
-        window.addResourceCleanup(() -> {
-            if(callback1 != null) {
-                callback1.close();
-                callback1.free();
-            }
-        });
+        };
+        GLFW.glfwSetCursorPosCallback(window.getWindowID(), callback1);
+        window.addResourceCleanup(callback1::close);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.data.other.blockshapes;
 
+import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.BlockModel;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.engine.data.BoundingBox;
@@ -9,8 +10,9 @@ import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 
 public class SlabBlockShape extends BlockShape {
 
-    public SlabBlockShape() {
-        data = BlockModel.create("/Models/Blocks/slab.txt");
+    public SlabBlockShape(GameInstance gameInstance) {
+        super(gameInstance);
+        data = BlockModel.create(gameInstance, "/Models/Blocks/slab.txt");
     }
 
 /*

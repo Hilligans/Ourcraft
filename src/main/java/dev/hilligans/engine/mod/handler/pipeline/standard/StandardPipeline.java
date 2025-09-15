@@ -7,16 +7,13 @@ import dev.hilligans.engine.mod.handler.pipeline.InstanceLoaderPipeline;
 import dev.hilligans.engine.mod.handler.pipeline.PerModPipelineStage;
 import dev.hilligans.engine.resource.loaders.ResourceLoader;
 import dev.hilligans.engine.util.argument.Argument;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
-import dev.hilligans.ourcraft.util.registry.Registry;
+import dev.hilligans.engine.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.Registry;
 
 import java.util.Arrays;
 import java.util.function.Function;
 
 public class StandardPipeline extends InstanceLoaderPipeline<StandardPipeline> {
-
-    public static final Argument<Boolean> dumpRegistries = Argument.existArg("--dump-registries")
-            .help("Prints all the registries to stdout at the end of loading.");
 
     public StandardPipeline(GameInstance gameInstance) {
         super(gameInstance);
@@ -55,8 +52,8 @@ public class StandardPipeline extends InstanceLoaderPipeline<StandardPipeline> {
         pipeline.addStage("Build Content For Game Instance", (pipeline15, section) -> {
             for (Registry<?> registry : pipeline15.getGameInstance().REGISTRIES.ELEMENTS) {
                 for (Object o : registry.ELEMENTS) {
-                    if (o instanceof IRegistryElement) {
-                        ((IRegistryElement) o).load(pipeline15.getGameInstance());
+                    if (o instanceof IRegistryElement element) {
+                        element.preLoad(pipeline15.getGameInstance());
                     }
                 }
             }
@@ -77,14 +74,6 @@ public class StandardPipeline extends InstanceLoaderPipeline<StandardPipeline> {
 
         pipeline.addStage("Finish Building", (pipeline13, section) -> {pipeline13.getGameInstance().builtSemaphore.release();});
 
-        if(dumpRegistries.get(gameInstance)) {
-            pipeline.addStage("Debug", ((pipeline1, section1) -> {
-                System.out.println("Registries:");
-                for(Registry<? extends IRegistryElement> registry : pipeline1.getGameInstance().REGISTRIES.ELEMENTS) {
-                    System.out.println(registry.getIdentifierName() + "=+" + Arrays.toString(registry.ELEMENTS.stream().map((Function<IRegistryElement, String>) o -> o.getIdentifierName()).toArray()));
-                }
-            }));
-        }
 
         return pipeline;
     }

@@ -14,45 +14,6 @@ public class  VAOManager {
 
     public static HashMap<Integer, Tuple<Integer,Integer>> buffers = new HashMap<>();
 
-    public static void destroyBuffer(int id) {
-        Tuple<Integer,Integer> tuple = buffers.get(id);
-        buffers.remove(id);
-        if(tuple != null) {
-            glDeleteBuffers(tuple.getTypeA());
-            glDeleteBuffers(tuple.getTypeB());
-        }
-        glDeleteVertexArrays(id);
-    }
-
-    public static int createVAO(float[] vertices, int[] indices) {
-        int VAO = glGenVertexArrays();
-        int VBO = glGenBuffers();
-        int EBO = glGenBuffers();
-
-
-        glBindVertexArray(VAO);
-
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
-
-
-
-        glVertexAttribPointer(0,3,GL_FLOAT,false,5 * 4,0);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, 2, GL_FLOAT, false, 5 * 4, 3 * 4);
-        glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        //glDeleteBuffers(VBO);
-        // glDeleteBuffers(EBO);
-        buffers.put(VAO,new Tuple<>(VBO,EBO));
-
-        return VAO;
-    }
-
     public static int createLine(float[] vertices, int[] indices) {
         int VAO = glGenVertexArrays();
         int VBO = glGenBuffers();

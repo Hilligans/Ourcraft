@@ -2,7 +2,7 @@ package dev.hilligans.engine.client.graphics.api;
 
 import dev.hilligans.engine.client.input.InputHandler;
 import dev.hilligans.engine.client.graphics.RenderWindow;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 
 public interface IInputProvider extends IRegistryElement {
 

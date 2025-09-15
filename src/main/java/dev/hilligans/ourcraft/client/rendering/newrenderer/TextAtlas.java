@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.client.rendering.newrenderer;
 
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
+import dev.hilligans.engine.client.graphics.resource.Image;
 import dev.hilligans.engine.resource.ResourceLocation;
 import dev.hilligans.engine.util.NamedThreadFactory;
 import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
@@ -28,7 +29,7 @@ public class TextAtlas {
     long[][] openSpots;
     int arrSize;
 
-    public int texture;
+    public long texture;
     int id = 0;
 
     public TextAtlas(GameInstance gameInstance) {
@@ -78,7 +79,7 @@ public class TextAtlas {
                             System.out.println(new ResourceLocation(imageLocation.path, imageLocation.modId).toIdentifier());
                             return;
                         }
-                        tempImage.flip(false, tempImage.mallocSizedBuffer(stack)).ensureSquare();
+                        tempImage.flip(false, tempImage.mallocSizedBuffer()).ensureSquare();
 
                         count++;
                         long starts = System.nanoTime();
@@ -105,10 +106,10 @@ public class TextAtlas {
     public long time = 0;
     public double count  = 0;
 
-    public int upload(IGraphicsEngine<?,?,?> engine) {
+    public long upload(IGraphicsEngine<?,?,?> engine) {
         clear();
         assemble(engine.getGameInstance());
-        texture = (int) engine.getDefaultImpl().createTexture(null,image);
+        texture =  engine.getDefaultImpl().createTexture(null,image);
         return texture;
     }
 

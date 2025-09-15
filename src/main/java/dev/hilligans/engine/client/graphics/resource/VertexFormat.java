@@ -1,6 +1,6 @@
-package dev.hilligans.engine.client.graphics;
+package dev.hilligans.engine.client.graphics.resource;
 
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 
 import java.util.ArrayList;
 

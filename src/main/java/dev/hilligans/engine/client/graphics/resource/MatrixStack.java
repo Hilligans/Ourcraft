@@ -1,4 +1,4 @@
-package dev.hilligans.engine.client.graphics;
+package dev.hilligans.engine.client.graphics.resource;
 
 import org.joml.*;
 

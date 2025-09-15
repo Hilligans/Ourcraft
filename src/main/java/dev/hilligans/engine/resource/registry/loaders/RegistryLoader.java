@@ -3,7 +3,7 @@ package dev.hilligans.engine.resource.registry.loaders;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.mod.handler.Identifier;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 
 public abstract class RegistryLoader implements IRegistryElement {
 

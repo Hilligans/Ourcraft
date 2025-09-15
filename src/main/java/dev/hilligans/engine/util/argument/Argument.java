@@ -3,8 +3,8 @@ package dev.hilligans.engine.util.argument;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.util.Ansi;
 import dev.hilligans.engine.util.Side;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
-import dev.hilligans.ourcraft.util.registry.Registry;
+import dev.hilligans.engine.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.Registry;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package dev.hilligans.engine.client.graphics.api;
 
-import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4d;

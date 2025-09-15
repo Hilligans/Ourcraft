@@ -6,7 +6,7 @@ import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.ourcraft.client.Client;
-import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.MeshHolder;
 import dev.hilligans.ourcraft.client.rendering.culling.CullingEngine;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
@@ -29,7 +29,7 @@ import java.util.concurrent.Executors;
 public class WorldRenderTask extends RenderTaskSource {
 
     public WorldRenderTask() {
-        super("new_world_render_task", "ourcraft:new_solid_world_renderer");
+        super("new_world_render_task");
     }
 
     public ShaderSource shaderSource;
@@ -40,11 +40,11 @@ public class WorldRenderTask extends RenderTaskSource {
     TextAtlas textAtlas;
 
     @Override
-    public RenderTask getDefaultTask() {
+    public RenderTask<Client> getDefaultTask() {
 
         IThreeDContainer<MeshHolder> meshes = new EmptyContainer<>();
 
-        return new RenderTask() {
+        return new RenderTask<Client>() {
 
             @Override
             public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, Client client, MatrixStack worldStack, MatrixStack screenStack, float delta) {
@@ -194,6 +194,9 @@ public class WorldRenderTask extends RenderTaskSource {
 
     @Override
     public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
+        if(textAtlas != null) {
+            return;
+        }
         textAtlas = new TextAtlas(gameInstance);
         for(Block block : gameInstance.getBlocks()) {
             if(!block.blockProperties.translucent) {
@@ -205,12 +208,13 @@ public class WorldRenderTask extends RenderTaskSource {
 
     @Override
     public void cleanup(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
+        System.out.println("Cleaning up:" + textAtlas.texture);
         graphicsEngine.getDefaultImpl().destroyTexture(graphicsContext, textAtlas.texture);
     }
 
     @Override
-    public void load(GameInstance gameInstance) {
-        super.load(gameInstance);
+    public void preLoad(GameInstance gameInstance) {
+        super.preLoad(gameInstance);
         shaderSource = gameInstance.SHADERS.get("ourcraft:world_shader");
     }
 }

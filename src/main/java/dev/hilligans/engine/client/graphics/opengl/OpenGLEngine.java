@@ -1,17 +1,16 @@
 package dev.hilligans.engine.client.graphics.opengl;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.ourcraft.client.Client;
-import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderPipeline;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.GraphicsEngineBase;
 import dev.hilligans.engine.data.Tuple;
-import dev.hilligans.ourcraft.util.Logger;
+import dev.hilligans.engine.util.Logger;
 import dev.hilligans.engine.util.argument.Argument;
-import dev.hilligans.ourcraft.util.sections.ISection;
-import dev.hilligans.ourcraft.util.sections.ProfiledSection;
+import dev.hilligans.engine.util.sections.ISection;
+import dev.hilligans.engine.util.sections.ProfiledSection;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL43;
 import org.lwjgl.opengl.GLDebugMessageCallback;
@@ -30,13 +29,14 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
 
     public static Argument<RenderPipeline> renderPipelineArgument = Argument.registryArg("--renderPipeline", RenderPipeline.class, "ourcraft:engine_loading_pipeline")
             .help("The default render pipeline to use.");
+    public static Argument<String> clientSection = Argument.stringArg("--clientSection", "empty")
+            .help("Specifies what section api to attach to the client");
+
 
     public Logger logger;
 
     public long window;
     public int texture;
-
-    public Client client;
 
     public OpenglDefaultImpl engineImpl;
 
@@ -45,9 +45,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
 
     public ArrayList<Callback> callbacks = new ArrayList<>();
 
-    public OpenGLEngine() {
-        engineImpl = new OpenglDefaultImpl(this);
-    }
+    public OpenGLEngine() {}
 
     @Override
     public OpenGLWindow createWindow() {
@@ -149,8 +147,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
     @Override
     public void close() {
         for(Callback callback : callbacks) {
-           // callback.close();
-           // callback.free();
+            callback.close();
         }
         gameInstance.cleanupGraphics(this, createContext(null));
         for(RenderWindow renderWindow : windows) {
@@ -169,7 +166,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         if(profiling) {
             return new GraphicsContext().setSection(new ProfiledSection().setMonitorName("loop"));
         }
-        return new GraphicsContext().setSection(ISection.getSection(client.argumentContainer.getString("--clientSection", "empty")));
+        return new GraphicsContext().setSection(ISection.getSection(clientSection.get(gameInstance)));
     }
 
 
@@ -201,6 +198,12 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
             return programCache[0].typeB;
         }
         return 0;
+    }
+
+    @Override
+    public void preLoad(GameInstance gameInstance) {
+        super.preLoad(gameInstance);
+        engineImpl = new OpenglDefaultImpl(this);
     }
 
     @Override

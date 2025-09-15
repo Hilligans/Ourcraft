@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.client.lang;
 
+import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.Ourcraft;
 
 import java.util.ArrayList;
@@ -21,8 +22,8 @@ public class Languages {
         return string;
     }
 
-    public static void setCurrentLanguage(String languageName) {
-        Ourcraft.getResourceManager().setLanguageFile(languageName);
+    public static void setCurrentLanguage(GameInstance gameInstance, String languageName) {
+        Ourcraft.getResourceManager(gameInstance).setLanguageFile(languageName);
     }
 
     private static void addLanguage(String language, String name) {

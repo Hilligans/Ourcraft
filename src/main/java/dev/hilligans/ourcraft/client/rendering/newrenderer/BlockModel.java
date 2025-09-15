@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering.newrenderer;
 
+import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.engine.client.graphics.api.IMeshBuilder;
@@ -542,12 +543,12 @@ public class BlockModel implements IModel {
         return this;
     }
 
-    public static BlockModel create(String path) {
-        IModel model = Ourcraft.GAME_INSTANCE.RESOURCE_MANAGER.getModel(path);
+    public static BlockModel create(GameInstance gameInstance, String path) {
+        IModel model = gameInstance.RESOURCE_MANAGER.getModel(path);
         if(model instanceof BlockModel) {
             return (BlockModel) model;
         }
-        String val = FileLoader.readString(Ourcraft.GAME_INSTANCE.RESOURCE_MANAGER.getResource(path));
+        String val = FileLoader.readString(gameInstance.RESOURCE_MANAGER.getResource(path));
         try {
             BlockModel blockModel = new BlockModel(val);
             blockModel.path = path;

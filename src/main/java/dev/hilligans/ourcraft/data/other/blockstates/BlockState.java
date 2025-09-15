@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.data.other.blockstates;
 
+import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.Blocks;
 
@@ -17,8 +18,8 @@ public class BlockState {
         this.blockId = blockId;
     }
 
-    public Block getBlock() {
-        return Blocks.getBlockWithID(blockId);
+    public Block getBlock(GameInstance gameInstance) {
+        return gameInstance.BLOCKS.get(blockId);
     }
 
     @Override

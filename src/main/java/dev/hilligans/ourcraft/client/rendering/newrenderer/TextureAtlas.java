@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.newrenderer;
 
 import dev.hilligans.engine.GameInstance;
+import dev.hilligans.engine.client.graphics.resource.Image;
 import dev.hilligans.engine.data.Triplet;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
@@ -60,8 +61,8 @@ public class TextureAtlas {
         return id;
     }
 
-    public dev.hilligans.ourcraft.client.rendering.newrenderer.Image toImage() {
-        Image img;
+    public dev.hilligans.engine.client.graphics.resource.Image toImage() {
+        dev.hilligans.engine.client.graphics.resource.Image img;
         if(imageHolders.size() != 0) {
             img = imageHolders.get(0).image;
             for (int x = 1; x < imageHolders.size(); x++) {
@@ -125,10 +126,10 @@ public class TextureAtlas {
         return img;
     }
 
-    public static Image joinImage(Image img1, Image img2) {
+    public static dev.hilligans.engine.client.graphics.resource.Image joinImage(dev.hilligans.engine.client.graphics.resource.Image img1, dev.hilligans.engine.client.graphics.resource.Image img2) {
         int width = img1.getWidth() + img2.getWidth();
         int height = Math.max(img1.getHeight(),img2.getHeight());
-        Image img = new Image(width,height,4);
+        dev.hilligans.engine.client.graphics.resource.Image img = new dev.hilligans.engine.client.graphics.resource.Image(width,height,4);
         for(int x = 0; x < img1.getWidth(); x++) {
             for(int y = 0; y < img1.getHeight(); y++) {
                 img.putPixel(x,y,img1.getPixel(x,y));
@@ -147,7 +148,7 @@ public class TextureAtlas {
         public double imageSize;
         int count;
 
-        public Image image;
+        public dev.hilligans.engine.client.graphics.resource.Image image;
 
         int width = 0;
         int height = 0;

@@ -1,7 +1,8 @@
 package dev.hilligans.engine.client.graphics.nuklear;
 
+import dev.hilligans.engine.application.IClientApplication;
 import dev.hilligans.ourcraft.client.Client;
-import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IDefaultEngineImpl;
@@ -47,7 +48,7 @@ public class NuklearLayout implements ILayout {
     }
 
     @Override
-    public void drawLayout(RenderWindow renderWindow, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, MatrixStack matrixStack, Client client) {
+    public void drawLayout(RenderWindow renderWindow, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, MatrixStack matrixStack, IClientApplication client) {
         int AA = NK_ANTI_ALIASING_ON;
 
         glEnable(GL_BLEND);

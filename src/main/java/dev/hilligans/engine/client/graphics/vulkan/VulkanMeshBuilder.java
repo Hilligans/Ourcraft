@@ -1,7 +1,7 @@
 package dev.hilligans.engine.client.graphics.vulkan;
 
-import dev.hilligans.ourcraft.client.rendering.VertexMesh;
-import dev.hilligans.engine.client.graphics.VertexFormat;
+import dev.hilligans.engine.client.graphics.resource.VertexMesh;
+import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.client.graphics.api.IMeshBuilder;
 import dev.hilligans.engine.client.graphics.vulkan.api.IVulkanMemoryManager;
 import dev.hilligans.engine.client.graphics.vulkan.boilerplate.VulkanBuffer;

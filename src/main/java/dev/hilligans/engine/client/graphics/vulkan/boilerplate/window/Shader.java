@@ -1,6 +1,6 @@
 package dev.hilligans.engine.client.graphics.vulkan.boilerplate.window;
 
-import dev.hilligans.engine.client.graphics.VertexFormat;
+import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.client.graphics.vulkan.boilerplate.LogicalDevice;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;

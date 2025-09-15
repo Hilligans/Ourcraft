@@ -1,11 +1,11 @@
 package dev.hilligans.engine.client.graphics.fixedfunctiongl;
 
-import dev.hilligans.engine.client.graphics.MatrixStack;
-import dev.hilligans.ourcraft.client.rendering.VertexMesh;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
+import dev.hilligans.engine.client.graphics.resource.VertexMesh;
 import dev.hilligans.engine.client.graphics.DefaultMeshBuilder;
 import dev.hilligans.engine.client.graphics.PipelineState;
 import dev.hilligans.engine.client.graphics.ShaderSource;
-import dev.hilligans.engine.client.graphics.VertexFormat;
+import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.engine.data.Tuple;

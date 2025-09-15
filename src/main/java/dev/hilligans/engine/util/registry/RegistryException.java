@@ -1,4 +1,4 @@
-package dev.hilligans.ourcraft.util.registry;
+package dev.hilligans.engine.util.registry;
 
 public class RegistryException extends RuntimeException {
 

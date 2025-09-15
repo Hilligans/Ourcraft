@@ -1,4 +1,4 @@
-package dev.hilligans.ourcraft.util.sections;
+package dev.hilligans.engine.util.sections;
 
 public record SectionView(String sectionName, ISection section) implements AutoCloseable {
     @Override

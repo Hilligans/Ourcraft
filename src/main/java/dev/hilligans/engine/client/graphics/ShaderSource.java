@@ -4,8 +4,9 @@ import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IGraphicsElement;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
+import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 
 import java.util.ArrayList;
 
@@ -54,7 +55,7 @@ public class ShaderSource implements IRegistryElement, IGraphicsElement {
     }
 
     @Override
-    public void load(GameInstance gameInstance) {
+    public void preLoad(GameInstance gameInstance) {
         vertexFormat = gameInstance.VERTEX_FORMATS.get(format);
     }
 

@@ -42,7 +42,7 @@ public interface IServer {
         @Override
         public void run() {
             server.setTime(server.getTime() + 1);
-            Ourcraft.GAME_INSTANCE.EVENT_BUS.postEvent(new ServerTickEvent(server));
+            //Ourcraft.GAME_INSTANCE.EVENT_BUS.postEvent(new ServerTickEvent(server));
             server.tick();
            // gameProcessor.tickServer(server);
             //for(World world : server.getWorlds()) {

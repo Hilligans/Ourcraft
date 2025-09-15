@@ -7,7 +7,7 @@ import dev.hilligans.engine.data.IntArrayMapBuilder;
 import dev.hilligans.engine.data.Tuple;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
 import dev.hilligans.engine.network.packet.PacketType;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 
 import java.util.ArrayList;
@@ -15,8 +15,7 @@ import java.util.ArrayList;
 public class Protocol implements IRegistryElement {
 
     public String protocolName;
-    
-    public GameInstance gameInstance = Ourcraft.GAME_INSTANCE;
+
     public ModContainer source;
 
     public ArrayList<Tuple<PacketType<?>, Integer>> packetTypes = new ArrayList<>();

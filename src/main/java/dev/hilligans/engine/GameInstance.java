@@ -2,6 +2,7 @@ package dev.hilligans.engine;
 
 import dev.hilligans.engine.application.IApplication;
 import dev.hilligans.engine.client.graphics.*;
+import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.biome.Biome;
 import dev.hilligans.ourcraft.block.Block;
@@ -46,12 +47,12 @@ import dev.hilligans.engine.resource.registry.loaders.RegistryLoader;
 import dev.hilligans.engine.authentication.IAuthenticationScheme;
 import dev.hilligans.ourcraft.settings.Setting;
 import dev.hilligans.engine.test.ITest;
-import dev.hilligans.ourcraft.util.Logger;
+import dev.hilligans.engine.util.Logger;
 import dev.hilligans.engine.util.Side;
 import dev.hilligans.engine.util.ThreadProvider;
 import dev.hilligans.engine.util.argument.ArgumentContainer;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
-import dev.hilligans.ourcraft.util.registry.Registry;
+import dev.hilligans.engine.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.Registry;
 import dev.hilligans.ourcraft.world.Feature;
 
 import java.net.URL;
@@ -70,7 +71,7 @@ public class GameInstance {
     public final ContentPack CONTENT_PACK = new ContentPack(this);
     public final ModList MOD_LIST = new ModList(this);
     public final UniversalResourceLoader RESOURCE_LOADER = new UniversalResourceLoader();
-    public final ArgumentContainer ARGUMENTS = new ArgumentContainer();
+    public final ArgumentContainer ARGUMENTS;
     public final DataLoader DATA_LOADER = new DataLoader();
     public final ThreadProvider THREAD_PROVIDER = new ThreadProvider(this);
     public Side side;
@@ -84,7 +85,13 @@ public class GameInstance {
     public final ToolLevelList MATERIAL_LIST = new ToolLevelList();
 
     public GameInstance() {
-        gameInstanceUniversalID = getNewGameInstanceUniversalID();
+        this(new ArgumentContainer());
+    }
+
+    public GameInstance(ArgumentContainer argumentContainer) {
+        this.ARGUMENTS = argumentContainer;
+        this.gameInstanceUniversalID = getNewGameInstanceUniversalID();
+        this.REGISTRIES = new Registry<>(this, Registry.class, "registry");
     }
 
     public void build(IGraphicsEngine<?,?,?> graphicsEngine, GraphicsContext graphicsContext) {
@@ -109,7 +116,7 @@ public class GameInstance {
 
     public String path = System.getProperty("user.dir");
 
-    public final Registry<Registry<?>> REGISTRIES = new Registry<>(this, Registry.class, "registry");
+    public final Registry<Registry<?>> REGISTRIES;
 
     public Registry<Block> BLOCKS;
     public Registry<Item> ITEMS;
@@ -182,8 +189,10 @@ public class GameInstance {
     public void finishBuild() {
         for (Registry<?> registry : REGISTRIES.ELEMENTS) {
             for (Object o : registry.ELEMENTS) {
-                if (o instanceof IRegistryElement) {
-                    ((IRegistryElement) o).load(this);
+                if (o instanceof IRegistryElement element) {
+                    //TODO figure out why this is needed
+                    element.preLoad(this);
+                    element.load(this);
                 }
             }
         }
@@ -195,7 +204,7 @@ public class GameInstance {
     }
 
     public ArgumentContainer getArgumentContainer() {
-        return Ourcraft.getArgumentContainer();
+        return ARGUMENTS;
     }
 
     public void buildBlockStates() {

@@ -2,11 +2,11 @@ package dev.hilligans.ourcraft.client.rendering;
 
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.client.Client;
-import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -24,7 +24,7 @@ public class ScreenBuilder implements IRegistryElement {
         JSONArray textures = jsonObject.getJSONArray("textures");
         for(int x = 0; x < textures.length(); x++) {
             JSONObject textureObject = textures.getJSONObject(x);
-            Texture texture = new Texture("Images/" + textureObject.getString("texture"));
+            Texture texture = new Texture("Images/" + textureObject.getString("texture"), owner.getModID());
             TextureElement textureElement = new TextureElement(texture, getInt(textureObject.getJSONArray("region")),getFloat(textureObject.getJSONArray("position")),getFloat(textureObject.getJSONArray("area")));
             this.textures.add(textureElement);
         }

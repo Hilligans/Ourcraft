@@ -1,8 +1,10 @@
 package dev.hilligans.ourcraft.util;
 
+import dev.hilligans.engine.command.ICommand;
+
 public class EnumParser {
 
-    public static <T extends Enum<T>> T parse(String val, Class<T> clazz) {
+    public static <T extends Enum<T>> T parse(ICommand command, String val, Class<T> clazz) {
         for(T en : clazz.getEnumConstants()) {
             if(en.name().equals(val)) {
                 return en;

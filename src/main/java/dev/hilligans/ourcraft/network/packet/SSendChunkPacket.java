@@ -28,7 +28,7 @@ public class SSendChunkPacket extends ServerToClientPacketType {
 
     @Override
     public void decode(ClientNetworkEntity entity, IByteArray data) {
-        IChunk chunk = new CubicChunk(32,0,0, 0);
+        IChunk chunk = new CubicChunk(entity.getWorld(), 32,0,0, 0);
         Ourcraft.chainedChunkStream.fillChunk(data, chunk);
         entity.getWorld().setChunk(chunk.getBlockX(), chunk.getBlockY(),  chunk.getBlockZ(), chunk.setWorld(entity.getWorld()));
         entity.getWorld().markDirtyAround(chunk.getBlockX(), chunk.getBlockY(), chunk.getBlockZ());

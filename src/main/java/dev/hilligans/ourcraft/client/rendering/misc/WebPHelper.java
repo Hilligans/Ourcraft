@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering.misc;
 
-import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
+import dev.hilligans.engine.client.graphics.resource.Image;
 import dev.hilligans.ourcraft.util.BitStream;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 

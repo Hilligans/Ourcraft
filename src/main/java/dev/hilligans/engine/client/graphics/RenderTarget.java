@@ -1,11 +1,13 @@
 package dev.hilligans.engine.client.graphics;
 
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 
 public class RenderTarget implements IRegistryElement {
 
     public String renderPipeline;
+    public String renderTask;
     public String name;
     public String after;
     public String before;
@@ -15,9 +17,10 @@ public class RenderTarget implements IRegistryElement {
 
     public PipelineState pipelineState;
 
-    public RenderTarget(String name, String renderPipeline) {
+    public RenderTarget(String name, String renderPipeline, String renderTask) {
         this.name = name;
         this.renderPipeline = renderPipeline;
+        this.renderTask = renderTask;
     }
 
     public RenderTarget afterTarget(String after, String modID) {
@@ -37,6 +40,10 @@ public class RenderTarget implements IRegistryElement {
         return this;
     }
 
+    public String getRenderTask() {
+        return renderTask;
+    }
+
     public void resetFrame() {
         matrixStack = null;
     }
@@ -48,7 +55,10 @@ public class RenderTarget implements IRegistryElement {
 
     @Override
     public String getResourceName() {
-        return name;
+        String before = this.before == null ? "" : this.before;
+        String after = this.after == null ? "" : this.after;
+
+        return before + "-" + name + "-" + renderPipeline.replace(":", "_") + "-" + renderTask.replace(":", "_") + "-" + after;
     }
 
     @Override

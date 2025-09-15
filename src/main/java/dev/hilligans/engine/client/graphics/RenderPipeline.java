@@ -1,12 +1,13 @@
 package dev.hilligans.engine.client.graphics;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.ourcraft.client.Client;
+import dev.hilligans.engine.application.IClientApplication;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IGraphicsElement;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 
 import java.util.ArrayList;
 
@@ -22,8 +23,8 @@ public class RenderPipeline implements IRegistryElement, IGraphicsElement {
         this.name = name;
     }
 
-    public void render(Client client, MatrixStack worldStack, MatrixStack screenStack, GraphicsContext graphicsContext) {
-        client.rWindow.render(graphicsContext, client, worldStack, screenStack);
+    public void render(IClientApplication client, MatrixStack worldStack, MatrixStack screenStack, GraphicsContext graphicsContext) {
+        client.getRenderWindow().render(graphicsContext, client, worldStack, screenStack);
     }
 
     public void addRenderTarget(RenderTarget renderTarget) {
@@ -59,13 +60,11 @@ public class RenderPipeline implements IRegistryElement, IGraphicsElement {
     }
 
     public PipelineInstance buildTargets(IGraphicsEngine<?, ?, ?> graphicsEngine) {
-        ArrayList<RenderTask> tasks = new ArrayList<>();
+        ArrayList<RenderTask<?>> tasks = new ArrayList<>();
+        System.out.println("Building targets " + renderTargets.size());
         for(RenderTarget renderTarget : renderTargets) {
-            for (RenderTaskSource renderTaskSource : owner.getGameInstance().RENDER_TASK.ELEMENTS) {
-                if(renderTaskSource.renderTargetName.equals(renderTarget.getIdentifierName())) {
-                    tasks.add(renderTaskSource.getTask(graphicsEngine.getIdentifierName()));
-                }
-            }
+            RenderTaskSource renderTask = owner.getGameInstance().RENDER_TASK.getExcept(renderTarget.getRenderTask());
+            tasks.add(renderTask.getTask(graphicsEngine.getIdentifierName()));
         }
         return new PipelineInstance(this, tasks);
     }
@@ -76,7 +75,7 @@ public class RenderPipeline implements IRegistryElement, IGraphicsElement {
     }
 
     @Override
-    public void load(GameInstance gameInstance) {
+    public void preLoad(GameInstance gameInstance) {
         for(RenderTarget renderTarget : gameInstance.RENDER_TARGETS.ELEMENTS) {
             if(getIdentifierName().equals(renderTarget.renderPipeline)) {
                 addRenderTarget(renderTarget);

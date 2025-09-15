@@ -1,7 +1,7 @@
 package dev.hilligans.engine.mod.handler.pipeline;
 
 
-import dev.hilligans.ourcraft.util.sections.ISection;
+import dev.hilligans.engine.util.sections.ISection;
 
 public interface PipelineStage<T> {
 

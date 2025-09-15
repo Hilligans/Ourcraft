@@ -1,16 +1,17 @@
 package dev.hilligans.engine.client.graphics;
 
 import dev.hilligans.engine.GameInstance;
+import dev.hilligans.engine.application.IClientApplication;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.engine.client.input.InputHandler;
 import dev.hilligans.engine.client.input.InputHandlerProvider;
 import dev.hilligans.engine.client.input.key.KeyPress;
 import dev.hilligans.engine.client.graphics.api.*;
 import dev.hilligans.engine.client.graphics.implementations.FreeCamera;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
-import dev.hilligans.ourcraft.client.rendering.world.StringRenderer;
-import dev.hilligans.ourcraft.util.Logger;
-import dev.hilligans.ourcraft.util.sections.ISection;
+import dev.hilligans.engine.client.graphics.resource.Image;
+import dev.hilligans.engine.util.Logger;
+import dev.hilligans.engine.util.sections.ISection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
@@ -51,13 +52,13 @@ public abstract class RenderWindow {
         this.windowName = "window "+windowID.getAndIncrement();
     }
 
-    public void renderPipeline(Client client, MatrixStack worldStack, MatrixStack screenStack, GraphicsContext graphicsContext) {
+    public void renderPipeline(IClientApplication client, MatrixStack worldStack, MatrixStack screenStack, GraphicsContext graphicsContext) {
         renderPipeline.render(client, worldStack, screenStack, graphicsContext);
     }
 
-    public void render(GraphicsContext graphicsContext, Client client, MatrixStack worldStack, MatrixStack screenStack) {
+    public void render(GraphicsContext graphicsContext, IClientApplication client, MatrixStack worldStack, MatrixStack screenStack) {
         ISection section = graphicsContext.getSection();
-        for(RenderTask renderTask : pipelineInstance.tasks) {
+        for(RenderTask<?> renderTask : pipelineInstance.tasks) {
             try(var $ = section.startSection(renderTask.getIdentifierName())) {
                 PipelineState pipelineState = renderTask.getPipelineState();
                 graphicsContext.setPipelineState(false);
@@ -65,7 +66,7 @@ public abstract class RenderWindow {
                     graphicsEngine.getDefaultImpl().setState(graphicsContext, pipelineState);
                     graphicsContext.setPipelineState(true);
                 }
-                renderTask.draw(this, graphicsContext, this.getGraphicsEngine(), getClient(), worldStack, screenStack, 1);
+                renderTask.ndraw(this, graphicsContext, this.getGraphicsEngine(), getClient(), worldStack, screenStack, 1);
             }
         }
     }

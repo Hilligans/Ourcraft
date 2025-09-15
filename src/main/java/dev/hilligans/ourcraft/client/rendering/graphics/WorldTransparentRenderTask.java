@@ -6,7 +6,7 @@ import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.ourcraft.client.Client;
-import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.MeshHolder;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IDefaultEngineImpl;
@@ -25,7 +25,7 @@ import org.joml.Vector3i;
 public class WorldTransparentRenderTask extends RenderTaskSource {
 
     public WorldTransparentRenderTask() {
-        super("world_transparent_render_task", "ourcraft:translucent_world_renderer");
+        super("world_transparent_render_task");
     }
 
     public int lastTickRenderCount = 0;
@@ -35,8 +35,8 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
     TextAtlas textAtlas;
 
     @Override
-    public RenderTask getDefaultTask() {
-        return new RenderTask() {
+    public RenderTask<Client> getDefaultTask() {
+        return new RenderTask<Client>() {
 
             public IThreeDContainer<MeshHolder> meshes = new EmptyContainer<>();
 
@@ -194,13 +194,16 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
     }
 
     @Override
-    public void load(GameInstance gameInstance) {
-        super.load(gameInstance);
+    public void preLoad(GameInstance gameInstance) {
+        super.preLoad(gameInstance);
         shaderSource = gameInstance.SHADERS.get("ourcraft:world_shader");
     }
 
     @Override
     public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
+        if(textAtlas != null) {
+            return;
+        }
         textAtlas = new TextAtlas(gameInstance);
         for(Block block : gameInstance.getBlocks()) {
             if(block.blockProperties.translucent) {

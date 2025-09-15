@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.data.other;
 
+import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.data.other.blockstates.BlockState;
@@ -16,6 +17,7 @@ public class Structure {
     public int height;
     public int length;
 
+    public GameInstance gameInstance;
 
     public BlockState[][][] blocks;
 
@@ -37,11 +39,11 @@ public class Structure {
             for(int y = 0; y < height; y++) {
                 for(int z = 0; z < length; z++) {
                     BlockState blockState = this.blocks[x][y][z];
-                    if(blockState.getBlock().hasBlockState()) {
-                        blocks.tags.add(new ShortNBTTag(blockState.getBlock().id));
+                    if(blockState.getBlock(gameInstance).hasBlockState()) {
+                        blocks.tags.add(new ShortNBTTag(blockState.getBlock(gameInstance).id));
                         blocks.tags.add(new ShortNBTTag(((DataBlockState)blockState).readData()));
                     } else {
-                        blocks.tags.add(new ShortNBTTag(blockState.getBlock().id));
+                        blocks.tags.add(new ShortNBTTag(blockState.getBlock(gameInstance).id));
                     }
                 }
             }
@@ -49,7 +51,7 @@ public class Structure {
         return compoundTag;
     }
 
-    public static Structure fromPath(String path) {
+    public static Structure fromPath(GameInstance gameInstance, String path) {
         CompoundNBTTag compoundTag = FileLoader.loadTag(path);
         Structure structure = new Structure(compoundTag.getInt("width"),compoundTag.getInt("height"),compoundTag.getInt("length"));
         ListNBTTag<ShortNBTTag> blocks = (ListNBTTag<ShortNBTTag>) compoundTag.getTag("blocks");
@@ -57,7 +59,7 @@ public class Structure {
         for(int x = 0; x < structure.width; x++) {
             for(int y = 0; y < structure.height; y++) {
                 for(int z = 0; z < structure.length; z++) {
-                    Block block = Blocks.getBlockWithID(blocks.tags.get(listSpot).val);
+                    Block block = gameInstance.getBlockWithID(blocks.tags.get(listSpot).val);
                     BlockState blockState;
                     if (block.hasBlockState()) {
                         listSpot++;

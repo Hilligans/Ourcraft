@@ -65,8 +65,4 @@ public class Blocks {
 
     public static final Block WATER = new Block("water", new BlockProperties().withTexture("water.png").translucent());
 
-    public static Block getBlockWithID(int id) {
-        return Ourcraft.GAME_INSTANCE.BLOCKS.get(id);
-    }
-
 }

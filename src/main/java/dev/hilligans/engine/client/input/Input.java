@@ -3,7 +3,7 @@ package dev.hilligans.engine.client.input;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.IInputProvider;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_REPEAT;
 public class Input implements IRegistryElement {
 
     public boolean repeating;
+    public String name;
     public String key;
     public String modID;
     public int[] keyBinds;
@@ -23,11 +24,13 @@ public class Input implements IRegistryElement {
 
     public String displayName;
 
-    public Input(String defaultBind) {
+    public Input(String name, String defaultBind) {
+        this.name = name;
         bind(defaultBind);
     }
 
-    public Input(String defaultBind, boolean repeating) {
+    public Input(String name, String defaultBind, boolean repeating) {
+        this.name = name;
         bind(defaultBind);
         this.repeating = repeating;
     }
@@ -68,7 +71,7 @@ public class Input implements IRegistryElement {
 
     @Override
     public String getResourceName() {
-        return key;
+        return name;
     }
 
     @Override

@@ -1,8 +1,7 @@
 package dev.hilligans.ourcraft.entity.entities;
 
 import dev.hilligans.ourcraft.block.Block;
-import dev.hilligans.engine.client.graphics.MatrixStack;
-import dev.hilligans.ourcraft.client.rendering.world.managers.VAOManager;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.data.BoundingBox;
 import dev.hilligans.ourcraft.entity.Entity;
 import dev.hilligans.ourcraft.item.BlockItem;
@@ -100,9 +99,6 @@ public class ItemEntity extends Entity {
 
     @Override
     public void destroy() {
-        if(id != -1) {
-            VAOManager.destroyBuffer(id);
-        }
         super.destroy();
     }
 

@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering.screens;
 
-import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.ourcraft.client.lang.Languages;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
 import dev.hilligans.engine.client.graphics.RenderWindow;
@@ -29,7 +29,7 @@ public class LanguageScreen extends ScreenBase implements SelectorScreen {
         }
         addWidget(new Button(100, 0, 200, 40, "menu.done", () -> {
             if(selectorWidget != null) {
-                Languages.setCurrentLanguage(selectorWidget.name);
+                Languages.setCurrentLanguage(getWindow().getGameInstance(), selectorWidget.name);
             }
             getClient().openScreen(new SettingsScreen());
         }));

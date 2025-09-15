@@ -1,4 +1,4 @@
-package dev.hilligans.ourcraft.util.registry;
+package dev.hilligans.engine.util.registry;
 
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
@@ -11,6 +11,8 @@ import dev.hilligans.engine.resource.ResourceLocation;
 public interface IRegistryElement {
 
     default void load(GameInstance gameInstance) {}
+
+    default void preLoad(GameInstance gameInstance) {}
 
     default void cleanup() {}
 

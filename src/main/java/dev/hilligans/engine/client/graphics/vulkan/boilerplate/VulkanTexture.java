@@ -1,7 +1,7 @@
 package dev.hilligans.engine.client.graphics.vulkan.boilerplate;
 
 import dev.hilligans.engine.client.graphics.vulkan.VulkanEngineException;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
+import dev.hilligans.engine.client.graphics.resource.Image;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;

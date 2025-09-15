@@ -11,23 +11,23 @@ public class PipelineInstance implements IGraphicsElement {
 
 
     public RenderPipeline renderPipeline;
-    public ArrayList<RenderTask> tasks;
+    public ArrayList<RenderTask<?>> tasks;
 
-    public PipelineInstance(RenderPipeline renderPipeline, ArrayList<RenderTask> renderTasks) {
+    public PipelineInstance(RenderPipeline renderPipeline, ArrayList<RenderTask<?>> renderTasks) {
         this.renderPipeline = renderPipeline;
         this.tasks = renderTasks;
     }
 
     @Override
     public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
-        for(RenderTask renderTask : tasks) {
+        for(RenderTask<?> renderTask : tasks) {
             renderTask.load(gameInstance, graphicsEngine, graphicsContext);
         }
     }
 
     @Override
     public void cleanup(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
-        for(RenderTask renderTask : tasks) {
+        for(RenderTask<?> renderTask : tasks) {
             renderTask.cleanup(gameInstance, graphicsEngine, graphicsContext);
         }
     }

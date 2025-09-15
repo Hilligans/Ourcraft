@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.data.other.blockshapes;
 
+import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.engine.data.BoundingBox;
 import dev.hilligans.ourcraft.data.other.JoinedBoundingBox;
@@ -7,8 +8,8 @@ import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 
 public class StairBlockShape extends BlockShape {
 
-    public StairBlockShape() {
-        super("stair.txt");
+    public StairBlockShape(GameInstance gameInstance) {
+        super(gameInstance, "stair.txt");
     }
 
     @Override

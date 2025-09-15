@@ -1,4 +1,4 @@
-package dev.hilligans.ourcraft.util.sections;
+package dev.hilligans.engine.util.sections;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -3,7 +3,7 @@ package dev.hilligans.ourcraft.world.newworldsystem;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
 import dev.hilligans.engine.util.IByteArray;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 import io.netty.buffer.ByteBuf;
 
 public abstract class ChunkStream implements IRegistryElement {

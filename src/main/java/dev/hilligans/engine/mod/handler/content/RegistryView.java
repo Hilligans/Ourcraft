@@ -1,7 +1,7 @@
 package dev.hilligans.engine.mod.handler.content;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.ourcraft.util.registry.Registry;
+import dev.hilligans.engine.util.registry.Registry;
 
 import java.util.function.Supplier;
 

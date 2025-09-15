@@ -1,7 +1,7 @@
 package dev.hilligans.engine.authentication;
 
 import dev.hilligans.engine.util.IByteArray;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 
 public interface IAuthenticationScheme<T extends IAccount<?>> extends IRegistryElement {
 

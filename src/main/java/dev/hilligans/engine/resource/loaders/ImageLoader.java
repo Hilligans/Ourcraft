@@ -1,6 +1,6 @@
 package dev.hilligans.engine.resource.loaders;
 
-import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
+import dev.hilligans.engine.client.graphics.resource.Image;
 import dev.hilligans.engine.resource.BufferAllocator;
 import dev.hilligans.engine.resource.IAllocator;
 import dev.hilligans.engine.resource.ResourceLocation;

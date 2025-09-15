@@ -2,14 +2,12 @@ package dev.hilligans.engine.client.graphics.nuklear;
 
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.ShaderSource;
-import dev.hilligans.engine.client.graphics.VertexFormat;
+import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.graphics.api.ILayoutEngine;
 import dev.hilligans.engine.resource.ResourceLocation;
-import org.lwjgl.nuklear.NkDrawNullTexture;
-import org.lwjgl.nuklear.NkUserFont;
-import org.lwjgl.nuklear.NkUserFontGlyph;
+import org.lwjgl.nuklear.*;
 import org.lwjgl.stb.STBTTAlignedQuad;
 import org.lwjgl.stb.STBTTFontinfo;
 import org.lwjgl.stb.STBTTPackContext;
@@ -34,6 +32,8 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
     public NkUserFont default_font;
     public NkDrawNullTexture null_texture;
     public VertexFormat vertexFormat;
+    NkQueryFontGlyphCallback queryFontCallback;
+    NkTextWidthCallback textWidthCallback;
 
     public GameInstance gameInstance;
 
@@ -95,59 +95,70 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
             memFree(bitmap);
         }
 
+        queryFontCallback = new NkQueryFontGlyphCallback() {
+            @Override
+            public void invoke(long handle, float font_height, long glyph, int codepoint, int next_codepoint) {
+                try (MemoryStack stack = stackPush()) {
+                    FloatBuffer x = stack.floats(0.0f);
+                    FloatBuffer y = stack.floats(0.0f);
+
+                    STBTTAlignedQuad q = STBTTAlignedQuad.malloc(stack);
+                    IntBuffer advance = stack.mallocInt(1);
+
+                    stbtt_GetPackedQuad(cdata, BITMAP_W, BITMAP_H, codepoint - 32, x, y, q, false);
+                    stbtt_GetCodepointHMetrics(fontInfo, codepoint, advance, null);
+
+                    NkUserFontGlyph ufg = NkUserFontGlyph.create(glyph);
+
+                    ufg.width(q.x1() - q.x0());
+                    ufg.height(q.y1() - q.y0());
+                    ufg.offset().set(q.x0(), q.y0() + (FONT_HEIGHT + descent));
+                    ufg.xadvance(advance.get(0) * scale);
+                    ufg.uv(0).set(q.s0(), q.t0());
+                    ufg.uv(1).set(q.s1(), q.t1());
+                }
+            }
+        };
+
+        textWidthCallback = new NkTextWidthCallback() {
+
+            @Override
+            public float invoke(long handle, float h, long text, int len) {
+                float text_width = 0;
+                try (MemoryStack stack = stackPush()) {
+                    IntBuffer unicode = stack.mallocInt(1);
+                    //IntBuffer unicode = MemoryUtil.memAllocInt(1);
+
+                    int glyph_len = nnk_utf_decode(text, memAddress(unicode), len);
+                    int text_len = glyph_len;
+
+                    if (glyph_len == 0) {
+                        return 0;
+                    }
+
+                    IntBuffer advance = stack.mallocInt(1);
+                    while (text_len <= len && glyph_len != 0) {
+                        if (unicode.get(0) == NK_UTF_INVALID) {
+                            break;
+                        }
+
+                        /* query currently drawn glyph information */
+                        stbtt_GetCodepointHMetrics(fontInfo, unicode.get(0), advance, null);
+                        text_width += advance.get(0) * scale;
+
+                        /* offset next glyph */
+                        glyph_len = nnk_utf_decode(text + text_len, memAddress(unicode), len - text_len);
+                        text_len += glyph_len;
+                    }
+                }
+                return text_width;
+            }
+        };
+
         default_font
-                .width((handle, h, text, len) -> {
-                    float text_width = 0;
-                    try (MemoryStack stack = stackPush()) {
-                        IntBuffer unicode = stack.mallocInt(1);
-                        //IntBuffer unicode = MemoryUtil.memAllocInt(1);
-
-                        int glyph_len = nnk_utf_decode(text, memAddress(unicode), len);
-                        int text_len  = glyph_len;
-
-                        if (glyph_len == 0) {
-                            return 0;
-                        }
-
-                        IntBuffer advance = stack.mallocInt(1);
-                        while (text_len <= len && glyph_len != 0) {
-                            if (unicode.get(0) == NK_UTF_INVALID) {
-                                break;
-                            }
-
-                            /* query currently drawn glyph information */
-                            stbtt_GetCodepointHMetrics(fontInfo, unicode.get(0), advance, null);
-                            text_width += advance.get(0) * scale;
-
-                            /* offset next glyph */
-                            glyph_len = nnk_utf_decode(text + text_len, memAddress(unicode), len - text_len);
-                            text_len += glyph_len;
-                        }
-                    }
-                    return text_width;
-                })
+                .width(textWidthCallback)
                 .height(FONT_HEIGHT)
-                .query((handle, font_height, glyph, codepoint, next_codepoint) -> {
-                    try (MemoryStack stack = stackPush()) {
-                        FloatBuffer x = stack.floats(0.0f);
-                        FloatBuffer y = stack.floats(0.0f);
-
-                        STBTTAlignedQuad q       = STBTTAlignedQuad.malloc(stack);
-                        IntBuffer        advance = stack.mallocInt(1);
-
-                        stbtt_GetPackedQuad(cdata, BITMAP_W, BITMAP_H, codepoint - 32, x, y, q, false);
-                        stbtt_GetCodepointHMetrics(fontInfo, codepoint, advance, null);
-
-                        NkUserFontGlyph ufg = NkUserFontGlyph.create(glyph);
-
-                        ufg.width(q.x1() - q.x0());
-                        ufg.height(q.y1() - q.y0());
-                        ufg.offset().set(q.x0(), q.y0() + (FONT_HEIGHT + descent));
-                        ufg.xadvance(advance.get(0) * scale);
-                        ufg.uv(0).set(q.s0(), q.t0());
-                        ufg.uv(1).set(q.s1(), q.t1());
-                    }
-                })
+                .query(queryFontCallback)
                 .texture(it -> it
                         .id(fontTexID));
 
@@ -188,6 +199,8 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
         graphicsEngine.getDefaultImpl().destroyTexture(graphicsContext, default_font.texture().id());
         default_font.free();
         null_texture.free();
+        queryFontCallback.free();
+        textWidthCallback.free();
         nkProgram = null;
     }
 }

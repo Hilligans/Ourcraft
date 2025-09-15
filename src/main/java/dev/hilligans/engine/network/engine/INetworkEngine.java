@@ -5,7 +5,7 @@ import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.engine.network.Protocol;
 import dev.hilligans.ourcraft.server.IServer;
 import dev.hilligans.engine.util.IByteArray;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 
 import java.util.Iterator;
 import java.util.List;

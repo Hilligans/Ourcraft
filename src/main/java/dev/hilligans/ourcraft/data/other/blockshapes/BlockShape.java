@@ -27,15 +27,15 @@ public class BlockShape {
     public Int2ObjectOpenHashMap<BlockTextureManager> textures = new Int2ObjectOpenHashMap<>();
     public BoundingBox defaultBoundingBox = new BoundingBox(0,0,0,1,1,1);
 
-    public BlockShape() {
-        data = BlockModel.create("Models/Blocks/block.txt");
+    public BlockShape(GameInstance gameInstance) {
+        data = BlockModel.create(gameInstance, "Models/Blocks/block.txt");
     }
 
     public String path;
 
-    public BlockShape(String path) {
+    public BlockShape(GameInstance gameInstance, String path) {
         this.path = path;
-        data = BlockModel.create("Models/Blocks/" + path);
+        data = BlockModel.create(gameInstance, "Models/Blocks/" + path);
     }
 
     public BlockShape(BlockModel model) {
@@ -69,7 +69,7 @@ public class BlockShape {
     public void putModel(int blockState,String path) {
         if(path != null && !path.equals("")) {
             System.err.println("created model " + path);
-            models.put(blockState, BlockModel.create("Models/Blocks/" + path));
+            models.put(blockState, BlockModel.create(gameInstance, "Models/Blocks/" + path));
         }
     }
 

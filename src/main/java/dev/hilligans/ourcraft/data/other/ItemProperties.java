@@ -65,7 +65,8 @@ public class ItemProperties {
 
     public Item getItem(String name) {
         if(block != null) {
-            return new BlockItem(name, Ourcraft.GAME_INSTANCE.getBlock(block),"ourcraft");
+            return null;
+            // return new BlockItem(name, Ourcraft.GAME_INSTANCE.getBlock(block),"ourcraft");
         } else {
             return new Item(name,this);
         }

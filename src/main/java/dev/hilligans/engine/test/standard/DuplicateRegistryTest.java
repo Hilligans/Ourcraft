@@ -4,8 +4,8 @@ import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.mod.handler.pipeline.InstanceLoaderPipeline;
 import dev.hilligans.engine.mod.handler.pipeline.standard.StandardPipeline;
 import dev.hilligans.engine.test.ITest;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
-import dev.hilligans.ourcraft.util.registry.Registry;
+import dev.hilligans.engine.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.Registry;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

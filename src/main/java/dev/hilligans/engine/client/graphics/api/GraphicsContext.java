@@ -1,7 +1,7 @@
 package dev.hilligans.engine.client.graphics.api;
 
 import dev.hilligans.engine.util.ThreadContext;
-import dev.hilligans.ourcraft.util.sections.ISection;
+import dev.hilligans.engine.util.sections.ISection;
 import org.jetbrains.annotations.NotNull;
 
 public class GraphicsContext extends ThreadContext {

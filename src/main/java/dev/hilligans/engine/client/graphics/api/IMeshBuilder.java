@@ -1,6 +1,6 @@
 package dev.hilligans.engine.client.graphics.api;
 
-import dev.hilligans.engine.client.graphics.VertexFormat;
+import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.data.BoundingBox;
 import dev.hilligans.engine.resource.IBufferAllocator;
 

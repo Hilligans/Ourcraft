@@ -1,5 +1,6 @@
-package dev.hilligans.ourcraft.util.registry;
+package dev.hilligans.engine.util.registry;
 
+import dev.hilligans.engine.EngineMain;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.mod.handler.Identifier;
 import dev.hilligans.engine.mod.handler.events.common.RegisterEvent;
@@ -18,15 +19,18 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
     public GameInstance gameInstance;
     public Class<T> classType;
     public String registryType;
-
     public String owner;
 
+    public boolean coreRegistry;
+    public final boolean debug;
     public boolean mapping = true;
+
 
     public Registry(GameInstance gameInstance, Class<?> classType, String registryType) {
         this.gameInstance = gameInstance;
         this.classType = (Class<T>) classType;
         this.registryType = registryType;
+        this.debug = EngineMain.debug.get(gameInstance);
     }
 
     public void clear() {
@@ -51,6 +55,10 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
         return null;
     }
 
+    public void setCoreRegistry() {
+        coreRegistry = true;
+    }
+
     public T getExcept(String name) {
         T val = get(name);
         if(val == null) {
@@ -67,6 +75,25 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
         if(gameInstance.EVENT_BUS.postEvent(new RegisterEvent<>(this,name,element)).shouldRun()) {
             if(element != null) {
                 element.setUniqueID(getUniqueID());
+            }
+            if(coreRegistry) {
+                if(mapping) {
+                    if(MAPPED_ELEMENTS.containsKey(name)) {
+                        return;
+                    }
+                } else if(ELEMENTS.contains(element)) {
+                    return;
+                }
+            }
+            if(debug) {
+                if(ELEMENTS.contains(element)) {
+                    throw new RegistryException("Attempting to registry to duplicate element: " + name + " into the registry", this);
+                }
+                if(mapping) {
+                    if(MAPPED_ELEMENTS.containsKey(name)) {
+                        throw new RegistryException("Attempting to registry to duplicate element: " + name + " into the registry", this);
+                    }
+                }
             }
             if(mapping) {
                 MAPPED_ELEMENTS.put(name, element);
@@ -236,6 +263,10 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
         return ELEMENTS.toArray((T[]) Array.newInstance(classType, ELEMENTS.size()));
     }
 
+    public String listElements() {
+        return registryType + ": [" + ELEMENTS.stream().map(IRegistryElement::getResourceName).reduce("", ((a, b) -> a + (a.isBlank() ? "" : ", ") + b)) + "]";
+    }
+
     @Override
     public String toString() {
         return "Registry{" +
@@ -263,7 +294,7 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Registry<?> registry = (Registry<?>) o;
-        return Objects.equals(ELEMENTS, registry.ELEMENTS) && Objects.equals(owner, registry.owner);
+        return Objects.equals(ELEMENTS, registry.ELEMENTS) && Objects.equals(owner, registry.owner) && Objects.equals(registryType, registry.registryType);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package dev.hilligans.engine.client.graphics.opengl;
 
-import dev.hilligans.ourcraft.client.Client;
-import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.application.IClientApplication;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.implementations.FreeCamera;
@@ -44,7 +44,7 @@ public class OpenGLWindow extends RenderWindow {
     }
 
     @Override
-    public void render(GraphicsContext graphicsContext, Client client, MatrixStack worldStack, MatrixStack screenStack) {
+    public void render(GraphicsContext graphicsContext, IClientApplication client, MatrixStack worldStack, MatrixStack screenStack) {
         glfwMakeContextCurrent(window);
         if(updatedSize) {
             GL30.glViewport(0, 0, width, height);
@@ -121,14 +121,24 @@ public class OpenGLWindow extends RenderWindow {
     private GLFWWindowFocusCallback focusCallback;
 
     public void registerCallbacks() {
-        sizeCallback = glfwSetWindowSizeCallback(window, (window, w, h) -> {
-            width = w;
-            height = h;
-            updatedSize = true;
-        });
+        sizeCallback = new GLFWWindowSizeCallback() {
+            @Override
+            public void invoke(long window, int w, int h) {
+                width = w;
+                height = h;
+                updatedSize = true;
+            }
+        };
+        glfwSetWindowSizeCallback(window, sizeCallback);
 
 
-        focusCallback = glfwSetWindowFocusCallback(window, (window, focused) -> windowFocused = focused);
+        focusCallback = new GLFWWindowFocusCallback() {
+            @Override
+            public void invoke(long window, boolean focused) {
+                windowFocused = focused;
+            }
+        };
+        glfwSetWindowFocusCallback(window, focusCallback);
 
         //MouseHandler mouseHandler = new MouseHandler(client);
         //glfwSetMouseButtonCallback(window, mouseHandler::invoke);
@@ -139,13 +149,10 @@ public class OpenGLWindow extends RenderWindow {
         super.cleanup();
         if(sizeCallback != null) {
             sizeCallback.close();
-            sizeCallback.free();
         }
         if(focusCallback != null) {
             focusCallback.close();
-            focusCallback.free();
         }
-
 
         glfwDestroyWindow(window);
     }

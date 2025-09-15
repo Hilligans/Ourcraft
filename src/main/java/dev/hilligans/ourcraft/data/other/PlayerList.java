@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.data.other;
 
-import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.data.Tuple;
 
 import java.util.ArrayList;

@@ -1,49 +1,53 @@
 package dev.hilligans.ourcraft.client.rendering;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.ShaderSource;
 import dev.hilligans.engine.client.graphics.api.*;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.Image;
+import dev.hilligans.engine.client.graphics.resource.Image;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
 import dev.hilligans.engine.resource.ResourceLocation;
 import dev.hilligans.ourcraft.util.Settings;
 import dev.hilligans.engine.util.UniqueResource;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 import org.jetbrains.annotations.NotNull;
 
 public class Texture implements IRegistryElement, IGraphicsElement {
 
     public final String path;
-    public ModContainer source;
+    public final String modID;
 
-    public ShaderSource shaderSource;
+    public final UniqueResource<TextureData> data = new UniqueResource<>();
 
-    final UniqueResource<TextureData> data = new UniqueResource<>();
-
-    public Texture(String path) {
+    public Texture(String path, String modID) {
         this.path = path;
+        this.modID = modID;
     }
 
     public void drawTexture(@NotNull RenderWindow window, @NotNull GraphicsContext graphicsContext, MatrixStack matrixStack, int x, int y, int width, int height, int startX, int startY, int endX, int endY) {
         IDefaultEngineImpl<?,?,?> defaultEngineImpl = window.getEngineImpl();
         GameInstance gameInstance = window.getGameInstance();
-        float minX = (float)startX / this.getWidth(gameInstance);
-        float minY = (float)startY / this.getHeight(gameInstance);
-        float maxX = (float)endX / this.getWidth(gameInstance);
-        float maxY = (float)endY / this.getHeight(gameInstance);
+        TextureData textureData = data.get(gameInstance);
+
+        float imgWidth = textureData.image().getWidth();
+        float imgHeight = textureData.image().getHeight();
+
+        float minX = (float)startX / imgWidth;
+        float minY = (float)startY / imgHeight;
+        float maxX = (float)endX / imgWidth;
+        float maxY = (float)endY / imgHeight;
         float[] vertices = new float[] {x,y,0,minX,minY,x,y + height,0,minX,maxY,x + width,y,0,maxX,minY,x + width,y + height,0,maxX,maxY};
         int[] indices = new int[] {0,1,2,2,1,3};
 
 
-        IMeshBuilder builder = window.getEngineImpl().getMeshBuilder(shaderSource.vertexFormat);
+        IMeshBuilder builder = window.getEngineImpl().getMeshBuilder(textureData.shaderSource().vertexFormat);
         //VertexMesh mesh = new VertexMesh(shaderSource.vertexFormat);
 
         builder.setData(vertices, indices);
 
         //GL11.glDisable(GL11.GL_DEPTH_TEST);
-        defaultEngineImpl.bindPipeline(graphicsContext, shaderSource.program);
+        defaultEngineImpl.bindPipeline(graphicsContext, textureData.shaderSource().program);
         defaultEngineImpl.bindTexture( graphicsContext, getTextureId(gameInstance));
         defaultEngineImpl.drawAndDestroyMesh(graphicsContext, matrixStack, builder);
     }
@@ -119,31 +123,24 @@ public class Texture implements IRegistryElement, IGraphicsElement {
 
     @Override
     public String getResourceOwner() {
-        return source.getModID();
+        return modID;
     }
 
     @Override
     public String getResourceType() {
         return "texture";
     }
-    @Override
-    public void assignOwner(ModContainer source) {
-        this.source = source;
-    }
-
-    @Override
-    public void load(GameInstance gameInstance) {
-        shaderSource = gameInstance.SHADERS.get("ourcraft:position_texture");
-    }
 
     @Override
     public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
         if(data.get(gameInstance) == null) {
-            Image texture = (Image) gameInstance.RESOURCE_LOADER.getResource(new ResourceLocation(path, source.getModID()));
+            Image texture = (Image) gameInstance.RESOURCE_LOADER.getResource(new ResourceLocation(path, modID));
             if (texture == null) {
                 System.err.println(path);
                 return;
             }
+
+            ShaderSource shaderSource = gameInstance.SHADERS.get("ourcraft:position_texture");
 
             long textureId = graphicsEngine.getDefaultImpl().createTexture(graphicsContext, texture);
             data.add(gameInstance, new TextureData(texture, textureId, shaderSource));
@@ -156,5 +153,5 @@ public class Texture implements IRegistryElement, IGraphicsElement {
         data.get(gameInstance).image().free();
     }
 
-    record TextureData(Image image, long textureID, ShaderSource shaderSource) {}
+    public record TextureData(Image image, long textureID, ShaderSource shaderSource) {}
 }

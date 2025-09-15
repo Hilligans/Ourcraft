@@ -1,10 +1,10 @@
 package dev.hilligans.engine.client.graphics.vulkan;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.PipelineState;
 import dev.hilligans.engine.client.graphics.ShaderSource;
-import dev.hilligans.engine.client.graphics.VertexFormat;
+import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.client.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.engine.client.graphics.vulkan.api.IVulkanMemoryManager;
 import dev.hilligans.engine.client.graphics.vulkan.api.VulkanMemoryAllocation;

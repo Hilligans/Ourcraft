@@ -1,4 +1,4 @@
-package dev.hilligans.ourcraft.client.rendering.world.managers;
+package dev.hilligans.engine.client.graphics.opengl;
 
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;

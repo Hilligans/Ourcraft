@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.world.newworldsystem;
 
+import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 
@@ -20,8 +21,8 @@ public class GlobalPaletteAtomicSubChunk implements IAtomicSubChunk {
         }
     }
 
-    public GlobalPaletteAtomicSubChunk() {
-        this(Ourcraft.GAME_INSTANCE.BLOCK_STATES);
+    public GlobalPaletteAtomicSubChunk(GameInstance gameInstance) {
+        this(gameInstance.BLOCK_STATES);
     }
 
     @Override

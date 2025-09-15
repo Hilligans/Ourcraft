@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.recipe.helper;
 
 import dev.hilligans.ourcraft.recipe.IRecipe;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 
 public class RecipeView<T extends IRecipe<?>> implements IRegistryElement {
 

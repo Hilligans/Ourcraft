@@ -1,8 +1,8 @@
 package dev.hilligans.engine.mod.handler.events.common;
 
 import dev.hilligans.engine.mod.handler.Event;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
-import dev.hilligans.ourcraft.util.registry.Registry;
+import dev.hilligans.engine.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.Registry;
 
 public class RegisterEvent<T extends IRegistryElement> extends Event {
 

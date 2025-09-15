@@ -1,9 +1,10 @@
-package dev.hilligans.ourcraft.client.rendering.newrenderer;
+package dev.hilligans.engine.client.graphics.resource;
 
 import dev.hilligans.engine.resource.EmptyAllocator;
 import dev.hilligans.engine.resource.IAllocator;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
@@ -74,6 +75,7 @@ public class Image {
             throw new RuntimeException();
         }
         allocator.free(this);
+        buffer = null;
     }
 
     public int getPixel(int x, int y) {
@@ -183,8 +185,8 @@ public class Image {
         return this;
     }
 
-    public ByteBuffer mallocSizedBuffer(MemoryStack stack) {
-        return stack.malloc(getWidth() * getHeight() * format);
+    public ByteBuffer mallocSizedBuffer() {
+        return MemoryUtil.memAlloc(getWidth() * getHeight() * format);
     }
 
     public Image flip(boolean horizontal, ByteBuffer buffer) {
@@ -206,7 +208,7 @@ public class Image {
             }
         }
         free();
-        allocator = (IAllocator<Image>) EmptyAllocator.INSTANCE;
+        allocator = resource -> MemoryUtil.memFree(resource.buffer);
         this.buffer = tempImage.buffer;
         return this;
     }

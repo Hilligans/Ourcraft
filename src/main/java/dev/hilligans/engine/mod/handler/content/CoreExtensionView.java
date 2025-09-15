@@ -3,6 +3,7 @@ package dev.hilligans.engine.mod.handler.content;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.application.IApplication;
 import dev.hilligans.engine.client.graphics.*;
+import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.client.input.Input;
 import dev.hilligans.engine.client.input.InputHandlerProvider;
 import dev.hilligans.ourcraft.client.rendering.Texture;

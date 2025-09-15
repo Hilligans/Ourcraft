@@ -1,6 +1,7 @@
 package dev.hilligans.engine.client.graphics;
 
-import dev.hilligans.ourcraft.client.rendering.VertexMesh;
+import dev.hilligans.engine.client.graphics.resource.VertexFormat;
+import dev.hilligans.engine.client.graphics.resource.VertexMesh;
 import dev.hilligans.engine.client.graphics.api.IMeshBuilder;
 import dev.hilligans.engine.resource.IAllocator;
 import dev.hilligans.engine.resource.IBufferAllocator;

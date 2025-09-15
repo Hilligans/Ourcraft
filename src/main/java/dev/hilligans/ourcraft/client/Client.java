@@ -3,6 +3,7 @@ package dev.hilligans.ourcraft.client;
 import dev.hilligans.engine.EngineMain;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.application.IApplication;
+import dev.hilligans.engine.application.IClientApplication;
 import dev.hilligans.ourcraft.client.audio.SoundBuffer;
 import dev.hilligans.ourcraft.client.audio.SoundEngine;
 import dev.hilligans.engine.client.input.InputHandler;
@@ -24,20 +25,17 @@ import dev.hilligans.engine.mod.handler.events.client.OpenScreenEvent;
 import dev.hilligans.engine.network.engine.NetworkSocket;
 import dev.hilligans.engine.save.FileLoader;
 import dev.hilligans.engine.tag.CompoundNBTTag;
-import dev.hilligans.ourcraft.util.Logger;
+import dev.hilligans.engine.util.Logger;
 import dev.hilligans.ourcraft.util.Settings;
 import dev.hilligans.engine.util.ThreadContext;
 import dev.hilligans.engine.util.argument.Argument;
 import dev.hilligans.engine.util.argument.ArgumentContainer;
-import dev.hilligans.ourcraft.util.registry.Registry;
+import dev.hilligans.engine.util.registry.Registry;
 import dev.hilligans.ourcraft.world.newworldsystem.ClientCubicWorld;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL11;
 
-import java.nio.DoubleBuffer;
-
-public class Client implements IApplication {
+public class Client implements IApplication, IClientApplication {
 
     public long window;
 
@@ -87,7 +85,6 @@ public class Client implements IApplication {
         for(IGraphicsEngine<?,?,?> engine : ((Registry<IGraphicsEngine<?,?,?>>)gameInstance.REGISTRIES.getExcept("ourcraft:graphics_engine")).ELEMENTS) {
             System.out.println(engine.getIdentifierName());
         }
-        ((OpenGLEngine)graphicsEngine).client = this;
         soundEngine = new SoundEngine(gameInstance);
         this.argumentContainer = argumentContainer;
     }
@@ -168,6 +165,7 @@ public class Client implements IApplication {
         }
     }
 
+    @Override
     public void openScreen(Screen screen1) {
         RenderWindow renderWindow = rWindow;
         screen1.setWindow(renderWindow);
@@ -192,8 +190,14 @@ public class Client implements IApplication {
         screen1.resize(renderWindow.getWindowWidth(),renderWindow.getWindowHeight());
     }
 
+    @Override
+    public RenderWindow getRenderWindow() {
+        return rWindow;
+    }
+
     public void openScreen(Container container) {
 
+        /*
         //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         ContainerScreen<?> containerScreen = container.getContainerScreen();
         gameInstance.EVENT_BUS.postEvent(new OpenScreenEvent(containerScreen,screen));
@@ -206,6 +210,8 @@ public class Client implements IApplication {
             playerData.openContainer.closeContainer();
         }
         playerData.openContainer = container;
+
+         */
     }
 
     public void openScreen(String screenName) {
@@ -219,13 +225,6 @@ public class Client implements IApplication {
     public static long timeSinceLastDraw = 0;
     public static float drawTime = 1000f * 1000000 / Settings.maxFps;
 
-    public DoubleBuffer getMousePos() {
-        DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
-        DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
-        //glfwGetCursorPos(window, x, y);
-        return BufferUtils.createDoubleBuffer(2);
-        //return BufferUtils.createDoubleBuffer(2).put(x.get()).put(y.get());
-    }
 
     public CompoundNBTTag writeUsernameAndPassword(CompoundNBTTag tag) {
          tag.putFullString("username",playerData.userName);
@@ -240,16 +239,17 @@ public class Client implements IApplication {
          FileLoader.save(tag,"clientData.dat");
     }
 
-    public long getRenderTime() {
-         return renderTime;
-    }
-
     public ClientPlayerData getPlayerData() {
         return playerData;
     }
 
     public IWorld getWorld() {
         return newClientWorld;
+    }
+
+    @Override
+    public Screen getOpenScreen() {
+        return screen;
     }
 
     public GameInstance getGameInstance() {

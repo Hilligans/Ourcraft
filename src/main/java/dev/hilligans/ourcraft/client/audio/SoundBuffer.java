@@ -3,7 +3,7 @@ package dev.hilligans.ourcraft.client.audio;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
 import dev.hilligans.engine.resource.ResourceLocation;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 import org.lwjgl.stb.STBVorbisInfo;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;

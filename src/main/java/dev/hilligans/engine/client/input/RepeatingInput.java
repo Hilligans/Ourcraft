@@ -8,12 +8,12 @@ public class RepeatingInput extends Input {
 
     BiConsumer<RenderWindow,Float> consumer;
 
-    public RepeatingInput(String defaultBind) {
-        super(defaultBind);
+    public RepeatingInput(String name, String defaultBind) {
+        super(name, defaultBind);
     }
 
-    public RepeatingInput(String defaultBind, BiConsumer<RenderWindow,Float> consumer) {
-        super(defaultBind, true);
+    public RepeatingInput(String name, String defaultBind, BiConsumer<RenderWindow,Float> consumer) {
+        super(name, defaultBind, true);
         this.consumer = consumer;
     }
 

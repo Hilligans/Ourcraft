@@ -3,14 +3,19 @@ package dev.hilligans.engine.mod.handler.pipeline;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.data.Tuple;
 import dev.hilligans.engine.mod.handler.content.ModList;
-import dev.hilligans.ourcraft.util.sections.LoadingSection;
+import dev.hilligans.engine.util.argument.Argument;
+import dev.hilligans.engine.util.sections.LoadingSection;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class InstanceLoaderPipeline<T extends InstanceLoaderPipeline<?>> {
 
-    GameInstance gameInstance;
+    public static final Argument<Integer> timeBetweenStages = Argument.integerArg("--timeBetweenLoadingStages", 0)
+            .help("Sleep time between engine loading stages, mostly useful for debugging purposes");
+
+    public GameInstance gameInstance;
+    public final int sleepTime;
 
     public ModList modList;
 
@@ -23,6 +28,7 @@ public class InstanceLoaderPipeline<T extends InstanceLoaderPipeline<?>> {
 
     public InstanceLoaderPipeline(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
+        this.sleepTime = timeBetweenStages.get(gameInstance);
     }
 
     public void build() {
@@ -31,6 +37,11 @@ public class InstanceLoaderPipeline<T extends InstanceLoaderPipeline<?>> {
 
         InstanceLoaderPipeline<T> self = this;
         section.startSubSection((section1, stage) -> {
+            if(sleepTime != 0) {
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (Exception e) {}
+            }
             stage.getTypeB().execute((T)self, section1);
             section.stopSubSection(stage.getTypeA());
         }, stages);

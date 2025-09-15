@@ -17,4 +17,10 @@ public class TestPipeline {
         });
         return pipeline;
     }
+
+    public static void run(GameInstance gameInstance) {
+        InstanceLoaderPipeline<?> pipeline = get(gameInstance);
+        pipeline.build();
+        System.exit(0);
+    }
 }

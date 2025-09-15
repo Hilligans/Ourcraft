@@ -3,6 +3,7 @@ package dev.hilligans.engine.mod.handler.content;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.application.IApplication;
 import dev.hilligans.engine.client.graphics.*;
+import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.ourcraft.biome.Biome;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.client.audio.SoundBuffer;
@@ -29,8 +30,8 @@ import dev.hilligans.engine.resource.registry.loaders.RegistryLoader;
 import dev.hilligans.engine.authentication.IAuthenticationScheme;
 import dev.hilligans.ourcraft.settings.Setting;
 import dev.hilligans.engine.test.ITest;
-import dev.hilligans.ourcraft.util.registry.IRegistryElement;
-import dev.hilligans.ourcraft.util.registry.Registry;
+import dev.hilligans.engine.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.Registry;
 import dev.hilligans.ourcraft.world.Feature;
 
 import java.lang.reflect.InvocationTargetException;
@@ -147,7 +148,9 @@ public class ModContainer {
         for(T val : data) {
             val.assignOwner(this);
         }
-        gameInstance.REGISTRIES.getExcept(type).putAllGen(data);
+        Registry<?> registry = gameInstance.REGISTRIES.getExcept(type);
+        registry.setCoreRegistry();
+        registry.putAllGen(data);
     }
 
     public void registerBlock(Block block) {

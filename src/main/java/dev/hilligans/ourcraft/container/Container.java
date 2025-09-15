@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.container;
 
 import dev.hilligans.ourcraft.client.Client;
-import dev.hilligans.engine.client.graphics.MatrixStack;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.ContainerScreen;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
@@ -14,7 +14,6 @@ import dev.hilligans.ourcraft.data.other.IInventory;
 import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.ourcraft.util.Settings;
 
-import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 
 public abstract class Container {
@@ -96,11 +95,11 @@ public abstract class Container {
         for(Slot slot : slots) {
             slot.render(matrixStack);
         }
-        DoubleBuffer mousePos = window.getClient().getMousePos();
-        Slot slot = getSlotAt((int)mousePos.get(0),(int)mousePos.get(1));
-        if(slot != null && !slot.getContents().isEmpty()) {
-            window.getStringRenderer().drawStringWithBackgroundTranslated(window, graphicsContext, matrixStack, slot.getContents().item.getName(),(int)mousePos.get(0) + 16,(int)mousePos.get(1),0.5f);
-        }
+        //DoubleBuffer mousePos = window.getClient().getMousePos();
+        //Slot slot = getSlotAt((int)mousePos.get(0),(int)mousePos.get(1));
+        //if(slot != null && !slot.getContents().isEmpty()) {
+        //    window.getStringRenderer().drawStringWithBackgroundTranslated(window, graphicsContext, matrixStack, slot.getContents().item.getName(),(int)mousePos.get(0) + 16,(int)mousePos.get(1),0.5f);
+        //}
     }
 
     public void setTextureSize(int x, int y) {
