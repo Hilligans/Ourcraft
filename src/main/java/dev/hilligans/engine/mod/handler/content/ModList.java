@@ -38,7 +38,7 @@ public class ModList {
         } else if(new File("ourcraft-1.0.3.jar").exists()) {
             gameInstance.DATA_LOADER.addJar("ourcraft-1.0.3.jar", "ourcraft");
         } else {
-            gameInstance.DATA_LOADER.addFolder("target/classes/", "ourcraft");
+        //    gameInstance.DATA_LOADER.addFolder("target/classes/", "ourcraft");
         }
 
         if(!(devBuild.get(gameInstance))) {
@@ -51,6 +51,7 @@ public class ModList {
         loadAllMods(new File("mods/"));
         loadClasses(new File("target/classes/"), "");
 
+        gameInstance.DATA_LOADER.addStream();
 
         return this;
     }

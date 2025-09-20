@@ -72,7 +72,7 @@ public class GameInstance {
     public final ModList MOD_LIST = new ModList(this);
     public final UniversalResourceLoader RESOURCE_LOADER = new UniversalResourceLoader();
     public final ArgumentContainer ARGUMENTS;
-    public final DataLoader DATA_LOADER = new DataLoader();
+    public final DataLoader DATA_LOADER = new DataLoader(this);
     public final ThreadProvider THREAD_PROVIDER = new ThreadProvider(this);
     public Side side;
 

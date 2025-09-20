@@ -2,7 +2,6 @@ package dev.hilligans.ourcraft.server;
 
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.util.argument.Argument;
-import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.engine.data.Tuple;

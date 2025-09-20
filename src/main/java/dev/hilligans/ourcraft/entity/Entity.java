@@ -1,6 +1,5 @@
 package dev.hilligans.ourcraft.entity;
 
-import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
@@ -149,9 +148,9 @@ public abstract class Entity {
         boolean couldMove = false;
         int x;
         for(x = 0; x < 7; x++) {
-            if(!getAllowedMovement(tryMovement(x,velX,velY,velZ),ServerMain.getServer().getWorld(null))) {
-                continue;
-            }
+            //if(!getAllowedMovement(tryMovement(x,velX,velY,velZ),ServerMain.getServer().getWorld(null))) {
+            //    continue;
+            //}
             couldMove = true;
             break;
         }
