@@ -5,19 +5,19 @@ import dev.hilligans.engine.mod.handler.content.ModContainer;
 import dev.hilligans.engine.mod.handler.content.RegistryView;
 import dev.hilligans.engine.mod.handler.pipeline.InstanceLoaderPipeline;
 
-public abstract class ModClass {
+public interface ModClass {
 
-    public abstract String getModID();
+    String getModID();
 
-    public void registerHooks(InstanceLoaderPipeline<?> pipeline) {
+    default void registerHooks(InstanceLoaderPipeline<?> pipeline) {
     }
 
-    public void registerRegistries(RegistryView view) {
+    default void registerRegistries(RegistryView view) {
     }
 
-    public void registerCoreExtensions(CoreExtensionView view) {
+    default void registerCoreExtensions(CoreExtensionView view) {
     }
 
-    public void registerContent(ModContainer container) {
+    default void registerContent(ModContainer container) {
     }
 }

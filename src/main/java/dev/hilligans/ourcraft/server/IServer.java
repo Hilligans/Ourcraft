@@ -1,16 +1,15 @@
 package dev.hilligans.ourcraft.server;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.ourcraft.Ourcraft;
+import dev.hilligans.engine.application.IServerApplication;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
-import dev.hilligans.engine.mod.handler.events.server.ServerTickEvent;
 import dev.hilligans.engine.network.Protocol;
 import dev.hilligans.engine.network.engine.NetworkEntity;
 import dev.hilligans.engine.authentication.IAccount;
 import dev.hilligans.engine.util.IByteArray;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
 
-public interface IServer {
+public interface IServer extends IServerApplication {
 
 
     void addWorld(IServerWorld world);

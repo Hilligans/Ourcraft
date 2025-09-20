@@ -1,5 +1,6 @@
 package dev.hilligans.engine.client.graphics.vulkan;
 
+import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
@@ -59,7 +60,7 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
     @Override
     public VulkanWindow setup() {
         impl = new VulkanDefaultImpl(this);
-        vulkanInstance = getVulkanInstance();
+        vulkanInstance = getVulkanInstance(this.gameInstance);
         vulkanInstance.setGraphicsEngine(this);
         vulkanInstance.setUp();
         vulkanInstance.vulkanWindow.setup();
@@ -117,8 +118,8 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
         return 0;
     }
 
-    public static VulkanInstance getVulkanInstance() {
-        return getVulkanInstance(new VulkanProperties(Ourcraft.getArgumentContainer()).warningValidation().errorValidation().addValidationLayers("VK_LAYER_KHRONOS_validation").verboseValidation().enableValidationLayers());
+    public static VulkanInstance getVulkanInstance(GameInstance gameInstance) {
+        return getVulkanInstance(new VulkanProperties(gameInstance.getArgumentContainer()).warningValidation().errorValidation().addValidationLayers("VK_LAYER_KHRONOS_validation").verboseValidation().enableValidationLayers());
     }
 
     public static VulkanInstance getVulkanInstance(VulkanProperties vulkanProperties) {

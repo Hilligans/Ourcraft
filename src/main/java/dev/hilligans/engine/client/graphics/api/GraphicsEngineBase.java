@@ -2,7 +2,7 @@ package dev.hilligans.engine.client.graphics.api;
 
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.RenderWindow;
-import dev.hilligans.engine.client.graphics.StringRenderer;
+import dev.hilligans.engine.client.graphics.util.StringRenderer;
 
 import java.util.ArrayList;
 

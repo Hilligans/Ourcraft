@@ -1,7 +1,6 @@
 package dev.hilligans.engine.network;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.engine.data.IntArrayMap;
 import dev.hilligans.engine.data.IntArrayMapBuilder;
 import dev.hilligans.engine.data.Tuple;

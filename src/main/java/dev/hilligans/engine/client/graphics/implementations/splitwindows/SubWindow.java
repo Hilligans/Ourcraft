@@ -1,6 +1,6 @@
 package dev.hilligans.engine.client.graphics.implementations.splitwindows;
 
-import dev.hilligans.ourcraft.client.Client;
+import dev.hilligans.engine.application.IClientApplication;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
@@ -54,7 +54,7 @@ public class SubWindow extends RenderWindow {
     }
 
     @Override
-    public Client getClient() {
+    public IClientApplication getClient() {
         return parent.getClient();
     }
 

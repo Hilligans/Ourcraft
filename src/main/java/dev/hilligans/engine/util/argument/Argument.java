@@ -1,7 +1,7 @@
 package dev.hilligans.engine.util.argument;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.ourcraft.util.Ansi;
+import dev.hilligans.engine.util.Ansi;
 import dev.hilligans.engine.util.Side;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 import dev.hilligans.engine.util.registry.Registry;

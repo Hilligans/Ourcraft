@@ -1,7 +1,5 @@
 package dev.hilligans.engine.util;
 
-import dev.hilligans.ourcraft.util.DaisyChain;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;

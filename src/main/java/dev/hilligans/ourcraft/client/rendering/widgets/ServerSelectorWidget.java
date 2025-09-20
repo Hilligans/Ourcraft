@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.widgets;
 
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
+import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.rendering.Textures;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
@@ -37,15 +38,16 @@ public class ServerSelectorWidget extends Widget {
 
     public void joinServer() {
         try {
+            Client client = (Client) screenBase.getClient();
             NetworkSocket<?> socket = screenBase.getClient().getGameInstance().getExcept("ourcraft:nettyEngine", INetworkEngine.class)
-                    .openClient(screenBase.getClient().getGameInstance().getExcept("ourcraft:login", Protocol.class), screenBase.getClient(), ip, port);
-            screenBase.getClient().socket = socket;
+                    .openClient(screenBase.getClient().getGameInstance().getExcept("ourcraft:login", Protocol.class), client, ip, port);
+            client.socket = socket;
             socket.onConnected(CGetServerInfo::send);
             socket.connectSocket();
             //screenBase.getClient().network.joinServer(ip, port, screenBase.getClient());
             Thread.sleep(1000);
-            screenBase.getClient().closeScreen();
-            screenBase.getClient().serverIP = ip + ":" + port;
+            client.closeScreen();
+            client.serverIP = ip + ":" + port;
             screenBase.window.queueRenderPipeline("ourcraft:new_world_pipeline");
             screenBase.getClient().openScreen(new LoadingScreen());
         } catch (Exception e) {

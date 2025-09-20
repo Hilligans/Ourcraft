@@ -1,8 +1,8 @@
 package dev.hilligans.engine.data;
 
-import dev.hilligans.ourcraft.data.other.BlockPos;
 import org.joml.Vector2d;
 import org.joml.Vector2f;
+import org.joml.Vector3i;
 
 public class RectangleBB {
 
@@ -41,7 +41,7 @@ public class RectangleBB {
         return this.minX < vector2f.x && this.minY < vector2f.y && this.maxX > vector2f.x && this.maxY > vector2f.y;
     }
 
-    public boolean intersectVector(Vector2f vector2f, BlockPos source) {
+    public boolean intersectVector(Vector2f vector2f, Vector3i source) {
         return intersectVector(new Vector2f(vector2f.x - source.x, vector2f.y - source.y));
     }
 

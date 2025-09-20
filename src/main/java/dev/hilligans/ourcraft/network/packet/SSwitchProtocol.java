@@ -3,7 +3,8 @@ package dev.hilligans.ourcraft.network.packet;
 import dev.hilligans.engine.network.Protocol;
 import dev.hilligans.engine.network.engine.ClientNetworkEntity;
 import dev.hilligans.engine.network.engine.NetworkEntity;
-import dev.hilligans.engine.network.packet.ServerToClientPacketType;
+import dev.hilligans.ourcraft.client.Client;
+import dev.hilligans.ourcraft.network.ServerToClientPacketType;
 import dev.hilligans.engine.util.IByteArray;
 
 public class SSwitchProtocol extends ServerToClientPacketType {
@@ -25,7 +26,7 @@ public class SSwitchProtocol extends ServerToClientPacketType {
     }
 
     @Override
-    public void decode(ClientNetworkEntity entity, IByteArray data) {
+    public void decode(ClientNetworkEntity<Client> entity, IByteArray data) {
         String protocolName = data.readUTF16();
         Protocol protocol = entity.getGameInstance().getExcept(protocolName, Protocol.class);
         entity.switchProtocol(protocol);

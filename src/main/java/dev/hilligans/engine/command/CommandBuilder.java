@@ -1,13 +1,12 @@
 package dev.hilligans.engine.command;
 
-import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.engine.command.executors.CommandExecutor;
 import dev.hilligans.engine.data.Triplet;
-import dev.hilligans.ourcraft.util.EnumParser;
-import dev.hilligans.ourcraft.util.interfaces.QuadConsumer;
-import dev.hilligans.ourcraft.util.interfaces.QuinConsumer;
-import dev.hilligans.ourcraft.util.interfaces.SextConsumer;
-import dev.hilligans.ourcraft.util.interfaces.TriConsumer;
+import dev.hilligans.engine.util.EnumParser;
+import dev.hilligans.engine.util.interfaces.QuadConsumer;
+import dev.hilligans.engine.util.interfaces.QuinConsumer;
+import dev.hilligans.engine.util.interfaces.SextConsumer;
+import dev.hilligans.engine.util.interfaces.TriConsumer;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 
 import java.lang.reflect.Array;

@@ -5,7 +5,7 @@ import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.engine.client.graphics.api.IMeshBuilder;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.BlockModel;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
+import dev.hilligans.engine.client.graphics.util.TextAtlas;
 import dev.hilligans.ourcraft.client.rendering.world.managers.BlockTextureManager;
 import dev.hilligans.ourcraft.client.rendering.world.managers.VAOManager;
 import dev.hilligans.ourcraft.data.other.BlockPos;

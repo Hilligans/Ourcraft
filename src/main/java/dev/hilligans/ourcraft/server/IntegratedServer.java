@@ -5,7 +5,7 @@ import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.engine.network.Protocol;
 import dev.hilligans.engine.network.engine.NetworkEntity;
 import dev.hilligans.engine.authentication.IAccount;
-import dev.hilligans.ourcraft.util.ConsoleReader;
+import dev.hilligans.engine.util.ConsoleReader;
 import dev.hilligans.engine.util.IByteArray;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
 
@@ -97,5 +97,25 @@ public class IntegratedServer implements IServer {
     @Override
     public IAccount<?> authenticate(String scheme, String username, IByteArray data) {
         return null;
+    }
+
+    @Override
+    public void postCoreStartApplication(GameInstance gameInstance) {
+
+    }
+
+    @Override
+    public void startApplication(GameInstance gameInstance) {
+
+    }
+
+    @Override
+    public String getResourceName() {
+        return "";
+    }
+
+    @Override
+    public String getResourceOwner() {
+        return "";
     }
 }

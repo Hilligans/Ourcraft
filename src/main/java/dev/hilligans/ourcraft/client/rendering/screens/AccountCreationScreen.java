@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.client.rendering.screens;
 
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
+import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
@@ -24,10 +25,11 @@ public class AccountCreationScreen extends ScreenBase {
         addWidget(token);
 
         addWidget(new Button(500, 200, 200, 50, "Create Account", () -> {
-            getClient().playerData.email = email.string;
+            Client client = (Client) getClient();
+            client.playerData.email = email.string;
             String passwordVal = Ourcraft.hashString(password.string, email.string);
-            getClient().playerData.userName = username.string;
-            getClient().saveUsernameAndPassword();
+            client.playerData.userName = username.string;
+            client.saveUsernameAndPassword();
         }));
 
     }

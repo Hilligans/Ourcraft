@@ -1,10 +1,9 @@
 package dev.hilligans.engine.resource;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.ourcraft.client.lang.Language;
-import dev.hilligans.ourcraft.client.lang.Languages;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.IModel;
-
+import dev.hilligans.engine.client.lang.Language;
+import dev.hilligans.engine.client.graphics.api.IModel;
+import dev.hilligans.engine.client.lang.Languages;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.net.URLClassLoader;

@@ -2,8 +2,9 @@ package dev.hilligans.ourcraft.network.packet;
 
 import dev.hilligans.engine.network.engine.NetworkEntity;
 import dev.hilligans.engine.network.engine.ServerNetworkEntity;
-import dev.hilligans.engine.network.packet.ClientToServerPacketType;
+import dev.hilligans.ourcraft.network.ClientToServerPacketType;
 import dev.hilligans.engine.util.IByteArray;
+import dev.hilligans.ourcraft.server.IServer;
 
 public class CSendMessage extends ClientToServerPacketType {
 
@@ -24,7 +25,7 @@ public class CSendMessage extends ClientToServerPacketType {
     }
 
     @Override
-    public void decode(ServerNetworkEntity entity, IByteArray data) {
+    public void decode(ServerNetworkEntity<IServer> entity, IByteArray data) {
         String message = data.readUTF16();
         entity.getServer().sendPacket(entity.getSendProtocol(), SSendMessage.get(entity, message));
     }

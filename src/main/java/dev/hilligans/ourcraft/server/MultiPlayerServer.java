@@ -1,12 +1,14 @@
 package dev.hilligans.ourcraft.server;
 
 import dev.hilligans.engine.GameInstance;
+import dev.hilligans.engine.util.argument.Argument;
+import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
 import dev.hilligans.engine.data.Tuple;
 import dev.hilligans.ourcraft.entity.Entity;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
-import dev.hilligans.engine.mod.handler.events.server.MultiPlayerServerStartEvent;
+import dev.hilligans.ourcraft.events.server.MultiPlayerServerStartEvent;
 import dev.hilligans.engine.network.AuthenticationException;
 import dev.hilligans.engine.network.Protocol;
 import dev.hilligans.engine.network.engine.INetworkEngine;
@@ -17,7 +19,11 @@ import dev.hilligans.engine.authentication.IAuthenticationScheme;
 import dev.hilligans.engine.util.IByteArray;
 import dev.hilligans.engine.util.NamedThreadFactory;
 import dev.hilligans.ourcraft.util.Settings;
+import dev.hilligans.ourcraft.world.gen.IWorldHeightBuilder;
 import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
+import dev.hilligans.ourcraft.world.newworldsystem.ServerCubicWorld;
+import dev.hilligans.ourcraft.world.newworldsystem.SimpleHeightBuilder;
+import dev.hilligans.planets.gen.PlanetWorldHeightBuilder;
 import io.netty.channel.ChannelHandlerContext;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
@@ -29,6 +35,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class MultiPlayerServer implements IServer {
+
+    public static Argument<IAuthenticationScheme[]> authenticationSchemesArg = Argument.arrayRegistryArg("--authenticationSchemes", IAuthenticationScheme.class, "all")
+            .help("Specify which authentication schemes to use");
 
     public long time = 0;
 
@@ -45,8 +54,11 @@ public class MultiPlayerServer implements IServer {
 
     public HashMap<String, IAuthenticationScheme<?>> authenticationSchemes = new HashMap<>();
 
-    public MultiPlayerServer(GameInstance gameInstance, IAuthenticationScheme<?>[] authenticationSchemes) {
+    public MultiPlayerServer(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
+    }
+
+    public void addAuthenticationSchemes(IAuthenticationScheme<?>[] authenticationSchemes) {
         for(IAuthenticationScheme<?> authenticationScheme : authenticationSchemes) {
             this.authenticationSchemes.put(authenticationScheme.getIdentifierName(), authenticationScheme);
         }
@@ -158,6 +170,47 @@ public class MultiPlayerServer implements IServer {
         }
 
         return authenticationScheme.authenticate(username, data);
+    }
+
+    @Override
+    public void postCoreStartApplication(GameInstance gameInstance) {
+
+    }
+
+    @Override
+    public void startApplication(GameInstance gameInstance) {
+        Thread serverThread = new Thread(() -> {
+            this.addAuthenticationSchemes(authenticationSchemesArg.get(this.gameInstance));
+            this.gameInstance.THREAD_PROVIDER.map();
+            IServerWorld world1 = new ServerCubicWorld(gameInstance, 0, "planet", 64, new PlanetWorldHeightBuilder(new IWorldHeightBuilder[]{
+                    new SimpleHeightBuilder(),
+                    new SimpleHeightBuilder(),
+                    new SimpleHeightBuilder(),
+                    new SimpleHeightBuilder(),
+                    new SimpleHeightBuilder(),
+                    new SimpleHeightBuilder()
+            }, 64).setSeed(1));
+
+            world1.generateWorld();
+            System.out.println("Done generating");
+            this.addWorld(world1);
+            System.out.println("starting server");
+            this.startServer("25588");
+        });
+
+        serverThread.setName("Server-Thread");
+        serverThread.setDaemon(true);
+        serverThread.start();
+    }
+
+    @Override
+    public String getResourceName() {
+        return "";
+    }
+
+    @Override
+    public String getResourceOwner() {
+        return "";
     }
 
     static class PlayerHandler implements Runnable {

@@ -3,7 +3,6 @@ package dev.hilligans.engine.util.registry;
 import dev.hilligans.engine.EngineMain;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.mod.handler.Identifier;
-import dev.hilligans.engine.mod.handler.events.common.RegisterEvent;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -69,37 +68,37 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
     }
 
     public void put(String name, T element) {
-        if(!registryType.equals(element.getResourceType())) {
+        if (!registryType.equals(element.getResourceType())) {
             throw new RegistryException("Failed to add elements to registry, " + element.getResourceType() + " does not match type of this registry of " + registryType, this);
         }
-        if(gameInstance.EVENT_BUS.postEvent(new RegisterEvent<>(this,name,element)).shouldRun()) {
-            if(element != null) {
-                element.setUniqueID(getUniqueID());
-            }
-            if(coreRegistry) {
-                if(mapping) {
-                    if(MAPPED_ELEMENTS.containsKey(name)) {
-                        return;
-                    }
-                } else if(ELEMENTS.contains(element)) {
+        //if(gameInstance.EVENT_BUS.postEvent(new RegisterEvent<>(this,name,element)).shouldRun()) {
+        if (element != null) {
+            element.setUniqueID(getUniqueID());
+        }
+        if (coreRegistry) {
+            if (mapping) {
+                if (MAPPED_ELEMENTS.containsKey(name)) {
                     return;
                 }
+            } else if (ELEMENTS.contains(element)) {
+                return;
             }
-            if(debug) {
-                if(ELEMENTS.contains(element)) {
+        }
+        if (debug) {
+            if (ELEMENTS.contains(element)) {
+                throw new RegistryException("Attempting to registry to duplicate element: " + name + " into the registry", this);
+            }
+            if (mapping) {
+                if (MAPPED_ELEMENTS.containsKey(name)) {
                     throw new RegistryException("Attempting to registry to duplicate element: " + name + " into the registry", this);
                 }
-                if(mapping) {
-                    if(MAPPED_ELEMENTS.containsKey(name)) {
-                        throw new RegistryException("Attempting to registry to duplicate element: " + name + " into the registry", this);
-                    }
-                }
             }
-            if(mapping) {
-                MAPPED_ELEMENTS.put(name, element);
-            }
-            ELEMENTS.add(element);
         }
+        if (mapping) {
+            MAPPED_ELEMENTS.put(name, element);
+        }
+        ELEMENTS.add(element);
+        // }
     }
 
     public void putFrom(Registry<?> registry) {

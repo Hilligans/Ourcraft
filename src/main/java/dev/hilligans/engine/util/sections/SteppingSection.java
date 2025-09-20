@@ -1,6 +1,6 @@
 package dev.hilligans.engine.util.sections;
 
-import dev.hilligans.ourcraft.util.ConsoleReader;
+import dev.hilligans.engine.util.ConsoleReader;
 
 import java.util.ArrayList;
 import java.util.List;

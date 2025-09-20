@@ -6,7 +6,7 @@ import dev.hilligans.engine.client.graphics.*;
 import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.client.input.Input;
 import dev.hilligans.engine.client.input.InputHandlerProvider;
-import dev.hilligans.ourcraft.client.rendering.Texture;
+import dev.hilligans.engine.client.graphics.util.Texture;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.graphics.api.ILayoutEngine;
 import dev.hilligans.engine.resource.loaders.ResourceLoader;

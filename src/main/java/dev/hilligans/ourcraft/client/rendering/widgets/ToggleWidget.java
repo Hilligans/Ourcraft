@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.widgets;
 
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
-import dev.hilligans.ourcraft.client.lang.Languages;
+import dev.hilligans.engine.client.lang.Languages;
 import dev.hilligans.ourcraft.client.rendering.Textures;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;

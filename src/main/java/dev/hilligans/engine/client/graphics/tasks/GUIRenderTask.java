@@ -9,7 +9,7 @@ import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
-import dev.hilligans.engine.client.graphics.StringRenderer;
+import dev.hilligans.engine.client.graphics.util.StringRenderer;
 import dev.hilligans.engine.util.sections.ProfiledSection;
 
 //import static dev.hilligans.ourcraft.util.FormattedString.FSTR;

@@ -8,7 +8,7 @@ import dev.hilligans.engine.client.graphics.RenderTaskSource;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
-import dev.hilligans.engine.client.graphics.StringRenderer;
+import dev.hilligans.engine.client.graphics.util.StringRenderer;
 
 public class ChatRenderTask extends RenderTaskSource {
 

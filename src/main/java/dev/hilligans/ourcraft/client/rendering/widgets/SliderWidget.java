@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.widgets;
 
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
-import dev.hilligans.ourcraft.client.lang.Languages;
+import dev.hilligans.engine.client.lang.Languages;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import org.lwjgl.opengl.GL11;
@@ -37,7 +37,7 @@ public class SliderWidget extends Widget {
     public void render(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, int xOffset, int yOffset) {
         super.render(window, graphicsContext, matrixStack, xOffset, yOffset);
 
-        if(isFocused && window.getClient().mouseHandler.mousePressed) {
+        //if(isFocused && ((Client)window.getClient()).mouseHandler.mousePressed) {
          /*   DoubleBuffer mousePos = window.getClient().getMousePos();
             if(isInBoundsX((int)mousePos.get(0))) {
                 activate((int)mousePos.get(0) - x, (int)mousePos.get(1) - y);
@@ -50,7 +50,7 @@ public class SliderWidget extends Widget {
             }
 
           */
-        }
+        //}
 
         GL11.glDisable(GL11.GL_DEPTH_TEST);
        // Textures.SLIDER_BACKGROUND.drawTexture(matrixStack,x - height / 4,y,width + height / 2,height);

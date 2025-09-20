@@ -13,6 +13,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.ServiceLoader;
 import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -40,13 +41,16 @@ public class ModList {
             gameInstance.DATA_LOADER.addFolder("target/classes/", "ourcraft");
         }
 
+        if(!(devBuild.get(gameInstance))) {
+            for(ModClass modClass : ServiceLoader.load(ModClass.class)) {
+                this.mods.add(new ModContainer(modClass));
+                this.classList.add(modClass.getClass());
+            }
+        }
+
         loadAllMods(new File("mods/"));
         loadClasses(new File("target/classes/"), "");
 
-        if(!(devBuild.get(gameInstance))) {
-            mods.add(new ModContainer(new Ourcraft()));
-            mods.add(new ModContainer(new Planets()));
-        }
 
         return this;
     }

@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering;
 
+import dev.hilligans.engine.client.graphics.util.Texture;
 import dev.hilligans.engine.mod.handler.content.CoreExtensionView;
 
 public class Textures {

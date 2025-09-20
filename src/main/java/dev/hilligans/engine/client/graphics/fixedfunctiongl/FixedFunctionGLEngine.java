@@ -1,11 +1,9 @@
 package dev.hilligans.engine.client.graphics.fixedfunctiongl;
 
-import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.GraphicsEngineBase;
-import dev.hilligans.ourcraft.client.rendering.screens.JoinScreen;
 import dev.hilligans.engine.util.Logger;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -16,7 +14,6 @@ import static org.lwjgl.opengl.GL11.*;
 public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWindow, FixedFunctionGLDefaultImpl, GraphicsContext> {
 
     public FixedFunctionGLDefaultImpl engineImpl;
-    public Client client;
 
     public FixedFunctionGLEngine() {
         engineImpl = new FixedFunctionGLDefaultImpl();
@@ -31,15 +28,15 @@ public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWin
     @Override
     public void render(RenderWindow window, GraphicsContext graphicsContext) {
 
-        Client client = window.getClient();
-        client.mouseLocked = client.screen == null;
+        //Client client = window.getClient();
+        //client.mouseLocked = client.screen == null;
         glGetError();
         long currentTime = System.nanoTime();
-        if(currentTime - Client.timeSinceLastDraw < Client.drawTime) {
-            return;
-        }
+       // if(currentTime - Client.timeSinceLastDraw < Client.drawTime) {
+       //     return;
+       // }
         window.frameTracker.count();
-        Client.timeSinceLastDraw = currentTime;
+       // Client.timeSinceLastDraw = currentTime;
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -51,7 +48,7 @@ public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWin
         MatrixStack screenStack = window.camera.getScreenStack();
         //screenStack.applyColor();
 
-        window.renderPipeline.render(client,matrixStack,screenStack,null);
+        window.renderPipeline.render(window.getClient(), matrixStack,screenStack,null);
     }
 
     @Override
@@ -75,19 +72,19 @@ public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWin
 
         glfwSetErrorCallback(GLFWErrorCallback.createPrint(System.out));
 
-        FixedFunctionGLWindow renderWindow = new FixedFunctionGLWindow(client, this);
-        windows.add(renderWindow);
-        renderWindow.setup();
+       // FixedFunctionGLWindow renderWindow = new FixedFunctionGLWindow(client, this);
+       // windows.add(renderWindow);
+       // renderWindow.setup();
         GL.createCapabilities();
 
-        client.glStarted = true;
+        //client.glStarted = true;
 
-        glfwMakeContextCurrent(renderWindow.window);
+        //glfwMakeContextCurrent(renderWindow.window);
 
         setupStringRenderer("");
 
-        client.screen = new JoinScreen();
-        client.screen.setWindow(renderWindow);
+        //client.screen = new JoinScreen();
+        //client.screen.setWindow(renderWindow);
        //
         // client.clientWorld = new ClientWorld(client);
 
@@ -99,7 +96,7 @@ public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWin
      //   glCullFace(GL_FRONT);
         glFrontFace(GL_CW);
 
-        return renderWindow;
+        return null;
     }
 
     @Override

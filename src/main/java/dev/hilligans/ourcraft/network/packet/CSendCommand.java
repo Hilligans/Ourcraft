@@ -1,11 +1,12 @@
 package dev.hilligans.ourcraft.network.packet;
 
 import dev.hilligans.engine.command.CommandTree;
-import dev.hilligans.engine.command.executors.PlayerExecutor;
+import dev.hilligans.ourcraft.command.PlayerExecutor;
 import dev.hilligans.engine.network.engine.NetworkEntity;
 import dev.hilligans.engine.network.engine.ServerNetworkEntity;
-import dev.hilligans.engine.network.packet.ClientToServerPacketType;
+import dev.hilligans.ourcraft.network.ClientToServerPacketType;
 import dev.hilligans.engine.util.IByteArray;
+import dev.hilligans.ourcraft.server.IServer;
 
 public class CSendCommand extends ClientToServerPacketType {
 
@@ -26,7 +27,7 @@ public class CSendCommand extends ClientToServerPacketType {
     }
 
     @Override
-    public void decode(ServerNetworkEntity entity, IByteArray data) {
+    public void decode(ServerNetworkEntity<IServer> entity, IByteArray data) {
         String[] arguments = data.readUTF16s();
         PlayerExecutor executor = new PlayerExecutor(entity.getServerPlayerData());
 

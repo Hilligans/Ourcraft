@@ -1,17 +1,16 @@
 package dev.hilligans.engine.network.engine;
 
+import dev.hilligans.engine.application.IClientApplication;
+import dev.hilligans.engine.application.IServerApplication;
 import dev.hilligans.engine.network.*;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.data.other.server.ServerPlayerData;
-import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.engine.network.packet.PacketType;
 import dev.hilligans.ourcraft.network.packet.SServerExceptionPacket;
 import dev.hilligans.ourcraft.server.IServer;
 import dev.hilligans.engine.util.IByteArray;
 import dev.hilligans.engine.util.Side;
-import dev.hilligans.ourcraft.world.newworldsystem.IServerWorld;
-import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -180,7 +179,7 @@ public class NettyEngine extends NetworkEngine<NettyEngine.NettyNetworkEntity, N
         }
     }
 
-    public static class NettyNetworkEntity extends SimpleChannelInboundHandler<IPacketByteArray> implements NetworkEntity, ClientNetworkEntity, ServerNetworkEntity {
+    public static class NettyNetworkEntity extends SimpleChannelInboundHandler<IPacketByteArray> implements NetworkEntity, ClientNetworkEntity<IClientApplication>, ServerNetworkEntity<IServerApplication> {
 
         Protocol sendProtocol;
         Protocol receiveProtocol;
@@ -295,16 +294,6 @@ public class NettyEngine extends NetworkEngine<NettyEngine.NettyNetworkEntity, N
         }
 
         @Override
-        public IWorld getWorld() {
-            return getClient().getWorld();
-        }
-
-        @Override
-        public IServerWorld getServerWorld() {
-            return null;
-        }
-
-        @Override
         public ServerPlayerData getServerPlayerData() {
             return data;
         }
@@ -312,11 +301,6 @@ public class NettyEngine extends NetworkEngine<NettyEngine.NettyNetworkEntity, N
         @Override
         public void setServerPlayerData(ServerPlayerData data) {
             this.data = data;
-        }
-
-        @Override
-        public PlayerEntity getPlayerEntity() {
-            return null;
         }
 
         @Override

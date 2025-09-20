@@ -5,6 +5,7 @@ import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
+import dev.hilligans.engine.client.graphics.util.StringRenderer;
 import dev.hilligans.engine.util.sections.ProfiledSection;
 import dev.hilligans.ourcraft.client.Client;
 

@@ -5,7 +5,8 @@ import dev.hilligans.engine.data.Tuple;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
 import dev.hilligans.engine.network.engine.ClientNetworkEntity;
 import dev.hilligans.engine.network.engine.NetworkEntity;
-import dev.hilligans.engine.network.packet.ServerToClientPacketType;
+import dev.hilligans.ourcraft.client.Client;
+import dev.hilligans.ourcraft.network.ServerToClientPacketType;
 import dev.hilligans.ourcraft.server.IServer;
 import dev.hilligans.engine.util.IByteArray;
 
@@ -38,7 +39,7 @@ public class SSendServerInfo extends ServerToClientPacketType {
     }
 
     @Override
-    public void decode(ClientNetworkEntity entity, IByteArray data) {
+    public void decode(ClientNetworkEntity<Client> entity, IByteArray data) {
         String version = data.readString();
         String motd = data.readString();
         int globalHashcode = data.readInt();

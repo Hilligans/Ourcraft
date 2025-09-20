@@ -7,7 +7,7 @@ import dev.hilligans.ourcraft.block.blockstate.IBlockStateTable;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.ourcraft.client.rendering.Renderer;
 import dev.hilligans.engine.client.graphics.api.IMeshBuilder;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
+import dev.hilligans.engine.client.graphics.util.TextAtlas;
 import dev.hilligans.ourcraft.data.descriptors.TagCollection;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.BlockProperties;

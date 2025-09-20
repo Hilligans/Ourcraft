@@ -1,9 +1,7 @@
 package dev.hilligans.engine.client.graphics.resource;
 
-import dev.hilligans.engine.resource.EmptyAllocator;
 import dev.hilligans.engine.resource.IAllocator;
 import org.lwjgl.stb.STBImage;
-import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import java.awt.image.BufferedImage;

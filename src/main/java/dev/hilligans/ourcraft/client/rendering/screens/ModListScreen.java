@@ -9,8 +9,6 @@ import dev.hilligans.ourcraft.client.rendering.widgets.InvisibleFolder;
 import dev.hilligans.ourcraft.client.rendering.widgets.SelectorScreen;
 import dev.hilligans.ourcraft.client.rendering.widgets.SelectorWidget;
 import dev.hilligans.ourcraft.client.rendering.widgets.ToggleWidget;
-import dev.hilligans.engine.mod.handler.content.ModContent;
-import dev.hilligans.ourcraft.util.Util;
 
 public class ModListScreen extends ScreenBase implements SelectorScreen {
 
@@ -20,9 +18,9 @@ public class ModListScreen extends ScreenBase implements SelectorScreen {
 
     public ModListScreen(Client client) {
         addWidget(folder);
-        for(String string : client.gameInstance.CONTENT_PACK.mods.keySet()) {
-            folder.addWidget(new SelectorWidget(0,0,200,50,string,this));
-        }
+        //for(String string : client.gameInstance.CONTENT_PACK.mods.keySet()) {
+        //    folder.addWidget(new SelectorWidget(0,0,200,50,string,this));
+        //}
         folder.update();
     }
 
@@ -39,8 +37,8 @@ public class ModListScreen extends ScreenBase implements SelectorScreen {
     public void drawScreen(RenderWindow window, MatrixStack matrixStack, GraphicsContext graphicsContext) {
         super.drawScreen(window, matrixStack, graphicsContext);
         if(selectorWidget != null) {
-            ModContent modContent = getClient().gameInstance.CONTENT_PACK.mods.get(selectorWidget.name);
-            window.getStringRenderer().drawStringInternal(window, graphicsContext, matrixStack,new String[]{modContent.getModID() + "Version: " + modContent.version, "Dependencies: " + Util.toString(modContent.getDependencies()), " ", modContent.description},350,100,0.5f);
+         //   ModContent modContent = getClient().getGameInstance().CONTENT_PACK.mods.get(selectorWidget.name);
+         //   window.getStringRenderer().drawStringInternal(window, graphicsContext, matrixStack,new String[]{modContent.getModID() + "Version: " + modContent.version, "Dependencies: " + Util.toString(modContent.getDependencies()), " ", modContent.description},350,100,0.5f);
         }
     }
 }

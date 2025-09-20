@@ -1,22 +1,14 @@
 package dev.hilligans.engine.mod.handler.content;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.ourcraft.block.Block;
-import dev.hilligans.ourcraft.client.Client;
-import dev.hilligans.ourcraft.client.rendering.ScreenBuilder;
 import dev.hilligans.engine.client.graphics.ShaderSource;
-import dev.hilligans.ourcraft.item.BlockItem;
-import dev.hilligans.ourcraft.item.Item;
 import dev.hilligans.engine.mod.handler.Mod;
-import dev.hilligans.engine.save.FileLoader;
 import dev.hilligans.engine.util.IByteArray;
-import dev.hilligans.ourcraft.util.Settings;
-import dev.hilligans.ourcraft.util.Util;
+import dev.hilligans.engine.util.Util;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URLClassLoader;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 public class ModContent {
@@ -33,10 +25,6 @@ public class ModContent {
     public String[] authors = new String[0];
     public String path = "";
 
-    public ArrayList<Block> blocks = new ArrayList<>();
-    public ArrayList<Item> items = new ArrayList<>();
-    public ArrayList<ScreenBuilder> screenBuilders = new ArrayList<>();
-
     public ArrayList<ShaderSource> shaders = new ArrayList<>();
     public boolean loaded = false;
     public boolean shouldLoad = true;
@@ -49,16 +37,6 @@ public class ModContent {
     public ModContent(IByteArray packetData, GameInstance gameInstance) {
         this.gameInstance = gameInstance;
         readData(packetData);
-        if(Settings.cacheDownloadedMods) {
-            if(Settings.storeServerModsIndividually) {
-                //String ip = ClientMain.getClient().serverIP.replace(':','_');
-                //if(!ip.equals("")) {
-                   // WorldLoader.write("mod_cache/servers/" + ip + "/" + getModID() + "-" + version + ".dat",packetData.toByteBuffer());
-                //}
-            } else {
-               // WorldLoader.write("mod_cache/mods/" + getModID() + "-" + version + ".dat",packetData.toByteBuffer());
-            }
-        }
     }
 
     public String getModID() {
@@ -76,40 +54,12 @@ public class ModContent {
         return this;
     }
 
-    public static ModContent readLocal(String name, GameInstance gameInstance, Client client) {
-        ByteBuffer buffer = FileLoader.readBuffer("mod_cache/" + (Settings.storeServerModsIndividually ? "servers/" + client.serverIP.replace(':','_') + "/" : "mods/") + name + ".dat");
-        if(buffer != null) {
-            ModContent modContent = new ModContent("", gameInstance);
-            //modContent.readData(new PacketData(buffer,2));
-            return modContent;
-        }
-        return null;
-    }
-
     public void load() throws Exception {
         if(mainClass != null && shouldLoad) {
             mainClass.getConstructor(ModContent.class).newInstance(this);
         }
         loaded = true;
     }
-
-
-    public void registerBlock(Block block) {
-       // block.setModContent(this);
-        blocks.add(block);
-       // blockTextures.putAll(block.blockProperties.blockTextureManager.getAllTextures());
-        items.add(new BlockItem(block.name,block,modID).setModContent(this));
-    }
-
-
-
-    public void registerScreenBuilder(ScreenBuilder... screenBuilders) {
-        for(ScreenBuilder screenBuilder : screenBuilders) {
-            screenBuilder.assignOwner(this);
-            this.screenBuilders.add(screenBuilder);
-        }
-    }
-
 
     public void putData(IByteArray byteArray) {
         byteArray.writeInt(version);

@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.world.managers;
 
 
-import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
+import dev.hilligans.engine.client.graphics.util.TextAtlas;
 
 public class BlockTextureManager {
 

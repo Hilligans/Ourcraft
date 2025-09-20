@@ -5,7 +5,6 @@ import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IGraphicsElement;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
-import dev.hilligans.engine.mod.handler.content.UnknownResourceException;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 
 import java.util.HashMap;

@@ -3,14 +3,13 @@ package dev.hilligans.engine.client.graphics.tasks;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.application.IClientApplication;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
-import dev.hilligans.ourcraft.client.rendering.Textures;
 import dev.hilligans.engine.client.graphics.PipelineState;
 import dev.hilligans.engine.client.graphics.RenderTask;
 import dev.hilligans.engine.client.graphics.RenderTaskSource;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
-import dev.hilligans.engine.client.graphics.StringRenderer;
+import dev.hilligans.engine.client.graphics.util.StringRenderer;
 
 public class EngineLoadingTask extends RenderTaskSource {
 
@@ -31,7 +30,7 @@ public class EngineLoadingTask extends RenderTaskSource {
                         var stage = gameInstance.loaderPipeline.stages.get(index - 1);
                         screenStack.push();
                         screenStack.setColor(1.0f, 1.0f, 1.0f);
-                        engine.getDefaultImpl().uploadMatrix(graphicsContext, screenStack, Textures.BACKFILL.data.get(gameInstance).shaderSource());
+                        //engine.getDefaultImpl().uploadMatrix(graphicsContext, screenStack, Textures.BACKFILL.data.get(gameInstance).shaderSource());
 
                         rend.drawCenteredStringInternal(window, graphicsContext, screenStack, stage.getTypeA(), 29, 0.5f);
                         rend.drawCenteredStringInternal(window, graphicsContext, screenStack, index + " of " + gameInstance.loaderPipeline.section.subsectionLength, 29 * 2, 0.5f);

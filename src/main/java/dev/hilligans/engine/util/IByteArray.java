@@ -1,6 +1,5 @@
 package dev.hilligans.engine.util;
 
-import dev.hilligans.ourcraft.save.IEncodeable;
 import dev.hilligans.engine.tag.INBTTag;
 
 import java.nio.charset.StandardCharsets;

@@ -6,9 +6,10 @@ import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.engine.network.Protocol;
 import dev.hilligans.engine.network.engine.NetworkEntity;
 import dev.hilligans.engine.network.engine.ServerNetworkEntity;
-import dev.hilligans.engine.network.packet.ClientToServerPacketType;
+import dev.hilligans.ourcraft.network.ClientToServerPacketType;
 import dev.hilligans.engine.authentication.IAccount;
 import dev.hilligans.engine.util.IByteArray;
+import dev.hilligans.ourcraft.server.IServer;
 
 public class CLogin extends ClientToServerPacketType {
 
@@ -29,7 +30,7 @@ public class CLogin extends ClientToServerPacketType {
         return array;
     }
 
-    public void decode(ServerNetworkEntity entity, IByteArray data) {
+    public void decode(ServerNetworkEntity<IServer> entity, IByteArray data) {
         final GameInstance gameInstance = entity.getGameInstance();
 
         String username = data.readString();

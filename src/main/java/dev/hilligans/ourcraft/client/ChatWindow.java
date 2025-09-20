@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.client;
 
-import dev.hilligans.ourcraft.client.rendering.Screen;
+import dev.hilligans.engine.client.graphics.Screen;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 
 import java.util.ArrayList;

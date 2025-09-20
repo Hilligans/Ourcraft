@@ -12,7 +12,7 @@ import dev.hilligans.ourcraft.client.rendering.culling.CullingEngine;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.graphics.api.IMeshBuilder;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.TextAtlas;
+import dev.hilligans.engine.client.graphics.util.TextAtlas;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.util.Settings;
 import dev.hilligans.ourcraft.world.newworldsystem.EmptyContainer;

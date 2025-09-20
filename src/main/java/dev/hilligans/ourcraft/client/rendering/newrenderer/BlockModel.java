@@ -1,7 +1,8 @@
 package dev.hilligans.ourcraft.client.rendering.newrenderer;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.ourcraft.Ourcraft;
+import dev.hilligans.engine.client.graphics.api.IModel;
+import dev.hilligans.engine.client.graphics.util.TextAtlas;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.engine.client.graphics.api.IMeshBuilder;
 import dev.hilligans.ourcraft.client.rendering.world.managers.BlockTextureManager;

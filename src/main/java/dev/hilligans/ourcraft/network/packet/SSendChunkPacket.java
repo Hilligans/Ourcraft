@@ -3,10 +3,12 @@ package dev.hilligans.ourcraft.network.packet;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.engine.network.engine.ClientNetworkEntity;
 import dev.hilligans.engine.network.engine.NetworkEntity;
-import dev.hilligans.engine.network.packet.ServerToClientPacketType;
+import dev.hilligans.ourcraft.client.Client;
+import dev.hilligans.ourcraft.network.ServerToClientPacketType;
 import dev.hilligans.engine.util.IByteArray;
 import dev.hilligans.ourcraft.world.newworldsystem.CubicChunk;
 import dev.hilligans.ourcraft.world.newworldsystem.IChunk;
+import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 
 public class SSendChunkPacket extends ServerToClientPacketType {
 
@@ -27,10 +29,11 @@ public class SSendChunkPacket extends ServerToClientPacketType {
     }
 
     @Override
-    public void decode(ClientNetworkEntity entity, IByteArray data) {
-        IChunk chunk = new CubicChunk(entity.getWorld(), 32,0,0, 0);
+    public void decode(ClientNetworkEntity<Client> entity, IByteArray data) {
+        IWorld world = entity.getClient().getWorld();
+        IChunk chunk = new CubicChunk(world, 32,0,0, 0);
         Ourcraft.chainedChunkStream.fillChunk(data, chunk);
-        entity.getWorld().setChunk(chunk.getBlockX(), chunk.getBlockY(),  chunk.getBlockZ(), chunk.setWorld(entity.getWorld()));
-        entity.getWorld().markDirtyAround(chunk.getBlockX(), chunk.getBlockY(), chunk.getBlockZ());
+        world.setChunk(chunk.getBlockX(), chunk.getBlockY(),  chunk.getBlockZ(), chunk.setWorld(world));
+        world.markDirtyAround(chunk.getBlockX(), chunk.getBlockY(), chunk.getBlockZ());
     }
 }

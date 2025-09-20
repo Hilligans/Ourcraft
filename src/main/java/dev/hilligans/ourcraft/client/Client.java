@@ -7,21 +7,20 @@ import dev.hilligans.engine.application.IClientApplication;
 import dev.hilligans.ourcraft.client.audio.SoundBuffer;
 import dev.hilligans.ourcraft.client.audio.SoundEngine;
 import dev.hilligans.engine.client.input.InputHandler;
-import dev.hilligans.engine.client.input.key.MouseHandler;
 import dev.hilligans.ourcraft.client.rendering.ContainerScreen;
-import dev.hilligans.ourcraft.client.rendering.Screen;
+import dev.hilligans.engine.client.graphics.Screen;
+import dev.hilligans.ourcraft.client.rendering.FreeCamera;
 import dev.hilligans.ourcraft.client.rendering.ScreenBuilder;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.graphics.api.IInputProvider;
-import dev.hilligans.engine.client.graphics.opengl.OpenGLEngine;
 import dev.hilligans.engine.client.graphics.vulkan.VulkanEngine;
 import dev.hilligans.ourcraft.client.rendering.screens.JoinScreen;
 import dev.hilligans.ourcraft.client.rendering.screens.container.screens.InventoryScreen;
 import dev.hilligans.ourcraft.container.Container;
 import dev.hilligans.ourcraft.data.other.PlayerList;
 import dev.hilligans.ourcraft.item.ItemStack;
-import dev.hilligans.engine.mod.handler.events.client.OpenScreenEvent;
+import dev.hilligans.ourcraft.events.client.OpenScreenEvent;
 import dev.hilligans.engine.network.engine.NetworkSocket;
 import dev.hilligans.engine.save.FileLoader;
 import dev.hilligans.engine.tag.CompoundNBTTag;
@@ -53,7 +52,6 @@ public class Client implements IApplication, IClientApplication {
     Client client = this;
     public Logger logger;
 
-    public MouseHandler mouseHandler;
     public Screen screen;
     public SoundEngine soundEngine;
 
@@ -103,6 +101,7 @@ public class Client implements IApplication, IClientApplication {
 
     public void setupClient() {
         RenderWindow window = graphicsEngine.startEngine();
+        window.camera = new FreeCamera(window);
         window.setClient(this);
         client.screen = new JoinScreen();
         client.screen.setWindow(window);

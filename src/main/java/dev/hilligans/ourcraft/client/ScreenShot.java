@@ -2,7 +2,7 @@ package dev.hilligans.ourcraft.client;
 
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.resource.Image;
-import dev.hilligans.ourcraft.client.rendering.world.managers.WorldTextureManager;
+import dev.hilligans.engine.client.graphics.util.WorldTextureManager;
 import dev.hilligans.engine.data.Triplet;
 import org.lwjgl.opengl.GL11;
 

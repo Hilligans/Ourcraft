@@ -1,6 +1,6 @@
 package dev.hilligans.engine.resource.loaders;
 
-import dev.hilligans.ourcraft.client.rendering.newrenderer.IModel;
+import dev.hilligans.engine.client.graphics.api.IModel;
 
 import java.nio.ByteBuffer;
 

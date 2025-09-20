@@ -5,7 +5,6 @@ import dev.hilligans.engine.mod.handler.pipeline.other.DumpRegistriesPipeline;
 import dev.hilligans.engine.mod.handler.pipeline.other.TestPipeline;
 import dev.hilligans.engine.mod.handler.pipeline.standard.StandardPipeline;
 import dev.hilligans.engine.network.Protocol;
-import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.ServerMain;
 import dev.hilligans.engine.util.Side;
 import dev.hilligans.engine.util.argument.Argument;
@@ -16,8 +15,6 @@ import org.lwjgl.system.Configuration;
 import java.io.IOException;
 import java.util.Arrays;
 
-import static dev.hilligans.ourcraft.Ourcraft.argumentContainer;
-
 public class EngineMain {
 
     public static final long start = System.currentTimeMillis();
@@ -26,8 +23,6 @@ public class EngineMain {
             .help("Shows this menu.");
     public static final Argument<Side> startingSide = Argument.sideArg("--side", Side.CLIENT)
             .help("Specifies which side to load.");
-    public static final Argument<Boolean> integratedServer = Argument.existArg("--integratedServer")
-            .help("Whether or not to launch an integrated server.");
     public static final Argument<Boolean> loadImmediate = Argument.existArg("--loadImmediate")
             .help("Always immediately load the GameInstance immediately, otherwise, it's loaded later in the chain before argument parsing. \n" +
                     "This is needed to see any acceptable values from registry arguments");
@@ -41,14 +36,14 @@ public class EngineMain {
             .help("Prints all registry contents after loading");
 
     public static void main(String[] args) throws IOException {
-        Ourcraft.argumentContainer = new ArgumentContainer(args);
+        ArgumentContainer argumentContainer = new ArgumentContainer(args);
         System.out.println("Starting with arguments: " + Arrays.toString(args));
         System.out.println("Starting client with PID " + ProcessHandle.current().pid());
 
-        GameInstance gameInstance = new GameInstance(Ourcraft.argumentContainer);
-        gameInstance.side = startingSide.get(argumentContainer);
+        GameInstance gameInstance = new GameInstance(argumentContainer);
+        gameInstance.side = startingSide.get(gameInstance);
 
-        if(help.get(argumentContainer)) {
+        if(help.get(gameInstance)) {
             if(loadImmediate.get(gameInstance)) {
                 StandardPipeline.get(gameInstance).build();
             }
@@ -69,17 +64,6 @@ public class EngineMain {
 
         gameInstance.THREAD_PROVIDER.map();
         gameInstance.builtSemaphore.acquireUninterruptibly();
-
-        if(integratedServer.get(argumentContainer)) {
-            try {
-                Thread serverThread = new Thread(() -> ServerMain.server(gameInstance));
-                serverThread.setName("Server-Thread");
-                serverThread.setDaemon(true);
-                serverThread.start();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
 
         InstanceLoaderPipeline<?> pipeline = StandardPipeline.get(gameInstance);
 

@@ -6,7 +6,6 @@ import dev.hilligans.engine.client.graphics.api.IInputProvider;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
-import org.lwjgl.system.Callback;
 
 public class MouseHandler implements IInputProvider {
 

@@ -2,16 +2,11 @@ package dev.hilligans.ourcraft.data.other;
 
 import dev.hilligans.engine.data.BoundingBox;
 import dev.hilligans.ourcraft.util.IPosition;
-import org.joml.Matrix3f;
-import org.joml.Vector3d;
-import org.joml.Vector3f;
+import org.joml.*;
 
-public class BlockPos {
+import java.lang.Math;
 
-    public int x;
-    public int y;
-    public int z;
-
+public class BlockPos extends Vector3i {
 
     public BlockPos(int x, int y, int z) {
         this.x = x;
@@ -47,6 +42,9 @@ public class BlockPos {
         this.x = (int) position.getRawX();
         this.y = (int) position.getRawY();
         this.z = (int) position.getRawZ();
+    }
+
+    public BlockPos() {
     }
 
     public static BlockPos fromSubChunkPos(int pos) {

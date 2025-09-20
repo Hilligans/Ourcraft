@@ -6,6 +6,7 @@ import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.engine.client.graphics.api.IMeshBuilder;
+import dev.hilligans.engine.client.graphics.util.Texture;
 import org.jetbrains.annotations.NotNull;
 
 public class ResizingTexture extends Texture {

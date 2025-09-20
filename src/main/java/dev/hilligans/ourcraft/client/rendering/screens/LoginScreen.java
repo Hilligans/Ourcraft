@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.screens;
 
 import dev.hilligans.ourcraft.Ourcraft;
+import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.rendering.ScreenBase;
 import dev.hilligans.ourcraft.client.rendering.widgets.Button;
 import dev.hilligans.ourcraft.client.rendering.widgets.InputField;
@@ -17,10 +18,11 @@ public class LoginScreen extends ScreenBase {
         addWidget(email);
 
         addWidget(new Button(100, 550, 200, 50, "Log in", () -> {
-            getClient().playerData.email = email.string;
+            Client client = (Client) getClient();
+            client.playerData.email = email.string;
             String passwordVal = Ourcraft.hashString(password.string, email.string);
-            getClient().playerData.userName = username.string;
-            getClient().saveUsernameAndPassword();
+            client.playerData.userName = username.string;
+            client.saveUsernameAndPassword();
             //getClient().authNetwork.sendPacket(new CLogin(username.string,passwordVal,email.string));
             getClient().openScreen(new JoinScreen());
         }));

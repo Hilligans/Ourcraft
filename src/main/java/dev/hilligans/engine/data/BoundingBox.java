@@ -1,10 +1,8 @@
 package dev.hilligans.engine.data;
 
-import dev.hilligans.ourcraft.data.other.BlockPos;
-import org.joml.Intersectionf;
-import org.joml.Vector2f;
-import org.joml.Vector3d;
-import org.joml.Vector3f;
+import org.joml.*;
+
+import java.lang.Math;
 
 public class BoundingBox implements IBoundingBox {
 
@@ -63,7 +61,7 @@ public class BoundingBox implements IBoundingBox {
         return this.minX < vector3f.x && this.minY < vector3f.y && this.minZ < vector3f.z && this.maxX > vector3f.x && this.maxY > vector3f.y && this.maxZ > vector3f.z;
     }
 
-    public boolean intersectVector(Vector3f vector3f, BlockPos source) {
+    public boolean intersectVector(Vector3f vector3f, Vector3i source) {
         return intersectVector(new Vector3f(vector3f.x - source.x, vector3f.y - source.y, vector3f.z - source.z));
     }
 
@@ -122,11 +120,11 @@ public class BoundingBox implements IBoundingBox {
         }
     }
 
-    public int getHitSide(Vector3f vector3f, BlockPos source) {
+    public int getHitSide(Vector3f vector3f, Vector3i source) {
         return getHitSide(new Vector3f(vector3f.x - source.x, vector3f.y - source.y, vector3f.z - source.z));
     }
 
-    public int getHitSide(Vector3d vector3d, BlockPos source) {
+    public int getHitSide(Vector3d vector3d, Vector3i source) {
         return getHitSide(new Vector3f((float)vector3d.x - source.x, (float)vector3d.y - source.y, (float)vector3d.z - source.z));
     }
 

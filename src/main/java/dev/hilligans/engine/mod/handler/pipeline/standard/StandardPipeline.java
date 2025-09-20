@@ -6,12 +6,8 @@ import dev.hilligans.engine.mod.handler.content.RegistryView;
 import dev.hilligans.engine.mod.handler.pipeline.InstanceLoaderPipeline;
 import dev.hilligans.engine.mod.handler.pipeline.PerModPipelineStage;
 import dev.hilligans.engine.resource.loaders.ResourceLoader;
-import dev.hilligans.engine.util.argument.Argument;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 import dev.hilligans.engine.util.registry.Registry;
-
-import java.util.Arrays;
-import java.util.function.Function;
 
 public class StandardPipeline extends InstanceLoaderPipeline<StandardPipeline> {
 
@@ -21,7 +17,6 @@ public class StandardPipeline extends InstanceLoaderPipeline<StandardPipeline> {
     public static InstanceLoaderPipeline<?> get(GameInstance gameInstance) {
 
         StandardPipeline pipeline = new StandardPipeline(gameInstance);
-        //RegistryView registryView = new RegistryView(gameInstance);
 
 
         //load all mods

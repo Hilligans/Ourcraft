@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering;
 
+import dev.hilligans.engine.application.IClientApplication;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderWindow;
@@ -38,7 +39,7 @@ public abstract class ContainerScreen<T extends Container> extends ScreenBase {
         super.mouseClick(x, y, mouseButton);
 
         Slot slot = container.getSlotAt(x,y);
-        Client client = getClient();
+        Client client = (Client) getClient();
         if(slot != null) {
             if(mouseButton == GLFW_MOUSE_BUTTON_1) {
                 ItemStack oldStack = client.playerData.heldStack.copy();

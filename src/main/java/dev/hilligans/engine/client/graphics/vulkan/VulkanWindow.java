@@ -1,11 +1,11 @@
 package dev.hilligans.engine.client.graphics.vulkan;
 
-import dev.hilligans.ourcraft.Ourcraft;
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.client.input.InputHandler;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
-import dev.hilligans.engine.client.graphics.implementations.FreeCamera;
+import dev.hilligans.ourcraft.client.rendering.FreeCamera;
 import dev.hilligans.engine.client.graphics.vulkan.boilerplate.*;
 import dev.hilligans.engine.client.graphics.vulkan.boilerplate.pipeline.*;
 import dev.hilligans.engine.client.graphics.vulkan.boilerplate.window.*;
@@ -83,7 +83,7 @@ public class VulkanWindow extends RenderWindow {
         renderPass = new RenderPass(this);
         viewport = new Viewport(this);
         vertexShader = new Shader(device, ShaderCompiler.compileShader(shader, "shader.glsl", VK_SHADER_STAGE_VERTEX_BIT),VK_SHADER_STAGE_VERTEX_BIT);
-        vertexShader.set(Ourcraft.position_RGB);
+        vertexShader.set(Engine.position_RGB);
 
         //SingleUseCommandBuffer buf = device.queueFamilyManager.getSingleCommandPool(false, false, true, false);
         //CommandBuffer commandBuffer = new CommandBuffer(buf.getBuffer());

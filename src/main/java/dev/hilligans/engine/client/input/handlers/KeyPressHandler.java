@@ -1,13 +1,10 @@
 package dev.hilligans.engine.client.input.handlers;
 
-import dev.hilligans.engine.client.graphics.api.GraphicsContext;
-import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.input.InputHandler;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.IInputProvider;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
-import org.lwjgl.system.Callback;
 
 public class KeyPressHandler implements IInputProvider {
 

@@ -9,7 +9,6 @@ import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.engine.data.Tuple;
-import dev.hilligans.engine.mod.handler.content.UnknownResourceException;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -236,6 +235,7 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
             cache[1] = f;
             return cache[0];
         }
+        /*
         for(VertexFormat vertexFormat : engine.client.gameInstance.VERTEX_FORMATS.ELEMENTS) {
             if(vertexFormat.formatName.equals(name)) {
                 cache[1] = vertexFormat;
@@ -244,5 +244,7 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
         }
 
         throw new UnknownResourceException("Failed to find resource in the registry by name: " + name, engine.client.gameInstance.VERTEX_FORMATS, name, engine.getGameInstance().OURCRAFT);
+        */
+        return null;
     }
 }

@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.screens.container.screens;
 
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
+import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.rendering.ContainerScreen;
 import dev.hilligans.ourcraft.client.rendering.Textures;
 import dev.hilligans.engine.client.graphics.RenderWindow;
@@ -13,7 +14,7 @@ public class InventoryScreen extends ContainerScreen<InventoryContainer> {
 
     @Override
     public InventoryContainer getContainer() {
-        return new InventoryContainer(getClient());
+        return new InventoryContainer((Client) getClient());
     }
 
     @Override
@@ -30,7 +31,7 @@ public class InventoryScreen extends ContainerScreen<InventoryContainer> {
        // Textures.HOTBAR.drawCenteredXTexture(matrixStack,startY, Settings.guiSize);
 
         for(int x = 0; x < 9; x++) {
-            ItemStack itemStack = window.getClient().playerData.inventory.getItem(x);
+            ItemStack itemStack = ((Client)window.getClient()).playerData.inventory.getItem(x);
             if(!itemStack.isEmpty()) {
                 itemStack.item.render(matrixStack,startX + x * width, startY, width / 2,itemStack);
             }

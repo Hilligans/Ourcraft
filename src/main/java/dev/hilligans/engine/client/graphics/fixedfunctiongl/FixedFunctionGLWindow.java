@@ -1,9 +1,9 @@
 package dev.hilligans.engine.client.graphics.fixedfunctiongl;
 
-import dev.hilligans.ourcraft.client.Client;
+import dev.hilligans.engine.application.IClientApplication;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
-import dev.hilligans.engine.client.graphics.implementations.FreeCamera;
+import dev.hilligans.ourcraft.client.rendering.FreeCamera;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -11,14 +11,13 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class FixedFunctionGLWindow extends RenderWindow {
 
     public long window;
-    public Client client;
     public boolean shouldClose = false;
     public boolean mouseLocked = false;
     public boolean windowFocused = true;
     public int width;
     public int height;
 
-    public FixedFunctionGLWindow(Client client, FixedFunctionGLEngine engine) {
+    public FixedFunctionGLWindow(IClientApplication client, FixedFunctionGLEngine engine) {
         super(engine);
         this.camera = new FreeCamera(this);
         window = glfwCreateWindow(1920,1080,"Ourcraft",NULL,NULL);
@@ -49,14 +48,9 @@ public class FixedFunctionGLWindow extends RenderWindow {
     @Override
     public void swapBuffers(GraphicsContext graphicsContext) {
         glfwSwapBuffers(window);
-        client.rendering = false;
+       // client.rendering = false;
         glfwPollEvents();
         tick();
-    }
-
-    @Override
-    public Client getClient() {
-        return client;
     }
 
     @Override

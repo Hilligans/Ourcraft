@@ -1,6 +1,5 @@
 package dev.hilligans.engine.util.sections;
 
-import dev.hilligans.ourcraft.Ourcraft;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,7 +21,7 @@ public class ProfiledSection implements ISection {
 
     @Override
     public SectionView startSection(String name) {
-        stackFrames.push(new StackFrame(name, Ourcraft.getTime()));
+        stackFrames.push(new StackFrame(name, getTime()));
         return new SectionView(name, this);
     }
 
@@ -65,7 +64,7 @@ public class ProfiledSection implements ISection {
     }
 
     private void processFrame(StackFrame stackFrame) {
-        stackFrame.setEndTime(Ourcraft.getTime());
+        stackFrame.setEndTime(getTime());
         StackFrame lastFrame = stackFrames.empty() ? null : stackFrames.peek();
         if(lastFrame != null) {
             stackFrame.setParent(lastFrame);
@@ -166,7 +165,7 @@ public class ProfiledSection implements ISection {
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
-            builder.append(getIndentLevel()+sectionName+": "+Ourcraft.getConvertedTime(totalTime)+"\n");
+            builder.append(getIndentLevel() + sectionName + ": " + getConvertedTime(totalTime)+"\n");
             //builder.append(STR."\{getIndentLevel()}\{sectionName}: \{Ourcraft.getConvertedTime(totalTime)}\n");
             for(StackFrame frame : frames) {
                 builder.append(frame.toString());
@@ -187,5 +186,13 @@ public class ProfiledSection implements ISection {
             }
             return builder.toString();
         }
+    }
+
+    public static String getConvertedTime(long time) {
+        return String.format("%2.2fms", time/1000000f);
+    }
+
+    public static long getTime() {
+        return System.nanoTime();
     }
 }

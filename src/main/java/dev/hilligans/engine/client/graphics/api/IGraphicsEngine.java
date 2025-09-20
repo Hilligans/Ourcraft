@@ -3,10 +3,11 @@ package dev.hilligans.engine.client.graphics.api;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderWindow;
-import dev.hilligans.engine.client.graphics.StringRenderer;
+import dev.hilligans.engine.client.graphics.util.StringRenderer;
 import dev.hilligans.engine.util.Logger;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 import dev.hilligans.engine.util.sections.ISection;
+import dev.hilligans.ourcraft.client.Client;
 
 import java.util.ArrayList;
 
@@ -56,7 +57,7 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
                                     }
                                     try (var $9 = section.startSection(window.getWindowName())) {
                                         try (var $2 = section.startSection("tick")) {
-                                            window.getClient().tick(graphicsContext);
+                                            ((Client)window.getClient()).tick(graphicsContext);
                                         }
                                         try (var $2 = section.startSection("render")) {
                                             render(window, graphicsContext);

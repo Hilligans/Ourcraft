@@ -4,7 +4,6 @@ import dev.hilligans.engine.application.IClientApplication;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
-import dev.hilligans.engine.client.graphics.implementations.FreeCamera;
 import org.lwjgl.glfw.GLFWWindowFocusCallback;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL30;
@@ -24,7 +23,6 @@ public class OpenGLWindow extends RenderWindow {
 
     public OpenGLWindow(OpenGLEngine engine, String name, int width, int height, long otherID) {
         super(engine);
-        this.camera = new FreeCamera(this);
         this.width = width;
         this.height = height;
 
@@ -75,14 +73,6 @@ public class OpenGLWindow extends RenderWindow {
             glfwSwapInterval(0);
             glfwSwapBuffers(window);
         }
-        client.rendering = false;
-        if(getGameInstance().built()) {
-            client.soundEngine.tick();
-        }
-//        if(client.screenShot) {
-//            client.screenShot = false;
-//            ScreenShot.takeScreenShot(this);
-//        }
         glfwPollEvents();
         tick();
     }

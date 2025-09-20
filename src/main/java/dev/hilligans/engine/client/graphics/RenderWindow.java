@@ -3,12 +3,11 @@ package dev.hilligans.engine.client.graphics;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.application.IClientApplication;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
-import dev.hilligans.ourcraft.client.Client;
+import dev.hilligans.engine.client.graphics.util.StringRenderer;
 import dev.hilligans.engine.client.input.InputHandler;
 import dev.hilligans.engine.client.input.InputHandlerProvider;
 import dev.hilligans.engine.client.input.key.KeyPress;
 import dev.hilligans.engine.client.graphics.api.*;
-import dev.hilligans.engine.client.graphics.implementations.FreeCamera;
 import dev.hilligans.engine.client.graphics.resource.Image;
 import dev.hilligans.engine.util.Logger;
 import dev.hilligans.engine.util.sections.ISection;
@@ -30,7 +29,7 @@ public abstract class RenderWindow {
     public IGraphicsEngine<?,?,?> graphicsEngine;
     public Logger logger;
     public InputHandler inputHandler;
-    public Client client;
+    public IClientApplication client;
     public String queuedPipeline;
     public Vector4f clearColor = new Vector4f();
     public String windowName;
@@ -48,7 +47,6 @@ public abstract class RenderWindow {
             }
         }
         setRenderPipeline("ourcraft:engine_loading_pipeline");
-        camera = new FreeCamera(this);
         this.windowName = "window "+windowID.getAndIncrement();
     }
 
@@ -101,11 +99,11 @@ public abstract class RenderWindow {
         }
     }
 
-    public void setClient(Client client) {
+    public void setClient(IClientApplication client) {
         this.client = client;
     }
 
-    public Client getClient() {
+    public IClientApplication getClient() {
         return client;
     }
 

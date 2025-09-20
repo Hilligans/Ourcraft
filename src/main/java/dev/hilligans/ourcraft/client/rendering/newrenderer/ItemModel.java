@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering.newrenderer;
 
+import dev.hilligans.engine.client.graphics.api.IModel;
 import dev.hilligans.ourcraft.util.Settings;
 
 public class ItemModel implements IModel {

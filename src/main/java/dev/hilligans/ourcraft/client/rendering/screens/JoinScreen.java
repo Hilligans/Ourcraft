@@ -35,7 +35,7 @@ public class JoinScreen extends ScreenBase {
     public void buildContentForWindow(RenderWindow window) {
         int windowY = (int) window.getWindowHeight();
 
-        Client client = getClient();
+        Client client = (Client) getClient();
         play = new Button(100, windowY / 2 + 100, 200, 50, "menu.join", () -> {
             if(selected != null) {
                 selected.joinServer();
@@ -96,8 +96,9 @@ public class JoinScreen extends ScreenBase {
     @Override
     public void drawScreen(RenderWindow window, MatrixStack matrixStack, GraphicsContext graphicsContext) {
         super.drawScreen(window, matrixStack, graphicsContext);
-        if(getClient().playerData.valid_account) {
-            window.getStringRenderer().drawStringInternal(window, graphicsContext, matrixStack,getClient().playerData.userName, (int) (Settings.guiSize * 8), (int) (1 * Settings.guiSize),0.5f);
+        Client client = (Client) getClient();
+        if(client.playerData.valid_account) {
+            window.getStringRenderer().drawStringInternal(window, graphicsContext, matrixStack,client.playerData.userName, (int) (Settings.guiSize * 8), (int) (1 * Settings.guiSize),0.5f);
             Textures.CHECK_MARK.drawTexture(window, graphicsContext, matrixStack,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));
         } else {
             Textures.X_MARK.drawTexture(window, graphicsContext, matrixStack,0,0,(int)(8 * Settings.guiSize), (int)(8 * Settings.guiSize));

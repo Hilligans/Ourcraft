@@ -1,7 +1,5 @@
 package dev.hilligans.engine.mod.handler;
 
-
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;

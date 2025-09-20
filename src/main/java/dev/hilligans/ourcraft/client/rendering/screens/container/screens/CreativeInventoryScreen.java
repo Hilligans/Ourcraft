@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.screens.container.screens;
 
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
+import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.rendering.ContainerScreen;
 import dev.hilligans.ourcraft.client.rendering.Textures;
 import dev.hilligans.engine.client.graphics.RenderWindow;
@@ -12,7 +13,7 @@ public class CreativeInventoryScreen extends ContainerScreen<CreativeContainer> 
 
     @Override
     public CreativeContainer getContainer() {
-        return new CreativeContainer(getClient());
+        return new CreativeContainer((Client) getClient());
     }
 
     @Override

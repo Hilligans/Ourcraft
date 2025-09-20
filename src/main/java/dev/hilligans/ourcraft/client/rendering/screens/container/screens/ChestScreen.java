@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.client.rendering.screens.container.screens;
 
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
+import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.rendering.ContainerScreen;
 import dev.hilligans.ourcraft.client.rendering.Textures;
 import dev.hilligans.engine.client.graphics.RenderWindow;
@@ -15,7 +16,7 @@ public class ChestScreen extends ContainerScreen<ChestContainer> {
 
     @Override
     public ChestContainer getContainer() {
-        return new ChestContainer(getClient());
+        return new ChestContainer((Client) getClient());
     }
 
     @Override

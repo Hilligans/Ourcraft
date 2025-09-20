@@ -2,7 +2,8 @@ package dev.hilligans.ourcraft.network.packet;
 
 import dev.hilligans.engine.network.engine.ClientNetworkEntity;
 import dev.hilligans.engine.network.engine.NetworkEntity;
-import dev.hilligans.engine.network.packet.ServerToClientPacketType;
+import dev.hilligans.ourcraft.client.Client;
+import dev.hilligans.ourcraft.network.ServerToClientPacketType;
 import dev.hilligans.engine.util.IByteArray;
 
 public class SSendMessage extends ServerToClientPacketType {
@@ -24,7 +25,7 @@ public class SSendMessage extends ServerToClientPacketType {
     }
 
     @Override
-    public void decode(ClientNetworkEntity entity, IByteArray data) {
+    public void decode(ClientNetworkEntity<Client> entity, IByteArray data) {
         String message = data.readUTF16();
         entity.getClient().chatMessages.addMessage(message);
         CSendCommand.send(entity, new String[] {"setBlock", "0", "100", "0", "ourcraft:stone"});

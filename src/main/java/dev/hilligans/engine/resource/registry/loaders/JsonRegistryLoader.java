@@ -3,7 +3,7 @@ package dev.hilligans.engine.resource.registry.loaders;
 import dev.hilligans.engine.mod.handler.Identifier;
 import dev.hilligans.engine.mod.handler.content.ModContent;
 import dev.hilligans.engine.resource.ResourceLocation;
-import dev.hilligans.ourcraft.util.interfaces.TriConsumer;
+import dev.hilligans.engine.util.interfaces.TriConsumer;
 import org.json.JSONObject;
 
 import java.util.HashMap;

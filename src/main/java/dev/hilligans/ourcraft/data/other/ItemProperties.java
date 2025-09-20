@@ -1,11 +1,9 @@
 package dev.hilligans.ourcraft.data.other;
 
-import dev.hilligans.ourcraft.Ourcraft;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.IModel;
+import dev.hilligans.engine.client.graphics.api.IModel;
 import dev.hilligans.ourcraft.client.rendering.newrenderer.ItemModel;
 import dev.hilligans.ourcraft.client.rendering.world.managers.ItemTextureManager;
 import dev.hilligans.ourcraft.data.descriptors.TagCollection;
-import dev.hilligans.ourcraft.item.BlockItem;
 import dev.hilligans.ourcraft.item.Item;
 import dev.hilligans.engine.mod.handler.content.ModContent;
 import org.json.JSONObject;
@@ -76,7 +74,8 @@ public class ItemProperties {
     public Item getItem(String name, ModContent modContent) {
         if(block != null) {
 
-            return new BlockItem(name, modContent.blocks.stream().findFirst().filter(block1 -> block1.name.equals(name)).get(),modContent.getModID());
+            return null;
+           // return new BlockItem(name, modContent.blocks.stream().findFirst().filter(block1 -> block1.name.equals(name)).get(),modContent.getModID());
         } else {
             return new Item(name,this);
         }

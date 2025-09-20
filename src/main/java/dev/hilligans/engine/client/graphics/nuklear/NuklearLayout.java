@@ -1,7 +1,6 @@
 package dev.hilligans.engine.client.graphics.nuklear;
 
 import dev.hilligans.engine.application.IClientApplication;
-import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;

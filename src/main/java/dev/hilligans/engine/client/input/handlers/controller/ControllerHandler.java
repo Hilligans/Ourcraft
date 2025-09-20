@@ -1,7 +1,5 @@
 package dev.hilligans.engine.client.input.handlers.controller;
 
-import dev.hilligans.engine.client.graphics.api.GraphicsContext;
-import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.input.InputHandler;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.IInputProvider;

@@ -2,7 +2,7 @@ package dev.hilligans.engine.application;
 
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.RenderWindow;
-import dev.hilligans.ourcraft.client.rendering.Screen;
+import dev.hilligans.engine.client.graphics.Screen;
 
 public interface IClientApplication extends IApplication {
 
