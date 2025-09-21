@@ -14,6 +14,8 @@ public interface IRegistryElement {
 
     default void preLoad(GameInstance gameInstance) {}
 
+    default void unload(GameInstance gameInstance) {}
+
     default void cleanup() {}
 
     String getResourceName();
@@ -47,8 +49,6 @@ public interface IRegistryElement {
     default TagCollection getTagCollection() {
         return new TagCollection();
     }
-
-    default void cleanupGraphics(IGraphicsEngine<?,?,?> graphicsEngine, GraphicsContext graphicsContext) {}
 
     default int hashcode() {
         return getUniqueName().hashCode();

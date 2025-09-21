@@ -7,15 +7,9 @@ public class EntityType implements IRegistryElement {
     public String owner;
     public String name;
 
-    public int inventorySize;
-
     public EntityType(String name, String modID) {
         this.name = name;
         this.owner = modID;
-    }
-
-    public int getInventorySize() {
-        return inventorySize;
     }
 
     @Override

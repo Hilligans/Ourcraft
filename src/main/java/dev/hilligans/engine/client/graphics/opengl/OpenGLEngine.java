@@ -150,6 +150,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
             callback.close();
         }
         gameInstance.cleanupGraphics(this, createContext(null));
+        gameInstance.cleanup();
         for(RenderWindow renderWindow : windows) {
             if(renderWindow.pipelineInstance != null) {
                 renderWindow.pipelineInstance.cleanup(getGameInstance(), this, createContext(null));

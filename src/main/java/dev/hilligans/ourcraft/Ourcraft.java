@@ -74,7 +74,7 @@ public class Ourcraft implements ModClass {
 
     @Override
     public void registerRegistries(RegistryView view) {
-        Tuple<Class<? extends IRegistryElement>, String>[] elements = new Tuple[]{
+        register(view,
                 new Tuple(Block.class, "block"),
                 new Tuple(Items.class, "item"),
                 new Tuple(Biome.class, "biome"),
@@ -87,12 +87,7 @@ public class Ourcraft implements ModClass {
                 new Tuple(ScreenBuilder.class, "screen"),
                 new Tuple(Feature.class, "feature"),
                 new Tuple(SoundCategory.class, "sound_category"),
-                new Tuple(EntityType.class, "entity_type"),
-        };
-
-        for(Tuple<Class<? extends IRegistryElement>, String> element : elements) {
-            view.registerRegistry(() -> new Registry<>(view.getGameInstance(), element.getTypeA(), element.getTypeB()));
-        }
+                new Tuple(EntityType.class, "entity_type"));
     }
 
     public void registerCoreExtensions(CoreExtensionView view) {
@@ -271,7 +266,7 @@ public class Ourcraft implements ModClass {
                     }
                 });
             }
-            view.registerApplication(new Client(view.getGameInstance(), view.getGameInstance().getArgumentContainer()));
+          //  view.registerApplication(new Client(view.getGameInstance(), view.getGameInstance().getArgumentContainer()));
         }
         if(integratedServer.get(view.getGameInstance())) {
             view.registerApplication(new MultiPlayerServer(view.getGameInstance()));

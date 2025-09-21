@@ -1,45 +1,33 @@
-package dev.hilligans.ourcraft.entity;
+package dev.hilligans.engine2d.world;
 
 import dev.hilligans.engine.data.IBoundingBox;
-import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
+import dev.hilligans.engine2d.client.sprite.ISpriteEntity;
+import dev.hilligans.engine2d.client.sprite.Sprite;
+import dev.hilligans.ourcraft.entity.EntityType;
+import dev.hilligans.ourcraft.entity.IEntity;
 
-public class NewEntity implements IEntity {
+public class Entity2D implements IEntity {
 
-    public IWorld world;
-    public EntityType entityType;
-    public long entityID;
-
-    public float pitch, yaw, velX, velY, velZ;
     public double x, y, z;
+    public long id;
+    public EntityType entityType;
 
-    public IBoundingBox boundingBox = IBoundingBox.EMPTY_BOX;
-
-    public NewEntity(EntityType entityType) {
+    public Entity2D(EntityType entityType) {
         this.entityType = entityType;
-    }
-
-    public IWorld getWorld() {
-        return this.world;
-    }
-
-    public void setWorld(IWorld world) {
-        this.world = world;
     }
 
     @Override
     public void setRot(float pitch, float yaw, float roll) {
-        this.pitch = pitch;
-        this.yaw = yaw;
     }
 
     @Override
     public long getID() {
-        return entityID;
+        return id;
     }
 
     @Override
     public void setID(long id) {
-        this.entityID = id;
+        this.id = id;
     }
 
     @Override
@@ -49,17 +37,17 @@ public class NewEntity implements IEntity {
 
     @Override
     public IBoundingBox getEntityBoundingBox() {
-        return boundingBox;
+        return null;
     }
 
     @Override
     public float getPitch() {
-        return pitch;
+        return 0;
     }
 
     @Override
     public float getYaw() {
-        return yaw;
+        return 0;
     }
 
     @Override
@@ -68,25 +56,21 @@ public class NewEntity implements IEntity {
     }
 
     @Override
-    public void setVel(float velX, float velY, float velZ) {
-        this.velX = velX;
-        this.velY = velY;
-        this.velZ = velZ;
-    }
+    public void setVel(float velX, float velY, float velZ) {}
 
     @Override
     public float getVelX() {
-        return velX;
+        return 0;
     }
 
     @Override
     public float getVelY() {
-        return velY;
+        return 0;
     }
 
     @Override
     public float getVelZ() {
-        return velZ;
+        return 0;
     }
 
     @Override
@@ -108,7 +92,7 @@ public class NewEntity implements IEntity {
 
     @Override
     public double getZ() {
-        return z;
+        return 0;
     }
 
     @Override

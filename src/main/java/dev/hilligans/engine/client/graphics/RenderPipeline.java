@@ -7,17 +7,23 @@ import dev.hilligans.engine.client.graphics.api.IGraphicsElement;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.util.argument.Argument;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class RenderPipeline implements IRegistryElement, IGraphicsElement {
+
+    public static Argument<Boolean> noRender = Argument.existArg("--noRender");
 
     public String name;
     public ModContainer owner;
    // public RenderWindow window;
 
     public ArrayList<RenderTarget> renderTargets = new ArrayList<>();
+    public ArrayList<RenderTarget> stagedRenderTargets = new ArrayList<>();
+
 
     public RenderPipeline(String name) {
         this.name = name;
@@ -25,6 +31,10 @@ public class RenderPipeline implements IRegistryElement, IGraphicsElement {
 
     public void render(IClientApplication client, MatrixStack worldStack, MatrixStack screenStack, GraphicsContext graphicsContext) {
         client.getRenderWindow().render(graphicsContext, client, worldStack, screenStack);
+    }
+
+    public void stageRenderTarget(RenderTarget renderTarget) {
+        stagedRenderTargets.add(renderTarget);
     }
 
     public void addRenderTarget(RenderTarget renderTarget) {
@@ -61,7 +71,51 @@ public class RenderPipeline implements IRegistryElement, IGraphicsElement {
 
     public PipelineInstance buildTargets(IGraphicsEngine<?, ?, ?> graphicsEngine) {
         ArrayList<RenderTask<?>> tasks = new ArrayList<>();
-        System.out.println("Building targets " + renderTargets.size());
+
+        ArrayList<RenderTarget> tempList = new ArrayList<>();
+        HashSet<String> targets = new HashSet<>();
+        int size;
+        while((size = stagedRenderTargets.size()) != 0) {
+            for(RenderTarget renderTarget : stagedRenderTargets) {
+                if(renderTarget.before == null && renderTarget.after == null) {
+                    targets.add(renderTarget.name + ":" + renderTarget.getResourceOwner());
+                    addRenderTarget(renderTarget);
+                    continue;
+                }
+
+                if(renderTarget.before != null && renderTarget.after != null) {
+                    if(targets.contains(renderTarget.before + ":" + renderTarget.targetedMod) && targets.contains(renderTarget.after + ":" + renderTarget.targetedMod)) {
+                        targets.add(renderTarget.name + ":" + renderTarget.getResourceOwner());
+                        addRenderTarget(renderTarget);
+                        continue;
+                    }
+                } else {
+                    if (renderTarget.before != null && targets.contains(renderTarget.before + ":" + renderTarget.targetedMod)) {
+                        targets.add(renderTarget.name + ":" + renderTarget.getResourceOwner());
+                        addRenderTarget(renderTarget);
+                        continue;
+                    }
+                    if (renderTarget.after != null && targets.contains(renderTarget.after + ":" + renderTarget.targetedMod)) {
+                        targets.add(renderTarget.name + ":" + renderTarget.getResourceOwner());
+                        addRenderTarget(renderTarget);
+                        continue;
+                    }
+                }
+
+                //alternate order to hopefully reduce cases where the user defines them in a backwards order
+                tempList.addFirst(renderTarget);
+            }
+
+            if(tempList.size() == size) {
+                throw new RuntimeException("Failed to build pipeline: " + getIdentifierName() + ", unlinkable dependencies: " + tempList.stream().map(IRegistryElement::getIdentifierName).toList());
+            }
+
+            ArrayList<RenderTarget> stage = this.stagedRenderTargets;
+            stage.clear();
+            this.stagedRenderTargets = tempList;
+            tempList = stage;
+        }
+
         for(RenderTarget renderTarget : renderTargets) {
             RenderTaskSource renderTask = owner.getGameInstance().RENDER_TASK.getExcept(renderTarget.getRenderTask());
             tasks.add(renderTask.getTask(graphicsEngine.getIdentifierName()));
@@ -76,9 +130,11 @@ public class RenderPipeline implements IRegistryElement, IGraphicsElement {
 
     @Override
     public void preLoad(GameInstance gameInstance) {
-        for(RenderTarget renderTarget : gameInstance.RENDER_TARGETS.ELEMENTS) {
-            if(getIdentifierName().equals(renderTarget.renderPipeline)) {
-                addRenderTarget(renderTarget);
+        if(!noRender.get(gameInstance)) {
+            for (RenderTarget renderTarget : gameInstance.RENDER_TARGETS.ELEMENTS) {
+                if (getIdentifierName().equals(renderTarget.renderPipeline)) {
+                    stageRenderTarget(renderTarget);
+                }
             }
         }
     }

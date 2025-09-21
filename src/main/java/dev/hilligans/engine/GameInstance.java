@@ -114,6 +114,14 @@ public class GameInstance {
         }
     }
 
+    public void cleanup() {
+        for(Registry<?> registry : REGISTRIES.ELEMENTS) {
+            for(IRegistryElement element : registry.ELEMENTS) {
+                element.cleanup();
+            }
+        }
+    }
+
     public String path = System.getProperty("user.dir");
 
     public final Registry<Registry<?>> REGISTRIES;
@@ -245,6 +253,14 @@ public class GameInstance {
             }
         }
         return null;
+    }
+
+    public <T> T getResource(String resource, Class<T> clazz) {
+        return RESOURCE_LOADER.getResource(resource, clazz);
+    }
+
+    public <T> T getResource(ResourceLocation resourceLocation, Class<T> clazz) {
+        return RESOURCE_LOADER.getResource(resourceLocation, clazz);
     }
 
     public <T> T getExcept(String name, Class<T> registryClass) {

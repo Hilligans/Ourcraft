@@ -32,6 +32,10 @@ public class UniversalResourceLoader {
         return getResource(new ResourceLocation(path));
     }
 
+    public <T> T getResource(String path, Class<T> clazz) {
+        return (T)getResource(path);
+    }
+
     public String getString(ResourceLocation resourceLocation) {
         ResourceLoader<?> resourceLoader = extensionLoaders.get("txt");
         return (String) resourceLoader.read(resourceLocation);
@@ -58,6 +62,10 @@ public class UniversalResourceLoader {
             throw new RuntimeException("No Resource Loader found for extension: " + extension);
         }
         return resourceLoader.read(resourceLocation);
+    }
+
+    public <T> T getResource(ResourceLocation resourceLocation, Class<T> clazz) {
+        return (T)getResource(resourceLocation);
     }
 
     public Object getUnknownResource(String path) {

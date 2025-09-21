@@ -34,9 +34,8 @@ import dev.hilligans.engine.resource.loaders.JsonLoader;
 import dev.hilligans.engine.resource.loaders.ResourceLoader;
 import dev.hilligans.engine.resource.loaders.StringLoader;
 import dev.hilligans.engine.resource.registry.loaders.RegistryLoader;
+import dev.hilligans.engine.schema.Schema;
 import dev.hilligans.engine.test.ITest;
-import dev.hilligans.engine.util.registry.IRegistryElement;
-import dev.hilligans.engine.util.registry.Registry;
 import dev.hilligans.engine.client.graphics.util.Texture;
 
 public class Engine implements ModClass {
@@ -45,7 +44,7 @@ public class Engine implements ModClass {
 
     @Override
     public void registerRegistries(RegistryView view) {
-        Tuple<Class<? extends IRegistryElement>, String>[] elements = new Tuple[]{
+        register(view,
                 new Tuple(IGraphicsEngine.class, "graphics_engine"),
                 new Tuple(Protocol.class, "protocol"),
                 new Tuple(ResourceLoader.class, "resource_loader"),
@@ -64,11 +63,7 @@ public class Engine implements ModClass {
                 new Tuple(IAuthenticationScheme.class, "authentication_scheme"),
                 new Tuple(ITest.class, "test"),
                 new Tuple(IApplication.class, "application"),
-        };
-
-        for(Tuple<Class<? extends IRegistryElement>, String> element : elements) {
-            view.registerRegistry(() -> new Registry<>(view.getGameInstance(), element.getTypeA(), element.getTypeB()));
-        }
+                new Tuple(Schema.class, "schema"));
     }
 
     @Override

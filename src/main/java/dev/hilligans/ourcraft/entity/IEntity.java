@@ -5,9 +5,6 @@ import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 
 public interface IEntity {
 
-    IWorld getWorld();
-    void setWorld(IWorld world);
-
     void setRot(float pitch, float yaw, float roll);
 
     long getID();
@@ -27,6 +24,9 @@ public interface IEntity {
     float getVelZ();
 
     void setPosition(double x, double y, double z);
+    default void setPosition(double x, double y) {
+        this.setPosition(x, y, 0);
+    }
 
     double getX();
     double getY();

@@ -139,7 +139,7 @@ public class Client implements IApplication, IClientApplication {
             newClientWorld.tick();
         }
         if(transition) {
-            client.gameInstance.build(client.graphicsEngine, null);
+            //client.gameInstance.build(client.graphicsEngine, null);
             transition = false;
             rWindow.setRenderPipeline("ourcraft:menu_pipeline");
         }
@@ -149,9 +149,6 @@ public class Client implements IApplication, IClientApplication {
 
     public void cleanUp() {
         soundEngine.cleanup();
-        for(SoundBuffer soundBuffer : gameInstance.SOUNDS.ELEMENTS) {
-            soundBuffer.cleanup();
-        }
     }
 
     public void closeScreen() {

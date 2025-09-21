@@ -393,7 +393,6 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
             for(Exception e : vertexArrayAllocationTracker.values()) {
                 throw new VideoMemoryLeakException("Missing VAO deallocation allocated at:", e);
             }
-            System.out.println(textureAllocationTracker.keySet());
             for(Throwable e : textureAllocationTracker.values()) {
                 throw new VideoMemoryLeakException("Missing texture deallocation allocated at:", e);
             }

@@ -1,5 +1,7 @@
 package dev.hilligans.engine.client.graphics.resource;
 
+import dev.hilligans.engine.client.graphics.api.GraphicsContext;
+import dev.hilligans.engine.client.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.engine.resource.IAllocator;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryUtil;
@@ -209,6 +211,11 @@ public class Image {
         allocator = resource -> MemoryUtil.memFree(resource.buffer);
         this.buffer = tempImage.buffer;
         return this;
+    }
+
+    public ImageInfo upload(IDefaultEngineImpl<?, ?, ?> imp, GraphicsContext graphicsContext) {
+        long id = imp.createTexture(graphicsContext, this);
+        return new ImageInfo(width, height, format, id);
     }
 
     @Override

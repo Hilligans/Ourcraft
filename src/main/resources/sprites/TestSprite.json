@@ -1,0 +1,28 @@
+{
+  "frames" : [
+    {
+      "minX": 0,
+      "minY": 0,
+      "maxX": 54,
+      "maxY": 54
+    },
+    {
+      "minX": 0,
+      "minY": 54,
+      "maxX": 54,
+      "maxY": 108
+    },
+    {
+      "minX": 54,
+      "minY": 0,
+      "maxX": 108,
+      "maxY": 54
+    },
+    {
+      "minX": 54,
+      "minY": 54,
+      "maxX": 108,
+      "maxY": 108
+    }
+  ]
+}
