@@ -7,26 +7,17 @@ import dev.hilligans.engine.util.registry.IRegistryElement;
 
 public abstract class RegistryLoader implements IRegistryElement {
 
-    public Identifier name;
-    public boolean rerunOnInstanceClear;
-    public GameInstance gameInstance;
+    public String name;
     public ModContainer source;
 
-    public RegistryLoader(Identifier name) {
+    public RegistryLoader(String name) {
         this.name = name;
-    }
-
-    public RegistryLoader rerunOnInstanceClear() {
-        rerunOnInstanceClear = true;
-        return this;
     }
 
     public abstract void run();
 
-    public void runInit() {
-        if(!rerunOnInstanceClear) {
-            run();
-        }
+    public GameInstance getGameInstance() {
+        return source.getGameInstance();
     }
 
     @Override
@@ -36,7 +27,7 @@ public abstract class RegistryLoader implements IRegistryElement {
 
     @Override
     public String getResourceName() {
-        return name.getName();
+        return name;
     }
 
     @Override

@@ -2,6 +2,7 @@ package dev.hilligans.ourcraft.util.game.resource;
 
 
 import dev.hilligans.engine.GameInstance;
+import dev.hilligans.engine.util.registry.Registry;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.instance.TagCache;
@@ -49,7 +50,8 @@ public class GameResourceTable {
             }
         }
 
-        for(Feature feature : gameInstance.FEATURES.ELEMENTS) {
+        Registry<Feature> FEATURES = gameInstance.getRegistry("ourcraft:feature", Feature.class);
+        for(Feature feature : FEATURES.ELEMENTS) {
             DATA.put(feature.getUniqueName(), new FeatureGameResource(feature).setUniqueID(getId()));
             ArrayList<Block> blocks = feature.getBlockList();
             for(Block block : blocks) {

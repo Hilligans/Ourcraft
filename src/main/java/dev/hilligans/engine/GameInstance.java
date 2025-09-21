@@ -4,7 +4,6 @@ import dev.hilligans.engine.application.IApplication;
 import dev.hilligans.engine.client.graphics.*;
 import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.ourcraft.Ourcraft;
-import dev.hilligans.ourcraft.biome.Biome;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.blockstate.BlockStateBuilder;
 import dev.hilligans.ourcraft.block.blockstate.BlockStateTable;
@@ -14,7 +13,6 @@ import dev.hilligans.ourcraft.client.audio.SoundBuffer;
 import dev.hilligans.ourcraft.client.audio.SoundCategory;
 import dev.hilligans.engine.client.input.Input;
 import dev.hilligans.engine.client.input.InputHandlerProvider;
-import dev.hilligans.ourcraft.client.rendering.ScreenBuilder;
 import dev.hilligans.engine.client.graphics.util.Texture;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IGraphicsElement;
@@ -24,7 +22,6 @@ import dev.hilligans.engine.command.ICommand;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
 import dev.hilligans.ourcraft.entity.EntityType;
 import dev.hilligans.ourcraft.item.Item;
-import dev.hilligans.ourcraft.item.data.ToolLevel;
 import dev.hilligans.ourcraft.item.data.ToolLevelList;
 import dev.hilligans.engine.mod.handler.EventBus;
 import dev.hilligans.engine.mod.handler.content.ContentPack;
@@ -35,8 +32,6 @@ import dev.hilligans.ourcraft.events.common.RegistryClearEvent;
 import dev.hilligans.engine.mod.handler.pipeline.InstanceLoaderPipeline;
 import dev.hilligans.engine.network.Protocol;
 import dev.hilligans.engine.network.engine.INetworkEngine;
-import dev.hilligans.ourcraft.recipe.IRecipe;
-import dev.hilligans.ourcraft.recipe.helper.RecipeView;
 import dev.hilligans.engine.resource.IBufferAllocator;
 import dev.hilligans.engine.resource.ResourceLocation;
 import dev.hilligans.engine.resource.ResourceManager;
@@ -53,7 +48,6 @@ import dev.hilligans.engine.util.ThreadProvider;
 import dev.hilligans.engine.util.argument.ArgumentContainer;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 import dev.hilligans.engine.util.registry.Registry;
-import dev.hilligans.ourcraft.world.Feature;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -128,20 +122,14 @@ public class GameInstance {
 
     public Registry<Block> BLOCKS;
     public Registry<Item> ITEMS;
-    public Registry<Biome> BIOMES;
     public Registry<Tag> TAGS;
-    public Registry<IRecipe<?>> RECIPES;
-    public Registry<RecipeView<?>> RECIPE_VIEWS;
     public Registry<IGraphicsEngine<?,?,?>> GRAPHICS_ENGINES;
     public Registry<Protocol> PROTOCOLS;
     public Registry<Setting> SETTINGS;
     public Registry<ResourceLoader<?>> RESOURCE_LOADERS;
     public Registry<SoundBuffer> SOUNDS;
     public Registry<SoundCategory> SOUND_CATEGORIES;
-    public Registry<ToolLevel> TOOL_MATERIALS;
     public Registry<RegistryLoader> DATA_LOADERS;
-    public Registry<ScreenBuilder> SCREEN_BUILDERS;
-    public Registry<Feature> FEATURES;
     public Registry<RenderTarget> RENDER_TARGETS;
     public Registry<RenderPipeline> RENDER_PIPELINES;
     public Registry<RenderTaskSource> RENDER_TASK;
@@ -163,19 +151,13 @@ public class GameInstance {
     public void copyRegistries() {
         BLOCKS = (Registry<Block>) REGISTRIES.getExcept("ourcraft:block");
         ITEMS = (Registry<Item>) REGISTRIES.getExcept("ourcraft:item");
-        BIOMES = (Registry<Biome>) REGISTRIES.getExcept("ourcraft:biome");
         TAGS = (Registry<Tag>) REGISTRIES.getExcept("ourcraft:tag");
-        RECIPES = (Registry<IRecipe<?>>) REGISTRIES.getExcept("ourcraft:recipe");
-        RECIPE_VIEWS = (Registry<RecipeView<?>>) REGISTRIES.getExcept("ourcraft:recipe_view");
         GRAPHICS_ENGINES = (Registry<IGraphicsEngine<?, ?, ?>>) REGISTRIES.getExcept("ourcraft:graphics_engine");
         PROTOCOLS = (Registry<Protocol>) REGISTRIES.getExcept("ourcraft:protocol");
         SETTINGS = (Registry<Setting>) REGISTRIES.getExcept("ourcraft:setting");
         RESOURCE_LOADERS = (Registry<ResourceLoader<?>>) REGISTRIES.getExcept("ourcraft:resource_loader");
         SOUNDS = (Registry<SoundBuffer>) REGISTRIES.getExcept("ourcraft:sound");
-        TOOL_MATERIALS = (Registry<ToolLevel>) REGISTRIES.getExcept("ourcraft:tool_level");
         DATA_LOADERS = (Registry<RegistryLoader>) REGISTRIES.getExcept("ourcraft:registry_loader");
-        SCREEN_BUILDERS = (Registry<ScreenBuilder>) REGISTRIES.getExcept("ourcraft:screen");
-        FEATURES = (Registry<Feature>) REGISTRIES.getExcept("ourcraft:feature");
         RENDER_TARGETS = (Registry<RenderTarget>) REGISTRIES.getExcept("ourcraft:render_target");
         RENDER_PIPELINES = (Registry<RenderPipeline>) REGISTRIES.getExcept("ourcraft:render_pipeline");
         RENDER_TASK = (Registry<RenderTaskSource>) REGISTRIES.getExcept("ourcraft:render_task");
@@ -240,7 +222,6 @@ public class GameInstance {
         BLOCKS.clear();
         ITEMS.clear();
         TAGS.clear();
-        RECIPES.clear();
         //TODO fix
         PROTOCOLS.clear();
         EVENT_BUS.postEvent(new RegistryClearEvent(this));
@@ -273,6 +254,10 @@ public class GameInstance {
         //throw new RuntimeException(STR."Unknown registry \{registryClass}");
     }
 
+    public <T extends IRegistryElement> Registry<T> getRegistry(String registryKey, Class<T> registryClass) {
+        return (Registry<T>) REGISTRIES.get(registryKey);
+    }
+
     public <T extends IRegistryElement> Registry<T> getRegistry(Class<T> registryClass) {
         for(Registry<?> registry : REGISTRIES.ELEMENTS) {
             if(registry.classType == registryClass) {
@@ -303,12 +288,6 @@ public class GameInstance {
 
     public ArrayList<Block> getBlocks() {
         return BLOCKS.ELEMENTS;
-    }
-
-    public void registerToolLevels(ToolLevel... toolLevels) {
-        for(ToolLevel toolLevel : toolLevels) {
-            TOOL_MATERIALS.put(toolLevel.name.getName(), toolLevel);
-        }
     }
 
     public void register(IRegistryElement registryElement) {
@@ -366,10 +345,6 @@ public class GameInstance {
 
     public int getUniqueID() {
         return gameInstanceUniversalID;
-    }
-
-    public void handleArgs(String[] args) {
-        ARGUMENTS.handle(args);
     }
 
     public ModContainer getMod(String modID) {

@@ -211,7 +211,8 @@ public class Client implements IApplication, IClientApplication {
     }
 
     public void openScreen(String screenName) {
-        ScreenBuilder screenBuilder = gameInstance.SCREEN_BUILDERS.get(screenName);
+        Registry<ScreenBuilder> SCREEN_BUILDERS = gameInstance.getRegistry("ourcraft:screen", ScreenBuilder.class);
+        ScreenBuilder screenBuilder = SCREEN_BUILDERS.get(screenName);
         if(screenBuilder == null) {
             throw new RuntimeException("Failed to find screen: " + screenName);
         }

@@ -258,13 +258,11 @@ public class ModContainer {
             toolLevel.assignOwner(this);
         }
         toolLevelRegistry.putAll(toolLevels);
-        //this.toolLevels.addAll(List.of(toolLevels));
     }
 
     public void registerRegistryLoader(RegistryLoader... registryLoaders) {
         for(RegistryLoader registryLoader : registryLoaders) {
-            registryLoader.gameInstance = gameInstance;
-            //this.registryLoaders.add(registryLoader);
+            registryLoader.assignOwner(this);
         }
         registryLoaderRegistry.putAll(registryLoaders);
     }

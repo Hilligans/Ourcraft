@@ -7,8 +7,9 @@ import dev.hilligans.engine.data.Tuple;
 import dev.hilligans.engine.mod.handler.ModClass;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
 import dev.hilligans.engine.mod.handler.content.RegistryView;
+import dev.hilligans.engine2d.client.tasks.BorderBlackout;
 import dev.hilligans.engine2d.client.Client2D;
-import dev.hilligans.engine2d.client.WorldRenderer;
+import dev.hilligans.engine2d.client.tasks.WorldRenderer;
 import dev.hilligans.engine2d.client.sprite.AnimatedSprite;
 import dev.hilligans.engine2d.client.sprite.Sprite;
 import dev.hilligans.ourcraft.entity.EntityType;
@@ -34,11 +35,14 @@ public class Engine2D implements ModClass {
             container.registerRenderPipelines(new RenderPipeline("pipeline2d"));
 
             container.registerRenderTask(new WorldRenderer());
+            container.registerRenderTask(new BorderBlackout());
 
             container.registerRenderTarget(new RenderTarget("second_world_renderer", "engine2D:pipeline2d", "engine2D:world_renderer_2d")
                     .setPipelineState(new PipelineState()));
+            container.registerRenderTarget(new RenderTarget("border_blackout_renderer", "engine2D:pipeline2d", "engine2D:border_blackout")
+                    .afterTarget("second_world_renderer", "engine2D").setPipelineState(new PipelineState()));
 
-            container.registerApplication(new Client2D());
+         //   container.registerApplication(new Client2D());
         }
     }
 

@@ -10,11 +10,21 @@ public class GraphicsContext extends ThreadContext {
         return 0;
     }
 
+    long frameStartTime;
+
     public boolean pipelineStateSet = false;
 
     public GraphicsContext setPipelineState(boolean state) {
         this.pipelineStateSet = state;
         return this;
+    }
+
+    public long getFrameStartTime() {
+        return frameStartTime;
+    }
+
+    public void updateFrameStartTime() {
+        this.frameStartTime = System.currentTimeMillis();
     }
 
     public GraphicsContext setSection(@NotNull ISection section) {

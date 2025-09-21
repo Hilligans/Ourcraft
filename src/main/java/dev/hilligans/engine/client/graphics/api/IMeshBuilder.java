@@ -61,6 +61,14 @@ public interface IMeshBuilder {
                 maxX, minY, z, maxTexX, minTexY,
                 maxX, maxY, z, maxTexX, maxTexY);
 
-        this.addIndices(s, s + 1, s + 2, s + 3, s + 2, s + 1);
+        this.addClockwiseIndices(s);
+    }
+
+    default void addClockwiseIndices(int base) {
+        this.addIndices(base, base + 1, base + 2, base + 3, base + 2, base + 1);
+    }
+
+    default void addCounterClockwiseIndices(int base) {
+        this.addIndices(base, base + 2, base + 1, base + 3, base + 1, base + 2);
     }
 }

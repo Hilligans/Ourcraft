@@ -53,6 +53,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.nio.DoubleBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -91,7 +92,7 @@ public class Ourcraft implements ModClass {
     }
 
     public void registerCoreExtensions(CoreExtensionView view) {
-        view.registerRegistryLoader(new JsonRegistryLoader(new Identifier("tool_tiers", "ourcraft"), "Data/ToolTiers.json", (modContent1, jsonObject, string) -> {
+        view.registerRegistryLoader(new JsonRegistryLoader("tool_tiers", "Data/ToolTiers.json", (modContent1, jsonObject, string) -> {
             JSONArray elements = jsonObject.getJSONArray("material");
             ToolLevel[] levels = new ToolLevel[elements.length()];
             for (int x = 0; x < elements.length(); x++) {
@@ -104,10 +105,11 @@ public class Ourcraft implements ModClass {
                 case "before" -> modContent1.gameInstance.MATERIAL_LIST.insertBefore(parts[1], levels);
                 case "after" -> modContent1.gameInstance.MATERIAL_LIST.insertAfter(parts[1], levels);
             }
-            view.getGameInstance().registerToolLevels(levels);
-        }).rerunOnInstanceClear());
 
-        view.registerRegistryLoader(new JsonRegistryLoader(new Identifier("blocks", "ourcraft"), "Data/Blocks.json", (modContent12, jsonObject, key) -> {
+            //modContent1.registerToolLevel(levels);
+        }));
+
+        /*view.registerRegistryLoader(new JsonRegistryLoader(new Identifier("blocks", "ourcraft"), "Data/Blocks.json", (modContent12, jsonObject, key) -> {
             try {
                 Block block = new Block(key, "Data/" + jsonObject.optString("data"), jsonObject.optJSONObject("overrides"));
                 JSONArray textures = jsonObject.getJSONArray("textures");
@@ -119,11 +121,12 @@ public class Ourcraft implements ModClass {
                 e.printStackTrace();
             }
         }));
+         */
 
 
-        view.registerRegistryLoader(new JsonRegistryLoader(new Identifier("screens", "ourcraft"), "Data/Screens.json", (modContent12, jsonObject, key) -> {
+        //view.registerRegistryLoader(new JsonRegistryLoader(new Identifier("screens", "ourcraft"), "Data/Screens.json", (modContent12, jsonObject, key) -> {
             //modContent12.registerScreenBuilder(new ScreenBuilder(key, jsonObject));
-        }).rerunOnInstanceClear());
+        //}));
 
         if (view.getGameInstance().side.isClient()) {
             Textures.addData(view);
@@ -135,7 +138,7 @@ public class Ourcraft implements ModClass {
             if (view.getGameInstance().side.isClient()) {
                 view.registerKeybinds(new Input("left_click", "ourcraft:mouse_handler::0") {
                     @Override
-                    public void press(RenderWindow renderWindow, float strength) {
+                    public void press(RenderWindow renderWindow, double strength) {
                         Client client = (Client) renderWindow.getClient();
                         if (client.screen != null) {
                             DoubleBuffer doubleBuffer = getMousePos(renderWindow.getWindowID());
@@ -146,7 +149,7 @@ public class Ourcraft implements ModClass {
 
                 view.registerKeybinds(new Input("escape_menu", "ourcraft:key_press_handler::" + KeyHandler.GLFW_KEY_ESCAPE) {
                     @Override
-                    public void press(RenderWindow renderWindow, float strength) {
+                    public void press(RenderWindow renderWindow, double strength) {
                         Client client = (Client) renderWindow.getClient();
                         if (client.renderWorld) {
                             if (client.screen == null) {
@@ -162,7 +165,7 @@ public class Ourcraft implements ModClass {
 
                 view.registerKeybinds(new Input("f3", "ourcraft:key_press_handler::" + KeyHandler.GLFW_KEY_F3) {
                     @Override
-                    public void press(RenderWindow renderWindow, float strength) {
+                    public void press(RenderWindow renderWindow, double strength) {
                         Client client = (Client) renderWindow.getClient();
                         client.playerData.f3 = !client.playerData.f3;
                     }
@@ -170,8 +173,8 @@ public class Ourcraft implements ModClass {
 
                 view.registerKeybinds(new Input("rotate_yaw", "ourcraft:mouse_handler::" + MouseHandler.MOUSE_X) {
                     @Override
-                    public void press(RenderWindow window, float strength) {
-                        window.getCamera().addRotation(0, strength/400);
+                    public void press(RenderWindow window, double strength) {
+                        window.getCamera().addRotation((float) 0, (float) (strength/400));
                         window.setMousePosition(window.getWindowWidth()/2, window.getWindowHeight()/2);
                         //GLFW.glfwSetCursorPos(window.getWindowID(), window.getWindowWidth()/2,window.getWindowHeight()/2);
                     }
@@ -179,8 +182,8 @@ public class Ourcraft implements ModClass {
 
                 view.registerKeybinds(new Input("rotate_pitch", "ourcraft:mouse_handler::" + MouseHandler.MOUSE_Y) {
                     @Override
-                    public void press(RenderWindow window, float strength) {
-                        window.getCamera().addRotation(-strength/400,0);
+                    public void press(RenderWindow window, double strength) {
+                        window.getCamera().addRotation((float) (-strength/400),0);
                         window.setMousePosition(window.getWindowWidth()/2, window.getWindowHeight()/2);
                         //GLFW.glfwSetCursorPos(window.getWindowID(), window.getWindowWidth()/2,window.getWindowHeight()/2);
                     }
@@ -188,7 +191,7 @@ public class Ourcraft implements ModClass {
 
                 view.registerKeybinds(new Input("open_test_screen", "ourcraft:key_press_handler::" + GLFW_KEY_SEMICOLON) {
                     @Override
-                    public void press(RenderWindow renderWindow, float strength) {
+                    public void press(RenderWindow renderWindow, double strength) {
                         super.press(renderWindow, strength);
                         renderWindow.client.openScreen(new TestScreen());
                     }
@@ -196,7 +199,7 @@ public class Ourcraft implements ModClass {
 
                 view.registerKeybinds(new Input("chunk_outlines", "ourcraft:key_press_handler::" + GLFW_KEY_F8){
                     @Override
-                    public void press(RenderWindow renderWindow, float strength) {
+                    public void press(RenderWindow renderWindow, double strength) {
                         super.press(renderWindow, strength);
                         Client client = (Client) renderWindow.getClient();
                         client.getPlayerData().debugChunkRendering = !client.getPlayerData().debugChunkRendering;
@@ -204,34 +207,34 @@ public class Ourcraft implements ModClass {
                 });
 
                 view.registerKeybinds(new RepeatingInput("move_forward", "ourcraft:key_press_handler::" + GLFW_KEY_W,
-                        (window, strength) -> window.getCamera().moveForward(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
+                        (window, strength) -> window.getCamera().moveForward((float) (5.6f * strength))).onlyWithPipelines("ourcraft:new_world_pipeline"));
 
                 view.registerKeybinds(new RepeatingInput("move_left", "ourcraft:key_press_handler::" + GLFW_KEY_A,
-                        (window, strength) -> window.getCamera().moveLeft(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
+                        (window, strength) -> window.getCamera().moveLeft((float) (5f * strength))).onlyWithPipelines("ourcraft:new_world_pipeline"));
 
                 view.registerKeybinds(new RepeatingInput("move_backward", "ourcraft:key_press_handler::" + GLFW_KEY_S,
-                        (window, strength) -> window.getCamera().moveBackward(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
+                        (window, strength) -> window.getCamera().moveBackward((float) (5f * strength))).onlyWithPipelines("ourcraft:new_world_pipeline"));
 
                 view.registerKeybinds(new RepeatingInput("move_right", "ourcraft:key_press_handler::" + GLFW_KEY_D,
-                        (window, strength) -> window.getCamera().moveRight(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
+                        (window, strength) -> window.getCamera().moveRight((float) (5f * strength))).onlyWithPipelines("ourcraft:new_world_pipeline"));
 
                 view.registerKeybinds(new RepeatingInput("jump", "ourcraft:key_press_handler::" + GLFW_KEY_SPACE,
-                        (window, strength) -> window.getCamera().moveUp(5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
+                        (window, strength) -> window.getCamera().moveUp((float) (5f * strength))).onlyWithPipelines("ourcraft:new_world_pipeline"));
 
                 view.registerKeybinds(new RepeatingInput("crouch", "ourcraft:key_press_handler::" + GLFW_KEY_LEFT_SHIFT,
-                        (window, strength) -> window.getCamera().moveUp(-5f * strength)).onlyWithPipelines("ourcraft:new_world_pipeline"));
+                        (window, strength) -> window.getCamera().moveUp((float) (-5f * strength))).onlyWithPipelines("ourcraft:new_world_pipeline"));
 
                 view.registerKeybinds(new RepeatingInput("pitch_down", "ourcraft:key_press_handler::" + GLFW_KEY_DOWN,
-                        (window, strength) -> window.getCamera().addRotation(0.1f * strength, 0)));
+                        (window, strength) -> window.getCamera().addRotation((float) (0.1f * strength), 0)));
 
                 view.registerKeybinds(new RepeatingInput("pitch_up", "ourcraft:key_press_handler::" + GLFW_KEY_UP,
-                        (window, strength) -> window.getCamera().addRotation(-0.1f * strength, 0)));
+                        (window, strength) -> window.getCamera().addRotation((float) (-0.1f * strength), 0)));
 
                 view.registerKeybinds(new RepeatingInput("yaw_down", "ourcraft:key_press_handler::" + GLFW_KEY_LEFT,
-                        (window, strength) -> window.getCamera().addRotation(0, -0.3f * strength)));
+                        (window, strength) -> window.getCamera().addRotation((float) 0, (float) (-0.3f * strength))));
 
                 view.registerKeybinds(new RepeatingInput("yaw_up", "ourcraft:key_press_handler::" + GLFW_KEY_RIGHT,
-                        (window, strength) -> window.getCamera().addRotation(0, 0.3f * strength)));
+                        (window, strength) -> window.getCamera().addRotation((float) 0, (float) (0.3f * strength))));
 
                 view.registerKeybinds(new RepeatingInput("roll_down", "ourcraft:key_press_handler::" + GLFW_KEY_L,
                         (window, strength) -> ((WorldCamera)window.getCamera()).roll -= 0.1f * strength));
@@ -242,7 +245,7 @@ public class Ourcraft implements ModClass {
 
                 view.registerKeybinds(new Input("open_tag_editor", "ourcraft:key_press_handler::" + GLFW_KEY_H) {
                     @Override
-                    public void press(RenderWindow renderWindow, float strength) {
+                    public void press(RenderWindow renderWindow, double strength) {
                         Client client = (Client) renderWindow.getClient();
                         client.openScreen(new TagEditorScreen());
                     }
@@ -250,7 +253,7 @@ public class Ourcraft implements ModClass {
 
                 view.registerKeybinds(new Input("open_frame_times", "ourcraft:key_press_handler::" + GLFW_KEY_P) {
                     @Override
-                    public void press(RenderWindow renderWindow, float strength) {
+                    public void press(RenderWindow renderWindow, double strength) {
                         Client client = (Client) renderWindow.getClient();
                         client.openScreen(new FrameTimeScreen());
                     }
@@ -258,7 +261,7 @@ public class Ourcraft implements ModClass {
 
                 view.registerKeybinds(new Input("open_chat", "ourcraft:key_press_handler::" + GLFW_KEY_T) {
                     @Override
-                    public void press(RenderWindow renderWindow, float strength) {
+                    public void press(RenderWindow renderWindow, double strength) {
                         Client client = (Client) renderWindow.getClient();
                         if (client.renderWorld) {
                             client.openScreen(new ChatWindow());
@@ -266,7 +269,7 @@ public class Ourcraft implements ModClass {
                     }
                 });
             }
-          //  view.registerApplication(new Client(view.getGameInstance(), view.getGameInstance().getArgumentContainer()));
+            view.registerApplication(new Client(view.getGameInstance(), view.getGameInstance().getArgumentContainer()));
         }
         if(integratedServer.get(view.getGameInstance())) {
             view.registerApplication(new MultiPlayerServer(view.getGameInstance()));
@@ -326,7 +329,6 @@ public class Ourcraft implements ModClass {
 
         Sounds.reg();
         modContent.registerSounds(Sounds.BLOCK_BREAK, Sounds.MUSIC);
-        //modContent.registerTexture(Textures.TEXTURES.toArray(new Texture[0]));
         Protocols.register(modContent);
         Commands.register(modContent);
 

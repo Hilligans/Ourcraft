@@ -48,9 +48,9 @@ public class Input implements IRegistryElement {
         return false;
     }
 
-    public void press(RenderWindow renderWindow, float strength) {}
+    public void press(RenderWindow renderWindow, double strength) {}
 
-    public void repeat(RenderWindow renderWindow, float strength) {}
+    public void repeat(RenderWindow renderWindow, double strength) {}
 
     public void bind(String key) {
         this.boundKey.add(key);

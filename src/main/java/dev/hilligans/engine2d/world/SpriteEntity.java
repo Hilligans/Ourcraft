@@ -1,5 +1,6 @@
 package dev.hilligans.engine2d.world;
 
+import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine2d.client.sprite.ISpriteEntity;
 import dev.hilligans.engine2d.client.sprite.Sprite;
 import dev.hilligans.ourcraft.entity.EntityType;
@@ -32,5 +33,11 @@ public class SpriteEntity extends Entity2D implements ISpriteEntity {
     @Override
     public float getHeight() {
         return 100;
+    }
+
+    @Override
+    public void tickVisuals(GraphicsContext graphicsContext) {
+        long time = graphicsContext.getFrameStartTime();
+        spriteIndex = (int) ((time / 400) % 4);
     }
 }

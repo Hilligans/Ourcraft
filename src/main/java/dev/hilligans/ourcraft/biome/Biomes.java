@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.biome;
 
 import dev.hilligans.engine.GameInstance;
+import dev.hilligans.engine.util.registry.Registry;
 import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.BlockTemplate;
@@ -99,19 +100,20 @@ public class Biomes {
     private static final float variationFactor = 1;
 
     public static Biome getBiome(GameInstance gameInstance, double noise, double temp, double humidity, double rand, double variation) {
-        ArrayList<Double> doubles = new ArrayList<>(gameInstance.BIOMES.ELEMENTS.size());
+        Registry<Biome> BIOMES = gameInstance.getRegistry("ourcraft:biome", Biome.class);
+        ArrayList<Double> doubles = new ArrayList<>(BIOMES.ELEMENTS.size());
 
 
-        for(Biome biome : gameInstance.BIOMES.ELEMENTS) {
+        for(Biome biome : BIOMES.ELEMENTS) {
             doubles.add(Math.abs(noise - biome.noise) * noiseFactor + Math.abs(temp - biome.temp) * tempFactor + Math.abs(humidity - biome.humidity) * humidityFactor + Math.abs(rand - biome.rand) * randFactor + Math.abs(variation - biome.variation) * variationFactor);
         }
 
         Biome biome = PLAINS;
         double val = 1000000;
-        for(int x = 0; x < gameInstance.BIOMES.ELEMENTS.size(); x++) {
+        for(int x = 0; x < BIOMES.ELEMENTS.size(); x++) {
           //  System.out.println(biomes.get(x).name + " " + doubles.get(x));
             if(val > doubles.get(x)) {
-                biome = gameInstance.BIOMES.get(x);
+                biome = BIOMES.get(x);
                 val = doubles.get(x);
             }
         }

@@ -86,6 +86,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         MatrixStack matrixStack = window.camera.getMatrix();
         MatrixStack screenStack = window.camera.getScreenStack();
 
+        graphicsContext.updateFrameStartTime();
         window.renderPipeline(window.getClient(), matrixStack, screenStack, graphicsContext);
     }
 

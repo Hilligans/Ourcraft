@@ -10,7 +10,6 @@ import dev.hilligans.engine.client.graphics.resource.ImageInfo;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
-import dev.hilligans.ourcraft.entity.IEntity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -99,7 +98,7 @@ public class AnimatedSprite implements Sprite {
         float x = (float) entity.getX();
         float y = (float) entity.getY();
 
-        builder.addQuad(x, y, minTexX, minTexY, x + entity.getWidth(), y + entity.getHeight(), maxTexX, maxTexY, 1);
+        builder.addQuad(x, y, minTexX, minTexY, x + entity.getWidth(), y + entity.getHeight(), maxTexX, maxTexY, 0);
         engine.getDefaultImpl().bindTexture(graphicsContext, info.imageID());
         engine.getDefaultImpl().drawAndDestroyMesh(graphicsContext, matrixStack, builder);
     }

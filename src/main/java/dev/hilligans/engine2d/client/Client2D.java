@@ -11,9 +11,7 @@ import dev.hilligans.engine2d.client.sprite.Sprite;
 import dev.hilligans.engine2d.world.SpriteEntity;
 import dev.hilligans.engine2d.world.World2D;
 import dev.hilligans.ourcraft.client.rendering.FreeCamera;
-import dev.hilligans.ourcraft.client.rendering.screens.JoinScreen;
 import dev.hilligans.ourcraft.entity.EntityType;
-import org.lwjgl.openal.AL11;
 
 public class Client2D implements IClientApplication {
 
@@ -64,11 +62,8 @@ public class Client2D implements IClientApplication {
         Thread thread = new Thread(() -> {
             try {
                 window = engine.startEngine();
-                window.camera = new FreeCamera(window);
+                window.camera = new Camera2D(window, 1200, 800);
 
-                window.camera.addRotation((float)0, 0);
-                window.camera.addRotation(0.0f, (float)Math.PI/2);
-                window.camera.setPosition(0, 0, -100);
                 window.setClient(this);
 
                 window.setClearColor(0.2f, 0.3f, 0.3f, 1.0f);

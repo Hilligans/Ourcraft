@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.entity;
 
+import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.data.IBoundingBox;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 
@@ -33,6 +34,7 @@ public interface IEntity {
     double getZ();
 
     void tick();
+    default void tickVisuals(GraphicsContext graphicsContext) {}
 
     default boolean intersects(IEntity entity) {
         return entity.getEntityBoundingBox().intersects(getEntityBoundingBox(), entity.getX(), entity.getY(), entity.getZ(), this.getX(), this.getY(), this.getZ());

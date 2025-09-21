@@ -13,7 +13,7 @@ public class FrameTracker {
 
     public FrameTracker() {
         setFrameTimeBufferSize(1000);
-        lastFrame = System.currentTimeMillis();
+        lastFrame = System.nanoTime();
     }
     public FrameTracker setMaxFrameRate(int time) {
         this.maxFrameRate = time;
@@ -26,9 +26,9 @@ public class FrameTracker {
     }
 
     public void count() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = System.nanoTime();
         framesInFlight++;
-        if (currentTime - timeSinceLastUpdate >= 1000L ){
+        if (currentTime - timeSinceLastUpdate >= 1000000000L ){
             fps = framesInFlight;
             framesInFlight = 0;
             timeSinceLastUpdate = currentTime;

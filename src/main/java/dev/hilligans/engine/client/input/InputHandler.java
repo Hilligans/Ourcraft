@@ -82,7 +82,7 @@ public class InputHandler {
         handleInput(input,mode,windowID,action,0,0,mode != 0 ? 1 : 0,provider);
     }
 
-    public void tick(float deltaTime) {
+    public void tick(double deltaTime) {
         if(deltaTime > 100) {
             throw new RuntimeException();
         }
