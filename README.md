@@ -8,7 +8,7 @@ https://discord.gg/BUhTVnS5ua
 2. Add the `--enable-preview` flag to your compiler.  
 3. Run `package.sh` or run the package command in Maven.  
 4. Run ourcraft-X.X.X-jar-with-dependencies.jar with the JVM flag `--enable-preview` and the program arguements 
-`--devBuild --integratedServer`.
+`--devBuild --integratedServer`. Note: --devBuild should only be needed when running the application through Intellij.
 5. Double click localhost:<port\> to launch into the demo.
 
 ## YourKit
