@@ -8,7 +8,6 @@ import dev.hilligans.engine.mod.handler.ModClass;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
 import dev.hilligans.engine.mod.handler.content.RegistryView;
 import dev.hilligans.engine2d.client.tasks.BorderBlackout;
-import dev.hilligans.engine2d.client.Client2D;
 import dev.hilligans.engine2d.client.tasks.WorldRenderer;
 import dev.hilligans.engine2d.client.sprite.AnimatedSprite;
 import dev.hilligans.engine2d.client.sprite.Sprite;
@@ -23,7 +22,6 @@ public class Engine2D implements ModClass {
         register(view,
                 new Tuple<>(Sprite.class, "sprite"));
     }
-
 
     @Override
     public void registerContent(ModContainer container) {

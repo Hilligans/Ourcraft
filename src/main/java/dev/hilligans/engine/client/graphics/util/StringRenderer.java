@@ -203,7 +203,6 @@ public class StringRenderer {
     //TODO fix array index exception
     public void addVertices(IMeshBuilder primitiveBuilder, char character, int x, int y, float scale) {
         float z = 0;
-        x += 1;
         if(textureAtlases.containsKey(character >> 8)) {
             TextureAtlas textureAtlas = textureAtlases.getOrDefault(character >> 8, null);
             if (textureAtlas == null) {
@@ -217,12 +216,12 @@ public class StringRenderer {
                 return;
             }
             float minX = textureAtlas.minX(id);
-            float minY = textureAtlas.minY(id);
+            float minY = textureAtlas.minY(id) + 12f / textureAtlas.height;
             float maxX = textureAtlas.maxX(id);
             float maxY = textureAtlas.maxY(id);
 
             maxX = (maxX - minX) * (getCharWidth(character) / 64.0f) + minX;
-            maxY = (maxY - minY) * (52 / 64.0f) + minY;
+            maxY = (maxY - minY) + minY;
 
             int width = getCharWidth(character);
             int height = stringHeight;

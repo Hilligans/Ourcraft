@@ -1,5 +1,6 @@
 package dev.hilligans.engine2d.world;
 
+import dev.hilligans.engine.data.IBoundingBox;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 

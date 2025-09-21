@@ -20,6 +20,8 @@ public class TextureAtlas {
     public int minTextureSize;
     public int ratio;
 
+    public int height;
+
     public Int2ObjectOpenHashMap<TextureAtlas.ImageHolder> imageMap = new Int2ObjectOpenHashMap<>();
 
     public ArrayList<TextureAtlas.ImageHolder> imageHolders = new ArrayList<>();
@@ -68,6 +70,7 @@ public class TextureAtlas {
             for (int x = 1; x < imageHolders.size(); x++) {
                 img = joinImage(img, imageHolders.get(x).image=null);
             }
+            height = img.height;
             return img;
         }
         return null;
