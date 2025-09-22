@@ -35,6 +35,8 @@ public class WorldRenderer extends RenderTaskSource {
             public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, Client2D client, MatrixStack worldStack, MatrixStack screenStack, float delta) {
                 IDefaultEngineImpl<?,?,?> impl = engine.getDefaultImpl();
                 World2D world = client.getWorld();
+                world.lastFrametime = window.frameTracker.getFrame(1) / 1000000000.0;
+                world.tick();
 
                 worldStack.translate(window.getCamera().getPosition());
 

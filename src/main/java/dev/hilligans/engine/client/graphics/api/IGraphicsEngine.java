@@ -99,10 +99,12 @@ public interface IGraphicsEngine<Q extends RenderWindow, V extends IDefaultEngin
     int getProgram(String name);
 
     default RenderWindow startEngine() {
-        if(!isRunning()) {
-            return setup();
-        } else {
-            return createWindow();
+        synchronized (this) {
+            if (!isRunning()) {
+                return setup();
+            } else {
+                return createWindow();
+            }
         }
     }
 

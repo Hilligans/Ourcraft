@@ -15,13 +15,17 @@ public class World2D {
     public GameInstance gameInstance;
     public Scene scene;
 
+    public double lastFrametime;
+
     public World2D(GameInstance gameInstance, String scene) {
         this.gameInstance = gameInstance;
         this.scene = gameInstance.getExcept(scene, Scene.class);
     }
 
-    public void addEntity(IEntity entity) {
+    public void addEntity(Entity2D entity) {
+        entity.setWorld(this);
         this.entities.add(entity);
+
         if(entity instanceof ISpriteEntity spriteEntity) {
             renderableEntities.add(spriteEntity);
         }
@@ -40,5 +44,11 @@ public class World2D {
 
     public List<ISpriteEntity> getRenderableEntities() {
         return renderableEntities;
+    }
+
+    public void tick() {
+        for(IEntity entity : entities) {
+            entity.tick();
+        }
     }
 }

@@ -1,17 +1,31 @@
 package dev.hilligans.engine2d.world;
 
+import dev.hilligans.engine.data.BoundingBox;
 import dev.hilligans.engine.data.IBoundingBox;
 import dev.hilligans.engine.entity.EntityType;
 import dev.hilligans.engine.entity.IEntity;
 
 public class Entity2D implements IEntity {
 
-    public double x, y, z;
+    public double x, y;
     public long id;
     public EntityType entityType;
+    public float velX, velY;
+    public float width, height;
+    public World2D world2D;
 
     public Entity2D(EntityType entityType) {
         this.entityType = entityType;
+        this.width = 32;
+        this.height = 32;
+    }
+
+    public void setWorld(World2D world) {
+        this.world2D = world;
+    }
+
+    public World2D getWorld() {
+        return world2D;
     }
 
     @Override
@@ -35,7 +49,7 @@ public class Entity2D implements IEntity {
 
     @Override
     public IBoundingBox getEntityBoundingBox() {
-        return null;
+        return new BoundingBox(x, y, -1, x + width, y + height, 1);
     }
 
     @Override
@@ -58,12 +72,12 @@ public class Entity2D implements IEntity {
 
     @Override
     public float getVelX() {
-        return 0;
+        return velX;
     }
 
     @Override
     public float getVelY() {
-        return 0;
+        return velY;
     }
 
     @Override
@@ -75,7 +89,14 @@ public class Entity2D implements IEntity {
     public void setPosition(double x, double y, double z) {
         this.x = x;
         this.y = y;
-        this.z = z;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
     }
 
     @Override

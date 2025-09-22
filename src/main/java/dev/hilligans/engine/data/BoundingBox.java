@@ -1,6 +1,7 @@
 package dev.hilligans.engine.data;
 
 import org.joml.*;
+import org.json.JSONObject;
 
 import java.lang.Math;
 
@@ -25,6 +26,10 @@ public class BoundingBox implements IBoundingBox {
         eyeHeight = maxY;
     }
 
+    public BoundingBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
+        this((float) minX, (float) minY, (float) minZ, (float) maxX, (float) maxY, (float) maxZ);
+    }
+
     public BoundingBox(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, float eyeHeight) {
         this.minX = minX;
         this.minY = minY;
@@ -43,6 +48,15 @@ public class BoundingBox implements IBoundingBox {
         this.maxY = values[4];
         this.maxZ = values[5];
         eyeHeight = maxY;
+    }
+
+    public BoundingBox(JSONObject jsonObject) {
+        this.minX = jsonObject.optInt("minX", 0);
+        this.minY = jsonObject.optInt("minY", 0);
+        this.minZ = jsonObject.optInt("minZ", 0);
+        this.maxX = jsonObject.optInt("maxX", 0);
+        this.maxY = jsonObject.optInt("maxY", 0);
+        this.maxZ = jsonObject.optInt("maxZ", 0);
     }
 
     public boolean intersectsBox(BoundingBox other, Vector3d myPos, Vector3d otherPos) {
@@ -74,6 +88,13 @@ public class BoundingBox implements IBoundingBox {
             return -1;
         }
         return vector2f.x;
+    }
+
+    public double intersectsRay(double x, double y, double z, double dirX, double dirY, double dirZ, Vector2d vector2d) {
+        if (!Intersectiond.intersectRayAab(x, y, z, dirX, dirY, dirZ, minX, minY, minZ, maxX, maxY, maxZ, vector2d)) {
+            return -1;
+        }
+        return vector2d.x;
     }
 
     public int getHitSide(Vector3f last) {

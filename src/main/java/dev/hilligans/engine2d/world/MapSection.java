@@ -6,22 +6,27 @@ import dev.hilligans.engine.client.graphics.api.IGraphicsElement;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.graphics.resource.Image;
 import dev.hilligans.engine.client.graphics.resource.ImageInfo;
+import dev.hilligans.engine.data.BoundingBox;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
 import dev.hilligans.engine.util.registry.IRegistryElement;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class MapSection implements IGraphicsElement, IRegistryElement {
 
     public ModContainer owner;
     public String name;
-    public String imagePath;
+    public String dataPath;
     public ImageInfo info;
 
     public int width;
     public int height;
 
-    public MapSection(String name, String imagePath) {
+    public BoundingBox[] boundingBoxes;
+
+    public MapSection(String name, String dataPath) {
         this.name = name;
-        this.imagePath = imagePath;
+        this.dataPath = dataPath;
     }
 
     public int getWidth() {
@@ -54,7 +59,15 @@ public class MapSection implements IGraphicsElement, IRegistryElement {
 
     @Override
     public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
-        Image image = gameInstance.getResource(imagePath, Image.class);
+        JSONObject jsonObject = gameInstance.getResource(dataPath, JSONObject.class);
+        JSONArray hitboxes = jsonObject.getJSONArray("hitboxes");
+
+        this.boundingBoxes = new BoundingBox[hitboxes.length()];
+        for(int x = 0; x < this.boundingBoxes.length; x++) {
+            this.boundingBoxes[x] = new BoundingBox(hitboxes.getJSONObject(x));
+        }
+
+        Image image = gameInstance.getResource(jsonObject.getString("image_path"), Image.class);
         this.info = image.upload(graphicsEngine.getDefaultImpl(), graphicsContext);
         this.width = this.info.width();
         this.height = this.info.height();

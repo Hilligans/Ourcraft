@@ -49,7 +49,7 @@ public class Engine2D implements ModClass {
             container.registerRenderTarget(new RenderTarget("border_blackout_renderer", "engine2D:pipeline2d", "engine2D:border_blackout")
                     .afterTarget("second_world_renderer", "engine2D").setPipelineState(new PipelineState()));
 
-            container.register("engine2D:map_section", new MapSection("test_section", "Images/Sample.png"));
+            container.register("engine2D:map_section", new MapSection("test_section", "sections/TestSection.json"));
             container.register("engine2D:scene", new Scene("test_scene", "scenes/TestScene.json"));
 
             container.registerApplication(new Client2D());

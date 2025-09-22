@@ -26,16 +26,6 @@ public class SpriteEntity extends Entity2D implements ISpriteEntity {
     }
 
     @Override
-    public float getWidth() {
-        return 32;
-    }
-
-    @Override
-    public float getHeight() {
-        return 32;
-    }
-
-    @Override
     public void tickVisuals(GraphicsContext graphicsContext) {
         long time = graphicsContext.getFrameStartTime();
         spriteIndex = (int) ((time / 400) % 4);

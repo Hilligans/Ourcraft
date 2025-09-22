@@ -1,0 +1,13 @@
+{
+  "image_path": "Images/Sample.png",
+  "hitboxes": [
+    {
+      "minX": 477,
+      "minY": 60,
+      "maxX": 586,
+      "maxY": 170,
+      "minZ": -1,
+      "maxZ": 1
+    }
+  ]
+}

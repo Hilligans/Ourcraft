@@ -8,6 +8,7 @@ import dev.hilligans.engine.client.graphics.api.IMeshBuilder;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.data.BoundingBox;
+import dev.hilligans.engine.data.IBoundingBox;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 import dev.hilligans.engine.util.registry.Registry;
 import org.json.JSONArray;
@@ -30,11 +31,11 @@ public class Scene implements IRegistryElement {
         this.scenePath = scenePath;
     }
 
-    public List<SceneSection> getOverlappingSections(BoundingBox boundingBox) {
+    public List<SceneSection> getOverlappingSections(IBoundingBox boundingBox) {
         ArrayList<SceneSection> overlapping = new ArrayList<>();
 
         for(SceneSection section : sections) {
-            if(section.getBoundingBox().intersectsBox(boundingBox)) {
+            if(boundingBox.intersects(section.getBoundingBox())) {
                 overlapping.add(section);
             }
         }
@@ -95,12 +96,7 @@ public class Scene implements IRegistryElement {
     public record SceneSection(MapSection section, int x, int y) {
 
         public BoundingBox getBoundingBox() {
-            int minX = Math.min(x + section.getWidth(), x);
-            int minY = Math.min(y + section.getHeight(), y);
-            int maxX = Math.max(x + section.getWidth(), x);
-            int maxY = Math.max(y + section.getHeight(), y);
-
-            return new BoundingBox(minX, minY, 0, maxX, maxY, 0);
+            return new BoundingBox(x, y, 0, x + section.getWidth(), y + section.getHeight(), 0);
         }
     }
 }

@@ -7,9 +7,12 @@ import dev.hilligans.engine.client.graphics.Screen;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.util.ThreadContext;
 import dev.hilligans.engine2d.client.sprite.Sprite;
+import dev.hilligans.engine2d.world.PlayerEntity;
 import dev.hilligans.engine2d.world.SpriteEntity;
 import dev.hilligans.engine2d.world.World2D;
 import dev.hilligans.engine.entity.EntityType;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Client2D implements IClientApplication {
 
@@ -57,11 +60,12 @@ public class Client2D implements IClientApplication {
     public void startApplication(GameInstance gameInstance) {
         IGraphicsEngine<?, ?, ?> engine = gameInstance.get("ourcraft:openglEngine", IGraphicsEngine.class);
 
+        AtomicBoolean waiting = new AtomicBoolean(true);
         Thread thread = new Thread(() -> {
             try {
                 window = engine.startEngine();
                 window.camera = new Camera2D(window, 600, 400);
-
+                waiting.set(false);
                 window.setClient(this);
 
                 window.setClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -86,6 +90,14 @@ public class Client2D implements IClientApplication {
         });
 
         thread.start();
+
+        while (waiting.get()) {}
+        world.addEntity(new PlayerEntity(
+                gameInstance.getExcept("engine2D:entity_type", EntityType.class),
+                gameInstance.getExcept("engine2D:test_sprite", Sprite.class),
+                (Camera2D) getRenderWindow().getCamera()));
+
+
     }
 
     @Override
