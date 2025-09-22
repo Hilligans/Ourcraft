@@ -6,12 +6,10 @@ import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.Screen;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.util.ThreadContext;
-import dev.hilligans.engine2d.client.sprite.ISpriteEntity;
 import dev.hilligans.engine2d.client.sprite.Sprite;
 import dev.hilligans.engine2d.world.SpriteEntity;
 import dev.hilligans.engine2d.world.World2D;
-import dev.hilligans.ourcraft.client.rendering.FreeCamera;
-import dev.hilligans.ourcraft.entity.EntityType;
+import dev.hilligans.engine.entity.EntityType;
 
 public class Client2D implements IClientApplication {
 
@@ -20,7 +18,7 @@ public class Client2D implements IClientApplication {
     public RenderWindow window;
     public Screen openScreen;
 
-    public World2D world = new World2D();
+    public World2D world;
 
     public World2D getWorld() {
         return world;
@@ -62,7 +60,7 @@ public class Client2D implements IClientApplication {
         Thread thread = new Thread(() -> {
             try {
                 window = engine.startEngine();
-                window.camera = new Camera2D(window, 1200, 800);
+                window.camera = new Camera2D(window, 600, 400);
 
                 window.setClient(this);
 
@@ -80,12 +78,14 @@ public class Client2D implements IClientApplication {
             }
         });
 
-        thread.start();
+        world = new World2D(gameInstance, "engine2D:test_scene");
 
         world.addEntity(new SpriteEntity(
                 gameInstance.getExcept("engine2D:entity_type", EntityType.class),
                 gameInstance.getExcept("engine2D:test_sprite", Sprite.class)) {
         });
+
+        thread.start();
     }
 
     @Override

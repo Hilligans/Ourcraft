@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.container.containers;
 
 import dev.hilligans.engine.GameInstance;
+import dev.hilligans.engine.util.registry.Registry;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.rendering.ContainerScreen;
 import dev.hilligans.ourcraft.client.rendering.screens.container.screens.CreativeInventoryScreen;
@@ -16,7 +17,8 @@ import dev.hilligans.ourcraft.item.ItemStack;
 public class CreativeContainer extends Container {
 
     public CreativeContainer(Client client) {
-        this(client.playerData.inventory,new Inventory(Math.max(client.getGameInstance().ITEMS.ELEMENTS.size(),54)));
+        Registry<Item> ITEMS = client.getGameInstance().getRegistry("ourcraft:item", Item.class);
+        this(client.playerData.inventory,new Inventory(Math.max(ITEMS.ELEMENTS.size(),54)));
     }
 
     public CreativeContainer(IInventory playerInventory, IInventory creativeInventory) {
@@ -61,9 +63,10 @@ public class CreativeContainer extends Container {
     }
 
     public static IInventory createInventory(GameInstance gameInstance) {
-        Inventory inventory = new Inventory(Math.max(gameInstance.ITEMS.ELEMENTS.size() ,54));
+        Registry<Item> ITEMS = gameInstance.getRegistry("ourcraft:item", Item.class);
+        Inventory inventory = new Inventory(Math.max(ITEMS.ELEMENTS.size() ,54));
         int x = 0;
-        for(Item item : gameInstance.ITEMS.ELEMENTS) {
+        for(Item item : ITEMS.ELEMENTS) {
             if(!(item instanceof BlockItem) || !((BlockItem) item).block.blockProperties.airBlock) {
                 inventory.setItem(x, new ItemStack(item, (byte) 1));
                 x++;

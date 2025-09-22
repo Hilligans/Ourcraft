@@ -430,7 +430,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
             }
         }
 
-        throw new UnknownResourceException("Failed to find resource in the registry by name: " + name, engine.getGameInstance().VERTEX_FORMATS, name, engine.getGameInstance().OURCRAFT);
+        throw new UnknownResourceException("Failed to find resource in the registry by name: " + name, engine.getGameInstance().VERTEX_FORMATS, name, null);
     }
 
     public static class VideoMemoryLeakException extends RuntimeException {

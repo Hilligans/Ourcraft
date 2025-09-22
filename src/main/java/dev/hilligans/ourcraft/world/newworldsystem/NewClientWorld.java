@@ -2,7 +2,7 @@ package dev.hilligans.ourcraft.world.newworldsystem;
 
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.entity.Entity;
-import dev.hilligans.ourcraft.entity.IEntity;
+import dev.hilligans.engine.entity.IEntity;
 import dev.hilligans.ourcraft.entity.IPlayerEntity;
 
 import java.util.function.Consumer;

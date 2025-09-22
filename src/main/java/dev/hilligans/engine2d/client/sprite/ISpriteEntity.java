@@ -1,6 +1,6 @@
 package dev.hilligans.engine2d.client.sprite;
 
-import dev.hilligans.ourcraft.entity.IEntity;
+import dev.hilligans.engine.entity.IEntity;
 
 public interface ISpriteEntity extends IEntity {
 

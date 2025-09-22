@@ -16,7 +16,7 @@ import dev.hilligans.engine.client.graphics.api.ILayoutEngine;
 import dev.hilligans.engine.client.graphics.api.IModel;
 import dev.hilligans.engine.command.ICommand;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
-import dev.hilligans.ourcraft.entity.EntityType;
+import dev.hilligans.engine.entity.EntityType;
 import dev.hilligans.ourcraft.item.Item;
 import dev.hilligans.ourcraft.item.data.ToolLevel;
 import dev.hilligans.engine.mod.handler.ModClass;

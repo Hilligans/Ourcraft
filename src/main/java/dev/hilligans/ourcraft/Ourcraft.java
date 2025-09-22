@@ -1,7 +1,6 @@
 package dev.hilligans.ourcraft;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import dev.hilligans.engine.authentication.IAuthenticationScheme;
 import dev.hilligans.engine.client.graphics.*;
 import dev.hilligans.engine.util.argument.Argument;
 import dev.hilligans.ourcraft.biome.Biome;
@@ -26,7 +25,7 @@ import dev.hilligans.ourcraft.command.Commands;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
 import dev.hilligans.engine.data.Tuple;
 import dev.hilligans.ourcraft.entity.Entities;
-import dev.hilligans.ourcraft.entity.EntityType;
+import dev.hilligans.engine.entity.EntityType;
 import dev.hilligans.ourcraft.item.Items;
 import dev.hilligans.ourcraft.item.data.ToolLevel;
 import dev.hilligans.engine.mod.handler.Identifier;
@@ -42,8 +41,6 @@ import dev.hilligans.ourcraft.schematic.LitematicaSchematicLoader;
 import dev.hilligans.ourcraft.server.MultiPlayerServer;
 import dev.hilligans.ourcraft.settings.Setting;
 import dev.hilligans.engine.test.standard.DuplicateRegistryTest;
-import dev.hilligans.engine.util.registry.IRegistryElement;
-import dev.hilligans.engine.util.registry.Registry;
 import dev.hilligans.ourcraft.world.Feature;
 import dev.hilligans.ourcraft.world.newworldsystem.ChainedBlockChunkStream;
 import dev.hilligans.ourcraft.world.newworldsystem.ChunkStream;
@@ -53,7 +50,6 @@ import org.lwjgl.glfw.GLFW;
 
 import java.nio.DoubleBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -269,7 +265,7 @@ public class Ourcraft implements ModClass {
                     }
                 });
             }
-            view.registerApplication(new Client(view.getGameInstance(), view.getGameInstance().getArgumentContainer()));
+            //view.registerApplication(new Client(view.getGameInstance(), view.getGameInstance().getArgumentContainer()));
         }
         if(integratedServer.get(view.getGameInstance())) {
             view.registerApplication(new MultiPlayerServer(view.getGameInstance()));

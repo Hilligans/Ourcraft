@@ -3,7 +3,6 @@ package dev.hilligans.engine;
 import dev.hilligans.engine.application.IApplication;
 import dev.hilligans.engine.client.graphics.*;
 import dev.hilligans.engine.client.graphics.resource.VertexFormat;
-import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.blockstate.BlockStateBuilder;
 import dev.hilligans.ourcraft.block.blockstate.BlockStateTable;
@@ -20,15 +19,13 @@ import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.graphics.api.ILayoutEngine;
 import dev.hilligans.engine.command.ICommand;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
-import dev.hilligans.ourcraft.entity.EntityType;
+import dev.hilligans.engine.entity.EntityType;
 import dev.hilligans.ourcraft.item.Item;
 import dev.hilligans.ourcraft.item.data.ToolLevelList;
 import dev.hilligans.engine.mod.handler.EventBus;
 import dev.hilligans.engine.mod.handler.content.ContentPack;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
-import dev.hilligans.engine.mod.handler.content.ModContent;
 import dev.hilligans.engine.mod.handler.content.ModList;
-import dev.hilligans.ourcraft.events.common.RegistryClearEvent;
 import dev.hilligans.engine.mod.handler.pipeline.InstanceLoaderPipeline;
 import dev.hilligans.engine.network.Protocol;
 import dev.hilligans.engine.network.engine.INetworkEngine;
@@ -49,8 +46,6 @@ import dev.hilligans.engine.util.argument.ArgumentContainer;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 import dev.hilligans.engine.util.registry.Registry;
 
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -61,7 +56,6 @@ public class GameInstance {
     public final EventBus EVENT_BUS = new EventBus();
     public final Logger LOGGER = new Logger("", "");
     public final ResourceManager RESOURCE_MANAGER = new ResourceManager(this);
-    public final ModContent OURCRAFT = new ModContent("ourcraft",this).addClassLoader(new URLClassLoader(new URL[]{Ourcraft.class.getProtectionDomain().getCodeSource().getLocation()})).addMainClass(Ourcraft.class);
     public final ContentPack CONTENT_PACK = new ContentPack(this);
     public final ModList MOD_LIST = new ModList(this);
     public final UniversalResourceLoader RESOURCE_LOADER = new UniversalResourceLoader();
@@ -121,7 +115,6 @@ public class GameInstance {
     public final Registry<Registry<?>> REGISTRIES;
 
     public Registry<Block> BLOCKS;
-    public Registry<Item> ITEMS;
     public Registry<Tag> TAGS;
     public Registry<IGraphicsEngine<?,?,?>> GRAPHICS_ENGINES;
     public Registry<Protocol> PROTOCOLS;
@@ -150,7 +143,6 @@ public class GameInstance {
 
     public void copyRegistries() {
         BLOCKS = (Registry<Block>) REGISTRIES.getExcept("ourcraft:block");
-        ITEMS = (Registry<Item>) REGISTRIES.getExcept("ourcraft:item");
         TAGS = (Registry<Tag>) REGISTRIES.getExcept("ourcraft:tag");
         GRAPHICS_ENGINES = (Registry<IGraphicsEngine<?, ?, ?>>) REGISTRIES.getExcept("ourcraft:graphics_engine");
         PROTOCOLS = (Registry<Protocol>) REGISTRIES.getExcept("ourcraft:protocol");
@@ -218,15 +210,6 @@ public class GameInstance {
         return builtSemaphore.availablePermits() == 1;
     }
 
-    public void clear() {
-        BLOCKS.clear();
-        ITEMS.clear();
-        TAGS.clear();
-        //TODO fix
-        PROTOCOLS.clear();
-        EVENT_BUS.postEvent(new RegistryClearEvent(this));
-    }
-
     public <T> T get(String name, Class<T> registryClass) {
         for(Registry<?> registry : REGISTRIES.ELEMENTS) {
             if(registry.classType == registryClass) {
@@ -267,14 +250,8 @@ public class GameInstance {
         return null;
     }
 
-    public Item getItem(int id) {
-        if(ITEMS.ELEMENTS.size() > id) {
-            return ITEMS.get(id);
-        }
-        return null;
-    }
-
     public Item getItem(String name) {
+        Registry<Item> ITEMS = getRegistry("ourcraft:item", Item.class);
         return ITEMS.MAPPED_ELEMENTS.get(name);
     }
 

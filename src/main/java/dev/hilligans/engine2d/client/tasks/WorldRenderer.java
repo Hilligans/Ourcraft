@@ -14,6 +14,8 @@ import dev.hilligans.engine2d.client.sprite.ISpriteEntity;
 import dev.hilligans.engine2d.client.sprite.Sprite;
 import dev.hilligans.engine2d.world.SpriteEntity;
 import dev.hilligans.engine2d.world.World2D;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
 
 import java.util.Random;
 
@@ -34,8 +36,12 @@ public class WorldRenderer extends RenderTaskSource {
                 IDefaultEngineImpl<?,?,?> impl = engine.getDefaultImpl();
                 World2D world = client.getWorld();
 
+                worldStack.translate(window.getCamera().getPosition());
+
                 impl.uploadMatrix(graphicsContext, worldStack, shaderSource);
                 impl.bindPipeline(graphicsContext, shaderSource.program);
+
+                world.getScene().draw(engine, graphicsContext, worldStack);
 
                 for(ISpriteEntity entity : world.getRenderableEntities()) {
                     Sprite sprite = entity.getSprite();

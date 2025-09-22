@@ -1,0 +1,14 @@
+{
+  "sections": [
+    {
+      "name": "engine2D:test_section",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "name": "engine2D:test_section",
+      "x": 400,
+      "y": 123
+    }
+  ]
+}

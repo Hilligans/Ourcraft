@@ -1,8 +1,7 @@
-package dev.hilligans.ourcraft.entity;
+package dev.hilligans.engine.entity;
 
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.data.IBoundingBox;
-import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 
 public interface IEntity {
 

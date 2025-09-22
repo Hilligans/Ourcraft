@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.entity;
 
+import dev.hilligans.engine.entity.IEntity;
 import dev.hilligans.ourcraft.data.other.IInventory;
 
 public interface ILivingEntity extends IEntity, IInventory {

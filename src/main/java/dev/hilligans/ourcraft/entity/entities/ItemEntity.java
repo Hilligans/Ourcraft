@@ -1,10 +1,12 @@
 package dev.hilligans.ourcraft.entity.entities;
 
+import dev.hilligans.engine.util.registry.Registry;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.data.BoundingBox;
 import dev.hilligans.ourcraft.entity.Entity;
 import dev.hilligans.ourcraft.item.BlockItem;
+import dev.hilligans.ourcraft.item.Item;
 import dev.hilligans.ourcraft.item.ItemStack;
 import dev.hilligans.engine.network.IPacketByteArray;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
@@ -23,7 +25,8 @@ public class ItemEntity extends Entity {
         this.block = block;
         type = 1;
         velY = 0.30f;
-        itemStack = new ItemStack(world.getGameInstance().ITEMS.MAPPED_ELEMENTS.get(block.name),(byte)1);
+        Registry<Item> ITEMS = world.getGameInstance().getRegistry("ourcraft:item", Item.class);
+        itemStack = new ItemStack(ITEMS.MAPPED_ELEMENTS.get(block.name),(byte)1);
         boundingBox = new BoundingBox(-0.25f,-0.25f,-0.25f,0.25f,0.25f,0.25f);
         pickupDelay = 10;
     }

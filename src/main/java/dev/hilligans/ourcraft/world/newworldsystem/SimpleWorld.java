@@ -4,7 +4,7 @@ import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.block.blockstate.IBlockState;
 import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.entity.Entity;
-import dev.hilligans.ourcraft.entity.IEntity;
+import dev.hilligans.engine.entity.IEntity;
 import dev.hilligans.ourcraft.entity.IPlayerEntity;
 
 import java.util.ArrayList;

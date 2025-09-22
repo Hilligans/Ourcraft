@@ -1,8 +1,8 @@
 package dev.hilligans.engine2d.world;
 
 import dev.hilligans.engine.data.IBoundingBox;
-import dev.hilligans.ourcraft.entity.EntityType;
-import dev.hilligans.ourcraft.entity.IEntity;
+import dev.hilligans.engine.entity.EntityType;
+import dev.hilligans.engine.entity.IEntity;
 
 public class Entity2D implements IEntity {
 

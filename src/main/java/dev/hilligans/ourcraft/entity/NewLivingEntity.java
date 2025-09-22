@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.entity;
 
+import dev.hilligans.engine.entity.EntityType;
 import dev.hilligans.ourcraft.data.other.server.IInventoryChanged;
 import dev.hilligans.ourcraft.item.ItemStack;
 

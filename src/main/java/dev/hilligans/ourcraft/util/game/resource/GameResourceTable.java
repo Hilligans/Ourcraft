@@ -29,7 +29,8 @@ public class GameResourceTable {
         this.tagCache = new TagCache(gameInstance);
         tagCache.build();
 
-        for(Item item : gameInstance.ITEMS.ELEMENTS) {
+        Registry<Item> ITEMS = gameInstance.getRegistry("ourcraft:item", Item.class);
+        for(Item item : ITEMS.ELEMENTS) {
             DATA.put(item.getUniqueName(), new ItemGameResource(item).setUniqueID(getId()));
         }
 

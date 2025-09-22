@@ -7,7 +7,7 @@ import dev.hilligans.ourcraft.data.other.BlockPos;
 import dev.hilligans.ourcraft.data.other.ChunkPos;
 import dev.hilligans.engine.data.IBoundingBox;
 import dev.hilligans.ourcraft.entity.Entity;
-import dev.hilligans.ourcraft.entity.IEntity;
+import dev.hilligans.engine.entity.IEntity;
 import dev.hilligans.ourcraft.entity.IPlayerEntity;
 import dev.hilligans.ourcraft.util.Immutable;
 import dev.hilligans.ourcraft.util.MathUtil;

@@ -267,9 +267,6 @@ public class Client implements IApplication, IClientApplication {
             client.loop();
 
             gameInstance.THREAD_PROVIDER.EXECUTOR.shutdownNow();
-            //if(integratedServer.get(gameInstance)) {
-            //    ServerMain.getServer().stop();
-            //}
             System.exit(0);
         });
         thread.start();

@@ -236,8 +236,4 @@
             <url>https://maven.pkg.github.com/Hilligans/Ourcraft</url>
         </repository>
     </distributionManagement>
-
-
-
-
 </project>

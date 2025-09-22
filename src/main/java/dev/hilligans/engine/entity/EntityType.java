@@ -1,4 +1,4 @@
-package dev.hilligans.ourcraft.entity;
+package dev.hilligans.engine.entity;
 
 import dev.hilligans.engine.util.registry.IRegistryElement;
 

@@ -1,6 +1,8 @@
 package dev.hilligans.ourcraft.entity;
 
 import dev.hilligans.engine.data.IBoundingBox;
+import dev.hilligans.engine.entity.EntityType;
+import dev.hilligans.engine.entity.IEntity;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 
 public class NewEntity implements IEntity {

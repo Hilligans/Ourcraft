@@ -1,6 +1,7 @@
 package dev.hilligans.ourcraft.recipe.helper;
 
 import dev.hilligans.engine.GameInstance;
+import dev.hilligans.engine.util.registry.Registry;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
 import dev.hilligans.ourcraft.data.descriptors.TagCollection;
 import dev.hilligans.ourcraft.item.Item;
@@ -25,7 +26,8 @@ public class RecipeHelper  {
     public ArrayList<Item> getItems(String filterKey) {
         DescriptorList[] descriptors = createDescriptors(filterKey);
         ArrayList<Item> items = new ArrayList<>();
-        for(Item item : gameInstance.ITEMS.ELEMENTS) {
+        Registry<Item> ITEMS = gameInstance.getRegistry("ourcraft:item", Item.class);
+        for(Item item : ITEMS.ELEMENTS) {
             for(DescriptorList descriptor : descriptors) {
                 if(descriptor.matches(item)) {
                     items.add(item);
