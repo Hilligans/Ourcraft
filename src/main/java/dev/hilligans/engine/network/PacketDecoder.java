@@ -9,8 +9,6 @@ import java.util.List;
 public class PacketDecoder extends ByteToMessageDecoder {
 
     int id = -1;
-    public int dataLength = -1;
-    public int packetLength = -1;
     public int packetWidth = 2;
     public boolean compressed;
 
@@ -22,7 +20,8 @@ public class PacketDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
-        packetLength = in.readableBytes();
+        int dataLength;
+        int packetLength = in.readableBytes();
         if(compressed) {
             if(packetLength >= 5) {
 
@@ -45,9 +44,4 @@ public class PacketDecoder extends ByteToMessageDecoder {
             }
         }
     }
-
-    public float getPercentage() {
-        return (float)dataLength / packetLength;
-    }
-
 }
