@@ -26,11 +26,11 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
 
     void destroyMesh(Q graphicsContext, long mesh);
 
-    default long createTexture(Q graphicsContext, Image image) {
+    default long createTexture(Q graphicsContext, Image image, TextureOptions textureOptions) {
         return createTexture(graphicsContext, image.getBuffer(), image.getWidth(), image.getHeight(), image.format);
     }
 
-    long createTexture(Q graphicsContext, ByteBuffer buffer, int width, int height, int format);
+    long createTexture(Q graphicsContext, ByteBuffer buffer, int width, int height, int format, TextureOptions textureOptions);
 
     void destroyTexture(Q graphicsContext, long texture);
 
@@ -81,11 +81,19 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
     }
 
     default long createTexture(Object graphicsContext, Image image) {
-        return createTexture((Q) graphicsContext, image);
+        return createTexture((Q) graphicsContext, image, TextureOptions.NO_OPTIONS);
     }
 
     default long createTexture(Object graphicsContext, ByteBuffer buffer, int width, int height, int format) {
-        return createTexture((Q) graphicsContext, buffer, width, height, format);
+        return createTexture((Q) graphicsContext, buffer, width, height, format, TextureOptions.NO_OPTIONS);
+    }
+
+    default long createTexture(Object graphicsContext, Image image, TextureOptions textureOptions) {
+        return createTexture((Q) graphicsContext, image, textureOptions);
+    }
+
+    default long createTexture(Object graphicsContext, ByteBuffer buffer, int width, int height, int format, TextureOptions textureOptions) {
+        return createTexture((Q) graphicsContext, buffer, width, height, format, textureOptions);
     }
 
     default void destroyTexture(Object graphicsContext, long texture) {

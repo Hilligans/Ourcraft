@@ -67,7 +67,9 @@ public class MapSection implements IGraphicsElement, IRegistryElement {
             this.boundingBoxes[x] = new BoundingBox(hitboxes.getJSONObject(x));
         }
 
+        long start = System.currentTimeMillis();
         Image image = gameInstance.getResource(jsonObject.getString("image_path"), Image.class);
+        System.out.println("Time to load image:" + (System.currentTimeMillis() - start));
         this.info = image.upload(graphicsEngine.getDefaultImpl(), graphicsContext);
         this.width = this.info.width();
         this.height = this.info.height();

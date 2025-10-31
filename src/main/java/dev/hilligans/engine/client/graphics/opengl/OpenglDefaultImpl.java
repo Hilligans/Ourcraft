@@ -1,6 +1,8 @@
 package dev.hilligans.engine.client.graphics.opengl;
 
 import dev.hilligans.engine.EngineMain;
+import dev.hilligans.engine.client.graphics.api.TextureCompression;
+import dev.hilligans.engine.client.graphics.api.TextureOptions;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.resource.VertexMesh;
 import dev.hilligans.engine.client.graphics.DefaultMeshBuilder;
@@ -20,13 +22,19 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL33;
+import org.lwjgl.stb.STBDXT;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+import static org.lwjgl.opengl.EXTTextureCompressionS3TC.GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+import static org.lwjgl.opengl.EXTTextureCompressionS3TC.GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.stb.STBDXT.STB_DXT_NORMAL;
 
 public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, GraphicsContext, DefaultMeshBuilder> {
 
@@ -105,7 +113,7 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
 
     @Override
     public void destroyMesh(GraphicsContext graphicsContext, long mesh) {
-        long array = vertexArrayObjects.get((int)mesh);
+        long array = vertexArrayObjects.remove((int)mesh);
         meshData.remove((int)mesh);
         glDeleteVertexArrays((int)mesh);
         if((int)array != 0) {
@@ -122,13 +130,56 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public long createTexture(GraphicsContext graphicsContext, Image image) {
+    public long createTexture(GraphicsContext graphicsContext, Image image, TextureOptions textureOptions) {
         int texture = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         int format = image.format == 4 ? GL_RGBA : GL_RGB;
-        glTexImage2D(GL_TEXTURE_2D, 0, format, image.width, image.height, 0, format, GL_UNSIGNED_BYTE, image.buffer);
+
+        int width = image.width;
+        int height = image.height;
+
+        if(textureOptions.compression()== TextureCompression.NONE || width % 4 != 0 || height % 4 != 0) {
+            glTexImage2D(GL_TEXTURE_2D, 0, format, image.width, image.height, 0, format, GL_UNSIGNED_BYTE, image.buffer);
+        } else {
+            ByteBuffer tempBuffer = MemoryUtil.memAlloc(64);
+            ByteBuffer dest;
+
+            boolean hasAlpha = textureOptions.compression() == TextureCompression.DXT5;
+            int offset;
+            int position = 0;
+
+            if(hasAlpha) {
+                dest = MemoryUtil.memAlloc(width * height);
+                offset = 16;
+            } else {
+                dest = MemoryUtil.memAlloc(width * height/2);
+                offset = 8;
+            }
+
+            image.buffer.order(ByteOrder.LITTLE_ENDIAN);
+            for(int y = 0; y < height; y+=4) {
+                for(int x = 0; x < width; x += 4) {
+                    for(int yy = y; yy < y + 4; yy++) {
+                        for(int xx = x; xx < x + 4; xx++) {
+                            tempBuffer.putInt(image.buffer.getInt((yy * width + xx) * 4));
+                        }
+                    }
+
+                    tempBuffer.flip();
+                    STBDXT.stb_compress_dxt_block(dest, tempBuffer, hasAlpha, STB_DXT_NORMAL);
+                    position+=offset;
+                    dest.position(position);
+                }
+            }
+
+            dest.flip();
+            glCompressedTexImage2D(GL_TEXTURE_2D, 0, hasAlpha ? GL_COMPRESSED_RGBA_S3TC_DXT5_EXT : GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, width, height, 0, dest);
+
+            MemoryUtil.memFree(dest);
+            MemoryUtil.memFree(tempBuffer);
+        }
         glGenerateMipmap(GL_TEXTURE_2D);
         textureTypes.put(texture, GL_TEXTURE_2D);
         if(trackingResourceAllocations) {
@@ -138,13 +189,54 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
-    public long createTexture(GraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format) {
+    public long createTexture(GraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format, TextureOptions textureOptions) {
         int texture = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         format = format == 4 ? GL_RGBA : GL_RGB;
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_INT_8_8_8_8_REV, buffer);
+
+        if(textureOptions.compression()== TextureCompression.NONE || width % 4 != 0 || height % 4 != 0 || true) {
+            //buffer.order(ByteOrder.BIG_ENDIAN);
+            glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_INT_8_8_8_8_REV, buffer);
+        } else {
+            ByteBuffer tempBuffer = MemoryUtil.memAlloc(64);
+            ByteBuffer dest;
+
+            boolean hasAlpha = textureOptions.compression() == TextureCompression.DXT5;
+            int offset;
+            int position = 0;
+
+            if(hasAlpha) {
+                dest = MemoryUtil.memAlloc(width * height);
+                offset = 16;
+            } else {
+                dest = MemoryUtil.memAlloc(width * height/2);
+                offset = 8;
+            }
+
+            buffer.order(ByteOrder.LITTLE_ENDIAN);
+            for(int y = 0; y < height; y+=4) {
+                for(int x = 0; x < width; x += 4) {
+                    for(int yy = y; yy < y + 4; yy++) {
+                        for(int xx = x; xx < x + 4; xx++) {
+                            tempBuffer.putInt(buffer.getInt((yy * width + xx) * 4));
+                        }
+                    }
+
+                    tempBuffer.flip();
+                    STBDXT.stb_compress_dxt_block(dest, tempBuffer, hasAlpha, STB_DXT_NORMAL);
+                    position+=offset;
+                    dest.position(position);
+                }
+            }
+
+            dest.flip();
+            glCompressedTexImage2D(GL_TEXTURE_2D, 0, hasAlpha ? GL_COMPRESSED_RGBA_S3TC_DXT5_EXT : GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, width, height, 0, dest);
+
+            MemoryUtil.memFree(dest);
+            MemoryUtil.memFree(tempBuffer);
+        }
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glGenerateMipmap(GL_TEXTURE_2D);

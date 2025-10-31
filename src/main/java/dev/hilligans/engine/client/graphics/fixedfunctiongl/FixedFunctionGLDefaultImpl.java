@@ -1,5 +1,6 @@
 package dev.hilligans.engine.client.graphics.fixedfunctiongl;
 
+import dev.hilligans.engine.client.graphics.api.TextureOptions;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.resource.VertexMesh;
 import dev.hilligans.engine.client.graphics.DefaultMeshBuilder;
@@ -87,7 +88,7 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     }
 
     @Override
-    public long createTexture(GraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format) {
+    public long createTexture(GraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format, TextureOptions textureOptions) {
         return 0;
     }
 

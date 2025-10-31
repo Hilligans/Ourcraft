@@ -1,6 +1,7 @@
 package dev.hilligans.engine.client.graphics.vulkan;
 
 import dev.hilligans.engine.GameInstance;
+import dev.hilligans.engine.client.graphics.api.TextureOptions;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.PipelineState;
 import dev.hilligans.engine.client.graphics.ShaderSource;
@@ -147,7 +148,7 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     }
 
     @Override
-    public long createTexture(VulkanBaseGraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format) {
+    public long createTexture(VulkanBaseGraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format, TextureOptions textureOptions) {
         VulkanTexture vulkanTexture = new VulkanTexture(graphicsContext.getCommandBuffer(), graphicsContext.getDevice(), buffer, width, height, format);
         synchronized (textures) {
             textures.put(vulkanTexture.image, vulkanTexture);

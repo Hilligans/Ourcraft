@@ -265,7 +265,7 @@ public class Ourcraft implements ModClass {
                     }
                 });
             }
-            //view.registerApplication(new Client(view.getGameInstance(), view.getGameInstance().getArgumentContainer()));
+            view.registerApplication(new Client(view.getGameInstance(), view.getGameInstance().getArgumentContainer()));
         }
         if(integratedServer.get(view.getGameInstance())) {
             view.registerApplication(new MultiPlayerServer(view.getGameInstance()));

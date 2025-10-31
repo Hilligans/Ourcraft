@@ -4,14 +4,25 @@ import dev.hilligans.engine.application.IClientApplication;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
+import dev.hilligans.engine.data.Tuple;
 import org.lwjgl.glfw.GLFWWindowFocusCallback;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL30;
+
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class OpenGLWindow extends RenderWindow {
+
+    public static ConcurrentLinkedQueue<Tuple<OpenGLWindow, GraphicsContext>> handlingQueue = new ConcurrentLinkedQueue<>();
+    public static AtomicLong ownerWindowID = new AtomicLong(0);
 
     public long window;
     public boolean shouldClose = false;
@@ -21,18 +32,23 @@ public class OpenGLWindow extends RenderWindow {
     public int height;
     public boolean updatedSize = false;
 
+    public Semaphore swapSemaphore = new Semaphore(0);
+    public boolean mainThread = false;
+
     public OpenGLWindow(OpenGLEngine engine, String name, int width, int height, long otherID) {
         super(engine);
         this.width = width;
         this.height = height;
 
         window = glfwCreateWindow(width, height, name, NULL, otherID);
+        System.out.println(window);
         if (window == NULL) {
             glfwTerminate();
             throw new RuntimeException("Failed to create window");
         }
 
         glfwMakeContextCurrent(window);
+
         registerCallbacks();
     }
 
@@ -68,6 +84,41 @@ public class OpenGLWindow extends RenderWindow {
 
     @Override
     public void swapBuffers(GraphicsContext graphicsContext) {
+        if(!mainThread) {
+            while(true) {
+                long owner = ownerWindowID.get();
+                if (owner == 0) {
+                    if(ownerWindowID.compareAndExchange(0, window) == 0) {
+                        mainThread = true;
+                        break;
+                    }
+                } else {
+                    handlingQueue.add(new Tuple<>(this, graphicsContext));
+                    try {
+                        this.swapSemaphore.acquire();
+                    } catch (InterruptedException e) {
+                        continue;
+                    }
+                    return;
+                }
+            }
+        }
+
+        glfwMakeContextCurrent(window);
+        swap(graphicsContext);
+        Tuple<OpenGLWindow, GraphicsContext> otherWindow;
+        while((otherWindow = handlingQueue.poll()) != null) {
+            GraphicsContext context = otherWindow.typeB;
+            OpenGLWindow window = otherWindow.typeA;
+
+            glfwMakeContextCurrent(window.window);
+            window.swapBuffers(context);
+
+            window.swapSemaphore.release();
+        }
+    }
+
+    public void swap(GraphicsContext graphicsContext) {
         super.swapBuffers(graphicsContext);
         try(var $ = graphicsContext.getSection().startSection("glfw_swap_buffers")) {
             glfwSwapInterval(0);
@@ -76,6 +127,7 @@ public class OpenGLWindow extends RenderWindow {
         glfwPollEvents();
         tick();
     }
+
 
     @Override
     public String getClipboardString() {

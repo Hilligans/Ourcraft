@@ -52,7 +52,7 @@ public class Engine2D implements ModClass {
             container.register("engine2D:map_section", new MapSection("test_section", "sections/TestSection.json"));
             container.register("engine2D:scene", new Scene("test_scene", "scenes/TestScene.json"));
 
-            container.registerApplication(new Client2D());
+           // container.registerApplication(new Client2D());
 
 
             final int MOVE_SPEED = 32;
