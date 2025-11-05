@@ -33,7 +33,7 @@ public class WebPHelper {
 
         stream.put(14, image.getWidth() - 1);
         stream.put(14, image.getHeight() - 1);
-        stream.put(1, image.format == 4 ? 1 : 0);
+        stream.put(1, image.format.getChannels() == 4 ? 1 : 0);
         stream.put(3, 0); //version number
 
         stream.put(3, 0); //block size

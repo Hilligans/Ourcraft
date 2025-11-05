@@ -2,6 +2,7 @@ package dev.hilligans.engine.client.graphics.util;
 
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
+import dev.hilligans.engine.client.graphics.api.TextureFormat;
 import dev.hilligans.engine.client.graphics.resource.Image;
 import dev.hilligans.engine.resource.ResourceLocation;
 import dev.hilligans.engine.util.NamedThreadFactory;
@@ -9,6 +10,7 @@ import dev.hilligans.ourcraft.client.rendering.newrenderer.ImageLocation;
 import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import org.lwjgl.system.MemoryStack;
 
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
@@ -110,7 +112,11 @@ public class TextAtlas {
     public long upload(IGraphicsEngine<?,?,?> engine) {
         clear();
         assemble(engine.getGameInstance());
-        texture =  engine.getDefaultImpl().createTexture(null,image);
+        image.buffer.order(ByteOrder.LITTLE_ENDIAN);
+        Image compressed = engine.getDefaultImpl().convertTexture(image, TextureFormat.DXT5);
+        texture =  engine.getDefaultImpl().createTexture(null,compressed);
+        compressed.free();
+
         return texture;
     }
 

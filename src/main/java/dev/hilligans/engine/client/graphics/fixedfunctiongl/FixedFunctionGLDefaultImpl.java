@@ -1,5 +1,7 @@
 package dev.hilligans.engine.client.graphics.fixedfunctiongl;
 
+import dev.hilligans.engine.GameInstance;
+import dev.hilligans.engine.client.graphics.api.TextureFormat;
 import dev.hilligans.engine.client.graphics.api.TextureOptions;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.resource.VertexMesh;
@@ -34,6 +36,11 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     public long boundTexture = -1;
 
     public int meshPointer = 0;
+
+    @Override
+    public GameInstance getGameInstance() {
+        return null;
+    }
 
     @Override
     public void drawMesh(GraphicsContext graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
@@ -218,6 +225,11 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     @Override
     public DefaultMeshBuilder getMeshBuilder(VertexFormat vertexFormat) {
         return null;
+    }
+
+    @Override
+    public boolean isTextureFormatSupported(TextureFormat textureFormat) {
+        return false;
     }
 
     private int getGLPrimitive(int type) {

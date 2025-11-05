@@ -1,9 +1,11 @@
 package dev.hilligans.engine.client.graphics.multigl;
 
+import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.DefaultMeshBuilder;
 import dev.hilligans.engine.client.graphics.PipelineState;
 import dev.hilligans.engine.client.graphics.ShaderSource;
 import dev.hilligans.engine.client.graphics.api.IDefaultEngineImpl;
+import dev.hilligans.engine.client.graphics.api.TextureFormat;
 import dev.hilligans.engine.client.graphics.api.TextureOptions;
 import dev.hilligans.engine.client.graphics.multigl.command.BindPipeline;
 import dev.hilligans.engine.client.graphics.multigl.command.DrawCommand;
@@ -35,6 +37,11 @@ public class MultiGLDefaultImpl implements IDefaultEngineImpl<MultiGLWindow, Mul
 
     public MultiGLEngine engine;
 
+
+    @Override
+    public GameInstance getGameInstance() {
+        return null;
+    }
 
     @Override
     public void drawMesh(MultiGLContext graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
@@ -183,6 +190,14 @@ public class MultiGLDefaultImpl implements IDefaultEngineImpl<MultiGLWindow, Mul
     @Override
     public DefaultMeshBuilder getMeshBuilder(VertexFormat vertexFormat) {
         return null;
+    }
+
+    @Override
+    public boolean isTextureFormatSupported(TextureFormat textureFormat) {
+        return switch (textureFormat) {
+            case RGB, RGBA, DXT1, DXT5 -> true;
+            default -> false;
+        };
     }
 
     VertexFormat[] cache = new VertexFormat[2];

@@ -2,6 +2,7 @@ package dev.hilligans.engine.client.graphics.resource;
 
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IDefaultEngineImpl;
+import dev.hilligans.engine.client.graphics.api.TextureFormat;
 import dev.hilligans.engine.resource.IAllocator;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryUtil;
@@ -10,12 +11,14 @@ import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
+import static dev.hilligans.engine.client.graphics.api.TextureFormat.RGB;
+
 public class Image {
 
     public ByteBuffer buffer;
     public int width;
     public int height;
-    public int format;
+    public TextureFormat format;
 
     public IAllocator<Image> allocator;
 
@@ -30,8 +33,23 @@ public class Image {
     public Image(int width, int height, int format, ByteBuffer byteBuffer) {
         this.width = width;
         this.height = height;
+        this.format = TextureFormat.from(format);
+        this.buffer = byteBuffer;
+    }
+
+    public Image(int width, int height, TextureFormat format, ByteBuffer byteBuffer) {
+        this.width = width;
+        this.height = height;
         this.format = format;
         this.buffer = byteBuffer;
+    }
+
+    public Image(int width, int height, TextureFormat format, ByteBuffer byteBuffer, IAllocator<Image> allocator) {
+        this.width = width;
+        this.height = height;
+        this.format = format;
+        this.buffer = byteBuffer;
+        this.allocator = allocator;
     }
 
     public Image(byte[] rawImageData) {
@@ -56,7 +74,7 @@ public class Image {
     public Image(BufferedImage image) {
         this.width = image.getWidth();
         this.height = image.getHeight();
-        this.format = 4;
+        this.format = TextureFormat.RGBA;
         buffer = ByteBuffer.allocateDirect(width * height * 4);
         for(int y = 0; y < height; y++) {
             for(int x = 0; x < width; x++) {
@@ -79,17 +97,17 @@ public class Image {
     }
 
     public int getPixel(int x, int y) {
-        int pos = x * format + y * format * width;
+        int pos = x * format.getChannels() + y * format.getChannels() * width;
         return buffer.getInt(pos);
     }
 
     public int getSmallPixel(int x, int y) {
-        int pos = x * format + y * format * width;
+        int pos = x * format.getChannels() + y * format.getChannels() * width;
         return buffer.get(pos) | (buffer.get(pos + 1) << 8) | (buffer.get(pos + 2) << 16);
     }
 
     public void putPixel(int x, int y, int val) {
-        int pos = x * format + y * format * width;
+        int pos = x * format.getChannels() + y * format.getChannels() * width;
         buffer.put(pos, (byte) val);
         buffer.put(pos + 1, (byte) (val >> 8));
         buffer.put(pos + 2, (byte) (val >> 16));
@@ -104,7 +122,7 @@ public class Image {
     }
 
     public int getPos(int x, int y) {
-        return x * format + y * format * width;
+        return x * format.getChannels() + y * format.getChannels() * width;
     }
 
     public void putImage(Image image, int x, int y) {
@@ -117,7 +135,7 @@ public class Image {
             return;
         }
          for(int yy = 0; yy < image.height; yy++) {
-          buffer.put((yy + y) * format * width + x * format,image.buffer,yy * format * image.width,image.width * format);
+          buffer.put((yy + y) * format.getChannels() * width + x * format.getChannels(),image.buffer,yy * format.getChannels() * image.width,image.width * format.getChannels());
         }
     }
 
@@ -158,7 +176,7 @@ public class Image {
         return height;
     }
 
-    public int getFormat() {
+    public TextureFormat getFormat() {
         return format;
     }
 
@@ -186,7 +204,7 @@ public class Image {
     }
 
     public ByteBuffer mallocSizedBuffer() {
-        return MemoryUtil.memAlloc(getWidth() * getHeight() * format);
+        return MemoryUtil.memAlloc(getWidth() * getHeight() * format.getChannels());
     }
 
     public Image flip(boolean horizontal, ByteBuffer buffer) {
@@ -195,7 +213,7 @@ public class Image {
         int width = getWidth();
         int height = getHeight();
 
-        if(format == 3) {
+        if(format == RGB) {
         } else {
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
@@ -215,7 +233,7 @@ public class Image {
 
     public ImageInfo upload(IDefaultEngineImpl<?, ?, ?> imp, GraphicsContext graphicsContext) {
         long id = imp.createTexture(graphicsContext, this);
-        return new ImageInfo(width, height, format, id);
+        return new ImageInfo(width, height, format.getChannels(), id);
     }
 
     @Override

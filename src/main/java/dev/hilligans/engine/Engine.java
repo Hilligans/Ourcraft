@@ -14,6 +14,8 @@ import dev.hilligans.engine.client.graphics.tasks.BlankRenderTask;
 import dev.hilligans.engine.client.graphics.tasks.EngineLoadingTask;
 import dev.hilligans.engine.client.graphics.tasks.GUIRenderTask;
 import dev.hilligans.engine.client.graphics.tasks.SplitWindowRenderTask;
+import dev.hilligans.engine.client.graphics.util.ITextureConverter;
+import dev.hilligans.engine.client.graphics.util.TextureConverters;
 import dev.hilligans.engine.client.graphics.vulkan.VulkanEngine;
 import dev.hilligans.engine.client.input.Input;
 import dev.hilligans.engine.client.input.InputHandlerProvider;
@@ -63,7 +65,8 @@ public class Engine implements ModClass {
                 new Tuple(IAuthenticationScheme.class, "authentication_scheme"),
                 new Tuple(ITest.class, "test"),
                 new Tuple(IApplication.class, "application"),
-                new Tuple(Schema.class, "schema"));
+                new Tuple(Schema.class, "schema"),
+                new Tuple<>(ITextureConverter.class, "texture_converter"));
     }
 
     @Override
@@ -97,6 +100,8 @@ public class Engine implements ModClass {
 
             view.registerRenderTask(new GUIRenderTask());
             view.registerRenderTask(new BlankRenderTask());
+
+            view.registerTextureConverter(TextureConverters.dxt1Compressor, TextureConverters.dxt5Compressor);
         }
     }
 

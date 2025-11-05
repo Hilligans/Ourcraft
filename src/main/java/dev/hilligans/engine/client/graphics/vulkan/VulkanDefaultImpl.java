@@ -1,6 +1,7 @@
 package dev.hilligans.engine.client.graphics.vulkan;
 
 import dev.hilligans.engine.GameInstance;
+import dev.hilligans.engine.client.graphics.api.TextureFormat;
 import dev.hilligans.engine.client.graphics.api.TextureOptions;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.PipelineState;
@@ -340,6 +341,11 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     @Override
     public VulkanMeshBuilder getMeshBuilder(VertexFormat vertexFormat) {
         return null;
+    }
+
+    @Override
+    public boolean isTextureFormatSupported(TextureFormat textureFormat) {
+        return true;
     }
 
     public void submitShader(String path, String modID, LogicalDevice device, int bit) {

@@ -1,19 +1,27 @@
 package dev.hilligans.engine.client.graphics.api;
 
+import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.PipelineState;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.ShaderSource;
 import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.client.graphics.resource.Image;
+import dev.hilligans.engine.client.graphics.util.ITextureConverter;
+import dev.hilligans.engine.client.graphics.util.Texture;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector4f;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
 
 public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsContext, V extends IMeshBuilder> {
+
+    GameInstance getGameInstance();
 
     default void close() {
     }
@@ -27,7 +35,7 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
     void destroyMesh(Q graphicsContext, long mesh);
 
     default long createTexture(Q graphicsContext, Image image, TextureOptions textureOptions) {
-        return createTexture(graphicsContext, image.getBuffer(), image.getWidth(), image.getHeight(), image.format);
+        return createTexture(graphicsContext, image.getBuffer(), image.getWidth(), image.getHeight(), image.format.getChannels());
     }
 
     long createTexture(Q graphicsContext, ByteBuffer buffer, int width, int height, int format, TextureOptions textureOptions);
@@ -67,6 +75,8 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
     V getMeshBuilder(String vertexFormat);
 
     V getMeshBuilder(VertexFormat vertexFormat);
+
+    boolean isTextureFormatSupported(TextureFormat textureFormat);
 
     default void drawMesh(Object graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
         drawMesh((Q) graphicsContext, matrixStack, meshID, indicesIndex, length);
@@ -175,5 +185,35 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
 
     default void defaultScissor(Object graphicsContext, RenderWindow renderWindow) {
         setScissor(graphicsContext, 0, 0, renderWindow.getWindowWidth(), renderWindow.getWindowHeight());
+    }
+
+    default Image convertTexture(Image texture, TextureFormat target, Function<List<ITextureConverter>, ITextureConverter> converterDecider) {
+
+        if(!isTextureFormatSupported(target)) {
+            throw new RuntimeException("Unsupported texture format: " + target);
+        }
+
+        List<ITextureConverter> converters = new ArrayList<>();
+        for(ITextureConverter converter : getGameInstance().TEXTURE_CONVERTERS.ELEMENTS) {
+            for(TextureFormat textureFormat : converter.getSourceFormats()) {
+                if(texture.format == textureFormat) {
+                    for(TextureFormat format : converter.getTargetFormats()) {
+                        if(target == format) {
+                            converters.add(converter);
+                        }
+                    }
+                }
+            }
+        }
+
+        if(converters.isEmpty()) {
+            return null;
+        }
+
+        return converterDecider.apply(converters).convert(texture, target);
+    }
+
+    default Image convertTexture(Image texture, TextureFormat target) {
+        return convertTexture(texture, target, List::getFirst);
     }
 }

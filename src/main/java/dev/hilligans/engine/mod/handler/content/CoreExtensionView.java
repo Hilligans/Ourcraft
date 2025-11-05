@@ -4,6 +4,7 @@ import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.application.IApplication;
 import dev.hilligans.engine.client.graphics.*;
 import dev.hilligans.engine.client.graphics.resource.VertexFormat;
+import dev.hilligans.engine.client.graphics.util.ITextureConverter;
 import dev.hilligans.engine.client.input.Input;
 import dev.hilligans.engine.client.input.InputHandlerProvider;
 import dev.hilligans.engine.client.graphics.util.Texture;
@@ -38,6 +39,10 @@ public class CoreExtensionView implements RegistrationView {
 
     public void registerRenderTask(RenderTaskSource... renderTasks) {
         container.registerCore("ourcraft:render_task", renderTasks);
+    }
+
+    public void registerTextureConverter(ITextureConverter... textureConverters) {
+        container.registerCore("ourcraft:texture_converter", textureConverters);
     }
 
     public void registerVertexFormat(VertexFormat... vertexFormats) {

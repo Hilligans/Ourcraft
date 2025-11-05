@@ -3,6 +3,7 @@ package dev.hilligans.engine;
 import dev.hilligans.engine.application.IApplication;
 import dev.hilligans.engine.client.graphics.*;
 import dev.hilligans.engine.client.graphics.resource.VertexFormat;
+import dev.hilligans.engine.client.graphics.util.ITextureConverter;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.blockstate.BlockStateBuilder;
 import dev.hilligans.ourcraft.block.blockstate.BlockStateTable;
@@ -138,6 +139,7 @@ public class GameInstance {
     public Registry<IAuthenticationScheme<?>> AUTHENTICATION_SCHEMES;
     public Registry<ITest> TESTS;
     public Registry<IApplication> APPLICATIONS;
+    public Registry<ITextureConverter> TEXTURE_CONVERTERS;
 
     public ArrayList<IBlockState> BLOCK_STATES;
 
@@ -166,6 +168,7 @@ public class GameInstance {
         AUTHENTICATION_SCHEMES = (Registry<IAuthenticationScheme<?>>) REGISTRIES.getExcept("ourcraft:authentication_scheme");
         TESTS = (Registry<ITest>) REGISTRIES.getExcept("ourcraft:test");
         APPLICATIONS = (Registry<IApplication>) REGISTRIES.getExcept("ourcraft:application");
+        TEXTURE_CONVERTERS = (Registry<ITextureConverter>) REGISTRIES.getExcept("ourcraft:texture_converter");
     }
 
     public void finishBuild() {

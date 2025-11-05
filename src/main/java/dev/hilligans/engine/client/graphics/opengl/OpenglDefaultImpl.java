@@ -1,16 +1,14 @@
 package dev.hilligans.engine.client.graphics.opengl;
 
 import dev.hilligans.engine.EngineMain;
-import dev.hilligans.engine.client.graphics.api.TextureCompression;
-import dev.hilligans.engine.client.graphics.api.TextureOptions;
+import dev.hilligans.engine.GameInstance;
+import dev.hilligans.engine.client.graphics.api.*;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.resource.VertexMesh;
 import dev.hilligans.engine.client.graphics.DefaultMeshBuilder;
 import dev.hilligans.engine.client.graphics.PipelineState;
 import dev.hilligans.engine.client.graphics.ShaderSource;
 import dev.hilligans.engine.client.graphics.resource.VertexFormat;
-import dev.hilligans.engine.client.graphics.api.GraphicsContext;
-import dev.hilligans.engine.client.graphics.api.IDefaultEngineImpl;
 import dev.hilligans.engine.client.graphics.vulkan.boilerplate.window.ShaderCompiler;
 import dev.hilligans.engine.client.graphics.resource.Image;
 import dev.hilligans.engine.data.Tuple;
@@ -135,50 +133,12 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        int format = image.format == 4 ? GL_RGBA : GL_RGB;
 
-        int width = image.width;
-        int height = image.height;
-
-        if(textureOptions.compression()== TextureCompression.NONE || width % 4 != 0 || height % 4 != 0) {
+        if(image.format == TextureFormat.RGB || image.format == TextureFormat.RGBA) {
+            int format = image.format == TextureFormat.RGBA ? GL_RGBA : GL_RGB;
             glTexImage2D(GL_TEXTURE_2D, 0, format, image.width, image.height, 0, format, GL_UNSIGNED_BYTE, image.buffer);
         } else {
-            ByteBuffer tempBuffer = MemoryUtil.memAlloc(64);
-            ByteBuffer dest;
-
-            boolean hasAlpha = textureOptions.compression() == TextureCompression.DXT5;
-            int offset;
-            int position = 0;
-
-            if(hasAlpha) {
-                dest = MemoryUtil.memAlloc(width * height);
-                offset = 16;
-            } else {
-                dest = MemoryUtil.memAlloc(width * height/2);
-                offset = 8;
-            }
-
-            image.buffer.order(ByteOrder.LITTLE_ENDIAN);
-            for(int y = 0; y < height; y+=4) {
-                for(int x = 0; x < width; x += 4) {
-                    for(int yy = y; yy < y + 4; yy++) {
-                        for(int xx = x; xx < x + 4; xx++) {
-                            tempBuffer.putInt(image.buffer.getInt((yy * width + xx) * 4));
-                        }
-                    }
-
-                    tempBuffer.flip();
-                    STBDXT.stb_compress_dxt_block(dest, tempBuffer, hasAlpha, STB_DXT_NORMAL);
-                    position+=offset;
-                    dest.position(position);
-                }
-            }
-
-            dest.flip();
-            glCompressedTexImage2D(GL_TEXTURE_2D, 0, hasAlpha ? GL_COMPRESSED_RGBA_S3TC_DXT5_EXT : GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, width, height, 0, dest);
-
-            MemoryUtil.memFree(dest);
-            MemoryUtil.memFree(tempBuffer);
+            glCompressedTexImage2D(GL_TEXTURE_2D, 0,  image.format == TextureFormat.DXT5 ? GL_COMPRESSED_RGBA_S3TC_DXT5_EXT : GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, image.width, image.height, 0, image.buffer);
         }
         glGenerateMipmap(GL_TEXTURE_2D);
         textureTypes.put(texture, GL_TEXTURE_2D);
@@ -480,6 +440,14 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     }
 
     @Override
+    public boolean isTextureFormatSupported(TextureFormat textureFormat) {
+        return switch (textureFormat) {
+            case RGB, RGBA, DXT1, DXT5 -> true;
+            default -> false;
+        };
+    }
+
+    @Override
     public void close() {
         if(trackingResourceAllocations) {
             for(Exception e : vertexArrayAllocationTracker.values()) {
@@ -534,5 +502,9 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         public VideoMemoryLeakException(String message, Throwable e) {
             super(message, e);
         }
+    }
+
+    public GameInstance getGameInstance() {
+        return engine.getGameInstance();
     }
 }
