@@ -43,7 +43,7 @@ public class PhysicalDevice {
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             IntBuffer size = memoryStack.mallocInt(1);
             vkEnumerateDeviceExtensionProperties(physicalDevice, (String) null, size, null);
-            VkExtensionProperties.Buffer device_extensions = VkExtensionProperties.mallocStack(size.get(0), memoryStack);
+            VkExtensionProperties.Buffer device_extensions = VkExtensionProperties.malloc(size.get(0), memoryStack);
             vkEnumerateDeviceExtensionProperties(physicalDevice, (String) null, size, device_extensions);
             for (int x = 0; x < device_extensions.capacity(); x++) {
                 if (device_extensions.get(x).extensionNameString().equals(VK_KHR_SWAPCHAIN_EXTENSION_NAME)) {

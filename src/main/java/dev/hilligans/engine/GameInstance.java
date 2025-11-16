@@ -3,7 +3,7 @@ package dev.hilligans.engine;
 import dev.hilligans.engine.application.IApplication;
 import dev.hilligans.engine.client.graphics.*;
 import dev.hilligans.engine.client.graphics.resource.VertexFormat;
-import dev.hilligans.engine.client.graphics.util.ITextureConverter;
+import dev.hilligans.engine.client.graphics.api.ITextureConverter;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.blockstate.BlockStateBuilder;
 import dev.hilligans.ourcraft.block.blockstate.BlockStateTable;

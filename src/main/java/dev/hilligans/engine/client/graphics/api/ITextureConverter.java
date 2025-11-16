@@ -1,6 +1,5 @@
-package dev.hilligans.engine.client.graphics.util;
+package dev.hilligans.engine.client.graphics.api;
 
-import dev.hilligans.engine.client.graphics.api.TextureFormat;
 import dev.hilligans.engine.client.graphics.resource.Image;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 

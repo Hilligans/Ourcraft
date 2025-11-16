@@ -6,6 +6,7 @@ import dev.hilligans.engine.authentication.UnauthenticatedScheme;
 import dev.hilligans.engine.client.graphics.*;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.graphics.api.ILayoutEngine;
+import dev.hilligans.engine.client.graphics.api.IMeshOptimizer;
 import dev.hilligans.engine.client.graphics.fixedfunctiongl.FixedFunctionGLEngine;
 import dev.hilligans.engine.client.graphics.nuklear.NuklearLayoutEngine;
 import dev.hilligans.engine.client.graphics.opengl.OpenGLEngine;
@@ -14,7 +15,8 @@ import dev.hilligans.engine.client.graphics.tasks.BlankRenderTask;
 import dev.hilligans.engine.client.graphics.tasks.EngineLoadingTask;
 import dev.hilligans.engine.client.graphics.tasks.GUIRenderTask;
 import dev.hilligans.engine.client.graphics.tasks.SplitWindowRenderTask;
-import dev.hilligans.engine.client.graphics.util.ITextureConverter;
+import dev.hilligans.engine.client.graphics.api.ITextureConverter;
+import dev.hilligans.engine.client.graphics.util.MeshOptimizers;
 import dev.hilligans.engine.client.graphics.util.TextureConverters;
 import dev.hilligans.engine.client.graphics.vulkan.VulkanEngine;
 import dev.hilligans.engine.client.input.Input;
@@ -66,7 +68,8 @@ public class Engine implements ModClass {
                 new Tuple(ITest.class, "test"),
                 new Tuple(IApplication.class, "application"),
                 new Tuple(Schema.class, "schema"),
-                new Tuple<>(ITextureConverter.class, "texture_converter"));
+                new Tuple<>(ITextureConverter.class, "texture_converter"),
+                new Tuple<>(IMeshOptimizer.class, "mesh_optimizer"));
     }
 
     @Override
@@ -102,6 +105,8 @@ public class Engine implements ModClass {
             view.registerRenderTask(new BlankRenderTask());
 
             view.registerTextureConverter(TextureConverters.dxt1Compressor, TextureConverters.dxt5Compressor);
+
+            view.registerMeshOptimizer(MeshOptimizers.optimizer);
         }
     }
 

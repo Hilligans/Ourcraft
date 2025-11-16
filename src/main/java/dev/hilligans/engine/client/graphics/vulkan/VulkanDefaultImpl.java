@@ -149,8 +149,8 @@ public class VulkanDefaultImpl implements IDefaultEngineImpl<VulkanWindow, Vulka
     }
 
     @Override
-    public long createTexture(VulkanBaseGraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format, TextureOptions textureOptions) {
-        VulkanTexture vulkanTexture = new VulkanTexture(graphicsContext.getCommandBuffer(), graphicsContext.getDevice(), buffer, width, height, format);
+    public long createTexture(VulkanBaseGraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, TextureFormat format, TextureOptions textureOptions) {
+        VulkanTexture vulkanTexture = new VulkanTexture(graphicsContext.getCommandBuffer(), graphicsContext.getDevice(), buffer, width, height, format.getChannels());
         synchronized (textures) {
             textures.put(vulkanTexture.image, vulkanTexture);
         }

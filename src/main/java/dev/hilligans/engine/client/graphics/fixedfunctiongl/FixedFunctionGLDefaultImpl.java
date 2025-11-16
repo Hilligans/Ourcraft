@@ -95,7 +95,7 @@ public class FixedFunctionGLDefaultImpl implements IDefaultEngineImpl<FixedFunct
     }
 
     @Override
-    public long createTexture(GraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, int format, TextureOptions textureOptions) {
+    public long createTexture(GraphicsContext graphicsContext, ByteBuffer buffer, int width, int height, TextureFormat format, TextureOptions textureOptions) {
         return 0;
     }
 

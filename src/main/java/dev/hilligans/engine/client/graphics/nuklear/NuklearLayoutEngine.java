@@ -2,6 +2,7 @@ package dev.hilligans.engine.client.graphics.nuklear;
 
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.ShaderSource;
+import dev.hilligans.engine.client.graphics.api.TextureFormat;
 import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
@@ -84,7 +85,7 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
             }
             texture.flip();
 
-            fontTexID = (int) graphicsEngine.getDefaultImpl().createTexture(graphicsContext, texture, BITMAP_W, BITMAP_H, 4);
+            fontTexID = (int) graphicsEngine.getDefaultImpl().createTexture(graphicsContext, texture, BITMAP_W, BITMAP_H, TextureFormat.RGBA);
 
            // glBindTexture(GL_TEXTURE_2D, fontTexID);
            // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, BITMAP_W, BITMAP_H, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, texture);
@@ -163,7 +164,7 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
                         .id(fontTexID));
 
         try (MemoryStack stack = stackPush()) {
-            int texture = (int) graphicsEngine.getDefaultImpl().createTexture(graphicsContext, stack.bytes((byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF), 1, 1, 4);
+            int texture = (int) graphicsEngine.getDefaultImpl().createTexture(graphicsContext, stack.bytes((byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF), 1, 1, TextureFormat.RGBA);
             null_texture.texture().id(texture);
             null_texture.uv().set(0.5f, 0.5f);
         }

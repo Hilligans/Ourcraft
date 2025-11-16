@@ -82,7 +82,7 @@ public class GUIRenderTask1 extends RenderTaskSource {
 
 
                 if (client.screen != null) {
-                    client.screen.render(window, screenStack, graphicsContext);
+                   // client.screen.render(window, screenStack, graphicsContext);
                   //  client.playerData.heldStack.renderStack(screenStack, (int) (Camera.newX - Settings.guiSize * 8), (int) (Camera.newY - Settings.guiSize * 8));
                 }
             }

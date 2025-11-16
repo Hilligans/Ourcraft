@@ -284,6 +284,7 @@ public class Ourcraft implements ModClass {
             modContent.registerRenderTask(new WorldTransparentRenderTask());
             modContent.registerRenderTask(new ChatRenderTask());
             modContent.registerRenderTask(new ChunkDebugRenderTask());
+            modContent.registerRenderTask(new GUIRenderTask1());
 
             modContent.registerRenderPipelines(new RenderPipeline("new_world_pipeline"));
             modContent.registerRenderTarget(new RenderTarget("debug_world_renderer", "ourcraft:new_world_pipeline", "ourcraft:chunk_debug_render_task")
@@ -299,6 +300,8 @@ public class Ourcraft implements ModClass {
             modContent.registerRenderTarget(new RenderTarget("chat_renderer", "ourcraft:new_world_pipeline", "ourcraft:chat_render_task").afterTarget("translucent_world_renderer", "ourcraft")
                     .setPipelineState(new PipelineState()));
             modContent.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:new_world_pipeline", "ourcraft:gui_render_task").afterTarget("chat_renderer", "ourcraft")
+                    .setPipelineState(new PipelineState()));
+            modContent.registerRenderTarget(new RenderTarget("gui_renderer1", "ourcraft:new_world_pipeline", "ourcraft:gui_render_task1").afterTarget("gui_renderer", "ourcraft")
                     .setPipelineState(new PipelineState()));
 
 

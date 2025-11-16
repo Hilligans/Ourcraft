@@ -1,8 +1,8 @@
 package dev.hilligans.engine.client.graphics.util;
 
+import dev.hilligans.engine.client.graphics.api.ITextureConverter;
 import dev.hilligans.engine.client.graphics.api.TextureFormat;
 import dev.hilligans.engine.client.graphics.resource.Image;
-import dev.hilligans.engine.resource.IAllocator;
 import org.lwjgl.stb.STBDXT;
 import org.lwjgl.system.MemoryUtil;
 

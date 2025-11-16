@@ -96,7 +96,7 @@ public class MultiGLDefaultImpl implements IDefaultEngineImpl<MultiGLWindow, Mul
     }
 
     @Override
-    public synchronized long createTexture(MultiGLContext graphicsContext, ByteBuffer buffer, int width, int height, int format, TextureOptions textureOptions) {
+    public synchronized long createTexture(MultiGLContext graphicsContext, ByteBuffer buffer, int width, int height, TextureFormat format, TextureOptions textureOptions) {
         return 0;
     }
 

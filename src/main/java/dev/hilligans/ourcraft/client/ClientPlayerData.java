@@ -14,7 +14,7 @@ public class ClientPlayerData {
     public Inventory inventory = new Inventory(Settings.playerInventorySize);
     public ItemStack heldStack = ItemStack.emptyStack();
     public Container openContainer;
-    public boolean f3 = false;
+    public boolean f3 = true;
     public boolean creative = true;
     public int handSlot = 0;
     public boolean flying = true;

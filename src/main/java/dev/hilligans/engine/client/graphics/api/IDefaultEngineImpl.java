@@ -7,7 +7,6 @@ import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.ShaderSource;
 import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.client.graphics.resource.Image;
-import dev.hilligans.engine.client.graphics.util.ITextureConverter;
 import dev.hilligans.engine.client.graphics.util.Texture;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector4f;
@@ -35,10 +34,10 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
     void destroyMesh(Q graphicsContext, long mesh);
 
     default long createTexture(Q graphicsContext, Image image, TextureOptions textureOptions) {
-        return createTexture(graphicsContext, image.getBuffer(), image.getWidth(), image.getHeight(), image.format.getChannels());
+        return createTexture(graphicsContext, image.getBuffer(), image.getWidth(), image.getHeight(), image.format);
     }
 
-    long createTexture(Q graphicsContext, ByteBuffer buffer, int width, int height, int format, TextureOptions textureOptions);
+    long createTexture(Q graphicsContext, ByteBuffer buffer, int width, int height, TextureFormat format, TextureOptions textureOptions);
 
     void destroyTexture(Q graphicsContext, long texture);
 
@@ -94,8 +93,8 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
         return createTexture((Q) graphicsContext, image, TextureOptions.NO_OPTIONS);
     }
 
-    default long createTexture(Object graphicsContext, ByteBuffer buffer, int width, int height, int format) {
-        return createTexture((Q) graphicsContext, buffer, width, height, format, TextureOptions.NO_OPTIONS);
+    default long createTexture(Object graphicsContext, ByteBuffer buffer, int width, int height, TextureFormat textureFormat) {
+        return createTexture((Q) graphicsContext, buffer, width, height, textureFormat, TextureOptions.NO_OPTIONS);
     }
 
     default long createTexture(Object graphicsContext, Image image, TextureOptions textureOptions) {
