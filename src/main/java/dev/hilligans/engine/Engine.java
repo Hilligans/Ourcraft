@@ -4,9 +4,7 @@ import dev.hilligans.engine.application.IApplication;
 import dev.hilligans.engine.authentication.IAuthenticationScheme;
 import dev.hilligans.engine.authentication.UnauthenticatedScheme;
 import dev.hilligans.engine.client.graphics.*;
-import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
-import dev.hilligans.engine.client.graphics.api.ILayoutEngine;
-import dev.hilligans.engine.client.graphics.api.IMeshOptimizer;
+import dev.hilligans.engine.client.graphics.api.*;
 import dev.hilligans.engine.client.graphics.fixedfunctiongl.FixedFunctionGLEngine;
 import dev.hilligans.engine.client.graphics.nuklear.NuklearLayoutEngine;
 import dev.hilligans.engine.client.graphics.opengl.OpenGLEngine;
@@ -15,7 +13,6 @@ import dev.hilligans.engine.client.graphics.tasks.BlankRenderTask;
 import dev.hilligans.engine.client.graphics.tasks.EngineLoadingTask;
 import dev.hilligans.engine.client.graphics.tasks.GUIRenderTask;
 import dev.hilligans.engine.client.graphics.tasks.SplitWindowRenderTask;
-import dev.hilligans.engine.client.graphics.api.ITextureConverter;
 import dev.hilligans.engine.client.graphics.util.MeshOptimizers;
 import dev.hilligans.engine.client.graphics.util.TextureConverters;
 import dev.hilligans.engine.client.graphics.vulkan.VulkanEngine;
@@ -33,10 +30,8 @@ import dev.hilligans.engine.mod.handler.content.RegistryView;
 import dev.hilligans.engine.network.Protocol;
 import dev.hilligans.engine.network.engine.INetworkEngine;
 import dev.hilligans.engine.network.engine.NettyEngine;
-import dev.hilligans.engine.resource.loaders.ImageLoader;
-import dev.hilligans.engine.resource.loaders.JsonLoader;
-import dev.hilligans.engine.resource.loaders.ResourceLoader;
-import dev.hilligans.engine.resource.loaders.StringLoader;
+import dev.hilligans.engine.resource.ResourceLocation;
+import dev.hilligans.engine.resource.loaders.*;
 import dev.hilligans.engine.resource.registry.loaders.RegistryLoader;
 import dev.hilligans.engine.schema.Schema;
 import dev.hilligans.engine.test.ITest;
@@ -74,7 +69,7 @@ public class Engine implements ModClass {
 
     @Override
     public void registerCoreExtensions(CoreExtensionView view) {
-        view.registerResourceLoader(new JsonLoader(), new ImageLoader(), new StringLoader());
+        view.registerResourceLoader(new JsonLoader(), new ImageLoader(), new StringLoader(), new ModelLoader());
 
         if (view.getGameInstance().getSide().isClient()) {
             view.registerGraphicsEngine(new VulkanEngine());

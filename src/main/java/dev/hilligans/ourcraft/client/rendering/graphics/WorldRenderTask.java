@@ -2,6 +2,8 @@ package dev.hilligans.ourcraft.client.rendering.graphics;
 
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.*;
+import dev.hilligans.engine.client.graphics.api.IModel;
+import dev.hilligans.engine.resource.ResourceLocation;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.Blocks;
 import dev.hilligans.ourcraft.block.blockstate.IBlockState;

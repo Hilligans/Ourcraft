@@ -1,5 +1,6 @@
 package dev.hilligans.engine.resource.dataloader;
 
+import dev.hilligans.engine.resource.HeapAllocator;
 import dev.hilligans.engine.resource.IBufferAllocator;
 import dev.hilligans.engine.save.FileLoader;
 
@@ -21,7 +22,7 @@ public class FolderResourceDirectory implements ResourceDirectory {
 
     @Override
     public ByteBuffer get(String path) throws IOException {
-        return FileLoader.readBuffer(folder.getPath() + "/" + path);
+        return get(path, HeapAllocator.INSTANCE);
     }
 
     @Override
@@ -37,7 +38,7 @@ public class FolderResourceDirectory implements ResourceDirectory {
                 try (RandomAccessFile aFile = new RandomAccessFile(folder.getPath() + "/" + path, "r")) {
                     ByteBuffer buf = allocator.malloc((int) aFile.length());
                     aFile.getChannel().read(buf);
-                    return buf.rewind();
+                    return buf.flip();
                 }
             }
             return null;

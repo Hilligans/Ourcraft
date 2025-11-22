@@ -1,7 +1,5 @@
 package dev.hilligans.ourcraft.data.other;
 
-import dev.hilligans.engine.client.graphics.api.IModel;
-import dev.hilligans.ourcraft.client.rendering.newrenderer.ItemModel;
 import dev.hilligans.ourcraft.client.rendering.world.managers.ItemTextureManager;
 import dev.hilligans.ourcraft.data.descriptors.TagCollection;
 import dev.hilligans.ourcraft.item.Item;
@@ -13,7 +11,7 @@ public class ItemProperties {
     public boolean serverSide = false;
     public boolean dynamicModel = false;
     public String block;
-    public IModel itemModel;
+    //public IModel itemModel;
     public ItemTextureManager itemTextureManager;
     public TagCollection tags = new TagCollection();
 
@@ -28,7 +26,7 @@ public class ItemProperties {
     }
 
     public ItemProperties addModel(String model) {
-        itemModel = new ItemModel(model,"");
+        //itemModel = new ItemModel(model,"");
         itemTextureManager = new ItemTextureManager(model);
         return this;
     }

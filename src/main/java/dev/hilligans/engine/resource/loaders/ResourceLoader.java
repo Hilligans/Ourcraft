@@ -6,6 +6,7 @@ import dev.hilligans.engine.resource.ResourceLocation;
 import dev.hilligans.engine.save.FileLoader;
 import dev.hilligans.engine.tag.CompoundNBTTag;
 import dev.hilligans.engine.util.registry.IRegistryElement;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -54,7 +55,7 @@ public abstract class ResourceLoader<T> implements IRegistryElement {
         if(buffer == null) {
             return null;
         }
-        return new String(buffer.array());
+        return MemoryUtil.memASCII(buffer);
     }
 
     public static CompoundNBTTag toCompoundTag(ByteBuffer buffer) {
