@@ -7,7 +7,7 @@ import dev.hilligans.engine.mod.handler.pipeline.InstanceLoaderPipeline;
 import dev.hilligans.engine.mod.handler.pipeline.PerModPipelineStage;
 import dev.hilligans.engine.resource.loaders.ResourceLoader;
 import dev.hilligans.engine.resource.registry.loaders.RegistryLoader;
-import dev.hilligans.engine.templates.TemplateLoader;
+import dev.hilligans.engine.template.TemplateLoader;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 import dev.hilligans.engine.util.registry.Registry;
 

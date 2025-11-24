@@ -14,8 +14,12 @@ public class InstanceLoaderPipeline<T extends InstanceLoaderPipeline<?>> {
     public static final Argument<Integer> timeBetweenStages = Argument.integerArg("--timeBetweenLoadingStages", 0)
             .help("Sleep time between engine loading stages, mostly useful for debugging purposes");
 
+    public static final Argument<Boolean> printLoadingTimes = Argument.existArg("--printLoadingTimes")
+            .help("Prints the time taken by each section of the loading pipeline.");
+
     public GameInstance gameInstance;
     public final int sleepTime;
+    public final boolean printTimes;
 
     public ModList modList;
 
@@ -29,10 +33,12 @@ public class InstanceLoaderPipeline<T extends InstanceLoaderPipeline<?>> {
     public InstanceLoaderPipeline(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
         this.sleepTime = timeBetweenStages.get(gameInstance);
+        this.printTimes = printLoadingTimes.get(gameInstance);
     }
 
     public void build() {
         section = new LoadingSection();
+        section.printLoadingTimes = printTimes;
         gameInstance.loaderPipeline = this;
 
         InstanceLoaderPipeline<T> self = this;

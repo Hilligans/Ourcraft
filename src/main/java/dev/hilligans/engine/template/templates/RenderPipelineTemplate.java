@@ -1,10 +1,12 @@
-package dev.hilligans.engine.templates;
+package dev.hilligans.engine.template.templates;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.PipelineState;
 import dev.hilligans.engine.client.graphics.RenderPipeline;
 import dev.hilligans.engine.client.graphics.RenderTarget;
 import dev.hilligans.engine.schema.Schema;
+import dev.hilligans.engine.template.Template;
 import dev.hilligans.engine.util.Array;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 
@@ -22,7 +24,7 @@ public class RenderPipelineTemplate implements Template<RenderPipeline> {
 
     @Override
     public String getResourceOwner() {
-        return "ourcraft";
+        return Engine.ENGINE_NAME;
     }
 
     @Override

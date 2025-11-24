@@ -1,4 +1,4 @@
-package dev.hilligans.engine.templates;
+package dev.hilligans.engine.template;
 
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.schema.Schema;

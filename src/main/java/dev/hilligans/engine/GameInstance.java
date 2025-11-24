@@ -5,7 +5,7 @@ import dev.hilligans.engine.client.graphics.*;
 import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.client.graphics.api.ITextureConverter;
 import dev.hilligans.engine.schema.Schema;
-import dev.hilligans.engine.templates.ITemplate;
+import dev.hilligans.engine.template.ITemplate;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.blockstate.BlockStateBuilder;
 import dev.hilligans.ourcraft.block.blockstate.BlockStateTable;

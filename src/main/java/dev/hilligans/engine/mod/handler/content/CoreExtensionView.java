@@ -14,7 +14,7 @@ import dev.hilligans.engine.client.graphics.api.ILayoutEngine;
 import dev.hilligans.engine.resource.loaders.ResourceLoader;
 import dev.hilligans.engine.resource.registry.loaders.RegistryLoader;
 import dev.hilligans.engine.schema.Schema;
-import dev.hilligans.engine.templates.ITemplate;
+import dev.hilligans.engine.template.ITemplate;
 
 public class CoreExtensionView implements RegistrationView {
 

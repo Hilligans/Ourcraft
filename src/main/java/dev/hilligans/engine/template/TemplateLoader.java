@@ -1,10 +1,9 @@
-package dev.hilligans.engine.templates;
+package dev.hilligans.engine.template;
 
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
 import dev.hilligans.engine.schema.Schema;
 import dev.hilligans.engine.util.registry.IRegistryElement;
-import org.json.JSONObject;
 
 import java.util.*;
 import java.util.concurrent.*;

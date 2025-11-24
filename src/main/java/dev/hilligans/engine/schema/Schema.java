@@ -42,7 +42,11 @@ public interface Schema<T> extends IRegistryElement {
         boolean optBoolean(String key, boolean def);
 
         Data getObject(String key);
+        Data optObject(String key, Data def);
 
         Array<Data> getObjects(String key);
+        Array<Data> optObjects(String key, Array<Data> def);
+
+        List<String> getKeys();
     }
 }

@@ -30,13 +30,13 @@ import dev.hilligans.engine.mod.handler.content.RegistryView;
 import dev.hilligans.engine.network.Protocol;
 import dev.hilligans.engine.network.engine.INetworkEngine;
 import dev.hilligans.engine.network.engine.NettyEngine;
-import dev.hilligans.engine.resource.ResourceLocation;
 import dev.hilligans.engine.resource.loaders.*;
 import dev.hilligans.engine.resource.registry.loaders.RegistryLoader;
 import dev.hilligans.engine.schema.JsonSchema;
 import dev.hilligans.engine.schema.Schema;
-import dev.hilligans.engine.templates.ITemplate;
-import dev.hilligans.engine.templates.RenderPipelineTemplate;
+import dev.hilligans.engine.template.ITemplate;
+import dev.hilligans.engine.template.templates.RenderPipelineTemplate;
+import dev.hilligans.engine.template.templates.ShaderSourceTemplate;
 import dev.hilligans.engine.test.ITest;
 import dev.hilligans.engine.client.graphics.util.Texture;
 
@@ -83,9 +83,9 @@ public class Engine implements ModClass {
             view.registerVertexFormat(position_texture_color, position_color_texture, position_texture_globalColor, position_texture, position_texture_animatedWrap_shortenedColor, position_color);
             view.registerVertexFormat(position2_texture_color, position_color_lines);
 
-            view.registerShader(new ShaderSource("world_shader", "ourcraft:position_color_texture", "Shaders/WorldVertexShader.glsl", "Shaders/WorldFragmentShader.glsl").withUniform("transform", "4fv").withUniform("color", "4f"));
-            view.registerShader(new ShaderSource("position_color_shader", "ourcraft:position_color", "Shaders/WorldVertexColorShader.glsl", "Shaders/WorldFragmentColorShader.glsl").withUniform("transform", "4fv").withUniform("color", "4f"));
-            view.registerShader(new ShaderSource("position_texture", "ourcraft:position_texture", "Shaders/PositionTexture.vsh", "Shaders/PositionTexture.fsh").withUniform("transform", "4fv").withUniform("color", "4f"));
+            //view.registerShader(new ShaderSource("world_shader", "ourcraft:position_color_texture", "Shaders/WorldVertexShader.glsl", "Shaders/WorldFragmentShader.glsl").withUniform("transform", "4fv").withUniform("color", "4f"));
+            //view.registerShader(new ShaderSource("position_color_shader", "ourcraft:position_color", "Shaders/WorldVertexColorShader.glsl", "Shaders/WorldFragmentColorShader.glsl").withUniform("transform", "4fv").withUniform("color", "4f"));
+            //view.registerShader(new ShaderSource("position_texture", "ourcraft:position_texture", "Shaders/PositionTexture.vsh", "Shaders/PositionTexture.fsh").withUniform("transform", "4fv").withUniform("color", "4f"));
             view.registerShader(new ShaderSource("position_color_lines_shader", "ourcraft:position_color_lines", "Shaders/WorldVertexColorShader.glsl", "Shaders/WorldFragmentColorShader.glsl").withUniform("transform", "4fv").withUniform("color", "4f"));
             view.registerShader(new ShaderSource("nk_shader", "position2_texture_color", "Shaders/NkVertexShader.glsl", "Shaders/NkFragmentShader.glsl").withUniform("transform", "4fv"));
 
@@ -109,7 +109,7 @@ public class Engine implements ModClass {
         }
 
         view.registerSchema(JsonSchema.instance);
-        view.registerTemplate(RenderPipelineTemplate.instance);
+        view.registerTemplate(RenderPipelineTemplate.instance, ShaderSourceTemplate.instance);
     }
 
     @Override

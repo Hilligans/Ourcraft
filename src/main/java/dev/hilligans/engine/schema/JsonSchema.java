@@ -7,6 +7,8 @@ import dev.hilligans.engine.util.LazyArray;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class JsonSchema implements Schema<JSONObject> {
 
     public static final JsonSchema instance = new JsonSchema();
@@ -105,9 +107,24 @@ public class JsonSchema implements Schema<JSONObject> {
         }
 
         @Override
+        public Data optObject(String key, Data def) {
+            return jsonObject.has(key) ? getObject(key) : def;
+        }
+
+        @Override
         public Array<Data> getObjects(String key) {
             JSONArray array = jsonObject.getJSONArray(key);
             return new LazyArray<>(array.length(), (index) -> new JsonData(array.getJSONObject(index)), (integer, jsonData) -> array.put(integer, ((JsonData)jsonData).jsonObject));
+        }
+
+        @Override
+        public Array<Data> optObjects(String key, Array<Data> def) {
+            return jsonObject.has(key) ? getObjects(key) : def;
+        }
+
+        @Override
+        public List<String> getKeys() {
+            return jsonObject.keySet().stream().toList();
         }
     }
 }
