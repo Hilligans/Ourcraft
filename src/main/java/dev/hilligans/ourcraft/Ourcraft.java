@@ -306,14 +306,7 @@ public class Ourcraft implements ModClass {
             modContent.registerRenderTarget(new RenderTarget("mesh_renderer", "ourcraft:new_world_pipeline", "engine3D:mesh_render_task").afterTarget("gui_renderer1", "ourcraft")
                     .setPipelineState(new PipelineState().setDepth(true)));
 
-
-            modContent.registerRenderPipelines(new RenderPipeline("menu_pipeline"));
             modContent.registerRenderPipelines(new RenderPipeline("split_window_pipeline"));
-
-
-            modContent.registerRenderTarget(new RenderTarget("gui_renderer", "ourcraft:menu_pipeline", "ourcraft:gui_render_task")
-                    .setPipelineState(new PipelineState()));
-
             modContent.registerRenderTarget(new RenderTarget("split_window_renderer", "ourcraft:split_window_pipeline", "ourcraft:split_window_render_task")
                     .setPipelineState(new PipelineState()));
         }

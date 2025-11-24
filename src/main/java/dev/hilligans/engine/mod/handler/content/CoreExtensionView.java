@@ -13,6 +13,8 @@ import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.graphics.api.ILayoutEngine;
 import dev.hilligans.engine.resource.loaders.ResourceLoader;
 import dev.hilligans.engine.resource.registry.loaders.RegistryLoader;
+import dev.hilligans.engine.schema.Schema;
+import dev.hilligans.engine.templates.ITemplate;
 
 public class CoreExtensionView implements RegistrationView {
 
@@ -72,6 +74,14 @@ public class CoreExtensionView implements RegistrationView {
 
     public void registerApplication(IApplication... applications) {
         container.registerCore("ourcraft:application", applications);
+    }
+
+    public void registerTemplate(ITemplate<?>... templates) {
+        container.registerCore("ourcraft:template", templates);
+    }
+
+    public void registerSchema(Schema<?>... schemas) {
+        container.registerCore("ourcraft:schema", schemas);
     }
 
     public void registerKeybinds(Input... inputs) {

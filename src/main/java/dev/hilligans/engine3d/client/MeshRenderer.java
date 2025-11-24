@@ -1,5 +1,6 @@
 package dev.hilligans.engine3d.client;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.application.IClientApplication;
 import dev.hilligans.engine.client.graphics.RenderTask;
@@ -26,9 +27,13 @@ public class MeshRenderer extends RenderTaskSource {
             @Override
             public void draw(RenderWindow window, GraphicsContext graphicsContext, IGraphicsEngine<?, ?, ?> engine, IClientApplication client, MatrixStack worldStack, MatrixStack screenStack, float delta) {
                 if (mesh != 0) {
+                    worldStack.push();
+                    worldStack.scale(10);
+                    worldStack.translate(0, 8, 0);
                     engine.getDefaultImpl().bindPipeline(graphicsContext, shaderSource.program);
                     engine.getDefaultImpl().uploadMatrix(graphicsContext, worldStack, shaderSource);
                     engine.getDefaultImpl().drawMesh(graphicsContext, worldStack, mesh, 0, (int)length);
+                    worldStack.pop();
                 }
             }
 

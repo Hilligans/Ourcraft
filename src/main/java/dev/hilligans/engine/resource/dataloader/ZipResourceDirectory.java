@@ -8,6 +8,7 @@ import java.nio.channels.SeekableByteChannel;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 

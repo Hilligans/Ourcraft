@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.zip.ZipFile;
@@ -116,6 +118,21 @@ public class DataLoader {
             return resourceDirectory.get(resourceLocation.path, allocator);
         } catch (IOException e) {
             return null;
+        }
+    }
+
+    public void forEach(String path, Consumer<String> consumer) {
+        HashSet<String> fileSet = new HashSet<>();
+
+        for(ResourceDirectory resourceDirectory : allResourceDirectories) {
+            List<String> resources = resourceDirectory.getFiles(path);
+
+            for(String s : resources) {
+                if(!fileSet.contains(s)) {
+                    fileSet.add(s);
+                    consumer.accept(s);
+                }
+            }
         }
     }
 }

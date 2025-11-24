@@ -5,6 +5,7 @@ import dev.hilligans.engine.resource.IBufferAllocator;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.List;
 
 public interface ResourceDirectory {
 
@@ -14,7 +15,7 @@ public interface ResourceDirectory {
 
     ByteBuffer get(String path, IBufferAllocator allocator) throws IOException;
 
-    ArrayList<String> getFiles(String path);
+    List<String> getFiles(String path);
 
-    ArrayList<String> getValidEnding(String path, ArrayList<String> fileEndings);
+    List<String> getValidEnding(String path, ArrayList<String> fileEndings);
 }

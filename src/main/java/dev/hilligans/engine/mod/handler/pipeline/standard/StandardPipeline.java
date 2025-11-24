@@ -7,6 +7,7 @@ import dev.hilligans.engine.mod.handler.pipeline.InstanceLoaderPipeline;
 import dev.hilligans.engine.mod.handler.pipeline.PerModPipelineStage;
 import dev.hilligans.engine.resource.loaders.ResourceLoader;
 import dev.hilligans.engine.resource.registry.loaders.RegistryLoader;
+import dev.hilligans.engine.templates.TemplateLoader;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 import dev.hilligans.engine.util.registry.Registry;
 
@@ -51,6 +52,9 @@ public class StandardPipeline extends InstanceLoaderPipeline<StandardPipeline> {
                 registryLoader.run();
             }
         }));
+
+        pipeline.addStage("Load Templates", (((pipeline1, _) -> TemplateLoader.loadTemplates(pipeline1.gameInstance))));
+
 
         pipeline.addStage("Build Content For Game Instance", (pipeline15, section) -> {
             for (Registry<?> registry : pipeline15.getGameInstance().REGISTRIES.ELEMENTS) {

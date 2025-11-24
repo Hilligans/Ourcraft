@@ -147,6 +147,10 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
         put(element.getIdentifierName(), element);
     }
 
+    public void putGen(IRegistryElement element) {
+        put(element.getIdentifierName(), (T) element);
+    }
+
     public void put(Identifier identifier, T element) {
         put(identifier.getName(),element);
     }
@@ -304,5 +308,15 @@ public class Registry<T extends IRegistryElement> implements IRegistryElement {
         }
 
         return hashCode;
+    }
+
+    public static <T extends IRegistryElement> Registry<?> find(Registry<Registry<?>> registries, Class<T> registryClazz) {
+        for(Registry<?> registry : registries.ELEMENTS) {
+            if(registry.classType == registryClazz) {
+                return registry;
+            }
+        }
+
+        return null;
     }
 }

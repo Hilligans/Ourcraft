@@ -4,6 +4,8 @@ import dev.hilligans.engine.application.IApplication;
 import dev.hilligans.engine.client.graphics.*;
 import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.client.graphics.api.ITextureConverter;
+import dev.hilligans.engine.schema.Schema;
+import dev.hilligans.engine.templates.ITemplate;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.block.blockstate.BlockStateBuilder;
 import dev.hilligans.ourcraft.block.blockstate.BlockStateTable;
@@ -140,6 +142,8 @@ public class GameInstance {
     public Registry<ITest> TESTS;
     public Registry<IApplication> APPLICATIONS;
     public Registry<ITextureConverter> TEXTURE_CONVERTERS;
+    public Registry<Schema<?>> SCHEMAS;
+    public Registry<ITemplate<?>> TEMPLATES;
 
     public ArrayList<IBlockState> BLOCK_STATES;
 
@@ -169,6 +173,8 @@ public class GameInstance {
         TESTS = (Registry<ITest>) REGISTRIES.getExcept("ourcraft:test");
         APPLICATIONS = (Registry<IApplication>) REGISTRIES.getExcept("ourcraft:application");
         TEXTURE_CONVERTERS = (Registry<ITextureConverter>) REGISTRIES.getExcept("ourcraft:texture_converter");
+        SCHEMAS = (Registry<Schema<?>>) REGISTRIES.getExcept("ourcraft:schema");
+        TEMPLATES = (Registry<ITemplate<?>>) REGISTRIES.getExcept("ourcraft:template");
     }
 
     public void finishBuild() {
@@ -321,6 +327,16 @@ public class GameInstance {
 
     public ByteBuffer getResource(ResourceLocation resourceLocation, IBufferAllocator allocator) {
         return DATA_LOADER.get(resourceLocation, allocator);
+    }
+
+    public Schema<?> getSchema(Object object) {
+        for (Schema<?> schema : SCHEMAS.ELEMENTS) {
+            if (schema.getSchemaClass() == object.getClass()) {
+                return schema;
+            }
+        }
+
+        return null;
     }
 
     public int getUniqueID() {

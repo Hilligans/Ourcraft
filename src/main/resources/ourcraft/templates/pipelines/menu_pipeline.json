@@ -1,0 +1,10 @@
+{
+  "template": "ourcraft:render_pipeline_template",
+
+  "name": "menu_pipeline",
+  "tasks" : [
+      {
+        "task": "ourcraft:gui_render_task"
+      }
+  ]
+}

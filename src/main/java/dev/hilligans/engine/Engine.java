@@ -33,7 +33,10 @@ import dev.hilligans.engine.network.engine.NettyEngine;
 import dev.hilligans.engine.resource.ResourceLocation;
 import dev.hilligans.engine.resource.loaders.*;
 import dev.hilligans.engine.resource.registry.loaders.RegistryLoader;
+import dev.hilligans.engine.schema.JsonSchema;
 import dev.hilligans.engine.schema.Schema;
+import dev.hilligans.engine.templates.ITemplate;
+import dev.hilligans.engine.templates.RenderPipelineTemplate;
 import dev.hilligans.engine.test.ITest;
 import dev.hilligans.engine.client.graphics.util.Texture;
 
@@ -63,6 +66,7 @@ public class Engine implements ModClass {
                 new Tuple(ITest.class, "test"),
                 new Tuple(IApplication.class, "application"),
                 new Tuple(Schema.class, "schema"),
+                new Tuple<>(ITemplate.class, "template"),
                 new Tuple<>(ITextureConverter.class, "texture_converter"),
                 new Tuple<>(IMeshOptimizer.class, "mesh_optimizer"));
     }
@@ -103,6 +107,9 @@ public class Engine implements ModClass {
 
             view.registerMeshOptimizer(MeshOptimizers.optimizer);
         }
+
+        view.registerSchema(JsonSchema.instance);
+        view.registerTemplate(RenderPipelineTemplate.instance);
     }
 
     @Override

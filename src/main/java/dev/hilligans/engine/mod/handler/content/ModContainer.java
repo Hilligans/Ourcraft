@@ -37,6 +37,8 @@ import dev.hilligans.ourcraft.world.Feature;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
+import java.util.Iterator;
+import java.util.List;
 
 public class ModContainer {
 
@@ -45,7 +47,6 @@ public class ModContainer {
     public GameInstance gameInstance;
     public URLClassLoader classLoader;
     public Path path;
-
 
 
     public Registry<Block> blockRegistry;
@@ -142,6 +143,46 @@ public class ModContainer {
             val.assignOwner(this);
         }
         registries.getExcept(type).putAllGen(data);
+    }
+
+    public void registerGen(IRegistryElement... data) {
+        Class<? extends IRegistryElement> clazz = null;
+        Registry<?> registry = null;
+
+        for(IRegistryElement val : data) {
+            val.assignOwner(this);
+
+            if(clazz == null || clazz != val.getClass()) {
+                clazz = val.getClass();
+                registry = Registry.find(registries, clazz);
+            }
+
+            if(registry == null) {
+                throw new RuntimeException("Unknown registry for registry element:" + val.getUniqueName());
+            }
+
+            registry.putGen(val);
+        }
+    }
+
+    public void registerGen(Iterable<IRegistryElement> data) {
+        Class<? extends IRegistryElement> clazz = null;
+        Registry<?> registry = null;
+
+        for(IRegistryElement val : data) {
+            val.assignOwner(this);
+
+            if(clazz == null || clazz != val.getClass()) {
+                clazz = val.getClass();
+                registry = Registry.find(registries, clazz);
+            }
+
+            if(registry == null) {
+                throw new RuntimeException("Unknown registry for registry element:" + val.getUniqueName());
+            }
+
+            registry.putGen(val);
+        }
     }
 
     public <T extends IRegistryElement> void registerCore(String type, T... data) {

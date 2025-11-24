@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class FolderResourceDirectory implements ResourceDirectory {
 
@@ -50,7 +51,7 @@ public class FolderResourceDirectory implements ResourceDirectory {
     @Override
     public ArrayList<String> getFiles(String path) {
         ArrayList<String> files = new ArrayList<>();
-        recursivelyAdd(path,folder,files);
+        recursivelyAdd(path, folder, files);
         return files;
     }
 
@@ -63,13 +64,14 @@ public class FolderResourceDirectory implements ResourceDirectory {
         File[] fileList = source.listFiles();
         if(fileList != null) {
             for (File file : fileList) {
+                String fPath = getPath(file);
                 if(file.isDirectory()) {
-                    if(path.startsWith(getPath(file))) {
+                    if(path.startsWith(fPath) || fPath.startsWith(path)) {
                         recursivelyAdd(path, file, files);
                     }
                 } else {
-                    if(getPath(file).startsWith(path)) {
-                        files.add(file.getAbsolutePath());
+                    if(fPath.startsWith(path)) {
+                        files.add(fPath);
                     }
                 }
             }
@@ -77,6 +79,10 @@ public class FolderResourceDirectory implements ResourceDirectory {
     }
 
     private String getPath(File file) {
-        return file.getAbsolutePath().substring(size);
+        String path = file.getAbsolutePath().substring(size);
+        if(path.charAt(0) == '/') {
+            path = path.substring(1);
+        }
+        return path;
     }
 }

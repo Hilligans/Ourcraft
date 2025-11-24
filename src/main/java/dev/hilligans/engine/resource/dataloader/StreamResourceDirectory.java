@@ -4,8 +4,12 @@ import dev.hilligans.engine.resource.IBufferAllocator;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.function.Consumer;
 
 public class StreamResourceDirectory implements ResourceDirectory {
 
@@ -47,7 +51,21 @@ public class StreamResourceDirectory implements ResourceDirectory {
 
     @Override
     public ArrayList<String> getFiles(String path) {
-        return new ArrayList<>();
+        ArrayList<String> files = new ArrayList<>();
+
+        try {
+            Enumeration<URL> urls = this.getClass().getClassLoader().getResources("/" + path);
+
+            for (Iterator<URL> it = urls.asIterator(); it.hasNext(); ) {
+                URL url = it.next();
+
+                files.add(url.getPath());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return files;
     }
 
     @Override
