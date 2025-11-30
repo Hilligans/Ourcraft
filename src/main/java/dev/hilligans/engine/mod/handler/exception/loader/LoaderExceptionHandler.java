@@ -1,5 +1,6 @@
 package dev.hilligans.engine.mod.handler.exception.loader;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.mod.handler.content.ModContent;
 import dev.hilligans.engine.mod.handler.exception.CrashReport;
 import dev.hilligans.engine.mod.handler.exception.ExceptionHandler;
@@ -51,6 +52,6 @@ public class LoaderExceptionHandler extends ExceptionHandler<Exception> {
 
     @Override
     public String getResourceOwner() {
-        return "ourcraft";
+        return Engine.ENGINE_NAME;
     }
 }

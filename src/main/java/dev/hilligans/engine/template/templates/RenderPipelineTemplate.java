@@ -17,6 +17,10 @@ public class RenderPipelineTemplate implements Template<RenderPipeline> {
 
     public static final RenderPipelineTemplate instance = new RenderPipelineTemplate();
 
+    public RenderPipelineTemplate() {
+        track();
+    }
+
     @Override
     public String getResourceName() {
         return "render_pipeline_template";

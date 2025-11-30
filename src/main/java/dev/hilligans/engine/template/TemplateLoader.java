@@ -71,6 +71,11 @@ public class TemplateLoader {
 
     public static List<IRegistryElement> loadTemplate(GameInstance gameInstance, ModContainer mod, String path) {
         Object data = gameInstance.RESOURCE_LOADER.getResource(path);
+        if(data == null) {
+            // If this fails, something is borked. the path was provided to us.
+            throw new RuntimeException("Failed to load resource: " + path);
+        }
+
         Schema<?> schema = gameInstance.getSchema(data);
 
         if(schema == null) {

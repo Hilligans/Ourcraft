@@ -25,7 +25,7 @@ public class EngineMain {
     public static final Argument<Boolean> loadImmediate = Argument.existArg("--loadImmediate")
             .help("Always immediately load the GameInstance immediately, otherwise, it's loaded later in the chain before argument parsing. \n" +
                     "This is needed to see any acceptable values from registry arguments");
-    public static final Argument<Protocol> defaultProtocol = Argument.registryArg("--protocol", Protocol.class, "ourcraft:Play")
+    public static final Argument<Protocol> defaultProtocol = Argument.registryArg("--protocol", Protocol.class, Engine.name("Play"))
             .help("The network protocol to use");
     public static final Argument<Boolean> runTests = Argument.existArg("--test")
             .help("Loads all contents and performs standard tests");

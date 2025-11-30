@@ -27,6 +27,8 @@ public class Protocol implements IRegistryElement {
 
     public Protocol(String protocolName) {
         this.protocolName = protocolName;
+
+        track();
     }
 
     public void register(PacketType<?> packetType) {

@@ -7,6 +7,7 @@ import dev.hilligans.engine.client.graphics.api.IGraphicsElement;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.handler.exception.ResourceInitializationException;
 import dev.hilligans.engine.util.argument.Argument;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 
@@ -27,6 +28,8 @@ public class RenderPipeline implements IRegistryElement, IGraphicsElement {
 
     public RenderPipeline(String name) {
         this.name = name;
+
+        track();
     }
 
     public void render(IClientApplication client, MatrixStack worldStack, MatrixStack screenStack, GraphicsContext graphicsContext) {
@@ -117,7 +120,12 @@ public class RenderPipeline implements IRegistryElement, IGraphicsElement {
         }
 
         for(RenderTarget renderTarget : renderTargets) {
-            RenderTaskSource renderTask = owner.getGameInstance().RENDER_TASK.getExcept(renderTarget.getRenderTask());
+            RenderTaskSource renderTask = owner.getGameInstance().RENDER_TASK.get(renderTarget.getRenderTask());
+
+            if(renderTask == null) {
+                throw new ResourceInitializationException(this, "Unknown render task: " + renderTarget.getRenderTask());
+            }
+
             tasks.add(renderTask.getTask(graphicsEngine.getIdentifierName()));
         }
         return new PipelineInstance(this, tasks);

@@ -1,6 +1,8 @@
 package dev.hilligans.engine.mod.handler.content;
 
 import dev.hilligans.engine.GameInstance;
+import dev.hilligans.engine.data.Tuple;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 import dev.hilligans.engine.util.registry.Registry;
 
 import java.util.function.Supplier;
@@ -26,6 +28,12 @@ public class RegistryView {
     public void registerRegistry(Supplier<Registry<?>>... registries) {
         for(Supplier<Registry<?>> registrySupplier : registries) {
             gameInstance.REGISTRIES.put(registrySupplier.get().assignOwner(owner));
+        }
+    }
+
+    public void register(Tuple<Class<? extends IRegistryElement>, String>... registries) {
+        for(Tuple<Class<? extends IRegistryElement>, String> element : registries) {
+            registerRegistry(() -> new Registry<>(gameInstance, element.getTypeA(), element.getTypeB()));
         }
     }
 }

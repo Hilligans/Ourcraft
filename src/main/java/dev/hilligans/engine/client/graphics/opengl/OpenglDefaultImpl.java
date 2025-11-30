@@ -12,6 +12,8 @@ import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.client.graphics.util.MeshOptimizers;
 import dev.hilligans.engine.client.graphics.vulkan.boilerplate.window.ShaderCompiler;
 import dev.hilligans.engine.client.graphics.resource.Image;
+import dev.hilligans.engine.data.Quadruplet;
+import dev.hilligans.engine.data.Triplet;
 import dev.hilligans.engine.data.Tuple;
 import dev.hilligans.engine.mod.handler.content.UnknownResourceException;
 import dev.hilligans.engine.resource.ResourceLocation;
@@ -27,6 +29,9 @@ import org.lwjgl.system.MemoryUtil;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.concurrent.*;
 
 import static org.lwjgl.opengl.EXTTextureCompressionS3TC.GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
 import static org.lwjgl.opengl.EXTTextureCompressionS3TC.GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
@@ -257,6 +262,29 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
 
     public String getEngineName() {
         return engine.getResourceOwner() + "." + engine.getResourceName();
+    }
+
+    public final ExecutorService shaderProcessor = Executors.newVirtualThreadPerTaskExecutor();
+    public ArrayList<Quadruplet<CompletableFuture<String>, CompletableFuture<String>, CompletableFuture<String>, Integer>> shaderCompilation = new ArrayList<>();
+
+    public void finishShaderUpload() {
+        while(!shaderCompilation.isEmpty()) {
+            var iter = shaderCompilation.iterator();
+
+            while (iter.hasNext()) {
+                var shader = iter.next();
+
+                if(shader.typeA.isDone() && shader.typeB.isDone() && (shader.typeC == null || shader.typeC.isDone())) {
+                    try {
+                        ShaderManager.registerShader(shader.typeD, shader.typeA.get(), shader.typeB.get());
+
+                        iter.remove();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 
     public String getShader(String shader, ShaderSource shaderSource) {

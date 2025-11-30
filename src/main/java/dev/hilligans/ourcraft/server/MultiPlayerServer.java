@@ -72,7 +72,7 @@ public class MultiPlayerServer implements IServer {
         playerHandler.scheduleAtFixedRate(new PlayerHandler(this), 0, 10, TimeUnit.MILLISECONDS);
        // ConsoleReader consoleReader = new ConsoleReader(this::executeCommand);
 
-        INetworkEngine<?, ?> engine = gameInstance.getExcept("ourcraft:nettyEngine", INetworkEngine.class);
+        INetworkEngine<?, ?> engine = gameInstance.getExcept("engine:nettyEngine", INetworkEngine.class);
         NetworkSocket<?> socket = engine.openServer(gameInstance.PROTOCOLS.getExcept("ourcraft:login"), this, "25588");
         networkSockets.add(socket);
 

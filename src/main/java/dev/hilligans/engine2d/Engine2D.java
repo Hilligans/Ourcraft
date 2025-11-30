@@ -26,7 +26,7 @@ public class Engine2D implements ModClass {
 
     @Override
     public void registerRegistries(RegistryView view) {
-        register(view,
+        view.register(
                 new Tuple<>(Sprite.class, "sprite"),
                 new Tuple<>(MapSection.class, "map_section"),
                 new Tuple<>(Scene.class, "scene"));
@@ -57,16 +57,16 @@ public class Engine2D implements ModClass {
 
             final int MOVE_SPEED = 32;
 
-            container.registerKeybinds(new RepeatingInput("move_up", "ourcraft:key_press_handler::" + GLFW_KEY_W,
+            container.registerKeybinds(new RepeatingInput("move_up", "engine:key_press_handler::" + GLFW_KEY_W,
                     (window, strength) -> window.getCamera().move(0, (float) (MOVE_SPEED * strength), 0)).onlyWithPipelines("engine2D:pipeline2d"));
 
-            container.registerKeybinds(new RepeatingInput("move_left", "ourcraft:key_press_handler::" + GLFW_KEY_A,
+            container.registerKeybinds(new RepeatingInput("move_left", "engine:key_press_handler::" + GLFW_KEY_A,
                     (window, strength) -> window.getCamera().move((float) (MOVE_SPEED * strength), 0, 0)).onlyWithPipelines("engine2D:pipeline2d"));
 
-            container.registerKeybinds(new RepeatingInput("move_down", "ourcraft:key_press_handler::" + GLFW_KEY_S,
+            container.registerKeybinds(new RepeatingInput("move_down", "engine:key_press_handler::" + GLFW_KEY_S,
                     (window, strength) -> window.getCamera().move(0, (float) (-MOVE_SPEED * strength), 0)).onlyWithPipelines("engine2D:pipeline2d"));
 
-            container.registerKeybinds(new RepeatingInput("move_right", "ourcraft:key_press_handler::" + GLFW_KEY_D,
+            container.registerKeybinds(new RepeatingInput("move_right", "engine:key_press_handler::" + GLFW_KEY_D,
                     (window, strength) -> window.getCamera().move((float) (-MOVE_SPEED * strength), 0, 0)).onlyWithPipelines("engine2D:pipeline2d"));
 
         }

@@ -1,5 +1,6 @@
 package dev.hilligans.engine.client.graphics.util;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.ShaderSource;
@@ -29,7 +30,7 @@ public class StringRenderer {
 
     public StringRenderer(IGraphicsEngine<?,?,?> graphicsEngine) {
         this.graphicsEngine = graphicsEngine;
-        shaderSource = graphicsEngine.getGameInstance().SHADERS.get("ourcraft:position_texture");
+        shaderSource = graphicsEngine.getGameInstance().SHADERS.getExcept(Engine.name("position_texture"));
     }
 
     public void drawStringTranslated(RenderWindow window, GraphicsContext graphicsContext, MatrixStack matrixStack, String string, int x, int y, float scale) {

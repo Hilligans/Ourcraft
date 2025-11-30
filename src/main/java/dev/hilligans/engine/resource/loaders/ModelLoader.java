@@ -19,7 +19,7 @@ public class ModelLoader extends ResourceLoader<IModel> {
 
     public ModelLoader() {
         super("model_loader", "model");
-        withFileTypes("obj");
+        withFileTypes("obj", "mtl");
     }
 
     @Override
@@ -30,6 +30,7 @@ public class ModelLoader extends ResourceLoader<IModel> {
 
 
             AIMesh mesh = AIMesh.create(meshes.get(i));
+            //mesh.mMaterialIndex()
             return new AssimpModel(mesh);
 
             //System.out.println(mesh.mNumVertices());

@@ -1,5 +1,6 @@
 package dev.hilligans.engine.client.graphics.util;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderWindow;
@@ -22,6 +23,8 @@ public class Texture implements IRegistryElement, IGraphicsElement {
     public Texture(String path, String modID) {
         this.path = path;
         this.modID = modID;
+
+        track();
     }
 
     public void drawTexture(@NotNull RenderWindow window, @NotNull GraphicsContext graphicsContext, MatrixStack matrixStack, int x, int y, int width, int height, int startX, int startY, int endX, int endY) {
@@ -139,7 +142,7 @@ public class Texture implements IRegistryElement, IGraphicsElement {
                 return;
             }
 
-            ShaderSource shaderSource = gameInstance.SHADERS.get("ourcraft:position_texture");
+            ShaderSource shaderSource = gameInstance.SHADERS.getExcept(Engine.name("position_texture"));
 
             long textureId = graphicsEngine.getDefaultImpl().createTexture(graphicsContext, texture);
             data.add(gameInstance, new TextureData(texture, textureId, shaderSource));

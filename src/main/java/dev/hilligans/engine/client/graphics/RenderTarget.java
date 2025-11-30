@@ -21,6 +21,8 @@ public class RenderTarget implements IRegistryElement {
         this.name = name;
         this.renderPipeline = renderPipeline;
         this.renderTask = renderTask;
+
+        track();
     }
 
     public RenderTarget afterTarget(String after, String modID) {

@@ -1,5 +1,6 @@
 package dev.hilligans.engine.client.input.handlers.controller;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.client.input.InputHandler;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.IInputProvider;
@@ -185,6 +186,6 @@ public class ControllerHandler implements IInputProvider {
 
     @Override
     public String getResourceOwner() {
-        return "ourcraft";
+        return Engine.ENGINE_NAME;
     }
 }

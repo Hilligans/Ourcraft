@@ -13,6 +13,10 @@ public class JsonSchema implements Schema<JSONObject> {
 
     public static final JsonSchema instance = new JsonSchema();
 
+    public JsonSchema() {
+        track();
+    }
+
     @Override
     public String getResourceName() {
         return "json_schema";

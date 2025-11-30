@@ -1,5 +1,6 @@
 package dev.hilligans.engine.client.input.handlers;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.client.input.InputHandler;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.IInputProvider;
@@ -63,6 +64,6 @@ public class KeyPressHandler implements IInputProvider {
 
     @Override
     public String getResourceOwner() {
-        return "ourcraft";
+        return Engine.ENGINE_NAME;
     }
 }

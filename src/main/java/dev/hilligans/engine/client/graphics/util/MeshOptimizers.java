@@ -1,11 +1,13 @@
 package dev.hilligans.engine.client.graphics.util;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.client.graphics.api.IMeshOptimizer;
 import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.data.Tuple;
 import dev.hilligans.engine.resource.BufferAllocator;
 import dev.hilligans.engine.resource.IAllocator;
 import dev.hilligans.engine.resource.IBufferAllocator;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.util.meshoptimizer.MeshOptimizer;
@@ -99,8 +101,11 @@ public class MeshOptimizers {
 
         @Override
         public String getResourceOwner() {
-            return "ourcraft";
+            return Engine.ENGINE_NAME;
         }
     };
 
+    static {
+        IRegistryElement.track(optimizer);
+    }
 }

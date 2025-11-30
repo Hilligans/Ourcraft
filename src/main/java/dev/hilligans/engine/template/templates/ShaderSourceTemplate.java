@@ -15,6 +15,10 @@ public class ShaderSourceTemplate implements Template<ShaderSource> {
 
     public static final ShaderSourceTemplate instance = new ShaderSourceTemplate();
 
+    public ShaderSourceTemplate() {
+        track();
+    }
+
     @Override
     public List<IRegistryElement> parse(GameInstance gameInstance, Schema.Data data, String filename, String owner) {
         Array<Schema.Data> shaders = data.getObjects("shaders");

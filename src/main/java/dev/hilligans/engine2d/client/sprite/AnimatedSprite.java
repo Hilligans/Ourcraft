@@ -30,6 +30,8 @@ public class AnimatedSprite implements Sprite {
         this.name = name;
         this.texturePath = texturePath;
         this.animationInfoPath = animationInfoPath;
+
+        track();
     }
 
     @Override

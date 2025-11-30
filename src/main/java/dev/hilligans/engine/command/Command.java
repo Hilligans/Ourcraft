@@ -13,6 +13,8 @@ public abstract class Command implements ICommand {
 
     public Command(String name) {
         this.name = name;
+
+        track();
     }
 
     @Override

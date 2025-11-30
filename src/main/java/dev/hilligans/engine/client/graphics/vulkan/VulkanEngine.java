@@ -1,5 +1,6 @@
 package dev.hilligans.engine.client.graphics.vulkan;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.ourcraft.client.Client;
@@ -138,6 +139,6 @@ public class VulkanEngine extends GraphicsEngineBase<VulkanWindow, VulkanDefault
 
     @Override
     public String getResourceOwner() {
-        return "ourcraft";
+        return Engine.ENGINE_NAME;
     }
 }

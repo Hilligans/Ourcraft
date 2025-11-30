@@ -1,5 +1,6 @@
 package dev.hilligans.engine.client.graphics.fixedfunctiongl;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
@@ -137,6 +138,6 @@ public class FixedFunctionGLEngine extends GraphicsEngineBase<FixedFunctionGLWin
 
     @Override
     public String getResourceOwner() {
-        return "ourcraft";
+        return Engine.ENGINE_NAME;
     }
 }

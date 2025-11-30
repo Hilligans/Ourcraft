@@ -36,6 +36,35 @@ public class ShaderManager {
         return shaderProgram;
     }
 
+    public static boolean registerShader(int shaderProgram, String vertexShader, String fragmentShader) {
+        int vertex =  GL30.glCreateShader(GL30.GL_VERTEX_SHADER);
+        int fragment = GL30.glCreateShader(GL20.GL_FRAGMENT_SHADER);
+
+        glShaderSource(vertex, vertexShader);
+        glShaderSource(fragment,fragmentShader);
+        glCompileShader(vertex);
+        glCompileShader(fragment);
+
+        if(GL30.glGetShaderi(vertex, GL20.GL_COMPILE_STATUS) == 0) {
+            System.out.println("Failed to compile vertex shader \n" + vertexShader);
+            return false;
+        }
+        if(GL30.glGetShaderi(fragment, GL20.GL_COMPILE_STATUS) == 0) {
+            System.out.println("Failed to compile fragment shader \n" + fragmentShader);
+            return false;
+        }
+
+        glAttachShader(shaderProgram,vertex);
+        glAttachShader(shaderProgram,fragment);
+        glLinkProgram(shaderProgram);
+        glDetachShader(shaderProgram,vertex);
+        glDetachShader(shaderProgram,fragment);
+        glDeleteShader(vertex);
+        glDeleteShader(fragment);
+
+        return true;
+    }
+
     public static int registerShader(String vertexShader, String fragmentShader, String tessControlShader, String tessEvalShader) {
         int vertex =  GL30.glCreateShader(GL30.GL_VERTEX_SHADER);
         int fragment = GL30.glCreateShader(GL20.GL_FRAGMENT_SHADER);

@@ -39,7 +39,7 @@ public class ServerSelectorWidget extends Widget {
     public void joinServer() {
         try {
             Client client = (Client) screenBase.getClient();
-            NetworkSocket<?> socket = screenBase.getClient().getGameInstance().getExcept("ourcraft:nettyEngine", INetworkEngine.class)
+            NetworkSocket<?> socket = screenBase.getClient().getGameInstance().getExcept("engine:nettyEngine", INetworkEngine.class)
                     .openClient(screenBase.getClient().getGameInstance().getExcept("ourcraft:login", Protocol.class), client, ip, port);
             client.socket = socket;
             socket.onConnected(CGetServerInfo::send);

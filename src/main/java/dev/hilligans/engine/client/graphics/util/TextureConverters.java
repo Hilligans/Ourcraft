@@ -1,8 +1,10 @@
 package dev.hilligans.engine.client.graphics.util;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.client.graphics.api.ITextureConverter;
 import dev.hilligans.engine.client.graphics.api.TextureFormat;
 import dev.hilligans.engine.client.graphics.resource.Image;
+import dev.hilligans.engine.util.registry.IRegistryElement;
 import org.lwjgl.stb.STBDXT;
 import org.lwjgl.system.MemoryUtil;
 
@@ -14,6 +16,7 @@ public class TextureConverters {
 
 
     public static ITextureConverter dxt1Compressor = new ITextureConverter() {
+
         @Override
         public TextureFormat[] getSourceFormats() {
             return new TextureFormat[] {TextureFormat.RGB};
@@ -73,7 +76,7 @@ public class TextureConverters {
 
         @Override
         public String getResourceOwner() {
-            return "ourcraft";
+            return Engine.ENGINE_NAME;
         }
     };
 
@@ -136,8 +139,12 @@ public class TextureConverters {
 
         @Override
         public String getResourceOwner() {
-            return "ourcraft";
+            return Engine.ENGINE_NAME;
         }
     };
 
+    static {
+        IRegistryElement.track(dxt1Compressor);
+        IRegistryElement.track(dxt5Compressor);
+    }
 }

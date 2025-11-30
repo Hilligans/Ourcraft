@@ -10,6 +10,8 @@ public class EntityType implements IRegistryElement {
     public EntityType(String name, String modID) {
         this.name = name;
         this.owner = modID;
+
+        track();
     }
 
     @Override

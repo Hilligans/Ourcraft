@@ -17,6 +17,8 @@ public class VertexFormat implements IRegistryElement {
         this.formatName = formatName;
         this.primitiveType = primitiveType;
         this.modID = modID;
+
+        track();
     }
 
     public VertexFormat addPart(String name, int primitiveType, int primitiveCount) {

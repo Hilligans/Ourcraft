@@ -35,11 +35,15 @@ public class SoundBuffer implements IRegistryElement {
 
     public SoundBuffer(String file)  {
         this.file = file;
+
+        track();
     }
 
     public SoundBuffer(String file, byte[] bytes) {
         this.file = file;
         this.bytes = bytes;
+
+        track();
     }
 
     public SoundBuffer(ShortBuffer shortBuffer) {
@@ -51,6 +55,8 @@ public class SoundBuffer implements IRegistryElement {
                 channelType = info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
             } catch (Exception ignored) {}
         }
+
+        track();
     }
 
     public SoundSource createNewSound(boolean loop, boolean relative, SoundCategory soundCategory) {

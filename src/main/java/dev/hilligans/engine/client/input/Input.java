@@ -3,6 +3,8 @@ package dev.hilligans.engine.client.input;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.IInputProvider;
 import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.handler.content.UnknownResourceException;
+import dev.hilligans.engine.mod.handler.exception.ResourceInitializationException;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 
@@ -27,12 +29,16 @@ public class Input implements IRegistryElement {
     public Input(String name, String defaultBind) {
         this.name = name;
         bind(defaultBind);
+
+        track();
     }
 
     public Input(String name, String defaultBind, boolean repeating) {
         this.name = name;
         bind(defaultBind);
         this.repeating = repeating;
+
+        track();
     }
 
     public boolean canInput(String pipeline) {
@@ -115,7 +121,9 @@ public class Input implements IRegistryElement {
                 int index = Integer.parseInt(pieces[1]);
 
                 IInputProvider provider = handler.hashedProvider.get(source);
-                System.out.println(source);
+                if(provider == null) {
+                    throw new ResourceInitializationException(this, "Failed to load resource from key string: " + string);
+                }
                 builder.append(provider.getButtonName(index, 0)).append(' ');
                 int newIndex = provider.getOffset() + index;
                 if(!list.contains(newIndex)) {

@@ -1,11 +1,10 @@
 package dev.hilligans.engine.mod.handler.content;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.ourcraft.Ourcraft;
 import dev.hilligans.engine.mod.handler.ModClass;
 import dev.hilligans.engine.resource.dataloader.FolderResourceDirectory;
 import dev.hilligans.engine.util.argument.Argument;
-import dev.hilligans.planets.Planets;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,9 +33,9 @@ public class ModList {
 
     public ModList load() {
         if(new File("ourcraft-1.0.3-jar-with-dependencies.jar").exists()) {
-            gameInstance.DATA_LOADER.addJar("ourcraft-1.0.3-jar-with-dependencies.jar", "ourcraft");
+            gameInstance.DATA_LOADER.addJar("ourcraft-1.0.3-jar-with-dependencies.jar", Engine.ENGINE_NAME);
         } else if(new File("ourcraft-1.0.3.jar").exists()) {
-            gameInstance.DATA_LOADER.addJar("ourcraft-1.0.3.jar", "ourcraft");
+            gameInstance.DATA_LOADER.addJar("ourcraft-1.0.3.jar", Engine.ENGINE_NAME);
         } else {
         //    gameInstance.DATA_LOADER.addFolder("target/classes/", "ourcraft");
         }

@@ -4,6 +4,7 @@ import dev.hilligans.engine.application.IApplication;
 import dev.hilligans.engine.client.graphics.*;
 import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.client.graphics.api.ITextureConverter;
+import dev.hilligans.engine.gametype.IGameType;
 import dev.hilligans.engine.schema.Schema;
 import dev.hilligans.engine.template.ITemplate;
 import dev.hilligans.ourcraft.block.Block;
@@ -38,7 +39,6 @@ import dev.hilligans.engine.resource.ResourceManager;
 import dev.hilligans.engine.resource.UniversalResourceLoader;
 import dev.hilligans.engine.resource.dataloader.DataLoader;
 import dev.hilligans.engine.resource.loaders.ResourceLoader;
-import dev.hilligans.engine.resource.registry.loaders.RegistryLoader;
 import dev.hilligans.engine.authentication.IAuthenticationScheme;
 import dev.hilligans.ourcraft.settings.Setting;
 import dev.hilligans.engine.test.ITest;
@@ -125,7 +125,6 @@ public class GameInstance {
     public Registry<ResourceLoader<?>> RESOURCE_LOADERS;
     public Registry<SoundBuffer> SOUNDS;
     public Registry<SoundCategory> SOUND_CATEGORIES;
-    public Registry<RegistryLoader> DATA_LOADERS;
     public Registry<RenderTarget> RENDER_TARGETS;
     public Registry<RenderPipeline> RENDER_PIPELINES;
     public Registry<RenderTaskSource> RENDER_TASK;
@@ -144,37 +143,38 @@ public class GameInstance {
     public Registry<ITextureConverter> TEXTURE_CONVERTERS;
     public Registry<Schema<?>> SCHEMAS;
     public Registry<ITemplate<?>> TEMPLATES;
+    public Registry<IGameType> GAME_TYPES;
 
     public ArrayList<IBlockState> BLOCK_STATES;
 
     public void copyRegistries() {
         BLOCKS = (Registry<Block>) REGISTRIES.getExcept("ourcraft:block");
         TAGS = (Registry<Tag>) REGISTRIES.getExcept("ourcraft:tag");
-        GRAPHICS_ENGINES = (Registry<IGraphicsEngine<?, ?, ?>>) REGISTRIES.getExcept("ourcraft:graphics_engine");
-        PROTOCOLS = (Registry<Protocol>) REGISTRIES.getExcept("ourcraft:protocol");
+        GRAPHICS_ENGINES = (Registry<IGraphicsEngine<?, ?, ?>>) REGISTRIES.getExcept(Engine.name("graphics_engine"));
+        PROTOCOLS = (Registry<Protocol>) REGISTRIES.getExcept(Engine.name("protocol"));
         SETTINGS = (Registry<Setting>) REGISTRIES.getExcept("ourcraft:setting");
-        RESOURCE_LOADERS = (Registry<ResourceLoader<?>>) REGISTRIES.getExcept("ourcraft:resource_loader");
+        RESOURCE_LOADERS = (Registry<ResourceLoader<?>>) REGISTRIES.getExcept(Engine.name("resource_loader"));
         SOUNDS = (Registry<SoundBuffer>) REGISTRIES.getExcept("ourcraft:sound");
-        DATA_LOADERS = (Registry<RegistryLoader>) REGISTRIES.getExcept("ourcraft:registry_loader");
-        RENDER_TARGETS = (Registry<RenderTarget>) REGISTRIES.getExcept("ourcraft:render_target");
-        RENDER_PIPELINES = (Registry<RenderPipeline>) REGISTRIES.getExcept("ourcraft:render_pipeline");
-        RENDER_TASK = (Registry<RenderTaskSource>) REGISTRIES.getExcept("ourcraft:render_task");
-        KEY_BINDS = (Registry<Input>) REGISTRIES.getExcept("ourcraft:key_bind");
-        VERTEX_FORMATS = (Registry<VertexFormat>) REGISTRIES.getExcept("ourcraft:vertex_format");
-        INPUT_HANDLER_PROVIDERS = (Registry<InputHandlerProvider>) REGISTRIES.getExcept("ourcraft:input");
-        TEXTURES = (Registry<Texture>) REGISTRIES.getExcept("ourcraft:texture");
-        SHADERS = (Registry<ShaderSource>) REGISTRIES.getExcept("ourcraft:shader");
-        LAYOUT_ENGINES = (Registry<ILayoutEngine<?>>) REGISTRIES.getExcept("ourcraft:layout_engine");
+        RENDER_TARGETS = (Registry<RenderTarget>) REGISTRIES.getExcept(Engine.name("render_target"));
+        RENDER_PIPELINES = (Registry<RenderPipeline>) REGISTRIES.getExcept(Engine.name("render_pipeline"));
+        RENDER_TASK = (Registry<RenderTaskSource>) REGISTRIES.getExcept(Engine.name("render_task"));
+        KEY_BINDS = (Registry<Input>) REGISTRIES.getExcept(Engine.name("key_bind"));
+        VERTEX_FORMATS = (Registry<VertexFormat>) REGISTRIES.getExcept(Engine.name("vertex_format"));
+        INPUT_HANDLER_PROVIDERS = (Registry<InputHandlerProvider>) REGISTRIES.getExcept(Engine.name("input"));
+        TEXTURES = (Registry<Texture>) REGISTRIES.getExcept(Engine.name("texture"));
+        SHADERS = (Registry<ShaderSource>) REGISTRIES.getExcept(Engine.name("shader"));
+        LAYOUT_ENGINES = (Registry<ILayoutEngine<?>>) REGISTRIES.getExcept(Engine.name("layout_engine"));
         SOUND_CATEGORIES = (Registry<SoundCategory>) REGISTRIES.getExcept("ourcraft:sound_category");
         ENTITY_TYPES = (Registry<EntityType>) REGISTRIES.getExcept("ourcraft:entity_type");
-        NETWORK_ENGINES = (Registry<INetworkEngine<?,?>>) REGISTRIES.getExcept("ourcraft:network_engine");
-        COMMANDS = (Registry<ICommand>) REGISTRIES.getExcept("ourcraft:command");
-        AUTHENTICATION_SCHEMES = (Registry<IAuthenticationScheme<?>>) REGISTRIES.getExcept("ourcraft:authentication_scheme");
-        TESTS = (Registry<ITest>) REGISTRIES.getExcept("ourcraft:test");
-        APPLICATIONS = (Registry<IApplication>) REGISTRIES.getExcept("ourcraft:application");
-        TEXTURE_CONVERTERS = (Registry<ITextureConverter>) REGISTRIES.getExcept("ourcraft:texture_converter");
-        SCHEMAS = (Registry<Schema<?>>) REGISTRIES.getExcept("ourcraft:schema");
-        TEMPLATES = (Registry<ITemplate<?>>) REGISTRIES.getExcept("ourcraft:template");
+        NETWORK_ENGINES = (Registry<INetworkEngine<?,?>>) REGISTRIES.getExcept(Engine.name("network_engine"));
+        COMMANDS = (Registry<ICommand>) REGISTRIES.getExcept(Engine.name("command"));
+        AUTHENTICATION_SCHEMES = (Registry<IAuthenticationScheme<?>>) REGISTRIES.getExcept(Engine.name("authentication_scheme"));
+        TESTS = (Registry<ITest>) REGISTRIES.getExcept(Engine.name("test"));
+        APPLICATIONS = (Registry<IApplication>) REGISTRIES.getExcept(Engine.name("application"));
+        TEXTURE_CONVERTERS = (Registry<ITextureConverter>) REGISTRIES.getExcept(Engine.name("texture_converter"));
+        SCHEMAS = (Registry<Schema<?>>) REGISTRIES.getExcept(Engine.name("schema"));
+        TEMPLATES = (Registry<ITemplate<?>>) REGISTRIES.getExcept(Engine.name("template"));
+        GAME_TYPES = (Registry<IGameType>) REGISTRIES.getExcept(Engine.name("game_type"));
     }
 
     public void finishBuild() {
@@ -260,7 +260,7 @@ public class GameInstance {
     }
 
     public Item getItem(String name) {
-        Registry<Item> ITEMS = getRegistry("ourcraft:item", Item.class);
+        Registry<Item> ITEMS = getRegistry(Engine.name("item"), Item.class);
         return ITEMS.MAPPED_ELEMENTS.get(name);
     }
 

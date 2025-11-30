@@ -20,6 +20,8 @@ public abstract class RenderTaskSource implements IRegistryElement, IGraphicsEle
         this.name = name;
         defaultTask = getDefaultTask();
         tasks.put("default", defaultTask);
+
+        track();
     }
 
     public abstract RenderTask<?> getDefaultTask();

@@ -29,6 +29,8 @@ public class Biome implements IRegistryElement {
 
     public Biome(String name) {
         this.name = name;
+
+        track();
     }
 
     public Biome(String name, WorldBuilder... worldBuilders) {

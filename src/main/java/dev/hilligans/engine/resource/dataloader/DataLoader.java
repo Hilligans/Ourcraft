@@ -66,7 +66,11 @@ public class DataLoader {
 
             for(ResourceDirectory directory : allResourceDirectories) {
                 try {
-                    return directory.get(resourceLocation.path);
+                    ByteBuffer buffer = directory.get(resourceLocation.path);
+                    if(buffer == null) {
+                        continue;
+                    }
+                    return buffer;
                 } catch (IOException _) {}
             }
             return null;
@@ -88,7 +92,11 @@ public class DataLoader {
 
             for(ResourceDirectory directory : allResourceDirectories) {
                 try {
-                    return directory.getDirect(resourceLocation.path);
+                    ByteBuffer buffer = directory.getDirect(resourceLocation.path);
+                    if(buffer == null) {
+                        continue;
+                    }
+                    return buffer;
                 } catch (IOException _) {}
             }
             return null;
@@ -109,7 +117,11 @@ public class DataLoader {
 
             for(ResourceDirectory directory : allResourceDirectories) {
                 try {
-                    return directory.get(resourceLocation.path, allocator);
+                    ByteBuffer buffer = directory.get(resourceLocation.path, allocator);
+                    if(buffer == null) {
+                        continue;
+                    }
+                    return buffer;
                 } catch (IOException _) {}
             }
             return null;
@@ -126,6 +138,8 @@ public class DataLoader {
 
         for(ResourceDirectory resourceDirectory : allResourceDirectories) {
             List<String> resources = resourceDirectory.getFiles(path);
+
+            //System.out.println(resourceDirectory + ":" + resources + ":" + path);
 
             for(String s : resources) {
                 if(!fileSet.contains(s)) {

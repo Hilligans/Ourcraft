@@ -21,6 +21,8 @@ public class SoundCategory implements IRegistryElement {
     public SoundCategory(String name) {
         this.name = name;
         soundCategories.add(this);
+
+        track();
     }
 
     public SoundCategory addParent(SoundCategory soundCategory) {

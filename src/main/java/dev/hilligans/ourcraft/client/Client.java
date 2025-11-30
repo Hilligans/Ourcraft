@@ -77,10 +77,11 @@ public class Client implements IApplication, IClientApplication {
 
     public Client(GameInstance gameInstance, ArgumentContainer argumentContainer) {
         this.gameInstance = gameInstance;
+        track();
         this.newClientWorld = new ClientCubicWorld(gameInstance, 0,"", 64);
         logger = gameInstance.LOGGER.withKey("client");
-        graphicsEngine = ((Registry<IGraphicsEngine<?,?,?>>)gameInstance.REGISTRIES.getExcept("ourcraft:graphics_engine")).get("ourcraft:openglEngine");
-        for(IGraphicsEngine<?,?,?> engine : ((Registry<IGraphicsEngine<?,?,?>>)gameInstance.REGISTRIES.getExcept("ourcraft:graphics_engine")).ELEMENTS) {
+        graphicsEngine = ((Registry<IGraphicsEngine<?,?,?>>)gameInstance.REGISTRIES.getExcept("engine:graphics_engine")).get("engine:openglEngine");
+        for(IGraphicsEngine<?,?,?> engine : ((Registry<IGraphicsEngine<?,?,?>>)gameInstance.REGISTRIES.getExcept("engine:graphics_engine")).ELEMENTS) {
             System.out.println(engine.getIdentifierName());
         }
         soundEngine = new SoundEngine(gameInstance);
@@ -211,7 +212,7 @@ public class Client implements IApplication, IClientApplication {
     }
 
     public void openScreen(String screenName) {
-        Registry<ScreenBuilder> SCREEN_BUILDERS = gameInstance.getRegistry("ourcraft:screen", ScreenBuilder.class);
+        Registry<ScreenBuilder> SCREEN_BUILDERS = gameInstance.getRegistry("engine:screen", ScreenBuilder.class);
         ScreenBuilder screenBuilder = SCREEN_BUILDERS.get(screenName);
         if(screenBuilder == null) {
             throw new RuntimeException("Failed to find screen: " + screenName);
@@ -253,7 +254,7 @@ public class Client implements IApplication, IClientApplication {
         return gameInstance;
     }
 
-    public static final Argument<IGraphicsEngine> graphicsEngineArg = Argument.registryArg("--graphicsEngine", IGraphicsEngine.class, "ourcraft:openglEngine")
+    public static final Argument<IGraphicsEngine> graphicsEngineArg = Argument.registryArg("--graphicsEngine", IGraphicsEngine.class, "engine:openglEngine")
             .help("The default graphics engine to use, still need to lookup acceptable values based on registry.");
 
     @Override

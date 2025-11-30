@@ -68,7 +68,7 @@ public class ZipResourceDirectory implements ResourceDirectory {
     public ArrayList<String> getFiles(String path) {
         ArrayList<String> files = new ArrayList<>();
         for(ZipEntry zipEntry : zipFile.stream().toList()) {
-            if(zipEntry.getName().startsWith(path)) {
+            if(zipEntry.getName().startsWith(path) && !zipEntry.isDirectory()) {
                 files.add(zipEntry.getName());
             }
         }
@@ -80,7 +80,7 @@ public class ZipResourceDirectory implements ResourceDirectory {
         ArrayList<String> endings = new ArrayList<>();
         for(String ending : fileEndings) {
             ZipEntry entry = zipFile.getEntry(path + "." + ending);
-            if(entry != null) {
+            if(entry != null && !entry.isDirectory()) {
                 endings.add(ending);
             }
         }

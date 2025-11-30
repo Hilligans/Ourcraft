@@ -4,13 +4,24 @@ import dev.hilligans.engine.resource.IBufferAllocator;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.function.Consumer;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
+/**
+ * Fallback in case we are running in an exe or an elf file. Otherwise, we would
+ * be really screwed.
+ */
 public class StreamResourceDirectory implements ResourceDirectory {
 
     @Override
@@ -54,14 +65,28 @@ public class StreamResourceDirectory implements ResourceDirectory {
         ArrayList<String> files = new ArrayList<>();
 
         try {
-            Enumeration<URL> urls = this.getClass().getClassLoader().getResources("/" + path);
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            URL dirURL = cl.getResource(path);
 
-            for (Iterator<URL> it = urls.asIterator(); it.hasNext(); ) {
-                URL url = it.next();
-
-                files.add(url.getPath());
+            if(dirURL == null) {
+                return files;
             }
-        } catch (IOException e) {
+
+            if (dirURL.getProtocol().equals("jar")) {
+                String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!"));
+                try (JarFile jar = new JarFile(URLDecoder.decode(jarPath, StandardCharsets.UTF_8))) {
+                    Enumeration<JarEntry> entries = jar.entries();
+                    while (entries.hasMoreElements()) {
+                        JarEntry entry = entries.nextElement();
+                        String name = entry.getName();
+                        if (name.startsWith(path) && !entry.isDirectory()) {
+                            files.add(name);
+                        }
+                    }
+                }
+            }
+
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 

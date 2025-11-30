@@ -29,6 +29,8 @@ public class Scene implements IRegistryElement {
     public Scene(String name, String scenePath) {
         this.name = name;
         this.scenePath = scenePath;
+
+        track();
     }
 
     public List<SceneSection> getOverlappingSections(IBoundingBox boundingBox) {

@@ -53,6 +53,8 @@ public class Block implements IRegistryElement {
         this.blockProperties = blockProperties;
         blockProperties.setName(name);
         droppedBlock = this;
+
+        track();
     }
 
     public Block(String name, BlockProperties blockProperties, String modId) {
@@ -65,6 +67,8 @@ public class Block implements IRegistryElement {
         this.name = name;
         this.path = path;
         this.overrides = overrides;
+
+        track();
     }
 
     public Block setBlockDrop(Block blockDrop) {

@@ -1,5 +1,6 @@
 package dev.hilligans.engine.test.standard;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.mod.handler.pipeline.InstanceLoaderPipeline;
 import dev.hilligans.engine.mod.handler.pipeline.standard.StandardPipeline;
@@ -12,6 +13,10 @@ import java.lang.reflect.Modifier;
 
 public class DuplicateRegistryTest implements ITest {
 
+    public DuplicateRegistryTest() {
+        track();
+    }
+
     @Override
     public String getResourceName() {
         return "duplicate_registry_test";
@@ -19,7 +24,7 @@ public class DuplicateRegistryTest implements ITest {
 
     @Override
     public String getResourceOwner() {
-        return "ourcraft";
+        return Engine.ENGINE_NAME;
     }
 
     @Override

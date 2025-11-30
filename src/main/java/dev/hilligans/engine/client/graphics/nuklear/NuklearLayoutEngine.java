@@ -1,5 +1,6 @@
 package dev.hilligans.engine.client.graphics.nuklear;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.ShaderSource;
 import dev.hilligans.engine.client.graphics.api.TextureFormat;
@@ -37,6 +38,10 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
     NkTextWidthCallback textWidthCallback;
 
     public GameInstance gameInstance;
+
+    public NuklearLayoutEngine() {
+        track();
+    }
 
     @Override
     public NuklearLayout parseLayout(String layout) {
@@ -177,20 +182,20 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
 
     @Override
     public String getResourceOwner() {
-        return "ourcraft";
+        return Engine.ENGINE_NAME;
     }
 
     @Override
     public void load(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
-        vertexFormat = gameInstance.VERTEX_FORMATS.get("ourcraft:position2_texture_color");
+        vertexFormat = gameInstance.VERTEX_FORMATS.get(Engine.name("position2_texture_color"));
     }
 
     @Override
     public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
         if(nkProgram == null) {
-            nkProgram = gameInstance.SHADERS.get("ourcraft:nk_shader");
-            load(graphicsEngine, graphicsContext, gameInstance.getResourceDirect(new ResourceLocation("Roboto-Medium.ttf", "ourcraft")));
+            nkProgram = gameInstance.SHADERS.getExcept(Engine.name("nk_shader"));
+            load(graphicsEngine, graphicsContext, gameInstance.getResourceDirect(new ResourceLocation("Roboto-Medium.ttf", Engine.ENGINE_NAME)));
         }
     }
 

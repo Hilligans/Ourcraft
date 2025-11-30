@@ -24,6 +24,8 @@ public abstract class ResourceLoader<T> implements IRegistryElement {
     public ResourceLoader(String name, String category) {
         this.name = name;
         this.category = category;
+
+        track();
     }
 
     public ResourceLoader<T> withFileTypes(String... fileTypes) {

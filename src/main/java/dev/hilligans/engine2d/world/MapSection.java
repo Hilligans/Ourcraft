@@ -27,6 +27,8 @@ public class MapSection implements IGraphicsElement, IRegistryElement {
     public MapSection(String name, String dataPath) {
         this.name = name;
         this.dataPath = dataPath;
+
+        track();
     }
 
     public int getWidth() {

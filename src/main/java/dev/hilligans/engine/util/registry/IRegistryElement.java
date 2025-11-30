@@ -8,6 +8,9 @@ import dev.hilligans.engine.mod.handler.content.ModContainer;
 import dev.hilligans.engine.mod.handler.content.ModContent;
 import dev.hilligans.engine.resource.ResourceLocation;
 
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+
 public interface IRegistryElement {
 
     default void load(GameInstance gameInstance) {}
@@ -52,5 +55,26 @@ public interface IRegistryElement {
 
     default int hashcode() {
         return getUniqueName().hashCode();
+    }
+
+
+    ConcurrentHashMap<IRegistryElement, Throwable> objectAllocationTrack = new ConcurrentHashMap<>();
+    boolean tracking = true;
+    default void track() {
+        track(this);
+    }
+
+    static void track(IRegistryElement element) {
+        if(tracking) {
+            Throwable throwable = new Throwable();
+            StackTraceElement[] trace = throwable.getStackTrace();
+            StackTraceElement[] subSet = new StackTraceElement[trace.length - 2];
+            for(int x = 0; x < subSet.length; x++) {
+                subSet[x] = trace[x+2];
+            }
+            throwable.setStackTrace(subSet);
+
+            objectAllocationTrack.put(element, throwable);
+        }
     }
 }

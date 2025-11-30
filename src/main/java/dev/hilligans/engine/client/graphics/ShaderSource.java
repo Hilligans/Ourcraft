@@ -33,6 +33,8 @@ public class ShaderSource implements IRegistryElement, IGraphicsElement {
         this.format = format;
         this.vertexShader = vertexShader;
         this.fragmentShader = fragmentShader;
+
+        track();
     }
 
     public ShaderSource(String name, String format, String vertexShader, String geometryShader, String fragmentShader) {

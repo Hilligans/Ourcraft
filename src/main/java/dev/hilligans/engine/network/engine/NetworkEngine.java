@@ -14,7 +14,9 @@ public abstract class NetworkEngine<T extends NetworkEntity, Q extends NetworkSo
     public ConcurrentHashMap<Protocol, ConcurrentLinkedQueue<T>> protocolMap = new ConcurrentHashMap<>();
 
 
-    public NetworkEngine() {}
+    public NetworkEngine() {
+        track();
+    }
 
     @Override
     public void switchProtocol(T entity, Protocol oldProtocol, Protocol newProtocol) {

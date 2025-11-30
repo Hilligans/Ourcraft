@@ -1,5 +1,6 @@
 package dev.hilligans.engine.client.graphics.opengl;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderPipeline;
@@ -27,7 +28,7 @@ import static org.lwjgl.opengl.GL43.glDebugMessageCallback;
 
 public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefaultImpl, GraphicsContext> {
 
-    public static Argument<RenderPipeline> renderPipelineArgument = Argument.registryArg("--renderPipeline", RenderPipeline.class, "ourcraft:engine_loading_pipeline")
+    public static Argument<RenderPipeline> renderPipelineArgument = Argument.registryArg("--renderPipeline", RenderPipeline.class, Engine.name("engine_loading_pipeline"))
             .help("The default render pipeline to use.");
     public static Argument<String> clientSection = Argument.stringArg("--clientSection", "empty")
             .help("Specifies what section api to attach to the client");
@@ -102,7 +103,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         OpenGLWindow renderWindow = new OpenGLWindow( this, "Ourcraft", 1600, 800, 0);
-        renderWindow.setRenderPipeline(gameInstance.ARGUMENTS.getString("--renderPipeline", "ourcraft:engine_loading_pipeline"));
+        renderWindow.setRenderPipeline(gameInstance.ARGUMENTS.getString("--renderPipeline", Engine.name("engine_loading_pipeline")));
         windows.add(renderWindow);
         renderWindow.setup();
         GL.createCapabilities();
@@ -219,6 +220,6 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
 
     @Override
     public String getResourceOwner() {
-        return "ourcraft";
+        return Engine.ENGINE_NAME;
     }
 }

@@ -1,5 +1,6 @@
 package dev.hilligans.engine.network.engine;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.application.IClientApplication;
 import dev.hilligans.engine.application.IServerApplication;
 import dev.hilligans.engine.network.*;
@@ -36,7 +37,7 @@ public class NettyEngine extends NetworkEngine<NettyEngine.NettyNetworkEntity, N
 
     @Override
     public String getResourceOwner() {
-        return "ourcraft";
+        return Engine.ENGINE_NAME;
     }
 
     @Override

@@ -1,10 +1,15 @@
 package dev.hilligans.engine.authentication;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.util.IByteArray;
 
 public class UnauthenticatedScheme implements IAuthenticationScheme<BasicAccount> {
 
     public long ID;
+
+    public UnauthenticatedScheme() {
+        track();
+    }
 
     @Override
     public BasicAccount authenticate(String username, IByteArray content) {
@@ -18,7 +23,7 @@ public class UnauthenticatedScheme implements IAuthenticationScheme<BasicAccount
 
     @Override
     public String getResourceOwner() {
-        return "ourcraft";
+        return Engine.ENGINE_NAME;
     }
 
     @Override

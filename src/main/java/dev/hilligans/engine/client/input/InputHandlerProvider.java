@@ -11,6 +11,8 @@ public abstract class InputHandlerProvider implements IRegistryElement {
 
     public InputHandlerProvider(String name) {
         this.name = name;
+
+        track();
     }
 
     public abstract IInputProvider getProvider(String engineName, String windowingName);

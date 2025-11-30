@@ -58,12 +58,12 @@ public class ServerPlayerData {
         this.id = id;
         playerInventory = playerEntity.inventory;
         openContainer = new InventoryContainer(playerInventory).setPlayerId(playerEntity.id);
-        playerInventory.setItem(0,new ItemStack(gameInstance.getItem("chest"), (byte)2));
-        playerInventory.setItem(1,new ItemStack(gameInstance.getItem("slab"), (byte)10));
-        playerInventory.setItem(2,new ItemStack(gameInstance.getItem("weeping_vine"), (byte)64));
-        playerInventory.setItem(3,new ItemStack(gameInstance.getItem("stair"), (byte)63));
-        playerInventory.setItem(4,new ItemStack(gameInstance.getItem("grass_plant"), (byte)63));
-        playerInventory.setItem(5,new ItemStack(gameInstance.getItem("blue"),(byte)63));
+        //playerInventory.setItem(0,new ItemStack(gameInstance.getItem("chest"), (byte)2));
+        //playerInventory.setItem(1,new ItemStack(gameInstance.getItem("slab"), (byte)10));
+        //playerInventory.setItem(2,new ItemStack(gameInstance.getItem("weeping_vine"), (byte)64));
+        //playerInventory.setItem(3,new ItemStack(gameInstance.getItem("stair"), (byte)63));
+        //playerInventory.setItem(4,new ItemStack(gameInstance.getItem("grass_plant"), (byte)63));
+        //playerInventory.setItem(5,new ItemStack(gameInstance.getItem("blue"),(byte)63));
     }
 
     public ServerPlayerData(GameInstance gameInstance, String name) {

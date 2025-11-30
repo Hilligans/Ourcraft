@@ -16,6 +16,7 @@ public abstract class GraphicsEngineBase<Q extends RenderWindow,V extends IDefau
 
 
     public GraphicsEngineBase() {
+        track();
     }
 
     @Override

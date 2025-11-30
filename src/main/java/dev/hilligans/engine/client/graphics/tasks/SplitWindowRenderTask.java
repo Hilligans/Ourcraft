@@ -1,5 +1,6 @@
 package dev.hilligans.engine.client.graphics.tasks;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.application.IClientApplication;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
@@ -65,6 +66,6 @@ public class SplitWindowRenderTask extends RenderTaskSource {
     @Override
     public void preLoad(GameInstance gameInstance) {
         super.preLoad(gameInstance);
-        shaderSource = gameInstance.SHADERS.get("ourcraft:position_texture");
+        shaderSource = gameInstance.SHADERS.get(Engine.name("position_texture"));
     }
 }

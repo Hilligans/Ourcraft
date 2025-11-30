@@ -16,7 +16,7 @@ public class TestScreen extends ScreenBase {
     public void setWindow(RenderWindow renderWindow) {
         super.setWindow(renderWindow);
         System.out.println(renderWindow.getGraphicsEngine().getGameInstance().LAYOUT_ENGINES.ELEMENTS);
-        layoutEngine = renderWindow.getGraphicsEngine().getGameInstance().LAYOUT_ENGINES.get("ourcraft:nk_layout_engine");
+        layoutEngine = renderWindow.getGraphicsEngine().getGameInstance().LAYOUT_ENGINES.get("engine:nk_layout_engine");
         layout = layoutEngine.parseLayout("");
     }
 

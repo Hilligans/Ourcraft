@@ -1,9 +1,11 @@
 package dev.hilligans.engine.mod.handler.content;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.application.IApplication;
 import dev.hilligans.engine.client.graphics.*;
 import dev.hilligans.engine.client.graphics.resource.VertexFormat;
+import dev.hilligans.engine.gametype.GameType;
 import dev.hilligans.ourcraft.biome.Biome;
 import dev.hilligans.ourcraft.block.Block;
 import dev.hilligans.ourcraft.client.audio.SoundBuffer;
@@ -17,8 +19,6 @@ import dev.hilligans.engine.client.graphics.api.IModel;
 import dev.hilligans.engine.command.ICommand;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
 import dev.hilligans.engine.entity.EntityType;
-import dev.hilligans.ourcraft.item.Item;
-import dev.hilligans.ourcraft.item.data.ToolLevel;
 import dev.hilligans.engine.mod.handler.ModClass;
 import dev.hilligans.engine.network.Protocol;
 import dev.hilligans.engine.network.engine.INetworkEngine;
@@ -26,19 +26,15 @@ import dev.hilligans.engine.network.packet.PacketType;
 import dev.hilligans.ourcraft.recipe.IRecipe;
 import dev.hilligans.ourcraft.recipe.helper.RecipeView;
 import dev.hilligans.engine.resource.loaders.ResourceLoader;
-import dev.hilligans.engine.resource.registry.loaders.RegistryLoader;
 import dev.hilligans.engine.authentication.IAuthenticationScheme;
 import dev.hilligans.ourcraft.settings.Setting;
 import dev.hilligans.engine.test.ITest;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 import dev.hilligans.engine.util.registry.Registry;
-import dev.hilligans.ourcraft.world.Feature;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
-import java.util.Iterator;
-import java.util.List;
 
 public class ModContainer {
 
@@ -50,7 +46,6 @@ public class ModContainer {
 
 
     public Registry<Block> blockRegistry;
-    public Registry<Item> itemRegistry;
     public Registry<Biome> biomeRegistry;
     public Registry<Tag> tagRegistry;
     public Registry<IRecipe<?>> recipeRegistry;
@@ -60,10 +55,7 @@ public class ModContainer {
     public Registry<Setting> settingRegistry;
     public Registry<ResourceLoader<?>> resourceLoaderRegistry;
     public Registry<SoundBuffer> soundBufferRegistry;
-    public Registry<ToolLevel> toolLevelRegistry;
-    public Registry<RegistryLoader> registryLoaderRegistry;
     public Registry<ScreenBuilder> screenBuilderRegistry;
-    public Registry<Feature> featureRegistry;
     public Registry<RenderTarget> renderTargetRegistry;
     public Registry<RenderPipeline> renderPipelineRegistry;
     public Registry<RenderTaskSource> renderTaskRegistry;
@@ -79,6 +71,7 @@ public class ModContainer {
     public Registry<IAuthenticationScheme<?>> authenticationSchemeRegistry;
     public Registry<ITest> testRegistry;
     public Registry<IApplication> applicationRegistry;
+    public Registry<GameType> gameTypeRegistry;
 
     public ModContainer(Class<? extends ModClass> clazz, URLClassLoader classLoader, Path path) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         this.modClass = clazz.getConstructor().newInstance();
@@ -99,35 +92,32 @@ public class ModContainer {
         }
 
         blockRegistry = (Registry<Block>) registries.getExcept("ourcraft:block");
-        itemRegistry = (Registry<Item>) registries.getExcept("ourcraft:item");
         biomeRegistry = (Registry<Biome>) registries.getExcept("ourcraft:biome");
         tagRegistry = (Registry<Tag>) registries.getExcept("ourcraft:tag");
         recipeRegistry = (Registry<IRecipe<?>>) registries.getExcept("ourcraft:recipe");
         recipeViewRegistry = (Registry<RecipeView<?>>) registries.getExcept("ourcraft:recipe_view");
-        graphicsEngineRegistry = (Registry<IGraphicsEngine<?, ?, ?>>) registries.getExcept("ourcraft:graphics_engine");
-        protocolRegistry = (Registry<Protocol>) registries.getExcept("ourcraft:protocol");
+        graphicsEngineRegistry = (Registry<IGraphicsEngine<?, ?, ?>>) registries.getExcept(Engine.name("graphics_engine"));
+        protocolRegistry = (Registry<Protocol>) registries.getExcept(Engine.name("protocol"));
         settingRegistry = (Registry<Setting>) registries.getExcept("ourcraft:setting");
-        resourceLoaderRegistry = (Registry<ResourceLoader<?>>) registries.getExcept("ourcraft:resource_loader");
+        resourceLoaderRegistry = (Registry<ResourceLoader<?>>) registries.getExcept(Engine.name("resource_loader"));
         soundBufferRegistry = (Registry<SoundBuffer>) registries.getExcept("ourcraft:sound");
-        toolLevelRegistry = (Registry<ToolLevel>) registries.getExcept("ourcraft:tool_level");
-        registryLoaderRegistry = (Registry<RegistryLoader>) registries.getExcept("ourcraft:registry_loader");
         screenBuilderRegistry = (Registry<ScreenBuilder>) registries.getExcept("ourcraft:screen");
-        featureRegistry = (Registry<Feature>) registries.getExcept("ourcraft:feature");
-        renderTargetRegistry = (Registry<RenderTarget>) registries.getExcept("ourcraft:render_target");
-        renderPipelineRegistry = (Registry<RenderPipeline>) registries.getExcept("ourcraft:render_pipeline");
-        renderTaskRegistry = (Registry<RenderTaskSource>) registries.getExcept("ourcraft:render_task");
-        inputRegistry = (Registry<Input>) registries.getExcept("ourcraft:key_bind");
-        vertexFormatRegistry = (Registry<VertexFormat>) registries.getExcept("ourcraft:vertex_format");
-        inputHandlerProviderRegistry = (Registry<InputHandlerProvider>) registries.getExcept("ourcraft:input");
-        textureRegistry = (Registry<Texture>) registries.getExcept("ourcraft:texture");
-        shaderSourceRegistry = (Registry<ShaderSource>) registries.getExcept("ourcraft:shader");
-        layoutEngineRegistry = (Registry<ILayoutEngine<?>>) registries.getExcept("ourcraft:layout_engine");
+        renderTargetRegistry = (Registry<RenderTarget>) registries.getExcept(Engine.name("render_target"));
+        renderPipelineRegistry = (Registry<RenderPipeline>) registries.getExcept(Engine.name("render_pipeline"));
+        renderTaskRegistry = (Registry<RenderTaskSource>) registries.getExcept(Engine.name("render_task"));
+        inputRegistry = (Registry<Input>) registries.getExcept(Engine.name("key_bind"));
+        vertexFormatRegistry = (Registry<VertexFormat>) registries.getExcept(Engine.name("vertex_format"));
+        inputHandlerProviderRegistry = (Registry<InputHandlerProvider>) registries.getExcept(Engine.name("input"));
+        textureRegistry = (Registry<Texture>) registries.getExcept(Engine.name("texture"));
+        shaderSourceRegistry = (Registry<ShaderSource>) registries.getExcept(Engine.name("shader"));
+        layoutEngineRegistry = (Registry<ILayoutEngine<?>>) registries.getExcept(Engine.name("layout_engine"));
         entityTypeRegistry = (Registry<EntityType>) registries.getExcept("ourcraft:entity_type");
-        networkEngineRegistry = (Registry<INetworkEngine<?,?>>) registries.getExcept("ourcraft:network_engine");
-        commandRegistry = (Registry<ICommand>) registries.getExcept("ourcraft:command");
-        authenticationSchemeRegistry = (Registry<IAuthenticationScheme<?>>) registries.getExcept("ourcraft:authentication_scheme");
-        testRegistry = (Registry<ITest>) registries.getExcept("ourcraft:test");
-        applicationRegistry = (Registry<IApplication>) registries.getExcept("ourcraft:application");
+        networkEngineRegistry = (Registry<INetworkEngine<?,?>>) registries.getExcept(Engine.name("network_engine"));
+        commandRegistry = (Registry<ICommand>) registries.getExcept(Engine.name("command"));
+        authenticationSchemeRegistry = (Registry<IAuthenticationScheme<?>>) registries.getExcept(Engine.name("authentication_scheme"));
+        testRegistry = (Registry<ITest>) registries.getExcept(Engine.name("test"));
+        applicationRegistry = (Registry<IApplication>) registries.getExcept(Engine.name("application"));
+        gameTypeRegistry = (Registry<GameType>) registries.getExcept(Engine.name("game_type"));
     }
 
     public String getModID() {
@@ -143,6 +133,15 @@ public class ModContainer {
             val.assignOwner(this);
         }
         registries.getExcept(type).putAllGen(data);
+    }
+
+    @SafeVarargs
+    private final <T extends IRegistryElement> void register(Registry<T> registry, T... elements) {
+        for(T val : elements) {
+            val.assignOwner(this);
+        }
+
+        registry.putAll(elements);
     }
 
     public void registerGen(IRegistryElement... data) {
@@ -208,19 +207,6 @@ public class ModContainer {
         }
     }
 
-    public void registerItem(Item item) {
-        //items.add(item);
-        //item.source = this;
-        item.assignOwner(this);
-        itemRegistry.put(item);
-    }
-
-    public void registerItems(Item... items) {
-        for(Item item : items) {
-            registerItem(item);
-        }
-    }
-
     public void registerSound(SoundBuffer soundBuffer) {
         soundBuffer.assignOwner(this);
         soundBufferRegistry.put(soundBuffer);
@@ -242,17 +228,11 @@ public class ModContainer {
         textureRegistry.putAll(textures);
     }
 
-    public void registerModel(IModel... models) {
-        for(IModel iModel : models) {
-        //    this.models.add(iModel);
-        }
-    }
-
     @SafeVarargs
     public final void registerPacket(PacketType<?>... packets) {
         ModContainer self = this;
         for(PacketType<?> packetType : packets) {
-            Protocol protocol = protocolRegistry.computeIfAbsent("ourcraft:Play", (s -> new Protocol(s.split(":")[1]).setSource(self)));
+            Protocol protocol = protocolRegistry.computeIfAbsent(Engine.name("Play"), (s -> new Protocol(s.split(":")[1]).setSource(self)));
             protocol.register(packetType);
         }
     }
@@ -273,11 +253,7 @@ public class ModContainer {
     }
 
     public void registerResourceLoader(ResourceLoader<?>... resourceLoaders) {
-        for(ResourceLoader<?> resourceLoader : resourceLoaders) {
-            resourceLoader.gameInstance = gameInstance;
-            resourceLoader.assignOwner(this);
-        }
-        resourceLoaderRegistry.putAll(resourceLoaders);
+        register(resourceLoaderRegistry, resourceLoaders);
     }
 
     public void registerBiome(Biome... biomes) {
@@ -287,146 +263,72 @@ public class ModContainer {
         biomeRegistry.putAll(biomes);
     }
 
-    public void registerFeature(Feature... features) {
-        for(Feature feature : features) {
-            feature.assignOwner(this);
-        }
-        featureRegistry.putAll(features);
-    }
-
-    public void registerToolLevel(ToolLevel... toolLevels) {
-        for(ToolLevel toolLevel : toolLevels) {
-            toolLevel.assignOwner(this);
-        }
-        toolLevelRegistry.putAll(toolLevels);
-    }
-
-    public void registerRegistryLoader(RegistryLoader... registryLoaders) {
-        for(RegistryLoader registryLoader : registryLoaders) {
-            registryLoader.assignOwner(this);
-        }
-        registryLoaderRegistry.putAll(registryLoaders);
-    }
-
     public void registerScreenBuilder(ScreenBuilder... screenBuilders) {
-        for(ScreenBuilder screenBuilder : screenBuilders) {
-            screenBuilder.assignOwner(this);
-          //  this.screenBuilders.add(screenBuilder);
-        }
-        screenBuilderRegistry.putAll(screenBuilders);
+        register(screenBuilderRegistry, screenBuilders);
     }
 
     public void registerGraphicsEngine(IGraphicsEngine<?,?,?>... graphicsEngines) {
-        for(IGraphicsEngine<?,?,?> graphicsEngine : graphicsEngines) {
-            graphicsEngine.assignOwner(this);
-        }
-        graphicsEngineRegistry.putAll(graphicsEngines);
+        register(graphicsEngineRegistry, graphicsEngines);
     }
 
     public void registerRenderTarget(RenderTarget... renderTargets) {
-        for(RenderTarget renderTarget : renderTargets) {
-            renderTarget.assignOwner(this);
-        }
-        renderTargetRegistry.putAll(renderTargets);
-        //this.renderTargets.addAll(Arrays.asList(renderTargets));
+        register(renderTargetRegistry, renderTargets);
     }
 
     public void registerRenderPipelines(RenderPipeline... renderPipelines) {
-        for(RenderPipeline renderPipeline : renderPipelines) {
-            renderPipeline.assignOwner(this);
-        }
-        renderPipelineRegistry.putAll(renderPipelines);
-        //this.renderPipelines.addAll(Arrays.asList(renderPipelines));
+        register(renderPipelineRegistry, renderPipelines);
     }
 
     public void registerRenderTask(RenderTaskSource... renderTasks) {
-        for(RenderTaskSource renderTask : renderTasks) {
-            renderTask.assignOwner(this);
-        }
-        renderTaskRegistry.putAll(renderTasks);
-        //this.renderTasks.addAll(Arrays.asList(renderTasks));
+        register(renderTaskRegistry, renderTasks);
     }
 
     public void registerVertexFormat(VertexFormat... vertexFormats) {
-        for(VertexFormat vertexFormat : vertexFormats) {
-            vertexFormat.assignOwner(this);
-        }
-        vertexFormatRegistry.putAll(vertexFormats);
-        //this.vertexFormats.addAll(Arrays.asList(vertexFormats));
+        register(vertexFormatRegistry, vertexFormats);
     }
 
     public void registerInputHandlerProviders(InputHandlerProvider... providers) {
-        for(InputHandlerProvider provider : providers) {
-            provider.assignOwner(this);
-        }
-        inputHandlerProviderRegistry.putAll(providers);
-        //this.inputHandlerProviders.addAll(Arrays.asList(providers));
+        register(inputHandlerProviderRegistry, providers);
     }
 
     public void registerKeybinds(Input... inputs) {
-        for(Input input : inputs) {
-            input.assignOwner(this);
-        }
-        inputRegistry.putAll(inputs);
-        //this.keybinds.addAll(Arrays.asList(inputs));
+        register(inputRegistry, inputs);
     }
 
     public void registerShader(ShaderSource... shaderSources) {
-        for(ShaderSource shaderSource : shaderSources) {
-            shaderSource.assignOwner(this);
-        }
-        shaderSourceRegistry.putAll(shaderSources);
-        //this.shaders.addAll(Arrays.asList(shaderSources));
+        register(shaderSourceRegistry, shaderSources);
     }
 
     public void registerLayoutEngine(ILayoutEngine<?>... layoutEngines) {
-        for(ILayoutEngine<?> layoutEngine : layoutEngines) {
-            layoutEngine.assignOwner(this);
-        }
-        layoutEngineRegistry.putAll(layoutEngines);
-        //this.layoutEngines.addAll(Arrays.asList(layoutEngines));
+        register(layoutEngineRegistry, layoutEngines);
     }
 
     public void registerEntityType(EntityType... entityTypes) {
-        for(EntityType entityType : entityTypes) {
-            entityType.assignOwner(this);
-        }
-        entityTypeRegistry.putAll(entityTypes);
+        register(entityTypeRegistry, entityTypes);
     }
 
     public void registerNetworkEngine(INetworkEngine<?, ?>... networkEngines) {
-        for(INetworkEngine<?, ?> networkEngine : networkEngines) {
-            networkEngine.assignOwner(this);
-        }
-        networkEngineRegistry.putAll(networkEngines);
+        register(networkEngineRegistry, networkEngines);
     }
 
     public void registerCommands(ICommand... commands) {
-        for(ICommand command : commands) {
-            command.assignOwner(this);
-        }
-        commandRegistry.putAll(commands);
+        register(commandRegistry, commands);
     }
 
     public void registerAuthenticationScheme(IAuthenticationScheme<?>... schemes) {
-        for(IAuthenticationScheme<?> scheme : schemes) {
-            scheme.assignOwner(this);
-        }
-        authenticationSchemeRegistry.putAll(schemes);
+        register(authenticationSchemeRegistry, schemes);
     }
 
     public void registerTest(ITest... tests) {
-        for(ITest test : tests) {
-            test.assignOwner(this);
-        }
-        testRegistry.putAll(tests);
+        register(testRegistry, tests);
     }
 
     public void registerApplication(IApplication... applications) {
-        for(IApplication application : applications) {
-            application.assignOwner(this);
-        }
-        applicationRegistry.putAll(applications);
+        register(applicationRegistry, applications);
+    }
+
+    public void registerGameType(GameType... gameTypes) {
+        register(gameTypeRegistry, gameTypes);
     }
 
     @Override

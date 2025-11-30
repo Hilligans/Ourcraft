@@ -7,7 +7,6 @@ public class UnknownResourceException extends RuntimeException {
 
     public Registry<?> registry;
     public String resourceName;
-    public ModContent accessor;
     public ModContainer owner;
 
     public UnknownResourceException(String message, Registry<?> registry, String resourceName, @Nullable ModContainer accessorMod) {
@@ -15,5 +14,10 @@ public class UnknownResourceException extends RuntimeException {
         this.registry = registry;
         this.resourceName = resourceName;
         this.owner = accessorMod;
+    }
+
+    public UnknownResourceException(String message, String resourceName) {
+        super(message);
+        this.resourceName = resourceName;
     }
 }

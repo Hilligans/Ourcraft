@@ -1,5 +1,6 @@
 package dev.hilligans.engine.client.graphics;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.application.IClientApplication;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
@@ -46,7 +47,7 @@ public abstract class RenderWindow {
                 logger = log.withKey("window");
             }
         }
-        setRenderPipeline("ourcraft:engine_loading_pipeline");
+        setRenderPipeline(Engine.name("engine_loading_pipeline"));
         this.windowName = "window "+windowID.getAndIncrement();
     }
 

@@ -1,18 +1,13 @@
 package dev.hilligans.engine.client.graphics.assimp;
 
 import dev.hilligans.engine.client.graphics.api.IDefaultEngineImpl;
-import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.graphics.api.IMeshBuilder;
 import dev.hilligans.engine.client.graphics.api.IModel;
-import dev.hilligans.engine.resource.IAllocator;
 import org.lwjgl.assimp.AIMesh;
 import org.lwjgl.assimp.AIVector3D;
 import org.lwjgl.system.MemoryUtil;
 
-import java.nio.ByteBuffer;
-
 import static dev.hilligans.engine.Engine.position_color;
-import static dev.hilligans.engine.Engine.position_texture_color;
 
 public class AssimpModel implements IModel {
 
@@ -34,6 +29,14 @@ public class AssimpModel implements IModel {
             builder.addVertices(buffer.x(), buffer.y(), buffer.z(), 1, 1, 1, 1);
             builder.addIndices(x);
         }
+
+        //for(int x = 0; x < mesh.mTextureCoordsNames().limit(); x++) {
+        //    String s = MemoryUtil.memASCII(mesh.mTextureCoordsNames().get(x));
+
+        //    System.out.println(s);
+        //}
+
+
 
         return builder;
     }

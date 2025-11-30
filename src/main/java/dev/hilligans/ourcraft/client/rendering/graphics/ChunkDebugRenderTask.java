@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering.graphics;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.*;
 import dev.hilligans.ourcraft.client.Client;
@@ -90,6 +91,6 @@ public class ChunkDebugRenderTask extends RenderTaskSource {
     @Override
     public void preLoad(GameInstance gameInstance) {
         super.preLoad(gameInstance);
-        shaderSource = gameInstance.getExcept("ourcraft:position_color_lines_shader", ShaderSource.class);
+        shaderSource = gameInstance.getExcept(Engine.name("position_color_lines_shader"), ShaderSource.class);
     }
 }

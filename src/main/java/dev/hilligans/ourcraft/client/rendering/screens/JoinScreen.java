@@ -72,7 +72,7 @@ public class JoinScreen extends ScreenBase {
             try {
                 NetworkSocket<?> socket = client.getGameInstance().getExcept("ourcraft:nettyEngine", INetworkEngine.class)
                         .openClient(client.getGameInstance().getExcept("ourcraft:login", Protocol.class), client, "localhost", portString);
-                socket.onConnected(e -> CLogin.send(e, "hilligans", "ourcraft:unathenticated_scheme"));
+                socket.onConnected(e -> CLogin.send(e, "hilligans", "engine:unathenticated_scheme"));
                 client.socket = socket;
                 socket.connectSocket();
                 //client.network.joinServer("localhost",portString,client);
