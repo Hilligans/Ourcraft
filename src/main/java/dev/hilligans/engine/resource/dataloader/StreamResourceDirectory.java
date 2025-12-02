@@ -25,6 +25,11 @@ import java.util.jar.JarFile;
 public class StreamResourceDirectory implements ResourceDirectory {
 
     @Override
+    public String getName() {
+        return "internal strema";
+    }
+
+    @Override
     public ByteBuffer get(String path) throws IOException {
         try(InputStream stream = StreamResourceDirectory.class.getResourceAsStream("/" + path)) {
             if(stream != null) {

@@ -1,8 +1,10 @@
 package dev.hilligans.engine.resource.dataloader;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.resource.IBufferAllocator;
 import dev.hilligans.engine.resource.ResourceLocation;
+import dev.hilligans.engine.util.Logger;
 import dev.hilligans.engine.util.argument.Argument;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,6 +60,10 @@ public class DataLoader {
 
     @Nullable
     public ByteBuffer get(ResourceLocation resourceLocation) {
+        if(Engine.verbose.get()) {
+            System.out.println("Looking for resource: \"" + resourceLocation.identifier() + "\"");
+        }
+
         ResourceDirectory resourceDirectory = resourceDirectoryHashMap.get(resourceLocation.getSource());
         if(resourceDirectory == null) {
             if(strictLoading.get(gameInstance)) {
@@ -70,8 +76,15 @@ public class DataLoader {
                     if(buffer == null) {
                         continue;
                     }
+                    if(Engine.verbose.get()) {
+                        System.out.println("Found resource: \"" + resourceLocation.identifier() + "\" in " + directory.getName());
+                    }
                     return buffer;
                 } catch (IOException _) {}
+            }
+
+            if(Engine.verbose.get()) {
+                System.out.println("Failed to find resource: \"" + resourceLocation.identifier() + "\"");
             }
             return null;
         }

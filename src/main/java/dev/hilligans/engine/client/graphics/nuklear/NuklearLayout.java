@@ -1,12 +1,10 @@
 package dev.hilligans.engine.client.graphics.nuklear;
 
 import dev.hilligans.engine.application.IClientApplication;
+import dev.hilligans.engine.client.graphics.api.*;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderWindow;
-import dev.hilligans.engine.client.graphics.api.GraphicsContext;
-import dev.hilligans.engine.client.graphics.api.IDefaultEngineImpl;
-import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
-import dev.hilligans.engine.client.graphics.api.ILayout;
+import dev.hilligans.ourcraft.client.rendering.Textures;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.nuklear.*;
 import org.lwjgl.system.MemoryStack;
@@ -59,11 +57,12 @@ public class NuklearLayout implements ILayout {
             glEnable(GL_SCISSOR_TEST);
 
             IDefaultEngineImpl<?, ?, ?> impl = engine.getDefaultImpl();
-            layout(ctx, width, height, stack);
+            layout(ctx, 0, 0, stack);
 
             ByteBuffer vertices = MemoryUtil.memCalloc(10000);
             //vertices.order(ByteOrder.LITTLE_ENDIAN);
             ByteBuffer elements = MemoryUtil.memCalloc(10000);
+
             //elements.order(ByteOrder.LITTLE_ENDIAN);
             // fill convert configuration
             NkConvertConfig config = NkConvertConfig.calloc(stack)
@@ -79,8 +78,9 @@ public class NuklearLayout implements ILayout {
                     .line_AA(AA);
 
             // setup buffers to load vertices and elements
-            NkBuffer vbuf = NkBuffer.malloc(stack);
-            NkBuffer ebuf = NkBuffer.malloc(stack);
+            NkBuffer vbuf = NkBuffer.calloc(stack);
+            NkBuffer ebuf = NkBuffer.calloc(stack);
+            //vbuf.allocated()
 
             //nk_buffer_init(vbuf, ALLOCATOR, 1024);
             //nk_buffer_init(ebuf, ALLOCATOR, 1024);
@@ -89,14 +89,10 @@ public class NuklearLayout implements ILayout {
 
             nk_buffer_init_fixed(vbuf, vertices/*, max_vertex_buffer*/);
             nk_buffer_init_fixed(ebuf, elements/*, max_element_buffer*/);
+
             //nk_buffer_init_fixed(vbuf, vertices/*, max_vertex_buffer*/);
             //nk_buffer_init_fixed(ebuf, elements/*, max_element_buffer*/);
             nk_convert(ctx, cmds, vbuf, ebuf, config);
-
-            for (int x = 0; x < 100; x++) {
-                //System.out.println(Short.toUnsignedInt(elements.getShort(x*2)));
-            }
-            //System.exit(0);
 
 
             FloatBuffer f = stack.floats(
@@ -105,54 +101,55 @@ public class NuklearLayout implements ILayout {
                     0.0f, 0.0f, -1.0f, 0.0f,
                     -1.0f, 1.0f, 0.0f, 1.0f
             );
+            impl.bindPipeline(graphicsContext, this.engine.nkProgram.program);
             impl.uploadData(graphicsContext, f, this.engine.nkProgram.uniformIndexes[0], "4fv", this.engine.nkProgram.program, this.engine.nkProgram);
 
-        if (vertices == null) {
-            throw new NullPointerException("vertex buffer is null");
-        }
-        if (elements == null) {
-            throw new NullPointerException("index buffer is null");
-        }
-        //glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
-        //glUnmapBuffer(GL_ARRAY_BUFFER);
+            //impl.uploadData(graphicsContext, matrixStack.matrix4f.get(stack.malloc(16 * 4)).flip().asFloatBuffer(),  this.engine.nkProgram.uniformIndexes[0], "4fv", this.engine.nkProgram.program, this.engine.nkProgram);
+            //impl.uploadMatrix(graphicsContext, matrixStack, this.engine.nkProgram);
 
-        //VertexMesh vertexMesh = new VertexMesh(this.engine.vertexFormat).addData(elements, vertices);
-        //vertexMesh.elementSize = 2;
-        //long mesh = impl.createMesh(graphicsContext, vertexMesh);
-        long mesh = 0;
+            IMeshBuilder builder = impl.getMeshBuilder(this.engine.vertexFormat);
+            //vertices.flip();
 
-        // iterate over and execute each draw command
-        float fb_scale_x = (float) renderWindow.getWindowWidth() / (float) width;
-        float fb_scale_y = (float) renderWindow.getWindowHeight() / (float) height;
-        long offset = NULL;
-        for (NkDrawCommand cmd = nk__draw_begin(ctx, cmds); cmd != null; cmd = nk__draw_next(cmd, cmds, ctx)) {
-            if (cmd.elem_count() == 0) {
-                continue;
+
+            builder.setData(vertices, elements);
+            builder.setIndexSize(2);
+
+
+            long mesh = impl.createMesh(graphicsContext, builder);
+            //long mesh = 0;
+
+            // iterate over and execute each draw command
+            float fb_scale_x = (float) renderWindow.getWindowWidth() / (float) width;
+            float fb_scale_y = (float) renderWindow.getWindowHeight() / (float) height;
+            long offset = NULL;
+            for (NkDrawCommand cmd = nk__draw_begin(ctx, cmds); cmd != null; cmd = nk__draw_next(cmd, cmds, ctx)) {
+                if (cmd.elem_count() == 0) {
+                    continue;
+                }
+                //System.out.println(cmd.elem_count());
+                impl.bindTexture(graphicsContext, cmd.texture().id());
+                //long id = Textures.FOLDER.data.get(engine.getGameInstance()).textureID();
+                //impl.bindTexture(graphicsContext, id);
+                //glBindTexture(GL_TEXTURE_2D, cmd.texture().id());
+                NkRect rect = cmd.clip_rect();
+                int x = (int) (rect.x() * fb_scale_x);
+                int y = (int) ((height - (int) (rect.y() + rect.h())) * fb_scale_y);
+                int width = (int) (rect.w() * fb_scale_x);
+                int height = (int) (rect.h() * fb_scale_y);
+                impl.setScissor(graphicsContext, x, y, width, height);
+
+                impl.drawMesh(graphicsContext, matrixStack, mesh, offset, cmd.elem_count());
+
+                offset += cmd.elem_count() * 2L;
             }
-            //System.out.println(cmd.elem_count());
-            impl.bindTexture(graphicsContext, cmd.texture().id());
-            //glBindTexture(GL_TEXTURE_2D, cmd.texture().id());
-            NkRect rect = cmd.clip_rect();
-            int x = (int) (rect.x() * fb_scale_x);
-            int y = (int) ((height - (int) (rect.y() + rect.h())) * fb_scale_y);
-            int width = (int) (rect.w() * fb_scale_x);
-            int height = (int) (rect.h() * fb_scale_y);
-            impl.setScissor(graphicsContext, x, y, width, height);
+            impl.destroyMesh(graphicsContext, mesh);
+            impl.defaultScissor(graphicsContext, renderWindow);
+            nk_clear(ctx);
+            nk_buffer_clear(cmds);
 
-            impl.drawMesh(graphicsContext, matrixStack, mesh, offset, cmd.elem_count());
-
-            //glDrawElements(GL_TRIANGLES, cmd.elem_count(), GL_UNSIGNED_SHORT, offset);
-
-            offset += cmd.elem_count() * 2L;
-        }
-        impl.destroyMesh(graphicsContext, mesh);
-        impl.defaultScissor(graphicsContext, renderWindow);
-        nk_clear(ctx);
-        nk_buffer_clear(cmds);
-
-        MemoryUtil.memFree(vertices);
-        MemoryUtil.memFree(elements);
-        }  catch (Exception e) {
+            //MemoryUtil.memFree(vertices);
+            //MemoryUtil.memFree(elements);
+        } catch (Exception e) {
             throw new RuntimeException("Failed to render nk layout", e);
         }
     }

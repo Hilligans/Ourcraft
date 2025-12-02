@@ -8,6 +8,7 @@ public class TomlLoader extends ResourceLoader<JSONObject> {
     public TomlLoader() {
         super("toml_loader", "configuration");
         withFileTypes("toml");
+        acceptsBuffer(BufferType.HEAP);
     }
 
     @Override

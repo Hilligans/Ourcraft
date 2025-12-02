@@ -1,5 +1,6 @@
 package dev.hilligans.engine.test.standard;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.test.ITest;
 import dev.hilligans.engine.util.registry.IRegistryElement;
@@ -39,11 +40,11 @@ public class TrackedAllocationTest implements ITest {
 
     @Override
     public String getResourceName() {
-        return "";
+        return "tracked_allocation_test";
     }
 
     @Override
     public String getResourceOwner() {
-        return "";
+        return Engine.ENGINE_NAME;
     }
 }

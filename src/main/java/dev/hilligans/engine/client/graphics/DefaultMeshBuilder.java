@@ -21,6 +21,8 @@ public class DefaultMeshBuilder implements IMeshBuilder, IAllocator<VertexMesh> 
     ByteBuffer vertexBuffer;
     ByteBuffer indexBuffer;
 
+    public int bytePerIndex = 4;
+
     public DefaultMeshBuilder(VertexFormat format) {
         this.format = format;
     }
@@ -48,6 +50,11 @@ public class DefaultMeshBuilder implements IMeshBuilder, IAllocator<VertexMesh> 
     @Override
     public IBufferAllocator indexAllocator() {
         return null;
+    }
+
+    @Override
+    public void setIndexSize(int size) {
+        this.bytePerIndex = size;
     }
 
     @Override
@@ -117,6 +124,7 @@ public class DefaultMeshBuilder implements IMeshBuilder, IAllocator<VertexMesh> 
         this.indices = null;
 
         VertexMesh mesh = new VertexMesh(format);
+        mesh.elementSize = bytePerIndex;
         mesh.addData(indexBuffer, vertexBuffer);
         mesh.setAllocator(this);
 

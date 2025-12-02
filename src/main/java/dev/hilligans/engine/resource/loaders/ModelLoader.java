@@ -20,6 +20,7 @@ public class ModelLoader extends ResourceLoader<IModel> {
     public ModelLoader() {
         super("model_loader", "model");
         withFileTypes("obj", "mtl");
+        acceptsBuffer(BufferType.DIRECT);
     }
 
     @Override

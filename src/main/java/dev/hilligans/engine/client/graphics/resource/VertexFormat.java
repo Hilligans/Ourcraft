@@ -28,6 +28,16 @@ public class VertexFormat implements IRegistryElement {
         return this;
     }
 
+    public VertexFormat addPart(String name, int primitiveType, int primitiveCount, boolean normalized) {
+        VertexPart part = new VertexPart(name, primitiveType, primitiveCount);
+        part.offset = getStride();
+        if(normalized) {
+            part.normalized();
+        }
+        parts.add(part);
+        return this;
+    }
+
     public int getPrimitiveType() {
         return primitiveType;
     }
@@ -108,6 +118,11 @@ public class VertexFormat implements IRegistryElement {
             this.primitiveSize = VertexFormat.getSize(primitiveType);
             this.primitiveCount = count;
             this.name = name;
+        }
+
+        public VertexPart normalized() {
+            normalized = true;
+            return this;
         }
 
         public int getSize() {

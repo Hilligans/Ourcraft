@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 public class YmlLoader extends ResourceLoader<JSONObject> {
 
     public YmlLoader() {
-        super("yml_loader", "configuration");
+        super("yml_loader", "configuration");;
     }
 
     @Override

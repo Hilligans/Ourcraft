@@ -29,6 +29,11 @@ public class ZipResourceDirectory implements ResourceDirectory {
     }
 
     @Override
+    public String getName() {
+        return "zip " + jarPath.toString();
+    }
+
+    @Override
     public ByteBuffer get(String path) throws IOException {
         Path someFileInJarPath = jarFS.getPath("/" + path);
         SeekableByteChannel rbc = Files.newByteChannel(someFileInJarPath, EnumSet.of(StandardOpenOption.READ));

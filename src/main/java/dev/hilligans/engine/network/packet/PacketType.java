@@ -3,16 +3,16 @@ package dev.hilligans.engine.network.packet;
 import dev.hilligans.engine.network.Protocol;
 import dev.hilligans.engine.network.engine.NetworkEntity;
 import dev.hilligans.engine.util.IByteArray;
-import dev.hilligans.engine.util.StableValue;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 
 public abstract class PacketType<T extends NetworkEntity> {
 
     public static final AtomicInteger UNIQUE_ID = new AtomicInteger();
 
     // Fake stable value LOL
-    public final StableValue<Integer> id = StableValue.supplier(UNIQUE_ID::getAndIncrement);
+    public final Supplier<Integer> id = StableValue.supplier(UNIQUE_ID::getAndIncrement);
 
     public int getRawID() {
         return id.get();

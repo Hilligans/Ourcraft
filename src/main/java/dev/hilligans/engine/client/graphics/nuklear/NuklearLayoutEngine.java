@@ -188,7 +188,7 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
     @Override
     public void load(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
-        vertexFormat = gameInstance.VERTEX_FORMATS.get(Engine.name("position2_texture_color"));
+        vertexFormat = gameInstance.VERTEX_FORMATS.get(Engine.name("nk_shader_format"));
     }
 
     @Override

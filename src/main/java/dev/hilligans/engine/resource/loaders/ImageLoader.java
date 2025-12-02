@@ -20,6 +20,7 @@ public class ImageLoader extends ResourceLoader<Image> implements IAllocator<Ima
     public ImageLoader() {
         super("default_image_loader", "image");
         withFileTypes("png","jpeg","tga","bmp","psd","gif","hdr","pic","pnm");
+        acceptsBuffer(BufferType.DIRECT);
     }
 
     @Override

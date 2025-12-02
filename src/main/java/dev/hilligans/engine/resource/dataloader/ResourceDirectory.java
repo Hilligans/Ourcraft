@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface ResourceDirectory {
 
+    public String getName();
+
     ByteBuffer get(String path) throws IOException;
 
     ByteBuffer getDirect(String path) throws IOException;

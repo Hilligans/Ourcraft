@@ -14,6 +14,7 @@ public interface IMeshBuilder {
     void setData(ByteBuffer vertices, ByteBuffer indices);
     IBufferAllocator vertexAllocator();
     IBufferAllocator indexAllocator();
+    void setIndexSize(int size);
 
     /* builder methods */
     void addVertices(float... vertices);

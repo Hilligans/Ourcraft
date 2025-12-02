@@ -40,9 +40,14 @@ import dev.hilligans.engine.template.templates.ShaderSourceTemplate;
 import dev.hilligans.engine.test.ITest;
 import dev.hilligans.engine.client.graphics.util.Texture;
 import dev.hilligans.engine.test.standard.DuplicateRegistryTest;
+import dev.hilligans.engine.test.standard.PerResourceTest;
 import dev.hilligans.engine.test.standard.TrackedAllocationTest;
 
+import java.util.function.Supplier;
+
 public class Engine implements ModClass {
+
+    public static final Supplier<Boolean> verbose = StableValue.supplier(() -> EngineMain.veryVeryVerbose.get(EngineMain.argumentContainer));
 
     public static final String ENGINE_NAME = "engine";
 
@@ -87,7 +92,7 @@ public class Engine implements ModClass {
             view.registerGraphicsEngine(new FixedFunctionGLEngine());
 
             view.registerVertexFormat(position_texture_color, position_color_texture, position_texture_globalColor, position_texture, position_texture_animatedWrap_shortenedColor, position_color);
-            view.registerVertexFormat(position2_texture_color, position_color_lines);
+            view.registerVertexFormat(position2_texture_color, position_color_lines, nk_shader_format);
 
             //view.registerShader(new ShaderSource("world_shader", "ourcraft:position_color_texture", "Shaders/WorldVertexShader.glsl", "Shaders/WorldFragmentShader.glsl").withUniform("transform", "4fv").withUniform("color", "4f"));
             //view.registerShader(new ShaderSource("position_color_shader", "ourcraft:position_color", "Shaders/WorldVertexColorShader.glsl", "Shaders/WorldFragmentColorShader.glsl").withUniform("transform", "4fv").withUniform("color", "4f"));
@@ -120,7 +125,7 @@ public class Engine implements ModClass {
 
     @Override
     public void registerContent(ModContainer container) {
-        container.registerTest(new TrackedAllocationTest(), new DuplicateRegistryTest());
+        container.registerTest(new TrackedAllocationTest(), new DuplicateRegistryTest(), new PerResourceTest());
 
         container.registerAuthenticationScheme(new UnauthenticatedScheme());
         container.registerNetworkEngine(new NettyEngine());
@@ -172,6 +177,10 @@ public class Engine implements ModClass {
             .addPart("position", VertexFormat.FLOAT, 3)
             .addPart("color", VertexFormat.FLOAT, 3);
 
+    public static final VertexFormat nk_shader_format = new VertexFormat(Engine.ENGINE_NAME, "nk_shader_format", VertexFormat.TRIANGLES)
+            .addPart("position", VertexFormat.FLOAT,2)
+            .addPart("texture", VertexFormat.FLOAT, 2)
+            .addPart("color", VertexFormat.UNSIGNED_BYTE, 4, true);
 
     @Override
     public String getModID() {

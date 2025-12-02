@@ -1,5 +1,6 @@
 package dev.hilligans.ourcraft.client.rendering.graphics;
 
+import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.*;
 import dev.hilligans.ourcraft.block.Block;
@@ -196,7 +197,7 @@ public class WorldTransparentRenderTask extends RenderTaskSource {
     @Override
     public void preLoad(GameInstance gameInstance) {
         super.preLoad(gameInstance);
-        shaderSource = gameInstance.SHADERS.get("ourcraft:world_shader");
+        shaderSource = gameInstance.SHADERS.getExcept(Engine.name("world_shader"));
     }
 
     @Override

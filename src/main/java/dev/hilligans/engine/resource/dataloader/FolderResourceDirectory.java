@@ -22,6 +22,11 @@ public class FolderResourceDirectory implements ResourceDirectory {
     }
 
     @Override
+    public String getName() {
+        return "folder " + folder.getPath();
+    }
+
+    @Override
     public ByteBuffer get(String path) throws IOException {
         return get(path, HeapAllocator.INSTANCE);
     }

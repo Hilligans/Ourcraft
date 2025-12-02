@@ -11,6 +11,7 @@ public class JsonLoader extends ResourceLoader<JSONObject> {
     public JsonLoader() {
         super("json_loader", "configuration");
         withFileTypes("json");
+        acceptsBuffer(BufferType.HEAP);
     }
 
     @Override

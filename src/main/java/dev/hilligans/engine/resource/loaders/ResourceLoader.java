@@ -6,6 +6,7 @@ import dev.hilligans.engine.resource.ResourceLocation;
 import dev.hilligans.engine.save.FileLoader;
 import dev.hilligans.engine.tag.CompoundNBTTag;
 import dev.hilligans.engine.util.registry.IRegistryElement;
+import dev.hilligans.engine.util.registry.ITestableRegistryElement;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
@@ -13,13 +14,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public abstract class ResourceLoader<T> implements IRegistryElement {
+public abstract class ResourceLoader<T> implements IRegistryElement, ITestableRegistryElement {
 
     public String name;
     public String category;
     public GameInstance gameInstance;
     public ArrayList<String> fileTypes = new ArrayList<>();
     public ModContainer source;
+    public int acceptedBuffer;
 
     public ResourceLoader(String name, String category) {
         this.name = name;
@@ -33,8 +35,24 @@ public abstract class ResourceLoader<T> implements IRegistryElement {
         return this;
     }
 
+    public ResourceLoader<T> acceptsBuffer(BufferType... buffers) {
+        for(BufferType bufferType : buffers) {
+            acceptedBuffer |= bufferType.bit;
+        }
+
+        return this;
+    }
+
     public T read(ResourceLocation path) {
-        ByteBuffer buffer = source.gameInstance.getResource(path);
+        ByteBuffer buffer;
+        if(BufferType.DIRECT.accepts(this)) {
+            buffer = source.gameInstance.getResourceDirect(path);
+        } else if(BufferType.HEAP.accepts(this)) {
+            buffer = source.gameInstance.getResource(path);
+        } else {
+            throw new RuntimeException("Resource loader:" + getIdentifierName() + " does not accept any buffer types!");
+        }
+
         if(buffer == null) {
             return null;
         }
@@ -106,5 +124,26 @@ public abstract class ResourceLoader<T> implements IRegistryElement {
     @Override
     public String getResourceType() {
         return "resource_loader";
+    }
+
+    @Override
+    public void runTest(GameInstance gameInstance) {
+        if(acceptedBuffer == 0) {
+            throw new RuntimeException("Resource loader:" + getIdentifierName() + " does not accept any buffer types!");
+        }
+    }
+
+    public enum BufferType {
+        DIRECT(1),
+        HEAP(2);
+
+        public final int bit;
+        BufferType(int bit) {
+            this.bit = bit;
+        }
+
+        public boolean accepts(ResourceLoader<?> resourceLoader) {
+            return (resourceLoader.acceptedBuffer & bit) != 0;
+        }
     }
 }

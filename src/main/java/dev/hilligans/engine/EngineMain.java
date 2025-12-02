@@ -33,9 +33,13 @@ public class EngineMain {
             .help("Turns on engine debuggers and memory trackers.");
     public static final Argument<Boolean> dumpRegistries = Argument.existArg("--dumpRegistries")
             .help("Prints all registry contents after loading");
+    public static final Argument<Boolean> veryVeryVerbose = Argument.existArg("-vvv")
+            .help("Print's a lot of debug information");
+
+    public static ArgumentContainer argumentContainer;
 
     public static void main(String[] args) throws IOException {
-        ArgumentContainer argumentContainer = new ArgumentContainer(args);
+        argumentContainer = new ArgumentContainer(args);
         System.out.println("Starting with arguments: " + Arrays.toString(args));
         System.out.println("Starting client with PID " + ProcessHandle.current().pid());
 

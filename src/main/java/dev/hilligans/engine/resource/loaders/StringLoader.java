@@ -7,6 +7,7 @@ public class StringLoader extends ResourceLoader<String> {
     public StringLoader() {
         super("string_loader", "string");
         withFileTypes("txt");
+        acceptsBuffer(BufferType.DIRECT);
     }
 
     @Override

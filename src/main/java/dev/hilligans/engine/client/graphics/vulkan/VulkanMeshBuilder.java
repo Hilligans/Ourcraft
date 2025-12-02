@@ -57,6 +57,11 @@ public class VulkanMeshBuilder implements IMeshBuilder, IAllocator<VertexMesh> {
     }
 
     @Override
+    public void setIndexSize(int size) {
+
+    }
+
+    @Override
     public void addVertices(float... vertices) {
         this.vertices.addElements(this.vertices.size(), vertices);
     }
