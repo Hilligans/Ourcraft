@@ -9,12 +9,14 @@ import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.graphics.api.ILayoutEngine;
 import dev.hilligans.engine.resource.ResourceLocation;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.nuklear.*;
 import org.lwjgl.stb.STBTTAlignedQuad;
 import org.lwjgl.stb.STBTTFontinfo;
 import org.lwjgl.stb.STBTTPackContext;
 import org.lwjgl.stb.STBTTPackedchar;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -50,10 +52,13 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
 
     STBTTFontinfo fontInfo;
     STBTTPackedchar.Buffer cdata;
+    ByteBuffer ttf;
 
     public void load(IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext, ByteBuffer ttf) {
-        default_font = NkUserFont.malloc();
-        null_texture = NkDrawNullTexture.malloc();
+        default_font = NkUserFont.calloc();
+        null_texture = NkDrawNullTexture.calloc();
+
+        this.ttf = ttf;
 
         int BITMAP_W = 1024;
         int BITMAP_H = 1024;
@@ -61,26 +66,29 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
         int FONT_HEIGHT = 18;
         int fontTexID;
 
-        fontInfo = STBTTFontinfo.create();
-        cdata    = STBTTPackedchar.create(95);
+        fontInfo = STBTTFontinfo.calloc();
+        cdata    = STBTTPackedchar.calloc(95);
 
         float scale;
         float descent;
 
+        int success = 0;
+
         try (MemoryStack stack = stackPush()) {
-            stbtt_InitFont(fontInfo, ttf);
+            success |= stbtt_InitFont(fontInfo, ttf) ? 0 : 1;
             scale = stbtt_ScaleForPixelHeight(fontInfo, FONT_HEIGHT);
 
-            IntBuffer d = stack.mallocInt(1);
+            IntBuffer d = stack.callocInt(1);
             stbtt_GetFontVMetrics(fontInfo, null, d, null);
+
             descent = d.get(0) * scale;
 
             ByteBuffer bitmap = memAlloc(BITMAP_W * BITMAP_H);
 
-            STBTTPackContext pc = STBTTPackContext.malloc(stack);
-            stbtt_PackBegin(pc, bitmap, BITMAP_W, BITMAP_H, 0, 1, NULL);
+            STBTTPackContext pc = STBTTPackContext.calloc(stack);
+            success |= stbtt_PackBegin(pc, bitmap, BITMAP_W, BITMAP_H, 0, 1, NULL) ? 0 : 2;
             stbtt_PackSetOversampling(pc, 4, 4);
-            stbtt_PackFontRange(pc, ttf, 0, FONT_HEIGHT, 32, cdata);
+            success |= stbtt_PackFontRange(pc, ttf, 0, FONT_HEIGHT, 32, cdata) ? 0 : 4;
             stbtt_PackEnd(pc);
 
             // Convert R8 to RGBA8
@@ -92,10 +100,9 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
 
             fontTexID = (int) graphicsEngine.getDefaultImpl().createTexture(graphicsContext, texture, BITMAP_W, BITMAP_H, TextureFormat.RGBA);
 
-           // glBindTexture(GL_TEXTURE_2D, fontTexID);
-           // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, BITMAP_W, BITMAP_H, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, texture);
-            //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            if(success != 0) {
+                throw new RuntimeException("Failed to initialize STB, error code: " + success);
+            }
 
             memFree(texture);
             memFree(bitmap);
@@ -108,8 +115,8 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
                     FloatBuffer x = stack.floats(0.0f);
                     FloatBuffer y = stack.floats(0.0f);
 
-                    STBTTAlignedQuad q = STBTTAlignedQuad.malloc(stack);
-                    IntBuffer advance = stack.mallocInt(1);
+                    STBTTAlignedQuad q       = STBTTAlignedQuad.malloc(stack);
+                    IntBuffer        advance = stack.mallocInt(1);
 
                     stbtt_GetPackedQuad(cdata, BITMAP_W, BITMAP_H, codepoint - 32, x, y, q, false);
                     stbtt_GetCodepointHMetrics(fontInfo, codepoint, advance, null);
@@ -133,10 +140,9 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
                 float text_width = 0;
                 try (MemoryStack stack = stackPush()) {
                     IntBuffer unicode = stack.mallocInt(1);
-                    //IntBuffer unicode = MemoryUtil.memAllocInt(1);
 
                     int glyph_len = nnk_utf_decode(text, memAddress(unicode), len);
-                    int text_len = glyph_len;
+                    int text_len  = glyph_len;
 
                     if (glyph_len == 0) {
                         return 0;

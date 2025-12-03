@@ -42,7 +42,7 @@ public class MeshRenderer extends RenderTaskSource {
 
             @Override
             public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
-                IModel model = gameInstance.RESOURCE_LOADER.getResource(new ResourceLocation("Data/barrel.obj", "ourcraft"), IModel.class);
+                IModel model = gameInstance.RESOURCE_LOADER.getResource(new ResourceLocation("Data/bed.glb", "ourcraft"), IModel.class);
                 IMeshBuilder builder = model.build(graphicsEngine.getDefaultImpl());
                 this.length = builder.getIndexCount();
 

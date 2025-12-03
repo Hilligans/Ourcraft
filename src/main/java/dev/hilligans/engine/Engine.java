@@ -84,7 +84,7 @@ public class Engine implements ModClass {
 
     @Override
     public void registerCoreExtensions(CoreExtensionView view) {
-        view.registerResourceLoader(new JsonLoader(), new ImageLoader(), new StringLoader(), new ModelLoader());
+        view.registerResourceLoader(new JsonLoader(), new ImageLoader(), new StringLoader(), new ModelLoader(), new GLTFModelLoader());
 
         if (view.getGameInstance().getSide().isClient()) {
             view.registerGraphicsEngine(new VulkanEngine());

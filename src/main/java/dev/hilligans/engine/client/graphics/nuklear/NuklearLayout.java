@@ -39,7 +39,7 @@ public class NuklearLayout implements ILayout {
         ctx = NkContext.create();
         cmds = NkBuffer.calloc();
         nk_init(ctx, ALLOCATOR, null);
-        nk_buffer_init(cmds, ALLOCATOR, 1024);
+        nk_buffer_init(cmds, ALLOCATOR, 10240);
         nk_style_set_font(ctx, engine.default_font);
         return this;
     }
@@ -80,12 +80,7 @@ public class NuklearLayout implements ILayout {
             // setup buffers to load vertices and elements
             NkBuffer vbuf = NkBuffer.calloc(stack);
             NkBuffer ebuf = NkBuffer.calloc(stack);
-            //vbuf.allocated()
 
-            //nk_buffer_init(vbuf, ALLOCATOR, 1024);
-            //nk_buffer_init(ebuf, ALLOCATOR, 1024);
-            //vertices = vbuf.memory().ptr();
-            //elements = ebuf.memory().ptr();
 
             nk_buffer_init_fixed(vbuf, vertices/*, max_vertex_buffer*/);
             nk_buffer_init_fixed(ebuf, elements/*, max_element_buffer*/);
@@ -225,7 +220,7 @@ public class NuklearLayout implements ILayout {
     }
 
     public static NkAllocator ALLOCATOR = NkAllocator.create()
-            .alloc((handle, old, size) -> nmemAllocChecked(size))
+            .alloc((handle, old, size) -> nmemCallocChecked(size, 1))
             .mfree((handle, ptr) -> nmemFree(ptr));
 
     public static NkDrawVertexLayoutElement.Buffer VERTEX_LAYOUT = NkDrawVertexLayoutElement.create(4)
