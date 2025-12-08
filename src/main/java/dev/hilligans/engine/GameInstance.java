@@ -25,12 +25,10 @@ import dev.hilligans.engine.command.ICommand;
 import dev.hilligans.ourcraft.data.descriptors.Tag;
 import dev.hilligans.engine.entity.EntityType;
 import dev.hilligans.ourcraft.item.Item;
-import dev.hilligans.ourcraft.item.data.ToolLevelList;
-import dev.hilligans.engine.mod.handler.EventBus;
-import dev.hilligans.engine.mod.handler.content.ContentPack;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
-import dev.hilligans.engine.mod.handler.content.ModList;
-import dev.hilligans.engine.mod.handler.pipeline.InstanceLoaderPipeline;
+import dev.hilligans.engine.mod.EventBus;
+import dev.hilligans.engine.mod.content.ModContainer;
+import dev.hilligans.engine.mod.content.ModList;
+import dev.hilligans.engine.mod.pipeline.InstanceLoaderPipeline;
 import dev.hilligans.engine.network.Protocol;
 import dev.hilligans.engine.network.engine.INetworkEngine;
 import dev.hilligans.engine.resource.IBufferAllocator;
@@ -59,7 +57,6 @@ public class GameInstance {
     public final EventBus EVENT_BUS = new EventBus();
     public final Logger LOGGER = new Logger("", "");
     public final ResourceManager RESOURCE_MANAGER = new ResourceManager(this);
-    public final ContentPack CONTENT_PACK = new ContentPack(this);
     public final ModList MOD_LIST = new ModList(this);
     public final UniversalResourceLoader RESOURCE_LOADER = new UniversalResourceLoader();
     public final ArgumentContainer ARGUMENTS;
@@ -72,8 +69,6 @@ public class GameInstance {
     public Semaphore builtSemaphore = new Semaphore(1);
 
     public InstanceLoaderPipeline<?> loaderPipeline;
-
-    public final ToolLevelList MATERIAL_LIST = new ToolLevelList();
 
     public GameInstance() {
         this(new ArgumentContainer());

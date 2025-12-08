@@ -1,22 +1,15 @@
 package dev.hilligans.engine.resource;
 
-import dev.hilligans.engine.mod.handler.Identifier;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
-import dev.hilligans.engine.mod.handler.content.ModContent;
+import dev.hilligans.engine.mod.Identifier;
+import dev.hilligans.engine.mod.content.ModContainer;
 
 public class ResourceLocation {
 
     public String path;
-    public ModContent source;
     public String sSource;
 
     public ResourceLocation(String path) {
         this.path = path;
-    }
-
-    public ResourceLocation(String path, ModContent source) {
-        this.path = path;
-        this.source = source;
     }
 
     public ResourceLocation(String path, ModContainer source) {
@@ -29,10 +22,7 @@ public class ResourceLocation {
     }
 
     public String getSource() {
-        if(source == null) {
-            return sSource;
-        }
-        return source.getModID();
+        return sSource;
     }
 
     public ResourceLocation withPrefix(String prefix) {
@@ -49,7 +39,7 @@ public class ResourceLocation {
 
     @Override
     public String toString() {
-        return "ResourceLocation{path='" + path + "\', source=" + (source == null ? sSource : source.getModID()) + "}";
+        return "ResourceLocation{path='" + path + "\', source=" + sSource + "}";
         //return STR."ResourceLocation{path='\{path}\{'\''}, source=\{source == null ? sSource : source.getModID()}\{'}'}";
     }
 

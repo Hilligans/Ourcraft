@@ -6,8 +6,8 @@ import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IGraphicsElement;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
-import dev.hilligans.engine.mod.handler.exception.ResourceInitializationException;
+import dev.hilligans.engine.mod.content.ModContainer;
+import dev.hilligans.engine.mod.exception.ResourceInitializationException;
 import dev.hilligans.engine.util.argument.Argument;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 

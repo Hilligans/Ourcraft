@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.events.common;
 
-import dev.hilligans.engine.mod.handler.Event;
+import dev.hilligans.engine.mod.Event;
 
 public class ProgramArgumentEvent extends Event {
 

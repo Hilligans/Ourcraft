@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.events.server;
 
-import dev.hilligans.engine.mod.handler.Event;
+import dev.hilligans.engine.mod.Event;
 import dev.hilligans.ourcraft.server.MultiPlayerServer;
 
 public class MultiPlayerServerStartEvent extends Event {

@@ -55,6 +55,6 @@ public class MeshRenderer extends RenderTaskSource {
     @Override
     public void preLoad(GameInstance gameInstance) {
         super.preLoad(gameInstance);
-        shaderSource = gameInstance.SHADERS.get("ourcraft:position_color_shader");
+        shaderSource = gameInstance.SHADERS.getExcept("engine:position_color_shader");
     }
 }

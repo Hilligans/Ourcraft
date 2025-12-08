@@ -1,9 +1,7 @@
 package dev.hilligans.ourcraft.client.audio;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.engine.client.graphics.api.GraphicsContext;
-import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.content.ModContainer;
 import dev.hilligans.engine.resource.ResourceLocation;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 import org.lwjgl.stb.STBVorbisInfo;

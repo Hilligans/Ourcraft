@@ -7,7 +7,7 @@ import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.content.ModContainer;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 import org.json.JSONArray;
 import org.json.JSONObject;

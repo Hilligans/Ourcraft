@@ -33,7 +33,7 @@ public class DataLoader {
         this.gameInstance = gameInstance;
     }
 
-    public void add(String modID, ResourceDirectory resourceDirectory) {
+    public synchronized void add(String modID, ResourceDirectory resourceDirectory) {
         this.resourceDirectoryHashMap.put(modID, resourceDirectory);
         this.allResourceDirectories.add(resourceDirectory);
     }

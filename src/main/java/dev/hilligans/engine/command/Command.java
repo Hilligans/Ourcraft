@@ -2,7 +2,7 @@ package dev.hilligans.engine.command;
 
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.content.ModContainer;
 
 public abstract class Command implements ICommand {
 

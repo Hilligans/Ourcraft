@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.world.structure;
 
-import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.content.ModContainer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

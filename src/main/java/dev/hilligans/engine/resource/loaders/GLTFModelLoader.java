@@ -1,6 +1,7 @@
 package dev.hilligans.engine.resource.loaders;
 
 import dev.hilligans.engine.client.graphics.api.IModel;
+import dev.hilligans.engine.client.graphics.assimp.AssimpModel;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.AIColor4D;
 import org.lwjgl.assimp.AIMesh;
@@ -42,12 +43,14 @@ public class GLTFModelLoader extends ResourceLoader<IModel> {
 
                 System.out.printf("%f, %f, %f, %f\n", color.r(), color.g(), color.b(), color.a());
             }
+
+            return new AssimpModel(mesh);
         }
 
 
         System.out.println(scene);
 
-        return null;
+        return new AssimpModel(null);
     }
 
     @Override

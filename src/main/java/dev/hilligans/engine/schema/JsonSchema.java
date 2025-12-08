@@ -1,7 +1,6 @@
 package dev.hilligans.engine.schema;
 
 import dev.hilligans.engine.Engine;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
 import dev.hilligans.engine.util.Array;
 import dev.hilligans.engine.util.LazyArray;
 import org.json.JSONArray;

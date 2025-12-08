@@ -18,7 +18,7 @@ import dev.hilligans.ourcraft.data.other.blockstates.DataBlockState;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
 import dev.hilligans.ourcraft.item.Item;
 import dev.hilligans.ourcraft.item.ItemStack;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.content.ModContainer;
 import dev.hilligans.engine.resource.ResourceLocation;
 import dev.hilligans.ourcraft.server.concurrent.Lock;
 import dev.hilligans.engine.util.registry.IRegistryElement;

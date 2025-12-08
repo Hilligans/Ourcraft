@@ -1,7 +1,7 @@
 package dev.hilligans.engine.util.argument;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.engine.mod.handler.content.ModList;
+import dev.hilligans.engine.mod.content.ModList;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

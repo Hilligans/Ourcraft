@@ -1,7 +1,7 @@
 package dev.hilligans.engine3d;
 
-import dev.hilligans.engine.mod.handler.ModClass;
-import dev.hilligans.engine.mod.handler.content.CoreExtensionView;
+import dev.hilligans.engine.mod.ModClass;
+import dev.hilligans.engine.mod.content.CoreExtensionView;
 import dev.hilligans.engine3d.client.MeshRenderer;
 
 public class Engine3D implements ModClass {

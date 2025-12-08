@@ -1,7 +1,8 @@
 package dev.hilligans.engine.template;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.data.Tuple;
+import dev.hilligans.engine.mod.content.ModContainer;
 import dev.hilligans.engine.schema.Schema;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 
@@ -17,6 +18,8 @@ public class TemplateLoader {
     public static void loadTemplates(GameInstance gameInstance) {
         Thread parentThread = Thread.currentThread();
         AtomicInteger completedMods = new AtomicInteger(gameInstance.MOD_LIST.getCount());
+
+        ConcurrentHashMap<String, Tuple<ArrayList<String>, ConcurrentHashMap<String, List<IRegistryElement>>>> allContent = new ConcurrentHashMap<>();
 
         gameInstance.MOD_LIST.foreach((mod) -> {
             System.out.println("Searching path:" + mod.getModID() + "/templates");
@@ -50,10 +53,7 @@ public class TemplateLoader {
                     ArrayList<String> keys = new ArrayList<>(Arrays.asList(elements.keySet().toArray(String[]::new)));
                     Collections.sort(keys);
 
-                    for (String key : keys) {
-                        mod.registerGen(elements.get(key));
-                    }
-
+                    allContent.put(mod.getModID(), new Tuple<>(keys, elements));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }finally {
@@ -67,6 +67,18 @@ public class TemplateLoader {
         while(completedMods.get() != 0) {
             LockSupport.parkNanos(1000 * 1000);
         }
+
+        gameInstance.MOD_LIST.foreach((m) -> {
+            Tuple<ArrayList<String>, ConcurrentHashMap<String, List<IRegistryElement>>> tuple = allContent.getOrDefault(m.getModID(), null);
+
+            if(tuple != null) {
+                ConcurrentHashMap<String, List<IRegistryElement>> elements = tuple.getTypeB();
+
+                for(String s : tuple.getTypeA()) {
+                    m.registerGenCore(elements.get(s));
+                }
+            }
+        });
     }
 
     public static List<IRegistryElement> loadTemplate(GameInstance gameInstance, ModContainer mod, String path) {

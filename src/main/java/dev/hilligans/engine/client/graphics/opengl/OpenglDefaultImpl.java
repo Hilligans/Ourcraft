@@ -9,13 +9,11 @@ import dev.hilligans.engine.client.graphics.DefaultMeshBuilder;
 import dev.hilligans.engine.client.graphics.PipelineState;
 import dev.hilligans.engine.client.graphics.ShaderSource;
 import dev.hilligans.engine.client.graphics.resource.VertexFormat;
-import dev.hilligans.engine.client.graphics.util.MeshOptimizers;
 import dev.hilligans.engine.client.graphics.vulkan.boilerplate.window.ShaderCompiler;
 import dev.hilligans.engine.client.graphics.resource.Image;
 import dev.hilligans.engine.data.Quadruplet;
-import dev.hilligans.engine.data.Triplet;
 import dev.hilligans.engine.data.Tuple;
-import dev.hilligans.engine.mod.handler.content.UnknownResourceException;
+import dev.hilligans.engine.mod.content.UnknownResourceException;
 import dev.hilligans.engine.resource.ResourceLocation;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
@@ -23,14 +21,10 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL33;
-import org.lwjgl.stb.STBDXT;
-import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.concurrent.*;
 
 import static org.lwjgl.opengl.EXTTextureCompressionS3TC.GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
@@ -38,7 +32,6 @@ import static org.lwjgl.opengl.EXTTextureCompressionS3TC.GL_COMPRESSED_RGBA_S3TC
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.stb.STBDXT.STB_DXT_NORMAL;
 import static org.lwjgl.system.MemoryUtil.memByteBuffer;
 
 public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, GraphicsContext, DefaultMeshBuilder> {

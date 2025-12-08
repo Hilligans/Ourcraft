@@ -9,7 +9,7 @@ import dev.hilligans.engine.client.graphics.resource.Image;
 import dev.hilligans.engine.client.graphics.resource.ImageInfo;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.resource.VertexFormat;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.content.ModContainer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

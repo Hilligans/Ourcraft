@@ -1,7 +1,7 @@
 package dev.hilligans.planets;
 
-import dev.hilligans.engine.mod.handler.ModClass;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.ModClass;
+import dev.hilligans.engine.mod.content.ModContainer;
 
 public class Planets implements ModClass {
 

@@ -1,7 +1,7 @@
 package dev.hilligans.engine.client.graphics;
 
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.content.ModContainer;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 
 public class RenderTarget implements IRegistryElement {

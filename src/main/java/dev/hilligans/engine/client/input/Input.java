@@ -2,9 +2,8 @@ package dev.hilligans.engine.client.input;
 
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.IInputProvider;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
-import dev.hilligans.engine.mod.handler.content.UnknownResourceException;
-import dev.hilligans.engine.mod.handler.exception.ResourceInitializationException;
+import dev.hilligans.engine.mod.content.ModContainer;
+import dev.hilligans.engine.mod.exception.ResourceInitializationException;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 

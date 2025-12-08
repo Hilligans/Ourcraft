@@ -4,7 +4,7 @@ import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.data.IntArrayMap;
 import dev.hilligans.engine.data.IntArrayMapBuilder;
 import dev.hilligans.engine.data.Tuple;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.content.ModContainer;
 import dev.hilligans.engine.network.packet.PacketType;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;

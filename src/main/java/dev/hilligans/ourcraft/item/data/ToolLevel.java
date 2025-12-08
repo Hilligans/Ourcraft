@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.item.data;
 
-import dev.hilligans.engine.mod.handler.Identifier;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.Identifier;
+import dev.hilligans.engine.mod.content.ModContainer;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 
 public class ToolLevel implements IRegistryElement {

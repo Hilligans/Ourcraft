@@ -28,10 +28,10 @@ import dev.hilligans.ourcraft.entity.Entities;
 import dev.hilligans.engine.entity.EntityType;
 import dev.hilligans.ourcraft.item.Items;
 import dev.hilligans.ourcraft.item.data.ToolLevel;
-import dev.hilligans.engine.mod.handler.ModClass;
-import dev.hilligans.engine.mod.handler.content.CoreExtensionView;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
-import dev.hilligans.engine.mod.handler.content.RegistryView;
+import dev.hilligans.engine.mod.ModClass;
+import dev.hilligans.engine.mod.content.CoreExtensionView;
+import dev.hilligans.engine.mod.content.ModContainer;
+import dev.hilligans.engine.mod.content.RegistryView;
 import dev.hilligans.ourcraft.network.Protocols;
 import dev.hilligans.ourcraft.recipe.IRecipe;
 import dev.hilligans.ourcraft.recipe.helper.RecipeView;
@@ -280,8 +280,8 @@ public class Ourcraft implements ModClass {
         modContent.registerEntityType(Entities.PLAYER);
 
 
-        Sounds.reg();
-        modContent.registerSounds(Sounds.BLOCK_BREAK, Sounds.MUSIC);
+        //Sounds.reg();
+        //modContent.registerSounds(Sounds.BLOCK_BREAK, Sounds.MUSIC);
         Protocols.register(modContent);
         Commands.register(modContent);
 

@@ -1,7 +1,7 @@
 package dev.hilligans.engine.resource.loaders;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.content.ModContainer;
 import dev.hilligans.engine.resource.ResourceLocation;
 import dev.hilligans.engine.save.FileLoader;
 import dev.hilligans.engine.tag.CompoundNBTTag;

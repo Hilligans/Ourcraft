@@ -2,7 +2,7 @@ package dev.hilligans.ourcraft.network.packet;
 
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.data.Tuple;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.content.ModContainer;
 import dev.hilligans.engine.network.engine.ClientNetworkEntity;
 import dev.hilligans.engine.network.engine.NetworkEntity;
 import dev.hilligans.ourcraft.client.Client;

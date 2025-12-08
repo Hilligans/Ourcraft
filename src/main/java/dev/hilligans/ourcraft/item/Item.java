@@ -3,10 +3,10 @@ package dev.hilligans.ourcraft.item;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderWindow;
+import dev.hilligans.engine.mod.content.ModContainer;
 import dev.hilligans.ourcraft.data.descriptors.TagCollection;
 import dev.hilligans.ourcraft.data.other.ItemProperties;
 import dev.hilligans.ourcraft.entity.living.entities.PlayerEntity;
-import dev.hilligans.engine.mod.handler.content.ModContent;
 import dev.hilligans.ourcraft.recipe.IRecipeComponent;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
@@ -14,7 +14,7 @@ import dev.hilligans.ourcraft.world.newworldsystem.IWorld;
 public class Item implements IRecipeComponent, IRegistryElement {
 
     public String name;
-    public ModContent source;
+    public ModContainer source;
     public ItemProperties itemProperties;
     public int id;
     public String modID;
@@ -32,11 +32,6 @@ public class Item implements IRecipeComponent, IRegistryElement {
     public Item(String name, ItemProperties itemProperties, String modID) {
         this(name,itemProperties);
         this.modID = modID;
-    }
-
-    public Item setModContent(ModContent modContent) {
-        this.source = modContent;
-        return this;
     }
 
     public void generateTextures() {
@@ -131,6 +126,10 @@ public class Item implements IRecipeComponent, IRegistryElement {
 
     public String getName() {
         return "item." + modID + "." + name;
+    }
+
+    public void setSource(ModContainer source) {
+        this.source = source;
     }
 
     @Override

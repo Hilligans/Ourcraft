@@ -2,8 +2,8 @@ package dev.hilligans.engine.test.standard;
 
 import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.engine.mod.handler.pipeline.InstanceLoaderPipeline;
-import dev.hilligans.engine.mod.handler.pipeline.standard.StandardPipeline;
+import dev.hilligans.engine.mod.pipeline.InstanceLoaderPipeline;
+import dev.hilligans.engine.mod.pipeline.standard.StandardPipeline;
 import dev.hilligans.engine.test.ITest;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 import dev.hilligans.engine.util.registry.Registry;

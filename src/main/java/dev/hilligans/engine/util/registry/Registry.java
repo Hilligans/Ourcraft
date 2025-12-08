@@ -2,7 +2,7 @@ package dev.hilligans.engine.util.registry;
 
 import dev.hilligans.engine.EngineMain;
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.engine.mod.handler.Identifier;
+import dev.hilligans.engine.mod.Identifier;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;

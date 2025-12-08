@@ -2,6 +2,10 @@ package dev.hilligans.engine.client.graphics.nuklear;
 
 import dev.hilligans.engine.application.IClientApplication;
 import dev.hilligans.engine.client.graphics.api.*;
+import dev.hilligans.engine.client.graphics.layout.*;
+import dev.hilligans.engine.client.graphics.layout.composite.LCheckBox;
+import dev.hilligans.engine.client.graphics.layout.standard.LHBox;
+import dev.hilligans.engine.client.graphics.layout.standard.LVBox;
 import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.ourcraft.client.rendering.Textures;
@@ -15,6 +19,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.nuklear.Nuklear.*;
+import static org.lwjgl.nuklear.Nuklear.nk_label;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.*;
@@ -29,17 +34,19 @@ public class NuklearLayout implements ILayout {
     public int width;
     public int height;
 
+    public LWidget widget = new LHBox(new LVBox(new LText("Text"), new LText("Text1"), new LBox(), new LCheckBox("My Box")));
+
     public NuklearLayout(NuklearLayoutEngine engine) {
         this.engine = engine;
-        width = 500;
-        height = 500;
+        width = 1000;
+        height = 1000;
     }
 
     protected NuklearLayout setup() {
         ctx = NkContext.create();
         cmds = NkBuffer.calloc();
         nk_init(ctx, ALLOCATOR, null);
-        nk_buffer_init(cmds, ALLOCATOR, 10240);
+        nk_buffer_init(cmds, ALLOCATOR, 1024);
         nk_style_set_font(ctx, engine.default_font);
         return this;
     }
@@ -57,7 +64,7 @@ public class NuklearLayout implements ILayout {
             glEnable(GL_SCISSOR_TEST);
 
             IDefaultEngineImpl<?, ?, ?> impl = engine.getDefaultImpl();
-            layout(ctx, 0, 0, stack);
+            layout(ctx, 50, 50, stack);
 
             ByteBuffer vertices = MemoryUtil.memCalloc(10000);
             //vertices.order(ByteOrder.LITTLE_ENDIAN);
@@ -149,7 +156,82 @@ public class NuklearLayout implements ILayout {
         }
     }
 
+    public void draw(LWidget widget, NkContext ctx, MemoryStack stack) {
+
+        switch (widget) {
+            case null -> {}
+            case LText text -> nk_label(ctx, text.getText(), NK_LEFT);
+            case LBox box ->  {
+                NkRect rect = NkRect.malloc(stack);
+
+                NkRect rect1 = NkRect.calloc(stack);
+                //rect1.w(10);
+                nk_widget_bounds(ctx, rect1);
+                //System.out.println("W:" + rect1.w());
+
+                //System.out.println(rect1.x());
+                //NkVec2 vec = NkVec2.calloc(stack);
+                //nk_layout_space_to_screen(ctx, vec);
+
+                rect.x(box.getX() + rect1.x());
+                rect.y(box.getY() + rect1.y());
+                rect.w(box.getWidth());
+                rect.h(box.getHeight());
+
+
+                NkColor color = NkColor.malloc(stack);
+                color.set((byte)127, (byte)0, (byte)0, (byte)127);
+
+                NkCommandBuffer commandBuffer = nk_window_get_canvas(ctx);
+                nk_fill_rect(commandBuffer, rect, 0, color);
+
+                draw(box.widget, ctx, stack);
+                //if(box.)
+                //nk_layout_space_begin(ctx, );
+            }
+            case LHBox hBox -> {
+                nk_layout_row_dynamic(ctx, 100 , hBox.getChildrenCount());
+                hBox.foreach((w) -> draw(w, ctx, stack));
+                nk_layout_row_end(ctx);
+            }
+            case LVBox vBox -> {
+                if(nk_group_begin(ctx, "group", NK_WINDOW_NO_SCROLLBAR | NK_WINDOW_BORDER)) {
+                    vBox.foreach((w) -> draw(w, ctx, stack));
+                    nk_group_end(ctx);
+                }
+            }
+            case LList list -> {
+                for (LWidget widg : list.getWidgets()) {
+                    draw(widg, ctx, stack);
+                }
+            }
+            case LCustomWidget customWidget -> draw(customWidget.decompose(), ctx, stack);
+            default -> throw new UnsupportedOperationException();
+        }
+    }
+
+
     void layout(NkContext ctx, int x, int y, MemoryStack stack) {
+
+        NkRect rect = NkRect.malloc(stack);
+
+        if (nk_begin(
+                ctx,
+                "Demo",
+                nk_rect(x, y, 230, 250, rect),
+                NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE | NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE)) {
+
+
+            //nk_label(ctx, "some rando text", NK_LEFT);
+
+            draw(widget, ctx, stack);
+
+        }
+
+        nk_end(ctx);
+
+        /*
+
         NkRect rect = NkRect.malloc(stack);
 
         if (nk_begin(
@@ -193,6 +275,8 @@ public class NuklearLayout implements ILayout {
         }
 
         nk_end(ctx);
+
+         */
 
     }
 

@@ -1,8 +1,8 @@
 package dev.hilligans.ourcraft.world;
 
 import dev.hilligans.engine.GameInstance;
+import dev.hilligans.engine.mod.content.ModContainer;
 import dev.hilligans.ourcraft.block.Block;
-import dev.hilligans.engine.mod.handler.content.ModContent;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 
 import java.util.ArrayList;
@@ -10,20 +10,14 @@ import java.util.ArrayList;
 public class Feature implements IRegistryElement {
 
     public String featureName;
-    public ModContent modContent;
+    public ModContainer modContainer;
 
     public Feature(String featureName) {
         this.featureName = featureName;
     }
 
-    public Feature setModContent(ModContent modContent) {
-        this.modContent = modContent;
-        return this;
-    }
-
-    @Override
-    public void load(GameInstance gameInstance) {
-
+    public void setModContainer(ModContainer modContainer) {
+        this.modContainer = modContainer;
     }
 
     @Override
@@ -33,7 +27,7 @@ public class Feature implements IRegistryElement {
 
     @Override
     public String getResourceOwner() {
-        return modContent.getModID();
+        return modContainer.getModID();
     }
 
     @Override

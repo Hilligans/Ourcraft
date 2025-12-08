@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.events.client;
 
 import dev.hilligans.engine.client.graphics.Screen;
-import dev.hilligans.engine.mod.handler.Event;
+import dev.hilligans.engine.mod.Event;
 
 public class OpenScreenEvent extends Event {
 

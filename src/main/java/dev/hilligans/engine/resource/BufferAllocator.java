@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 
 public class BufferAllocator implements IBufferAllocator {
 
+    public static final BufferAllocator instance = new BufferAllocator();
+
     @Override
     public ByteBuffer malloc(int size) {
         return MemoryUtil.memAlloc(size);

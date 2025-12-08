@@ -3,7 +3,7 @@ package dev.hilligans.ourcraft.recipe;
 import dev.hilligans.ourcraft.container.Container;
 import dev.hilligans.ourcraft.container.CraftingContainer;
 import dev.hilligans.ourcraft.item.ItemStack;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.content.ModContainer;
 
 public class CraftingRecipe<T extends Container & CraftingContainer> implements IRecipe<T> {
 

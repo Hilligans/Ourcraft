@@ -8,8 +8,8 @@ import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.graphics.api.ILayoutEngine;
+import dev.hilligans.engine.resource.BufferAllocator;
 import dev.hilligans.engine.resource.ResourceLocation;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.nuklear.*;
 import org.lwjgl.stb.STBTTAlignedQuad;
 import org.lwjgl.stb.STBTTFontinfo;
@@ -57,7 +57,6 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
     public void load(IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext, ByteBuffer ttf) {
         default_font = NkUserFont.calloc();
         null_texture = NkDrawNullTexture.calloc();
-
         this.ttf = ttf;
 
         int BITMAP_W = 1024;
@@ -201,7 +200,7 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
     public void load(GameInstance gameInstance, IGraphicsEngine<?, ?, ?> graphicsEngine, GraphicsContext graphicsContext) {
         if(nkProgram == null) {
             nkProgram = gameInstance.SHADERS.getExcept(Engine.name("nk_shader"));
-            load(graphicsEngine, graphicsContext, gameInstance.getResourceDirect(new ResourceLocation("Roboto-Medium.ttf", Engine.ENGINE_NAME)));
+            load(graphicsEngine, graphicsContext, gameInstance.getResource(new ResourceLocation("Roboto-Medium.ttf", Engine.ENGINE_NAME), BufferAllocator.instance));
         }
     }
 
@@ -213,6 +212,8 @@ public class NuklearLayoutEngine implements ILayoutEngine<NuklearLayout> {
         null_texture.free();
         queryFontCallback.free();
         textWidthCallback.free();
+        BufferAllocator.instance.free(ttf);
+        this.ttf = null;
         nkProgram = null;
     }
 }

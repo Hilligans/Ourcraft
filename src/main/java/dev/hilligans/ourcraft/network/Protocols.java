@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.network;
 
-import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.content.ModContainer;
 import dev.hilligans.ourcraft.network.packet.*;
 
 public class Protocols {

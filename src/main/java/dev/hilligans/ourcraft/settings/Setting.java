@@ -1,6 +1,6 @@
 package dev.hilligans.ourcraft.settings;
 
-import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.content.ModContainer;
 import dev.hilligans.engine.util.Side;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 

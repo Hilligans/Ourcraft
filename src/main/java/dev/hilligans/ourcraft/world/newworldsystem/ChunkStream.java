@@ -1,7 +1,7 @@
 package dev.hilligans.ourcraft.world.newworldsystem;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.content.ModContainer;
 import dev.hilligans.engine.util.IByteArray;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 import io.netty.buffer.ByteBuf;

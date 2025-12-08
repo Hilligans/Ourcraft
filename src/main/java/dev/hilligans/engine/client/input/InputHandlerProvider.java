@@ -1,7 +1,7 @@
 package dev.hilligans.engine.client.input;
 
 import dev.hilligans.engine.client.graphics.api.IInputProvider;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.content.ModContainer;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 
 public abstract class InputHandlerProvider implements IRegistryElement {

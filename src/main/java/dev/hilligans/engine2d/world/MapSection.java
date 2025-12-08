@@ -7,7 +7,7 @@ import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.engine.client.graphics.resource.Image;
 import dev.hilligans.engine.client.graphics.resource.ImageInfo;
 import dev.hilligans.engine.data.BoundingBox;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
+import dev.hilligans.engine.mod.content.ModContainer;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 import org.json.JSONArray;
 import org.json.JSONObject;

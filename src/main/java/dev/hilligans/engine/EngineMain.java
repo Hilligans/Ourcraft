@@ -1,9 +1,9 @@
 package dev.hilligans.engine;
 
-import dev.hilligans.engine.mod.handler.pipeline.InstanceLoaderPipeline;
-import dev.hilligans.engine.mod.handler.pipeline.other.DumpRegistriesPipeline;
-import dev.hilligans.engine.mod.handler.pipeline.other.TestPipeline;
-import dev.hilligans.engine.mod.handler.pipeline.standard.StandardPipeline;
+import dev.hilligans.engine.mod.pipeline.InstanceLoaderPipeline;
+import dev.hilligans.engine.mod.pipeline.other.DumpRegistriesPipeline;
+import dev.hilligans.engine.mod.pipeline.other.TestPipeline;
+import dev.hilligans.engine.mod.pipeline.standard.StandardPipeline;
 import dev.hilligans.engine.network.Protocol;
 import dev.hilligans.engine.util.Side;
 import dev.hilligans.engine.util.argument.Argument;

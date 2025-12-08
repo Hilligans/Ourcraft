@@ -1,14 +1,10 @@
 package dev.hilligans.engine.util.registry;
 
 import dev.hilligans.engine.GameInstance;
-import dev.hilligans.engine.client.graphics.api.GraphicsContext;
-import dev.hilligans.engine.client.graphics.api.IGraphicsEngine;
 import dev.hilligans.ourcraft.data.descriptors.TagCollection;
-import dev.hilligans.engine.mod.handler.content.ModContainer;
-import dev.hilligans.engine.mod.handler.content.ModContent;
+import dev.hilligans.engine.mod.content.ModContainer;
 import dev.hilligans.engine.resource.ResourceLocation;
 
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 public interface IRegistryElement {
@@ -38,12 +34,6 @@ public interface IRegistryElement {
     default String getRegistryName() {
         return getResourceOwner() + ":" + getResourceType();
     }
-
-    default ResourceLocation getResourceLocation(ModContent modContent) {
-        return new ResourceLocation(getResourceName(),modContent);
-    }
-
-    default void assignOwner(ModContent modContent) {}
 
     default void assignOwner(ModContainer owner) {}
 
