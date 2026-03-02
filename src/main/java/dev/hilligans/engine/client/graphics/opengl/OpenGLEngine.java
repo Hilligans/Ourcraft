@@ -12,11 +12,15 @@ import dev.hilligans.engine.util.Logger;
 import dev.hilligans.engine.util.argument.Argument;
 import dev.hilligans.engine.util.sections.ISection;
 import dev.hilligans.engine.util.sections.ProfiledSection;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL43;
 import org.lwjgl.opengl.GLDebugMessageCallback;
+import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.MemoryUtil;
+import org.lwjgl.util.shaderc.Shaderc;
 
 import java.util.ArrayList;
 
@@ -221,5 +225,15 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
     @Override
     public String getResourceOwner() {
         return Engine.ENGINE_NAME;
+    }
+
+    static {
+        // Run static initializers
+        Thread.startVirtualThread(() -> {int x = STBImage.STBI_default;});
+        Thread.startVirtualThread(() -> org.lwjgl.glfw.GLFW.getLibrary());
+        Thread.startVirtualThread(() -> {int x = GL11.GL_AUX0;});
+        Thread.startVirtualThread(() -> Shaderc.getLibrary());
+        Thread.startVirtualThread(() -> GL.getFunctionProvider());
+        Thread.startVirtualThread(() -> {boolean x = Callback.BITS32;});
     }
 }

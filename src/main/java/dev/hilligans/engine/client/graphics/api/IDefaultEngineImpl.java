@@ -145,8 +145,8 @@ public interface IDefaultEngineImpl<T extends RenderWindow, Q extends GraphicsCo
 
     default void uploadMatrix(GraphicsContext context, MatrixStack matrixStack, @NotNull ShaderSource shaderSource) {
         try(MemoryStack memoryStack = MemoryStack.stackPush()) {
-            uploadData(context, memoryStack.floats(matrixStack.color.x, matrixStack.color.y, matrixStack.color.z, matrixStack.color.w), shaderSource.uniformIndexes[1], "4f", shaderSource.program, shaderSource);
-            uploadData(context, matrixStack.matrix4f.get(memoryStack.mallocFloat(16)), shaderSource.uniformIndexes[0], "4fv", shaderSource.program, shaderSource);
+            uploadData(context, memoryStack.floats(matrixStack.color.x, matrixStack.color.y, matrixStack.color.z, matrixStack.color.w), shaderSource.getUniformIndex(1), "4f", shaderSource.program, shaderSource);
+            uploadData(context, matrixStack.matrix4f.get(memoryStack.mallocFloat(16)), shaderSource.getUniformIndex(0), "4fv", shaderSource.program, shaderSource);
         }
     }
 

@@ -16,19 +16,18 @@ public class TemplateLoader {
     public static ExecutorService service = Executors.newVirtualThreadPerTaskExecutor();
 
     public static void loadTemplates(GameInstance gameInstance) {
-        Thread parentThread = Thread.currentThread();
-        AtomicInteger completedMods = new AtomicInteger(gameInstance.MOD_LIST.getCount());
-
-        ConcurrentHashMap<String, Tuple<ArrayList<String>, ConcurrentHashMap<String, List<IRegistryElement>>>> allContent = new ConcurrentHashMap<>();
+        ArrayList<CompletableFuture<Tuple<ArrayList<String>, ConcurrentHashMap<String, List<IRegistryElement>>>>> futures = new ArrayList<>();
 
         gameInstance.MOD_LIST.foreach((mod) -> {
-            System.out.println("Searching path:" + mod.getModID() + "/templates");
+            CompletableFuture<Tuple<ArrayList<String>, ConcurrentHashMap<String, List<IRegistryElement>>>> future = new CompletableFuture<>();
+            futures.add(future);
+
             service.submit(() -> {
+                ConcurrentHashMap<String, List<IRegistryElement>> elements = new ConcurrentHashMap<>();
                 try {
                     Thread thread = Thread.currentThread();
 
                     AtomicInteger counter = new AtomicInteger();
-                    ConcurrentHashMap<String, List<IRegistryElement>> elements = new ConcurrentHashMap<>();
 
                     gameInstance.DATA_LOADER.forEach(mod.getModID() + "/templates",
                             s -> {
@@ -49,35 +48,30 @@ public class TemplateLoader {
                     while (counter.get() != 0) {
                         LockSupport.parkNanos(1000 * 100);
                     }
-
-                    ArrayList<String> keys = new ArrayList<>(Arrays.asList(elements.keySet().toArray(String[]::new)));
-                    Collections.sort(keys);
-
-                    allContent.put(mod.getModID(), new Tuple<>(keys, elements));
                 } catch (Exception e) {
                     e.printStackTrace();
-                }finally {
-                    if (completedMods.decrementAndGet() == 0) {
-                        LockSupport.unpark(parentThread);
-                    }
+                } finally {
+                    ArrayList<String> keys = new ArrayList<>(elements.keySet());
+                    Collections.sort(keys);
+
+                    future.complete(new Tuple<>(keys, elements));
                 }
             });
         });
 
-        while(completedMods.get() != 0) {
-            LockSupport.parkNanos(1000 * 1000);
-        }
 
-        gameInstance.MOD_LIST.foreach((m) -> {
-            Tuple<ArrayList<String>, ConcurrentHashMap<String, List<IRegistryElement>>> tuple = allContent.getOrDefault(m.getModID(), null);
+        AtomicInteger i = new AtomicInteger();
+        gameInstance.MOD_LIST.foreach((mod) -> {
+            CompletableFuture<Tuple<ArrayList<String>, ConcurrentHashMap<String, List<IRegistryElement>>>> future = futures.get(i.getAndIncrement());
+            try {
+                Tuple<ArrayList<String>, ConcurrentHashMap<String, List<IRegistryElement>>> tuple = future.get();
 
-            if(tuple != null) {
                 ConcurrentHashMap<String, List<IRegistryElement>> elements = tuple.getTypeB();
 
                 for(String s : tuple.getTypeA()) {
-                    m.registerGenCore(elements.get(s));
+                    mod.registerGenCore(elements.get(s));
                 }
-            }
+            } catch (Exception e) {}
         });
     }
 

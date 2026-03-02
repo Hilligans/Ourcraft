@@ -31,9 +31,11 @@ import dev.hilligans.engine.test.ITest;
 import dev.hilligans.engine.util.registry.IRegistryElement;
 import dev.hilligans.engine.util.registry.Registry;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
+import java.util.HashMap;
 
 public class ModContainer {
 
@@ -43,6 +45,9 @@ public class ModContainer {
     public URLClassLoader classLoader;
     public Path path;
 
+    public int hashcode;
+
+    public HashMap<Class<?>, Registry<?>> registryMap;
 
     public Registry<Block> blockRegistry;
     public Registry<Biome> biomeRegistry;
@@ -85,9 +90,11 @@ public class ModContainer {
     public void setGameInstance(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
         this.registries = gameInstance.REGISTRIES.duplicate();
+        this.registryMap = new HashMap<>();
 
         for(Registry<?> registry : registries.ELEMENTS) {
             registry.mapping = false;
+            this.registryMap.put(registry.classType, registry);
         }
 
         blockRegistry = (Registry<Block>) registries.getExcept("ourcraft:block");
@@ -132,6 +139,13 @@ public class ModContainer {
             val.assignOwner(this);
         }
         registries.getExcept(type).putAllGen(data);
+    }
+
+    public <T extends IRegistryElement> void register(Class<T> registryType, T... data) {
+        for(T val : data) {
+            val.assignOwner(this);
+        }
+        registryMap.get(registryType).putAllGen(data);
     }
 
     @SafeVarargs
@@ -216,9 +230,6 @@ public class ModContainer {
     public void registerBlock(Block block) {
         block.assignOwner(this);
         blockRegistry.put(block);
-        //blocks.add(block);
-        // blockTextures.putAll(block.blockProperties.blockTextureManager.getAllTextures());
-        //items.add(new BlockItem(block.name,block,modID).setModContent(this));
     }
 
     public void registerBlocks(Block... blocks) {
@@ -230,8 +241,6 @@ public class ModContainer {
     public void registerSound(SoundBuffer soundBuffer) {
         soundBuffer.assignOwner(this);
         soundBufferRegistry.put(soundBuffer);
-        //sounds.add(soundBuffer);
-        //soundBuffer.source = this;
     }
 
     public void registerSounds(SoundBuffer... soundBuffers) {
@@ -351,8 +360,23 @@ public class ModContainer {
         register(gameTypeRegistry, gameTypes);
     }
 
+    public void cleanup() {
+        this.hashcode = registries.hashCode();
+        // The only time im using reflection otherwise this cleanup is annoying to maintain.
+        // Since all these registries are clones, nuke them so they can get gced.
+        try {
+            for (Field field : this.getClass().getFields()) {
+                if (Registry.class == field.getType()) {
+                    field.set(this, null);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public int hashCode() {
-        return registries.hashCode();
+        return this.hashcode;
     }
 }

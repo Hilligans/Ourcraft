@@ -12,12 +12,15 @@ import dev.hilligans.engine.client.graphics.resource.VertexFormat;
 import dev.hilligans.engine.client.graphics.vulkan.boilerplate.window.ShaderCompiler;
 import dev.hilligans.engine.client.graphics.resource.Image;
 import dev.hilligans.engine.data.Quadruplet;
+import dev.hilligans.engine.data.Triplet;
 import dev.hilligans.engine.data.Tuple;
 import dev.hilligans.engine.mod.content.UnknownResourceException;
 import dev.hilligans.engine.resource.ResourceLocation;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2LongArrayMap;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL33;
@@ -43,6 +46,9 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     public final Int2LongOpenHashMap vertexArrayObjects = new Int2LongOpenHashMap();
     public final Int2IntOpenHashMap fbos = new Int2IntOpenHashMap();
 
+    public final LongArrayList shaders = new LongArrayList();
+    public final ConcurrentHashMap<Long, Quadruplet<ShaderSource, String, String, String>> waitingShaders = new ConcurrentHashMap<>();
+
     public final boolean trackingResourceAllocations;
     public final Int2ObjectOpenHashMap<Throwable> textureAllocationTracker = new Int2ObjectOpenHashMap<>();
     public final Int2ObjectOpenHashMap<Exception> vertexArrayAllocationTracker = new Int2ObjectOpenHashMap<>();
@@ -53,6 +59,8 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     public long boundProgram = -1;
     public long boundFBO = 0;
 
+    public final OpenglDefaultImpl instance = this;
+
     public OpenglDefaultImpl(OpenGLEngine engine) {
         this.engine = engine;
         this.trackingResourceAllocations = EngineMain.debug.get(engine.getGameInstance());
@@ -60,6 +68,9 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
 
     @Override
     public void drawMesh(GraphicsContext graphicsContext, MatrixStack matrixStack, long meshID, long indicesIndex, int length) {
+        if(boundProgram == -1) {
+            return;
+        }
         Tuple<Integer, Integer> data = meshData.get((int)meshID);
         if(data == null) {
             return;
@@ -181,6 +192,9 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
 
     @Override
     public void drawAndDestroyMesh(GraphicsContext graphicsContext, MatrixStack matrixStack, DefaultMeshBuilder builder) {
+        if(boundProgram == -1) {
+            return;
+        }
         VertexMesh mesh = builder.build();
         if(mesh.vertexFormat == null) {
             mesh.vertexFormat = getFormat(mesh.vertexFormatName);
@@ -235,6 +249,20 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
 
     @Override
     public void bindPipeline(GraphicsContext graphicsContext, long pipeline) {
+        long pipe = pipeline;
+        pipeline = shaders.getLong((int) pipeline);
+
+        if(pipeline == -1) {
+            if(waitingShaders.containsKey(pipe)) {
+                pipeline = finishShaderUpload(pipe);
+            }
+        }
+
+        if(pipeline == -1) {
+            boundProgram = -1;
+            return;
+        }
+
         if(pipeline != boundProgram){
             GL20.glUseProgram((int) pipeline);
             boundProgram = pipeline;
@@ -257,7 +285,6 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
         return engine.getResourceOwner() + "." + engine.getResourceName();
     }
 
-    public final ExecutorService shaderProcessor = Executors.newVirtualThreadPerTaskExecutor();
     public ArrayList<Quadruplet<CompletableFuture<String>, CompletableFuture<String>, CompletableFuture<String>, Integer>> shaderCompilation = new ArrayList<>();
 
     public void finishShaderUpload() {
@@ -288,9 +315,30 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
 
     @Override
     public long createProgram(GraphicsContext graphicsContext, ShaderSource shaderSource) {
-        String vertex = getShader(shaderSource.vertexShader, shaderSource);
-        String fragment = getShader(shaderSource.fragmentShader, shaderSource);
-        String geometry = shaderSource.geometryShader == null ? null : getShader(shaderSource.geometryShader, shaderSource);
+        int index = shaders.size();
+        shaders.add(-1);
+
+        Thread.startVirtualThread(() -> {
+            try {
+                String vertex = getShader(shaderSource.vertexShader, shaderSource);
+                String fragment = getShader(shaderSource.fragmentShader, shaderSource);
+                String geometry = shaderSource.geometryShader == null ? null : getShader(shaderSource.geometryShader, shaderSource);
+
+                waitingShaders.put((long) index, new Quadruplet<>(shaderSource, vertex, fragment, geometry));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        return index;
+    }
+
+    public long finishShaderUpload(long index) {
+        Quadruplet<ShaderSource, String, String, String> data = waitingShaders.remove(index);
+        ShaderSource shaderSource = data.typeA;
+        String vertex = data.typeB;
+        String fragment = data.typeC;
+        String geometry = data.typeD;
 
         int shader;
         if(geometry == null) {
@@ -305,9 +353,14 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
                 shaderSource.uniformIndexes[x] = glGetUniformLocation(shader, shaderSource.uniformNames.get(x));
             }
         }
-        if(trackingResourceAllocations) {
-            programAllocationTracker.put(shader, new Exception());
+
+        synchronized (instance) {
+            if (trackingResourceAllocations) {
+                programAllocationTracker.put(shader, new Exception());
+            }
         }
+
+        shaders.set((int) index, shader);
 
         return shader;
     }
@@ -323,8 +376,10 @@ public class OpenglDefaultImpl implements IDefaultEngineImpl<OpenGLWindow, Graph
     @Override
     public void uploadData(GraphicsContext graphicsContext, FloatBuffer data, long index, String type, long program, ShaderSource shaderSource) {
         //if(program != boundProgram) {
-            GL20.glUseProgram((int)program);
-            boundProgram = program;
+            bindPipeline(graphicsContext, program);
+            if(boundProgram == -1)  {
+                return;
+            }
        // }
         if ("4fv".equals(type)) {
             GL33.glUniformMatrix4fv((int) index, false, data);

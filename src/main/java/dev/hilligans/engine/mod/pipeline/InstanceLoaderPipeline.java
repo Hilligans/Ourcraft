@@ -89,4 +89,9 @@ public class InstanceLoaderPipeline<T extends InstanceLoaderPipeline<?>> {
         stages.add(new Tuple<>(name, stage));
         return (T) this;
     }
+
+    public T addAsyncStage(String name, AsyncPipelineStage<T> stage) {
+        stages.add(new Tuple<>(name, stage));
+        return (T) this;
+    }
 }

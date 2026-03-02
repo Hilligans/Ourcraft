@@ -11,7 +11,7 @@ public class ArgumentSearcher {
     public static String findAllArguments(GameInstance gameInstance) {
         try {
             StringBuilder stringBuilder = new StringBuilder();
-            ModList list = gameInstance.MOD_LIST.load();
+            ModList list = gameInstance.MOD_LIST;//.load();
             for(Class<?> clazz : list.classList) {
                 boolean spaced = false;
                 for(Field field : clazz.getFields()) {

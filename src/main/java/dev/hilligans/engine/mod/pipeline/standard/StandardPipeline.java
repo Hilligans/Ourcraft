@@ -3,6 +3,7 @@ package dev.hilligans.engine.mod.pipeline.standard;
 import dev.hilligans.engine.Engine;
 import dev.hilligans.engine.GameInstance;
 import dev.hilligans.engine.mod.content.CoreExtensionView;
+import dev.hilligans.engine.mod.content.ModContainer;
 import dev.hilligans.engine.mod.content.RegistryView;
 import dev.hilligans.engine.mod.pipeline.InstanceLoaderPipeline;
 import dev.hilligans.engine.mod.pipeline.PerModPipelineStage;
@@ -71,6 +72,8 @@ public class StandardPipeline extends InstanceLoaderPipeline<StandardPipeline> {
         pipeline.addStage("Build Content For Game Instance", (pipeline15, section) -> pipeline15.getGameInstance().finishBuild());
 
         pipeline.addStage("Post Hooks", (pipeline1, section) -> pipeline1.runPostHooks());
+
+        pipeline.addAsyncStage("Cleanup", ((pipeline1, _) -> pipeline1.getGameInstance().MOD_LIST.foreach(ModContainer::cleanup)));
 
         pipeline.addStage("Finish Building", (pipeline13, section) -> {pipeline13.getGameInstance().builtSemaphore.release();});
 

@@ -9,6 +9,10 @@ public interface ModClass {
 
     String getModID();
 
+    default String[] getDependencies() {
+        return new String[] {"engine"};
+    }
+
     default void registerHooks(InstanceLoaderPipeline<?> pipeline) {
     }
 

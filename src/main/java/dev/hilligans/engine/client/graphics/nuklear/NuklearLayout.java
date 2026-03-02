@@ -104,7 +104,7 @@ public class NuklearLayout implements ILayout {
                     -1.0f, 1.0f, 0.0f, 1.0f
             );
             impl.bindPipeline(graphicsContext, this.engine.nkProgram.program);
-            impl.uploadData(graphicsContext, f, this.engine.nkProgram.uniformIndexes[0], "4fv", this.engine.nkProgram.program, this.engine.nkProgram);
+            impl.uploadData(graphicsContext, f, this.engine.nkProgram.getUniformIndex(0), "4fv", this.engine.nkProgram.program, this.engine.nkProgram);
 
             //impl.uploadData(graphicsContext, matrixStack.matrix4f.get(stack.malloc(16 * 4)).flip().asFloatBuffer(),  this.engine.nkProgram.uniformIndexes[0], "4fv", this.engine.nkProgram.program, this.engine.nkProgram);
             //impl.uploadMatrix(graphicsContext, matrixStack, this.engine.nkProgram);
@@ -220,13 +220,14 @@ public class NuklearLayout implements ILayout {
                 "Demo",
                 nk_rect(x, y, 230, 250, rect),
                 NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE | NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE)) {
-
-
-            //nk_label(ctx, "some rando text", NK_LEFT);
-
             draw(widget, ctx, stack);
-
         }
+
+        nk_input_begin(ctx);
+
+        nk_input_motion(ctx, 1, 1);
+
+        nk_input_end(ctx);
 
         nk_end(ctx);
 
@@ -281,13 +282,6 @@ public class NuklearLayout implements ILayout {
     }
 
     private static final int EASY = 0;
-    private static final int HARD = 1;
-
-    NkColorf background = NkColorf.create()
-            .r(0.10f)
-            .g(0.18f)
-            .b(0.24f)
-            .a(1.0f);
 
     private int op = EASY;
 

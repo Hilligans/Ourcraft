@@ -51,6 +51,14 @@ public class ShaderSource implements IRegistryElement, IGraphicsElement {
         return this;
     }
 
+    public int getUniformIndex(int index) {
+        if(uniformIndexes == null) {
+            return -1;
+        }
+
+        return uniformIndexes[index];
+    }
+
     @Override
     public void assignOwner(ModContainer owner) {
         this.owner = owner;
