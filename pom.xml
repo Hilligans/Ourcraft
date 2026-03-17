@@ -20,7 +20,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <lwjgl.version>3.4.0-SNAPSHOT</lwjgl.version>
+        <lwjgl.version>3.4.1</lwjgl.version>
         <lwjgl.natives>natives-linux</lwjgl.natives>
 
         <maven.compiler.source>25</maven.compiler.source>
@@ -195,6 +195,15 @@
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-assimp</artifactId>
+            <classifier>${lwjgl.natives}</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-sdl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-sdl</artifactId>
             <classifier>${lwjgl.natives}</classifier>
         </dependency>
     </dependencies>

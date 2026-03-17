@@ -17,9 +17,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class OpenGLWindow extends RenderWindow {
+public abstract class OpenGLWindow extends RenderWindow {
 
     public static ConcurrentLinkedQueue<Tuple<OpenGLWindow, GraphicsContext>> handlingQueue = new ConcurrentLinkedQueue<>();
     public static AtomicLong ownerWindowID = new AtomicLong(0);
@@ -39,22 +38,6 @@ public class OpenGLWindow extends RenderWindow {
         super(engine);
         this.width = width;
         this.height = height;
-
-        window = glfwCreateWindow(width, height, name, NULL, otherID);
-        System.out.println(window);
-        if (window == NULL) {
-            glfwTerminate();
-            throw new RuntimeException("Failed to create window");
-        }
-
-        glfwMakeContextCurrent(window);
-
-        registerCallbacks();
-    }
-
-    public void setup() {
-       super.setup();
-       glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 
     @Override
@@ -75,57 +58,6 @@ public class OpenGLWindow extends RenderWindow {
     @Override
     public void close() {
         shouldClose = true;
-    }
-
-    @Override
-    public boolean shouldClose() {
-        return (window != NULL && glfwWindowShouldClose(window)) || shouldClose;
-    }
-
-    @Override
-    public void swapBuffers(GraphicsContext graphicsContext) {
-        if(!mainThread) {
-            while(true) {
-                long owner = ownerWindowID.get();
-                if (owner == 0) {
-                    if(ownerWindowID.compareAndExchange(0, window) == 0) {
-                        mainThread = true;
-                        break;
-                    }
-                } else {
-                    handlingQueue.add(new Tuple<>(this, graphicsContext));
-                    try {
-                        this.swapSemaphore.acquire();
-                    } catch (InterruptedException e) {
-                        continue;
-                    }
-                    return;
-                }
-            }
-        }
-
-        glfwMakeContextCurrent(window);
-        swap(graphicsContext);
-        Tuple<OpenGLWindow, GraphicsContext> otherWindow;
-        while((otherWindow = handlingQueue.poll()) != null) {
-            GraphicsContext context = otherWindow.typeB;
-            OpenGLWindow window = otherWindow.typeA;
-
-            glfwMakeContextCurrent(window.window);
-            window.swapBuffers(context);
-
-            window.swapSemaphore.release();
-        }
-    }
-
-    public void swap(GraphicsContext graphicsContext) {
-        super.swapBuffers(graphicsContext);
-        try(var $ = graphicsContext.getSection().startSection("glfw_swap_buffers")) {
-            glfwSwapInterval(0);
-            glfwSwapBuffers(window);
-        }
-        glfwPollEvents();
-        tick();
     }
 
 
@@ -159,43 +91,4 @@ public class OpenGLWindow extends RenderWindow {
         return "glfw";
     }
 
-    private GLFWWindowSizeCallback sizeCallback;
-    private GLFWWindowFocusCallback focusCallback;
-
-    public void registerCallbacks() {
-        sizeCallback = new GLFWWindowSizeCallback() {
-            @Override
-            public void invoke(long window, int w, int h) {
-                width = w;
-                height = h;
-                updatedSize = true;
-            }
-        };
-        glfwSetWindowSizeCallback(window, sizeCallback);
-
-
-        focusCallback = new GLFWWindowFocusCallback() {
-            @Override
-            public void invoke(long window, boolean focused) {
-                windowFocused = focused;
-            }
-        };
-        glfwSetWindowFocusCallback(window, focusCallback);
-
-        //MouseHandler mouseHandler = new MouseHandler(client);
-        //glfwSetMouseButtonCallback(window, mouseHandler::invoke);
-    }
-
-    @Override
-    public void cleanup() {
-        super.cleanup();
-        if(sizeCallback != null) {
-            sizeCallback.close();
-        }
-        if(focusCallback != null) {
-            focusCallback.close();
-        }
-
-        glfwDestroyWindow(window);
-    }
 }

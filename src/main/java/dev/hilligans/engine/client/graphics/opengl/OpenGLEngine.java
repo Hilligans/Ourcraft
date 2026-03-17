@@ -8,6 +8,7 @@ import dev.hilligans.engine.client.graphics.RenderWindow;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
 import dev.hilligans.engine.client.graphics.api.GraphicsEngineBase;
 import dev.hilligans.engine.data.Tuple;
+import dev.hilligans.engine.util.EnumParser;
 import dev.hilligans.engine.util.Logger;
 import dev.hilligans.engine.util.argument.Argument;
 import dev.hilligans.engine.util.sections.ISection;
@@ -17,18 +18,24 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL43;
 import org.lwjgl.opengl.GLDebugMessageCallback;
+import org.lwjgl.sdl.SDLInit;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.util.shaderc.Shaderc;
 
 import java.util.ArrayList;
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL32.GL_PROGRAM_POINT_SIZE;
 import static org.lwjgl.opengl.GL43.GL_DEBUG_OUTPUT;
 import static org.lwjgl.opengl.GL43.glDebugMessageCallback;
+import static org.lwjgl.sdl.SDLInit.SDL_INIT_VIDEO;
+import static org.lwjgl.sdl.SDLInit.SDL_Quit;
+import static org.lwjgl.sdl.SDLVideo.*;
 
 public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefaultImpl, GraphicsContext> {
 
@@ -36,7 +43,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
             .help("The default render pipeline to use.");
     public static Argument<String> clientSection = Argument.stringArg("--clientSection", "empty")
             .help("Specifies what section api to attach to the client");
-
+    public static Argument<WindowAPI> windowAPIArgument = Argument.enumArg("--windowAPI", WindowAPI.class, WindowAPI.GLFW);
 
     public Logger logger;
 
@@ -52,9 +59,12 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
 
     public OpenGLEngine() {}
 
+    public WindowAPI windowAPI = null;
+
     @Override
     public OpenGLWindow createWindow() {
-        OpenGLWindow renderWindow = new OpenGLWindow(this, "Ourcraft 1", 1600, 800, windows.get(0).window);
+        // windows.get(0).window
+        OpenGLWindow renderWindow = windowAPI.windowSupplier.apply(this, "OpenGL Window 1");
         renderWindow.setRenderPipeline(renderPipelineArgument.get(gameInstance));
         windows.add(renderWindow);
         renderWindow.setup();
@@ -100,13 +110,11 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         running = true;
         System.setProperty("java.awt.headless", "true");
 
-        if(!glfwInit()) {
-            throw new RuntimeException("Failed to create window");
-        }
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        OpenGLWindow renderWindow = new OpenGLWindow( this, "Ourcraft", 1600, 800, 0);
+        windowAPI.init();
+
+        OpenGLWindow renderWindow = windowAPI.windowSupplier.apply(this, "Ourcraft");
+        //OpenGLWindow renderWindow = new OpenGLWindow( this, "Ourcraft", 1600, 800, 0);
+
         renderWindow.setRenderPipeline(gameInstance.ARGUMENTS.getString("--renderPipeline", Engine.name("engine_loading_pipeline")));
         windows.add(renderWindow);
         renderWindow.setup();
@@ -131,7 +139,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         gameInstance.build(this, null);
         setupStringRenderer("");
 
-        glfwWindowHint(GLFW_SAMPLES, 4);
+        //glfwWindowHint(GLFW_SAMPLES, 4);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -165,7 +173,7 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
         stringRenderer.close(engineImpl, createContext(null));
 
         engineImpl.close();
-        glfwTerminate();
+        windowAPI.close();
     }
 
     @Override
@@ -210,7 +218,8 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
     @Override
     public void preLoad(GameInstance gameInstance) {
         super.preLoad(gameInstance);
-        engineImpl = new OpenglDefaultImpl(this);
+        this.engineImpl = new OpenglDefaultImpl(this);
+        this.windowAPI = windowAPIArgument.get(gameInstance);
     }
 
     @Override
@@ -230,10 +239,54 @@ public class OpenGLEngine extends GraphicsEngineBase<OpenGLWindow, OpenglDefault
     static {
         // Run static initializers
         Thread.startVirtualThread(() -> {int x = STBImage.STBI_default;});
-        Thread.startVirtualThread(() -> org.lwjgl.glfw.GLFW.getLibrary());
         Thread.startVirtualThread(() -> {int x = GL11.GL_AUX0;});
         Thread.startVirtualThread(() -> Shaderc.getLibrary());
         Thread.startVirtualThread(() -> GL.getFunctionProvider());
         Thread.startVirtualThread(() -> {boolean x = Callback.BITS32;});
+    }
+
+    public enum WindowAPI {
+        GLFW((engine, name) -> new GLFWOpenGLWindow(engine, name, 1600, 800, 0)) {
+            @Override
+            void init() {
+                if(!glfwInit()) {
+                    throw new RuntimeException("Failed to create window");
+                }
+                glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
+                glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
+                glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+            }
+
+
+            @Override
+            void close() {
+                glfwTerminate();
+            }
+        },
+        SDL((engine, name) -> new SDLOpenGLWindow(engine, name, 1600, 800, 0)) {
+            @Override
+            void init() {
+                if(!SDLInit.SDL_Init(SDL_INIT_VIDEO)) {
+                    throw new RuntimeException("Failed to create window");
+                }
+
+                SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+                SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+            }
+
+            @Override
+            void close() {
+                SDL_Quit();
+            }
+        };
+
+        private BiFunction<OpenGLEngine, String, OpenGLWindow> windowSupplier;
+
+        WindowAPI(BiFunction<OpenGLEngine, String, OpenGLWindow> windowSupplier) {
+            this.windowSupplier = windowSupplier;
+        }
+
+        abstract void init();
+        abstract void close();
     }
 }

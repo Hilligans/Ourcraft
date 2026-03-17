@@ -10,12 +10,14 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class Argument<T> {
     public Class<T> clazz;
     public T defaultValue;
     public Function<String, T> parseFunction;
+    public BiFunction<String, Class<T>, T> biFunction;
     public String[] keys;
     public List<String> acceptedValues;
     public String helpString = "";
@@ -25,6 +27,13 @@ public class Argument<T> {
         this.clazz = clazz;
         this.defaultValue = defaultValue;
         this.parseFunction = parseFunction;
+        this.keys = keys;
+    }
+
+    public Argument(BiFunction<String, Class<T>, T> parseFunction, Class<T> clazz, T defaultValue, String... keys) {
+        this.clazz = clazz;
+        this.defaultValue = defaultValue;
+        this.biFunction = parseFunction;
         this.keys = keys;
     }
 
@@ -70,7 +79,10 @@ public class Argument<T> {
                 if(acceptedValues != null && !acceptedValues.contains(arg)) {
                     throw new RuntimeException("Argument " + arg + " is not accepted by " + clazz.getSimpleName() + " " + key);
                 }
-                return parseFunction.apply(arg);
+                if(parseFunction != null) {
+                    return parseFunction.apply(arg);
+                }
+                return biFunction.apply(arg, clazz);
             }
         }
 
@@ -89,8 +101,19 @@ public class Argument<T> {
         return new Argument<>(Boolean.class, defaultValue, Boolean::parseBoolean, key).acceptedValues("true", "false");
     }
 
+    public static <Q extends Enum<Q>> Argument<Q> enumArg(String key, Class<Q> clazz, Q defaultValue) {
+        Q[] values = clazz.getEnumConstants();
+        ArrayList<String> keys = new ArrayList<>(values.length);
+
+        for(Q q : values) {
+            keys.add(q.name());
+        }
+
+        return new Argument<>((s, clasz) -> Enum.valueOf(clasz, s), clazz, defaultValue, key).acceptedValues(keys);
+    }
+
     public static Argument<Boolean> existArg(String key) {
-        return new Argument<>(Boolean.class, false, null, key) {
+        return new Argument<>(Boolean.class, false, (Function<String, Boolean>)null, key) {
             @Override
             public Boolean get(ArgumentContainer argumentContainer) {
                 for(String s : keys) {
@@ -104,7 +127,7 @@ public class Argument<T> {
     }
 
     public static Argument<Integer> integerArg(String key, int defaultValue) {
-        return new Argument<>(Integer.class, defaultValue, Integer::parseInt, key).acceptedValuesString("<int>");
+        return new Argument<>(Integer.class, defaultValue, (Function<String, Integer>)Integer::parseInt, key).acceptedValuesString("<int>");
     }
 
     public static Argument<Float> floatArg(String key, float defaultValue) {
@@ -118,7 +141,7 @@ public class Argument<T> {
     public static <T extends IRegistryElement> Argument<T> registryArg(String key, Class<T> clazz, String defaultValue) {
         Argument<String> strArg = stringArg(key, defaultValue);
 
-        return new Argument<>(clazz, null, null, key) {
+        return new Argument<>(clazz, null, (Function<String, T>)null, key) {
             @Override
             public T get(ArgumentContainer argumentContainer) {
                 throw new UnsupportedOperationException("Must use get with GameInstance when looking up registry elements!");
