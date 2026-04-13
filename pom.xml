@@ -23,8 +23,8 @@
         <lwjgl.version>3.4.1</lwjgl.version>
         <lwjgl.natives>natives-linux</lwjgl.natives>
 
-        <maven.compiler.source>25</maven.compiler.source>
-        <maven.compiler.target>25</maven.compiler.target>
+        <maven.compiler.source>26</maven.compiler.source>
+        <maven.compiler.target>26</maven.compiler.target>
     </properties>
 
 
@@ -239,8 +239,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>25</source>
-                    <target>25</target>
+                    <source>26</source>
+                    <target>26</target>
                     <compilerArgs>--enable-preview</compilerArgs>
                     <!--<compilerArgs>-enable-preview</compilerArgs>-->
                 </configuration>

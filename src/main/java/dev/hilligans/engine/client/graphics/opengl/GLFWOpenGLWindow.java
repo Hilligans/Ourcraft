@@ -1,9 +1,12 @@
 package dev.hilligans.engine.client.graphics.opengl;
 
+import dev.hilligans.engine.application.IClientApplication;
 import dev.hilligans.engine.client.graphics.api.GraphicsContext;
+import dev.hilligans.engine.client.graphics.resource.MatrixStack;
 import dev.hilligans.engine.data.Tuple;
 import org.lwjgl.glfw.GLFWWindowFocusCallback;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
+import org.lwjgl.opengl.GL30;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -109,6 +112,26 @@ public class GLFWOpenGLWindow extends OpenGLWindow {
     }
 
     @Override
+    public void render(GraphicsContext graphicsContext, IClientApplication client, MatrixStack worldStack, MatrixStack screenStack) {
+        glfwMakeContextCurrent(window);
+        if(updatedSize) {
+            GL30.glViewport(0, 0, width, height);
+            updatedSize = false;
+        }
+        super.render(graphicsContext, client, worldStack, screenStack);
+    }
+
+    @Override
+    public String getClipboardString() {
+        return glfwGetClipboardString(window);
+    }
+
+    @Override
+    public void setMousePosition(int x, int y) {
+        glfwSetCursorPos(window, x, y);
+    }
+
+    @Override
     public void cleanup() {
         super.cleanup();
         if(sizeCallback != null) {
@@ -119,5 +142,10 @@ public class GLFWOpenGLWindow extends OpenGLWindow {
         }
 
         glfwDestroyWindow(window);
+    }
+
+    @Override
+    public String getWindowingName() {
+        return "glfw";
     }
 }

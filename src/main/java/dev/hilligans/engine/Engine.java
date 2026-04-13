@@ -47,7 +47,7 @@ import java.util.function.Supplier;
 
 public class Engine implements ModClass {
 
-    public static final Supplier<Boolean> verbose = StableValue.supplier(() -> EngineMain.veryVeryVerbose.get(EngineMain.argumentContainer));
+    public static final Supplier<Boolean> verbose = LazyConstant.of(() -> EngineMain.veryVeryVerbose.get(EngineMain.argumentContainer));
 
     public static final String ENGINE_NAME = "engine";
 

@@ -11,7 +11,6 @@ import dev.hilligans.ourcraft.client.ChatWindow;
 import dev.hilligans.ourcraft.client.Client;
 import dev.hilligans.ourcraft.client.audio.SoundBuffer;
 import dev.hilligans.ourcraft.client.audio.SoundCategory;
-import dev.hilligans.ourcraft.client.audio.Sounds;
 import dev.hilligans.engine.client.input.Input;
 import dev.hilligans.engine.client.input.RepeatingInput;
 import dev.hilligans.engine.client.input.handlers.MouseHandler;

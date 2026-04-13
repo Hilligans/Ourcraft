@@ -11,8 +11,7 @@ public abstract class PacketType<T extends NetworkEntity> {
 
     public static final AtomicInteger UNIQUE_ID = new AtomicInteger();
 
-    // Fake stable value LOL
-    public final Supplier<Integer> id = StableValue.supplier(UNIQUE_ID::getAndIncrement);
+    public final Supplier<Integer> id = LazyConstant.of(UNIQUE_ID::getAndIncrement);
 
     public int getRawID() {
         return id.get();

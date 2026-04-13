@@ -3,6 +3,7 @@ package dev.hilligans.engine.client.input.providers;
 import dev.hilligans.engine.client.input.InputHandlerProvider;
 import dev.hilligans.engine.client.input.handlers.MouseHandler;
 import dev.hilligans.engine.client.graphics.api.IInputProvider;
+import dev.hilligans.engine.client.input.handlers.SDLHandler;
 
 public class MouseHandlerProvider extends InputHandlerProvider {
 
@@ -14,6 +15,8 @@ public class MouseHandlerProvider extends InputHandlerProvider {
     public IInputProvider getProvider(String engineName, String windowingName) {
         if(windowingName.equals("glfw")) {
             return new MouseHandler();
+        } else if(windowingName.equals("sdl")) {
+            return new SDLHandler();
         }
         return null;
     }
